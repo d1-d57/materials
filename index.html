@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Лекции — слайды</title>
+<title>Математические материалы</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Forum&display=swap" rel="stylesheet">
@@ -32,7 +32,7 @@
     margin:0 0 14px;
     letter-spacing:.01em;
   }
-  .sub{color:var(--muted);font-size:clamp(16px,2.4vw,19px);max-width:46ch}
+  .sub{color:var(--muted);font-size:clamp(16px,2.4vw,19px);max-width:52ch}
   .list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
   a.card{
     display:flex;align-items:baseline;gap:18px;
@@ -48,10 +48,17 @@
     min-width:36px;flex:0 0 auto;
   }
   .body{flex:1 1 auto}
+  .ttl-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 4px}
   .ttl{
     font-family:'Forum',serif;
     font-size:clamp(23px,3.6vw,30px);
-    line-height:1.12;margin:0 0 4px;
+    line-height:1.12;margin:0;
+  }
+  .tag{
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;
+    padding:2px 9px;white-space:nowrap;
   }
   .desc{color:var(--muted);font-size:15px}
   .arrow{align-self:center;color:var(--accent);font-size:22px;transition:transform .18s ease}
@@ -63,15 +70,15 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>Лекции</h1>
-    <div class="sub">Слайды математических лекций. Каждая открывается прямо в браузере.</div>
+    <h1>Материалы</h1>
+    <div class="sub">Математические материалы — слайдовые деки, статьи и листки с задачами. Каждый открывается прямо в браузере.</div>
   </header>
 
   <nav class="list">
     <a class="card" href="dandelin/">
       <span class="num">01</span>
       <span class="body">
-        <p class="ttl">Сферы Данделена</p>
+        <span class="ttl-row"><span class="ttl">Сферы Данделена</span><span class="tag">дек</span></span>
         <span class="desc">Конические сечения, эллипс и директриса</span>
       </span>
       <span class="arrow">→</span>
@@ -79,7 +86,7 @@
     <a class="card" href="buffon/">
       <span class="num">02</span>
       <span class="body">
-        <p class="ttl">Игла Бюффона</p>
+        <span class="ttl-row"><span class="ttl">Игла Бюффона</span><span class="tag">дек</span></span>
         <span class="desc">Геометрическая вероятность и оценка числа π</span>
       </span>
       <span class="arrow">→</span>
@@ -87,23 +94,23 @@
     <a class="card" href="euler-formula/">
       <span class="num">03</span>
       <span class="body">
-        <p class="ttl">21 доказательство формулы Эйлера</p>
-        <span class="desc">V − E + F = 2 — двадцать одно доказательство</span>
+        <span class="ttl-row"><span class="ttl">21 доказательство формулы Эйлера</span><span class="tag">статья</span></span>
+        <span class="desc">V − E + F = 2 — двадцать одно доказательство (перевод)</span>
       </span>
       <span class="arrow">→</span>
     </a>
     <a class="card" href="matchings/">
       <span class="num">04</span>
       <span class="body">
-        <p class="ttl">Паросочетания и покрытия</p>
-        <span class="desc">Теория паросочетаний в графах</span>
+        <span class="ttl-row"><span class="ttl">Паросочетания и покрытия</span><span class="tag">листок</span></span>
+        <span class="desc">Список задач по теории паросочетаний в графах</span>
       </span>
       <span class="arrow">→</span>
     </a>
   </nav>
 
   <footer>
-    Слайды лекций · <a href="https://github.com/d1-d57/lectures">github.com/d1-d57/lectures</a>
+    Математические материалы · <a href="https://github.com/d1-d57/materials">github.com/d1-d57/materials</a>
   </footer>
 </div>
 </body>
