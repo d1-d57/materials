@@ -88,6 +88,7 @@ body.blanked #stage { visibility: hidden; }
         color: #8a96a3; font: 13px/1 ui-monospace, monospace;
         opacity: 0; transition: opacity .35s ease; pointer-events: none; }
 #hint.is-shown { opacity: 1; }
+#hint { display: none !important; }   /* подсказка-легенда скрыта для публикации */
 /* lecture progress: brick bar, fraction of slides; hover grows it; the
    thin bottom zone catches hover + click-to-jump. Lives OUTSIDE the engine. */
 #lect-zone { position: fixed; left: 0; bottom: 0; width: 100%; height: 14px;
