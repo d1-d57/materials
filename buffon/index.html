@@ -500,18 +500,18 @@ body.blanked #stage { visibility: hidden; }
       <p>Начнём с другой задачи Бюффона. Будем бросать монетку диаметра <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn mathvariant="bold">1</mn><mn mathvariant="bold">2</mn></mfrac></mstyle></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\tfrac12}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></span>.<br><b>С какой вероятностью она пересечёт линию?</b><br>Важно только положение центра: монетка пересекает линию, когда её центр<br><span class="fill"><span class="blur-reveal" data-reveal="2">находится от неё на расстоянии меньше <span class="acc"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn mathvariant="bold">1</mn><mn mathvariant="bold">4</mn></mfrac></mstyle></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\tfrac14}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">4</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></span></span></span></span></p>
     </div>
     <div class="board">
-      <div class="panel p-coins" data-scene-from="2"><canvas data-sim="coin"></canvas></div>
+      <div class="panel p-coins"><canvas data-sim="coin"></canvas></div>
     </div>
   </div>
 </section>
 
-<section class="slide" id="sl-interval" data-scenes="2" data-refs="p-10.jpg,p-11.jpg">
+<section class="slide" id="sl-interval" data-scenes="3" data-refs="p-10.jpg,p-11.jpg,p-11.jpg">
   <div class="grid">
     <div class="zone copy t-body">
       <p>Будем описывать положение монетки расстоянием от её<br>центра до верхней линии полосы, в которую он попал</p>
       <p>Это число принимает случайные значения от <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">0</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{0}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">0</span></span></span></span></span></span> до <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">1</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">1</span></span></span></span></span></span><br>Монетка пересечёт линию, если число попадает в две<br>крайние четверти. Они занимают половину отрезка</p>
       <p>Значит, вероятность равна <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi><mstyle scriptlevel="0" displaystyle="false"><mfrac><mn mathvariant="bold">1</mn><mn mathvariant="bold">2</mn></mfrac></mstyle></mi></mrow><annotation encoding="application/x-tex">\boldsymbol{\tfrac12}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></span></p>
-      <p><b>Чему равна вероятность, если диаметр <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">d</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span></span></span></span></span></span>? Ответ: <span class="fill"><span class="blur-reveal" data-reveal="2"><span class="acc"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">d</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span></span></span></span></span></span></span></span></span></b></p>
+      <p data-scene-from="2"><b>Чему равна вероятность, если диаметр <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">d</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span></span></span></span></span></span>?: <span class="fill"><span class="blur-reveal" data-reveal="3"><span class="acc"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">d</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">d</span></span></span></span></span></span></span></span></span></b></p>
     </div>
     <div class="rail">
       <div class="panel p-thermo ill-box" data-ill="sl-interval-1"></div>
@@ -1549,6 +1549,7 @@ body.blanked #stage { visibility: hidden; }
     this.line2 = this.H / 2 + this.T / 2;
     this.drops = []; this._anim = false; this._last = null;
     this.recent = []; this.KEEP = 14;          // монеты, ещё держащие контур
+    this.mode = 1;                             // сцена 1: круги+2 линии; сцена 2: +центры+полосы
     var self = this;
     this._tickB = function () { self._tick(); };
     this.reset();
@@ -1557,18 +1558,41 @@ body.blanked #stage { visibility: hidden; }
 
   Coin.prototype.resetState = function () {
     Lab.prototype.resetState.call(this);
-    this.drops = []; this._last = null; this.recent = [];
+    this.drops = []; this._last = null; this.recent = []; this.all = [];
+  };
+  /* сцена: 1 — круги без центров и без полос; 2 — центры всех монет + опасные полосы */
+  Coin.prototype.onScene = function (k) {
+    var m = (k >= 2) ? 2 : 1;
+    if (m !== this.mode) { this.mode = m; this.rebake(); }
+  };
+  /* пере-запечь офскрин из накопленных монет под текущий режим */
+  Coin.prototype.rebake = function () {
+    var c = this.octx;
+    c.clearRect(0, 0, this.W, this.H);
+    c.fillStyle = this.C.card; c.fillRect(0, 0, this.W, this.H);
+    this.drawBase(c);
+    for (var i = 0; i < this.all.length; i++) this._dot(c, this.all[i]);
+    this.draw();
+  };
+  /* точка-центр (только в режиме 2) */
+  Coin.prototype._dot = function (c, o) {
+    if (this.mode < 2) return;
+    c.globalAlpha = 0.9; c.fillStyle = o.hit ? this.C.brick : this.C.steel;
+    c.beginPath(); c.arc(o.x, o.y, 3, 0, 7); c.fill();
+    c.globalAlpha = 1;
   };
 
   /* фон: зоны во всю ширину + 2 линии пола (как в статике) */
   Coin.prototype.drawBase = function (c) {
     var W = this.W, r = this.r, l1 = this.line1, l2 = this.line2, C = this.C;
-    c.globalAlpha = 0.10; c.fillStyle = C.steel;          // спокойная середина
-    c.fillRect(0, l1 + r, W, (l2 - r) - (l1 + r));
-    c.globalAlpha = 0.16; c.fillStyle = C.brick;          // опасные зоны (< r от линии)
-    c.fillRect(0, l1, W, r);
-    c.fillRect(0, l2 - r, W, r);
-    c.globalAlpha = 1;
+    if (this.mode >= 2) {                                 // полосы — только сцена 2
+      c.globalAlpha = 0.10; c.fillStyle = C.steel;        // спокойная середина
+      c.fillRect(0, l1 + r, W, (l2 - r) - (l1 + r));
+      c.globalAlpha = 0.16; c.fillStyle = C.brick;        // опасные зоны (< r от линии)
+      c.fillRect(0, l1, W, r);
+      c.fillRect(0, l2 - r, W, r);
+      c.globalAlpha = 1;
+    }
     c.strokeStyle = C.steel; c.lineWidth = 3; c.lineCap = 'butt';
     c.beginPath();
     c.moveTo(0, l1 + 0.5); c.lineTo(W, l1 + 0.5);
@@ -1579,10 +1603,8 @@ body.blanked #stage { visibility: hidden; }
   /* осевшая монета в аккумулятор: только точка-центр статусного цвета —
      «важно только положение центра»; контур живёт во freshest-слое */
   Coin.prototype.stamp = function (c, o) {
-    var col = o.hit ? this.C.brick : this.C.steel;
-    c.globalAlpha = 0.9; c.fillStyle = col;
-    c.beginPath(); c.arc(o.x, o.y, 3, 0, 7); c.fill();
-    c.globalAlpha = 1;
+    this.all.push(o);
+    this._dot(c, o);                          // центр — только в режиме 2
     this.recent.push(o);
     if (this.recent.length > this.KEEP) this.recent.shift();
   };
@@ -1661,15 +1683,15 @@ body.blanked #stage { visibility: hidden; }
     var C = this.C, r = this.r;
     for (var i = 0; i < this.drops.length; i++) {
       var d = this.drops[i];
-      if (d.flash) {                                    // вспышка последней в пакете
+      if (d.flash) {                                    // вспышка последней в пакете (нейтральная)
         c.globalAlpha = Math.max(0, 1 - d.f / 4);
-        c.strokeStyle = C.mustard; c.lineWidth = 3;
+        c.strokeStyle = C.steel; c.lineWidth = 3;
         c.beginPath(); c.arc(d.x, d.y, r, 0, 7); c.stroke();
         continue;
       }
-      var land = d.f >= 6;                              // кадр посадки — горчица
+      var land = d.f >= 6;                              // кадр посадки — статусный цвет (без горчицы)
       c.globalAlpha = land ? 1 : 0.35 + 0.07 * d.f;
-      c.strokeStyle = land ? C.mustard : C.steel;
+      c.strokeStyle = land ? (d.hit ? C.brick : C.steel) : C.steel;
       c.lineWidth = land ? 3 : 2.2;
       c.beginPath();
       c.arc(d.x, d.y, r * DROP[Math.min(d.f, 7)], 0, 7);
