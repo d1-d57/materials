@@ -384,7 +384,7 @@ body.blanked #stage { visibility: hidden; }
 .scene-3 .blur-reveal[data-reveal="3"],
 .scene-4 .blur-reveal[data-reveal="2"],
 .scene-4 .blur-reveal[data-reveal="3"],
-.scene-4 .blur-reveal[data-reveal="4"]{filter:none;opacity:1;color:inherit}
+.scene-4 .blur-reveal[data-reveal="4"]{filter:none;opacity:1;color:var(--accent)}
 .formula .katex{font-size:1.0em}
 
 /* ===== выразительность: формулы-результаты и финальный ответ — крупнее (герои) ===== */
@@ -798,6 +798,7 @@ body.blanked #stage { visibility: hidden; }
       card: t('--card', '#fff'), ink: t('--ink', '#333'),
       rule: t('--rule', '#c3cedd'), steel: t('--steel', '#8195ad'),
       brick: t('--brick', '#bf5b4f'), mustard: t('--mustard', '#c9a23c'),
+      cgreen: t('--cgreen', '#7ea474'), corange: t('--corange', '#d98e4a'),
       pastels: [t('--p1', '#b18ec0'), t('--p2', '#7b9bd1'), t('--p3', '#8fae72'),
                 t('--p4', '#d9b349'), t('--p5', '#c96a55')]
     };
@@ -984,9 +985,20 @@ body.blanked #stage { visibility: hidden; }
     if (this._play) this._play.textContent = (this.running && this.speed === 1) ? '❚❚' : '▸';
     if (this._fast) this._fast.textContent = (this.running && this.speed > 1) ? '❚❚' : '▸▸';
   };
-  Lab.prototype.settle = function () {       // состояние покоя при входе на сцену
-    if (this.n) return;
-    this.reset();
+  /* пере-замер размеров при ПОКАЗЕ (init-гонка: конструктор мерил до вёрстки) */
+  Lab.prototype.measure = function () {
+    var w = this.cv.clientWidth, h = this.cv.clientHeight;
+    if (!w || !h) return;                         // вёрстка ещё не готова — не трогаем
+    if (w === this.W && h === this.H) return;     // размер тот же — буферы не пересоздаём
+    this.W = w; this.H = h;
+    var dpr = Math.min(devicePixelRatio || 1, 2);
+    this.cv.width = w * dpr; this.cv.height = h * dpr;
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.off.width = this.cv.width; this.off.height = this.cv.height;
+    this.octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  Lab.prototype.settle = function () {       // состояние покоя при входе на сцену (зовётся из activate)
+    this.reset();                            // всегда с нуля — сброс на каждом входе
     REDUCED ? this.throwN(this.target) : this.play();
   };
 
@@ -1275,7 +1287,12 @@ body.blanked #stage { visibility: hidden; }
       }
       var exp = registry[id];
       if (exp && exp.onScene) exp.onScene(k);
-      if (justShown) { if (exp.pause) exp.pause(); if (exp.reset) exp.reset(); if (exp.play) exp.play(); }  /* ноль + авто-запуск (как кнопка «заново») */
+      if (justShown) {                                    /* ноль + авто-запуск (единый хук покоя) */
+        if (exp.pause) exp.pause();
+        if (exp.measure) exp.measure();                   /* init-гонка: пере-замер при показе */
+        if (exp.settle) exp.settle();                     /* settle() = reset()+прогон, sim переопределяют */
+        else { if (exp.reset) exp.reset(); if (exp.play) exp.play(); }
+      }
     });
   }
   function watch() {
@@ -1350,9 +1367,8 @@ body.blanked #stage { visibility: hidden; }
 
     /* ⏵ после покоя докидывает следующее окно — кривые растут вправо */
     Conv.prototype.settle = function () {
-      if (this.n) return;
-      this.reset();
-      this.throwN(100);                       // 0..100 уже отрисовано
+      this.reset();                           // всегда с нуля на входе
+      this.throwN(50);                        // 0..50 уже отрисовано (шумный старт вне области — скрыт)
       if (!window.LabCore.REDUCED) this.play(); else this.throwN(this.target - this.n);
     };
     Conv.prototype.play = function () {
@@ -1525,7 +1541,7 @@ body.blanked #stage { visibility: hidden; }
   var DROP = [1.30, 1.24, 1.17, 1.10, 1.045, 0.992, 0.978, 1.0];
 
   function Coin(cv) {
-    Lab.call(this, cv, { spacing: 200, seed: 9151, autoTarget: 200,
+    Lab.call(this, cv, { spacing: 200, seed: 9151, autoTarget: 200, endless: true,
                          level: 0.5, sparkLo: 0.2, sparkHi: 0.8,
                          sparkEvery: 2 });
     this.r = this.T / 4;                       // d = T/2 ⇒ r = T/4
@@ -1694,7 +1710,7 @@ body.blanked #stage { visibility: hidden; }
 
   function Prob(cv) {
     Lab.call(this, cv, {
-      spacing: 96, seed: 19, autoTarget: 500,
+      spacing: 96, seed: 19, autoTarget: 500, endless: true,
       level: 2 / Math.PI / 2,            /* p/2 = 1/π */
       sparkLo: .1, sparkHi: .6
     });
@@ -1751,7 +1767,7 @@ body.blanked #stage { visibility: hidden; }
   function Polygons(cv) {
     var Lab = window.LabCore.Lab;
     Lab.call(this, cv, {
-      spacing: 158, seed: 208, autoTarget: 110,
+      spacing: 158, seed: 208, autoTarget: 110, endless: true,
       level: 2 / Math.PI / 2,            /* p/2 = 1/π ≈ .318 — риска на спарклайне */
       sparkEvery: 3, sparkLo: 0.10, sparkHi: 0.55
     });
@@ -1840,7 +1856,7 @@ body.blanked #stage { visibility: hidden; }
   var Lab = window.LabCore.Lab;
 
   function Circle(cv) {
-    Lab.call(this, cv, { spacing: 158, seed: 158, autoTarget: 100, level: 1 / Math.PI,
+    Lab.call(this, cv, { spacing: 158, seed: 158, autoTarget: 100, endless: true, level: 1 / Math.PI,
                          sparkEvery: 5 });
     this.T = this.H / 12;             // ровно 12 периодов разлиновки в панели —
     this.r = this.T / (2 * Math.PI);  // равномерный cy честен; периметр = T («длина 1»)
@@ -1895,7 +1911,7 @@ body.blanked #stage { visibility: hidden; }
   window.LabKinds['result'] = function (cv) {
     var Lab = window.LabCore.Lab;
     var exp = Object.create(Lab.prototype);
-    Lab.call(exp, cv, { spacing: 150, seed: 30141, autoTarget: 120, level: 2 / Math.PI,
+    Lab.call(exp, cv, { spacing: 150, seed: 30141, autoTarget: 120, endless: true, level: 2 / Math.PI,
                         sparkEvery: 5 });
     exp.drawBase = exp.lines.bind(exp);
 
