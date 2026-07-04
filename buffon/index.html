@@ -331,9 +331,9 @@ body.blanked #stage { visibility: hidden; }
 #sl-area .copy { grid-area: 2 / 2; }
 #sl-area .copy p + p { margin-top: calc(1em * var(--lh) - 1px); }
 #sl-area .rail { grid-area: 1 / 3 / 3 / 4; background: var(--board); position: relative; }
-/* панели стоят вплотную (стык y=406 — как в оригинале p-41) */
-#sl-area .p-cos { position: absolute; left: 14px; top: 178px; width: 302px; height: 228px; }
-#sl-area .p-kin { position: absolute; left: 14px; top: 406px; width: 302px; height: 225px; }
+/* ЗАХОД-03: две статичные иллюстрации → один живой канвас cos-area на всю доску
+   (высокий: график скорости сверху / кинематика+спидометр снизу) */
+#sl-area .p-anim { position: absolute; left: 14px; top: 96px; width: 317px; height: 618px; }
 /* выносная формула: кегль 40 (полоса 39px на эталоне); line-height и margin-top запинены
    на шаг тела 53.9px, чтобы крупный кегль не сбивал ритм нижних абзацев */
 #sl-area .formula { font-size: 40px; line-height: 53.9px; margin-top: 53.9px; text-align: center; }
@@ -672,8 +672,7 @@ body.blanked #stage { visibility: hidden; }
       <p data-scene-from="5">Площадь под графиком равна пути <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold-italic">x</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4444em;"></span><span class="mord"><span class="mord"><span class="mord boldsymbol">x</span></span></span></span></span></span>, то есть <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">1</mi></mrow><annotation encoding="application/x-tex">\boldsymbol{1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord"><span class="mord"><span class="mord mathbf">1</span></span></span></span></span></span></p>
     </div>
     <div class="rail">
-      <div class="panel p-cos ill-box" data-ill="sl-area-1"></div>
-      <div class="panel p-kin ill-box" data-ill="sl-area-2" data-scene-from="3"></div>
+      <div class="panel p-anim" data-scene-from="3"><canvas data-sim="cos-area"></canvas></div>
     </div>
   </div>
 </section>
@@ -2412,7 +2411,11 @@ body.blanked #stage { visibility: hidden; }
       this.draw();
     };
     /* ---- контракт покоя/сцен ---- */
-    CosArea.prototype.onScene = function (k) { this.reveal = k; this.draw(); };
+    CosArea.prototype.onScene = function (k) {
+      var rise = k >= 3 && this.reveal < 3;   // вход в раскрытие — играем с нуля (G3)
+      this.reveal = k;
+      if (rise) this.settle(); else this.draw();
+    };
     CosArea.prototype.reset = function () {
       this.stop(); this.t = 0; this.e = 0; this.last = 0; this.draw();
     };
