@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ANIM-01 — площадь под косинусом (прототип v4)</title>
+<style>
+  body{margin:0;background:#eceae3;color:#33383d;font-family:'Glacial Indifference',ui-sans-serif,system-ui,sans-serif;
+       display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  #ca-wrap{max-width:720px;width:100%;}
+</style>
+</head>
+<body>
+<!--
+  ПРОТОТИП «площадь под косинусом» (ANIM-01, v4).
+  Следим за ОРДИНАТОЙ (высота=sin); абсцисса убрана. Без слов и тригонометрии —
+  только точки-границы (единичная окружность; ось процесса 0…π/2 на ОБОИХ графиках).
+  Величины связаны ЦВЕТОМ: синий=высота, красный=скорость (спидометр+нижняя кривая),
+  золотой=площадь. При портировании → lab-ext data-sim="cos-area", канон-палитра/шрифты,
+  3 сцены (см. ANIM-01-cos-area-spec.md), автозапуск/сброс по G3, мораль — в тексте слайда.
+  Мат-сверка со слайдом 21 (sl-area) при сборке.
+-->
+<h2 class="sr-only">Точка едет по четверти единичной окружности; её ордината растёт, скорость роста показана спидометром и нижним графиком; площадь под нижней кривой равна пройденной высоте и доходит до единицы. Синий — высота, красный — скорость, золотой — площадь.</h2>
+<div id="ca-wrap">
+  <canvas id="ca-cv" width="720" height="460" style="width:100%;height:auto;display:block;"></canvas>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:8px;">
+    <button id="ca-play" style="font:600 16px ui-sans-serif,system-ui;width:44px;height:36px;border:1px solid #c3cedd;background:#fff;border-radius:8px;cursor:pointer;color:#33383d;">▸</button>
+    <input id="ca-sl" type="range" min="0" max="1000" value="0" style="flex:1;accent-color:#c9a23c;cursor:pointer;">
+  </div>
+</div>
+<script>
+(function(){
+  var cv=document.getElementById('ca-cv'), ctx=cv.getContext('2d');
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=720*dpr; cv.height=460*dpr; ctx.scale(dpr,dpr);
+  var W=720,H=460,PI=Math.PI,HALF=PI/2;
+  var C={ink:'#33383d',rule:'#c3cedd',steel:'#6f86a6',brick:'#bf5b4f',gold:'#c9a23c',goldF:'rgba(201,162,60,0.30)',faint:'#9aa3ad'};
+  var O={x:80,y:424},R=340, sp={x:372,y:126,r:52};
+  var G1={x0:470,x1:700,base:236,top:64};
+  var G2={x0:470,x1:700,base:432,top:262};
+  var t=0, playing=false, last=0;
+  var slider=document.getElementById('ca-sl'), btn=document.getElementById('ca-play');
+
+  function gx(g,a){return g.x0+(a/HALF)*(g.x1-g.x0);}
+  function gy(g,v){return g.base+v*(g.top-g.base);}
+  function arrow(x1,y1,x2,y2,col,w){var a=Math.atan2(y2-y1,x2-x1),h=9;
+    ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-h*Math.cos(a-0.4),y2-h*Math.sin(a-0.4));ctx.lineTo(x2-h*Math.cos(a+0.4),y2-h*Math.sin(a+0.4));ctx.closePath();ctx.fill();}
+  function lbl(x,y,s,col,al){ctx.fillStyle=col;ctx.font='12px ui-monospace,monospace';ctx.textAlign=al||'left';ctx.textBaseline='alphabetic';ctx.fillText(s,x,y);}
+  function frame(g){
+    ctx.strokeStyle=C.rule;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(g.x0,g.top-6);ctx.lineTo(g.x0,g.base);ctx.lineTo(g.x1+6,g.base);ctx.stroke();
+    ctx.setLineDash([3,4]);ctx.strokeStyle='#e2e6eb';
+    ctx.beginPath();ctx.moveTo(g.x0,gy(g,1));ctx.lineTo(g.x1,gy(g,1));ctx.stroke();ctx.setLineDash([]);
+    lbl(g.x0-8,gy(g,1)+4,'1',C.faint,'right'); lbl(g.x0-8,g.base+4,'0',C.faint,'right');
+    lbl(g.x1,g.base+18,'π/2',C.faint,'center');
+  }
+  function curve(g,fn,col){ctx.strokeStyle=col;ctx.lineWidth=2.6;ctx.beginPath();
+    for(var i=0;i<=120;i++){var a=HALF*i/120,X=gx(g,a),Y=gy(g,fn(a));i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);}ctx.stroke();}
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var a=t*HALF, ca=Math.cos(a), sa=Math.sin(a);
+    var P={x:O.x+R*ca, y:O.y-R*sa};
+
+    ctx.strokeStyle=C.rule;ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(O.x,O.y+8);ctx.lineTo(O.x,O.y-R-14);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(O.x-8,O.y);ctx.lineTo(O.x+R+14,O.y);ctx.stroke();
+    ctx.strokeStyle='#cfd8e2';ctx.lineWidth=2;ctx.beginPath();ctx.arc(O.x,O.y,R,-HALF,0);ctx.stroke();
+    ctx.fillStyle=C.faint;
+    ctx.beginPath();ctx.arc(O.x,O.y-R,3,0,7);ctx.fill();
+    ctx.beginPath();ctx.arc(O.x+R,O.y,3,0,7);ctx.fill();
+    lbl(O.x-12,O.y-R+4,'1',C.faint,'right'); lbl(O.x+R,O.y+20,'1',C.faint,'center');
+
+    ctx.setLineDash([3,4]);ctx.strokeStyle=C.steel;ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(O.x,P.y);ctx.stroke();ctx.setLineDash([]);
+    ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(O.x,O.y);ctx.lineTo(O.x,P.y);ctx.stroke();
+    ctx.fillStyle=C.steel;ctx.beginPath();ctx.arc(O.x,P.y,4,0,7);ctx.fill();
+
+    ctx.strokeStyle=C.ink;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(O.x,O.y);ctx.lineTo(P.x,P.y);ctx.stroke();
+    var vlen=64, vdx=-sa, vdy=-ca;
+    arrow(P.x,P.y,P.x+vlen*vdx,P.y+vlen*vdy,C.brick,2.4);
+    ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(P.x,P.y,5.5,0,7);ctx.fill();
+
+    ctx.strokeStyle='#cfd8e2';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(sp.x,sp.y,sp.r,0,7);ctx.stroke();
+    ctx.fillStyle=C.faint;ctx.beginPath();ctx.arc(sp.x,sp.y,2.5,0,7);ctx.fill();
+    var tx=sp.x+sp.r*vdx, ty=sp.y+sp.r*vdy;
+    ctx.strokeStyle=C.gold;ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(sp.x,sp.y);ctx.lineTo(sp.x,sp.y+sp.r*vdy);ctx.stroke();
+    arrow(sp.x,sp.y,tx,ty,C.brick,2);
+    ctx.fillStyle=C.brick;ctx.beginPath();ctx.arc(tx,ty,3,0,7);ctx.fill();
+
+    frame(G1); curve(G1,Math.sin,C.steel);
+    var m1x=gx(G1,a),m1y=gy(G1,sa);
+    ctx.setLineDash([3,3]);ctx.strokeStyle=C.steel;ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.moveTo(G1.x0,m1y);ctx.lineTo(m1x,m1y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=C.steel;ctx.beginPath();ctx.arc(m1x,m1y,4.5,0,7);ctx.fill();
+
+    frame(G2);
+    ctx.fillStyle=C.goldF;ctx.beginPath();ctx.moveTo(G2.x0,G2.base);
+    for(var i=0;i<=100;i++){var aa=a*i/100;ctx.lineTo(gx(G2,aa),gy(G2,Math.cos(aa)));}
+    ctx.lineTo(gx(G2,a),G2.base);ctx.closePath();ctx.fill();
+    curve(G2,Math.cos,C.brick);
+    var m2x=gx(G2,a),m2y=gy(G2,ca);
+    ctx.fillStyle=C.brick;ctx.beginPath();ctx.arc(m2x,m2y,4.5,0,7);ctx.fill();
+  }
+
+  function tick(ts){ if(!playing)return; if(!last)last=ts; var d=(ts-last)/1000; last=ts;
+    t+=d/6.5; if(t>=1){t=1; playing=false; btn.textContent='↺';} slider.value=Math.round(t*1000); draw();
+    if(playing)requestAnimationFrame(tick); }
+  btn.onclick=function(){ if(t>=1)t=0; playing=!playing; last=0;
+    btn.textContent=playing?'❚❚':(t>=1?'↺':'▸'); if(playing)requestAnimationFrame(tick); else draw(); };
+  slider.oninput=function(){ playing=false; last=0; btn.textContent='▸'; t=slider.value/1000; draw(); };
+  draw();
+})();
+</script>
+</body>
+</html>
