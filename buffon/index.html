@@ -1029,7 +1029,7 @@ body.blanked #stage { visibility: hidden; }
        3-4: + популяция игл длины 1 с горчичной третью
      ============================================================ */
   function Yellow(cv) {
-    Lab.call(this, cv, { spacing: 112, seed: 977, autoTarget: 320,
+    Lab.call(this, cv, { spacing: 158, seed: 977, autoTarget: 320,
                          level: 2 / (3 * Math.PI), sparkEvery: 3,
                          sparkLo: 0.02, sparkHi: 0.45 });
     this.mode = 1; this.tri = []; this.ndl = [];
@@ -1934,7 +1934,7 @@ body.blanked #stage { visibility: hidden; }
   window.LabKinds['result'] = function (cv) {
     var Lab = window.LabCore.Lab;
     var exp = Object.create(Lab.prototype);
-    Lab.call(exp, cv, { spacing: 150, seed: 30141, autoTarget: 120, endless: true, level: 2 / Math.PI,
+    Lab.call(exp, cv, { spacing: 158, seed: 30141, autoTarget: 120, endless: true, level: 2 / Math.PI,
                         sparkEvery: 5 });
     exp.drawBase = exp.lines.bind(exp);
 
