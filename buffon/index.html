@@ -311,13 +311,7 @@ body.blanked #stage { visibility: hidden; }
 #sl-condition .copy { grid-area: 2 / 2; }
 #sl-condition .board { grid-area: 3 / 1 / 4 / 4; background: var(--board); position: relative; }
 /* панель-схема (игла, y, α) — на месте эталона: canvas 551×464, в доске top=464−446=18 */
-#sl-condition .p-needle { position: absolute; left: 292px; top: 18px; width: 1106px; height: 327px; }
-#sl-condition .p-legend { position: absolute; left: 42px; top: 108px; width: 212px; height: 128px;
-  display: grid; align-content: center; gap: 14px; padding-left: 18px; font-size: 24px; }
-#sl-condition .p-legend .dot { display: inline-block; width: 13px; height: 13px;
-  border-radius: 50%; margin-right: 10px; vertical-align: -1px; }
-#sl-condition .p-legend .dot.b { background: var(--brick); }
-#sl-condition .p-legend .dot.s { background: var(--steel); }
+#sl-condition .p-needle { position: absolute; left: 167px; top: 18px; width: 1106px; height: 327px; }
 /* «y» в выносной y ⩽ cos α на рендере светлый (не болд), сама формула болд */
 #sl-condition .t-math .rg { font-weight: 400; }
 #sl-condition .lab-row { right: 64px; bottom: 14px; }
@@ -660,7 +654,6 @@ body.blanked #stage { visibility: hidden; }
     </div>
     <div class="board">
       <div class="panel p-needle"><canvas data-sim="phase-mass"></canvas></div>
-  <div class="panel p-legend t-body"><span><i class="dot b"></i>пересекает</span><span><i class="dot s"></i>не пересекает</span></div>
     </div>
   </div>
 </section>
@@ -2075,7 +2068,7 @@ body.blanked #stage { visibility: hidden; }
     this.layout = layout;                       // 'condition' | 'canvas'
     Lab.call(this, cv, layout === 'canvas'
       ? { seed: 7351, autoTarget: 4000, level: 2 / PI, sparkEvery: 8 }
-      : { seed: 5077, autoTarget: 800, dash: false });
+      : { seed: 5077, autoTarget: 800, dash: false, endless: true });
     this.pts = [];                              // все точки (для волны)
     this.recent = []; this.KEEP = 24;           // свежие иглы полосы
     this.mode = 2;                              // 2 = статус-цвета; 3 = + кривая
@@ -2169,9 +2162,8 @@ body.blanked #stage { visibility: hidden; }
       if (this.recent.length > this.KEEP) this.recent.shift();
       this.stampDot(c, a, y, hit ? this.C.brick : this.C.steel, .85);
     } else {
-      var thr = this.waving ? this.waveT : Infinity;  // статусные цвета всегда
-      var st = this.dotStyle(pt, thr);
-      this.stampDot(c, a, y, st[0], st[1]);
+      if (this.pts.length > this.o.autoTarget) this.pts.shift();  // катящееся окно — не заливает
+      this.redrawAll(this.waving ? this.waveT : Infinity);         // статусные цвета всегда
     }
     return hit;
   };
