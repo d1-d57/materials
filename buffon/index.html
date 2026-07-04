@@ -377,6 +377,8 @@ body.blanked #stage { visibility: hidden; }
 :root{--accent:#785a18}   /* охра: переменная не была определена в деке — лечит тёмные акценты B1 */
 .katex{font-size:1.02em}
 .acc,.acc .katex,.acc .katex *{color:var(--accent)!important}
+/* G5: переход 8→k на sl-polygons — изменившийся символ подсвечен золотом */
+#sl-polygons [data-scene-from="4"],#sl-polygons [data-scene-from="4"] .katex *{color:var(--accent)}
 .blur-reveal{filter:blur(5.5px) saturate(.55);opacity:.9;color:var(--steel);
   transition:filter .5s ease,opacity .5s ease,color .5s ease;will-change:filter}
 .scene-2 .blur-reveal[data-reveal="2"],
