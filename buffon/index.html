@@ -1874,8 +1874,7 @@ body.blanked #stage { visibility: hidden; }
   function Circle(cv) {
     Lab.call(this, cv, { spacing: 158, seed: 158, autoTarget: 100, endless: true, level: 1 / Math.PI,
                          sparkEvery: 5 });
-    this.T = this.H / 12;             // ровно 12 периодов разлиновки в панели —
-    this.r = this.T / (2 * Math.PI);  // равномерный cy честен; периметр = T («длина 1»)
+    this.r = this.T / (2 * Math.PI);  // T = spacing 158 — как yellow/polygons/result (A3); периметр = T («длина 1»)
     this.drawBase = this.lines.bind(this);
     this.reset();
   }
