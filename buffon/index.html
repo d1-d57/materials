@@ -317,6 +317,7 @@ body.blanked #stage { visibility: hidden; }
 #sl-condition .lab-row { right: 64px; bottom: 14px; }
 #sl-convergence .lab-row { left: 14px; right: auto; bottom: 10px; }   /* свободный угол под осью Y */
 #sl-phase .lab-row { right: 74px; bottom: 12px; }                     /* не трогаем подпись π/2 */
+#sl-result .lab-row { transform: none; right: 8px; }                  /* A6: JS-инлайн right:8px + остаточный translateX(50%) выносил кнопки на 48px за панель */
 
 /* Фазовый портрет-вау: доска во весь холст, одна широкая составная панель —
    побайтовый повтор панели divider2 (p-31), но без заголовка (промер p-39).
