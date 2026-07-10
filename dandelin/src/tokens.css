@@ -1,0 +1,13 @@
+:root{
+  /* fixed type tokens — body is NEVER auto-fitted */
+  --t-lead:50px; --t-body:38px; --t-dense:33px; --t-caption:20px;
+  --inset:56px;                                   /* one left inset across archetypes */
+  --font-display:'Forum',serif;                   /* CAPS only */
+  --font-body:'Glacial Indifference','Noto Sans',sans-serif;
+  /* full canon palette — define ALL (undefined var in extracted SVG = black fill) */
+  --paper:#e6e5e1; --board:#a7c2cb; --card:#ffffff; --ink:#333333;
+  --accent:#785a18; --marker:#c0aa5a;
+  --brick:#bf5b4f; --steel:#8195ad; --mustard:#c9a23c; --rule:#c3cedd; --blush:#f0e2de;
+  --p1:#b18ec0; --p2:#7b9bd1; --p3:#8fae72; --p4:#d9b349; --p5:#c96a55;
+  --cgreen:#7ea474; --corange:#d98e4a;
+}

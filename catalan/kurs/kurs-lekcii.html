@@ -1,0 +1,2049 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Каталан: пути, деревья, парковки — курс целиком</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  :root{
+    --text:#211f1b; --muted:#726c60; --accent:#2f6e8e; --accent-soft:#e8f0f4;
+    --bg:#fbfaf6; --rule:#e7e2d6; --warm:#c9743a; --warm-soft:#f6ece2; --shade:#dfeaf0;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+    font-size:21px;line-height:1.7;font-optical-sizing:auto}
+
+  /* ── Макет: [оглавление] [текст ≤820] [поле заметок ~195] ── */
+  .layout{display:grid;grid-template-columns:210px minmax(0,1015px);gap:46px;
+    max-width:1275px;margin:0 auto;padding:52px 30px 130px}
+  main{min-width:0}
+  article{max-width:820px}
+
+  /* ── Боковое оглавление (sticky) ── */
+  .toc{position:sticky;top:74px;align-self:start;max-height:calc(100vh - 96px);
+    overflow:auto;font-family:"Source Sans 3",system-ui,sans-serif;font-size:.83rem;
+    line-height:1.4;border-right:1px solid var(--rule);padding-right:14px}
+  .toc>summary{list-style:none;cursor:default;font-weight:600;font-size:.74rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+  .toc>summary::-webkit-details-marker{display:none}
+  .toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+  .toc li{counter-increment:toc;margin:.16em 0}
+  .toc a{display:block;color:var(--muted);text-decoration:none;border:0;
+    padding:.18em .3em .18em 1.7em;border-radius:3px;position:relative}
+  .toc a::before{content:counter(toc);position:absolute;left:.2em;
+    color:#b7ae9c;font-variant-numeric:tabular-nums}
+  .toc a:hover{color:var(--accent);background:var(--accent-soft)}
+  .toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+  .toc a.active::before{color:var(--accent)}
+
+  /* ── Шапка ── */
+  h1{font-size:2.5rem;line-height:1.12;font-weight:600;letter-spacing:-.015em;margin:.05em 0 .3em}
+  .subtitle{color:var(--muted);font-size:1.25rem;font-style:italic;line-height:1.45;margin:0 0 1.1em}
+  .meta{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--muted);border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);padding:.7em 0;margin:0 0 2.2em}
+
+  /* ── Заголовки разделов (авто-нумерация) ── */
+  article{counter-reset:sec}
+  h2{font-family:"Source Sans 3",system-ui,sans-serif;font-size:1.62rem;font-weight:600;
+    letter-spacing:-.01em;line-height:1.2;margin:2.5em 0 .55em;counter-increment:sec;
+    scroll-margin-top:74px}
+  h2::before{content:counter(sec) ". ";color:var(--accent);font-weight:600}
+  .lead{font-size:1.18rem;line-height:1.6}
+  p{margin:0 0 1.05em}
+  strong,b{font-weight:600}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid #bcd2dd}
+  a:hover{border-bottom-color:var(--accent)}
+  .up{font-variant-numeric:tabular-nums}
+
+  /* ── Врезка-прозрение ── */
+  .insight{background:var(--accent-soft);border-left:3px solid var(--accent);
+    border-radius:2px;padding:.8em 1.15em;margin:1.6em 0;font-size:1rem;line-height:1.55}
+  .insight .tag{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.2em}
+
+  /* ── Нумерованные определения / теоремы / доказательства / примеры ── */
+  .stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);
+    scroll-margin-top:74px}
+  .stmt .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.98rem;
+    letter-spacing:.01em}
+  .defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+  .defn .lbl{color:var(--accent)}
+  .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+  .thm .lbl{color:var(--warm)}
+  .proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;
+    padding-left:1.05em;margin:1em 0}
+  .proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+  .example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+  .example .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.9rem;
+    letter-spacing:.02em;color:var(--muted);display:block;margin-bottom:.25em;
+    text-transform:uppercase}
+
+  /* ── Заметки на полях (float в правый жёлоб) ── */
+  .mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
+    font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;line-height:1.5;
+    color:var(--muted);border-left:2px solid var(--rule);padding-left:.75em}
+  .mn b{color:var(--text)}
+
+  /* ── Иллюстрации: готовые SVG ── */
+  figure{margin:2.1em 0;text-align:center}
+  figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+  figcaption{color:var(--muted);font-size:.92rem;line-height:1.45;font-style:italic;
+    margin:.75em auto 0;max-width:36em;text-wrap:balance}
+
+  /* ── Плейсхолдеры (рисует аналитик) ── */
+  figure.ph{border:1.7px dashed var(--accent);background:
+      repeating-linear-gradient(135deg,transparent 0 11px,rgba(47,110,142,.04) 11px 22px),
+      #f7f4ee;
+    border-radius:7px;padding:1.15em 1.25em 1em;text-align:left}
+  figure.ph .ph-tag{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.68rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--accent);display:flex;
+    align-items:center;gap:.5em;margin-bottom:.5em}
+  figure.ph .ph-tag::before{content:"✎";font-size:1.05em}
+  figure.ph .ph-what{font-family:"Source Serif 4",serif;font-size:1rem;line-height:1.5;
+    color:var(--text);font-style:normal;min-height:2.4em}
+  figure.ph figcaption{font-style:italic;color:var(--muted);text-align:left;margin:.7em 0 0;max-width:none}
+
+  .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+  .katex{font-size:1.05em}
+  hr.sep{border:0;height:1px;background:var(--rule);margin:2.6em 0}
+  .foot{color:var(--muted);font-size:.92rem;font-style:italic;border-top:1px solid var(--rule);
+    margin-top:3em;padding-top:1.2em}
+
+  /* SVG helpers (из исходного файла — не менять) */
+  .s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+  .s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+  .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-fillw{fill:var(--warm)}
+  .s-fillsh{fill:var(--shade)}
+  .s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+  .s-node-r{fill:var(--text)}
+  .s-txt{font-family:"Source Sans 3",sans-serif;font-size:13px;fill:var(--text)}
+  .s-txt-w{font-family:"Source Sans 3",sans-serif;font-size:13px;fill:#fff;font-weight:600}
+  .s-txt-m{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:var(--muted)}
+  .s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+  /* ── Адаптив ── */
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:0;padding:34px 20px 90px}
+    .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+      padding:0 0 1em;margin-bottom:2em}
+    .toc>summary{cursor:pointer}
+    .toc ol{columns:2;column-gap:22px}
+    h1{font-size:2rem}
+    .mn{float:none;width:auto;margin:1.2em 0;border-left:3px solid var(--rule);
+      padding:.4em 0 .4em .9em}
+  }
+  @media (max-width:520px){
+    body{font-size:19px}
+    h1{font-size:1.7rem}.subtitle{font-size:1.1rem}
+    .toc ol{columns:1}
+    .katex{font-size:1em}
+  }
+
+  /* ══════════════════════ Таб-бар ══════════════════════ */
+  .tabbar{position:sticky;top:0;z-index:50;display:flex;justify-content:center;gap:2px;
+    background:var(--bg);border-bottom:1px solid var(--rule);
+    padding:0 20px;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+  .tabbar-inner{display:flex;gap:2px;max-width:1275px;width:100%}
+  .tab-btn{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.92rem;font-weight:600;
+    letter-spacing:.01em;color:var(--muted);background:none;border:none;cursor:pointer;
+    padding:16px 20px 14px;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+  .tab-btn:hover{color:var(--accent)}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-btn .rn{font-variant-numeric:tabular-nums;color:var(--warm);margin-right:.4em}
+  .tab-btn.active .rn{color:var(--accent)}
+  .tab{display:none}
+  .tab.active{display:block}
+  @media (max-width:640px){
+    .tabbar{padding:0 8px}
+    .tab-btn{font-size:.78rem;padding:12px 8px 10px;flex:1;text-align:center}
+    .tab-btn .rn{display:block;margin:0 0 .2em}
+  }
+
+  /* Мосты между вкладками — визуально как обычные ссылки, но с маркером направления */
+  a[data-tab]{border-bottom-style:dashed}
+  a[data-tab]::after{content:" ↗";font-size:.85em;opacity:.6}
+
+  /* Границы/оговорки капстоуна */
+  .caveat{background:#f6ece2;border:1px solid #e3c7a8;border-radius:5px;
+    padding:.75em 1.05em;margin:1.4em 0;font-size:.95rem;line-height:1.5}
+  .caveat .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.78rem;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--warm);display:block;margin-bottom:.3em}
+  .tabbar-inner{flex-wrap:wrap;row-gap:0;align-items:center}
+  .tab-sep{width:1px;height:20px;background:var(--rule);margin:0 5px;align-self:center}
+  .tab-grp{font-family:"Source Sans 3",sans-serif;font-size:.6rem;letter-spacing:.09em;
+    text-transform:uppercase;color:#b7ae9c;align-self:center;padding:0 5px}
+  .tab-btn{padding:14px 13px 12px}
+  @media(max-width:820px){.tab-btn{font-size:.72rem;padding:9px 7px 7px}.tab-grp,.tab-sep{display:none}}
+</style>
+</head>
+<body>
+
+<nav class="tabbar"><div class="tabbar-inner">
+  <span class="tab-grp">Мир 1</span>
+  <button class="tab-btn" data-target="tab-lec1"><span class="rn">Л1</span>Триангуляции</button>
+  <button class="tab-btn" data-target="tab-lec2"><span class="rn">Л2</span>Отражение</button>
+  <button class="tab-btn" data-target="tab-lec3"><span class="rn">Л3</span>Цикл-лемма</button>
+  <button class="tab-btn" data-target="tab-lec4"><span class="rn">Л4</span>Блуждание</button>
+  <span class="tab-sep"></span>
+  <span class="tab-grp">Мир 2</span>
+  <button class="tab-btn" data-target="tab-lec5"><span class="rn">Л5</span>Парковка</button>
+  <button class="tab-btn" data-target="tab-lec6"><span class="rn">Л6</span>Дерево · Кэли</button>
+  <button class="tab-btn" data-target="tab-lec7"><span class="rn">Л7</span>Креверас</button>
+  <button class="tab-btn" data-target="tab-lec8"><span class="rn">Л8</span>Лица</button>
+  <span class="tab-sep"></span>
+  <button class="tab-btn" data-target="tab-lec9"><span class="rn">Доп</span>Капстоун</button>
+</div></nav>
+
+<section class="tab" id="tab-lec1">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#m1-vvedenie">Одно число, которое прячется всюду</a></li>
+    <li><a href="#m1-triang">Разрезать многоугольник</a></li>
+    <li><a href="#m1-derevo-svojstva">Что такое дерево</a></li>
+    <li><a href="#m1-zoopark">Зоопарк одного числа: единая идея стека</a></li>
+    <li><a href="#m1-vyrez-list">Вклеить лист → замкнутая формула</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 1 · Триангуляции и формула Каталана</h1>
+  <p class="subtitle">Комбинаторный вход: разрезаем многоугольник, переводим в деревья и получаем замкнутую формулу.</p>
+  <div class="meta">Мир 1 · черновик · 5 разделов</div>
+
+<h2 id="m1-vvedenie">Одно число, которое прячется всюду</h2>
+
+  <p class="lead">Мы будем считать — казалось бы, разные вещи: сколькими способами разрезать многоугольник, вырастить дерево, расставить скобки. И всякий раз будет вылезать одно и то же число. Вопрос, который поведёт нас через всю первую половину: <strong>почему одно число говорит на стольких языках — и что в нём главное?</strong></p>
+
+  <p>Ответ окажется неожиданным. Пока считаем в идеальном, «сбалансированном» мире — красивых объяснений много, и все разные. Но стоит настоящей задаче (подсчёт голосов, случайное блуждание) вывести нас в мир произвольных путей — половина красот сломается. Уцелеют немногие приёмы; они-то и есть настоящие, и они же протянут мост во <a href="#tab-lec5">вторую половину курса</a>. Но не будем забегать.</p>
+
+  <p class="mn">Обозначения по ходу: $C_n$ — число Каталана (малые значения: $1,1,2,5,14,42,\dots$); везде, где не оговорено иное, $n\ge0$. Уровень изложения — «Квант» построже: строгие определения и полные доказательства там, где источник их даёт; идея вместо выкладки — там, где источник сам честно так и делает.</p>
+
+<h2 id="m1-triang">Разрезать многоугольник</h2>
+
+  <p>Начнём с задачи без всякой вероятности. Выпуклый многоугольник; проведём непересекающиеся диагонали так, чтобы он распался на треугольники. <strong>Сколькими способами это можно сделать?</strong></p>
+
+  <p>Посчитаем малые случаи руками: треугольник — 1, квадрат — 2, пятиугольник — 5, шестиугольник — 14. Числа 1, 2, 5, 14, 42… — это и есть числа Каталана, но пока это просто ответ на конкретную задачу.</p>
+
+  <div class="stmt defn" id="m1-def-1"><span class="lbl">Определение 1 (триангуляция).</span>
+  Пусть дан выпуклый $(n+2)$-угольник с вершинами $0,1,\dots,n+1$, занумерованными по часовой стрелке; ребро $\{0,n+1\}$ назовём <em>основанием</em>. <em>Триангуляция</em> — разбиение многоугольника на треугольники непересекающимися диагоналями. Число треугольников в любой триангуляции $(n+2)$-угольника равно $n$, число рёбер (сторон и диагоналей) равно $2n+1$: $n+2$ стороны и $n-1$ диагонали. Обозначим через $C_n$ число триангуляций.</div>
+
+  <figure>
+    <svg viewBox="0 0 620 170" width="620" role="img" aria-label="Триангуляции треугольника, квадрата, пятиугольника, шестиугольника: 1, 2, 5, 14">
+      <!-- C1: triangle, 1 way -->
+      <g transform="translate(40,20)">
+        <polygon points="30,0 60,52 0,52" class="s-line"/>
+        <text x="30" y="90" text-anchor="middle" class="s-txt-m">C₁ = 1</text>
+      </g>
+      <!-- C2: square, 2 ways (two diagonal choices side by side) -->
+      <g transform="translate(150,20)">
+        <polygon points="15,0 45,0 60,45 0,45" class="s-line"/>
+        <line x1="15" y1="0" x2="60" y2="45" class="s-dash"/>
+        <text x="30" y="90" text-anchor="middle" class="s-txt-m">C₂ = 2</text>
+      </g>
+      <!-- C3: pentagon, one triangulation drawn (fan) -->
+      <g transform="translate(270,10)">
+        <polygon points="35,0 68,25 55,62 15,62 2,25" class="s-line"/>
+        <line x1="35" y1="0" x2="55" y2="62" class="s-dash"/>
+        <line x1="35" y1="0" x2="15" y2="62" class="s-dash"/>
+        <text x="35" y="98" text-anchor="middle" class="s-txt-m">C₃ = 5</text>
+      </g>
+      <!-- C4: hexagon, one fan triangulation -->
+      <g transform="translate(400,0)">
+        <polygon points="40,0 72,20 72,55 40,75 8,55 8,20" class="s-line"/>
+        <line x1="40" y1="0" x2="72" y2="55" class="s-dash"/>
+        <line x1="40" y1="0" x2="40" y2="75" class="s-dash"/>
+        <line x1="40" y1="0" x2="8" y2="55" class="s-dash"/>
+        <text x="40" y="108" text-anchor="middle" class="s-txt-m">C₄ = 14</text>
+      </g>
+      <text x="310" y="150" text-anchor="middle" class="s-txt-m">одна из триангуляций каждого — растёт число способов, а не только вершин</text>
+    </svg>
+    <figcaption>Малые случаи: 1, 2, 5, 14 — числа Каталана, но пока это просто ответ на задачу о триангуляции. По одному примеру триангуляции показано для каждого многоугольника (для квадрата — обе).</figcaption>
+  </figure>
+
+  <p>И <strong>рекуррента видна сразу</strong>, ещё до всякой теории. Сторона-основание многоугольника входит ровно в один треугольник разбиения; его третья вершина делит остаток на два меньших многоугольника — слева и справа.</p>
+
+  <div class="stmt thm" id="m1-thm-1"><span class="lbl">Утверждение 1 (теорема, рекуррента Сегнера).</span>
+  $C_0=1$, и для $n\ge 1$
+  $$C_n=\sum_{k=0}^{n-1} C_k\,C_{n-1-k}.$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство.</span>
+  Основание $\{0,n+1\}$ принадлежит ровно одному треугольнику триангуляции — назовём его <em>базисным</em>, с третьей вершиной $v\in\{1,\dots,n\}$. Эта вершина делит исходный многоугольник на два меньших: левый $\{0,1,\dots,v\}$ — $(v+1)$-угольник, и правый $\{v,\dots,n+1\}$ — $(n+2-v)$-угольник. Триангуляции левого и правого подмногоугольников независимы и однозначно восстанавливают вместе с базисным треугольником исходную триангуляцию. Значит, триангуляции с $v$-м базисным треугольником — это пары (триангуляция $(v{+}1)$-угольника, триангуляция $(n{+}2{-}v)$-угольника), то есть их $C_{v-1}\cdot C_{n-v}$. Суммируя по $v=1,\dots,n$ и полагая $k=v-1$, получаем требуемую свёртку. $\blacksquare$</div>
+
+  <figure>
+    <svg viewBox="0 0 380 210" width="380" role="img" aria-label="Базисный треугольник делит многоугольник на левую и правую части">
+      <polygon points="190,10 320,90 260,175 120,175 60,90" class="s-line"/>
+      <!-- base edge highlighted -->
+      <line x1="120" y1="175" x2="260" y2="175" class="s-accent" stroke-width="3.4"/>
+      <!-- apex vertex v and diagonals to it -->
+      <circle cx="320" cy="90" r="5" class="s-node-r"/>
+      <line x1="320" y1="90" x2="120" y2="175" class="s-dash"/>
+      <line x1="320" y1="90" x2="260" y2="175" class="s-dash" stroke-width="0"/>
+      <polygon points="120,175 260,175 320,90" fill="var(--warm-soft)" stroke="var(--warm)" stroke-width="1.6"/>
+      <text x="230" y="100" text-anchor="middle" class="s-txt-m" fill="var(--warm)">базисный</text>
+      <text x="98" y="100" text-anchor="middle" class="s-txt-m">левый: v+1-угольник</text>
+      <text x="320" y="55" text-anchor="middle" class="s-txt-m">правый: n+2−v</text>
+      <text x="190" y="196" text-anchor="middle" class="s-txt-m">основание {0, n+1}</text>
+      <text x="322" y="108" text-anchor="middle" class="s-txt">v</text>
+    </svg>
+    <figcaption>Базисный треугольник на основании $\{0,n+1\}$ с апексом $v$ делит многоугольник на левый и правый — рекуррента Сегнера читается прямо с картинки.</figcaption>
+  </figure>
+
+  <p>Рекуррента свёрточная — считает числа одно за другим, но не даёт замкнутой формулы. Вопрос о формуле остаётся открытым: свёрточная рекуррента её впрямую не отдаёт, значит посмотрим на объект под другим углом — переоденем его во что-то, с чем удобнее работать руками. Самое податливое переодевание — <strong>дерево.</strong></p>
+
+  <div class="stmt defn" id="m1-def-2"><span class="lbl">Определение 2 (полное бинарное дерево).</span>
+  <em>Полное бинарное дерево</em> (ПБД) — корневое дерево, в котором каждая внутренняя (не листовая) вершина имеет ровно двух потомков — левого и правого (упорядоченных). Дерево с $n$ внутренними вершинами имеет $n+1$ лист.</div>
+
+  <div class="stmt thm" id="m1-thm-2"><span class="lbl">Утверждение 2 (биекция триангуляция ↔ ПБД).</span>
+  Существует биекция между триангуляциями $(n+2)$-угольника и ПБД с $n$ внутренними вершинами, согласованная с рекуррентным разложением обеих моделей (базисный треугольник ↔ корень).</div>
+
+  <div class="proof"><span class="lbl">Доказательство (конструкция).</span>
+  Строим рекурсивно: пустой ($n=0$) объект (отрезок-основание без диагоналей) ↔ лист. Для $n\ge 1$: базисный треугольник с апексом $v$ (Утв. 1) даёт разложение на левый и правый подмногоугольники — рекурсивно переводим их в левое и правое поддеревья корня. Обратно: по ПБД $T=(L,R)$ строим базисный треугольник $\{0,v,n+1\}$, где $v-1$ = число внутренних вершин $L$, и рекурсивно достраиваем $L\to$ левый подмногоугольник, $R\to$ правый. Обе процедуры взаимно обратны по построению. $\blacksquare$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 200" width="460" role="img" aria-label="Триангуляция пятиугольника и соответствующее полное бинарное дерево">
+      <g transform="translate(30,10)">
+        <polygon points="60,0 110,38 90,100 30,100 10,38" class="s-line"/>
+        <line x1="60" y1="0" x2="90" y2="100" class="s-dash"/>
+        <line x1="60" y1="0" x2="30" y2="100" class="s-dash"/>
+        <line x1="30" y1="100" x2="90" y2="100" class="s-accent" stroke-width="3"/>
+        <text x="60" y="150" text-anchor="middle" class="s-txt-m">триангуляция (базис = низ)</text>
+      </g>
+      <text x="240" y="90" text-anchor="middle" class="s-txt">↔</text>
+      <g transform="translate(280,10)">
+        <line x1="70" y1="20" x2="40" y2="55" class="s-line"/>
+        <line x1="70" y1="20" x2="100" y2="55" class="s-line"/>
+        <line x1="40" y1="65" x2="15" y2="100" class="s-line"/>
+        <line x1="40" y1="65" x2="65" y2="100" class="s-line"/>
+        <circle cx="70" cy="16" r="9" class="s-node-r"/>
+        <circle cx="40" cy="60" r="8" class="s-node-r"/>
+        <circle cx="100" cy="60" r="7" class="s-node"/>
+        <circle cx="15" cy="105" r="7" class="s-node"/>
+        <circle cx="65" cy="105" r="7" class="s-node"/>
+        <text x="70" y="150" text-anchor="middle" class="s-txt-m">ПБД, 2 внутр. вершины</text>
+      </g>
+    </svg>
+    <figcaption>Триангуляция ↔ полное бинарное дерево: базисный треугольник даёт корень, левая и правая части — левое и правое поддерево.</figcaption>
+  </figure>
+
+  <p>Задача о счёте триангуляций целиком переезжает на язык деревьев — там, как увидим ниже, рассуждения нагляднее.</p>
+
+<h2 id="m1-derevo-svojstva">Что такое дерево</h2>
+
+  <p>Раз мы пришли к деревьям, стоит понять, что это за объект, — это не отступление ради эрудиции: индукция и язык графов понадобятся до конца курса, а часть свойств дерева тут же читается обратно на триангуляции.</p>
+
+  <div class="stmt thm" id="m1-thm-3"><span class="lbl">Утверждение 3 (лемма, свойства дерева).</span>
+  (a) Всякое (конечное непустое) дерево на $m$ вершинах имеет ровно $m-1$ ребро.
+  <br>(b) Всякое дерево с $m\ge 2$ вершинами имеет хотя бы один лист (вершину степени 1).
+  <br>(c) В ПБД с $n$ внутренними вершинами число листьев равно $n+1$.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (кратко).</span>
+  (a),(b) — индукцией по $m$. База $m=1$ тривиальна. Переход: возьмём максимальный путь дерева $v_0v_1\dots v_k$; его конец $v_k$ не может иметь соседа вне пути (иначе либо удлинил бы путь, либо создал цикл), значит $\deg(v_k)=1$ — лист найден. Удаляя лист, получаем дерево на $m-1$ вершине с $m-2$ рёбрами по индукции; возвращая ребро — $m-1$.
+  <br>(c) — индукцией по $n$: ПБД с $n$ внутренними вершинами есть корень + левое поддерево ($n_1$ внутр.) + правое ($n_2$ внутр.), $n=n_1+n_2+1$; листьев по предположению $n_1{+}1$ и $n_2{+}1$, всего $n_1{+}n_2{+}2=n{+}1$. $\blacksquare$</div>
+
+<h2 id="m1-zoopark">Зоопарк одного числа: единая идея стека</h2>
+
+  <p>И вот теперь — обещанные <strong>лица одного числа.</strong> Если обходить дерево по кругу, записывая спуски и подъёмы, получается ломаная из шагов «вверх» и «вниз», не уходящая под горизонт — <strong>путь Дика.</strong> Он же — правильная скобочная последовательность (спуск — открыть скобку, подъём — закрыть). Он же — особая перестановка, которую можно разобрать стеком (стек-сортируемые, или 231-избегающие). Разные на вид объекты — многоугольники, деревья, пути, скобки, перестановки — оказываются переодеваниями друг друга, и переодевает их одна идея: <strong>что-то кладём в стек, что-то достаём.</strong> Спуск и подъём, открыть и закрыть, положить и снять.</p>
+
+  <div class="stmt defn" id="m1-def-3"><span class="lbl">Определение 3 (путь Дика / скобки — хаб моделей).</span>
+  <em>Путь Дика</em> длины $2n$ — последовательность из $n$ шагов $R=(1,0)$ (или символа «(») и $n$ шагов $U=(0,1)$ (или «)»), в которой каждый префикс содержит не меньше $R$, чем $U$ (эквивалентно: правильная скобочная последовательность). Число путей Дика длины $2n$ равно $C_n$.</div>
+
+  <div class="stmt thm" id="m1-thm-4"><span class="lbl">Утверждение 4 (зоопарк: биекции моделей через хаб).</span>
+  Путь Дика, ПБД, планарное (плоское корневое) дерево и триангуляция находятся в биективном соответствии друг с другом через общий хаб — скобочные последовательности; все четыре биекции согласованы с рекуррентным разложением Утв. 1 (разложить → перевести части → собрать = перевести целиком).</div>
+
+  <div class="proof"><span class="lbl">Доказательство (конструкция).</span>
+  ПБД → Дик: лист ↦ пустое слово; узел $(L,R)\mapsto$ «(» + Дик$(L)$ + «)» + Дик$(R)$ — рекурсивно. Планарное дерево → Дик: обход в глубину, спуск к ребёнку — «(», подъём — «)». Триангуляция → Дик — как в Утв. 2, но записывая слово вместо дерева. Все три построения — прямое чтение того же разложения «первый возврат / корень / базисный треугольник» в скобочный код. $\blacksquare$</div>
+
+  <p class="mn"><b>Честная пометка.</b> Помимо ПБД/планарного дерева/триангуляции, тот же путь Дика кодирует ещё один объект — стек-сортируемую (231-избегающую) перестановку (Кнут, 1968): их тоже ровно $C_n$. Полный алгоритм биекции путь ↔ такая перестановка через стек здесь не расписан — формулировка и счётный факт даны, детальный алгоритм — за кадром.</p>
+
+  <figure>
+    <svg viewBox="0 0 620 190" width="620" role="img" aria-label="Обход дерева даёт путь Дика: спуск вниз — открывающая скобка, подъём — закрывающая">
+      <!-- дерево слева -->
+      <g transform="translate(20,10)">
+        <line x1="60" y1="20" x2="30" y2="60" class="s-line"/>
+        <line x1="60" y1="20" x2="90" y2="60" class="s-line"/>
+        <line x1="30" y1="70" x2="10" y2="105" class="s-line"/>
+        <line x1="30" y1="70" x2="50" y2="105" class="s-line"/>
+        <circle cx="60" cy="16" r="9" class="s-node-r"/>
+        <circle cx="30" cy="65" r="8" class="s-node-r"/>
+        <circle cx="90" cy="65" r="7" class="s-node"/>
+        <circle cx="10" cy="110" r="7" class="s-node"/>
+        <circle cx="50" cy="110" r="7" class="s-node"/>
+        <text x="55" y="150" text-anchor="middle" class="s-txt-m">ПБД (обход в глубину)</text>
+      </g>
+      <text x="220" y="95" text-anchor="middle" class="s-txt">→</text>
+      <!-- путь Дика справа: (()())  вниз-вниз-вверх-вниз-вверх-вверх -->
+      <g transform="translate(270,150)">
+        <line x1="0" y1="0" x2="240" y2="0" class="s-thin"/>
+        <path d="M0 0 L20 -40 L40 -60 L60 -40 L80 -60 L100 -40 L120 0" class="s-accent"/>
+        <g class="s-txt" text-anchor="middle">
+          <text x="10" y="-24">(</text><text x="30" y="-54">(</text><text x="50" y="-46">)</text>
+          <text x="70" y="-54">(</text><text x="90" y="-46">)</text><text x="110" y="-24">)</text>
+        </g>
+        <text x="60" y="24" text-anchor="middle" class="s-txt-m">путь Дика: ( ( ) ( ) )</text>
+      </g>
+    </svg>
+    <figcaption>Обход дерева в глубину: спуск к ребёнку — шаг вверх на пути / открывающая скобка, возврат к родителю — шаг вниз / закрывающая скобка. Один и тот же объект в разных костюмах.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 700 205" width="700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Один объект в пяти костюмах: скобки, путь Дика, дерево, триангуляция, перестановка">
+  <text x="350" y="16" text-anchor="middle" class="s-txt">C₃ = 5 — один объект, пять костюмов; переодевает всех один стек</text>
+  <!-- A brackets -->
+  <text x="70" y="95" text-anchor="middle" style="font-family:'DejaVu Sans';font-size:22px;fill:#211f1b">( ( ) ( ) )</text>
+  <text x="70" y="180" text-anchor="middle" class="s-txt-m">скобки</text>
+  <!-- B path -->
+  <line x1="175" y1="130" x2="245" y2="130" class="s-thin"/>
+  <path d="M175 130 L186.6 112 L198.3 94 L210 112 L221.6 94 L233.3 112 L245 130" class="s-accent"/>
+  <text x="210" y="180" text-anchor="middle" class="s-txt-m">путь Дика</text>
+  <!-- C tree (plane tree of (()()) ) -->
+  <line x1="350" y1="42" x2="350" y2="78" class="s-line"/>
+  <line x1="350" y1="82" x2="333" y2="115" class="s-line"/>
+  <line x1="350" y1="82" x2="367" y2="115" class="s-line"/>
+  <circle cx="350" cy="40" r="7" class="s-node-r"/>
+  <circle cx="350" cy="80" r="7" class="s-node-r"/>
+  <circle cx="333" cy="118" r="6" class="s-node"/>
+  <circle cx="367" cy="118" r="6" class="s-node"/>
+  <text x="350" y="180" text-anchor="middle" class="s-txt-m">дерево</text>
+  <!-- D triangulation (pentagon fan from top vertex) -->
+  <polygon points="490,42 528,70 513,114 467,114 452,70" class="s-line"/>
+  <line x1="490" y1="42" x2="513" y2="114" class="s-accent"/>
+  <line x1="490" y1="42" x2="467" y2="114" class="s-accent"/>
+  <text x="490" y="180" text-anchor="middle" class="s-txt-m">триангуляция</text>
+  <!-- E permutation (132, plotted) -->
+  <rect x="602" y="46" width="60" height="60" class="s-thin" fill="none"/>
+  <line x1="622" y1="46" x2="622" y2="106" class="s-thin"/>
+  <line x1="642" y1="46" x2="642" y2="106" class="s-thin"/>
+  <line x1="602" y1="66" x2="662" y2="66" class="s-thin"/>
+  <line x1="602" y1="86" x2="662" y2="86" class="s-thin"/>
+  <circle cx="612" cy="96" r="4" class="s-ar-a"/>
+  <circle cx="632" cy="56" r="4" class="s-ar-a"/>
+  <circle cx="652" cy="76" r="4" class="s-ar-a"/>
+  <text x="632" y="180" text-anchor="middle" class="s-txt-m">231-избегающая</text>
+  <!-- links -->
+  <g class="s-txt-m" text-anchor="middle" fill="#726c60">
+    <text x="140" y="98">↔</text><text x="280" y="98">↔</text><text x="420" y="98">↔</text><text x="560" y="98">↔</text>
+  </g>
+</svg>
+    <figcaption>Одно число $C_3=5$ в пяти костюмах: скобки, путь Дика, дерево, триангуляция и 231-избегающая перестановка — все переводятся друг в друга одной идеей стека.</figcaption>
+  </figure>
+
+<h2 id="m1-vyrez-list">Вклеить лист → замкнутая формула</h2>
+
+  <p>Осталось вернуть долг — замкнутую формулу. И тут работает приём, который <strong>проще всего угадать именно на деревьях: вклеить лист.</strong> Из дерева поменьше можно вырастить дерево побольше, добавив листок; сосчитав пары «дерево плюс отмеченное место» с двух сторон, получаем короткое двучленное соотношение.</p>
+
+  <div class="stmt defn" id="m1-def-5"><span class="lbl">Определение 5 (рёбра-слоты ПБД; отмеченный лист).</span>
+  Пусть $T$ — ПБД с $n$ внутренними вершинами. <em>Рёбра-слоты</em> $T$ — это его $2n$ настоящих рёбер плюс одно <em>фантомное корневое ребро</em> (стоящее «над» корнем, ни к чему не привязанное, — прямой аналог основания многоугольника) — всего $2n+1$ слотов; каждому сопоставляется <em>сторона</em> $s\in\{\text{лево},\text{право}\}$.
+  $$\hat L=\{(T,e,s)\},\quad |\hat L|=(2n+1)\cdot2\cdot C_n=(4n+2)C_n,\qquad \hat R=\{(T',\ell): T'\text{ — ПБД с }n{+}1\text{ внутр. верш.},\ \ell\text{ — отмеченный лист}\},\quad |\hat R|=(n+2)C_{n+1}.$$</div>
+
+  <div class="stmt thm" id="m1-thm-6"><span class="lbl">Утверждение 6 (теорема, древесная версия раздутия).</span>
+  $(4n+2)C_n=(n+2)C_{n+1}$, доказано биекцией $\hat L\leftrightarrow\hat R$ («вставить/вырезать лист»).</div>
+
+  <div class="proof"><span class="lbl">Доказательство (биекция).</span>
+  <em>Вставка листа</em> ($\hat L\to\hat R$): дана пара $(T,e,s)$. Если $e$ — фантомное корневое ребро, вставляем новую внутреннюю вершину $w$ <em>над</em> старым корнем: $w$ — новый корень, один ребёнок — новый лист $\ell$, другой — всё старое дерево $T$; сторона $s$ определяет, какой ребёнок левый. Если $e$ — обычное ребро между родителем $u$ и ребёнком $v$, вставляем $w$ <em>на месте разреза</em>: $w$ занимает место $v$, один ребёнок $w$ — новый лист $\ell$, другой — старое поддерево в $v$; сторона $s$ определяет, слева или справа $\ell$.
+  <br><em>Вырезание листа</em> ($\hat R\to\hat L$, обратная): дана пара $(T',\ell)$; у листа $\ell$ есть родитель $w$ с другим ребёнком-поддеревом $S$. Удаляем $w,\ell$, подвешивая $S$ на место $w$ (если у $w$ был родитель $u$ — ребро-слот $\{u,S\}$; если $w$ был корнем — слот фантомный). Сторона $s$ — был ли $\ell$ левым или правым ребёнком $w$.
+  <br>Обе операции взаимно обратны по построению, откуда $(4n+2)C_n=|\hat L|=|\hat R|=(n+2)C_{n+1}$. $\blacksquare$</div>
+
+  <p class="mn"><b>Флаг закрыт.</b> Это не дословная цитата источника (там дан только вариант на триангуляциях — см. врезку ниже), а перенос автора скелета через словарь Утв. 2. Доказано строго; численно сверено вручную $n\le1$ и <strong>программно $n\le4$</strong> (`verify_tree_leaf_insertion.py`) — совпадений без исключений. Древесную версию можно цитировать как канон.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 210" width="460" role="img" aria-label="Вклеить лист: новая вершина w встаёт на место разреза, старое поддерево и новый лист становятся её детьми">
+      <!-- before -->
+      <g transform="translate(20,10)">
+        <line x1="55" y1="20" x2="25" y2="60" class="s-thin"/>
+        <line x1="55" y1="20" x2="85" y2="60" class="s-thin"/>
+        <circle cx="55" cy="16" r="9" class="s-node-r"/>
+        <circle cx="25" cy="65" r="8" class="s-node"/>
+        <circle cx="85" cy="65" r="8" class="s-node"/>
+        <text x="25" y="95" text-anchor="middle" class="s-txt-m">v</text>
+        <text x="55" y="130" text-anchor="middle" class="s-txt-m">до: слот-ребро (родитель, v)</text>
+      </g>
+      <text x="220" y="95" text-anchor="middle" class="s-txt">→</text>
+      <!-- after: w inserted at v's place -->
+      <g transform="translate(280,10)">
+        <line x1="55" y1="20" x2="25" y2="60" class="s-thin"/>
+        <line x1="55" y1="20" x2="85" y2="60" class="s-thin"/>
+        <line x1="25" y1="70" x2="10" y2="105" class="s-accent"/>
+        <line x1="25" y1="70" x2="40" y2="105" class="s-accent"/>
+        <circle cx="55" cy="16" r="9" class="s-node-r"/>
+        <circle cx="25" cy="65" r="9" fill="#fff" stroke="var(--warm)" stroke-width="2.2"/>
+        <text x="25" y="69" text-anchor="middle" class="s-txt" fill="var(--warm)">w</text>
+        <circle cx="85" cy="65" r="8" class="s-node"/>
+        <circle cx="10" cy="110" r="7" class="s-node"/>
+        <circle cx="40" cy="110" r="8" fill="var(--warm-soft)" stroke="var(--warm)" stroke-width="1.8"/>
+        <text x="40" y="114" text-anchor="middle" class="s-txt" fill="var(--warm)">ℓ</text>
+        <text x="10" y="132" text-anchor="middle" class="s-txt-m">v</text>
+        <text x="55" y="160" text-anchor="middle" class="s-txt-m">после: w на месте v, дети w — v и новый лист ℓ</text>
+      </g>
+    </svg>
+    <figcaption>«Вклеить лист»: слот-ребро $(родитель, v)$ разрезается, новая вершина $w$ занимает место $v$, а её двумя детьми становятся старое поддерево $v$ и новый лист $\ell$ (сторона — слева или справа).</figcaption>
+  </figure>
+
+  <p class="mn"><b>Глубже.</b> Тот же результат впервые доказан на языке триангуляций («раздутие/сдутие», скелет §1.5) — там вставляется новая вершина многоугольника и переносится часть рёбер; геометрически рабочая, но труднее угадываемая версия. Мы нарочно шли через деревья.</p>
+
+  <div class="stmt thm" id="m1-thm-7"><span class="lbl">Утверждение 7 (замкнутая формула).</span>
+  $$C_n=\frac{1}{n+1}\binom{2n}{n}.$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство.</span>
+  Из Утв. 6: $C_{n+1}=\dfrac{4n+2}{n+2}\,C_n$ при $C_0=1$. Раскручиваем телескопом:
+  $$C_n=\prod_{k=0}^{n-1}\frac{4k+2}{k+2}=\frac{2\cdot6\cdot10\cdots(4n-2)}{2\cdot3\cdot4\cdots(n+1)}=\frac{(2n)!/n!}{(n+1)!}=\frac1{n+1}\binom{2n}n.\ \blacksquare$$</div>
+
+  <p>Вот и магия: свёрточная рекуррента давала числа поштучно, а теперь есть замкнутая формула через факториалы.</p>
+
+  <div class="insight"><span class="tag">Прозрение · Акт 1</span>
+  Переодели триангуляцию в дерево — и на дереве операция «вклеить лист» угадалась сама. Свёрточная рекуррента впрямую формулу не отдаёт; двучленное соотношение из счёта пар «объект + отмеченное место» — отдаёт, телескопом.</div>
+
+  <p>Важная честная пометка на будущее: <strong>всё это работало, потому что путь сбалансирован</strong> — он возвращается к горизонту. Раздутие, вырезание, аккуратные деревья — красоты идеального мира. Что будет, если снять условие возврата? Красивые рассуждения сломаются. Чтобы это увидеть, нужна задача, которая сама вытолкнет нас из равновесия.</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec2">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#m1-golosa">Голоса выводят из равновесия</a></li>
+    <li><a href="#m1-otrazhenie">Принцип отражения (André, 1887)</a></li>
+    <li><a href="#m1-bertran">Мост: отражение = Бертран = разорение игрока</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 2 · Голоса и принцип отражения</h1>
+  <p class="subtitle">Задача о голосовании выводит в несбалансированные пути; зеркало даёт формулу второй раз.</p>
+  <div class="meta">Мир 1 · черновик · 3 раздела</div>
+
+<h2 id="m1-golosa">Голоса выводят из равновесия</h2>
+
+  <p>Такая задача есть, и она классическая. На выборах двое: $A$ набрал больше голосов, чем $B$. Бюллетени вскрывают по одному. <strong>Сколькими способами это можно сделать так, чтобы $A$ ни разу не оказался позади $B$?</strong> (Ничьи по дороге — допускаются; строгий вариант без ничьих ждёт чуть ниже.)</p>
+
+  <p>Нарисуем подсчёт ломаной: бюллетень за $A$ — шаг вверх, за $B$ — шаг вниз. Каждый порядок вскрытия — путь из шагов $\pm1$. Но теперь путь, вообще говоря, <strong>не возвращается к горизонту</strong>: он кончается на высоте (голоса $A$ минус голоса $B$). Вот он, тот самый несбалансированный путь — осевой объект всей первой половины. Путь Дика, с которого мы начали, — его частный случай (когда пришли поровну).</p>
+
+  <div class="stmt defn" id="m1-def-6"><span class="lbl">Определение 6 (несбалансированный путь).</span>
+  <em>Несбалансированный путь</em> $\pm1$ длины $m$ — последовательность шагов $+1/-1$ от оси, где число шагов вверх и вниз, вообще говоря, <em>не равно</em>: путь заканчивается на произвольной высоте, не обязательно на 0. Путь Дика — его частный случай (равное число шагов, возврат в 0). Число всех путей длины $m$, оканчивающихся на высоте $h$ ($m,h$ одной чётности), — биномиальный коэффициент $\binom{m}{(m+h)/2}$.</div>
+
+  <p><strong>Задача о голосовании (баллотировка).</strong> Кандидат $A$ набрал $p$ голосов, кандидат $B$ — $q\le p$ голосов; бюллетени вскрывают по одному в случайном порядке. Сколькими способами это можно сделать так, чтобы на <em>каждом</em> промежуточном подсчёте число голосов за $A$ было не меньше числа голосов за $B$? Кодируя «за $A$» шагом $+1$, «за $B$» — шагом $-1$, получаем несбалансированный путь длины $p+q$, оканчивающийся на высоте $p-q\ge0$; условие «$A$ не отстаёт» = «путь не опускается ниже оси».</p>
+
+  <p>Считать все пути легко — это просто биномиальный коэффициент, дети это знают. Трудность — в условии «$A$ всегда впереди (или наравне)», то есть «путь не касается уровня ниже оси». И тут — <strong>прозрение-зеркало (принцип отражения).</strong></p>
+
+  <div class="insight"><span class="tag">Прозрение · Акт 2</span>
+  Каждый «плохой» путь, коснувшийся уровня ниже оси, зеркально отразим до первого касания. Плохие пути встанут во взаимно-однозначное соответствие с путями, вышедшими из отражённой точки, — а тех считать легко. Вычитаем — и получаем ответ.
+  </div>
+
+<h2 id="m1-otrazhenie">Принцип отражения (André, 1887)</h2>
+
+  <div class="stmt thm" id="m1-thm-8"><span class="lbl">Утверждение 8 (теорема, принцип отражения).</span>
+  Пусть $p\ge q\ge0$. Число путей длины $p+q$ из шагов $\pm1$ ($p$ шагов $+1$, $q$ шагов $-1$), остающихся неотрицательными на всём протяжении, равно
+  $$\binom{p+q}{p}-\binom{p+q}{p+1}.$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство (принцип отражения).</span>
+  Перейдём к решёточной записи: шаг $+1\leftrightarrow R=(1,0)$, шаг $-1\leftrightarrow U=(0,1)$; путь становится монотонным путём из $(0,0)$ в $(p,q)$, а условие «не опускается ниже оси» — условием «не заходит строго выше диагонали $y=x$». «Плохой» путь — тот, что задевает прямую $y=x+1$.
+  <br>Пусть $P$ — плохой путь. Пусть $k$ — позиция <em>первого</em> шага, после которого путь оказывается в точке $(t,t{+}1)$ на этой прямой. Разрежем $P=\mathrm{prefix}\cdot\mathrm{suffix}$ и отразим $\mathrm{suffix}$ (заменив в нём $R\leftrightarrow U$): получаем путь из $(t,t{+}1)$ в точку $(q{-}1,\,p{+}1)$ — она <em>не зависит от $t$</em>. Обратно: по любому пути $Q$ из $(0,0)$ в $(q{-}1,p{+}1)$ найдём первое касание прямой $y=x{+}1$ (оно обязательно есть) и отразим хвост — восстановим плохой путь. Обе процедуры взаимно обратны, значит плохие пути в биекции со <em>всеми</em> путями в $(q{-}1,p{+}1)$: их $\binom{p+q}{q-1}=\binom{p+q}{p+1}$. Хороших — $\binom{p+q}{p}-\binom{p+q}{p+1}$. $\blacksquare$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 230" width="460" role="img" aria-label="Зеркало: плохой путь после первого касания диагонали-барьера отражается в путь до фиксированной точки">
+      <!-- coordinate frame -->
+      <g transform="translate(40,190)">
+        <line x1="0" y1="0" x2="220" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-170" class="s-thin"/>
+        <line x1="0" y1="10" x2="190" y2="-170" class="s-dash"/>
+        <text x="200" y="-166" class="s-txt-m">y = x + 1 (барьер)</text>
+        <!-- good part of path (solid, real) -->
+        <path d="M0 0 L20 -20 L40 -20 L60 -40 L80 -40" class="s-accent"/>
+        <circle cx="80" cy="-40" r="4" class="s-ar-a"/>
+        <text x="70" y="-52" class="s-txt-m">первое касание y=x+1</text>
+        <!-- bad tail (dotted grey, original) -->
+        <path d="M80 -40 L100 -60 L120 -80 L140 -80 L160 -100" class="s-thin" stroke-dasharray="4 3"/>
+        <!-- reflected tail (dashed accent-warm) -->
+        <path d="M80 -40 L100 -20 L110 0" class="s-line" stroke="var(--warm)" stroke-dasharray="3 3"/>
+        <text x="140" y="10" text-anchor="middle" class="s-txt-m" fill="var(--warm)">отражённый хвост</text>
+        <text x="176" y="-96" text-anchor="middle" class="s-txt-m">исходный хвост (плохой)</text>
+      </g>
+    </svg>
+    <figcaption>Отражение хвоста после первого касания барьера $y=x{+}1$ переносит плохой путь в путь до фиксированной точки $(q{-}1,p{+}1)$ — не зависящей от места касания.</figcaption>
+  </figure>
+
+  <div class="stmt example"><span class="lbl">Следствие (Каталан снова)</span>
+  Частный случай $p=q=n$ (путь Дика: неотрицательность плюс автоматический возврат в $0$) даёт <em>второе, независимое</em> доказательство замкнутой формулы:
+  $$C_n=\binom{2n}{n}-\binom{2n}{n+1}=\frac{1}{n+1}\binom{2n}{n}.$$
+  Важно: в отличие от вырезания листа (§5), это доказательство <strong>не использует баланс существенно</strong> — Утв. 8 доказано для произвольных $p\ge q$, а формула Каталана — лишь его частный случай.</div>
+
+<h2 id="m1-bertran">Мост: отражение = Бертран = разорение игрока</h2>
+
+  <p>Классическая задача Бертрана (1887) чуть строже задачи о голосовании: кандидат $A$ набрал $a$ голосов, $B$ — $b<a$, и спрашивается, в скольких случаях $A$ <strong>строго</strong> опережает $B$ на протяжении всего подсчёта (без ничьих вовсе, включая начало).</p>
+
+  <div class="stmt thm"><span class="lbl">Формула Бертрана (вывод из Утв. 8).</span>
+  Число путей длины $a+b$ ($a$ шагов $+1$, $b$ шагов $-1$, $a>b$), строго положительных на всех шагах после старта, равно
+  $$\binom{a+b-1}{a-1}-\binom{a+b-1}{a}=\frac{a-b}{a+b}\binom{a+b}{a}.$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство.</span>
+  Первый шаг обязан быть $+1$. После него путь на уровне $1$; условие «оставаться $>0$ до конца» переходит (сдвигом на $-1$) в условие «оставаться $\ge0$» для оставшихся $a{+}b{-}1$ шагов — это Утв. 8 при $p=a{-}1,\,q=b$. Равенство второй форме — по тождеству $\binom{a+b-1}{a-1}=\frac{a}{a+b}\binom{a+b}{a}$ и аналогично для второго слагаемого. $\blacksquare$</div>
+
+  <p class="mn"><b>Мостик (формулировка, без доказательства).</b> Тот же зеркальный приём — не только про голоса: ровно он стоит за задачей о <strong>разорении игрока</strong> (вероятность разориться раньше, чем сорвать банк, при симметричном блуждании с поглощающими границами). Один трюк — три костюма: комбинаторный (голоса), вероятностный (разорение), азартный (Бертран). Полного вывода теории разорения здесь нет — это формулировка-мостик, не доказываемый результат.</p>
+
+  <p>Отражение красиво — но в нём есть что-то от фокуса: зеркало появляется ниоткуда. Возникает законный вопрос: <strong>нет ли одного честного счёта, который объяснит формулу без трюка?</strong></p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec3">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#m1-cikl">Один поворот круга</a></li>
+    <li><a href="#m1-sterzhen">Стержень курса: одна лемма на трёх языках</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 3 · Цикл-лемма: стержень курса</h1>
+  <p class="subtitle">Один поворот круга — одна идея на трёх языках: путь, дерево, парковка.</p>
+  <div class="meta">Мир 1 · черновик · 2 раздела</div>
+
+<h2 id="m1-cikl">Один поворот круга</h2>
+
+  <p>Есть. И он окажется главным во всём курсе.</p>
+
+  <p>Возьмём последовательность шагов и будем <strong>проворачивать её по кругу</strong> — циклически сдвигать.</p>
+
+  <div class="stmt defn" id="m1-def-7"><span class="lbl">Определение 7 (доминирующая последовательность).</span>
+  Последовательность из символов $X,Y$ называется <em>доминирующей</em>, если в каждом (непустом) префиксе число $X$ строго больше числа $Y$.</div>
+
+  <div class="stmt thm" id="m1-thm-9"><span class="lbl">Утверждение 9 (циклическая лемма, Dvoretzky–Motzkin, 1947).</span>
+  Пусть дана последовательность из $m$ символов $X$ и $k$ символов $Y$, $m>k$. Тогда среди $m+k$ её циклических сдвигов ровно $m-k$ доминирующих.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (XY-уничтожение).</span>
+  Расположим $m{+}k$ символов по кругу. Будем повторно удалять соседние пары «$X$ непосредственно перед $Y$ по часовой стрелке» (порядок удалений не влияет на результат). После полного уничтожения таких пар останется ровно $m{-}k$ символов $X$ подряд (каждое удаление сохраняет разность «число $X$ минус число $Y$»). Каждый из уцелевших $X$ — начало ровно одного доминирующего циклического сдвига; остальные сдвиги доминирующими не являются. $\blacksquare$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 220" width="460" role="img" aria-label="Карусель цикл-леммы: из 2n+1 циклических сдвигов ровно один доминирующий">
+      <g transform="translate(230,110)">
+        <circle r="88" class="s-thin"/>
+        <g id="cikl-seats"></g>
+      </g>
+      <text x="230" y="14" text-anchor="middle" class="s-txt-m">последовательность из n+1 символов X и n символов Y, по кругу</text>
+      <text x="230" y="210" text-anchor="middle" class="s-txt-m">ровно один сдвиг (тёмный) — доминирующий: XXY XYY → …</text>
+    </svg>
+    <figcaption>Карусель: у последовательности из $n{+}1$ символов $X$ и $n$ символов $Y$ ровно один из $2n{+}1$ циклических сдвигов (тёмная отметка) доминирующий — остальные обязательно где-то «уходят в минус».</figcaption>
+  </figure>
+
+  <div class="stmt thm" id="m1-thm-10"><span class="lbl">Утверждение 10 (следствие).</span>
+  $(2n+1)\,C_n=\binom{2n+1}{n}$, то есть $C_n=\dfrac1{2n+1}\dbinom{2n+1}{n}$.</div>
+
+  <div class="proof"><span class="lbl">Доказательство.</span>
+  Применим Утв. 9 к $m=n{+}1$, $k=n$: $m{-}k=1$ — ровно один доминирующий сдвиг у каждой последовательности из $n{+}1$ символов $X$ и $n$ символов $Y$. По последовательности $S$ находим единственный доминирующий сдвиг, убираем первый символ (обязательно $X$) — остаток длины $2n$ есть путь Дика. Обратно: по пути Дика $D$ строим $W=X{+}D$ — единственный доминирующий сдвиг; любой из $2n{+}1$ сдвигов $W$ порождает тот же $D$. Отображение «последовательность → путь Дика» ровно $(2n{+}1)$-к-одному, откуда $\binom{2n+1}n=(2n+1)C_n$. $\blacksquare$</div>
+
+  <p>Третий, независимый от §5 и §6, вывод формулы Каталана — одной дробью, без геометрического зеркала. (Это третий вывод той же формулы — и он нравится многим больше всех.)</p>
+
+<h2 id="m1-sterzhen">Стержень курса: одна лемма на трёх языках</h2>
+
+  <p>Но главное не формула. Главное — что <strong>этот поворот круга — одна и та же идея на трёх языках сразу.</strong></p>
+
+  <div class="stmt thm" id="m1-thm-11"><span class="lbl">Утверждение 11 (стержень; формулировка, доказательство — ссылкой).</span>
+  Циклическая лемма имеет одну и ту же формулировку сразу на трёх языках курса:
+  <br>• <strong>путь</strong> (Утв. 9 выше): среди циклических сдвигов последовательности $\pm1$-шагов с суммой $-1$ ровно один даёт путь Дика;
+  <br>• <strong>дерево</strong> (лемма Рени, Raney 1960): если выписать дерево <em>словом Лукасевича</em> (степень каждой вершины в порядке обхода минус единица; сумма такого слова $=-1$), то среди его циклических сдвигов ровно один соответствует настоящему корневому плоскому дереву — «ровно один способ выбрать корень / провернуть последовательность детей»;
+  <br>• <strong>парковка</strong> (<a href="#s-pollak" data-tab="tab-lec5">Мир 2</a>): круг Поллака — в каждой орбите $\mathbb Z_{n+1}$-сдвигов ровно одна образует корректную парковочную функцию, что даёт формулу Кэли $(n+1)^{n-1}$.</div>
+
+  <p>Один принцип «в каждой орбите ровно один хороший» держит все три половины материала. Это не наша выдумка, а существующая математика (Raney 1960; Dershowitz–Zaks 1990). Полное доказательство древесной и парковочной версий здесь не переносим — доказательство лемма-Рени-версии дословно повторяет XY-уничтожение Утв. 9 (применённое к слову Лукасевича), доказательство круга Поллака — отдельный сюжет <a href="#s-pollak" data-tab="tab-lec5">Мира 2</a>.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 230" width="700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Одна циклическая лемма на трёх языках: путь, дерево, парковка">
+  <text x="350" y="16" text-anchor="middle" class="s-txt">Одна лемма — три языка: «в каждой орбите сдвигов ровно один хороший»</text>
+  <!-- panel 1: path / sequence on a ring -->
+  <text x="120" y="42" text-anchor="middle" class="s-txt-m">путь (±1-шаги)</text>
+  <circle cx="120" cy="110" r="46" class="s-thin" fill="none"/>
+  <g class="s-txt" text-anchor="middle">
+    <text x="120" y="70">+</text><text x="153" y="94">+</text><text x="160" y="130">−</text>
+    <text x="137" y="158">+</text><text x="103" y="158">−</text><text x="80" y="130">−</text><text x="87" y="94">−</text>
+  </g>
+  <path d="M150 88 A46 46 0 0 1 156 120" class="s-accent" marker-end="url(#arh)"/>
+  <text x="120" y="200" text-anchor="middle" class="s-txt-m">1 хороший сдвиг</text>
+  <!-- panel 2: tree + Lukasiewicz word -->
+  <text x="350" y="42" text-anchor="middle" class="s-txt-m">дерево (слово Лукасевича)</text>
+  <line x1="350" y1="66" x2="330" y2="98" class="s-line"/>
+  <line x1="350" y1="66" x2="370" y2="98" class="s-line"/>
+  <line x1="370" y1="102" x2="370" y2="132" class="s-line"/>
+  <circle cx="350" cy="64" r="6" class="s-node-r"/>
+  <circle cx="330" cy="100" r="5" class="s-node"/>
+  <circle cx="370" cy="100" r="5" class="s-node-r"/>
+  <circle cx="370" cy="135" r="5" class="s-node"/>
+  <text x="350" y="162" text-anchor="middle" class="s-txt-m">слово 2·0·1·0</text>
+  <text x="350" y="200" text-anchor="middle" class="s-txt-m">1 верное укоренение</text>
+  <!-- panel 3: parking ring (Pollak) -->
+  <text x="580" y="42" text-anchor="middle" class="s-txt-m">парковка (круг Поллака)</text>
+  <circle cx="580" cy="110" r="46" class="s-thin" fill="none"/>
+  <circle cx="580" cy="64" r="9" class="s-node-r"/>
+  <circle cx="613" cy="86" r="9" class="s-node-r"/>
+  <circle cx="619" cy="126" r="9" class="s-fillsh" stroke="#726c60"/>
+  <circle cx="592" cy="152" r="9" class="s-node-r"/>
+  <circle cx="558" cy="152" r="9" class="s-node-r"/>
+  <circle cx="547" cy="120" r="9" class="s-node-r"/>
+  <text x="580" y="200" text-anchor="middle" class="s-txt-m">1 свободное место</text>
+  <!-- bridges -->
+  <g class="s-txt" text-anchor="middle" fill="#c9743a"><text x="235" y="112">≡</text><text x="465" y="112">≡</text></g>
+  <defs><marker id="arh" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" class="s-ar-a"/></marker></defs>
+</svg>
+    <figcaption>Стержень курса: одна циклическая лемма на трёх языках — путь, дерево (лемма Рени) и парковка (круг Поллака); в каждой орбите циклических сдвигов ровно один «хороший» объект.</figcaption>
+  </figure>
+
+  <p class="mn"><b>Глубже.</b> Задача о кладке кирпичей — красивая биекция в том же духе (усиленная цикл-лемма), но за кадром этого курса.</p>
+
+  <p>Всё это время мы считали объекты аккуратно. А что, если пойти по пути не по правилам, а наугад?</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec4">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#m1-bluzhdanie">Пустить наугад</a></li>
+    <li><a href="#m1-nevozvrat">Кульминация: вероятность не вернуться</a></li>
+    <li><a href="#m1-chungfeller">Жемчужина: Chung–Feller</a></li>
+    <li><a href="#m1-area">Area на трёх языках</a></li>
+    <li><a href="#m1-itog">Что в итоге</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 4 · Случайное блуждание и площадь</h1>
+  <p class="subtitle">Пускаем путь наугад: возвращение, невозврат, жемчужина Chung–Feller, area как мост вперёд.</p>
+  <div class="meta">Мир 1 · черновик · 5 разделов</div>
+
+<h2 id="m1-bluzhdanie">Пустить наугад</h2>
+
+  <p>Представьте частицу на прямой: каждый шаг — влево или вправо с равной вероятностью. Тот же путь $\pm1$, что и раньше, только теперь случайный. Первый естественный вопрос: <strong>вернётся ли она когда-нибудь домой, в исходную точку?</strong></p>
+
+  <div class="stmt defn" id="m1-def-8"><span class="lbl">Определение 8 (симметричное случайное блуждание).</span>
+  Частица стартует в $0$; на каждом шаге независимо сдвигается на $+1$ или $-1$ с вероятностью $1/2$ каждое. $S_m$ — положение после $m$ шагов.</div>
+
+  <p>Здесь всё, что мы построили, окупается. Пути, впервые возвращающиеся в ноль на шаге $2n$, — это ровно каталановские пути (то самое разложение по первому возврату, с которого начиналась рекуррента в §2).</p>
+
+  <div class="stmt thm" id="m1-thm-12"><span class="lbl">Утверждение 12 (возврат = рекуррента Каталана).</span>
+  Пусть $f_{2n}=\Pr[S_1\ne0,\dots,S_{2n-1}\ne0,\,S_{2n}=0]$ — вероятность того, что <em>первое</em> возвращение в $0$ происходит ровно на шаге $2n$. Тогда траектории первого возврата на шаге $2n$ — это ровно $2\cdot C_{n-1}$ путей Дика длины $2n-2$ (сдвинутых на первый и последний шаг), и первое возвращение подчиняется рекурренте Сегнера в вероятностной одежде.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (разложение по первому возврату).</span>
+  Путь, впервые вернувшийся в $0$ на шаге $2n$, обязан начаться шагом $+1$ и оставаться $>0$ вплоть до шага $2n-1$, после чего шаг $-1$ возвращает его в $0$. Убрав первый и последний шаг и опустив траекторию на 1, получаем путь Дика длины $2n-2$; таких $C_{n-1}$, и с учётом знака (два симметричных варианта) — $2C_{n-1}$ траекторий: $f_{2n}=2C_{n-1}/2^{2n}$. Это в точности разложение «первый возврат», уже встречавшееся как рекуррента Сегнера (§2) — та же структура, теперь считающая вероятности. $\blacksquare$</div>
+
+<h2 id="m1-nevozvrat">Кульминация: вероятность не вернуться</h2>
+
+  <div class="stmt thm" id="m1-thm-13"><span class="lbl">Утверждение 13 (вероятность невозврата за $2n$ шагов).</span>
+  $$\Pr[S_1\ne0,\dots,S_{2n}\ne0]=\frac{\binom{2n}{n}}{2^{2n}}=u_{2n}.$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство (собрано из принципа отражения; честная пометка — дословного вывода в источниках нет).</span>
+  <em>Шаг 1 (вспомогательная лемма).</em> Число путей длины $m$ (шаги $\pm1$, старт в $0$), остающихся $\ge0$ на всём протяжении (не обязанных вернуться в $0$), равно $\binom{m}{\lfloor m/2\rfloor}$. Доказательство: путь на высоте $h\ge0$ состоит из $u=(m{+}h)/2$ шагов $+1$; по Утв. 8 при $p=u,q=m{-}u$ таких путей $\binom mu-\binom m{u+1}$; сумма по всем $h$ телескопируется в $\binom{m}{\lceil m/2\rceil}=\binom{m}{\lfloor m/2\rfloor}$.
+  <br><em>Шаг 2 (сборка).</em> Путь без возврата длины $2n$ после первого шага обязан целиком оставаться по одну сторону от оси. Если первый шаг $+1$: оставшиеся $2n-1$ шагов, сдвигом на $-1$, — путь длины $2n-1$, остающийся $\ge0$; таких $\binom{2n-1}{n-1}$ по лемме Шага 1. Симметрично для $-1$. Итого $2\binom{2n-1}{n-1}$ путей без возврата, и
+  $$\Pr[\text{без возврата за }2n]=\frac{2\binom{2n-1}{n-1}}{2^{2n}}.$$
+  Осталось заметить $\binom{2n}{n}=2\binom{2n-1}{n-1}$ (по симметрии биномиальных коэффициентов), откуда требуемое равенство. $\blacksquare$</div>
+
+  <p class="mn"><b>Вне-школы.</b> Убывает к нулю (значит, блуждание почти наверное когда-нибудь вернётся) — но медленно, как $1/\sqrt{\pi n}$ (формула Стирлинга). Вывод асимптотики в курс не входит (пределов и Стирлинга нет по условию) — упоминаем факт без доказательства.</p>
+
+<h2 id="m1-chungfeller">Жемчужина: Chung–Feller</h2>
+
+  <p>И напоследок — жемчужина в духе всей первой половины. Спросим: какую долю времени блуждание проводит <strong>выше</strong> горизонта? Интуиция кричит «около половины». Ответ переворачивает интуицию.</p>
+
+  <div class="stmt thm" id="m1-thm-14"><span class="lbl">Утверждение 14 (теорема Chung–Feller).</span>
+  Среди всех $\binom{2n}{n}$ путей длины $2n$ из шагов $\pm1$, оканчивающихся в $0$ («большие пути Дика», без ограничения на знак), число путей, ровно $2k$ шагов которых проведены выше оси, <strong>не зависит от $k$</strong> и равно $C_n$, для каждого $k=0,1,\dots,n$.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (переформулировка exceedance-биекции).</span>
+  Рассмотрим монотонные решёточные пути $R,U$ из $(0,0)$ в $(n,n)$ и статистику <em>exceedance</em> — число шагов $U$, лежащих строго выше диагонали $y=x$. Классы $\mathrm{exc}=0,1,\dots,n$ разбивают все $\binom{2n}n$ путей; класс $\mathrm{exc}=0$ — это пути Дика ($C_n$ штук). Явная биекция уменьшает exceedance на 1: находим первый шаг $U$ выше диагонали (позиция $i$), доходим до первого возврата на диагональ (позиция $j$), переставляем части: новый путь $=P[j{+}1{:}]+P[j]+P[0{:}j]$. Операция обратима; класс $\mathrm{exc}=0$ ставится в биекцию с каждым классом $\mathrm{exc}=k$ последовательным применением $k$ раз — все $n{+}1$ класс равномощны, $\binom{2n}n/(n{+}1)=C_n$. Переход к формулировке «выше оси» — тот же результат в повёрнутых на $45°$ координатах. $\blacksquare$</div>
+
+  <figure>
+    <svg viewBox="0 0 470 235" width="470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Гистограмма Chung-Feller: все четыре столбика равной высоты">
+  <text x="235" y="18" text-anchor="middle" class="s-txt">Сколько путей проводят данную долю времени выше оси?</text>
+  <!-- axes -->
+  <line x1="60" y1="180" x2="430" y2="180" class="s-thin"/>
+  <line x1="60" y1="180" x2="60" y2="45" class="s-thin"/>
+  <!-- four equal bars, height C3=5 -->
+  <g>
+    <rect x="90"  y="70" width="52" height="110" class="s-fillsh" stroke="#2f6e8e"/>
+    <rect x="172" y="70" width="52" height="110" class="s-fillsh" stroke="#2f6e8e"/>
+    <rect x="254" y="70" width="52" height="110" class="s-fillsh" stroke="#2f6e8e"/>
+    <rect x="336" y="70" width="52" height="110" class="s-fillsh" stroke="#2f6e8e"/>
+  </g>
+  <g class="s-txt" text-anchor="middle">
+    <text x="116" y="120">5</text><text x="198" y="120">5</text><text x="280" y="120">5</text><text x="362" y="120">5</text>
+  </g>
+  <g class="s-txt-m" text-anchor="middle">
+    <text x="116" y="197">0</text><text x="198" y="197">1/3</text><text x="280" y="197">2/3</text><text x="362" y="197">1</text>
+  </g>
+  <text x="245" y="222" text-anchor="middle" class="s-txt-m">доля времени выше оси  →  все доли равновероятны</text>
+  <!-- crossed-out intuition bell -->
+  <path d="M100 150 Q235 40 388 150" class="s-dash"/>
+  <text x="300" y="70" class="s-txt-m" fill="#c9743a">интуиция: колокол ✗</text>
+</svg>
+    <figcaption>Теорема Chung–Feller при $n=3$: доля времени выше оси распределена равномерно — все четыре класса равномощны ($C_3=5$), вопреки интуиции о «колоколе вокруг половины».</figcaption>
+  </figure>
+
+  <p class="mn"><b>Вне-школы.</b> Тот же приём даром работает и для более общих путей — Моцкина, Шрёдера (формулировкой, без вывода здесь).</p>
+
+<h2 id="m1-area">Area на трёх языках</h2>
+
+  <p>На лесенке живёт естественное число — <strong>площадь</strong> между путём и осью. Это статистика, которая тянулась фоном через весь рассказ, — и сейчас она протянет мост во <a href="#tab-lec5">вторую половину курса</a>.</p>
+
+  <div class="stmt defn" id="m1-def-9"><span class="lbl">Определение 9 (площадь пути, area).</span>
+  Для пути Дика $D$ длины $2n$ <em>area</em> $=\sum$ высот всех $2n$ ступенек пути (эквивалентно — площадь между путём и осью).</div>
+
+  <div class="stmt thm" id="m1-thm-15"><span class="lbl">Утверждение 15 (area на языке дерева, поэлементно).</span>
+  Пусть $T$ — ПБД, соответствующее пути Дика $D$, и вершины $T$ обходятся в порядке preorder $v_1,\dots,v_{2n+1}$. Тогда глубина вершины $v_r$ (расстояние до корня) равна высоте $r$-й ступеньки пути $D$ — вершина в вершину — и, суммируя,
+  $$\mathrm{area}(D)=\sum_{r} \mathrm{depth}(v_r).$$</div>
+
+  <div class="proof"><span class="lbl">Доказательство (пометка — композиция двух цитат).</span>
+  Утверждение — композиция двух фактов у Elizalde (2302.05252): поэлементное соответствие «глубина $r$-й вершины в preorder = высота $r$-й ступеньки пути» и определение $\mathrm{area}=\sum$ высот. Это не единая теорема источника, а составленная нами композиция двух его мест — но верна поэлементно и численно сверена для $n\le7$. $\blacksquare$ (со звёздочкой)</div>
+
+  <figure>
+    <svg viewBox="0 0 700 200" width="700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Одна величина area в трёх видах: площадь под путём, сумма глубин дерева, промах парковки">
+  <text x="350" y="18" text-anchor="middle" class="s-txt">Одно число — площадь пути = Σ глубин дерева = промах парковки</text>
+  <!-- panel 1: path with shaded area (mountain) -->
+  <g transform="translate(44,148)">
+    <polygon points="0,0 22,-22 44,-44 66,-22 88,-44 110,-22 132,0" class="s-fillsh" stroke="none"/>
+    <polyline points="0,0 22,-22 44,-44 66,-22 88,-44 110,-22 132,0" class="s-accent" fill="none"/>
+    <line x1="0" y1="0" x2="132" y2="0" class="s-thin"/>
+  </g>
+  <text x="110" y="180" text-anchor="middle" class="s-txt-m">area = Σ высот ступенек</text>
+  <!-- panel 2: tree with depths -->
+  <g transform="translate(300,46)">
+    <line x1="40" y1="6" x2="14" y2="40" class="s-line"/>
+    <line x1="40" y1="6" x2="66" y2="40" class="s-line"/>
+    <line x1="66" y1="44" x2="66" y2="82" class="s-line"/>
+    <circle cx="40" cy="4" r="7" class="s-node-r"/>
+    <circle cx="14" cy="42" r="6" class="s-node"/>
+    <circle cx="66" cy="42" r="6" class="s-node-r"/>
+    <circle cx="66" cy="86" r="6" class="s-node"/>
+    <g class="s-txt-m"><text x="52" y="2">0</text><text x="-2" y="46">1</text><text x="78" y="42">1</text><text x="78" y="90">2</text></g>
+  </g>
+  <text x="356" y="180" text-anchor="middle" class="s-txt-m">Σ глубин = 0+1+1+2 = 4</text>
+  <!-- panel 3: parking miss (mini) -->
+  <g transform="translate(516,86)">
+    <rect x="0"  y="0" width="26" height="24" rx="3" class="s-thin"/>
+    <rect x="34" y="0" width="26" height="24" rx="3" class="s-thin"/>
+    <rect x="68" y="0" width="26" height="24" rx="3" class="s-thin"/>
+    <g class="s-txt-m" text-anchor="middle"><text x="13" y="17">1</text><text x="47" y="17">2</text><text x="81" y="17">3</text></g>
+    <path d="M13 -6 C 22 -34 72 -34 81 -6" class="s-thin" marker-end="url(#arm2)"/>
+    <text x="47" y="-30" text-anchor="middle" class="s-txt-m">проезды мимо</text>
+  </g>
+  <text x="563" y="180" text-anchor="middle" class="s-txt-m">= промах (Мир 2)</text>
+  <g class="s-txt" text-anchor="middle" fill="#c9743a"><text x="248" y="112">=</text><text x="474" y="112">=</text></g>
+  <defs><marker id="arm2" markerWidth="8" markerHeight="8" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" class="s-ar-m"/></marker></defs>
+</svg>
+    <figcaption>Тройной вид одной величины: площадь под путём Дика $=\sum$ глубин вершин дерева $=$ промах парковки (Мир 2).</figcaption>
+  </figure>
+
+  <p>Итог — одна и та же величина видна как «площадь» на пути и как «насколько ветвисто-глубокое дерево» на языке дерева.</p>
+
+  <div class="caveat"><span class="lbl">Открытая развилка (честно, не решаем здесь)</span>
+  Та же статистика area видна и на языке перестановок — как число инверсий $\mathrm{inv}$ стек-сортируемой (231-избегающей) перестановки, соответствующей пути Дика (конструкция Bandlow–Killpatrick). Но в литературе <strong>нет единого соглашения</strong>, через какой запрещённый паттерн ($231$ или $312$) строить эту биекцию — они дают, вообще говоря, разные (хоть и равнораспределённые) статистики. Выбор основного соглашения для курса <strong>не сделан</strong> и здесь явочным порядком не фиксируется. Оставляем как честно помеченный открытый вопрос: третье, перестановочное лицо area в Мире 1 не доказано, а лишь заявлено формулировкой.</div>
+
+  <p>Мосты дальше, формулировками (без доказательства в этом файле):</p>
+  <ul>
+    <li><strong>area → q-Каталан / промах парковки.</strong> Статистика area продолжается во второй половине курса как $q$-число Каталана и как «промах» парковочной функции — см. <a href="#cap-qkatalan" data-tab="tab-lec9">капстоун</a>.</li>
+    <li><strong>Счастливые споты = пики пути = числа Нараяны</strong> (<span id="m1-narayana"></span>убывающие парковочные функции переводятся в пути Дика; число «счастливых спотов» парковки равно числу пиков соответствующего пути — это числа Нараяны, среднее $E=(n+1)/2$; вывод — в источнике, здесь не переприводим).</li>
+  </ul>
+
+  <div class="stmt example"><span class="lbl">Честный зазор: северная звезда</span>
+  На самом глубоком уровне пути Дика и парковки — две грани одного алгебраического объекта: пространство диагональных гармоник имеет размерность $(n+1)^{n-1}$ (= число парковок), а его ряд Гильберта суммируется по помеченным путям Дика со статистиками area/dinv ($q,t$-числа Каталана — Shuffle Theorem, Haglund–Haiman–Loehr–Morse–Zabrocki, доказана Carlsson–Mellit). Это целиком вне школьного уровня — только упоминание как горизонт, объясняющий, почему обе половины курса вообще об одном и том же.</div>
+
+<h2 id="m1-itog">Что в итоге</h2>
+
+  <p>Мы начали с ножниц и многоугольника и никуда не сворачивали с дороги «одно число — много языков». Посчитали триангуляции; перевели их в деревья; в деревьях узнали пути, скобки, перестановки — и поняли, что всех переодевает один стек. Вывели формулу тремя разными способами — вырезанием листа, зеркалом, поворотом круга. И увидели, что не все они равны: <strong>вырезание держалось на балансе и сломалось бы на произвольном пути, а зеркало и поворот круга пережили переход в несбалансированный мир</strong> — они и есть настоящие идеи. А поворот круга оказался даже больше, чем приёмом для счёта: это стержень, на котором держится и <a href="#tab-lec5">вторая половина курса</a>.</p>
+
+  <p>Честный зазор напоследок. Площадь под путём — статистика, которая тянулась фоном через весь рассказ, — уводит прямиком во вторую половину: там она обернётся промахом парковки и q-числом Каталана (<a href="#cap-qkatalan" data-tab="tab-lec9">капстоун</a>). А на самом глубоком уровне пути и парковки окажутся двумя гранями одного алгебраического объекта (диагональные гармоники, $q,t$-числа Каталана) — но это северная звезда, к которой курс ещё подрастёт.</p>
+
+  <p class="foot">Черновик статьи-заготовки к первой половине курса. Полные доказательства, точные ссылки на источники и честные пометки о конспективных местах — в математическом скелете курса (`kurs/mir1-skelet.md`). Иллюстрации нарисованы под этот текст; часть композиционно тонких мест оставлена плейсхолдерами. Стиль ещё пойдёт через редакторский проход. Капстоун — там, где сходятся обе половины, — в третьей вкладке.</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec5">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#s-vvedenie">Откуда мы приходим</a></li>
+    <li><a href="#s-parking">Задача о парковке</a></li>
+    <li><a href="#s-kriterij">Критерий: когда встанут все</a></li>
+    <li><a href="#s-put">Внутри парковки — встречаем путь Дика</a></li>
+    <li><a href="#s-pollak">Сколько их? Считаем как в Мире 1</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 5 · Парковка → путь Дика</h1>
+  <p class="subtitle">Задача о машинах оборачивается переодетым путём Дика; тот же круговой приём считает и её.</p>
+  <div class="meta">Мир 2 · черновик · 5 разделов</div>
+
+<h2 id="s-vvedenie">Откуда мы приходим</h2>
+
+  <p class="lead">В <a href="#tab-lec1">первой половине курса</a> всё вертелось вокруг <em>путей Дика</em> — ломаных из шагов «вверх» и «вправо», которые не опускаются ниже диагонали, — и мы научились их считать (числа Каталана). Отсюда нам понадобится ровно один факт: путь Дика — это, по существу, дерево (за каждым правильным скобочным выражением стоит дерево, и мы это <a href="#m1-zoopark" data-tab="tab-lec1">видели</a>). Его и будем держать в уме, чтобы один раз пустить в дело.</p>
+
+  <p>А начнём с задачи, которая на путь Дика не похожа совсем, — про машины. И увидим, как из неё сама собой вырастает и классическая формула Кэли для числа помеченных деревьев, и целая россыпь мостов обратно — в первую половину курса.</p>
+
+  <p class="mn">Договоримся об обозначениях: <b>[n]</b> = {1, 2, …, n}, <b>[n]₀</b> = {0, 1, …, n}. Всё изложение элементарно — «школьная математика для взрослого»: строго формулируем, но идею доказательства ставим выше изнурительной выкладки.</p>
+
+  <p>Статья — одна дорога, без развилок. Сначала сама задача и простой вопрос: <em>когда паркуются все?</em> Ответ-критерий вдруг окажется дословно условием пути Дика — и парковка предстанет переодетым путём Дика (вот и первый мост в <a href="#tab-lec1">Мир 1</a>: сними метки — ты в мире Каталана). Тогда и посчитать парковки захочется тем же круговым приёмом, каким <a href="#m1-cikl" data-tab="tab-lec3">Мир 1 считает пути</a>. Дальше заведём на пути <em>площадь</em>, увидим, как из рекурсии сам собой сворачивается <em>дерево</em> и даром выпадает формула Кэли, — и займёмся тонкими мерками: совпадают ли у «одного объекта в трёх костюмах» не только количества. Тут наивная дорога подведёт, и связь похитрее придётся приручить. В конце соберём «много лиц» одного числа и приоткроем двери наружу — в теорию вероятностей и снова в Мир 1 (а самый глубокий мост — площадь → q-число Каталана — ждёт в <a href="#cap-qkatalan" data-tab="tab-lec9">капстоуне</a>).</p>
+
+<h2 id="s-parking">Задача о парковке</h2>
+
+  <p>Вдоль улицы стоят $n$ мест подряд: $1, 2, \dots, n$. Приезжают $n$ машин, по очереди. У каждой есть любимое место; машина едет к нему, если занято — едет дальше и встаёт на первое свободное, назад сдавать нельзя. Список любимых мест и есть предмет разговора.</p>
+
+  <div class="stmt defn" id="def-1"><span class="lbl">Определение 1 (функция предпочтений и процедура).</span>
+  На одностороннюю улицу с местами $1,\dots,n$ приезжают машины $1,\dots,n$. <em>Функция предпочтений</em> — это отображение $f\colon [n]\to[n]$, где $f(i)$ — желаемое место машины $i$. По процедуре машина $i$ едет к месту $f(i)$; если оно свободно — паркуется там, иначе едет дальше и занимает первое свободное место после $f(i)$ (назад нельзя).</div>
+
+  <div class="stmt defn" id="def-2"><span class="lbl">Определение 2 (парковочная функция).</span>
+  Функция предпочтений $f$ называется <strong>парковочной функцией</strong>, если при этой процедуре паркуются <em>все</em> $n$ машин.</div>
+
+  <figure>
+    <svg viewBox="0 0 440 120" width="440" role="img" aria-label="Машина хочет занятое место и переезжает на следующее свободное">
+      <!-- spots -->
+      <g>
+        <rect x="20"  y="70" width="56" height="34" rx="4" class="s-thin"/>
+        <rect x="82"  y="70" width="56" height="34" rx="4" class="s-thin s-fillsh"/>
+        <rect x="144" y="70" width="56" height="34" rx="4" class="s-thin"/>
+        <rect x="206" y="70" width="56" height="34" rx="4" class="s-thin"/>
+        <rect x="268" y="70" width="56" height="34" rx="4" class="s-thin"/>
+        <rect x="330" y="70" width="56" height="34" rx="4" class="s-thin"/>
+      </g>
+      <g class="s-txt-m" text-anchor="middle">
+        <text x="48" y="118">1</text><text x="110" y="118">2</text><text x="172" y="118">3</text>
+        <text x="234" y="118">4</text><text x="296" y="118">5</text><text x="358" y="118">6</text>
+      </g>
+      <!-- occupied car on spot 2 -->
+      <rect x="88" y="76" width="44" height="22" rx="6" class="s-fillsh" stroke="#9bb8c6"/>
+      <!-- arriving car above spot 2, arrow to spot 3 -->
+      <rect x="88" y="24" width="44" height="22" rx="6" class="s-fillw"/>
+      <text x="110" y="39" text-anchor="middle" class="s-txt-w">хочет 2</text>
+      <path d="M132 35 C 175 35 172 60 172 66" class="s-accent" marker-end="url(#arw)"/>
+      <defs><marker id="arw" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+        <path d="M0 0 L6 3 L0 6 z" class="s-ar-a"/></marker></defs>
+    </svg>
+    <figcaption>Место 2 занято — машина едет вперёд и встаёт на 3. Назад нельзя.</figcaption>
+  </figure>
+
+  <p>Перед нами маленький случайный процесс, и первый естественный вопрос про него сам собой — <strong>при каких списках желаний паркуются все?</strong> Поиграем на маленьком примере, чтобы почувствовать, что тут вообще может пойти не так.</p>
+
+  <div class="stmt example"><span class="lbl">Пример</span>
+  Пусть $n=4$ и $f=(1,3,1,1)$. Смотрим по очереди:
+  <br>• машина 1 хочет 1 — свободно — встаёт на <strong>1</strong>;
+  <br>• машина 2 хочет 3 — свободно — встаёт на <strong>3</strong>;
+  <br>• машина 3 хочет 1 — занято, едет дальше: 2 свободно — встаёт на <strong>2</strong> (один промах);
+  <br>• машина 4 хочет 1 — занято, 2 занято, 3 занято, 4 свободно — встаёт на <strong>4</strong> (три промаха).
+  <br>Встали все четыре — значит $f=(1,3,1,1)$ парковочная. Этот пример мы протащим через полстатьи: он ещё станет путём, потом деревом.</div>
+
+  <p>А вот когда бывает беда? Когда слишком много машин целятся в конец улицы: передним местам не хватает клиентов, а задним не хватает места. Скажем, $f=(3,3,3,4)$ на четырёх местах: три машины рвутся к месту 3, и втроём в «3 и правее» они не помещаются — кто-то упрётся в конец, а места 1 и 2 останутся пустыми. Значит, всё решает <em>сколько машин целятся «недалеко»</em>. Это наблюдение мы сейчас превратим в точный критерий.</p>
+
+<h2 id="s-kriterij">Критерий: когда встанут все</h2>
+
+  <p>Ответ короткий и запоминающийся: важно только, чтобы отсортированные желания «не обгоняли номер».</p>
+
+  <div class="stmt thm" id="thm-1"><span class="lbl">Теорема 1 (критерий парковки).</span>
+  Пусть $a_1 \le a_2 \le \dots \le a_n$ — предпочтения $f$, отсортированные по возрастанию. Тогда $f$ — парковочная функция <em>тогда и только тогда</em>, когда
+  $$a_i \le i \quad\text{для всех } i=1,\dots,n.$$
+  Равносильно: для каждого $k$ число машин, желающих одно из мест $\{n-k+1,\dots,n\}$, не превосходит $k$.</div>
+
+  <div class="proof"><span class="lbl">Идея (минимальный контрпример).</span>
+  Пусть паркуются не все; возьмём <em>самое левое</em> место $i$, оставшееся пустым. Его никто не хотел (иначе оно было бы занято этой машиной), и мимо него никто не переливался вправо (перелив идёт только через занятые места). Значит, все машины, доехавшие до мест $1,\dots,i$, целились в первые $i-1$ мест, но их оказалось меньше $i-1$ — иначе одна была бы вынуждена занять $i$. Это и есть нарушение условия. Обратно: если для некоторого $i$ желающих места $\le i$ меньше $i$, то первые $i$ мест не могут заполниться (машина никогда не встаёт левее своего желания), а машин и мест поровну — кто-то не припаркуется. $\square$</div>
+
+  <p class="mn">Полное доказательство — в математическом скелете курса. Здесь и далее мы намеренно даём <b>идею и ключевые шаги</b>, а не каждую строчку: цель — увидеть механизм.</p>
+
+  <p>Проверим критерий на нашем примере. Для $f=(1,3,1,1)$ отсортированные желания — $(1,1,1,3)$: и правда $a_1=1\le1$, $a_2=1\le2$, $a_3=1\le3$, $a_4=3\le4$. Всё в порядке — согласуется с тем, что все машины встали. А для «плохого» $f=(3,3,3,4)$ сортировка даёт $(3,3,3,4)$, и уже $a_1=3\le1$ нарушено.</p>
+
+  <p>Запомним не только сам критерий, но и его <em>вид</em>: «отсортированные желания не обгоняют номер». Ровно этот вид скоро откликнется в совершенно другом месте — и это будет не совпадение.</p>
+
+<h2 id="s-put">Внутри парковки — встречаем путь Дика</h2>
+
+  <p>Прежде чем считать парковки, всмотримся в их устройство — и узна́ем старого знакомого. Ключ — <em>вид</em> критерия из <a href="#thm-1">Теоремы 1</a>. Условие «отсортированные желания $a_i \le i$» — это дословно условие, которым в <a href="#tab-lec1">первой половине</a> задавались <em>пути Дика</em> («ломаная не обгоняет диагональ»). То есть парковочная функция — это переодетый путь Дика. Оденем его аккуратно.</p>
+
+  <div class="stmt defn" id="def-3"><span class="lbl">Определение 3 (путь Дика).</span>
+  Путь Дика длины $2n$ — ломаная из $n$ шагов «вверх» и $n$ шагов «вправо», идущая из левого-нижнего угла в правый-верхний и ни разу не опускающаяся ниже диагонали. Это обычный, «немеченый» объект <a href="#m1-triang" data-tab="tab-lec1">первой половины</a> курса.</div>
+
+  <div class="stmt defn" id="def-4"><span class="lbl">Определение 4 (помеченный путь Дика).</span>
+  Помеченный путь Дика порядка $n$ — путь Дика, у которого $n$ шагов «вверх» занумерованы числами $1,\dots,n$ (каждое ровно раз) так, что метки в пределах одного столбца (вертикального пробега) <em>возрастают снизу вверх</em>.</div>
+
+  <p>Связь строится через диагонали. На диаграмме проводим диагонали, параллельные главной, и нумеруем столбцы $1,2,\dots$; метку $i$ (машину $i$) ставим на шаг «вверх» в столбце $f(i)$. Условие возрастания меток внутри столбца делает картинку однозначной.</p>
+
+  <div class="stmt thm" id="thm-2"><span class="lbl">Теорема 2 (биекция: помеченный путь Дика ↔ парковочная функция).</span>
+  Правило «метка $i$ стоит в столбце $j$ $\Leftrightarrow$ $f(i)=j$» задаёт взаимно однозначное соответствие между помеченными путями Дика порядка $n$ и парковочными функциями порядка $n$. <em>Сколько их всего — посчитаем в следующем разделе; пока важно само соответствие.</em></div>
+
+  <div class="proof"><span class="lbl">Почему это биекция.</span>
+  Число шагов «вверх» в первых $k$ столбцах — это число машин с $f(i)\le k$. Путь не падает ниже диагонали ровно тогда, когда в каждых первых $k$ столбцах шагов «вверх» набралось хотя бы $k$, — а это дословно критерий <a href="#thm-1">Теоремы 1</a>. Значит, путь Дика $\Leftrightarrow$ парковочная $f$. Обратимость: зная $f$, мы знаем <em>множество</em> меток каждого столбца, а порядок внутри столбца восстанавливается однозначно требованием возрастания. $\square$</div>
+
+  <div class="stmt example"><span class="lbl">Пример f=(1,3,1,1)</span>
+  Считаем, сколько машин попадает в каждый столбец: $f$-значения $1,3,1,1$ дают столбец 1 = {метки 1, 3, 4}, столбец 2 = {}, столбец 3 = {метка 2}, столбец 4 = {}. Внутри столбца 1 метки идут снизу вверх по возрастанию: 1, 3, 4. Проверим Дика: после столбца 1 набрано 3 шага «вверх» (нужно ≥1), после столбца 2 — те же 3 (нужно ≥2), после столбца 3 — 4 (нужно ≥3), после столбца 4 — 4 (нужно ≥4). Всё выполнено — перед нами законный помеченный путь Дика.</div>
+
+  <figure>
+    <svg viewBox="0 0 440 190" width="440" role="img" aria-label="Помеченный путь Дика и он же без меток">
+      <!-- left: labeled -->
+      <g transform="translate(28,150)">
+        <line x1="0" y1="0" x2="120" y2="-120" class="s-dash"/>
+        <path d="M0 0 L0 -30 L30 -30 L30 -60 L60 -60 L60 -90 L90 -90 L90 -120 L120 -120" class="s-accent"/>
+        <line x1="0" y1="0" x2="120" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-120" class="s-thin"/>
+        <g class="s-txt" text-anchor="middle">
+          <text x="-11" y="-11">2</text><text x="19" y="-41">3</text>
+          <text x="49" y="-71">1</text><text x="79" y="-101">4</text>
+        </g>
+        <text x="60" y="30" text-anchor="middle" class="s-txt-m">помеченный путь</text>
+      </g>
+      <!-- right: unlabeled -->
+      <g transform="translate(268,150)">
+        <line x1="0" y1="0" x2="120" y2="-120" class="s-dash"/>
+        <path d="M0 0 L0 -30 L30 -30 L30 -60 L60 -60 L60 -90 L90 -90 L90 -120 L120 -120" class="s-line"/>
+        <line x1="0" y1="0" x2="120" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-120" class="s-thin"/>
+        <text x="60" y="30" text-anchor="middle" class="s-txt-m">стёрли метки — путь Дика</text>
+      </g>
+    </svg>
+    <figcaption>Парковка — это путь Дика с метками. Снял метки — ты в мире Каталана; надел — в мире парковок.</figcaption>
+  </figure>
+
+  <p>А вот и секрет, ради которого стоило рисовать: <strong>сотрём метки — останется обычный путь Дика,</strong> объект первой половины. Вот сердце всей второй половины: помеченный путь — мостик, которым обе части курса держатся друг за друга.</p>
+
+  <div class="stmt thm"><span class="lbl">Утверждение (хаб: снятие меток = переход в Мир 1).</span>
+  Если стереть метки с помеченного пути Дика, получится обычный путь Дика — объект <a href="#tab-lec1">Мира 1</a> (Каталан). Всё, что зависит только от <em>формы</em> пути, а не от меток, автоматически становится общей величиной для обеих половин курса.</div>
+
+<h2 id="s-pollak">Сколько их? Считаем как в Мире 1</h2>
+
+  <p>Теперь, когда парковка опознана как помеченный путь Дика, вопрос «сколько их?» получает естественный ход: <strong>посчитаем их так, как <a href="#tab-lec1">Мир 1</a> считает пути.</strong> В лоб трудно — условие $a_i \le i$ не разваливается в произведение независимых выборов, — и в похожем тупике <a href="#m1-cikl" data-tab="tab-lec3">Мир 1 берётся за круговой приём</a> (циклическую лемму). Перенесём его сюда: это единственное прозрение на весь рассказ, и оно приходит не с неба, а ровно потому, что мы уже узнали в парковке путь.</p>
+
+  <div class="insight"><span class="tag">Прозрение</span>
+  Посадим места на <strong>круг</strong>. Пусть мест не $n$, а $n{+}1$, замкнутых в кольцо; каждая машина выбирает любимое место из $n{+}1$ — всего $(n{+}1)^n$ списков. На кольце паркуются <em>всегда все</em> (машин на одну меньше, чем мест), и ровно одно место остаётся пустым.</div>
+
+  <figure>
+    <svg viewBox="0 0 240 200" width="240" role="img" aria-label="Восемь мест по кругу, одно пустое">
+      <circle cx="120" cy="100" r="78" class="s-thin"/>
+      <g id="seats"></g>
+    </svg>
+    <figcaption>Мест на одно больше, чем машин: одно место (светлое) всегда остаётся пустым.</figcaption>
+  </figure>
+
+  <div class="stmt thm" id="thm-3"><span class="lbl">Теорема 3 (число парковочных функций).</span>
+  Число парковочных функций порядка $n$ равно $(n{+}1)^{\,n-1}$. Столько же, стало быть, и помеченных путей Дика — счёт из <a href="#thm-2">Теоремы 2</a> замкнулся.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (круговой приём Поллака).</span>
+  Запустим ту же процедуру на кольце из $n{+}1$ мест; круговых списков предпочтений $f\colon[n]\to[n{+}1]$ ровно $(n{+}1)^n$. Все $n$ машин паркуются (мест больше), и ровно одно место пусто. Пусть $P_k$ — множество списков, при которых пустым остаётся место $k$. Сдвиг всех предпочтений на единицу по кругу поворачивает всю картину и уносит пустое место туда же — это биекция $P_k \cong P_{k+1}$. Значит, все $n{+}1$ классов $P_k$ равны по размеру, и
+  $$|P_k| = \frac{(n{+}1)^n}{n{+}1} = (n{+}1)^{\,n-1}.$$
+  Осталось узнать линейные парковки среди кольцевых. Обычные парковочные функции на прямой улице — это ровно те кольцевые списки, при которых пустым остаётся «лишнее» место $n{+}1$: тогда никто не доезжает до него и не переливается через него, и кольцо ведёт себя как прямая. То есть их ровно $|P_{n+1}| = (n{+}1)^{\,n-1}$. $\square$</div>
+
+  <p><em>Мостик назад.</em> Этот круговой приём — то же самое, что <em>циклическая лемма</em> (Дворецкий–Моцкин; в русской традиции — лемма Рени), которой <a href="#m1-cikl" data-tab="tab-lec3">в первой половине мы считали пути Дика</a>: «в орбите циклических сдвигов ровно фиксированная доля хороших». Один трюк — оба мира, и здесь он не с неба, а ровно потому, что мы уже узнали в парковке путь. Кто первой половины не застал, ничего не теряет: приём самодостаточен. И запомним эту геометрию «поворота по кругу»: она ещё вернётся в <a href="#s-joyal" data-tab="tab-lec8">§Жуаяль</a>, уже под видом функционального графа.</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec6">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#s-ploshchad">Площадь и промах — одно число</a></li>
+    <li><a href="#s-derevo">Путь распадается — рождается дерево</a></li>
+    <li><a href="#s-keli">Подарок: формула Кэли — даром</a></li>
+    <li><a href="#s-inversii">Совпадают ли и тонкие мерки? Инверсии</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 6 · Дерево из рекурсии и формула Кэли</h1>
+  <p class="subtitle">Площадь как тонкая мерка, первый возврат сворачивает дерево, формула Кэли выпадает даром.</p>
+  <div class="meta">Мир 2 · черновик · 4 раздела</div>
+
+<h2 id="s-ploshchad">Площадь и промах — одно число</h2>
+
+  <p>На лесенке живёт естественное число — <strong>площадь</strong> между путём и диагональю. Заведём её и её двойника на стороне парковки.</p>
+
+  <div class="stmt defn" id="def-5"><span class="lbl">Определение 5 (площадь, area).</span>
+  $\operatorname{area}(P)$ — число клеток единичной решётки, лежащих между путём $P$ и диагональю (над диагональю, под путём). Величина зависит только от формы пути, но не от меток. Ровно та же величина, что <a href="#m1-area" data-tab="tab-lec4">в Мире 1</a> тянулась фоном через весь рассказ.</div>
+
+  <div class="stmt defn" id="def-6"><span class="lbl">Определение 6 (промах, displacement).</span>
+  Если машина $i$ паркуется на месте $p_i$, то полный <em>промах</em>
+  $$D(f) = \sum_{i=1}^{n}\bigl(p_i - f(i)\bigr) = \frac{n(n{+}1)}{2} - \sum_{i=1}^{n} f(i)$$
+  — суммарное число мест, которые машины проехали мимо своих желаний (равенство справа верно, потому что места $p_1,\dots,p_n$ — это перестановка $\{1,\dots,n\}$, и их сумма всегда $\tfrac{n(n+1)}2$).</div>
+
+  <div class="stmt thm" id="lem-4"><span class="lbl">Лемма 4 (площадь = промах, поэлементно).</span>
+  При биекции <a href="#thm-2" data-tab="tab-lec5">Теоремы 2</a> для каждой пары «путь $P$ ↔ парковка $f$» выполнено $\operatorname{area}(P) = D(f)$.</div>
+
+  <div class="proof"><span class="lbl">Идея.</span>
+  Каждая «пустая» клетка над диагональю, лежащая ниже пути, отвечает ровно одному проезду мимо занятого места. Подсчёт клеток $\operatorname{area}(P)$ и подсчёт промахов $D(f)$ — это один и тот же счёт, проведённый в двух согласованных системах координат: геометрической и «по машинам». $\square$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 168" width="460" role="img" aria-label="Площадь пути равна промаху парковки: четыре клетки, четыре проезда">
+      <defs><marker id="tp2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" class="s-ar-m"/></marker></defs>
+      <g transform="translate(48,134)">
+        <line x1="0" y1="0" x2="104" y2="-104" class="s-dash"/>
+        <rect x="0"  y="-52"  width="26" height="26" class="s-fillsh"/>
+        <rect x="0"  y="-78"  width="26" height="26" class="s-fillsh"/>
+        <rect x="26" y="-78"  width="26" height="26" class="s-fillsh"/>
+        <rect x="52" y="-104" width="26" height="26" class="s-fillsh"/>
+        <path d="M0 0 L0 -78 L52 -78 L52 -104 L104 -104" class="s-accent"/>
+        <line x1="0" y1="0" x2="104" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-104" class="s-thin"/>
+        <g class="s-txt-m" text-anchor="middle"><text x="13" y="-35">1</text><text x="13" y="-61">2</text><text x="39" y="-61">3</text><text x="65" y="-87">4</text></g>
+        <text x="52" y="24" text-anchor="middle" class="s-txt-m">4 клетки площади</text>
+      </g>
+      <text x="228" y="78" text-anchor="middle" class="s-txt">=</text>
+      <g transform="translate(262,0)">
+        <rect x="6"   y="76" width="30" height="26" rx="3" class="s-thin"/>
+        <rect x="44"  y="76" width="30" height="26" rx="3" class="s-thin"/>
+        <rect x="82"  y="76" width="30" height="26" rx="3" class="s-thin"/>
+        <rect x="120" y="76" width="30" height="26" rx="3" class="s-thin"/>
+        <g class="s-txt-m" text-anchor="middle"><text x="21" y="118">1</text><text x="59" y="118">2</text><text x="97" y="118">3</text><text x="135" y="118">4</text></g>
+        <path d="M21 72 C 21 40 135 40 135 74" class="s-thin" marker-end="url(#tp2)"/>
+        <text x="78" y="36" text-anchor="middle" class="s-txt-m">машина 4 — мимо 3 мест</text>
+        <path d="M21 72 C 28 60 46 60 59 74" class="e2" fill="none" marker-end="url(#tp2)"/>
+        <text x="78" y="134" text-anchor="middle" class="s-txt-m">машина 3 — мимо 1 · всего 3 + 1 = 4</text>
+      </g>
+    </svg>
+    <figcaption>Лемма 4 на примере $f=(1,3,1,1)$: закрашенных клеток площади ровно столько, сколько проездов мимо занятых мест, — по 4.</figcaption>
+  </figure>
+
+  <div class="stmt example"><span class="lbl">Пример f=(1,3,1,1)</span>
+  Машины встали на места $p=(1,3,2,4)$. Промах $D = (1{-}1)+(3{-}3)+(2{-}1)+(4{-}1) = 0+0+1+3 = \mathbf{4}$. То же по формуле: $\tfrac{4\cdot5}{2} - (1{+}3{+}1{+}1) = 10 - 6 = 4$. По <a href="#lem-4">Лемме 4</a> площадь под соответствующим путём тоже равна 4. Число «4» мы ещё вспомним в <a href="#s-kontrprimer" data-tab="tab-lec7">§11</a> — и там оно нас подведёт.</div>
+
+  <p>Площадь запомним крепко: это <em>главная нить</em> до самого конца. Ниже она дважды свяжет вторую половину с первой — сначала как общая статистика пути (<a href="#s-inversii">инверсии</a>), потом как показатель степени в <a href="#cap-qkatalan" data-tab="tab-lec9">q-числе Каталана</a> (капстоун).</p>
+
+<h2 id="s-derevo">Путь распадается — рождается дерево</h2>
+
+  <p>Здесь срабатывает то единственное, что мы взяли из <a href="#tab-lec1">первой половины</a>: <strong>путь Дика — это дерево.</strong> И прячется дерево за путём не случайно, а по <em>рекурсии</em> — той самой, что <a href="#m1-triang" data-tab="tab-lec1">в Мире 1 порождает числа Каталана</a>.</p>
+
+  <p>Снимем на минуту метки. Первый раз, когда путь <em>возвращается</em> на диагональ, он распадается надвое: «горб» до возврата и весь остаток — и то и другое снова пути Дика, только короче. Это и есть рекурсия Каталана: объект склеен из двух таких же, но меньших. А дерево читается прямо из разбиения — корень, к нему подвешено поддерево «горба», а «остаток» даёт остальные ветви корня; спускаясь так до отдельных вершин, мы <em>рекурсивно</em> собираем дерево из пути.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 214" width="460" role="img" aria-label="Первый возврат делит путь на горб и остаток; так же рекурсивно собирается дерево">
+      <!-- left: путь Дика с разбиением по первому возврату -->
+      <g transform="translate(40,150)">
+        <line x1="0" y1="0" x2="104" y2="-104" class="s-dash"/>
+        <line x1="0" y1="0" x2="104" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-104" class="s-thin"/>
+        <path d="M0 0 L0 -52 L52 -52" class="s-accent"/>
+        <path d="M52 -52 L52 -78 L78 -78 L78 -104 L104 -104" class="s-line"/>
+        <circle cx="52" cy="-52" r="3.6" class="s-ar-a"/>
+        <text x="14" y="-62" text-anchor="middle" class="s-txt-m">горб</text>
+        <text x="84" y="-112" text-anchor="middle" class="s-txt-m">остаток</text>
+        <text x="52" y="26" text-anchor="middle" class="s-txt-m">первый возврат на диагональ</text>
+      </g>
+      <text x="238" y="82" text-anchor="middle" class="s-txt">→</text>
+      <!-- right: дерево, собранное рекурсивно -->
+      <g transform="translate(300,0)">
+        <line x1="72" y1="36" x2="44" y2="82" class="s-accent"/>
+        <line x1="44" y1="94" x2="44" y2="132" class="s-accent"/>
+        <line x1="72" y1="36" x2="98" y2="82" class="s-line"/>
+        <line x1="72" y1="36" x2="130" y2="82" class="s-line"/>
+        <circle cx="72" cy="34" r="11" class="s-node-r"/>
+        <circle cx="44" cy="88" r="10" fill="#fff" stroke="#2f6e8e" stroke-width="2.2"/>
+        <circle cx="44" cy="138" r="10" fill="#fff" stroke="#2f6e8e" stroke-width="2.2"/>
+        <circle cx="98" cy="88" r="10" class="s-node"/>
+        <circle cx="130" cy="88" r="10" class="s-node"/>
+        <text x="44" y="166" text-anchor="middle" class="s-txt-m">горб</text>
+        <text x="114" y="166" text-anchor="middle" class="s-txt-m">остаток</text>
+      </g>
+    </svg>
+    <figcaption>Первый возврат на диагональ делит путь на «горб» и «остаток» — оба короче и снова пути Дика. По той же рекурсии, что даёт числа Каталана, дерево склеивается из корня, поддерева горба и ветвей остатка.</figcaption>
+  </figure>
+
+  <p>Это самый прямой мост в <a href="#tab-lec1">Мир 1</a>: там немеченый путь Дика — уже дерево, ровно по этой рекурсии первого возврата. У нас путь помеченный — значит, и дерево будет помеченным; опишем его аккуратно.</p>
+
+  <div class="stmt defn" id="def-7"><span class="lbl">Определение 7 (помеченное дерево).</span>
+  Помеченное дерево — связный ациклический граф на вершинах $\{0,1,\dots,n\}$; вершина $0$ фиксирована как корень.</div>
+
+  <p>Конкретное правило — прочитать дерево прямо с диаграммы по столбцам. Читаем метки слева направо, снизу вверх, обозначив прочитанное $a_1,a_2,\dots$ и положив $a_0:=0$. Для каждого $j=0,1,\dots$ проводим рёбра из вершины $a_j$ ко всем вершинам, чьи метки стоят в столбце $j{+}1$. Иными словами: метки первого столбца — дети корня $0$; метки следующего непустого столбца — дети очередной уже открытой вершины, и так далее.</p>
+
+  <p class="mn"><b>Честная пометка.</b> Первый возврат даёт <em>форму</em> дерева (это факт Мира 1); правило «по столбцам» — конкретная помеченная развёртка, и биекцию мы доказываем именно для неё (см. Теорему 5). Совпадают ли две конструкции дословно и не добавляет ли условие «метки в столбце растут» ограничений на дерево — отдельное утверждение, которое стоит установить в Мире 1; здесь мы на него не опираемся.</p>
+
+  <div class="stmt thm" id="thm-5"><span class="lbl">Теорема 5 (биекция: помеченный путь Дика ↔ помеченное дерево).</span>
+  Описанная развёртка — взаимно однозначное соответствие между помеченными путями Дика порядка $n$ и помеченными деревьями на $\{0,\dots,n\}$. Обратно дерево сворачивается в путь однозначно благодаря единственности путей в дереве.</div>
+
+  <div class="proof"><span class="lbl">Почему обратимо.</span>
+  Индукцией по $j$ проверяется, что каждый «якорь» $a_j$ — это либо $0$, либо метка, уже встреченная левее, поэтому все вершины оказываются достижимы из $0$ и граф связен, а рёбер ровно $n$ — значит, это дерево. Обратный ход (дерево → путь): метки столбца $j{+}1$ — соседи вершины $a_j$, ещё не попавшие в $\{a_0,\dots,a_{j-1}\}$; ацикличность и связность гарантируют, что $a_j$ к нужному моменту определён однозначно. $\square$</div>
+
+  <div class="stmt example"><span class="lbl">Пример f=(1,3,1,1) — третий костюм</span>
+  Читаем метки по столбцам снизу вверх: столбец 1 даёт $1,3,4$, столбец 3 даёт $2$; итого $a_1{=}1,\ a_2{=}3,\ a_3{=}4,\ a_4{=}2$, и $a_0{=}0$. Проводим рёбра:
+  <br>• $j=0$: из $a_0=0$ — во весь столбец 1 → рёбра $0{-}1,\ 0{-}3,\ 0{-}4$;
+  <br>• $j=1$: из $a_1=1$ — столбец 2 пуст → ничего;
+  <br>• $j=2$: из $a_2=3$ — столбец 3 = {2} → ребро $3{-}2$;
+  <br>• $j=3$: из $a_3=4$ — столбец 4 пуст → ничего.
+  <br>Получилось дерево: корень $0$ держит $1,3,4$, а к вершине $3$ подвешена $2$. Пять вершин, четыре ребра — всё сходится.</div>
+
+  <figure>
+    <svg viewBox="0 0 700 200" width="700" role="img" aria-label="Один объект в трёх костюмах: парковка, помеченный путь Дика, дерево для f=(1,3,1,1)">
+      <defs>
+        <marker id="tp" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" class="s-ar-m"/></marker>
+        <style>
+          .l1{fill:#2f6e8e}.l2{fill:#c9743a}.l3{fill:#4f8f4a}.l4{fill:#8a5aa8}
+          .e1{stroke:#2f6e8e}.e2{stroke:#c9743a}.e3{stroke:#4f8f4a}.e4{stroke:#8a5aa8}
+        </style>
+      </defs>
+
+      <!-- Панель 1: парковка -->
+      <text x="86" y="15" class="s-txt-m" text-anchor="middle">парковка · f = (1,3,1,1)</text>
+      <g>
+        <rect x="10" y="72" width="36" height="30" rx="4" class="s-thin"/>
+        <rect x="52" y="72" width="36" height="30" rx="4" class="s-thin"/>
+        <rect x="94" y="72" width="36" height="30" rx="4" class="s-thin"/>
+        <rect x="136" y="72" width="36" height="30" rx="4" class="s-thin"/>
+      </g>
+      <rect x="13" y="75" width="30" height="24" rx="5" class="l1"/><text x="28" y="92" class="s-txt-w" text-anchor="middle">1</text>
+      <rect x="55" y="75" width="30" height="24" rx="5" class="l3"/><text x="70" y="92" class="s-txt-w" text-anchor="middle">3</text>
+      <rect x="97" y="75" width="30" height="24" rx="5" class="l2"/><text x="112" y="92" class="s-txt-w" text-anchor="middle">2</text>
+      <rect x="139" y="75" width="30" height="24" rx="5" class="l4"/><text x="154" y="92" class="s-txt-w" text-anchor="middle">4</text>
+      <g class="s-txt-m" text-anchor="middle"><text x="28" y="116">1</text><text x="70" y="116">2</text><text x="112" y="116">3</text><text x="154" y="116">4</text></g>
+      <path d="M28 68 C 28 48 70 48 70 66" class="s-thin" marker-end="url(#tp)"/>
+      <path d="M28 66 C 28 36 154 36 154 66" class="s-thin" marker-end="url(#tp)"/>
+      <text x="90" y="134" class="s-txt-m" text-anchor="middle">промах 1 + 3 = 4</text>
+
+      <text x="212" y="96" class="s-txt-m" text-anchor="middle">→</text>
+
+      <!-- Панель 2: помеченный путь Дика -->
+      <text x="300" y="15" class="s-txt-m" text-anchor="middle">помеченный путь Дика</text>
+      <g transform="translate(250,150)">
+        <line x1="0" y1="0" x2="104" y2="-104" class="s-dash"/>
+        <rect x="0"  y="-52"  width="26" height="26" class="s-fillsh"/>
+        <rect x="0"  y="-78"  width="26" height="26" class="s-fillsh"/>
+        <rect x="26" y="-78"  width="26" height="26" class="s-fillsh"/>
+        <rect x="52" y="-104" width="26" height="26" class="s-fillsh"/>
+        <path d="M0 0 L0 -78 L52 -78 L52 -104 L104 -104" class="s-accent"/>
+        <line x1="0" y1="0" x2="104" y2="0" class="s-thin"/>
+        <line x1="0" y1="0" x2="0" y2="-104" class="s-thin"/>
+        <text x="-11" y="-13" text-anchor="middle" class="l1 s-txt">1</text>
+        <text x="-11" y="-39" text-anchor="middle" class="l3 s-txt">3</text>
+        <text x="-11" y="-65" text-anchor="middle" class="l4 s-txt">4</text>
+        <text x="41"  y="-87" text-anchor="middle" class="l2 s-txt">2</text>
+        <text x="52" y="26" text-anchor="middle" class="s-txt-m">площадь = 4</text>
+      </g>
+
+      <text x="474" y="96" class="s-txt-m" text-anchor="middle">→</text>
+
+      <!-- Панель 3: дерево -->
+      <text x="600" y="15" class="s-txt-m" text-anchor="middle">дерево</text>
+      <g transform="translate(510,0)">
+        <line x1="90" y1="45" x2="40"  y2="98" class="e1" stroke-width="1.6"/>
+        <line x1="90" y1="45" x2="90"  y2="98" class="e3" stroke-width="1.6"/>
+        <line x1="90" y1="45" x2="140" y2="98" class="e4" stroke-width="1.6"/>
+        <line x1="90" y1="110" x2="90" y2="150" class="e2" stroke-width="1.6"/>
+        <circle cx="90" cy="40" r="15" class="s-node-r"/><text x="90" y="45" text-anchor="middle" class="s-txt-w">0</text>
+        <circle cx="40"  cy="104" r="14" class="l1"/><text x="40"  y="109" text-anchor="middle" class="s-txt-w">1</text>
+        <circle cx="90"  cy="104" r="14" class="l3"/><text x="90"  y="109" text-anchor="middle" class="s-txt-w">3</text>
+        <circle cx="140" cy="104" r="14" class="l4"/><text x="140" y="109" text-anchor="middle" class="s-txt-w">4</text>
+        <circle cx="90"  cy="156" r="14" class="l2"/><text x="90"  y="161" text-anchor="middle" class="s-txt-w">2</text>
+      </g>
+    </svg>
+    <figcaption>Один объект в трёх костюмах для $f=(1,3,1,1)$: машины на улице, помеченный путь Дика (площадь = промах = 4), дерево с корнем 0. Метки 1–4 покрашены в свои цвета — их видно во всех трёх картинках.</figcaption>
+  </figure>
+
+  <p>Так замыкается цепочка <strong>парковка ↔ помеченный путь ↔ дерево</strong>: три костюма одного объекта.</p>
+
+<h2 id="s-keli">Подарок: формула Кэли — даром</h2>
+
+  <p>Теперь посчитаем следствие. Раз парковка, путь и дерево — одно и то же, помеченных деревьев на $n{+}1$ вершине ровно столько же, сколько парковок.</p>
+
+  <div class="stmt thm" id="thm-6"><span class="lbl">Следствие 6 (формула Кэли для $n{+}1$ вершины).</span>
+  Число помеченных деревьев на $\{0,1,\dots,n\}$ равно $(n{+}1)^{\,n-1}$.</div>
+
+  <p>А ведь это <strong>знаменитая формула Кэли</strong> — её обычно доказывают саму по себе, как отдельную теорему про деревья. Мы же <em>не начинали с деревьев вовсе</em>: они выросли из задачи про машины, а формула выпала даром, как только мы всмотрелись в устройство парковки. Ничего не упало с неба — мы шли по одной дороге и в конце обнаружили, что прошли мимо классической теоремы.</p>
+
+  <p class="mn">В «древесной» записи для $m$ вершин формула звучит как $m^{\,m-2}$. У нас $m=n{+}1$, откуда $(n{+}1)^{(n+1)-2}=(n{+}1)^{\,n-1}$ — то же самое.</p>
+
+  <p>Проверим руками на самых маленьких случаях — заодно почувствуем размер числа.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 205" width="460" role="img" aria-label="Три дерева на трёх вершинах и три парковки длины 2">
+      <!-- col 1: звезда 0-{1,2} ↔ f=(1,1) -->
+      <g>
+        <line x1="76" y1="44" x2="56" y2="86" class="s-thin"/>
+        <line x1="76" y1="44" x2="96" y2="86" class="s-thin"/>
+        <circle cx="76" cy="40" r="13" class="s-node-r"/><text x="76" y="45" text-anchor="middle" class="s-txt-w">0</text>
+        <circle cx="56" cy="92" r="12" class="s-node"/><text x="56" y="97" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="96" cy="92" r="12" class="s-node"/><text x="96" y="97" text-anchor="middle" class="s-txt">2</text>
+        <text x="76" y="150" text-anchor="middle" class="s-txt-m">↕</text>
+        <text x="76" y="176" text-anchor="middle" class="s-txt">f = (1, 1)</text>
+      </g>
+      <!-- col 2: путь 0-1-2 ↔ f=(1,2) -->
+      <g>
+        <line x1="228" y1="44" x2="228" y2="76" class="s-thin"/>
+        <line x1="228" y1="102" x2="228" y2="122" class="s-thin"/>
+        <circle cx="228" cy="40" r="13" class="s-node-r"/><text x="228" y="45" text-anchor="middle" class="s-txt-w">0</text>
+        <circle cx="228" cy="90" r="12" class="s-node"/><text x="228" y="95" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="228" cy="135" r="12" class="s-node"/><text x="228" y="140" text-anchor="middle" class="s-txt">2</text>
+        <text x="228" y="160" text-anchor="middle" class="s-txt-m">↕</text>
+        <text x="228" y="176" text-anchor="middle" class="s-txt">f = (1, 2)</text>
+      </g>
+      <!-- col 3: путь 0-2-1 ↔ f=(2,1) -->
+      <g>
+        <line x1="380" y1="44" x2="380" y2="76" class="s-thin"/>
+        <line x1="380" y1="102" x2="380" y2="122" class="s-thin"/>
+        <circle cx="380" cy="40" r="13" class="s-node-r"/><text x="380" y="45" text-anchor="middle" class="s-txt-w">0</text>
+        <circle cx="380" cy="90" r="12" class="s-node"/><text x="380" y="95" text-anchor="middle" class="s-txt">2</text>
+        <circle cx="380" cy="135" r="12" class="s-node"/><text x="380" y="140" text-anchor="middle" class="s-txt">1</text>
+        <text x="380" y="160" text-anchor="middle" class="s-txt-m">↕</text>
+        <text x="380" y="176" text-anchor="middle" class="s-txt">f = (2, 1)</text>
+      </g>
+      <text x="228" y="199" text-anchor="middle" class="s-txt-m">3 дерева = 3 парковки = (2 + 1)¹ = 3</text>
+    </svg>
+    <figcaption>Три помеченных дерева на $\{0,1,2\}$ и три парковки длины 2 — ровно $(2{+}1)^{1}=3$, и биекция ставит их в пары.</figcaption>
+  </figure>
+
+<h2 id="s-inversii">Совпадают ли и тонкие мерки? Инверсии</h2>
+
+  <p>У настоящего «одного и того же объекта в трёх костюмах» обычно совпадают не только количества, а и более тонкие мерки. У пути есть <a href="#def-5">площадь</a> (= промах парковки). А что естественного у дерева?</p>
+
+  <div class="stmt defn" id="def-8"><span class="lbl">Определение 8 (инверсия дерева).</span>
+  Пусть $T$ — дерево на $\{0,\dots,n\}$ с корнем $0$. Пара $(i,j)$ с $1\le i&lt;j\le n$ называется <em>инверсией</em>, если вершина $j$ лежит на (единственном) пути от корня $0$ к вершине $i$. Через $\operatorname{inv}(T)$ обозначим число таких пар.</div>
+
+  <div class="stmt example"><span class="lbl">Пример: инверсии нашего дерева</span>
+  У дерева из <a href="#s-derevo">§7</a> ($0{-}\{1,3,4\}$, $3{-}2$) пути от корня таковы: к 1 — это $0,1$; к 2 — $0,3,2$; к 3 — $0,3$; к 4 — $0,4$. Ищем пары $i&lt;j$, где бо́льшая вершина $j$ стоит на пути к меньшей $i$: единственная такая — путь к вершине $2$ проходит через вершину $3$, то есть $(i,j)=(2,3)$. Значит $\operatorname{inv}(T)=1$.</div>
+
+  <p>Теперь честный экспериментальный ход: посчитаем <em>распределения</em> — сколько парковок с промахом $0,1,2,\dots$ и сколько деревьев с $0,1,2,\dots$ инверсиями. Для маленьких $n$ они <strong>совпадают</strong>. Это тождество Кревераса; заметили мы его, как честные экспериментаторы, по данным.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 186" width="460" role="img" aria-label="Инверсия на дереве и совпадение распределений">
+      <!-- дерево с подсвеченным путём 0→3→2 -->
+      <g transform="translate(18,0)">
+        <line x1="95" y1="34" x2="45" y2="84" class="s-thin"/>
+        <line x1="95" y1="34" x2="145" y2="84" class="s-thin"/>
+        <line x1="95" y1="34" x2="95" y2="82" class="s-accent"/>
+        <line x1="95" y1="98" x2="95" y2="132" class="s-accent"/>
+        <circle cx="95" cy="30" r="14" class="s-node-r"/><text x="95" y="35" text-anchor="middle" class="s-txt-w">0</text>
+        <circle cx="45" cy="90" r="13" class="s-node"/><text x="45" y="95" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="95" cy="90" r="13" class="s-node"/><text x="95" y="95" text-anchor="middle" class="s-txt">3</text>
+        <circle cx="145" cy="90" r="13" class="s-node"/><text x="145" y="95" text-anchor="middle" class="s-txt">4</text>
+        <circle cx="95" cy="146" r="13" class="s-node"/><text x="95" y="151" text-anchor="middle" class="s-txt">2</text>
+        <rect x="76" y="74" width="38" height="88" rx="16" fill="none" stroke="#c9743a" stroke-width="1.3" stroke-dasharray="4 3"/>
+        <text x="150" y="150" class="s-txt-m">инверсия (2, 3):</text>
+        <text x="150" y="166" class="s-txt-m">3 на пути 0→2</text>
+      </g>
+      <!-- гистограмма 6,6,3,1 (одна на обе стороны) -->
+      <g transform="translate(300,0)">
+        <text x="70" y="14" text-anchor="middle" class="s-txt-m">n = 3: одно распределение</text>
+        <line x1="6" y1="152" x2="150" y2="152" class="s-thin"/>
+        <rect x="14"  y="104" width="24" height="48" fill="#dfeaf0" stroke="#2f6e8e"/><text x="26"  y="98"  text-anchor="middle" class="s-txt">6</text>
+        <rect x="48"  y="104" width="24" height="48" fill="#dfeaf0" stroke="#2f6e8e"/><text x="60"  y="98"  text-anchor="middle" class="s-txt">6</text>
+        <rect x="82"  y="128" width="24" height="24" fill="#dfeaf0" stroke="#2f6e8e"/><text x="94"  y="122" text-anchor="middle" class="s-txt">3</text>
+        <rect x="116" y="144" width="24" height="8"  fill="#dfeaf0" stroke="#2f6e8e"/><text x="128" y="138" text-anchor="middle" class="s-txt">1</text>
+        <g class="s-txt-m" text-anchor="middle"><text x="26" y="166">0</text><text x="60" y="166">1</text><text x="94" y="166">2</text><text x="128" y="166">3</text></g>
+        <text x="70" y="182" text-anchor="middle" class="s-txt-m">по горизонтали — промах = число инверсий</text>
+      </g>
+    </svg>
+    <figcaption>Слева — инверсия $(2,3)$: вершина 3 лежит на пути от корня к 2. Справа — для $n=3$ число парковок с промахом $d$ и число деревьев с $d$ инверсиями совпадают: $6,6,3,1$ (тождество Кревераса).</figcaption>
+  </figure>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec7">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#s-krever">Тождество Кревераса: разрез-двигатель</a></li>
+    <li><a href="#s-kontrprimer">Когда очевидное решение не работает</a></li>
+    <li><a href="#s-umnaya">Умная связь: приручаем биекцию</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 7 · Тонкие мерки: тождество Кревераса</h1>
+  <p class="subtitle">Совпадают ли распределения? Разрез по старшей вершине и честный провал наивной карты.</p>
+  <div class="meta">Мир 2 · черновик · 3 раздела</div>
+
+<h2 id="s-krever">Тождество Кревераса: разрез-двигатель</h2>
+
+  <p>Оформим наблюдение как теорему — и на этот раз разберём, <em>почему</em> так. Заведём два многочлена-«перечислителя».</p>
+
+  <div class="stmt defn" id="def-9"><span class="lbl">Определение 9 (перечислители).</span>
+  $$P_n(q) = \sum_{f} q^{\,D(f)}, \qquad I_n(q) = \sum_{T} q^{\,\operatorname{inv}(T)},$$
+  где первая сумма — по всем парковкам порядка $n$, вторая — по всем деревьям на $\{0,\dots,n\}$. Коэффициент при $q^m$ — это число объектов с промахом (соответственно инверсиями) $m$.</div>
+
+  <div class="stmt thm" id="thm-7"><span class="lbl">Теорема 7 (Креверас, 1980).</span>
+  $I_n(q) = P_n(q)$ при всех $n$. В частности, при $q=1$ обе стороны дают $(n{+}1)^{\,n-1}$ — уже знакомый нам счёт.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (общая рекуррента — один разрез с двух сторон).</span>
+  Обе последовательности удовлетворяют <em>одной</em> рекурренте
+  $$X_{n+1}(q) = \sum_{i=0}^{n}\binom{n}{i}\,\bigl(1+q+\dots+q^{\,i}\bigr)\,X_i(q)\,X_{n-i}(q),\qquad X_1(q)=1,$$
+  и каждая — своим разрезом. Дух тот же, что у пути: <em>склеить объект из двух меньших такого же типа.</em> Но разрез теперь другой — он опирается на <strong>номера вершин</strong>, а в Мире 1 (где меток нет) такого разреза попросту не бывает. В этом и новизна взгляда.
+  <br><em>Дерево.</em> В дереве $T$ на $\{0,\dots,n{+}1\}$ пойдём от корня $0$ к <em>самой большой</em> вершине $n{+}1$ по единственному пути; первый шаг ведёт в соседа корня — назовём его $r$. Отрежем ребро $0{-}r$: дерево распадётся на кусок $A'$ при корне $0$ (пусть в нём $i$ ненулевых меток) и поддерево $A''$ при $r$ (там остальные $n{-}i$ меток и сама $n{+}1$). Какие метки ушли в $A'$ — любой из $\binom{n}{i}$ выборов. Куда делись инверсии? Каждая пара «бо́льшая вершина стоит на пути к меньшей» либо целиком в $A'$, либо целиком в $A''$, либо это стык $(a,r)$ с $a\in A''$, $a&lt;r$ (тогда $r$ и вправду лежит на пути $0\to a$). Первых — ровно $\operatorname{inv}(A')$, вторых — $\operatorname{inv}(A'')$, а стыковых — столько, каков <em>ранг</em> $r$ по величине среди меток $A''$, а он свободно пробегает $0,1,\dots,n{-}i$. Вот откуда множитель $1+q+\dots+q^{\,n-i}$. Переобозначив куски как деревья поменьше, получаем слагаемое $\binom{n}{i}\,(1+\dots+q^{\,n-i})\,I_i(q)\,I_{n-i}(q)$; сумма по $i$ (с симметрией $i\leftrightarrow n{-}i$) и даёт рекурренту.
+  <br><em>Парковка.</em> Тот же разрез, только режется не ребро дерева, а «хвост» отсортированной парковки у наибольшего значения; та же тройка «внутри–внутри–стык» и тот же множитель $1+q+\dots$ возникают дословно так же (это теорема II самого Кревераса). Одинаковые начала и одна рекуррента — значит $I_n=P_n$. $\square$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 236" width="460" role="img" aria-label="Разрез Кревераса: режем ребро от корня к соседу на пути к наибольшей вершине">
+      <!-- A' (справа, muted) -->
+      <line x1="230" y1="50" x2="300" y2="98" class="s-line"/>
+      <line x1="230" y1="50" x2="362" y2="98" class="s-line"/>
+      <line x1="300" y1="110" x2="300" y2="154" class="s-line"/>
+      <!-- ребро 0-r (режем, пунктир) -->
+      <line x1="205" y1="50" x2="152" y2="94" class="s-thin" stroke-dasharray="5 4"/>
+      <!-- путь r -> ... -> n+1 (accent) -->
+      <line x1="146" y1="112" x2="120" y2="152" class="s-accent"/>
+      <line x1="120" y1="164" x2="150" y2="202" class="s-accent"/>
+      <!-- узлы -->
+      <circle cx="217" cy="42" r="14" class="s-node-r"/><text x="217" y="47" text-anchor="middle" class="s-txt-w">0</text>
+      <circle cx="146" cy="104" r="13" fill="#fff" stroke="#c9743a" stroke-width="2.4"/><text x="146" y="109" text-anchor="middle" class="s-txt">r</text>
+      <circle cx="114" cy="158" r="12" class="s-node"/>
+      <circle cx="150" cy="208" r="14" fill="#f6ece2" stroke="#c9743a" stroke-width="2.2"/><text x="150" y="213" text-anchor="middle" class="s-txt">n+1</text>
+      <circle cx="300" cy="104" r="12" class="s-node"/>
+      <circle cx="362" cy="104" r="12" class="s-node"/>
+      <circle cx="300" cy="160" r="12" class="s-node"/>
+      <!-- ножницы -->
+      <line x1="172" y1="62" x2="188" y2="78" stroke="#c9743a" stroke-width="1.7"/>
+      <line x1="188" y1="62" x2="172" y2="78" stroke="#c9743a" stroke-width="1.7"/>
+      <text x="205" y="70" class="s-txt-m">режем 0–r</text>
+      <text x="118" y="232" text-anchor="middle" class="s-txt-m">A′′ · при r, держит n+1</text>
+      <text x="340" y="186" text-anchor="middle" class="s-txt-m">A′ · при корне 0</text>
+    </svg>
+    <figcaption>Разрез Кревераса: идём от корня $0$ к наибольшей вершине $n{+}1$ и режем первое ребро $0{-}r$. Дерево распадается на $A'$ и $A''$; инверсии — внутри $A'$, внутри $A''$ и «стык» через $r$, чей ранг среди $A''$ и даёт множитель $1+q+\dots+q^{\,n-i}$.</figcaption>
+  </figure>
+
+  <p class="mn"><b>Сверено.</b> И рекуррента, и само равенство $I_n(q)=P_n(q)$ проверены прямым перебором до $n=6$ — например, $I_4=P_4=24+36q+30q^2+20q^3+10q^4+4q^5+q^6$.</p>
+
+  <p>Пока всё гладко: числа совпадают, распределения совпадают. Казалось бы, осталось предъявить <em>прямое</em> соответствие, которое переносит промах в инверсии поштучно. И тут — разворот.</p>
+
+<h2 id="s-kontrprimer">Когда очевидное решение не работает</h2>
+
+  <p>У нас ведь <em>уже есть</em> готовая дорога парковка → дерево — та самая развёртка из <a href="#thm-5" data-tab="tab-lec6">Теоремы 5</a>. Напрашивается: пусть она и переносит промах в инверсии. Проверяем — <strong>не сходится.</strong></p>
+
+  <div class="insight"><span class="tag">Разворот</span>
+  На нашем маленьком примере $f=(1,3,1,1)$ промах равен $D=\mathbf{4}$ (<a href="#s-ploshchad" data-tab="tab-lec6">§6</a>), а у построенного из него дерева инверсий всего $\operatorname{inv}(T)=\mathbf{1}$ (<a href="#s-inversii" data-tab="tab-lec6">§9</a>). Наивная развёртка уравнивает <em>количества</em> объектов, но тонкую мерку <em>не переносит</em>: $4 \ne 1$.</div>
+
+  <p>Это не случайность масштаба. На стандартном учебном примере покрупнее промах доходит до 16, а у наивного дерева инверсий — снова всего 4. Красивая, наглядная дорога <a href="#thm-5" data-tab="tab-lec6">§7</a> честно считает объекты, но их внутреннюю «энергию» перемешивает.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 112" width="460" role="img" aria-label="Промах 4 не равен одной инверсии">
+      <text x="112" y="58" text-anchor="middle" style="font-size:46px;font-weight:600;fill:#2f6e8e">4</text>
+      <text x="112" y="88" text-anchor="middle" class="s-txt-m">промах (= площадь)</text>
+      <text x="228" y="55" text-anchor="middle" style="font-size:32px;fill:#c9743a">≠</text>
+      <text x="348" y="58" text-anchor="middle" style="font-size:46px;font-weight:600;fill:#4f8f4a">1</text>
+      <text x="348" y="88" text-anchor="middle" class="s-txt-m">инверсия наивного дерева</text>
+    </svg>
+    <figcaption>Тот же пример $f=(1,3,1,1)$: наивная развёртка честно даёт нужное <em>число</em> объектов, но тонкая мерка расходится — промах 4 против 1 инверсии. Значит, нужна другая, умная связь.</figcaption>
+  </figure>
+
+  <p>Это честный момент «очевидное решение не работает» — и именно он делает финал ценным. Значит, чтобы увидеть «промах = инверсии» не в среднем, а поштучно, нужна <strong>другая, более хитрая связь.</strong></p>
+
+<h2 id="s-umnaya">Умная связь: приручаем биекцию</h2>
+
+  <p>Рекуррента уже доказала $I_n=P_n$ — и доказала <em>прозрачно</em>: одна и та же раскладка на обеих сторонах. Это наш надёжный этаж. Но она равняет <em>распределения</em>, а не выдаёт конкретному промаху конкретную инверсию. Поэлементную связь тоже можно предъявить — только она уже требует приручения: «прямой, явной и при этом наглядной» карты промах → инверсии не существует (это давно замеченный факт, а не наша лень).</p>
+
+  <div class="stmt thm" id="thm-8"><span class="lbl">Теорема 8 (поэлементная биекция промах ↔ инверсии).</span>
+  Существует явная биекция $\varphi$ между парковочными функциями порядка $n$ и деревьями на $\{0,\dots,n\}$ такая, что $D(f) = \operatorname{inv}(\varphi(f))$ для <em>каждой</em> парковки $f$ (а не только в сумме).</div>
+
+  <p><strong>Ближе всего к нашему разрезу — сам Креверас.</strong> В той же работе 1980 года он строит биекцию <em>рекурсивно</em>, ровно тем же спуском по разрезу, что доказывает рекурренту: отрезали ветвь к старшей вершине — и по индукции переносим промах в инверсии, кусок за куском (с готовыми словарями-картинками для $n\le3$). Красиво, что доказательство и биекция здесь — одно рассуждение; плата — это процедура-спуск, а не замкнутая формула.</p>
+
+  <p><strong>Нерекурсивную</strong> явную биекцию отдельно спрашивал Стэнли — и её дали. Самая доступная — <em>Шина</em> (леса ↔ парковки): на одном наборе позиций строятся три наложенных дерева — $D$ (перемеченное в убывающее), $I$ (метка вершины = число висящих на ней инверсий) и $C$ (нумерация в postorder), а парковка собирается как $D\times(C-I)$. Ядро наглядно: возьми метки $C$ напрямую — все машины счастливы; вычитание $\operatorname{inv}$ сдвигает предпочтение каждой машины ровно на её будущее число инверсий и превращает его ровно в столько же промахов. Есть и биекция <em>Кнута</em> — через вспомогательную перестановку и перемётку в preorder; техничнее, но столь же элементарная по шагам.</p>
+
+  <div class="stmt example"><span class="lbl">Пример Кнута (из справочника, Yan)</span>
+  Возьмём $f=(4,0,1,0,3,6,4)$, $n=7$ (нумерация мест здесь с нуля). Машины паркуются на местах $p = 4\,0\,1\,2\,3\,6\,5$; сдвиг на 1 даёт перестановку $p' = 5\,1\,2\,3\,4\,7\,6$, а обратная к ней — $q = 2\,3\,4\,5\,1\,7\,6$. По этим данным строится дерево $\varphi(f)$, и прямой подсчёт подтверждает $D(f) = \operatorname{inv}(\varphi(f)) = 3$: индивидуальный промах каждой машины превратился ровно в её вклад в инверсии.</div>
+
+  <p class="mn"><b>Честная пометка.</b> Полная индукция обратимости у Кнута (в справочнике Yan) выписана конспективно — алгоритм и один развёрнутый пример; у Кревераса и Шина доказательства даны целиком. Мы приводим конструкции как есть в источниках, не реконструируя опущенные шаги.</p>
+
+  <p>Вот и честная карта высоты. «<a href="#lem-4" data-tab="tab-lec6">Площадь = промах</a>» видно сразу, одной картинкой. «Промах и инверсии совпадают как распределения» даёт <a href="#s-krever">разрез</a> — прозрачно и мотивированно. А поэлементное «этот промах ↔ эта инверсия» лежит выше всего: наивная дорога туда не ведёт (мы видели), и связь приходится приручать — зато в существовании ей не отказано.</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec8">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#s-lica">Много лиц одного числа</a></li>
+    <li><a href="#s-joyal">Жуаяль: функция как граф</a></li>
+    <li><a href="#s-prufer">Прюфер: дерево как слово</a></li>
+    <li><a href="#s-pitman">Питман: растущий лес</a></li>
+    <li><a href="#s-schastlivye">Дверь наружу: счастливые машины</a></li>
+    <li><a href="#s-itog">Что в итоге</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Лекция 8 · Много лиц числа и двери наружу</h1>
+  <p class="subtitle">Жуаяль, Прюфер, Питман — и двери в теорию вероятностей и обратно в Мир 1.</p>
+  <div class="meta">Мир 2 · черновик · 6 разделов</div>
+
+<h2 id="s-lica">Много лиц одного числа</h2>
+
+  <p>Формулу Кэли мы получили через парковки. Но раз число $(n{+}1)^{\,n-1}$ такое богатое, у него есть и <em>совсем другие</em> доказательства — и каждое вскрывает свою скрытую геометрию. Это не «ещё примеры для полноты», а разные лица одного числа; и теперь, когда деревья уже на столе, взглянуть на них по-другому — естественно.</p>
+
+  <div class="insight"><span class="tag">Три лица впереди</span>
+  <strong><a href="#s-joyal">Жуаяль</a></strong> — лицо «геометрия»: дерево спрятано в функциональном графе, и это прямая встреча с кругом Поллака. <strong><a href="#s-prufer">Прюфер</a></strong> — лицо «код»: дерево записано буквами. <strong><a href="#s-pitman">Питман</a></strong> — лицо «рост»: дерево собирается из леса ребро за ребром.</div>
+
+<h2 id="s-joyal">Жуаяль: функция как граф</h2>
+
+  <p>Начнём с лица, которое ближе всего к уже пройденному, — геометрического: оно приведёт нас <em>прямо назад, к кругу Поллака.</em> Идея — посчитать не деревья, а деревья <em>с двумя отмеченными концами</em>, и опознать их как обычные функции.</p>
+
+  <div class="stmt thm" id="thm-9"><span class="lbl">Теорема 9 (Жуаяль).</span>
+  Пусть $\widetilde T_n$ — множество троек «дерево на $\{1,\dots,n\}$ с двумя отмеченными вершинами (концами, возможно совпадающими)». Тогда $|\widetilde T_n| = n^{\,n}$, откуда число деревьев $T_n = n^{\,n-2}$.</div>
+
+  <div class="proof"><span class="lbl">Идея (функциональный граф).</span>
+  Строим биекцию с множеством всех функций $f\colon\{1,\dots,n\}\to\{1,\dots,n\}$ (их ровно $n^n$). Рисуем $f$ графом: из каждой вершины ровно одна стрелка $i\to f(i)$. В каждой компоненте столько же рёбер, сколько вершин, — значит, ровно один цикл; в целом получаются <em>циклы, на которых висят деревья.</em> Вершины на циклах образуют множество $M$, а $f|_M$ — перестановка $M$. Выписав $M$ по возрастанию и прочитав вторую строку $f(a),\dots,f(z)$, вытягиваем цикловую часть в <em>путь</em> с двумя концами $f(a)$ и $f(z)$; остальные вершины подвешиваем как в графе. Получилось дерево с двумя отмеченными концами; ход обратим (путь между концами восстанавливает $M$ и порядок). $\square$</div>
+
+  <div class="stmt example"><span class="lbl">Пример: функция → функциональный граф</span>
+  Пусть $n=5$ и $f=(2,2,4,5,4)$, то есть $1\to2,\ 2\to2,\ 3\to4,\ 4\to5,\ 5\to4$. Циклы: петля $2\to2$ и двойка $4\to5\to4$; значит $M=\{2,4,5\}$. Вне циклов вершина 1 висит на 2, вершина 3 висит на 4 — ровно картинка «цикл(ы) + подвешенные деревья».</div>
+
+  <figure>
+    <svg viewBox="0 0 320 160" width="320" role="img" aria-label="Функциональный граф: цикл с подвешенными деревьями">
+      <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto">
+        <path d="M0 0 L6 3 L0 6 z" class="s-ar-m"/></marker></defs>
+      <!-- cycle -->
+      <circle cx="120" cy="80" r="12" class="s-node"/>
+      <circle cx="180" cy="55" r="12" class="s-node"/>
+      <circle cx="180" cy="105" r="12" class="s-node"/>
+      <path d="M131 74 A 40 40 0 0 1 172 60" class="s-thin" marker-end="url(#ar2)"/>
+      <path d="M180 67 A 40 40 0 0 1 180 93" class="s-thin" marker-end="url(#ar2)"/>
+      <path d="M170 111 A 40 40 0 0 1 128 90" class="s-thin" marker-end="url(#ar2)"/>
+      <!-- hanging trees -->
+      <circle cx="66" cy="55" r="11" class="s-node"/>
+      <circle cx="60" cy="112" r="11" class="s-node"/>
+      <circle cx="240" cy="35" r="11" class="s-node"/>
+      <path d="M76 60 C 96 66 104 72 110 76" class="s-thin" marker-end="url(#ar2)"/>
+      <path d="M70 108 C 92 100 104 92 110 86" class="s-thin" marker-end="url(#ar2)"/>
+      <path d="M231 40 C 210 46 196 50 190 52" class="s-thin" marker-end="url(#ar2)"/>
+      <text x="150" y="150" text-anchor="middle" class="s-txt-m">цикл в центре, деревья свисают в него</text>
+    </svg>
+    <figcaption>Функция как граф: из каждой вершины одна стрелка. Та же картинка «цикл + деревья» пряталась и в круге Поллака.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 420 200" width="420" role="img" aria-label="Функциональный граф f=(2,2,4,5,4): циклы с подвешенными деревьями">
+      <defs><marker id="jr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" class="s-ar-m"/></marker></defs>
+      <path d="M104 58 C 84 30 136 30 116 58" class="s-thin" fill="none" marker-end="url(#jr)"/>
+      <line x1="110" y1="126" x2="110" y2="89" class="s-thin" marker-end="url(#jr)"/>
+      <line x1="210" y1="126" x2="210" y2="89" class="s-thin" marker-end="url(#jr)"/>
+      <path d="M226 60 C 240 46 240 46 254 60" class="s-thin" fill="none" marker-end="url(#jr)"/>
+      <path d="M254 84 C 240 98 240 98 226 84" class="s-thin" fill="none" marker-end="url(#jr)"/>
+      <circle cx="110" cy="72" r="15" fill="#fff" stroke="#2f6e8e" stroke-width="2.4"/><text x="110" y="77" text-anchor="middle" class="s-txt">2</text>
+      <circle cx="210" cy="72" r="15" fill="#fff" stroke="#2f6e8e" stroke-width="2.4"/><text x="210" y="77" text-anchor="middle" class="s-txt">4</text>
+      <circle cx="270" cy="72" r="15" fill="#fff" stroke="#2f6e8e" stroke-width="2.4"/><text x="270" y="77" text-anchor="middle" class="s-txt">5</text>
+      <circle cx="110" cy="140" r="14" class="s-node"/><text x="110" y="145" text-anchor="middle" class="s-txt">1</text>
+      <circle cx="210" cy="140" r="14" class="s-node"/><text x="210" y="145" text-anchor="middle" class="s-txt">3</text>
+      <text x="150" y="28" text-anchor="middle" class="s-txt-m">циклы M = {2, 4, 5}</text>
+      <text x="210" y="186" text-anchor="middle" class="s-txt-m">из каждой вершины — одна стрелка: циклы, на которых висят деревья</text>
+    </svg>
+    <figcaption>Функция $f=(2,2,4,5,4)$ как граф: петля у 2, цикл $4\leftrightarrow5$, к ним подвешены 1 и 3. Развернув цикловую часть в путь между двумя концами, получаем дерево с двумя отмеченными вершинами — та же геометрия «цикл + деревья», что стояла за <a href="#s-pollak" data-tab="tab-lec5">кругом Поллака</a>.</figcaption>
+  </figure>
+
+  <p>И вот встреча сюжетов: картинка «цикл + подвешенные деревья» — ровно та же геометрия, что стояла за <a href="#s-pollak" data-tab="tab-lec5">кругом Поллака</a>. Предпочтения на $n{+}1$ местах там тоже кодировались отображением с круговой структурой. Два далёких эпизода оказались про одно.</p>
+
+<h2 id="s-prufer">Прюфер: дерево как слово</h2>
+
+  <p>Второе лицо — <em>код</em>: всё дерево умещается в короткое слово, и по нему восстанавливается однозначно.</p>
+
+  <div class="stmt defn" id="def-10"><span class="lbl">Определение 10 (код Прюфера).</span>
+  Для дерева на вершинах $\{1,\dots,n\}$ код строится срезанием листьев: $n{-}1$ раз находим <em>наибольший</em> лист, записываем имя его единственного соседа и удаляем лист. Последний записанный символ (он всегда равен наименьшей вершине) отбрасываем — остаётся слово длины $n{-}2$.</div>
+
+  <div class="stmt thm" id="thm-10"><span class="lbl">Теорема 10 (Прюфер — биекция).</span>
+  Код Прюфера — взаимно однозначное соответствие между деревьями на $\{1,\dots,n\}$ и словами длины $n{-}2$ из букв $\{1,\dots,n\}$. При этом вершина $v$ встречается в слове ровно $\deg(v)-1$ раз.</div>
+
+  <div class="proof"><span class="lbl">Обратимость (индукция).</span>
+  Листья искомого дерева — это в точности вершины, <em>не</em> встречающиеся в слове. Значит, первый срезанный лист — наибольшая из отсутствующих вершин; присоединяем её к $w_1$, вычёркиваем $w_1$ из слова и повторяем для меньшего дерева. Каждый шаг однозначен — соответствие обратимо. $\square$</div>
+
+  <div class="stmt example"><span class="lbl">Пример: дерево → код</span>
+  Возьмём дерево на $\{1,2,3,4,5\}$ с рёбрами $1{-}3,\ 2{-}3,\ 3{-}4,\ 4{-}5$ (звезда с хвостиком). Срезаем по шагам:
+  <br>• листья 1, 2, 5; наибольший — 5, сосед 4 → пишем <strong>4</strong>, убираем 5;
+  <br>• листья 1, 2, 4; наибольший — 4, сосед 3 → пишем <strong>3</strong>, убираем 4;
+  <br>• листья 1, 2; наибольший — 2, сосед 3 → пишем <strong>3</strong>, убираем 2;
+  <br>• остались 1, 3; наибольший лист 3, сосед 1 → пишем <strong>1</strong> (последний символ — отбрасываем: это наименьшая вершина).
+  <br>Код Прюфера — $(4,3,3)$, длина $n{-}2=3$. Проверка: вершина 3 (степень 3) встречается $3{-}1=2$ раза, вершина 4 (степень 2) — один раз, остальные — ноль. Всё сходится.</div>
+
+  <figure>
+    <svg viewBox="0 0 460 170" width="460" role="img" aria-label="Код Прюфера по шагам">
+      <style>.pf-cut{fill:#c9743a;stroke:#c9743a}.pf-rec{fill:#c9743a;font-weight:600}</style>
+      <!-- кадр 0: полное дерево, срезаем 5 -->
+      <g transform="translate(0,0)">
+        <line x1="18" y1="24" x2="46" y2="50" class="s-thin"/><line x1="18" y1="76" x2="46" y2="50" class="s-thin"/>
+        <line x1="46" y1="50" x2="72" y2="50" class="s-thin"/><line x1="72" y1="50" x2="95" y2="50" class="s-thin"/>
+        <circle cx="18" cy="24" r="9" class="s-node"/><text x="18" y="28" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="18" cy="76" r="9" class="s-node"/><text x="18" y="80" text-anchor="middle" class="s-txt">2</text>
+        <circle cx="46" cy="50" r="9" class="s-node"/><text x="46" y="54" text-anchor="middle" class="s-txt">3</text>
+        <circle cx="72" cy="50" r="9" class="s-node"/><text x="72" y="54" text-anchor="middle" class="s-txt">4</text>
+        <circle cx="95" cy="50" r="9" class="pf-cut"/><text x="95" y="54" text-anchor="middle" class="s-txt-w">5</text>
+        <text x="56" y="120" text-anchor="middle" class="s-txt-m">срезаем 5 →</text>
+        <text x="56" y="138" text-anchor="middle" class="pf-rec s-txt">4</text>
+      </g>
+      <text x="120" y="52" class="s-txt-m">→</text>
+      <!-- кадр 1: без 5, срезаем 4 -->
+      <g transform="translate(130,0)">
+        <line x1="18" y1="24" x2="46" y2="50" class="s-thin"/><line x1="18" y1="76" x2="46" y2="50" class="s-thin"/>
+        <line x1="46" y1="50" x2="72" y2="50" class="s-thin"/>
+        <circle cx="18" cy="24" r="9" class="s-node"/><text x="18" y="28" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="18" cy="76" r="9" class="s-node"/><text x="18" y="80" text-anchor="middle" class="s-txt">2</text>
+        <circle cx="46" cy="50" r="9" class="s-node"/><text x="46" y="54" text-anchor="middle" class="s-txt">3</text>
+        <circle cx="72" cy="50" r="9" class="pf-cut"/><text x="72" y="54" text-anchor="middle" class="s-txt-w">4</text>
+        <text x="45" y="120" text-anchor="middle" class="s-txt-m">срезаем 4 →</text>
+        <text x="45" y="138" text-anchor="middle" class="pf-rec s-txt">3</text>
+      </g>
+      <text x="240" y="52" class="s-txt-m">→</text>
+      <!-- кадр 2: без 4, срезаем 2 -->
+      <g transform="translate(250,0)">
+        <line x1="18" y1="24" x2="46" y2="50" class="s-thin"/><line x1="18" y1="76" x2="46" y2="50" class="s-thin"/>
+        <circle cx="18" cy="24" r="9" class="s-node"/><text x="18" y="28" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="18" cy="76" r="9" class="pf-cut"/><text x="18" y="80" text-anchor="middle" class="s-txt-w">2</text>
+        <circle cx="46" cy="50" r="9" class="s-node"/><text x="46" y="54" text-anchor="middle" class="s-txt">3</text>
+        <text x="32" y="120" text-anchor="middle" class="s-txt-m">срезаем 2 →</text>
+        <text x="32" y="138" text-anchor="middle" class="pf-rec s-txt">3</text>
+      </g>
+      <text x="330" y="52" class="s-txt-m">→</text>
+      <!-- кадр 3: осталось ребро 1-3 -->
+      <g transform="translate(348,0)">
+        <line x1="18" y1="50" x2="46" y2="50" class="s-thin"/>
+        <circle cx="18" cy="50" r="9" class="s-node"/><text x="18" y="54" text-anchor="middle" class="s-txt">1</text>
+        <circle cx="46" cy="50" r="9" class="s-node"/><text x="46" y="54" text-anchor="middle" class="s-txt">3</text>
+        <rect x="6" y="108" width="92" height="30" rx="5" fill="none" stroke="#c9743a" stroke-width="1.4"/>
+        <text x="52" y="128" text-anchor="middle" class="pf-rec s-txt">код (4, 3, 3)</text>
+      </g>
+    </svg>
+    <figcaption>Код Прюфера дерева $1{-}3,\,2{-}3,\,3{-}4,\,4{-}5$: раз за разом срезаем <em>наибольший</em> лист и пишем его соседа. Три шага — слово $(4,3,3)$; по нему дерево восстановимо однозначно.</figcaption>
+  </figure>
+
+  <div class="stmt thm"><span class="lbl">Следствие 11 (Кэли через Прюфера).</span>
+  Слов длины $n{-}2$ из $n$ букв ровно $n^{\,n-2}$ — значит, столько же деревьев на $n$ вершинах. Это самое «школьное» лицо формулы: дерево буквально записано буквами.</div>
+
+<h2 id="s-pitman">Питман: растущий лес</h2>
+
+  <p>Третье лицо — вероятностное по духу: соберём дерево из отдельных вершин, добавляя рёбра по одному, и посчитаем сборку двумя способами.</p>
+
+  <div class="stmt defn" id="def-11"><span class="lbl">Определение 11 (корневой лес).</span>
+  Корневой лес на $\{1,\dots,n\}$ — ациклический граф с выбранным корнем в каждой компоненте. Рёбра считаем направленными от корней наружу. Обозначим $F_{n,k}$ — леса ровно из $k$ деревьев.</div>
+
+  <div class="stmt defn" id="def-12"><span class="lbl">Определение 12 (измельчающаяся последовательность).</span>
+  Последовательность лесов $F_1,\dots,F_k$ (где $F_i\in F_{n,i}$) <em>измельчающаяся</em>, если каждый $F_i$ содержит следующий $F_{i+1}$ как ориентированный подграф — то есть на каждом шаге удаляется ровно одно ребро, и деревьев становится на одно больше.</div>
+
+  <div class="stmt thm" id="thm-12"><span class="lbl">Теорема 12 (Питман).</span>
+  Для любого фиксированного леса $F_k\in F_{n,k}$ число корневых <em>деревьев</em> $F_1$, содержащих $F_k$, равно $n^{\,k-1}$ — и не зависит от того, каков именно $F_k$. При $k=n$ (лес из $n$ изолированных вершин) это даёт $|F_{n,1}| = n^{\,n-1} = n\cdot T_n$, откуда $T_n = n^{\,n-2}$.</div>
+
+  <div class="proof"><span class="lbl">Двойной счёт.</span>
+  Посчитаем двумя способами число $N^*$ измельчающихся цепочек, кончающихся на $F_k$.
+  <br><em>От дерева вниз:</em> берём одно из $N$ деревьев, содержащих $F_k$, и удаляем его $k{-}1$ лишних рёбер в любом из $(k{-}1)!$ порядков → $N^* = N\cdot(k{-}1)!$.
+  <br><em>От леса вверх:</em> чтобы из $F_k$ добавить ребро (перейти к $k{-}1$ деревьям), тянем его из любой вершины ($n$ способов) в корень одного из $k{-}1$ «чужих» деревьев → $n(k{-}1)$ способов; следующий шаг $n(k{-}2)$, и так до конца. Перемножая: $N^* = n^{\,k-1}(k{-}1)!$.
+  <br>Сравнивая, $N = n^{\,k-1}$. $\square$</div>
+
+  <figure>
+    <svg viewBox="0 0 460 150" width="460" role="img" aria-label="Питман: лес склеивается ребро за ребром, двойной счёт">
+      <!-- F4 -->
+      <g transform="translate(6,20)" class="s-txt" text-anchor="middle">
+        <circle cx="14" cy="14" r="9" class="s-node"/><text x="14" y="18">1</text>
+        <circle cx="52" cy="14" r="9" class="s-node"/><text x="52" y="18">2</text>
+        <circle cx="14" cy="52" r="9" class="s-node"/><text x="14" y="56">3</text>
+        <circle cx="52" cy="52" r="9" class="s-node"/><text x="52" y="56">4</text>
+        <text x="33" y="84" class="s-txt-m">4 дерева</text>
+      </g>
+      <g text-anchor="middle" class="s-txt-m"><text x="100" y="42">→</text><text x="100" y="60">×12</text></g>
+      <!-- F3: ребро 1-2 -->
+      <g transform="translate(126,20)" class="s-txt" text-anchor="middle">
+        <line x1="14" y1="14" x2="52" y2="14" class="s-thin"/>
+        <circle cx="14" cy="14" r="9" class="s-node"/><text x="14" y="18">1</text>
+        <circle cx="52" cy="14" r="9" class="s-node"/><text x="52" y="18">2</text>
+        <circle cx="14" cy="52" r="9" class="s-node"/><text x="14" y="56">3</text>
+        <circle cx="52" cy="52" r="9" class="s-node"/><text x="52" y="56">4</text>
+        <text x="33" y="84" class="s-txt-m">3 дерева</text>
+      </g>
+      <g text-anchor="middle" class="s-txt-m"><text x="220" y="42">→</text><text x="220" y="60">×8</text></g>
+      <!-- F2: рёбра 1-2, 3-4 -->
+      <g transform="translate(246,20)" class="s-txt" text-anchor="middle">
+        <line x1="14" y1="14" x2="52" y2="14" class="s-thin"/>
+        <line x1="14" y1="52" x2="52" y2="52" class="s-thin"/>
+        <circle cx="14" cy="14" r="9" class="s-node"/><text x="14" y="18">1</text>
+        <circle cx="52" cy="14" r="9" class="s-node"/><text x="52" y="18">2</text>
+        <circle cx="14" cy="52" r="9" class="s-node"/><text x="14" y="56">3</text>
+        <circle cx="52" cy="52" r="9" class="s-node"/><text x="52" y="56">4</text>
+        <text x="33" y="84" class="s-txt-m">2 дерева</text>
+      </g>
+      <g text-anchor="middle" class="s-txt-m"><text x="340" y="42">→</text><text x="340" y="60">×4</text></g>
+      <!-- F1: дерево -->
+      <g transform="translate(366,20)" class="s-txt" text-anchor="middle">
+        <line x1="14" y1="14" x2="52" y2="14" class="s-thin"/>
+        <line x1="14" y1="14" x2="14" y2="52" class="s-thin"/>
+        <line x1="14" y1="52" x2="52" y2="52" class="s-thin"/>
+        <circle cx="14" cy="14" r="9" class="s-node-r"/><text x="14" y="18" class="s-txt-w">1</text>
+        <circle cx="52" cy="14" r="9" class="s-node"/><text x="52" y="18">2</text>
+        <circle cx="14" cy="52" r="9" class="s-node"/><text x="14" y="56">3</text>
+        <circle cx="52" cy="52" r="9" class="s-node"/><text x="52" y="56">4</text>
+        <text x="33" y="84" class="s-txt-m">1 дерево</text>
+      </g>
+      <text x="230" y="142" text-anchor="middle" class="s-txt-m">сборок 12 · 8 · 4; в обратную сторону — 3! порядков удаления. Один счёт с двух концов.</text>
+    </svg>
+    <figcaption>Двойной счёт Питмана: лес склеивается ребро за ребром. При $k$ деревьях новое ребро можно добавить $n(k{-}1)$ способами — отсюда $(n{+}1)^{n-1}$ почти без выкладок.</figcaption>
+  </figure>
+
+  <p>Это лицо — про <em>случайный растущий лес</em>, и оно возвращает вероятностный дух <a href="#s-pollak" data-tab="tab-lec5">круга Поллака</a>. Заодно оно объясняет, почему число $n^{n-2}$ так упорно возникает: сборка дерева «не помнит», с какого конца её начали.</p>
+
+<h2 id="s-schastlivye">Дверь наружу: счастливые машины</h2>
+
+  <p>Каждое лицо приоткрыло дверь; заглянем в одну из них здесь (вторая — <a href="#cap-qkatalan" data-tab="tab-lec9">площадь → q-Каталан</a> — ждёт в капстоуне). Первая — вероятностная, и открывается она тем же кругом Поллака.</p>
+
+  <div class="stmt defn" id="def-13"><span class="lbl">Определение 13 (счастливая машина).</span>
+  Машина $i$ <em>счастлива</em>, если паркуется ровно на своё предпочтение, $p_i = f(i)$ (ни одного проезда мимо).</div>
+
+  <div class="stmt thm" id="thm-13"><span class="lbl">Теорема 13 (среднее число счастливых).</span>
+  Для равновероятной случайной парковочной функции порядка $n$
+  $$\mathbb{E}[\#\text{счастливых}] = \frac{n}{2}\left(1 + \frac{2}{n+1}\right)\;\approx\;\frac n2.$$
+  То есть в среднем счастлива примерно половина машин.</div>
+
+  <div class="proof"><span class="lbl">Доказательство (круг Поллака + линейность).</span>
+  <br><em>Шаг 1.</em> В круговой модели (<a href="#thm-3" data-tab="tab-lec5">Теорема 3</a>) сдвиг всех предпочтений на константу поворачивает всю динамику, поэтому событие «машина $i$ счастлива» не меняется при таком сдвиге.
+  <br><em>Шаг 2.</em> Сдвиги разбивают все $(n{+}1)^n$ круговых списков на орбиты размера $n{+}1$, и в каждой орбите ровно один представитель — обычная парковка. Так как «счастье» постоянно вдоль орбиты, среднее по парковкам равно среднему по всем круговым спискам без условий.
+  <br><em>Шаг 3.</em> К приезду машины $i$ занято $i{-}1$ мест; она счастлива, если её (независимое, равновероятное на $n{+}1$ местах) предпочтение попало в свободное: вероятность $\dfrac{(n{+}1)-(i-1)}{n{+}1}=\dfrac{n-i+2}{n{+}1}$.
+  <br><em>Шаг 4.</em> По линейности,
+  $$\mathbb{E} = \sum_{i=1}^{n}\frac{n-i+2}{n+1} = \frac1{n+1}\sum_{k=2}^{n+1}k = \frac{n+2}{2}-\frac1{n+1} = \frac n2\Bigl(1+\frac2{n+1}\Bigr).\ \square$$</div>
+
+  <p>Ничего нового не понадобилось — только тот же круговой приём плюс линейность матожидания. Вероятностная нить, начатая в <a href="#s-pollak" data-tab="tab-lec5">§5</a>, замкнулась. (Между делом: та же умная связь <a href="#thm-8" data-tab="tab-lec7">§12</a> переносит «счастливые машины» в «лидеров дерева» — вершины, наименьшие в своём поддереве, — так что эта статистика тоже живёт во всех трёх костюмах. А убывающий вариант парковок связан ещё и с числами Нараяны — <a href="#m1-narayana" data-tab="tab-lec4">мост в Мир 1</a>.)</p>
+
+<h2 id="s-itog">Что в итоге</h2>
+
+  <p>Мы начали с одной задачи — машины на улице — и ни разу с этой дороги не свернули. Спросили, когда паркуются все, и в критерии узнали переодетый <a href="#s-put" data-tab="tab-lec5">путь Дика</a>; посчитали его тем же круговым приёмом, каким <a href="#s-pollak" data-tab="tab-lec5">Мир 1 считает пути</a>; завели <a href="#s-ploshchad" data-tab="tab-lec6">площадь</a> и по <a href="#s-derevo" data-tab="tab-lec6">рекурсии первого возврата</a> свернули путь в дерево — а вместе с ним даром выпала <a href="#s-keli" data-tab="tab-lec6">формула Кэли</a>. Дальше сверили тонкие мерки: распределения промаха и инверсий совпадают, и это прозрачно доказывает <a href="#s-krever" data-tab="tab-lec7">разрез Кревераса</a> — рекурсия по номерам вершин, которой в Мире 1 нет. Наивная карта промах→инверсии <a href="#s-kontrprimer" data-tab="tab-lec7">подвела</a>, и поэлементную связь пришлось <a href="#s-umnaya" data-tab="tab-lec7">приручить</a>. Наконец увидели у числа <a href="#s-lica">много лиц</a> — геометрию Жуаяля (снова круг Поллака!), код Прюфера, рост Питмана — и дверь наружу, к <a href="#s-schastlivye">счастливым машинам</a>.</p>
+
+  <p><strong>Куда мы всё время смотрели — в <a href="#tab-lec1">Мир 1</a>.</strong> Мостов туда набралось много: снятие меток превращает путь в объект Каталана; круговой приём — это цикл-лемма, что считает и пути Дика; первый возврат — рекурсия Каталана; площадь тянется в q-Каталан (капстоун). Обе половины уже на бумаге — и держатся друг за друга ровно в тех местах, где эта статья на них ссылалась.</p>
+
+  <p>И честный зазор напоследок: лиц и дверей у числа $(n{+}1)^{\,n-1}$ мы открыли не все. Матричная теорема Кирхгофа, рекурсия Реньи–Риордана, маршрут через значение $I_n(-1)$, возрастающие деревья и «скачущие» перестановки (числа Эйлера, а за ними $\sec x+\tan x$) — всё осталось за краем. Куда ведут остальные двери, узнаем, когда курс подрастёт. А то, куда ведёт площадь — к q-Каталану и к ассоциэдру, — собрано в <a href="#tab-lec9">капстоуне</a>.</p>
+
+  <p class="foot">Черновик статьи-заготовки ко второй половине курса. Полные доказательства, точные ссылки на источники (Loehr, Yan, Aigner–Ziegler, Shin, Kreweras 1980, конспект 18.212) и честные пометки о конспективных местах — в математическом скелете курса. Иллюстрации нарисованы под этот текст; стиль ещё пойдёт через редакторский проход. Раздел «Площадь → q-Каталан» перенесён в капстоун (общий финал курса).</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<section class="tab" id="tab-lec9">
+<div class="layout">
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#cap-vvedenie">Где сходятся миры</a></li>
+    <li><a href="#cap-qkatalan">Площадь → q-Каталан: мост в оба конца</a></li>
+    <li><a href="#cap-assoc-yadro">Ассоциэдр ↔ парковка: школьное ядро</a></li>
+    <li><a href="#cap-assoc-geom">Геометрия: ассоциэдр картинкой</a></li>
+    <li><a href="#cap-granicy">Границы: не путать Loday и Питмана–Стэнли</a></li>
+    <li><a href="#cap-final">Финал курса: одно число живёт на многих языках</a></li>
+  </ol>
+</details>
+
+<main>
+<article>
+
+  <h1>Дополнительная лекция · Капстоун: где сходятся миры</h1>
+  <p class="subtitle">Ассоциэдр ↔ парковка и q-Каталан: обе половины буквально об одном числе.</p>
+  <div class="meta">Дополнительная · черновик · 6 разделов</div>
+
+<h2 id="cap-vvedenie">Где сходятся миры</h2>
+
+  <p class="lead">Весь курс шёл по одной идее: <em>одно число говорит на многих языках.</em> <a href="#tab-lec1">Мир 1</a> считал это число как триангуляции, пути Дика, деревья — в мире, где всё сбалансировано, а потом смотрел, что уцелеет, когда баланс снят. <a href="#tab-lec5">Мир 2</a> начал с другой задачи — парковки — и вышел на то же число другим числом: $(n{+}1)^{n-1}$, формула Кэли.</p>
+
+  <p>Здесь — два финальных сюжета, для которых нужны буквально <strong>обе</strong> половины разом. Первый — короткий мост: площадь пути (Мир 1) продолжается в промах парковки (Мир 2) и оба вместе — в $q$-число Каталана. Второй — geometрия: то же число $(n{+}1)^{n-1}$ считает не только парковки, но и кусочки специального многогранника — ассоциэдра, чьи вершины сами являются триангуляциями (объект Мира 1).</p>
+
+<h2 id="cap-qkatalan">Площадь → q-Каталан: мост в оба конца</h2>
+
+  <p>Последняя дверь Мира 2 возвращает нас в самое начало — к <a href="#m1-area" data-tab="tab-lec4">площади</a>, главной нити первой половины. Она уводит и туда, и в промах парковки одновременно.</p>
+
+  <div class="insight"><span class="tag">Мост</span>
+  Если сложить $q^{\operatorname{area}(P)}$ по всем немеченым путям Дика (<a href="#m1-area" data-tab="tab-lec4">объектам Мира 1</a>), получится <em>q-число Каталана</em>
+  $$C_n(q) = \frac{1}{[\,n{+}1\,]_q}\begin{bmatrix}2n\\ n\end{bmatrix}_q,\qquad [k]_q = 1+q+\dots+q^{\,k-1}$$
+  (гауссов $q$-биномиальный коэффициент; при $q=1$ — обычное число Каталана). Та самая площадь, что тянулась от лесенки пути Дика (Мир 1) до <a href="#s-ploshchad" data-tab="tab-lec6">промаха парковки</a> (Мир 2), здесь становится показателем степени.</div>
+
+  <p>Это второй, числовой мост между половинами: они сшиты не только равенством счётов $(n{+}1)^{\,n-1}$ (о нём — ниже), но и одной геометрической величиной — площадью. Доказательство (через $q$-аналог принципа отражения) живёт в <a href="#m1-otrazhenie" data-tab="tab-lec2">Мире 1</a>; здесь мы приносим только сам мост, не доказательство — оно требует $q$-версии инструментов, которую в школьный курс не берём.</p>
+
+  <figure>
+    <svg viewBox="0 0 480 180" width="480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Площадь пути становится показателем степени q в q-числе Каталана">
+  <!-- left: path with shaded area cells -->
+  <g transform="translate(40,140)">
+    <line x1="0" y1="0" x2="104" y2="-104" class="s-dash"/>
+    <rect x="0"  y="-52"  width="26" height="26" class="s-fillsh"/>
+    <rect x="0"  y="-78"  width="26" height="26" class="s-fillsh"/>
+    <rect x="26" y="-78"  width="26" height="26" class="s-fillsh"/>
+    <rect x="52" y="-104" width="26" height="26" class="s-fillsh"/>
+    <path d="M0 0 L0 -78 L52 -78 L52 -104 L104 -104" class="s-accent"/>
+    <line x1="0" y1="0" x2="104" y2="0" class="s-thin"/>
+    <line x1="0" y1="0" x2="0" y2="-104" class="s-thin"/>
+    <text x="52" y="20" text-anchor="middle" class="s-txt-m">area = 4 клетки</text>
+  </g>
+  <!-- arrow -->
+  <text x="200" y="78" text-anchor="middle" class="s-txt">→</text>
+  <!-- right: q power + generating function -->
+  <text x="330" y="66" text-anchor="middle" style="font-family:'DejaVu Sans';font-size:26px;fill:#2f6e8e">q⁴</text>
+  <text x="348" y="116" text-anchor="middle" class="s-txt">Σ q^area = Cₙ(q)</text>
+  <text x="348" y="138" text-anchor="middle" class="s-txt-m">при q = 1 — число Каталана</text>
+</svg>
+    <figcaption>Мост area → q-Каталан: площадь пути становится показателем степени $q$, и сумма $q^{\operatorname{area}}$ по всем путям Дика даёт $q$-число Каталана $C_n(q)$.</figcaption>
+  </figure>
+
+<h2 id="cap-assoc-yadro">Ассоциэдр ↔ парковка: школьное ядро</h2>
+
+  <p>Второй сюжет капстоуна отвечает на вопрос, который напрашивался с самого начала курса: раз <a href="#m1-triang" data-tab="tab-lec1">триангуляции многоугольника</a> (Мир 1) и <a href="#s-pollak" data-tab="tab-lec5">парковки</a> (Мир 2) — обе про число $(n{+}1)^{n-1}$-и-соседей, есть ли между ними мост попрямее, чем просто «оба считаются круговым приёмом»? Есть — и его доказываемая часть школьна.</p>
+
+  <p>Мы уже знаем счёт парковок: <a href="#thm-3" data-tab="tab-lec5">круг Поллака</a> даёт ровно $(n{+}1)^{n-1}$ парковочных функций порядка $n$. Вопрос в другом: можно ли <em>собрать</em> каждую парковку явным рекурсивным рецептом — так же, как триангуляция Мира 1 собиралась из базисного треугольника и двух меньших частей?</p>
+
+  <div class="stmt thm" id="cap-thm-1"><span class="lbl">Утверждение (Лодэ, «разрежь-и-перемешай»).</span>
+  Каждая парковочная функция порядка $n$ строится <em>ровно один раз</em> следующим рецептом: выбери первую машину $a\in\{1,\dots,p{+}1\}$; разбей остаток на две меньшие парковки длины $p$ и $q$ (где $p{+}q{=}n{-}1$); сдвинь вторую вверх на $p{+}1$; произвольно перемешай (shuffle) две получившиеся последовательности между собой.</div>
+
+  <p>Отсюда — рекуррента для числа парковок $d_n$:
+  $$d_n=\sum_{p=0}^{n-1}(p{+}1)\binom{n-1}{p}\,d_p\,d_{n-1-p},$$
+  которая замыкается в $(n{+}1)^{n-1}$ через тождество Абеля (берём его как готовый инструмент, чёрный ящик — само тождество Абеля не доказываем).</p>
+
+  <div class="stmt example"><span class="lbl">Пример разреза</span>
+  Парковка $(3,6,1,7,2,1,3,6)$ (длина 8) разрезается рецептом на две меньшие парковки $(1,2,1,3)$ и $(1,2,1)$ (после сдвига и перемешивания). Проверка малых случаев: $d_1=1,\ d_2=3,\ d_3=16,\ d_4=125$ — совпадает с $(n{+}1)^{n-1}$ при $n=1,2,3,4$.</div>
+
+  <p class="mn"><b>Школьно.</b> Пререквизиты рецепта — биномы, перемешивания (shuffle), индукция. Линейной алгебры нет; теория групп не нужна — только «перестановка/перемешивание». Тождество Абеля используется как готовый факт, без доказательства (как в Мире 1 не доказывается формула Стирлинга).</p>
+
+  <p>Итак, доказываемая часть — чистая комбинаторика: парковок ровно $(n{+}1)^{n-1}$ (круг Поллака, <a href="#s-pollak" data-tab="tab-lec5">Мир 2</a>), и каждую собираешь рецептом «выбери первую машину, разрежь остаток на две меньшие парковки, перемешай» (Лодэ). Никакой геометрии для этого не нужно.</p>
+
+<h2 id="cap-assoc-geom">Геометрия: ассоциэдр картинкой</h2>
+
+  <p>А вот и награда — геометрия, которую мы <strong>утверждаем со ссылкой, не доказываем.</strong> Те же $(n{+}1)^{n-1}$ парковок оказываются метками кусочков специального многогранника.</p>
+
+  <div class="stmt example"><span class="lbl">Утверждается (без доказательства)</span>
+  Ассоциэдр — многогранник, грани которого соответствуют разбиениям выпуклого многоугольника диагоналями; в частности, его <em>вершины</em> — это в точности триангуляции (то есть объект <a href="#m1-triang" data-tab="tab-lec1">Мира 1</a>, числа Каталана). Минимальная триангуляция $n$-мерного ассоциэдра на симплексы состоит ровно из $(n{+}1)^{n-1}$ симплексов, с явной биекцией на парковочные функции (Loday, math/0510380).</div>
+
+  <p>Малые случаи рисуются на доске.</p>
+
+  <figure>
+    <svg viewBox="0 0 460 230" width="460" role="img" aria-label="Ассоциэдр A2 — пятиугольник, разбитый на 3 треугольника, в биекции с 3 парковками длины 2">
+      <g transform="translate(115,15)">
+        <polygon points="60,0 112,38 92,100 28,100 8,38" fill="none" class="s-line"/>
+        <!-- triangulation fan from top vertex -->
+        <line x1="60" y1="0" x2="92" y2="100" class="s-accent"/>
+        <line x1="60" y1="0" x2="28" y2="100" class="s-accent"/>
+        <!-- three triangle labels -->
+        <text x="60" y="45" text-anchor="middle" class="s-txt-m" fill="var(--accent)">△1</text>
+        <text x="42" y="75" text-anchor="middle" class="s-txt-m" fill="var(--warm)">△2</text>
+        <text x="78" y="75" text-anchor="middle" class="s-txt-m" fill="#4f8f4a">△2</text>
+        <circle cx="60" cy="0" r="4" class="s-node-r"/>
+        <circle cx="112" cy="38" r="4" class="s-node-r"/>
+        <circle cx="92" cy="100" r="4" class="s-node-r"/>
+        <circle cx="28" cy="100" r="4" class="s-node-r"/>
+        <circle cx="8" cy="38" r="4" class="s-node-r"/>
+      </g>
+      <text x="230" y="150" text-anchor="middle" class="s-txt-m">A₂ = пятиугольник → 3 треугольника (одна из триангуляций)</text>
+      <!-- three parking functions correspondence -->
+      <g transform="translate(60,175)" class="s-txt-m" text-anchor="middle">
+        <text x="0" y="0">↕</text>
+      </g>
+      <text x="230" y="200" text-anchor="middle" class="s-txt">↕</text>
+      <text x="230" y="222" text-anchor="middle" class="s-txt-m">3 парковки длины 2: (1,1) · (1,2) · (2,1)</text>
+    </svg>
+    <figcaption>Ассоциэдр $A_2$ = пятиугольник; его вершины — 5 триангуляций (Мир 1), а одна конкретная триангуляция самого пятиугольника-многогранника на 3 треугольника ставится в биекцию с 3 парковками длины 2 (Мир 2). Малый, но точный пример моста «геометрия ↔ парковка».</figcaption>
+  </figure>
+
+  <p>Дальше число растёт быстро и рисовать становится не с руки: $A_3$ (ассоциэдр размерности 3) триангулируется на $16=4^2$ тетраэдров — ровно столько же, сколько парковок длины 3 (мы уже проверили $d_3=16$ выше).</p>
+
+  <figure>
+    <svg viewBox="0 0 470 250" width="470" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Схема трёхмерного ассоциэдра A3: призмоподобное тело, триангулированное на 16 тетраэдров">
+  <text x="235" y="24" text-anchor="middle" class="s-txt">A₃ — уже трёхмерный многогранник (схема)</text>
+  <!-- back pentagon (hidden, dashed) -->
+  <polygon points="200,96 280,74 346,118 314,188 212,180" class="s-dash" fill="none"/>
+  <!-- connectors front->back -->
+  <g class="s-thin">
+    <line x1="150" y1="122" x2="200" y2="96"/>
+    <line x1="230" y1="98" x2="280" y2="74"/>
+    <line x1="300" y1="142" x2="346" y2="118"/>
+    <line x1="270" y1="214" x2="314" y2="188"/>
+    <line x1="170" y1="206" x2="212" y2="180"/>
+  </g>
+  <!-- front pentagon (solid) -->
+  <polygon points="150,122 230,98 300,142 270,214 170,206" class="s-line" fill="#e8f0f4" fill-opacity="0.35"/>
+  <!-- highlighted tetrahedron: front triangle + apex at back vertex -->
+  <polygon points="150,122 230,98 170,206" class="s-accent" fill="#2f6e8e" fill-opacity="0.14"/>
+  <g class="s-accent">
+    <line x1="150" y1="122" x2="280" y2="74"/>
+    <line x1="230" y1="98" x2="280" y2="74"/>
+    <line x1="170" y1="206" x2="280" y2="74"/>
+  </g>
+  <text x="150" y="160" text-anchor="middle" class="s-txt-m" fill="#2f6e8e">1 тетраэдр из 16</text>
+  <text x="235" y="242" text-anchor="middle" class="s-txt-m">триангулируется на 16 = 4² тетраэдров (= парковки длины 3)</text>
+</svg>
+    <figcaption>Ассоциэдр $A_3$ уже трёхмерен: триангулируется на $16=4^2$ тетраэдров — ровно столько, сколько парковок длины 3. Рисунок схематичный (не точная комбинаторика граней), чтобы увидеть: геометрия за плоским $A_2$ не заканчивается.</figcaption>
+  </figure>
+
+<h2 id="cap-granicy">Границы: не путать Loday и Питмана–Стэнли</h2>
+
+  <div class="caveat"><span class="lbl">Важная оговорка</span>
+  «$(n{+}1)^{n-1}$ симплексов, один на парковку» — результат <strong>Лодэ</strong> (Loday, math/0510380), НЕ Питмана–Стэнли. У Питмана–Стэнли (math/9908029) своя разбивка — на $C_n$ камер-произведений, и их формула $(n{+}1)^{n-1}=n!\cdot V_n(1,\dots,1)$ считает <em>объём</em> многогранника через число камер, умноженное на факториал, — это не то же самое, что «число кусков триангуляции».
+  <br>Есть и вторая путаница, которую стоит избежать: <strong>деревья в этих двух конструкциях играют разные роли.</strong> У Питмана–Стэнли бинарные деревья индексируют $C_n$ камер разбиения. У Лодэ деревья (а точнее — их обобщение, ПБД-подобные структуры) индексируют вершины ассоциэдра, а число $(n{+}1)^{n-1}$ считает верхние симплексы триангуляции. Одни и те же слова «дерево» и «$(n+1)^{n-1}$» — но две разные конструкции, которые здесь принципиально не смешиваем.</div>
+
+<h2 id="cap-final">Финал курса: одно число живёт на многих языках</h2>
+
+  <p>Курс кольцуется там же, где начался Мир 1: <strong>одно число говорит на стольких языках — вопрос был, что в нём главное.</strong> Ответ, собранный по кусочкам через оба мира:</p>
+
+  <ul>
+    <li>Число Каталана $C_n$ — <a href="#m1-triang" data-tab="tab-lec1">триангуляции</a>, <a href="#m1-zoopark" data-tab="tab-lec1">пути Дика / деревья / скобки</a>, доказанное тремя разными способами (<a href="#m1-vyrez-list" data-tab="tab-lec1">вырезание листа</a>, <a href="#m1-otrazhenie" data-tab="tab-lec2">отражение</a>, <a href="#m1-cikl" data-tab="tab-lec3">поворот круга</a>);</li>
+    <li>Число $(n{+}1)^{n-1}$ — <a href="#s-pollak" data-tab="tab-lec5">парковки</a> и <a href="#s-keli" data-tab="tab-lec6">деревья Кэли</a> (Мир 2), связанные с Миром 1 <a href="#m1-sterzhen" data-tab="tab-lec3">одной и той же циклической леммой</a>, а теперь ещё и с <a href="#cap-assoc-geom">геометрией ассоциэдра</a>;</li>
+    <li>Статистика <em>площадь</em> — сквозная нить: <a href="#m1-area" data-tab="tab-lec4">площадь пути</a> (Мир 1) = <a href="#lem-4" data-tab="tab-lec6">промах парковки</a> (Мир 2) = показатель степени в <a href="#cap-qkatalan">q-числе Каталана</a> (капстоун);</li>
+    <li>И, наконец, северная звезда обеих половин — <a href="#m1-area" data-tab="tab-lec4">диагональные гармоники</a>, где пути Дика и парковки становятся двумя гранями одного алгебраического объекта. Целиком вне школы, но именно это объясняет, почему курс всё время смотрел в одну сторону.</li>
+  </ul>
+
+  <p>Курс начинался с ножниц и многоугольника, прошёл через голоса, круг и случайное блуждание, встретил парковки и деревья Кэли — и здесь, в капстоуне, оба мира наконец сходятся не метафорически, а буквально: одной величиной (площадью) и одним числом ($(n{+}1)^{n-1}$), которое считает и парковки, и куски многогранника, чьи вершины — те самые триангуляции, с которых всё началось.</p>
+
+  <p class="foot">Капстоун собирает q-Каталан (перенесён из статьи Мира 2, переоформлен мостом) и ассоциэдр↔парковка (из находок ресёрч-волны `mir1-nahodki.md` §VI: школьное ядро — рецепт Лодэ «разрежь-и-перемешай»; геометрия — утверждение со ссылкой, не доказательство). Границы Loday≠Питман–Стэнли соблюдены намеренно строго — источники используют одно число для разных подсчётов, и смешивать их нельзя.</p>
+
+</article>
+</main>
+</div>
+</section>
+
+<script>
+(function(){
+  var TABS = ['tab-lec1','tab-lec2','tab-lec3','tab-lec4','tab-lec5','tab-lec6','tab-lec7','tab-lec8','tab-lec9'];
+  var btns = Array.prototype.slice.call(document.querySelectorAll('.tab-btn'));
+  var sections = {};
+  TABS.forEach(function(id){ sections[id] = document.getElementById(id); });
+  var currentObserver = null;
+
+  function activateTab(id, opts){
+    opts = opts || {};
+    if (TABS.indexOf(id) === -1) id = TABS[0];
+    TABS.forEach(function(t){
+      var sec = sections[t];
+      if (!sec) return;
+      if (t === id) sec.classList.add('active'); else sec.classList.remove('active');
+    });
+    btns.forEach(function(b){
+      if (b.getAttribute('data-target') === id) b.classList.add('active'); else b.classList.remove('active');
+    });
+    if (!opts.noHash) {
+      history.replaceState(null, '', '#' + id);
+    }
+    setupObserverFor(id);
+    if (opts.scrollToTop) window.scrollTo({top:0});
+  }
+
+  // Подсветка активного раздела в оглавлении — ограничена активной вкладкой
+  function setupObserverFor(tabId){
+    if (currentObserver) { currentObserver.disconnect(); currentObserver = null; }
+    var root = sections[tabId];
+    if (!root || !('IntersectionObserver' in window)) return;
+    var links = Array.prototype.slice.call(root.querySelectorAll('.toc a[href^="#"]'));
+    if (!links.length) return;
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var current = null;
+    function setActive(id){
+      if (current) current.classList.remove('active');
+      var a = map[id];
+      if (a) { a.classList.add('active'); current = a; }
+    }
+    var visible = {};
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) visible[e.target.id] = e.intersectionRatio;
+        else delete visible[e.target.id];
+      });
+      var best=null, bestTop=Infinity;
+      Object.keys(visible).forEach(function(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top;
+        if (top < bestTop) { bestTop = top; best = id; }
+      });
+      if (best) setActive(best);
+    }, {rootMargin:'-15% 0px -75% 0px', threshold:[0,1]});
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) obs.observe(el);
+    });
+    currentObserver = obs;
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      activateTab(b.getAttribute('data-target'), {scrollToTop:true});
+    });
+  });
+
+  // Меж-вкладочные мосты: <a data-tab="tab-lec5" href="#s-pollak">
+  document.addEventListener('click', function(ev){
+    var a = ev.target.closest ? ev.target.closest('a[data-tab]') : null;
+    if (!a) return;
+    ev.preventDefault();
+    var target = a.getAttribute('data-tab');
+    var hash = (a.getAttribute('href')||'').replace(/^#/, '');
+    activateTab(target);
+    if (hash) {
+      // ждём кадр, чтобы секция успела стать display:block перед скроллом
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          var el = document.getElementById(hash);
+          if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+    }
+  });
+
+  // Инициализация по hash при загрузке
+  var initial = (location.hash || '').replace(/^#/, '');
+  if (TABS.indexOf(initial) !== -1) {
+    activateTab(initial, {noHash:true});
+  } else if (initial) {
+    // hash ведёт на конкретный якорь внутри одной из вкладок — найдём её
+    var found = null;
+    TABS.forEach(function(t){
+      if (found) return;
+      var sec = sections[t];
+      if (sec && sec.querySelector('#'+CSS.escape(initial))) found = t;
+    });
+    activateTab(found || TABS[0], {noHash:true});
+    if (found) {
+      requestAnimationFrame(function(){
+        var el = document.getElementById(initial);
+        if (el) el.scrollIntoView({block:'start'});
+      });
+    }
+  } else {
+    activateTab(TABS[0], {noHash:true});
+  }
+})();
+</script>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</body>
+</html>

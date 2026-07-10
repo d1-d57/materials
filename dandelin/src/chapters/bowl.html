@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#fff;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif}
+  #wrap{position:fixed;inset:0;display:grid;place-items:center}
+  svg{width:100%;height:100%;display:block}
+  text{fill:#333}
+</style></head>
+<body>
+<div id="wrap">
+<svg id="svg" viewBox="0 0 680 380" preserveAspectRatio="xMidYMid meet">
+  <defs><clipPath id="ell"><ellipse cx="340" cy="190" rx="270" ry="149"/></clipPath></defs>
+  <ellipse cx="340" cy="190" rx="272" ry="150" fill="#a7c2cb" fill-opacity="0.10"/>
+  <ellipse cx="340" cy="190" rx="272" ry="150" fill="none" stroke="#283845" stroke-width="2.2"/>
+  <line x1="68" y1="190" x2="612" y2="190" stroke="#8195ad" stroke-width="1" stroke-dasharray="3 4" opacity="0.5"/>
+
+  <g clip-path="url(#ell)">
+    <g id="rays"></g>
+    <g id="front"></g>
+  </g>
+
+  <g id="spark">
+    <g id="sparkRays" stroke="#c9a23c" stroke-width="2" stroke-linecap="round"></g>
+    <circle cx="115.5" cy="190" r="6" fill="#c9a23c" stroke="#fff" stroke-width="2"/>
+    <text x="115.5" y="223" text-anchor="middle" font-size="14.5" font-weight="700" fill="#a07d18">искра F&#8321;</text>
+  </g>
+  <g id="stoneG">
+    <g id="shards" stroke="#bf5b4f" stroke-width="2.2" stroke-linecap="round" opacity="0"></g>
+    <path id="stone" fill="#bf5b4f" stroke="#fff" stroke-width="1.6"/>
+    <text x="564.5" y="223" text-anchor="middle" font-size="14.5" font-weight="700" fill="#bf5b4f">камень F&#8322;</text>
+  </g>
+
+  <text id="concl" x="340" y="357" text-anchor="middle" font-size="14.5" font-weight="700" fill="#785a18" opacity="0">волна из F&#8321; собирается в F&#8322; — камень дробится</text>
+</svg>
+</div>
+<script>{{DRIVER:04}}<\/script>
+</body></html>

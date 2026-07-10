@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%;background:#fff;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif}
+#wrap{position:fixed;inset:0;display:grid;place-items:center}svg{width:100%;height:100%;touch-action:none}text{fill:#333}#T{cursor:grab}
+</style></head><body><div id="wrap">
+<svg id="svg" viewBox="0 0 680 400" preserveAspectRatio="xMidYMid meet">
+  <ellipse cx="340" cy="215" rx="250" ry="135" fill="#a7c2cb" fill-opacity="0.09" stroke="#333" stroke-width="1.7"/>
+  <line id="tang" stroke="#283845" stroke-width="2"/>
+  <text id="tlab" font-size="13.5" fill="#283845" text-anchor="end">касательная</text>
+  <!-- путь через другую точку P (длиннее) -->
+  <line id="pf1" stroke="#bf5b4f" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.8"/>
+  <line id="pf2" stroke="#bf5b4f" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.8"/>
+  <!-- путь через T (кратчайший) -->
+  <polyline id="rays" fill="none" stroke="#c0aa5a" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <path id="arcA" fill="none" stroke="#c0aa5a" stroke-width="2"/>
+  <path id="arcB" fill="none" stroke="#c0aa5a" stroke-width="2"/>
+  <circle cx="130" cy="215" r="4.5" fill="#bf5b4f" stroke="#fff" stroke-width="2"/>
+  <text x="130" y="237" text-anchor="middle" font-size="15" font-weight="700" fill="#bf5b4f">F₁</text>
+  <circle cx="550" cy="215" r="4.5" fill="#bf5b4f" stroke="#fff" stroke-width="2"/>
+  <text x="550" y="237" text-anchor="middle" font-size="15" font-weight="700" fill="#bf5b4f">F₂</text>
+  <circle id="P" r="5" fill="#8195ad" stroke="#fff" stroke-width="2"/>
+  <text id="Plab" text-anchor="middle" font-size="15" font-weight="700" fill="#8195ad">P</text>
+  <circle id="T" r="7" fill="#785a18" stroke="#fff" stroke-width="2.5"/>
+  <text id="Tlab" text-anchor="middle" font-size="15" font-weight="700" fill="#785a18">T</text>
+  <text id="ineq" x="340" y="40" text-anchor="middle" font-size="22" font-weight="700"><tspan fill="#bf5b4f">F₁P + F₂P</tspan><tspan fill="#333"> &gt; </tspan><tspan fill="#785a18">F₁T + F₂T</tspan></text>
+</svg></div>
+<script>{{DRIVER:02}}<\/script>
+</body></html>

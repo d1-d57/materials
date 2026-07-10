@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#fff;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif}
+  #wrap{position:fixed;inset:0;display:grid;place-items:center}
+  svg{width:100%;height:100%;display:block;touch-action:none}
+  text{fill:#333}
+  #W{cursor:grab}
+</style></head>
+<body>
+<div id="wrap">
+<svg id="svg" viewBox="0 0 680 340" preserveAspectRatio="xMidYMid meet">
+  <rect x="40" y="190" width="600" height="118" fill="#a7c2cb" fill-opacity="0.10"/>
+  <line x1="40" y1="190" x2="640" y2="190" stroke="#8195ad" stroke-width="2.4"/>
+  <text x="50" y="208" font-size="13.5" fill="#8195ad">река</text>
+
+  <!-- ОТРАЖЕНИЕ (только сцена 2) -->
+  <g id="refl" opacity="0">
+    <line id="bb" stroke="#8195ad" stroke-width="1.2" stroke-dasharray="3 4"/>
+    <circle id="Bp" r="4.5" fill="#8195ad" fill-opacity="0.55" stroke="#fff" stroke-width="1.5"/>
+    <line id="straight" stroke="#785a18" stroke-width="1.3" stroke-dasharray="2 5" opacity="0.7"/>
+    <line id="wbp" stroke="#c0aa5a" stroke-width="1.6" stroke-dasharray="4 4" opacity="0.85"/>
+    <path id="arcA" fill="none" stroke="#c0aa5a" stroke-width="2"/>
+    <path id="arcB" fill="none" stroke="#c0aa5a" stroke-width="2"/>
+  </g>
+
+  <!-- путь дом→W→сарай -->
+  <polyline id="path" fill="none" stroke="#c0aa5a" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <circle cx="170" cy="95" r="5" fill="#bf5b4f" stroke="#fff" stroke-width="2"/>
+  <text x="170" y="80" text-anchor="middle" font-size="15" font-weight="700" fill="#bf5b4f">дом</text>
+  <circle cx="480" cy="75" r="5" fill="#bf5b4f" stroke="#fff" stroke-width="2"/>
+  <text x="480" y="60" text-anchor="middle" font-size="15" font-weight="700" fill="#bf5b4f">сарай</text>
+
+  <circle id="W" r="7" cy="190" fill="#785a18" stroke="#fff" stroke-width="2.5"/>
+  <text id="Wlab" y="214" text-anchor="middle" font-size="16" font-weight="700" fill="#785a18">W</text>
+</svg>
+</div>
+<script>{{DRIVER:08}}<\/script>
+</body></html>

@@ -1,0 +1,40 @@
+# Арка 8 — Сцены · ПЕРЕНОС
+
+> **Когда:** слайд свёрстан (арка 7), геометрия финальная; надо раскрыть по кликам. · **Вход:** `slides/<id>.html` (все шаги размещены и скрыты) + разметка сцен в `content/<id>.md`. · **Выход:** `data-scene-from/until` на элементах, `data-scenes="N"` на секции (пишет генератор из шорткатов Р2). · **Гейт:** каждый клик что-то меняет; связка вне блюра; заморожена геометрия. · **next:** арка 10 (сборка). · **Семя:** `../zhurnal/2026-07-10_sborka-konvejera/distillat-verstka-kanon-qa.md` §Арка 8.
+
+## Контракт
+**Вход.** `slides/<id>.html` с готовой финальной геометрией (все шаги размещены, скрыты) + шорткаты Р2 в `content/<id>.md`: `{@N}`/`{@N-M}`/`{@-M}` на абзаце, инлайн `{@N|текст}`, шторки `{fill@N|бланк|ответ}` и `{blur@N|значение}`.
+**Выход.** Генератор (`render_inline_md`/`_attrs_from_tag` в `build_deck.py`) сам пишет `data-scene-from`/`data-scene-until` на `<p>`/`<span>`, `data-scenes="N"` на `<section>`; движок (`engine.js` `applyScene`) раскрывает через `opacity+visibility` (никогда `display`). **Арка 8 отвечает за правильную РАЗМЕТКУ в md, не за код движка.**
+**Гейт.** Аналог `--scene-diff` (арка 10): последовательные сцены отличаются ТОЛЬКО добавленными пикселями (геометрия заморожена), ни один клик не пустой. Ручной чек: связка (`≈`,`=`) не блюрится вместе со значением — блюрится только ответ; структурные символы вне `.fill`/blur. Дед-клик (сцена без видимых изменений) — дефект (прецедент Kepler 3→1 сцены).
+
+## Синтаксис Р2 — переносим дословно (уже парсит генератор)
+- `{@N}` → `data-scene-from="N"`;
+- `{fill@N|a|b}` → пара `<span class="fill">` (inline-grid, ровно один активный child на сцену);
+- `{blur@N|x}` → `<span class="blur-reveal" data-reveal="N">`;
+- каскад в `engine.js`: `.scene-K [data-scene-from="K"]{opacity:1;visibility:visible}` до 9 сцен, `scene-off` для `data-scene-until`.
+- Правило «связка вне блюра»: `≈ <span class="fill">…</span>`, НИКОГДА `<span class="fill">≈ …</span>` (второй child ломает `grid-area:1/1`). Живой пример: `../../buffon/src/content/sl-polygons.md`.
+
+## Механика reveal — где живёт CSS (проверено на живых деках)
+Два механизма ОРТОГОНАЛЬНЫ по конструкции — не конфликтуют:
+- **scene-from** (появление): базовый `[data-scene-from]{opacity:0;visibility:hidden}` — в канон-`shablon.html` (dandelin стр. 60, buffon стр. 52), плюс scene-каскад там же. Общий стандарт, наследуется всеми деками.
+- **blur-reveal** (размытие до сцены): элементы несут `data-reveal`, НЕ `data-scene-from` → под правило `opacity:0` НЕ попадают. Поэтому опасение «`[data-scene-from]{opacity:0}` перебивает `.blur-reveal` по специфичности» на живых деках **не возникает** (мех. орто). НО сам CSS блюра (`.blur-reveal{filter:blur(5.5px)…}` + scene-gated un-blur) живёт per-deck в `overlay.css` (`../../buffon/src/overlay.css` стр. 18–25), НЕ в базе.
+
+**Рекомендация (уровень конвейера):** blur-reveal CSS и `transition-delay:0s` синк — механизм, не пер-дек вкус → вынести в канон-базу (`base.css`/`shablon`), одна правка на все деки. Пока не вынесено — арка 8 обязана гарантировать их присутствие в каждом деке с `{blur@}` или синхронным «текст+картинка одной сцены».
+
+## Адаптируем
+- `transition-delay` на `.formula`/`.panel`/`[data-scene-from]` обнулить для синхронного раскрытия текст+картинка одной сцены (иначе картинка отстаёт ~120–140мс). Фикс есть per-deck: `.formula[data-scene-from],[data-scene-from] .formula,.panel[data-scene-from]{transition-delay:0s!important}` (buffon overlay стр. 34) — на новом деке подтверждать/переносить (см. рекомендацию выше).
+- **Мост к арке 9 (sim):** каждый sim (`canvas data-sim="kind"`) обязан реализовать `settle()`/`reset()`/`play()`/`onScene(k)`, чтобы попасть под контракт «открывается на нуле». Механика `justShown`/`_simVis`/`MutationObserver` уже дословно в `sims/lab.core.js` — арка 8 её НЕ пишет, только требует 4 метода от нового sim.
+
+## Внешнее
+Ничего для механики сцен. 3D-главы (архетип A `decks/06-conics.md`: `data-step-offset`, postMessage `{goStep}`/`{ride}`, resize-on-show) — мост к арке 9/`threejs`; сама синхронизация deck↔iframe (hash-поллинг ~150мс) уже дословно в `shablon.html` обоих деков. Арка 8 знает контракт (не ставить `data-ride` рядом со степами), авторинг сцены — арка 9.
+
+## Ловушки
+- `.fill` — inline-grid ровно с одним активным child на сцену; связка-текст ДО `.fill`, не внутри.
+- `prev()` в `engine.js` НЕ покадровый откат: внутри сцены — сброс на шаг 1; с шага 1 — переход на ФИНАЛЬНУЮ сцену предыдущего слайда. Не проектировать сцены под покадровый «назад».
+
+## Якоря (по требованию)
+- Живой код: `../../buffon/src/{content/sl-polygons.md,overlay.css,shablon.html,engine.js}`, `../../dandelin/src/shablon.html`, `../../_generator/SLIDE-FORMAT.md`.
+- Скилл: `html-slides-studio/references/{slide-engine,simulations}.md`, `references/decks/06-conics.md`.
+
+## Открытые вопросы
+- Вынести blur-reveal + `transition-delay:0s` в канон-базу (одна правка на деки) vs оставить per-deck — рекомендация вынести, не решено (пересекается с «base.css», конвейер-уровень).

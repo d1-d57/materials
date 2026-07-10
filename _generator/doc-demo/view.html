@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>doc-demo</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  --bg:#f7f4ee; --panel:#fffdf8; --text:#201d18; --muted:#6c655a;
+  --rule:#ddd5c7; --accent:#7a1f1f; --insight-bg:#f2ecdd; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#7a1f1f;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.62;font-size:18px;-webkit-text-size-adjust:100%}
+a{color:var(--link)}
+.wrap{max-width:960px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.doc-head{font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .1em}
+.gen-note{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 1.4rem}
+.runtime-note{font-family:var(--sans);font-size:.82rem;line-height:1.5;background:#fff8e6;
+  border:1px solid #e6d7a2;border-radius:6px;padding:.7rem .9rem;margin:0 0 1.6rem;color:#6a5a1e}
+.runtime-note code{background:#f0e6c8;padding:0 .25em;border-radius:3px}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-1:checked ~ #panel-1{display:block}
+#tab-1:checked ~ .tabbar label[for="tab-1"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── поток текста ── */
+.stream{max-width:840px;padding-right:200px;counter-reset:sec}
+@media(max-width:900px){.stream{padding-right:0}}
+.stream h2{font-family:var(--serif);font-size:1.28rem;margin:2rem 0 .6rem;counter-increment:sec}
+.stream h2::before{content:counter(sec)". ";color:var(--muted)}
+.stream h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem}
+.stream p{margin:.7em 0}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.25em 0}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+.mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
+  font-family:var(--sans);font-size:.8rem;line-height:1.5;color:var(--muted);
+  border-left:2px solid var(--rule);padding-left:.75em}
+.mn b,.mn strong{color:var(--text)}
+@media(max-width:900px){.mn{float:none;width:auto;margin:1.2em 0;
+  border-left:3px solid var(--rule);padding:.4em 0 .4em .9em}}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+.insight{background:var(--insight-bg);border-left:4px solid var(--accent);
+  padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
+.insight .tag{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:.5em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── мета-строка потока ── */
+.stream-meta{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:0 0 1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+.stream-meta .status{font-weight:700;color:var(--text)}
+.stream-meta .debt{color:var(--flag-open);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>doc-demo</h1>
+  <p class="gen-note">Вид doc-движка · вкладки = потоки-«котёл» (стадия склада сюжетов). Источник истины — markdown; правь его и пересобирай (0 токенов).</p>
+</div>
+<div class="runtime-note">Математика набрана <b>KaTeX через CDN</b> — это <b>авторский рантайм-вид для вычитки</b> (Р7), единственная внешняя зависимость. Офлайн формулы деградируют в сырой <code>$…$</code>, страница не падает. Финальный дек несёт статический кэш формул, не рантайм.</div>
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-1">
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Математика</label>
+<label class="tab-label" for="tab-1">Научпоп</label>
+</nav>
+<section class="panel" id="panel-0"><div class="stream-meta"><span><span class="status">status: chernovik</span></span> <span>регистр: читаемый</span> <span><span class="debt">⚑ открытых долгов: 1</span></span> <span>источник: matematika.md</span></div><div class="stream"><h1>Числа Каталана — математический скелет</h1>
+<aside class="note">Игрушечный контент для ДЕМО doc-движка (механизм + вид), не настоящая лекция. Канон дека не трогаем.</aside>
+<h2>Определение и первые значения</h2>
+<p>Считаем руками, до всякой теории: $C_0 = 1,\ C_1 = 1,\ C_2 = 2,\ C_3 = 5,\ C_4 = 14$. Замкнутая форма — одна строка, display-режимом:</p>
+<p>$$C_n = \frac{1}{n+1}\binom{2n}{n}.$$</p>
+<p class="level-line">Уровень: <span class="level">школьно</span></p>
+<p class="mn">Договоримся об обозначениях: <strong>[n]</strong> = {1, …, n}. Соглашение держится до конца скелета — мелкая оговорка, вынесенная в жёлоб, а не в поток чтения.</p>
+<h2>Рекуррента</h2>
+<p>Основание входит ровно в один треугольник — отсюда сразу видна рекуррента $C_{n+1} = \sum_{i=0}^{n} C_i\, C_{n-i}$, ещё до всякой общей теории.</p>
+<div class="insight"><span class="tag">Прозрение</span> Одна и та же величина $C_n$ считает и триангуляции, и пути Дюка, и правильные скобки. Это <strong>один объект на трёх языках</strong> — стержень, который переживёт любое обобщение.</div>
+<figure class="ill-ph"><div class="ill-badge">🖼 ИЛЛЮСТРАЦИЯ · 3 сцен</div><figcaption>Три панели-биекции бок о бок: триангуляция · путь Дюка · скобки. Метки покрашены согласованно между панелями (парковка/путь/дерево).</figcaption></figure>
+<h2>Открытые долги и честные пометки</h2>
+<p class="flag open">⚑ Флаг: биекция Шина не проверена руками для $n = 5$ — нужна ручная сверка промаха (16 против 4 инверсий).</p>
+<p class="flag open">⚑ Флаг: знак в замкнутой форме — свериться подстановкой малых $n$.</p>
+<p class="flag closed"><b>✔ закрыт.</b> Флаг закрыт: знак верный, проверено подстановкой $n = 1, 2, 3$ — все три дают $C_n$ из таблицы выше.</p>
+<p class="foot">Черновик математического скелета. Полные доказательства — отдельный проход; стилевой гейт ещё не пройден. Один долг (биекция Шина) сознательно оставлен открытым — линтер об этом предупреждает, но на статусе <code>chernovik</code> не валит.</p></div></section>
+<section class="panel" id="panel-1"><div class="stream-meta"><span><span class="status">status: chernovik</span></span> <span>регистр: устный</span> <span>источник: naupop.md</span></div><div class="stream"><h1>Числа Каталана — научпоп-рассказ</h1>
+<aside class="note">Тот же сюжет, что во вкладке «Математика», но голосом рассказчика. Игрушечное ДЕМО, не лекция.</aside>
+<h2>Крючок</h2>
+<p><strong>Сколькими способами</strong> можно разрезать многоугольник на треугольники? Начинаем считать руками — и натыкаемся на странно знакомый ряд: 1, 2, 5, 14, 42…</p>
+<p class="mn">Тот же ряд встретится ещё трижды за курс — держите его в голове как «северную звезду».</p>
+<h2>Разворот</h2>
+<div class="insight"><span class="tag">Разворот</span> Наивная биекция <em>промахивается</em>: промах равен 16, а инверсий у дерева всего 4. Число <strong>16 ≠ 4</strong> — это и есть место, где «очевидное» отображение ломается, и лучший честный поворот всего сюжета.</div>
+<p>Тут важно не спрятать провал за красивыми словами, а назвать конкретное число. «Аккуратно раскладываем промах» — это ещё не механизм; механизм появляется во вкладке «Математика».</p>
+<figure class="ill-ph"><div class="ill-badge">🖼 ИЛЛЮСТРАЦИЯ · 2 сцен</div><figcaption>Анимация: наивная стрелка «промахивается» мимо цели, подпись 16 ≠ 4 вспыхивает красным, затем перестройка чинит счёт.</figcaption></figure>
+<h2>Куда дальше</h2>
+<ul><li>один объект — три языка (треугольники, пути, скобки);</li><li>рекуррента видна прямо из геометрии, без формул;</li><li>строгие доказательства и мат-долги — во вкладке «Математика».</li></ul>
+<p class="foot">Черновик рассказа. Регистр устный: лектор дораскажет то, что не попадёт на слайд — ограничение по словам только на слайдовый текст, не на устную линию.</p></div></section>
+</div>
+</div>
+</body>
+</html>

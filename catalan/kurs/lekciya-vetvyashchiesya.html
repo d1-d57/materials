@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ветвящийся процесс — капстоун-лекция</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  :root{
+    --text:#211f1b; --muted:#726c60; --accent:#2f6e8e; --accent-soft:#e8f0f4;
+    --bg:#fbfaf6; --rule:#e7e2d6; --warm:#c9743a; --warm-soft:#f6ece2; --shade:#dfeaf0;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+    font-size:21px;line-height:1.7;font-optical-sizing:auto}
+
+  .layout{display:grid;grid-template-columns:210px minmax(0,1015px);gap:46px;
+    max-width:1275px;margin:0 auto;padding:52px 30px 130px}
+  main{min-width:0}
+  article{max-width:820px;counter-reset:sec}
+
+  /* Боковое оглавление */
+  .toc{position:sticky;top:34px;align-self:start;max-height:calc(100vh - 60px);
+    overflow:auto;font-family:"Source Sans 3",system-ui,sans-serif;font-size:.83rem;
+    line-height:1.4;border-right:1px solid var(--rule);padding-right:14px}
+  .toc>.h{font-weight:600;font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+  .toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+  .toc li{counter-increment:toc;margin:.16em 0}
+  .toc a{display:block;color:var(--muted);text-decoration:none;border:0;
+    padding:.18em .3em .18em 1.7em;border-radius:3px;position:relative}
+  .toc a::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;font-variant-numeric:tabular-nums}
+  .toc a:hover{color:var(--accent);background:var(--accent-soft)}
+  .toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+  .toc a.active::before{color:var(--accent)}
+
+  /* Шапка */
+  h1{font-size:2.5rem;line-height:1.12;font-weight:600;letter-spacing:-.015em;margin:.05em 0 .3em}
+  .subtitle{color:var(--muted);font-size:1.25rem;font-style:italic;line-height:1.45;margin:0 0 1.1em}
+  .meta{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--muted);border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);padding:.7em 0;margin:0 0 2.2em}
+
+  h2{font-family:"Source Sans 3",system-ui,sans-serif;font-size:1.62rem;font-weight:600;
+    letter-spacing:-.01em;line-height:1.2;margin:2.5em 0 .55em;counter-increment:sec;scroll-margin-top:24px}
+  h2::before{content:counter(sec) ". ";color:var(--accent);font-weight:600}
+  .lead{font-size:1.18rem;line-height:1.6}
+  p{margin:0 0 1.05em}
+  strong,b{font-weight:600}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid #bcd2dd}
+  a:hover{border-bottom-color:var(--accent)}
+
+  .insight{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:2px;
+    padding:.8em 1.15em;margin:1.6em 0;font-size:1rem;line-height:1.55}
+  .insight .tag{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.2em}
+
+  .stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:24px}
+  .stmt .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.98rem;letter-spacing:.01em}
+  .defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+  .defn .lbl{color:var(--accent)}
+  .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+  .thm .lbl{color:var(--warm)}
+  .example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+  .example .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.9rem;letter-spacing:.02em;
+    color:var(--muted);display:block;margin-bottom:.25em;text-transform:uppercase}
+  .proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+  .proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+
+  figure{margin:2.1em 0;text-align:center}
+  figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+  figcaption{color:var(--muted);font-size:.92rem;line-height:1.45;font-style:italic;
+    margin:.75em auto 0;max-width:38em;text-wrap:balance}
+
+  .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+  .katex{font-size:1.05em}
+  hr.sep{border:0;height:1px;background:var(--rule);margin:2.6em 0}
+  .caveat{background:#f6ece2;border:1px solid #e3c7a8;border-radius:5px;padding:.75em 1.05em;margin:1.4em 0;
+    font-size:.95rem;line-height:1.5}
+  .caveat .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.78rem;letter-spacing:.05em;
+    text-transform:uppercase;color:var(--warm);display:block;margin-bottom:.3em}
+  .foot{color:var(--muted);font-size:.92rem;font-style:italic;border-top:1px solid var(--rule);
+    margin-top:3em;padding-top:1.2em}
+
+  /* SVG helpers (как в курсе) */
+  .s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+  .s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+  .s-dashm{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:5 4}
+  .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-warm{fill:none;stroke:var(--warm);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+  .s-node-r{fill:var(--text)}
+  .s-node-a{fill:var(--accent);stroke:var(--accent);stroke-width:1.8}
+  .s-txt{font-family:"Source Sans 3",sans-serif;font-size:13px;fill:var(--text)}
+  .s-txt-w{font-family:"Source Sans 3",sans-serif;font-size:13px;fill:#fff;font-weight:600}
+  .s-txt-m{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:var(--muted)}
+  .s-txt-a{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:var(--accent);font-weight:600}
+  .s-txt-wm{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:var(--warm);font-weight:600}
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:0;padding:34px 20px 90px}
+    .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+      padding:0 0 1em;margin-bottom:2em}
+    .toc ol{columns:2;column-gap:22px}
+    h1{font-size:2rem}
+  }
+  @media (max-width:520px){
+    body{font-size:19px}
+    h1{font-size:1.7rem}.subtitle{font-size:1.1rem}
+    .toc ol{columns:1}
+    .katex{font-size:1em}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <nav class="toc">
+    <div class="h">Капстоун</div>
+    <ol>
+      <li><a href="#s1">Задача: цепная реакция</a></li>
+      <li><a href="#s2">Выживет ли? Диагональ</a></li>
+      <li><a href="#s3">Дерево становится общим путём</a></li>
+      <li><a href="#s4">Два способа считать: зеркало и круг</a></li>
+      <li><a href="#s5">Общий ответ</a></li>
+      <li><a href="#s6">Одна машина — много чисел</a></li>
+      <li><a href="#s7">Числа Фусса–Каталана</a></li>
+      <li><a href="#s8">Замыкание круга</a></li>
+      <li><a href="#s9">Горизонт</a></li>
+    </ol>
+  </nav>
+
+  <main>
+  <article>
+
+    <h1>Ветвящийся процесс</h1>
+    <p class="subtitle">От вымирания рода — к общей технике деревьев и путей на решётке</p>
+    <div class="meta">Капстоун первой половины · сильные 8–9 классы · обобщение путей и деревьев</div>
+
+    <p class="lead">Одна живая вероятностная задача — заглохнет ли цепная реакция и насколько она разрастётся — сама рождает <em>общий</em> путь на решётке и <em>общее</em> дерево. По дороге мы проверим на прочность два способа считать: зеркало сломается, поворот круга выживет. А в финале сумма всех ответов вернёт нас к вероятности вырождения.</p>
+
+    <h2 id="s1">Задача: цепная реакция</h2>
+    <p>Начнём с общего. Есть <strong>размножающийся объект</strong>: заражённый человек, нейтрон в реакторе, носитель фамилии. Каждый порождает <strong>случайное число «потомков» — по некоторому фиксированному закону</strong> (заразит ноль человек с одной вероятностью, одного — с другой, двоих — с третьей, и так далее), независимо от других. В среднем — $R_0$ потомков. Всё начинается с одного. Растёт случайное дерево — <em>ветвящийся процесс.</em></p>
+    <p>Закон здесь <strong>произвольный</strong> — не «орёл-решка», а любая таблица вероятностей: настоящая эпидемия, где число заражённых от одного колеблется вокруг $R_0$; распад, где вылетает 0, 1, 2, 3 нейтрона. Два honest-вопроса встают сразу:</p>
+    <div class="insight"><span class="tag">Два вопроса</span>
+    <strong>A. Заглохнет ли?</strong> оборвётся ли цепочка — или будет тлеть вечно? &nbsp;·&nbsp; <strong>B. Если заглохнет — насколько разрастётся?</strong> сколько всего объектов затронет за всю историю?</div>
+    <p>Вопрос A вы, возможно, уже видели — у него классический ответ. Вопрос B поведёт нас в новую комбинаторику. И — что неожиданно — в самом конце они окажутся одним и тем же.</p>
+
+    <h2 id="s2">Выживет ли? Диагональ</h2>
+    <p>Обозначим за $q$ вероятность того, что род <strong>в конце концов вымрет</strong>. Прозрение в одну строку — <em>самоподобие</em>: весь род вымирает тогда и только тогда, когда по отдельности вымирает род каждого из потомков предка. Потомки независимы, и род каждого — снова ветвящийся процесс, вымирающий с той же вероятностью $q$. Если у предка $k$ потомков, вероятность этого $q^k$; усредняя по числу потомков,</p>
+    <div class="stmt thm"><span class="lbl">Уравнение вырождения.</span>
+    $$q = p_0 + p_1\,q + p_2\,q^2 + \dots = f(q),\qquad f(s)=p_0+p_1 s+p_2 s^2+\dots$$
+    Здесь $f$ просто собирает закон потомства: подставь $q$, усредни. Значит <strong>$q$ — точка, где график $f$ пересекает диагональ $y=s$.</strong></div>
+
+    <figure>
+      <svg viewBox="0 0 300 210" width="300" role="img" aria-label="График f пересекает диагональ в точке q">
+        <line x1="40" y1="180" x2="196" y2="180" class="s-thin"/>
+        <line x1="40" y1="180" x2="40" y2="30" class="s-thin"/>
+        <text x="36" y="196" text-anchor="end" class="s-txt-m">0</text>
+        <text x="180" y="196" text-anchor="middle" class="s-txt-m">1</text>
+        <text x="33" y="44" text-anchor="end" class="s-txt-m">1</text>
+        <text x="118" y="205" text-anchor="middle" class="s-txt-m">s</text>
+        <line x1="40" y1="180" x2="180" y2="40" class="s-dash"/>
+        <text x="163" y="72" class="s-txt-a">y = s</text>
+        <polyline points="40,145 61,142.6 86.7,133.3 110,118.75 138,93.55 159,69.1 180,40" class="s-warm"/>
+        <text x="120" y="140" class="s-txt-wm">f(s)</text>
+        <circle cx="86.7" cy="133.3" r="4" class="s-node-a"/>
+        <line x1="86.7" y1="133.3" x2="86.7" y2="180" class="s-dash"/>
+        <text x="86.7" y="196" text-anchor="middle" class="s-txt-a">q</text>
+      </svg>
+      <figcaption>Вероятность вырождения $q$ — <strong>наименьшая</strong> точка, где $f$ пересекает диагональ. Точка $s=1$ подходит всегда; если в среднем потомков больше одного ($R_0>1$), есть и вторая, меньшая — она и есть ответ. При $R_0\le 1$ остаётся только $q=1$: род обречён.</figcaption>
+    </figure>
+
+    <p>Это «вертикальный» вопрос: да или нет. Красиво — но он ничего не говорит о <em>размере</em>. За размер возьмётся совсем другая техника. Отложим диагональ; в §6 мы к ней вернёмся с неожиданной стороны.</p>
+
+    <h2 id="s3">Родословное дерево становится общим путём</h2>
+    <p>Возьмёмся за вопрос B. Переоденем дерево в <strong>путь</strong> — как в первой половине курса переодевали деревья в пути Дика. Обойдём дерево в глубину (предок, его старший потомок, старший потомок старшего… — как читают книгу) и по ходу нарисуем ломаную:</p>
+    <div class="insight"><span class="tag">Правило обхода (кодировка Харриса)</span>
+    приходя к объекту, у которого $c$ потомков, делаем шаг на $c-1$. Смысл: его самого «вычёркиваем» ($-1$), но ставим в очередь $c$ потомков ($+c$). Ломаная стартует с нуля и <strong>впервые падает до $-1$ ровно тогда, когда очередь опустела — то есть обойден весь род.</strong> Значит размер $T$ — это номер шага первого попадания в $-1$.</div>
+
+    <p>И вот тут — главная развилка курса, ради неё всё и затевалось. Форма пути зависит <em>только</em> от закона потомства.</p>
+
+    <figure>
+      <svg viewBox="0 0 620 210" width="620" role="img" aria-label="Бинарный род даёт путь Дика ±1, попадающий в −1 на шаге 5">
+        <g transform="translate(35,24)">
+          <line x1="70" y1="16" x2="38" y2="58" class="s-line"/>
+          <line x1="70" y1="16" x2="102" y2="58" class="s-line"/>
+          <line x1="38" y1="66" x2="18" y2="104" class="s-line"/>
+          <line x1="38" y1="66" x2="58" y2="104" class="s-line"/>
+          <circle cx="70" cy="12" r="8" class="s-node-r"/>
+          <circle cx="38" cy="62" r="8" class="s-node-r"/>
+          <circle cx="102" cy="62" r="7" class="s-node"/>
+          <circle cx="18" cy="106" r="7" class="s-node"/>
+          <circle cx="58" cy="106" r="7" class="s-node"/>
+          <text x="60" y="150" text-anchor="middle" class="s-txt-m">только 0 или 2 потомка</text>
+        </g>
+        <text x="248" y="92" text-anchor="middle" class="s-txt">→</text>
+        <g transform="translate(300,24)">
+          <line x1="0" y1="120" x2="248" y2="120" class="s-thin"/>
+          <text x="-8" y="124" text-anchor="end" class="s-txt-m">0</text>
+          <polyline points="0,120 45,92 90,64 135,92 180,120 225,148" class="s-accent"/>
+          <circle cx="0" cy="120" r="3.4" class="s-node-r"/>
+          <circle cx="45" cy="92" r="3.4" class="s-node-r"/>
+          <circle cx="90" cy="64" r="3.4" class="s-node-r"/>
+          <circle cx="135" cy="92" r="3.4" class="s-node-r"/>
+          <circle cx="180" cy="120" r="3.4" class="s-node-r"/>
+          <circle cx="225" cy="148" r="5" class="s-node-a"/>
+          <text x="238" y="152" class="s-txt-a">−1</text>
+          <text x="225" y="172" text-anchor="middle" class="s-txt-a">T = 5</text>
+          <text x="16" y="108" class="s-txt-m">+1</text>
+          <text x="61" y="80" class="s-txt-m">+1</text>
+          <text x="150" y="108" class="s-txt-m">−1</text>
+        </g>
+      </svg>
+      <figcaption>Если у каждого только 0 или 2 потомка — шаги ровно $\pm1$: получается <strong>путь Дика</strong>, тот самый горный путь первой половины. Это узкий, сбалансированный случай.</figcaption>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 392 170" width="392" role="img" aria-label="Общее потомство даёт большой прыжок вверх — путь Лукасевича">
+        <g transform="translate(16,26)">
+          <line x1="34" y1="14" x2="12" y2="54" class="s-line"/>
+          <line x1="34" y1="14" x2="34" y2="54" class="s-line"/>
+          <line x1="34" y1="14" x2="56" y2="54" class="s-line"/>
+          <circle cx="34" cy="10" r="7" class="s-node-r"/>
+          <circle cx="12" cy="58" r="6" class="s-node"/>
+          <circle cx="34" cy="58" r="6" class="s-node"/>
+          <circle cx="56" cy="58" r="6" class="s-node"/>
+          <text x="34" y="96" text-anchor="middle" class="s-txt-m">3 потомка</text>
+        </g>
+        <text x="118" y="70" text-anchor="middle" class="s-txt">→</text>
+        <g transform="translate(150,20)">
+          <line x1="0" y1="90" x2="200" y2="90" class="s-thin"/>
+          <text x="-8" y="94" text-anchor="end" class="s-txt-m">0</text>
+          <polyline points="0,90 50,30 100,60 150,90 195,120" class="s-warm"/>
+          <circle cx="0" cy="90" r="3.2" class="s-node-r"/>
+          <circle cx="50" cy="30" r="3.2" class="s-node-r"/>
+          <circle cx="100" cy="60" r="3.2" class="s-node-r"/>
+          <circle cx="150" cy="90" r="3.2" class="s-node-r"/>
+          <circle cx="195" cy="120" r="4.5" class="s-node-a"/>
+          <text x="26" y="52" class="s-txt-wm">+2</text>
+          <text x="208" y="124" class="s-txt-a">−1</text>
+        </g>
+      </svg>
+      <figcaption>А при <strong>произвольном</strong> потомстве шаг «$-1$ или вверх на любое число»: трое потомков — сразу прыжок $+2$. Это уже <strong>путь Лукасевича</strong> (вниз строго на 1, вверх на сколько угодно) — общий путь на решётке. Путь Дика — его сбалансированный частный случай.</figcaption>
+    </figure>
+
+    <p>Вот новое понятие, которого не было в Л1–Л4: <strong>общий путь на решётке</strong>. Первая половина курса видела только его ±1-тень (путь Дика); живая задача про размножение вытащила его целиком. Размер рода теперь — <strong>первый выход общего блуждания в $-1$</strong>. Осталось научиться такие пути <em>считать</em>.</p>
+
+    <h2 id="s4">Два способа считать: зеркало и круг</h2>
+    <p>Пути Дика мы умели считать <strong>двумя</strong> приёмами. Настоящая проверка идеи — обобщение: перенесём оба на общий путь Лукасевича и посмотрим, что уцелеет.</p>
+
+    <p><strong>Принцип отражения (Л2).</strong> «Плохие» пути (те, что нырнули под барьер) зеркально отражают относительно барьера и ставят в соответствие с путями попроще. Приём держится на <em>зеркале</em>: отражённая ломаная обязана снова быть допустимым путём. Для $\pm1$ так и есть — отражение просто меняет местами шаги $+1$ и $-1$.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 200" width="640" role="img" aria-label="Отражение работает на пути ±1, но ломается на пути Лукасевича">
+        <!-- левая панель: ±1, зеркало работает -->
+        <g transform="translate(14,22)">
+          <text x="92" y="6" text-anchor="middle" class="s-txt">путь ±1 — зеркало работает</text>
+          <line x1="0" y1="95" x2="185" y2="95" class="s-dashm"/>
+          <text x="150" y="90" class="s-txt-m">барьер</text>
+          <polyline points="0,95 30,71 60,47 90,71 120,47 150,71" class="s-accent"/>
+          <polyline points="0,95 30,119 60,143 90,119 120,143 150,119" class="s-accent" stroke-dasharray="5 4" opacity="0.7"/>
+          <text x="126" y="42" class="s-txt-a">путь</text>
+          <text x="126" y="150" class="s-txt-m">зеркало ✓</text>
+        </g>
+        <line x1="320" y1="20" x2="320" y2="178" class="s-thin"/>
+        <!-- правая панель: Лукасевич, зеркало ломается -->
+        <g transform="translate(360,22)">
+          <text x="112" y="6" text-anchor="middle" class="s-txt">путь Лукасевича — ломается</text>
+          <line x1="0" y1="95" x2="222" y2="95" class="s-dashm"/>
+          <text x="178" y="90" class="s-txt-m">барьер</text>
+          <polyline points="46,95 96,47" class="s-warm"/>
+          <circle cx="46" cy="95" r="3.4" class="s-node-r"/>
+          <circle cx="96" cy="47" r="3.4" class="s-node-r"/>
+          <text x="58" y="66" class="s-txt-wm">+2</text>
+          <text x="104" y="46" class="s-txt-m">путь</text>
+          <polyline points="46,95 96,143" class="s-warm" stroke-dasharray="5 4" opacity="0.85"/>
+          <text x="58" y="132" class="s-txt-wm">−2</text>
+          <text x="104" y="150" class="s-txt-wm">✗ нельзя</text>
+        </g>
+      </svg>
+      <figcaption>Слева: у пути $\pm1$ зеркало превращает путь снова в путь $\pm1$ — счёт отражением работает. Справа: у пути Лукасевича прыжок $+2$ при отражении даёт $-2$, а <strong>вниз можно только на 1</strong> — легального зеркала нет. Приём ломается ровно там, где кончается симметрия.</figcaption>
+    </figure>
+
+    <p>На общем пути отражение <strong>ломается</strong>: отражая прыжок $+2$, получаем спуск $-2$, которого в наших шагах не бывает. Компактной формулы отражением тут и не существует — это известный факт <span style="color:var(--muted)">(Краттенталер: «для несимметричного барьера замкнутой формулы нет и вряд ли она есть»)</span>. Зеркало было <em>красотой сбалансированного мира</em> — и осталось в нём.</p>
+
+    <p><strong>Поворот круга (Л3, лемма Рени).</strong> Второй приём считает не отражением, а <em>вращением</em>: разложи шаги по кругу и поворачивай. Ему <strong>всё равно</strong>, какого размера шаги — он их лишь переставляет по кругу, ничего не меняя в наборе. Поэтому он переживает обобщение без единой царапины.</p>
+
+    <figure>
+      <svg viewBox="0 0 300 205" width="300" role="img" aria-label="Из четырёх циклических поворотов ровно один даёт правильное блуждание">
+        <circle cx="150" cy="105" r="70" class="s-thin"/>
+        <circle cx="150" cy="35" r="14" class="s-node-a"/>
+        <text x="150" y="40" text-anchor="middle" class="s-txt-w">+2</text>
+        <circle cx="220" cy="105" r="13" class="s-node"/>
+        <text x="220" y="110" text-anchor="middle" class="s-txt">−1</text>
+        <circle cx="150" cy="175" r="13" class="s-node"/>
+        <text x="150" y="180" text-anchor="middle" class="s-txt">−1</text>
+        <circle cx="80" cy="105" r="13" class="s-node"/>
+        <text x="80" y="110" text-anchor="middle" class="s-txt">−1</text>
+        <text x="150" y="14" text-anchor="middle" class="s-txt-a">старт ✓</text>
+      </svg>
+      <figcaption>Любые шаги (здесь $+2,-1,-1,-1$, сумма $-1$) на круге. Из всех поворотов ровно один даёт правильное родословное блуждание (не уходит ниже нуля до конца) — <strong>лемма Рени</strong>, стержень курса. Симметрия не нужна: важна только сумма шагов.</figcaption>
+    </figure>
+
+    <p>Это утверждение надо сформулировать точно и доказать — иначе «поворот считает» остаётся словами.</p>
+
+    <div class="stmt thm"><span class="lbl">Лемма (Рени, цикл-лемма).</span>
+    Пусть $x_1,\dots,x_n$ — целые, $x_i\ge-1$, $x_1+\dots+x_n=-1$. Назовём сдвиг <em>правильным</em>, если все его частичные суммы $\ge0$ до последнего шага. Тогда среди $n$ циклических сдвигов правильный <strong>ровно один</strong>.</div>
+    <div class="proof"><span class="lbl">Доказательство.</span> Пусть $S_0=0,\ S_j=x_1+\dots+x_j$ (значит $S_n=-1$); на круге считаем $S_{m+n}=S_m-1$ (полный круг убавляет сумму на $1$). Сдвиг с позиции $p$ правильный $\iff S_{p+j}\ge S_p$ при $j=1,\dots,n-1$.
+    <em>Существование.</em> Возьмём $p$ — <strong>первую</strong> точку минимума среди $S_0,\dots,S_{n-1}$. Для $p+j\le n-1$: $S_{p+j}\ge\min=S_p$. Для $p+j\ge n$ (пусть $r=p+j-n\lt p$): $S_{p+j}-S_p=(S_r-1)-S_p\ge0$, ведь $S_r>S_p$ (первый минимум $\Rightarrow S_r\ge S_p+1$). Сдвиг $p$ правильный.
+    <em>Единственность.</em> Будь правильны $p\lt p'$: из $p$ (не переходя круг) $S_{p'}\ge S_p$; из $p'$ (обойдя круг до $p$) $(S_p-1)\ge S_{p'}$, т.е. $S_p>S_{p'}$ — противоречие. $\blacksquare$</div>
+
+    <div class="insight"><span class="tag">Мораль</span>
+    Обобщение отсеяло приёмы: <strong>зеркало (отражение) сломалось</strong>, <strong>круг (поворот) выжил</strong>. Это и есть throughline курса — переход от сбалансированного к произвольному отличает случайную красоту от настоящей идеи. Настоящей оказалась цикл-лемма.</div>
+
+    <h2 id="s5">Общий ответ — с формулировками и доказательствами</h2>
+    <p>Теперь честно. Сначала — мост от вероятностной модели к тому, что мы вообще считаем.</p>
+
+    <div class="stmt defn"><span class="lbl">Исход и его вероятность.</span>
+    Исход процесса — плоское дерево $\tau$ (потомки упорядочены по рождению). Если у его вершин по $c_1,\dots,c_n$ детей, то, поскольку частицы независимы и каждая рожает $c_i$ детей с вероятностью $p_{c_i}$,
+    $$P(\text{процесс дал }\tau)=\prod_{i=1}^n p_{c_i},\qquad\text{откуда}\qquad P(T=n)=\sum_{\tau:\,|\tau|=n}\ \prod_{i=1}^n p_{c_i}.$$</div>
+
+    <p><strong>Ключевой момент</strong> (здесь у меня была подмена «посчитаем деревья»): $P(T=n)$ — не число деревьев, а <em>взвешенная сумма</em>; у разных деревьев разный вес $\prod p_{c_i}$. Знать их количество мало — надо просуммировать веса. Делаем это в два хода: кодируем деревья путями, а сумму по путям берём поворотом круга.</p>
+
+    <div class="stmt thm"><span class="lbl">Утверждение (кодировка Лукасевича).</span>
+    Обход в глубину, $x_i=c_i-1$, — <strong>биекция</strong> между плоскими деревьями с $n$ вершинами и правильными последовательностями ($x_i\ge-1$, сумма $-1$, частичные суммы $\ge0$ до конца).</div>
+    <div class="proof"><span class="lbl">Доказательство.</span> Сумма $\sum(c_i-1)=(n-1)-n=-1$ (у дерева $n{-}1$ ребро). Частичная сумма $S_k=(\text{дети первых }k\text{ вершин})-k=(\text{вершин на стеке обхода})-1\ge0$, пока обход идёт ($k\lt n$), и $=-1$ в конце. Обратно: $c_1=x_1+1$ — число детей корня; правильная последовательность единственно режется на $c_1$ правильных блоков (спуски ровно на $1$, уровни не проскакиваются), каждый кодирует поддерево — индукция по $n$. $\blacksquare$</div>
+
+    <p>Вес дерева теперь стал весом его пути: $\prod_i p_{c_i}=\prod_i p_{x_i+1}$. Складываем — и включаем цикл-лемму из §4.</p>
+
+    <div class="stmt thm"><span class="lbl">Теорема (Оттер 1949, Дуасс 1969).</span>
+    $$P(T=n)=\frac1n\,P(S_n=-1),\qquad S_n=(\xi_1-1)+\dots+(\xi_n-1),$$
+    где $\xi_i$ — независимые числа потомков.</div>
+    <div class="proof"><span class="lbl">Доказательство.</span> По кодировке $P(T=n)=\sum_{\text{правильных }(x_i)}\prod_i p_{x_i+1}$. Разложим <em>все</em> последовательности ($x_i\ge-1$, сумма $-1$) на орбиты циклических сдвигов. В орбите ровно $n$ различных членов (период $d\lt n$ невозможен: сумма периода $\times\tfrac nd=-1$ при целой сумме $\Rightarrow d=n$), ровно один правильный (Лемма Рени, §4), и все $n$ имеют один вес $\prod p_{x_i+1}$ (те же шаги). Значит сумма по правильным $=\tfrac1n$ суммы по всем:
+    $$P(T=n)=\frac1n\!\!\sum_{\substack{c_i\ge0\\ \sum c_i=n-1}}\!\!\prod_i p_{c_i}=\frac1n\,P(\xi_1+\dots+\xi_n=n-1)=\frac1n P(S_n=-1).\ \blacksquare$$</div>
+
+    <p>Множитель $\tfrac1n$ — усреднение по $n$ поворотам, тот же, что рождает $\tfrac{a-b}{a+b}$ у Бертрана. А выбросив вероятности (взяв вес-индикатор в том же доказательстве), получаем чистый счёт:</p>
+
+    <p>А теперь — обещанная чистая комбинаторика. Она выпадает из того же доказательства, если вместо вероятностей поставить простой вес-индикатор. Но сначала честно вспомним, <strong>что такое мультиномиальный коэффициент</strong> — иначе он и правда падает с неба.</p>
+
+    <div class="insight"><span class="tag">Что такое мультиномиальный коэффициент</span>
+    Биномиальный $\binom nk$ считает, сколькими способами выложить в ряд $n$ символов, из которых $k$ одного сорта и $n-k$ другого (оттого он и считает $\pm1$-пути: $k$ шагов вверх, $n-k$ вниз). <strong>Мультиномиальный</strong> — то же для нескольких сортов: число расстановок $n$ символов, где $n_0$ одного сорта, $n_1$ другого, …, $n_r$ последнего, равно
+    $$\binom{n}{n_0,n_1,\dots,n_r}=\frac{n!}{n_0!\,n_1!\cdots n_r!}.$$
+    (Все $n!$ перестановок делим на $n_j!$ внутри каждого сорта — там перестановки одинаковых символов ничего не меняют.)</div>
+
+    <p>При чём тут деревья? Код Лукасевича дерева — ряд из $n$ шагов, и «меню степеней» задаёт, каких шагов сколько: лист (шаг $-1$) встречается $n_0$ раз, «один ребёнок» (шаг $0$) — $n_1$ раз, «два ребёнка» (шаг $+1$) — $n_2$ раз, и так далее. Число <em>разных</em> слов при заданном меню $(n_0,n_1,\dots)$ — это ровно мультиномиальный коэффициент. А цикл-лемма из §4 говорит: кодами деревьев (правильными) будет ровно $\tfrac1n$ из них.</p>
+
+    <div class="stmt thm"><span class="lbl">Следствие (баллотировка для деревьев).</span>
+    Число плоских деревьев из $n$ вершин, где $n_j$ вершин имеют по $j$ детей ($\textstyle\sum_j n_j=n$, $\textstyle\sum_j j\,n_j=n-1$), равно
+    $$\frac1n\binom{n}{n_0,n_1,n_2,\dots}.$$</div>
+
+    <div class="example"><span class="lbl">Разбор на пальцах: n = 4</span>
+    Возьмём деревья из $4$ вершин с меню «одна вершина о двух детях, одна об одном, два листа» (то есть $n_0{=}2,\,n_1{=}1,\,n_2{=}1$; шаги $+1,0,-1,-1$). Разных слов из этих шагов — $\dfrac{4!}{2!\,1!\,1!}=12$. Правильных (кодов деревьев) ровно $\tfrac14\cdot12=\mathbf 3$. Другие меню считаются так же: «одна вершина о трёх детях» даёт $\tfrac14\binom{4}{3,0,0,1}=\tfrac14\cdot4=1$, «цепочка» (каждый об одном ребёнке) — тоже $1$. Итого $3+1+1=\mathbf5=C_3$ — все плоские деревья из $4$ вершин.</div>
+
+    <p>Вот откуда берётся Каталан: это <em>сумма</em> мультиномиалов по всем меню степеней. Но куда интереснее посмотреть, что даёт <strong>каждый закон размножения по отдельности</strong> — там целый зоопарк классических чисел.</p>
+
+    <h2 id="s6">Одна машина — много чисел</h2>
+    <p>Теорема Оттера–Дуасса одна, а закон потомства $(p_k)$ — ручка. Крутя её, из одной и той же теоремы выпадают разные знаменитые последовательности. Вот главные остановки.</p>
+
+    <div class="example"><span class="lbl">Зоопарк инстансов</span>
+    <p style="margin:.2em 0"><strong>Геометрический</strong> $p_k=1/2^{k+1}$: все деревья одного размера равновероятны (вес $2^{-(2n-1)}$ у каждого) $\Rightarrow$ равномерное дерево; всех плоских деревьев $C_{n-1}$ — <strong>Каталан</strong>. Единственный случай, где «число деревьев» напрямую даёт вероятность.</p>
+    <p style="margin:.2em 0"><strong>Бинарный</strong> $\{0,2\}$: полные бинарные деревья $=$ триангуляции $=$ пути Дика — снова <strong>Каталан</strong> $C_m$.</p>
+    <p style="margin:.2em 0"><strong>$\{0,1,2\}$</strong>: деревья с ветвлением $0/1/2$ (путь Моцкина) — <strong>числа Моцкина</strong> $1,1,2,4,9,21,\dots$</p>
+    <p style="margin:.2em 0"><strong>$\{0,d\}$</strong>: $d$-арные деревья — <strong>числа Фусса–Каталана</strong> (следующий раздел).</p>
+    <p style="margin:.2em 0 0"><strong>Пуассоновский</strong> $p_k=e^{-1}/k!$ (с метками): равномерное помеченное дерево, их $n^{n-1}$ — формула <strong>Кэли</strong> из второго мини-курса.</p></div>
+
+    <p>Каталан, Моцкин, Фусс, Кэли — не отдельные чудеса, а <strong>одна карта</strong>: разные законы размножения, одна теорема. Разберём подробнее самую прямую ветку-обобщение чисел Каталана.</p>
+
+    <h2 id="s7">Числа Фусса–Каталана</h2>
+    <p>Возьмём закон «у каждого <strong>0 или ровно $d$</strong> потомков». Дерево тогда $d$-<em>арное</em>: у каждой не-листовой вершины ровно $d$ детей. Это самое естественное обобщение бинарного случая ($d=2$), и числа, которые его считают, — классические.</p>
+
+    <div class="stmt defn"><span class="lbl">Определение.</span>
+    <strong>Число Фусса–Каталана</strong> $C_m^{(d)}$ — количество $d$-арных плоских деревьев с $m$ внутренними вершинами (всего $n=dm+1$ вершин). Явно
+    $$C_m^{(d)}=\frac{1}{dm+1}\binom{dm+1}{m}\qquad(d=2\ \Rightarrow\ C_m^{(2)}=C_m,\ \text{числа Каталана}).$$</div>
+
+    <p>Почему формула такая — уже понятно из §5: у $d$-арного дерева шаги пути только $-1$ (лист) и $+(d-1)$ (внутренняя вершина), меню фиксировано ($m$ шагов $+(d-1)$ и $(d-1)m+1$ листьев), мультиномиал сворачивается в один бином $\binom{dm+1}{m}$, а цикл-лемма делит на $n=dm+1$.</p>
+
+    <div class="stmt thm"><span class="lbl">Что они считают (три лица одного числа).</span>
+    Одно и то же число $C_m^{(d)}$ перечисляет: <strong>(1)</strong> $d$-арные деревья с $m$ внутренними вершинами; <strong>(2)</strong> разбиения выпуклого $\big(m(d{-}1){+}2\big)$-угольника на $(d{+}1)$-угольники непересекающимися диагоналями; <strong>(3)</strong> пути Лукасевича из $dm+1$ шагов $\{-1,\,+(d{-}1)\}$, не уходящие под ось.</div>
+
+    <div class="insight"><span class="tag">Откуда имя · история</span>
+    Это ровно обобщение задачи, с которой начинается наш курс. Эйлер спросил: на сколько способов разрезать выпуклый многоугольник на <em>треугольники</em> ($=3$-угольники, случай $d=2$)? Сегнер нашёл рекурренту (1758). Тридцать лет спустя <strong>Николаус Фусс</strong> (ученик и секретарь Эйлера, Петербургская академия) обобщил задачу на разбиения на $(d{+}1)$-угольники (1791). Имя «числа Фусса–Каталана» закрепилось уже в XX веке.</div>
+
+    <p>Малые значения для $d=3$ (тернарные деревья, у каждой внутренней вершины по $3$ ребёнка): $C_0^{(3)}{=}1,\,C_1^{(3)}{=}1,\,C_2^{(3)}{=}3,\,C_3^{(3)}{=}12,\,C_4^{(3)}{=}55$. Разберём $C_2^{(3)}=3$ руками — тремя картинками.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 150" width="640" role="img" aria-label="Три тернарных дерева с двумя внутренними вершинами">
+        <g transform="translate(20,14)">
+          <line x1="85" y1="14" x2="45" y2="48" class="s-line"/><line x1="85" y1="14" x2="85" y2="48" class="s-line"/><line x1="85" y1="14" x2="125" y2="48" class="s-line"/>
+          <line x1="45" y1="54" x2="25" y2="90" class="s-line"/><line x1="45" y1="54" x2="45" y2="90" class="s-line"/><line x1="45" y1="54" x2="65" y2="90" class="s-line"/>
+          <circle cx="85" cy="12" r="6" class="s-node-r"/><circle cx="45" cy="51" r="6" class="s-node-r"/><circle cx="85" cy="51" r="5" class="s-node"/><circle cx="125" cy="51" r="5" class="s-node"/>
+          <circle cx="25" cy="92" r="4.5" class="s-node"/><circle cx="45" cy="92" r="4.5" class="s-node"/><circle cx="65" cy="92" r="4.5" class="s-node"/>
+          <text x="85" y="120" text-anchor="middle" class="s-txt-m">внутр. — левый</text>
+        </g>
+        <g transform="translate(235,14)">
+          <line x1="85" y1="14" x2="45" y2="48" class="s-line"/><line x1="85" y1="14" x2="85" y2="48" class="s-line"/><line x1="85" y1="14" x2="125" y2="48" class="s-line"/>
+          <line x1="85" y1="54" x2="65" y2="90" class="s-line"/><line x1="85" y1="54" x2="85" y2="90" class="s-line"/><line x1="85" y1="54" x2="105" y2="90" class="s-line"/>
+          <circle cx="85" cy="12" r="6" class="s-node-r"/><circle cx="45" cy="51" r="5" class="s-node"/><circle cx="85" cy="51" r="6" class="s-node-r"/><circle cx="125" cy="51" r="5" class="s-node"/>
+          <circle cx="65" cy="92" r="4.5" class="s-node"/><circle cx="85" cy="92" r="4.5" class="s-node"/><circle cx="105" cy="92" r="4.5" class="s-node"/>
+          <text x="85" y="120" text-anchor="middle" class="s-txt-m">внутр. — средний</text>
+        </g>
+        <g transform="translate(450,14)">
+          <line x1="85" y1="14" x2="45" y2="48" class="s-line"/><line x1="85" y1="14" x2="85" y2="48" class="s-line"/><line x1="85" y1="14" x2="125" y2="48" class="s-line"/>
+          <line x1="125" y1="54" x2="105" y2="90" class="s-line"/><line x1="125" y1="54" x2="125" y2="90" class="s-line"/><line x1="125" y1="54" x2="145" y2="90" class="s-line"/>
+          <circle cx="85" cy="12" r="6" class="s-node-r"/><circle cx="45" cy="51" r="5" class="s-node"/><circle cx="85" cy="51" r="5" class="s-node"/><circle cx="125" cy="51" r="6" class="s-node-r"/>
+          <circle cx="105" cy="92" r="4.5" class="s-node"/><circle cx="125" cy="92" r="4.5" class="s-node"/><circle cx="145" cy="92" r="4.5" class="s-node"/>
+          <text x="85" y="120" text-anchor="middle" class="s-txt-m">внутр. — правый</text>
+        </g>
+      </svg>
+      <figcaption>Все $C_2^{(3)}=3$ тернарных дерева с двумя внутренними вершинами: корень о трёх детях, и ровно один из детей сам о трёх (остальные — листья). Три варианта — по позиции внутреннего ребёнка. (В $\big(m(d{-}1){+}2\big)$-угольнике это те же $3$ разрезания шестиугольника на два четырёхугольника.)</figcaption>
+    </figure>
+
+    <p>А обход такого дерева даёт путь Лукасевича со скачками ровно $+(d{-}1)=+2$:</p>
+
+    <figure>
+      <svg viewBox="0 0 640 210" width="640" role="img" aria-label="Тернарное дерево и его путь Лукасевича со скачками +2">
+        <g transform="translate(24,22)">
+          <line x1="95" y1="16" x2="45" y2="56" class="s-line"/>
+          <line x1="95" y1="16" x2="95" y2="56" class="s-line"/>
+          <line x1="95" y1="16" x2="145" y2="56" class="s-line"/>
+          <line x1="95" y1="64" x2="63" y2="102" class="s-line"/>
+          <line x1="95" y1="64" x2="95" y2="102" class="s-line"/>
+          <line x1="95" y1="64" x2="127" y2="102" class="s-line"/>
+          <circle cx="95" cy="12" r="8" class="s-node-r"/>
+          <circle cx="45" cy="60" r="6.5" class="s-node"/>
+          <circle cx="95" cy="60" r="8" class="s-node-r"/>
+          <circle cx="145" cy="60" r="6.5" class="s-node"/>
+          <circle cx="63" cy="106" r="6" class="s-node"/>
+          <circle cx="95" cy="106" r="6" class="s-node"/>
+          <circle cx="127" cy="106" r="6" class="s-node"/>
+          <text x="95" y="146" text-anchor="middle" class="s-txt-m">тернарный род (0 или 3)</text>
+        </g>
+        <text x="258" y="100" text-anchor="middle" class="s-txt">→</text>
+        <g transform="translate(305,22)">
+          <line x1="0" y1="140" x2="228" y2="140" class="s-thin"/>
+          <text x="-8" y="144" text-anchor="end" class="s-txt-m">0</text>
+          <polyline points="0,140 30,92 60,116 90,68 120,92 150,116 180,140 210,164" class="s-warm"/>
+          <circle cx="0" cy="140" r="3.2" class="s-node-r"/>
+          <circle cx="30" cy="92" r="3.2" class="s-node-r"/>
+          <circle cx="60" cy="116" r="3.2" class="s-node-r"/>
+          <circle cx="90" cy="68" r="3.2" class="s-node-r"/>
+          <circle cx="120" cy="92" r="3.2" class="s-node-r"/>
+          <circle cx="150" cy="116" r="3.2" class="s-node-r"/>
+          <circle cx="180" cy="140" r="3.2" class="s-node-r"/>
+          <circle cx="210" cy="164" r="5" class="s-node-a"/>
+          <text x="6" y="110" class="s-txt-wm">+2</text>
+          <text x="66" y="88" class="s-txt-wm">+2</text>
+          <text x="222" y="168" class="s-txt-a">−1</text>
+        </g>
+      </svg>
+      <figcaption>$d=3$: у каждого $0$ или $3$ потомка $\Rightarrow$ путь Лукасевича со скачком $+2$. <span style="color:var(--muted)">(Все формулировки и доказательства — скелет <code>mir1-skelet-vetvyashchiesya.md</code>; счёты сверены перебором, $n\le9$.)</span></figcaption>
+    </figure>
+
+    <h2 id="s8">Замыкание круга</h2>
+    <p>Теперь — обещанное возвращение к диагонали. Вопрос B дал нам все $P(T=n)$ по отдельности. Сложим их по всем размерам:</p>
+    <div class="insight"><span class="tag">Сумма траекторий = вырождение</span>
+    $$\sum_{n\ge 1} P(T=n)\;=\;P(\text{род конечен})\;=\;q.$$
+    Ведь «род конечен» и «род вымер» — одно и то же событие. Значит вероятность вырождения <strong>собирается из траекторий</strong>: $q=\sum_n \tfrac1n P(S_n=-1)$.</div>
+
+    <p>Но связь ещё прямее. Заведём «бухгалтерию по размерам» — приписав каждому размеру его вероятность, соберём их в одну функцию $F(x)=\sum_n P(T=n)\,x^n$. И применим ту же <strong>самосборку</strong>, что дала уравнение вырождения: дерево — это корень плюс независимые поддеревья его потомков. Корень добавляет единицу к размеру (множитель $x$), а потомки — это $f$ от независимых копий того же процесса. Получаем</p>
+    $$F(x)=x\cdot f\bigl(F(x)\bigr).$$
+    <p>Подставим $x=1$: $F(1)=f\bigl(F(1)\bigr)$ — то есть $F(1)$ сидит ровно <strong>на пересечении $f$ с диагональю</strong> из §2. А ведь $F(1)=\sum_n P(T=n)=q$. Круг замкнулся:</p>
+    <div class="stmt defn"><span class="lbl">Один объект, два лица</span>
+    «Горизонтальный» ответ (поворот круга, размер за размером) и «вертикальный» (диагональ, выживет ли) — <strong>одно число $q$</strong>. Просуммировав траектории, мы вернулись ровно в ту точку, где $f$ встречает диагональ.</div>
+    <p>Как из $F$ вытащить каждое $P(T=n)$ по отдельности — это уже язык производящих функций, и туда мы сегодня не пойдём: нам хватило одной самосборки, чтобы увидеть, что оба вопроса — про одно.</p>
+
+    <h2 id="s9">Горизонт</h2>
+    <p>Соберём в три этажа. <strong>A. Выживет?</strong> — $q$ на пересечении $f$ с диагональю (самоподобие). <strong>B. Насколько велик?</strong> — полное потомство, $P(T=n)=\tfrac1n P(S_n{=}-1)$ (поворот круга). <strong>C. Какой формы?</strong> — путь и дерево одновременно: бинарное потомство → путь Дика, общее → путь Лукасевича. Всё держится на стержне Л3 — той же цикл-лемме, что считает голоса.</p>
+
+    <div class="caveat"><span class="lbl">Северная звезда (вне школы, но объясняет, зачем всё это)</span>
+    Поворот круга — не только про конечные пути. Пусти процесс к пределу — и «поверни к минимуму» (преобразование Верваа) окажется тем же поворотом в непрерывном времени, а масштабный предел дерева — <em>броунова экскурсия</em> и континуальное случайное дерево. Общую теорию путей на решётке (walk / bridge / meander / excursion, kernel method) строят Бандерье–Флажоле. Целиком это аспирантура — но её школьная тень, наш поворот круга, у нас уже в руках.</div>
+
+    <p>И последнее — мост во вторую половину курса: парковка при ближайшем рассмотрении оказывается блужданием, остановленным в первый момент попадания в $-1$ — то есть <strong>ровно полным потомством</strong> ветвящегося процесса. Обе половины курса и здесь про одно.</p>
+
+    <div class="foot">Черновик капстоун-лекции (до гейтов терминологии/стиля). Строгий скелет (все формулировки и доказательства) — <code>kurs/mir1-skelet-vetvyashchiesya.md</code>; проверки — <code>spravochnik/verify/verify_otter_dwass.py</code>, <code>verify_fuss_general.py</code>. Источники: Dwass 1969; van der Hofstad–Keane (Amer. Math. Monthly 2008); Harris 1952; Le Gall «Random Trees»; Krattenthaler (обзор); Banderier–Flajolet 2002.</div>
+
+  </article>
+  </main>
+</div>
+
+<script>
+  const links=[...document.querySelectorAll('.toc a')];
+  const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+  const obs=new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ links.forEach(l=>l.classList.remove('active'));
+      const a=map.get(e.target.id); if(a)a.classList.add('active'); }});
+  },{rootMargin:'-20% 0px -70% 0px'});
+  document.querySelectorAll('article h2[id]').forEach(h=>obs.observe(h));
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</body>
+</html>

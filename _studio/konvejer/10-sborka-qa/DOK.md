@@ -1,0 +1,38 @@
+# Арка 10 — Сборка + QA · ПЕРЕНОС
+
+> **Когда:** источник заполнен (итог арок 6–9); надо собрать и проверить. · **Вход:** `<лекция>/src/` целиком. · **Выход:** `dist/index.html` самодостаточный + PASS/FAIL-отчёт с exit-кодом. · **Гейт:** 5 слоёв дёшево→дорого (lint → render-identity → аудит → scene-diff → глаз). · **next:** дек готов (или правка → назад по гейту). · **Семя:** `../../zhurnal/2026-07-10_sborka-konvejera/distillat-verstka-kanon-qa.md` §Арка 10.
+
+## Контракт
+**Вход.** Заполненная `<лекция>/src/`: `brief.md` (`slide_order`, id, canvas) · `shablon.html` · `tokens.css` · `fonts/faces.css` · `engine.js` · `content/*.md` · `slides/*.html` · `illustrations/*` · опц. `chapters/`+`drivers/`+`lib/three.min.js` · опц. `sims/`+`math/katex.json`.
+**Выход.** `dist/index.html` самодостаточный (0 внешних asset-URL) + консольный PASS/FAIL-отчёт с exit-кодом.
+**Задача арки:** СЕКВЕНИРОВАТЬ уже готовые инструменты (`build_deck.py`, `render.py`, адаптированный `audit.py`) в один прогон и описать, когда какой гейт и что делать при FAIL. Инструменты в основном написаны — арка не строит их с нуля.
+
+## Гейт слоями (дёшево → дорого)
+1. **Линтер `build_deck.py`** (реализован, stdlib, без браузера): 0 нерезолвленных `{{…}}`; 0 `⟦MISSING-MATH⟧`; каждый `data-ill`/`data-iframe` резолвится в файл; каждый `var(--x)` в illustrations/overlay определён в `tokens.css`; 0 внешних src/href (кроме `<a href>`); `slide_order` = точное покрытие `slides/`, без сирот/дублей.
+2. **Render-identity** (Р1, для правок существующего дека): нормализованный посимвольный дифф (снять HTML-комментарии, схлопнуть пробелы). Доказано byte-exact на dandelin (sha256 `69812415…`), почти byte-exact на buffon (`cmp` exit 0 при `--no-banner`). Дешевле браузерной сверки — первый рубеж для правок.
+3. **Аудит** (адаптация `scripts/audit.py`, нужен Playwright): overflow `.zone`==0; shadow/radius/gradient==0; фон-плашки только из палитры (**парсить `:root` из СОБРАННОГО `tokens.css` дека**, не хардкод allow-list — Р8 tiers разрешает пер-дек оверрайд); весь `.fit`/`.t-body` текст `#333333`; 0 `<figcaption>`; `.t-body` ≥ 35px (`FLOOR_PX=35`); fit-группы консистентны. Адвайзори (WARN): проза в `<text>` SVG, canvas < 12% площади слайда.
+4. **`--scene-diff`** (тот же аудит): последовательные сцены отличаются только добавленными пикселями, нет дед-кликов (см. `../08-sceny/DOK.md`).
+5. **Глаз:** `render.py <deck> [outdir]` (все слайды PNG, `?only=N&scene=99`); `render.py --compare orig rebuilt outdir` (попиксельный дифф Pillow). Гонять на каждой правке, не только на майлстоуне.
+
+## Переносим дословно
+`build_deck.py` (линтер+сборка) и `render.py` (shoot+compare) уже готовы. Метод «рендерь ОБА (оригинал и пересборку), сравнивай side-by-side ДО done» — уже в `render.py --compare`.
+
+## Адаптируем
+Из `scripts/audit.py` — паттерн 1:1 (JS-пробинг через `page.evaluate`, PASS/FAIL/WARN построчно, exit 1 при FAIL, WARN не валит билд; структурные проверки overflow/forbidden/fit-group/figcaption), НО: точка входа — наш `dist/index.html`; `ALLOWED_BG` = парс `:root` собранного `tokens.css`, не хардкод-сет. Файл адаптированного аудита физически ещё не написан (только спроектирован) — **решение: класть в `../../../_generator/audit.py`** (со-локация с `build_deck.py`+`render.py`, один toolchain).
+
+## Внешнее
+Ничего для сборки/аудита (Р3, stdlib-ядро). Playwright/Pillow — инструменты на машине Вани, не скиллы; в песочнице генератора браузера нет (`_generator/README.md`) — `render.py`/аудит гоняются локально.
+
+## Ловушки
+- `audit.py` скилла заточен на браузер и НЕ дублирует наш линтер (сироты `slide_order`, битые `data-ill`, неопределённые `var`) — оставить оба слоями, не сливать в монолит.
+- Render-identity текстом сильнее скриншот-сверки (тот же DOM рендереру), но НЕ ловит рантайм-баги (JS-ошибка в `engine.js`, CSS-конфликт из арки 8) — для них нужен browser-аудит/глаз. Текстовый дифф не заменяет.
+- Патч-механизм из `DESIGN.md §6` (движок+патчи sim_reset/overview из `buffon-canon-build.py`) `build_deck.py` НЕ реализует и не должен: патчи уже осели в `engine.js`/`sims/lab.core.js` на этапе распила канон-дека. Не искать несуществующий механизм.
+
+## Якоря (по требованию)
+- Живой код: `../../../_generator/{build_deck.py,render.py,DESIGN.md,README.md}`, `../../../dandelin/`, `../../../buffon/`.
+- Скилл: `html-slides-studio/scripts/{audit.py,build_single.py}`.
+
+## Открытые вопросы
+- **Delivery vs working копия.** `engine.js` несёт feedback-инструменты (E/A/X: `editMode`/`noteMode`/`showReport` — 12 вхождений в dandelin, 6 в buffon). Нужна ли лектору чистая delivery-копия без них — за владельцем. Если да — нужен аналог `build_single.py` под наш `engine.js` (свои regex-якоря, не проверялись). Дефолт пока: инструменты внутри, скрыты до тоггла.
+- Адаптированный `_generator/audit.py` под наш canon физически не написан (спроектирован здесь) — написать при первом реальном деке (гейт «многогранники»).
+- Сцепка арок 7/8/10 верифицирована на регрессии, не на greenfield-деке — первая реальная проверка на гейте готовности фабрики.

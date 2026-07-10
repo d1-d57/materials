@@ -1,0 +1,8 @@
+<svg viewBox="0 0 1278 403" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1278" height="403" fill="var(--card)"/>
+  <line x1="0" y1="41" x2="1278" y2="41" stroke="var(--rule)" stroke-width="1.5"/>
+  <line x1="0" y1="360" x2="1278" y2="360" stroke="var(--rule)" stroke-width="1.5"/>
+  <line x1="320" y1="41" x2="320" y2="360" stroke="var(--steel)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M 639 158 L 692.2 250.2 L 585.8 250.2 Z" fill="none" stroke="var(--mustard)" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="958" cy="200" r="50.8" fill="none" stroke="var(--brick)" stroke-width="8"/>
+</svg>

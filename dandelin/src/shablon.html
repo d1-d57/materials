@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Сферы Данделена</title>
+<!-- ============================================================
+  CANONICAL DECK SKELETON. Four strictly separated blocks:
+    [1] DECK STYLES  — tokens, fonts, per-slide grids
+    [2] SLIDES       — text + zones only (no inline illustrations)
+    [3] ASSETS       — illustrations as <template>, hydrated by id
+    [4] ENGINE       — copied verbatim, never edited during work
+  Canvas: fixed 1440×810. The stage scales it; never vh/vw inside.
+============================================================ -->
+<style>
+/* ===== [1] DECK STYLES ===== */
+/* fonts loaded by relative path during build; base64-embedded for delivery */
+{{FONTS_CSS}}
+
+{{TOKENS_CSS}}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body{ font-family:var(--font-body); color:var(--ink); }
+
+/* --- text roles --- */
+.t-body { font-size: var(--t-body); line-height: 1.4; text-wrap: pretty; }
+.copy{ font-size:var(--t-body); line-height:1.4; }
+.copy p + p{ margin-top:26px; }                   /* ONE block gap — the rhythm tool */
+.copy b{ font-weight:700; }
+.acc{ color:var(--accent); }                      /* one ochre accent per slide, on bold */
+.formula{ text-align:center; font-weight:700; margin-top:26px; }
+.lead{ font-size:var(--t-lead); line-height:1.25; }
+/* ceremonial: Forum caps, centered (title / dividers / finale / card) */
+.cer{ font-family:var(--font-display); text-transform:uppercase; color:var(--ink);
+      text-align:center; font-weight:400; }
+.tlist{ list-style:none; }
+.tlist li{ position:relative; padding-left:1.4em; }
+.tlist li + li{ margin-top:14px; }
+.tlist li::before{ content:''; position:absolute; left:0; top:.55em;
+                   width:.4em; height:.4em; background:var(--marker); }
+/* illustration placeholder — flat grey on white card; replaced when assets arrive.
+   no shadow/radius/gradient (audit-clean). */
+.ph{ width:100%; height:100%; display:grid; place-items:center; background:var(--card);
+     color:var(--ink); font-family:var(--font-body); text-align:center; padding:24px;
+     outline:2px dashed #c3c4c0; outline-offset:-12px; }  /* dashed = placeholder, removed with real asset */
+.ph .ph-t{ font-size:24px; font-weight:700; }
+.ph .ph-s{ font-size:18px; margin-top:8px; line-height:1.35; }
+/* fill mechanic: blank and answer stacked in one cell — geometry frozen */
+.fill { display: inline-grid; text-align: center; }
+.fill > span { grid-area: 1 / 1; }
+.scene-off { opacity: 0 !important; visibility: hidden !important; }
+html, body { height: 100%; background: #111; }
+#stage { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.slide { width: 1440px; height: 810px; position: relative; overflow: hidden;
+         transform-origin: center center; background: #e6e5e1; color: #333; }
+.slide[data-skip] { display: none !important; }
+.zone  { position: relative; overflow: hidden; min-width: 0; min-height: 0; }
+.fit   { max-width: 100%; max-height: 100%; }
+
+/* Scene reveal: hidden steps keep layout (visibility, NEVER display) so
+   geometry is frozen and the fitter can still measure them. */
+[data-scene-from] { opacity: 0; visibility: hidden; transition: opacity .35s; }
+.scene-2 [data-scene-from="2"],
+.scene-3 [data-scene-from="2"], .scene-3 [data-scene-from="3"],
+.scene-4 [data-scene-from="2"], .scene-4 [data-scene-from="3"], .scene-4 [data-scene-from="4"],
+.scene-5 [data-scene-from="2"], .scene-5 [data-scene-from="3"], .scene-5 [data-scene-from="4"], .scene-5 [data-scene-from="5"]
+  { opacity: 1; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { [data-scene-from] { transition: none; } }
+
+/* Blank screen (clicker "B" / "."): black, standard presenter behaviour */
+body.blanked #stage { visibility: hidden; }
+
+#hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+        color: #8a96a3; font: 13px/1 ui-monospace, monospace;
+        opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+#hint.is-shown { opacity: 1; }
+#hint { display: none !important; }   /* подсказка-легенда скрыта для публикации */
+/* lecture progress: brick bar, fraction of slides; hover grows it; the
+   thin bottom zone catches hover + click-to-jump. Lives OUTSIDE the engine. */
+#lect-zone { position: fixed; left: 0; bottom: 0; width: 100%; height: 14px;
+             z-index: 200; cursor: pointer; }
+#lect-progress { position: fixed; left: 0; bottom: 0; height: 2.5px; width: 0;
+  background: #bf5b4f; opacity: .55; z-index: 201; pointer-events: none;
+  transition: width .25s ease, height .15s ease, opacity .15s ease; }
+/* cinematic: a slide fades in on turn (opacity only — geometry stays frozen);
+   pull-outs/panels arrive a beat after their step. reduced-motion kills all. */
+@keyframes deck-in { from { opacity: 0; } to { opacity: 1; } }
+.slide { animation: deck-in .17s ease both; }
+[data-scene-from] .pull, [data-scene-from].pull { transition-delay: .14s; }
+[data-scene-from] .panel, [data-scene-from].panel { transition-delay: .12s; }
+@media (prefers-reduced-motion: reduce) { .slide { animation: none; } }
+
+/* --- shared archetype helpers --- */
+.grid{ position:absolute; inset:0; display:grid; }
+.board{ background:var(--board); }
+.pad{ padding:46px 56px 0 56px; }                 /* text inset: top-left gravity */
+.ill-box{ background:var(--card); display:grid; place-items:center; overflow:hidden; position:relative; }
+.ill-box img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+.ill-box > *{ max-width:100%; max-height:100%; }
+.bcenter{ display:grid; place-items:center; }     /* board centering a card */
+
+/* 00 · title — solid board, centered card */
+#s00 .grid{ grid-template-columns:26% 48% 26%; background:var(--board); }
+#s00 .imgL, #s00 .imgR{ height:100%; overflow:hidden; }
+#s00 .imgL img, #s00 .imgR img{ width:100%; height:100%; object-fit:cover; display:block; }
+#s00 .mid{ display:grid; place-items:center; align-content:center; row-gap:22px; padding:40px 30px; }
+
+/* 01 · Kepler — two zones 56/44; board holds orbit (wide) + portrait card */
+#s01 .grid{ grid-template-rows:64% 36%; }
+#s01 .board{ display:flex; align-items:center; justify-content:center; gap:42px; }
+#s01 .board .ill-box{ height:248px; background:var(--card); overflow:hidden; }
+#s01 .board .ill-box img{ position:static; width:100%; height:100%; object-fit:contain; }
+#s01 .board .ill-box svg{ width:100%; height:100%; display:block; }
+#s01 .korbit{ width:281px; }
+#s01 .kportrait{ width:250px; }
+#s01 .kellipse{ width:418px; }
+
+/* 02 · Greeks — text top third, 3D board needs height (33/67) */
+#s02 .grid{ grid-template-rows:33% 67%; }
+#s02 .board{ display:grid; place-items:center; }
+#s02 .ill-box{ width:82%; height:92%; }
+
+/* 03 · string — 50/50 text top, interactive bottom */
+#s03 .grid{ grid-template-columns:44% 56%; }
+#s03 .board{ display:grid; place-items:center; }
+#s03 .ill-box{ width:96%; height:92%; }
+
+/* 04 · Dandelin spheres — top plaque 15%H + full-field 3D core */
+#s04 .grid{ grid-template-rows:25% 75%; }
+#s04 .plaque{ background:var(--paper); display:grid; align-content:center; padding:0 56px; }
+#s04 .board{ display:grid; place-items:center; }
+#s04 .ill-box{ width:72%; height:96%; }
+
+/* 05 · axial section — text top 44, board 56 with section (wide) + portrait (right) */
+#s05 .grid{ grid-template-rows:23% 77%; }
+#s05 .plaque{ background:var(--paper); display:grid; align-content:center; padding:0 56px; }
+#s05 .board{ display:grid; place-items:stretch; }
+#s05 .sboard{ grid-template-columns:55% 45%; }
+#s05 .s3d{ display:grid; place-items:center; }
+#s05 .s3d .ill-box{ width:97%; height:97%; }
+#s05 .spics{ display:grid; grid-template-rows:1fr 1fr; gap:13px; padding:10px 18px 12px 2px; min-height:0; }
+#s05 .scard{ display:flex; flex-direction:column; background:var(--card); min-height:0; }
+#s05 .spic{ flex:1; min-height:0; display:grid; place-items:center; padding:6px 6px 0; }
+#s05 .spic svg{ height:100%; width:auto; max-width:100%; display:block; }
+#s05 .scap{ text-align:center; font-size:16px; color:var(--ink); padding:4px 10px 9px; line-height:1.25; }
+
+/* 05a · Dandelin bio — text left, portrait+fort right */
+#s05a .grid{ grid-template-columns:56% 44%; }
+#s05a .board{ display:grid; grid-template-rows:54% 46%; }
+#s05a .portrait{ margin:30px 40px 10px; padding:6px; }
+#s05a .fort{ margin:10px 40px 30px; }
+
+/* 05b · directrix (bonus 3D) — text paper top, 3D board bottom */
+#s05b .grid{ grid-template-rows:27% 73%; }
+#s05b .board{ display:grid; place-items:center; }
+#s05b .ill-box{ width:54%; height:92%; }
+
+/* 06 · river — bottom board-band 44/56, text top */
+#s06 .grid{ grid-template-rows:44% 56%; }
+#s06 .board{ display:grid; place-items:center; }
+#s06 .ill-box{ width:70%; height:82%; }
+
+/* 07 · ray focus→focus — text top 40, board 60 carries the scenes */
+#s07 .grid{ grid-template-rows:40% 60%; }
+#s07b .grid{ grid-template-rows:40% 60%; }
+#s07b .board{ display:grid; place-items:center; }
+#s07b .ill-box{ width:74%; height:86%; }
+#s07 .board{ display:grid; place-items:center; }
+#s07 .ill-box{ width:72%; height:84%; }
+
+/* 08 · whispering gallery — photo on board (top), text on paper (bottom) */
+#s08 .grid{ grid-template-rows:44% 56%; }
+#s08 .board-top{ background:var(--board); display:grid; place-items:center; }
+#s08 .board-top .ill-box{ width:62%; height:84%; }
+#s08 .text-zone{ background:var(--paper); }
+
+/* 09 · lithotripsy — text top 33, 3D board needs height; ellipsoid (wide) + fuselage (side) */
+#s09 .grid{ grid-template-columns:66% 34%; }
+#s09 .pad{ padding:22px 50px 0 56px; }
+#s09 .copy{ font-size:35px; line-height:1.26; }
+#s09 .board{ display:grid; grid-template-rows:54% 46%; }
+#s09 .litho{ margin:30px 40px 8px; background:var(--board); } #s09 .litho img{ object-fit:contain; } #s09 .jet{ margin:8px 40px 30px; }
+#s09b .grid{ grid-template-rows:24% 76%; }
+#s09b .plaque{ background:var(--paper); display:grid; align-content:center; padding:0 56px; }
+#s09b .board{ display:grid; place-items:center; }
+#s09b .ill-box{ width:74%; height:96%; }
+
+/* 10 · finale — solid board, paper card with the line + montage strip */
+#s10 .grid{ grid-template-columns:1fr 76% 1fr; grid-template-rows:1fr auto 1fr; background:var(--board); }
+#s10 .card{ grid-area:2/2; background:var(--paper); display:grid; place-items:center; padding:54px 72px; }
+
+/* 11 · thanks — solid board, ceremonial card */
+#s11 .grid{ grid-template-columns:1fr 56% 1fr; grid-template-rows:1fr auto auto 1fr; background:var(--board); }
+#s11 .card{ grid-area:2/2; background:transparent; display:grid; place-items:center;
+            grid-template-rows:auto auto; row-gap:20px; padding:48px; }
+
+#s11b .grid{ grid-template-columns:410px 56px 1fr; grid-template-rows:120px 1fr; background:var(--paper); }
+#s11b .board{ grid-area:1/1/3/2; background:var(--board); position:relative; }
+#s11b .brd-title{ position:absolute; left:40px; top:40px; font-size:72px; }
+#s11b .p-photo{ position:absolute; left:80px; top:184px; width:250px; height:258px; background:var(--card); overflow:hidden; }
+#s11b .p-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+#s11b .p-qr{ position:absolute; left:80px; top:474px; width:250px; height:250px; background:var(--card); overflow:hidden; }
+#s11b .p-qr img{ width:100%; height:100%; object-fit:contain; display:block; }
+#s11b .copy{ grid-area:2/3; align-self:center; font-family:var(--font-body); letter-spacing:.10em; line-height:1.5; }
+#s11b .bullets{ list-style:none; padding-left:34px; }
+#s11b .bullets li{ position:relative; margin:16px 0; }
+#s11b .bullets li::before{ content:''; position:absolute; left:-32px; top:.6em; width:9px; height:9px; background:var(--ink); }
+#s08 .copy{ font-size:35px; line-height:1.36; }
+#s09p .grid{ grid-template-columns:40% 60%; }
+#s09p .copy{ font-size:35px; line-height:1.34; }
+#s09p .pboard{ display:grid; grid-template-rows:54% 46%; padding:30px 34px; }
+#s09p .pdiagram{ background:var(--card); display:grid; place-items:center; padding:8px; }
+#s09p .pdiagram svg{ max-width:100%; max-height:100%; }
+#s09p .pphotos{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; padding-top:20px; }
+#s09p .pphotos .pfig{ display:flex; flex-direction:column; min-height:0; }
+#s09p .pphotos img{ flex:1; width:100%; min-height:0; object-fit:cover; display:block; background:var(--card); }
+#s09p .pphotos .cap{ text-align:center; font-size:18px; color:var(--ink); padding-top:9px; }
+#s05c .grid{ grid-template-columns:1fr; grid-template-rows:152px 1fr; background:var(--board); padding:0; }
+#s05c .covertitle{ grid-row:1; align-self:center; justify-self:center; width:80%; }
+#s05c .cer{ text-align:center; }
+#s05c .coverframe{ grid-row:2; justify-self:center; align-self:start; width:430px; height:462px; background:var(--card); padding:14px; }
+#s05c .coverframe .ill-box{ width:100%; height:100%; background:var(--card); }
+#s05c .coverframe .ill-box img{ object-fit:cover; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+
+<!-- ===== [2] SLIDES — text and zones only. No SVG walls here. ===== -->
+
+<!-- 00 · TITLE -->
+{{SLIDE:s00}}
+
+<!-- 00b · ВИЗИТКА (вторым слайдом) -->
+<!-- 11b · ВИЗИТКА -->
+{{SLIDE:s11b}}
+
+
+<!-- 01 · KEPLER -->
+{{SLIDE:s01}}
+
+<!-- 02 · GREEKS · CONICS -->
+{{SLIDE:s02}}
+
+<!-- 03 · STRING · CONSTANT SUM -->
+{{SLIDE:s03}}
+<!-- 03b · ДАНДЕЛЕН (перед двумя шарами) -->
+<!-- 05a · DANDELIN (bio) -->
+{{SLIDE:s05a}}
+
+
+<!-- 04 · DANDELIN SPHERES (core) -->
+{{SLIDE:s04}}
+
+<!-- 05 · AXIAL SECTION · LEMMA · SUM -->
+{{SLIDE:s05}}
+
+<!-- 05b · DIRECTRIX (bonus, 3D chapter 3) -->
+{{SLIDE:s05b}}
+<!-- 05c · ПЕРЕБИВКА: оптические свойства -->
+{{SLIDE:s05c}}
+
+
+<!-- 06 · RIVER (digression) -->
+{{SLIDE:s06}}
+
+<!-- 07 · RAY FOCUS → FOCUS -->
+{{SLIDE:s07}}
+
+<!-- 07b · TANGENT TO ELLIPSE -->
+{{SLIDE:s07b}}
+
+<!-- 08 · WHISPERING GALLERY -->
+{{SLIDE:s08}}
+
+<!-- 09 · SPARK IN FOCUS · LITHOTRIPSY -->
+{{SLIDE:s09}}
+
+
+<!-- 09b · LITHOTRIPSY SIMULATION -->
+{{SLIDE:s09b}}
+<!-- 09p · ПАРАБОЛА: применения -->
+{{SLIDE:s09p}}
+
+<!-- 10 · FINALE · THE GAP -->
+{{SLIDE:s10}}
+
+<!-- 11 · THANKS -->
+{{SLIDE:s11}}
+
+</div></div>
+<div id="lect-zone"></div>
+<div id="lect-progress"></div>
+<div id="hint">← → листать · F — экран · B — чёрный · O — обзор · E — текст · A — заметки · X — отчёт</div>
+
+<!-- ===== [3] ASSETS REGISTRY — placeholders until real assets arrive ===== -->
+<template id="ill-cone-title">{{ILL:cone-title}}</template>
+<template id="ill-kepler-portrait">{{ILL:kepler-portrait}}</template>
+<template id="ill-kepler-orbit">{{ILL:kepler-orbit}}</template>
+<template id="ill-cone-cut">{{ILL:cone-cut}}</template>
+<template id="ill-conics-trio">{{ILL:conics-trio}}</template>
+<template id="ill-string">{{ILL:string}}</template>
+<template id="ill-spheres">{{ILL:spheres}}</template>
+<template id="ill-axial-section">{{ILL:axial-section}}</template>
+<template id="ill-dandelin-fort">{{ILL:dandelin-fort}}</template>
+<template id="ill-dandelin-portrait">{{ILL:dandelin-portrait}}</template>
+<template id="ill-river">{{ILL:river}}</template>
+<template id="ill-tangent-ray">{{ILL:tangent-ray}}</template>
+<template id="ill-gallery-photo">{{ILL:gallery-photo}}</template>
+<template id="ill-lithotripsy-bowl">{{ILL:lithotripsy-bowl}}</template>
+<template id="ill-machine">{{ILL:machine}}</template>
+<template id="ill-litho-engraving">{{ILL:litho-engraving}}</template>
+<template id="ill-vizitka-photo">{{ILL:vizitka-photo}}</template>
+<template id="ill-vizitka-qr">{{ILL:vizitka-qr}}</template>
+<script type="text/html" id="tpl-mirror">{{CHAPTER:mirror}}</script>
+<script type="text/html" id="tpl-tangent">{{CHAPTER:tangent}}</script>
+<template id="ill-optics-caustic">{{ILL:optics-caustic}}</template>
+<template id="ill-montage">{{ILL:montage}}</template>
+
+<script id="three-lib">{{THREE_LIB}}</script>
+<script type="text/html" id="tpl-directrix">{{CHAPTER:directrix}}</script>
+<script type="text/html" id="tpl-bowl">{{CHAPTER:bowl}}</script>
+<script type="text/html" id="tpl-string">{{CHAPTER:string}}</script>
+<script type="text/html" id="tpl-mirror">{{CHAPTER:mirror-2}}</script>
+<script type="text/html" id="tpl-tangent">{{CHAPTER:tangent-2}}</script>
+<script type="text/html" id="tpl-river">{{CHAPTER:river}}</script>
+<script type="text/html" id="tpl-conic">{{CHAPTER:conic}}</script>
+<script type="text/html" id="tpl-spheres">{{CHAPTER:spheres}}</script>
+<script>{{ENGINE_JS}}</script>
+
+<script>
+/* Lecture progress + hint visibility. Reads the hash, never touches the
+   engine — a clean seam, the pattern the author validated. */
+(function () {
+  var total = document.querySelectorAll('.slide').length;
+  var bar = document.getElementById('lect-progress');
+  var zone = document.getElementById('lect-zone');
+  var hint = document.getElementById('hint');
+  function upd() {
+    var m = location.hash.match(/^#s(\d+)/), i = m ? +m[1] : 0;
+    bar.style.width = (100 * (i + 1) / total) + '%';
+  }
+  addEventListener('hashchange', upd); setInterval(upd, 400); upd();
+  hint.classList.add('is-shown');                          // visible first seconds
+  setTimeout(function () { hint.classList.remove('is-shown'); }, 6000);
+  zone.addEventListener('mouseenter', function () {
+    bar.style.height = '6px'; bar.style.opacity = '.85'; hint.classList.add('is-shown'); });
+  zone.addEventListener('mouseleave', function () {
+    bar.style.height = '2.5px'; bar.style.opacity = '.55'; hint.classList.remove('is-shown'); });
+  zone.addEventListener('click', function (e) {            // click bottom edge → jump
+    var i = Math.min(total - 1, Math.floor(e.clientX / innerWidth * total));
+    if (typeof showSingle === 'function') { showSingle(i, 1); if (typeof syncHash === 'function') syncHash(); }
+  });
+})();
+</script>
+<script>
+/* 3D chapters: hydrate iframes from <script type="text/html"> templates and
+   sync their step to the deck's current scene via postMessage. Clean seam —
+   reads the hash like the progress bar; never touches the engine. */
+(function(){
+  function tpl3d(id){ var e=document.getElementById(id); return e? e.textContent.split('<\\/script').join('</script') : ''; }
+  document.querySelectorAll('[data-iframe]').forEach(function(box){
+    var f=document.createElement('iframe'); f.setAttribute('tabindex','-1'); f.setAttribute('scrolling','no');
+    f.style.cssText='width:100%;height:100%;border:0;display:block;background:#ffffff';
+    f.srcdoc=tpl3d(box.dataset.iframe); box.appendChild(f);
+  });
+  // resize a chapter iframe when its slide becomes visible (hidden slide → canvas 0)
+  function pokeResize(){
+    document.querySelectorAll('[data-iframe]').forEach(function(box){
+      var slide=box.closest('.slide'); if(!slide) return;
+      var vis=slide.style.display!=='none' && slide.offsetParent!==null;
+      var f=box.querySelector('iframe');
+      if(vis && f && f.contentWindow && !box._shown){ box._shown=true;
+        try{ f.contentWindow.dispatchEvent(new Event('resize')); }catch(e){} }
+      else if(!vis){ box._shown=false; }
+    });
+  }
+  setInterval(pokeResize,120);
+  function sync(){
+    var m=location.hash.match(/^#s(\d+)\.(\d+)/); if(!m) return;
+    var slide=document.querySelectorAll('.slide:not([data-skip])')[+m[1]]; if(!slide) return;
+    var box=slide.querySelector('[data-iframe]'); if(!box) return;
+    var f=box.querySelector('iframe'); if(!f||!f.contentWindow) return;
+    if(box.dataset.ride){ try{ f.contentWindow.postMessage({ride:true},'*'); }catch(e){} return; }
+    var off=parseInt(box.dataset.stepOffset||'0',10)||0;
+    var sc=parseInt(slide.dataset.scenes||'1',10)||1;
+    var clk=box.dataset.stepsClickable==='1';
+    try{ f.contentWindow.postMessage({goStep:(+m[2])-1+off, win:[off, off+sc-1], clickable:clk},'*'); }catch(e){}
+  }
+  setInterval(sync,150);
+})();
+</script>
+</body>
+</html>

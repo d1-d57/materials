@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Конические сечения — эллипс, парабола, гипербола</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#FAF6E8}
+  #c{position:fixed;inset:0}
+  #hint{position:fixed;left:14px;bottom:12px;font:12.5px/1.4 Georgia,serif;color:#9a8f7c;
+        pointer-events:none;user-select:none;font-style:italic}
+  #bar{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);text-align:center;user-select:none}
+  #cap{font:italic 14px/1.5 Georgia,serif;color:#8a7c63;margin-bottom:9px;letter-spacing:.02em}
+  #dots{display:flex;gap:12px;justify-content:center}
+  #dots button{min-width:11px;height:11px;border-radius:50%;border:1.5px solid #c2b393;
+    background:transparent;cursor:pointer;padding:0;transition:all .2s}
+  #dots button.on{background:#b9764a;border-color:#b9764a}
+  #playbtn{position:fixed;right:16px;bottom:16px;width:34px;height:34px;border-radius:50%;
+    border:1.5px solid #c2b393;background:#FAF6E8;color:#8a7c63;font-size:12px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;padding:0;line-height:1}
+</style>
+</head>
+<body>
+<div id="c"></div>
+<div id="hint">тащить — вращать · ← → — сечение</div>
+<div id="bar"><div id="cap"></div><div id="dots"></div></div>
+<button id="playbtn" title="вращение">❚❚</button>
+<script>window.THREE=window.parent.THREE;<\/script>
+<script>{{DRIVER:09}}<\/script>
+</body>
+</html>

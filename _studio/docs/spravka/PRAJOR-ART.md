@@ -1,0 +1,35 @@
+# PRAJOR-ART — находки ресёрча (что украсть / чего избежать)
+
+> **КОГДА читать:** нужно обоснование архитектурных решений или прайор-арт по теме. · **ЧТО дописывать сюда:** новые находки ресёрча со ссылками. · **КУДА дальше:** решения — `../pochemu-i-videnie/RESHENIYA.md`.
+
+Пресс-тест нашей схемы против мира (5 углов). Вывод: фундамент верный — наша схема совпала с конвергенцией зрелых систем.
+
+## 1. Slides-as-code
+Ближайший близнец — **Quarto**: тема из двух слоёв (`defaults`=токены / `rules`=структура) + `embed-resources` инлайнит в один самодостаточный HTML. reveal — скоупинг стилей под `.reveal`; Marp — global (headmatter) vs per-slide; Typst — set/show, но выход PDF; Slidev — Vue/Vite SPA с недетерминированными хэшами (враг render-identity).
+→ **ADOPT** слой-токенов vs слой-правил, скоупинг, global/per-slide. **AVOID** фреймворк-движки. Наш stdlib-инлайнер — преимущество.
+
+## 2. Math → static HTML (→ Р7)
+Чистого stdlib-пути НЕТ. Прагматика — Node `katex.renderToString`, версия pinned, тот же `{tex→html}` кэш, уже вшитые css+woff.
+→ **ADOPT** изолированный Node+katex, батчем только промахи, стабильный JSON. **AVOID** рантайм KaTeX/MathJax; SVG-движки (несовместимый markup).
+
+## 3. Design-tokens (→ Р8)
+Модель Style Dictionary 1:1: include(канон)+source(оверрайд) → deep-merge → resolve alias → CSS `:root`. Тиры primitive→semantic→component; деки читают ТОЛЬКО semantic. Merged `:root` инлайнить (не `<link>`).
+→ **ADOPT** primitive→semantic + свой ~50-строчный stdlib-эмиттер + DTCG-подобная форма. **AVOID** Style Dictionary/npm, внешний tokens.css.
+
+## 4. Agent-пайплайны (→ Р9)
+Наша схема на линии конвергенции. Уточнения: трёхуровневый арк-файл (SKILL.md); reference-not-inline; REPORT-дистиллят 1–2k; явный `next`+checkpoint, готовые заходы = чекпойнты; гейт внутри арки.
+→ **ADAPT** дома = durable Store, заход = ephemeral checkpointer. **AVOID** инлайн апстрим-контекста вниз, память сессии как канал, тяжёлый walker, тихий «done».
+
+## 5. Иллюстрации (→ Р10)
+Каждая илл. — свой `.svg`, инлайн живой `<svg>` (не base64): до неё дотягиваются `var()`/`currentColor`; в `<img>`/data-URI изолирован → чёрная заливка (наш баг).
+→ **ADOPT** inline-`<svg>` + SVGO (pinned + per-file id-prefix) + headless-гейт (пустая/одноцветная зона). **AVOID** base64 для SVG; `var()` внутри `<img>`; «нет ошибки = отрисовалось».
+
+## Источники
+- Quarto [embed-resources](https://quarto.org/docs/output-formats/html-publishing.html) · Typst [set/show](https://typst.app/docs/reference/styling/)
+- KaTeX [Node/renderToString](https://katex.org/docs/node) · [common issues](https://katex.org/docs/issues)
+- [Style Dictionary](https://styledictionary.com/info/architecture/) · [W3C DTCG](https://www.designtokens.org/tr/drafts/format/)
+- [Anthropic — context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) · [Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) · [LangGraph persistence](https://docs.langchain.com/oss/python/langgraph/persistence) · [12-factor agents](https://github.com/humanlayer/12-factor-agents)
+- [Base64 SVG (CSS-Tricks)](https://css-tricks.com/probably-dont-base64-svg/) · [SVGO](https://svgo.dev/) · [reproducible builds](https://reproducible-builds.org/docs/deterministic-build-systems/)
+
+---
+*Находки ресёрча. Что из них решено — `../pochemu-i-videnie/RESHENIYA.md` (Р7–Р10).*

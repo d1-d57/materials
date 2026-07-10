@@ -1,0 +1,26 @@
+<svg viewBox="0 0 640 132" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:100%">
+  <!-- 1 · конус с сечением -->
+  <g>
+    <path d="M52 26 L108 26 L80 104 Z" fill="none" stroke="#333" stroke-width="1.6" stroke-linejoin="round"/>
+    <ellipse cx="80" cy="52" rx="30" ry="8.5" fill="none" stroke="#c0aa5a" stroke-width="2.4" transform="rotate(-9 80 52)"/>
+  </g>
+  <!-- 2 · эллипс с ниткой и фокусами -->
+  <g transform="translate(160,0)">
+    <ellipse cx="80" cy="66" rx="52" ry="34" fill="none" stroke="#c0aa5a" stroke-width="2.4"/>
+    <circle cx="49" cy="66" r="3" fill="#bf5b4f"/><circle cx="111" cy="66" r="3" fill="#bf5b4f"/>
+    <circle cx="108" cy="40" r="3" fill="#785a18"/>
+    <path d="M49 66 L108 40 L111 66" fill="none" stroke="#333" stroke-width="1.1"/>
+  </g>
+  <!-- 3 · орбита с Солнцем -->
+  <g transform="translate(320,0)">
+    <ellipse cx="80" cy="66" rx="54" ry="33" fill="none" stroke="#c0aa5a" stroke-width="2.4"/>
+    <circle cx="52" cy="66" r="8" fill="#c9a23c" stroke="#fff" stroke-width="1.2"/>
+    <circle cx="132" cy="62" r="3.4" fill="#333"/>
+  </g>
+  <!-- 4 · чаша с фокусами и лучами -->
+  <g transform="translate(480,0)">
+    <ellipse cx="80" cy="66" rx="54" ry="33" fill="none" stroke="#c0aa5a" stroke-width="2.4"/>
+    <circle cx="49" cy="66" r="3.4" fill="#c9a23c"/><circle cx="111" cy="66" r="3.4" fill="#bf5b4f"/>
+    <path d="M49 66 L78 40 L111 66 M49 66 L74 92 L111 66" fill="none" stroke="#333" stroke-width="1" opacity="0.75"/>
+  </g>
+</svg>

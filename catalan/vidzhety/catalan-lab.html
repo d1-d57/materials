@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лаборатория Каталана — Раздутие / Сдутие</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+
+  :root {
+    --bg: #faf8f5;
+    --fg: #1a1a18;
+    --accent: #c24d2c;
+    --subtle: #d4cfc8;
+    --panel-bg: #f2efea;
+    --base-color: #b8860b;
+    --side-color: #777;
+    --diag-color: #aaa;
+    --dot-color: #c24d2c;
+    --marked-color: #c24d2c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Crimson Pro', Georgia, serif;
+    background: var(--bg); color: var(--fg);
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  h1 { font-weight: 300; font-size: 1.8rem; letter-spacing: 0.04em; margin-bottom: 0.25rem; }
+  .subtitle {
+    font-size: 0.93rem; font-style: italic; color: #888;
+    margin-bottom: 1rem; text-align: center; max-width: 560px; line-height: 1.5;
+  }
+  .formula {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    background: var(--panel-bg); padding: 0.45rem 1rem; border-radius: 4px;
+    margin-bottom: 1rem; border: 1px solid var(--subtle); color: #555;
+  }
+
+  .controls-top { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; }
+  .controls-top label { font-size: 0.9rem; color: #666; }
+  .controls-top select {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    padding: 0.3rem 0.6rem; border: 1px solid var(--subtle);
+    border-radius: 4px; background: #fff; color: var(--fg);
+  }
+
+  .main-container {
+    display: flex; align-items: center; gap: 0.6rem;
+    width: 100%; max-width: 1050px; justify-content: center; flex-wrap: wrap;
+  }
+
+  .panel {
+    background: var(--panel-bg); border: 1px solid var(--subtle);
+    border-radius: 8px; padding: 0.8rem 0.6rem 0.6rem; display: flex;
+    flex-direction: column; align-items: center;
+    min-width: 340px; flex: 1; max-width: 440px;
+  }
+  .panel-title {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em;
+    text-transform: uppercase; color: #999; margin-bottom: 0.15rem;
+  }
+  .panel-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    color: #b0a89e; margin-bottom: 0.2rem; text-align: center; min-height: 1em;
+  }
+
+  .mid-col {
+    display: flex; flex-direction: column; gap: 0.4rem; align-items: center;
+  }
+  .arrow-btn {
+    width: 46px; height: 46px; border: 1.5px solid var(--subtle); border-radius: 50%;
+    background: #fff; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; font-size: 1.3rem; color: var(--accent); transition: all 0.15s;
+    font-weight: bold;
+  }
+  .arrow-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .arrow-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+  .arrow-btn:disabled:hover { background: #fff; color: var(--accent); border-color: var(--subtle); }
+
+  .btn-rand {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+    padding: 0.3rem 0.6rem; border: 1px solid var(--subtle); border-radius: 4px;
+    background: #fff; color: #888; cursor: pointer; transition: all 0.15s;
+    margin-top: 0.3rem;
+  }
+  .btn-rand:hover { border-color: var(--accent); color: var(--accent); }
+
+  .explanation {
+    max-width: 700px; margin-top: 1.5rem; padding: 0.8rem 1.2rem;
+    background: var(--panel-bg); border: 1px solid var(--subtle);
+    border-radius: 8px; font-size: 0.88rem; line-height: 1.65; color: #666;
+  }
+  .explanation summary {
+    cursor: pointer; font-weight: 600; color: var(--fg);
+    font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .explanation p { margin-top: 0.5rem; }
+  .explanation b { color: var(--fg); }
+</style>
+</head>
+<body>
+
+<h1>Лаборатория Каталана</h1>
+<p class="subtitle">Биективное доказательство формулы через раздутие и сдутие триангуляций</p>
+<div class="formula">(4n + 2) · C<sub>n</sub>&ensp;=&ensp;(n + 2) · C<sub>n+1</sub></div>
+
+<div class="controls-top">
+  <label>n =</label>
+  <select id="nSel">
+    <option value="1">1</option><option value="2">2</option>
+    <option value="3" selected>3</option><option value="4">4</option>
+    <option value="5">5</option><option value="6">6</option>
+    <option value="7">7</option><option value="8">8</option>
+  </select>
+</div>
+
+<div class="main-container">
+  <div class="panel">
+    <div class="panel-title" id="tL">P : 5-угольник</div>
+    <div class="panel-hint" id="hL"></div>
+    <svg id="sL" width="370" height="340"></svg>
+  </div>
+
+  <div class="mid-col">
+    <button class="arrow-btn" id="bR" onclick="doInflate()" disabled title="Раздуть →">→</button>
+    <button class="arrow-btn" id="bL" onclick="doDeflate()" disabled title="← Сдуть">←</button>
+    <button class="btn-rand" onclick="doRandom()">случайный</button>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title" id="tR">Q : 6-угольник</div>
+    <div class="panel-hint" id="hR"></div>
+    <svg id="sR" width="370" height="340"></svg>
+  </div>
+</div>
+
+<details class="explanation">
+  <summary>Комментарий</summary>
+  <p><b>Слева:</b> триангуляция (n+2)-угольника + ориентированное ребро
+  (точка у вершины = направление). Объектов: (4n+2)·Cₙ.</p>
+  <p><b>Справа:</b> триангуляция (n+3)-угольника + выделенная не-базисная сторона.
+  Объектов: (n+2)·Cₙ₊₁.</p>
+  <p><b>→ Раздутие:</b> вершина с точкой расщепляется на две, образуя новую сторону.
+  <b>← Сдутие:</b> треугольник при выделенной стороне стягивается; точка ставится у стянутой вершины.</p>
+  <p>Равенство (4n+2)Cₙ = (n+2)Cₙ₊₁ даёт по индукции: Cₙ = C(2n,n)/(n+1).</p>
+</details>
+
+<script>
+// ================================================================
+const W=370, H=340, CX=W/2, CY=H/2+10, RAD=118;
+const TPAL = [
+  'rgba(70,130,180,0.14)',   // steel blue
+  'rgba(200,145,60,0.14)',   // amber
+  'rgba(90,165,90,0.14)',    // sage
+  'rgba(165,95,155,0.14)',   // mauve
+];
+let N=3;
+let L={m:0,v:[],d:[],ori:null};   // ori={e:[a,b], dot:v}
+let R={m:0,v:[],d:[],mk:null};    // mk=[i,j]
+
+// Interaction state
+let diagSel=null;  // {side:'L'|'R', vi:index} — first vertex for adding diagonal
+let oriSel=null;   // vertex index — first vertex (dot) for orientation selection
+
+// ================================================================
+// GEOMETRY
+// ================================================================
+function mkV(m){
+  const vs=[];
+  for(let i=0;i<m;i++){
+    const a=Math.PI+Math.PI*(m-2)/(2*m)-(i/m)*2*Math.PI;
+    vs.push({x:CX+RAD*Math.cos(a),y:CY-RAD*Math.sin(a)});
+  }
+  return vs;
+}
+function isBase(a,b,m){return(a===0&&b===m-1)||(b===0&&a===m-1)}
+function isSide(a,b,m){const d=Math.abs(a-b);return d===1||d===m-1}
+function isDiag(a,b,m){return a!==b&&!isSide(a,b,m)}
+function ek(a,b){return Math.min(a,b)+'-'+Math.max(a,b)}
+
+function cross(a1,a2,b1,b2,m){
+  if(new Set([a1,a2,b1,b2]).size<4)return false;
+  function inA(f,t,v){let c=(f+1)%m;while(c!==t){if(c===v)return true;c=(c+1)%m}return false}
+  return inA(a1,a2,b1)!==inA(a1,a2,b2);
+}
+
+function canAdd(a,b,ds,m){
+  if(!isDiag(a,b,m))return false;
+  for(const[c,d]of ds){if(ek(c,d)===ek(a,b))return false;if(cross(a,b,c,d,m))return false}
+  return true;
+}
+function triDone(ds,m){return ds.length===m-3}
+
+// Find all triangles from current edges (sides + diagonals)
+function tris(ds,m){
+  const es=new Set();
+  for(let i=0;i<m;i++)es.add(ek(i,(i+1)%m));
+  for(const[a,b]of ds)es.add(ek(a,b));
+  const r=[];
+  for(let i=0;i<m;i++)for(let j=i+1;j<m;j++)for(let k=j+1;k<m;k++)
+    if(es.has(ek(i,j))&&es.has(ek(j,k))&&es.has(ek(i,k)))r.push([i,j,k]);
+  return r;
+}
+
+function allE(ds,m){
+  const r=[];
+  for(let i=0;i<m;i++)r.push([i,(i+1)%m]);
+  for(const[a,b]of ds)r.push([a,b]);
+  return r;
+}
+
+// Check if two vertices share an edge (side or diagonal)
+function shareEdge(a,b,ds,m){
+  if(isSide(a,b,m))return true;
+  for(const[c,d]of ds)if(ek(c,d)===ek(a,b))return true;
+  return false;
+}
+
+function ccwArc(v,a,m){
+  const s=new Set();let c=(v+1)%m;
+  while(c!==a){s.add(c);c=(c+1)%m}
+  return s;
+}
+
+// Triangle coloring via dual graph (BFS, works for partial too)
+function colorTris(ts,m){
+  if(!ts.length)return[];
+  const adj=ts.map(()=>[]);
+  for(let i=0;i<ts.length;i++)for(let j=i+1;j<ts.length;j++){
+    const ei=[[ts[i][0],ts[i][1]],[ts[i][1],ts[i][2]],[ts[i][0],ts[i][2]]];
+    const ej=[[ts[j][0],ts[j][1]],[ts[j][1],ts[j][2]],[ts[j][0],ts[j][2]]];
+    let found=false;
+    for(const[a,b]of ei){for(const[c,d]of ej)
+      if(ek(a,b)===ek(c,d)){adj[i].push(j);adj[j].push(i);found=true;break}
+      if(found)break;
+    }
+  }
+  const col=new Array(ts.length).fill(-1);
+  for(let start=0;start<ts.length;start++){
+    if(col[start]!==-1)continue;
+    col[start]=0;
+    const q=[start];
+    for(let qi=0;qi<q.length;qi++){
+      const u=q[qi];
+      for(const nb of adj[u]){
+        if(col[nb]===-1){
+          const used=new Set(adj[nb].map(x=>col[x]).filter(x=>x>=0));
+          let c=0;while(used.has(c))c++;
+          col[nb]=c; q.push(nb);
+        }
+      }
+    }
+  }
+  return col;
+}
+
+// ================================================================
+// RANDOM
+// ================================================================
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+function randTri(m){
+  const ds=[],all=[];
+  for(let i=0;i<m;i++)for(let j=i+2;j<m;j++)if(!(i===0&&j===m-1))all.push([i,j]);
+  for(let it=0;it<200&&ds.length<m-3;it++){shuf(all);for(const[a,b]of all){if(ds.length>=m-3)break;if(canAdd(a,b,ds,m))ds.push([a,b])}}
+  return ds;
+}
+
+// ================================================================
+// SVG HELPERS
+// ================================================================
+function el(t,a){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e}
+
+// ================================================================
+// RENDER
+// ================================================================
+function render(side){
+  const st=side==='L'?L:R;
+  const svg=document.getElementById('s'+side);
+  svg.innerHTML='';
+  const{m,v:vs,d:ds}=st;
+  if(!m)return;
+  const dc=triDone(ds,m);
+
+  // --- Triangle fills (progressive — always computed) ---
+  const ts=tris(ds,m);
+  if(ts.length>0){
+    const cols=colorTris(ts,m);
+    ts.forEach((t,i)=>{
+      svg.appendChild(el('polygon',{
+        points:t.map(vi=>`${vs[vi].x},${vs[vi].y}`).join(' '),
+        fill:TPAL[cols[i]%TPAL.length],stroke:'none'
+      }));
+    });
+  }
+
+  // --- Ground below base ---
+  const v0=vs[0],vm=vs[m-1];
+  const gy=Math.max(v0.y,vm.y)+5;
+  svg.appendChild(el('line',{
+    x1:v0.x-10,y1:gy+3,x2:vm.x+10,y2:gy+3,
+    stroke:'var(--base-color)',opacity:0.18,'stroke-width':7,'stroke-linecap':'round'
+  }));
+
+  // --- Base edge ---
+  const baseOri=side==='L'&&st.ori&&ek(0,m-1)===ek(st.ori.e[0],st.ori.e[1]);
+  svg.appendChild(el('line',{
+    x1:v0.x,y1:v0.y,x2:vm.x,y2:vm.y,
+    stroke:baseOri?'var(--marked-color)':'var(--base-color)',
+    'stroke-width':baseOri?3.5:4,'stroke-linecap':'round'
+  }));
+
+  // --- Non-base sides ---
+  for(let i=0;i<m;i++){
+    const j=(i+1)%m;
+    if(isBase(i,j,m))continue;
+    const isMk=side==='R'&&st.mk&&ek(i,j)===ek(st.mk[0],st.mk[1]);
+    const isOri=side==='L'&&st.ori&&ek(i,j)===ek(st.ori.e[0],st.ori.e[1]);
+    svg.appendChild(el('line',{
+      x1:vs[i].x,y1:vs[i].y,x2:vs[j].x,y2:vs[j].y,
+      stroke:isMk?'var(--marked-color)':(isOri?'var(--marked-color)':'var(--side-color)'),
+      'stroke-width':isMk?3:(isOri?2.5:1.5),'stroke-linecap':'round'
+    }));
+  }
+
+  // --- Diagonals ---
+  for(const[a,b]of ds){
+    const isOri=side==='L'&&st.ori&&ek(a,b)===ek(st.ori.e[0],st.ori.e[1]);
+    svg.appendChild(el('line',{
+      x1:vs[a].x,y1:vs[a].y,x2:vs[b].x,y2:vs[b].y,
+      stroke:isOri?'var(--marked-color)':'var(--diag-color)',
+      'stroke-width':isOri?2.5:1.3,
+      'stroke-dasharray':isOri?'none':'5,3','stroke-linecap':'round'
+    }));
+  }
+
+  // --- Orientation dot (left) ---
+  if(side==='L'&&st.ori){
+    const dv=st.ori.dot;
+    svg.appendChild(el('circle',{cx:vs[dv].x,cy:vs[dv].y,r:8,fill:'var(--dot-color)',opacity:0.85}));
+  }
+
+  // --- Marked side midpoint dot (right) ---
+  if(side==='R'&&st.mk){
+    const[a,b]=st.mk;
+    svg.appendChild(el('circle',{
+      cx:(vs[a].x+vs[b].x)/2,cy:(vs[a].y+vs[b].y)/2,r:5,fill:'var(--marked-color)',opacity:0.8
+    }));
+  }
+
+  // --- Orientation first-click highlight ---
+  if(side==='L'&&oriSel!==null){
+    svg.appendChild(el('circle',{
+      cx:vs[oriSel].x,cy:vs[oriSel].y,r:9,
+      fill:'none',stroke:'var(--accent)','stroke-width':2,'stroke-dasharray':'3,2',
+      opacity:0.7,'pointer-events':'none'
+    }));
+  }
+
+  // --- Diagonal building first-click highlight ---
+  if(diagSel&&diagSel.side===side){
+    svg.appendChild(el('circle',{
+      cx:vs[diagSel.vi].x,cy:vs[diagSel.vi].y,r:7,
+      fill:'var(--accent)',opacity:0.35,'pointer-events':'none'
+    }));
+  }
+
+  // --- Vertices ---
+  for(let i=0;i<m;i++){
+    const isDot=side==='L'&&st.ori&&st.ori.dot===i;
+    svg.appendChild(el('circle',{
+      cx:vs[i].x,cy:vs[i].y,r:isDot?8:4.5,
+      fill:isDot?'var(--dot-color)':'#fff',
+      stroke:isDot?'none':'var(--fg)','stroke-width':isDot?0:1.5
+    }));
+    // Label
+    const lr=RAD+20, ang=Math.PI+Math.PI*(m-2)/(2*m)-(i/m)*2*Math.PI;
+    const tx=CX+lr*Math.cos(ang), ty=CY-lr*Math.sin(ang);
+    const lb=el('text',{x:tx,y:ty,'text-anchor':'middle','dominant-baseline':'middle',
+      'font-family':'JetBrains Mono,monospace','font-size':'11px',fill:'#777','font-weight':'400'});
+    lb.textContent=i; svg.appendChild(lb);
+  }
+
+  // --- INTERACTION LAYER ---
+  // 1) Diagonal removal: click on existing diagonal
+  for(let di=ds.length-1;di>=0;di--){
+    const[a,b]=ds[di];
+    const h=el('line',{
+      x1:vs[a].x,y1:vs[a].y,x2:vs[b].x,y2:vs[b].y,
+      stroke:'transparent','stroke-width':14,cursor:'pointer'
+    });
+    h.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      ds.splice(di,1);
+      if(side==='L') st.ori=null;
+      if(side==='R') st.mk=null;
+      diagSel=null; oriSel=null;
+      render(side); updateHints();
+    });
+    svg.appendChild(h);
+  }
+
+  // 2) Vertex clicks: different behavior depending on state
+  for(let i=0;i<m;i++){
+    const h=el('circle',{cx:vs[i].x,cy:vs[i].y,r:20,fill:'transparent',cursor:'pointer'});
+    h.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      handleVertexClick(side,i);
+    });
+    svg.appendChild(h);
+  }
+
+  // 3) Side clicking for right panel (marked side selection)
+  if(side==='R'&&dc){
+    for(let i=0;i<m;i++){
+      const j=(i+1)%m;
+      if(isBase(i,j,m))continue;
+      const mx=(vs[i].x+vs[j].x)/2, my=(vs[i].y+vs[j].y)/2;
+      const h=el('circle',{cx:mx,cy:my,r:16,fill:'transparent',cursor:'pointer'});
+      h.addEventListener('mouseenter',()=>h.setAttribute('fill','rgba(194,77,44,0.10)'));
+      h.addEventListener('mouseleave',()=>h.setAttribute('fill','transparent'));
+      h.addEventListener('click',(e)=>{
+        e.stopPropagation();
+        if(st.mk&&ek(i,j)===ek(st.mk[0],st.mk[1])) st.mk=null;
+        else st.mk=[i,j];
+        render('R'); updateHints();
+      });
+      svg.appendChild(h);
+    }
+  }
+
+  updateBtns();
+}
+
+// ================================================================
+// VERTEX CLICK HANDLER
+// ================================================================
+function handleVertexClick(side, i){
+  const st=side==='L'?L:R;
+  const{m,d:ds}=st;
+  const dc=triDone(ds,m);
+
+  // LEFT panel, triangulation complete → orientation mode (two clicks)
+  if(side==='L'&&dc){
+    if(oriSel===null){
+      // First click: select dot vertex
+      // If clicking on current dot → deselect orientation
+      if(st.ori&&st.ori.dot===i){
+        st.ori=null;
+        render('L'); updateHints();
+        return;
+      }
+      oriSel=i;
+      render('L'); updateHints();
+    } else {
+      // Second click: must share an edge with oriSel
+      if(i===oriSel){
+        // Clicked same vertex → cancel
+        oriSel=null;
+        render('L'); updateHints();
+        return;
+      }
+      if(shareEdge(oriSel,i,ds,m)){
+        // Set orientation: dot at oriSel, edge is (oriSel, i)
+        st.ori={e:[Math.min(oriSel,i),Math.max(oriSel,i)],dot:oriSel};
+        oriSel=null;
+        render('L'); updateHints();
+      } else {
+        // Not sharing edge → restart with this vertex as new first selection
+        oriSel=i;
+        render('L'); updateHints();
+      }
+    }
+    return;
+  }
+
+  // Diagonal building mode (triangulation not complete)
+  if(!dc){
+    if(diagSel&&diagSel.side===side){
+      const a=diagSel.vi, b=i;
+      diagSel=null;
+      if(a!==b&&canAdd(a,b,ds,m)){
+        ds.push([Math.min(a,b),Math.max(a,b)]);
+        if(side==='L') st.ori=null;
+        if(side==='R') st.mk=null;
+      }
+      oriSel=null;
+      render(side); updateHints();
+    } else {
+      diagSel={side,vi:i};
+      oriSel=null;
+      render(side); updateHints();
+    }
+  }
+}
+
+// ================================================================
+// INFLATION / DEFLATION
+// ================================================================
+
+function doInflate(){
+  if(!L.ori)return;
+  const{e,dot:v}=L.ori;
+  const a=e[0]===v?e[1]:e[0];
+  const m=L.m, M=m+1;
+  const arc=ccwArc(v,a,m);
+
+  function remap(x){return x<=v?x:x+1}
+
+  const nd=[],added=new Set();
+  function addD(p,q){if(p===q)return;const k=ek(p,q);if(added.has(k))return;if(isDiag(p,q,M)){nd.push([Math.min(p,q),Math.max(p,q)]);added.add(k)}}
+
+  for(const[c,d]of L.d){
+    if(ek(c,d)===ek(a,v))continue;
+    if(c===v||d===v){
+      const oth=c===v?d:c;
+      if(arc.has(oth))addD(v+1,remap(oth));
+      else addD(v,remap(oth));
+    } else addD(remap(c),remap(d));
+  }
+
+  addD(remap(a),v);
+  addD(remap(a),v+1);
+
+  R.m=M; R.v=mkV(M); R.d=nd; R.mk=[v,(v+1)%M];
+  diagSel=null; oriSel=null;
+  render('R'); updateHints();
+}
+
+function doDeflate(){
+  if(!R.mk)return;
+  const M=R.m, m=M-1;
+  let[s1,s2]=R.mk;
+  if((s1+1)%M!==s2){[s1,s2]=[s2,s1]}
+  if((s1+1)%M!==s2){console.error('bad side');return}
+
+  const ts=tris(R.d,M);
+  let tri=null;
+  for(const t of ts){
+    const es=[[t[0],t[1]],[t[1],t[2]],[t[0],t[2]]];
+    if(es.some(([a,b])=>ek(a,b)===ek(s1,s2))){tri=t;break}
+  }
+  if(!tri){console.error('no tri');return}
+
+  const u=tri.find(x=>x!==s1&&x!==s2);
+  function remap(x){if(x<s2)return x;if(x===s2)return s1;return x-1}
+
+  const nd=[],added=new Set();
+  for(const[c,d]of R.d){
+    if(ek(c,d)===ek(s1,s2)||ek(c,d)===ek(s1,u)||ek(c,d)===ek(s2,u))continue;
+    const rc=remap(c),rd=remap(d);
+    if(rc===rd)continue;
+    const k=ek(rc,rd);if(added.has(k))continue;
+    if(isDiag(rc,rd,m)){nd.push([Math.min(rc,rd),Math.max(rc,rd)]);added.add(k)}
+  }
+
+  const ru=remap(u);
+  L.m=m; L.v=mkV(m); L.d=nd;
+  L.ori={e:[Math.min(ru,s1),Math.max(ru,s1)],dot:s1};
+  diagSel=null; oriSel=null;
+  render('L'); updateHints();
+}
+
+// ================================================================
+// RANDOM PAIR
+// ================================================================
+function doRandom(){
+  L.d=randTri(L.m);
+  const edges=allE(L.d,L.m);
+  const e=edges[Math.floor(Math.random()*edges.length)];
+  const dotV=Math.random()<0.5?e[0]:e[1];
+  L.ori={e:[Math.min(e[0],e[1]),Math.max(e[0],e[1])],dot:dotV};
+  diagSel=null; oriSel=null;
+  render('L');
+  doInflate();
+  updateHints();
+}
+
+// ================================================================
+// HINTS & BUTTONS
+// ================================================================
+function updateHints(){
+  const lc=triDone(L.d,L.m);
+  if(!lc){
+    const n=L.m-3-L.d.length;
+    document.getElementById('hL').textContent=n>0?`проведите ${n} диагонал${n===1?'ь':n<5?'и':'ей'}`:'';
+  } else if(!L.ori){
+    document.getElementById('hL').textContent=oriSel!==null?`вершина ${oriSel} — выберите смежную`:'выберите вершину (точку)';
+  } else {
+    document.getElementById('hL').textContent='';
+  }
+
+  const rc=triDone(R.d,R.m);
+  if(!rc){
+    const n=R.m-3-R.d.length;
+    document.getElementById('hR').textContent=n>0?`проведите ${n} диагонал${n===1?'ь':n<5?'и':'ей'}`:'';
+  } else if(!R.mk){
+    document.getElementById('hR').textContent='выберите сторону (не основание)';
+  } else {
+    document.getElementById('hR').textContent='';
+  }
+  updateBtns();
+}
+
+function updateBtns(){
+  document.getElementById('bR').disabled=!(triDone(L.d,L.m)&&L.ori);
+  document.getElementById('bL').disabled=!(triDone(R.d,R.m)&&R.mk);
+}
+
+// ================================================================
+// INIT
+// ================================================================
+function init(){
+  N=parseInt(document.getElementById('nSel').value);
+  L.m=N+2; L.v=mkV(N+2); L.d=[]; L.ori=null;
+  R.m=N+3; R.v=mkV(N+3); R.d=[]; R.mk=null;
+  diagSel=null; oriSel=null;
+  document.getElementById('tL').textContent=`P : ${N+2}-угольник`;
+  document.getElementById('tR').textContent=`Q : ${N+3}-угольник`;
+  render('L'); render('R'); updateHints();
+}
+
+document.getElementById('nSel').addEventListener('change',init);
+init();
+setTimeout(doRandom,300);
+</script>
+</body>
+</html>

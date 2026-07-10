@@ -1,0 +1,29 @@
+<svg viewBox="0 0 302 225" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="302" height="225" fill="var(--card)"/>
+  <!-- construction: projections, dashed rule -->
+  <line x1="144.8" y1="58.5" x2="144.8" y2="184.5" stroke="var(--rule)" stroke-width="1.4" stroke-dasharray="4 3.5"/>
+  <line x1="243.4" y1="128.9" x2="243.4" y2="184.5" stroke="var(--rule)" stroke-width="1.4" stroke-dasharray="4 3.5"/>
+  <!-- axes: steel -->
+  <line x1="48.5" y1="184.5" x2="48.5" y2="6.8" stroke="var(--steel)" stroke-width="2.5"/>
+  <line x1="48.5" y1="184.5" x2="260.3" y2="184.5" stroke="var(--steel)" stroke-width="2.5"/>
+  <!-- quarter circle: steel 2.5 -->
+  <path d="M 48.5 16.9 A 155.5 167.6 0 0 1 204.0 184.5" fill="none" stroke="var(--steel)" stroke-width="2.5"/>
+  <!-- radius O-P and angle arc: thin steel construction -->
+  <line x1="48.5" y1="184.5" x2="144.8" y2="50.6" stroke="var(--steel)" stroke-width="1.6"/>
+  <path d="M 48.5 122.5 A 62 62 0 0 1 84.7 134.2" fill="none" stroke="var(--steel)" stroke-width="1.4"/>
+  <!-- velocity vector at P: brick 2.6 -->
+  <line x1="152.4" y1="56.3" x2="236.2" y2="119.5" stroke="var(--brick)" stroke-width="2.6"/>
+  <polygon points="243.4,124.9 232.5,121.9 237.5,115.2" fill="var(--brick)"/>
+  <!-- projected velocity along the axis: brick 2.6 -->
+  <line x1="144.8" y1="184.5" x2="236" y2="184.5" stroke="var(--brick)" stroke-width="2.6"/>
+  <polygon points="244.5,184.5 234.0,188.7 234.0,180.3" fill="var(--brick)"/>
+  <circle cx="144.8" cy="184.5" r="3.2" fill="var(--brick)"/>
+  <!-- point P: mustard with card halo -->
+  <circle cx="144.8" cy="50.6" r="6" fill="var(--mustard)" stroke="var(--card)" stroke-width="2.2"/>
+  <!-- labels: Noto 16, ink .7, variables italic -->
+  <text x="35.5" y="21.9" font-family="Noto Sans, sans-serif" font-size="16" fill="var(--ink)" opacity="0.7" text-anchor="middle">1</text>
+  <text x="37.7" y="197.7" font-family="Noto Sans, sans-serif" font-size="16" font-style="italic" fill="var(--ink)" opacity="0.7" text-anchor="middle">O</text>
+  <text x="142" y="201.1" font-family="Noto Sans, sans-serif" font-size="16" font-style="italic" fill="var(--ink)" opacity="0.7" text-anchor="middle">x</text>
+  <text x="158" y="42.8" font-family="Noto Sans, sans-serif" font-size="16" font-style="italic" fill="var(--ink)" opacity="0.7" text-anchor="middle">P</text>
+  <text x="79" y="127" font-family="Noto Sans, sans-serif" font-size="16" font-style="italic" fill="var(--ink)" opacity="0.7" text-anchor="middle">&#945;</text>
+</svg>
