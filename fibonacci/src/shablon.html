@@ -2,34 +2,73 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Новый дек</title>
+<title>Числа Фибоначчи</title>
 <!-- ============================================================
-  КАНОН-СКЕЛЕТ (замороженный канон, KONSTITUCIYA §1). Четыре блока:
-    [1] DECK STYLES  — токены, шрифты, base.css (общий канон), пер-слайдовые гриды
-    [2] SLIDES       — только текст и зоны (арка 7 добавляет {{SLIDE:<id>}})
-    [3] ASSETS       — иллюстрации в <template> (арка 9)
-    [4] ENGINE       — движок дословно, не править
-  Холст 1440×810. Стартовая точка greenfield-дека Фазы II («скопируй скелет»).
-  Общий канон-CSS вынесен в base.css; пер-слайдовый грид — bespoke, здесь ПУСТ.
+  Дек «Числа Фибоначчи» (курс, биективный взгляд). Канон-контракт:
+    [1] DECK STYLES — токены, шрифты, base.css, единая 2-плановая сетка
+    [2] SLIDES      — текст+зоны (слот SLIDE на каждый id)
+    [3] ASSETS      — иллюстрации (<template>), интерактив fib-strip
+    [4] ENGINE      — движок дословно
+  Холст 1440×810. Два плана: бумага (текст-условие) / доска (доказательство).
+  Доказательства — canvas/SVG БЕЗ текста (§4 захода). Юникод-индексы, без KaTeX.
 ============================================================ -->
 <style>
 /* ===== [1] DECK STYLES ===== */
-/* шрифты грузятся по относительному пути при сборке; base64-вшиты в выход */
 {{FONTS_CSS}}
 
 {{TOKENS_CSS}}
 {{BASE_CSS}}
 
-/* ---------- пер-слайдовые гриды (bespoke — добавляет арка 7 «вёрстка») ---------- */
-/* напр.:  #s01 .grid{ position:absolute; inset:0; display:grid;
-             grid-template-columns:34px 1372px 34px; grid-template-rows:18px 210px 582px; }
-           #s01 .copy{ grid-area:2/2; } */
+/* ---------- единая 2-плановая сетка (bespoke, минимальная) ---------- */
+/* обложка/разделитель/финал: доска во весь холст, Forum caps по центру */
+.slide.cover { background: var(--board); }
+.slide.cover .wrap { position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto 1fr;
+  align-items: center; padding: 0 120px; }
+.slide.cover .head { grid-row: 2; }
+.slide.cover .t-display { font-size: 92px; }
+.slide.cover .sub { font-family: 'Glacial Indifference','Noto Sans',sans-serif; text-align: center;
+  color: var(--ink); font-size: 34px; letter-spacing: .04em; margin-top: 34px; }
+.slide.cover .art { position: absolute; left: 0; right: 0; bottom: 46px; height: 190px; }
+
+/* контент-слайд: лента-условие (бумага) сверху + доска снизу */
+.slide .grid { position: absolute; inset: 0; display: grid;
+  grid-template-columns: 64px 1fr 64px; grid-template-rows: 54px auto 1fr 40px; }
+.slide .head-band { grid-area: 2 / 2; }
+.slide .copy { grid-area: 2 / 2; }
+.slide .board { grid-area: 3 / 1 / 4 / 4; background: var(--board); position: relative; overflow: hidden; }
+.slide .board .panel { position: absolute; inset: 40px 80px; background: transparent; }
+.slide .board .panel.card { background: var(--card); }
+.slide .t-body { --t-body: 34px; }
+.slide .t-body b, .slide .t-body span.acc { font-weight: 700; color: var(--brick); }
+.slide .zone.copy .lead { font-family: 'Forum', serif; text-transform: uppercase;
+  letter-spacing: .01em; color: var(--ink); font-size: 30px; margin-bottom: 12px; display:block; }
+
+/* full-illu: короткая лента, большая доска */
+.slide.tall .grid { grid-template-rows: 40px auto 1fr 28px; }
+.slide.tall .board .panel { inset: 30px 60px; }
+
+/* canvas на доске */
+.slide .board canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* svg-иллюстрация на доске */
+.slide .board .panel > svg { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ===== [2] SLIDES — арка 7 добавляет {{SLIDE:<id>}} в порядке brief.slide_order ===== -->
+<!-- ===== [2] SLIDES ===== -->
+{{SLIDE:s01-title}}
+{{SLIDE:s02-hook}}
+{{SLIDE:s03-strip}}
+{{SLIDE:s04-recur}}
+{{SLIDE:s05-masks}}
+{{SLIDE:s06-star}}
+{{SLIDE:s07-code}}
+{{SLIDE:s08-subset}}
+{{SLIDE:s09-perm}}
+{{SLIDE:s10-sum}}
+{{SLIDE:s11-cassini}}
+{{SLIDE:s12-close}}
 
 </div></div>
 <div id="lect-zone" style="position:fixed;left:0;bottom:0;width:100%;height:14px;z-index:200;cursor:pointer"></div>
@@ -37,32 +76,30 @@
   background:var(--brick);opacity:.55;z-index:201;pointer-events:none;transition:width .25s ease,height .15s ease,opacity .15s ease"></div>
 <div id="hint">← → листать · F — экран · B — чёрный · O — обзор</div>
 
-<!-- ===== [3] ASSETS REGISTRY — арка 9 добавляет <template id="ill-<name>"> ===== -->
+<!-- ===== [3] ASSETS REGISTRY ===== -->
+<template id="ill-hook-2xn">{{ILL:hook-2xn}}</template>
+<template id="ill-strip-transform">{{ILL:strip-transform}}</template>
+<template id="ill-masks-fan">{{ILL:masks-fan}}</template>
+<template id="ill-star">{{ILL:star}}</template>
+<template id="ill-title-art">{{ILL:title-art}}</template>
+<template id="ill-bridge">{{ILL:bridge}}</template>
+
+<!-- интерактив (§4: один механизм, переиспользован) -->
+<script>{{SIM:lab.core}}</script>
 
 <script>{{ENGINE_JS}}</script>
 
 <script>
-/* Прогресс лекции по hash — движок не трогаем (чистый шов, канон-паттерн). */
+/* прогресс лекции по hash — движок не трогаем (канон-паттерн) */
 (function () {
   var total = document.querySelectorAll('.slide').length;
-  var bar = document.getElementById('lect-progress');
-  var zone = document.getElementById('lect-zone');
-  var hint = document.getElementById('hint');
-  function upd() {
-    var m = location.hash.match(/^#s(\d+)/), i = m ? +m[1] : 0;
-    if (bar) bar.style.width = (total ? 100 * (i + 1) / total : 0) + '%';
-  }
+  var bar = document.getElementById('lect-progress'), zone = document.getElementById('lect-zone'), hint = document.getElementById('hint');
+  function upd() { var m = location.hash.match(/^#s(\d+)/), i = m ? +m[1] : 0; if (bar) bar.style.width = (total ? 100 * (i + 1) / total : 0) + '%'; }
   addEventListener('hashchange', upd); setInterval(upd, 400); upd();
-  hint.classList.add('is-shown');
-  setTimeout(function () { hint.classList.remove('is-shown'); }, 6000);
-  zone.addEventListener('mouseenter', function () {
-    bar.style.height = '6px'; bar.style.opacity = '.85'; hint.classList.add('is-shown'); });
-  zone.addEventListener('mouseleave', function () {
-    bar.style.height = '2.5px'; bar.style.opacity = '.55'; hint.classList.remove('is-shown'); });
-  zone.addEventListener('click', function (e) {
-    var i = Math.min(total - 1, Math.floor(e.clientX / innerWidth * total));
-    if (typeof showSingle === 'function') { showSingle(i, 1); if (typeof syncHash === 'function') syncHash(); }
-  });
+  hint.classList.add('is-shown'); setTimeout(function () { hint.classList.remove('is-shown'); }, 6000);
+  zone.addEventListener('mouseenter', function () { bar.style.height = '6px'; bar.style.opacity = '.85'; hint.classList.add('is-shown'); });
+  zone.addEventListener('mouseleave', function () { bar.style.height = '2.5px'; bar.style.opacity = '.55'; hint.classList.remove('is-shown'); });
+  zone.addEventListener('click', function (e) { var i = Math.min(total - 1, Math.floor(e.clientX / innerWidth * total)); if (typeof showSingle === 'function') { showSingle(i, 1); if (typeof syncHash === 'function') syncHash(); } });
 })();
 </script>
 </body>

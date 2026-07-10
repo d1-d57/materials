@@ -1,30 +1,37 @@
 ---
-id: novyj-dek
-title: "Новый дек"
+id: fibonacci
+title: "Числа Фибоначчи"
 canvas: 1440x810
 provenance: greenfield
 milestone: greenfield (нет provenance_sha256 → render-identity гейт неприменим на 1-й сборке; замена — линтер + audit.py + глаз)
 accent_tag: span
+register: читаемый
+word_budget_per_slide: 40
 slide_order:
+  - s01-title
+  - s02-hook
+  - s03-strip
+  - s04-recur
+  - s05-masks
+  - s06-star
+  - s07-code
+  - s08-subset
+  - s09-perm
+  - s10-sum
+  - s11-cassini
+  - s12-close
 ---
 
-# <дек> — источник (скелет greenfield)
+# fibonacci — источник дека (курс «Числа Фибоначчи»)
 
-Стартовая папка нового дека Фазы II. Скопирована из `_generator/skeleton/`
-(шаг 0 «скопируй скелет», выход раскадровки арки 5).
+Реализуемый ночным прогоном срез из 12 слайдов (сквозная дуга нити). Полный курс (3 лекции) — в `../raskadrovka/PLAN.md`. Раскадровка — стадия 5; наполнение (текст/сцены/интерактив) — Фаза II.
 
-## Что заполнить
-- `accent_tag`: `span` (buffon-стиль, дефолт канона — Р16) или `b` (dandelin-стиль) — тег для `**acc**`.
-- `slide_order`: перечислить id слайдов В ПОРЯДКЕ показа (по одному `- <id>` на строку).
-  Обязан ТОЧНО покрывать `slides/` + `content/` (линтер-гейт, без сирот/дублей).
-- `content/<id>.md` — текст слайда (маркдаун-диалект, `_generator/SLIDE-FORMAT.md`).
-- `slides/<id>.html` — `<section class="slide" id="<id>" data-scenes="N">` с зонами и `{{MD:<id>}}`.
-- пер-слайдовый грид `#<id> .grid{…}` — в `<style>` `shablon.html` (bespoke; общий канон — в `base.css`).
-- `illustrations/<name>.svg|.html` — иллюстрации (арка 9); `tokens.css` — палитра при нужде.
+## Регистр и бюджет (контракт 5→6)
+- register: читаемый (семинар-разбор; условие с экрана, доказательство — canvas без текста).
+- word_budget_per_slide: 40 (доказательства бессловесны → тексты короткие; край 50).
 
-## Что уже канон (не трогать без причины)
-- `base.css` — общий канон-CSS (структура `#stage/.slide/.zone/.fit`, сцены, `#hint`, роли текста `t-body/t-display/t-math`, `.panel/.lab-row/.sim-controls`).
-- `engine.js` — движок дословно. `tokens.css` — канон-палитра. `fonts/faces.css` — 5 @font-face.
+## Единый интерактив
+Один canvas-kind `fib-strip` (в `sims/lab.core.js`); режим — `data-mode` (recur/code/subset/perm/sum/cassini). Полоска редактируется (клик по клетке), образ под соответствием обновляется живьём. §4 захода: «придумай один механизм и переиспользуй».
 
-Сборка: `python3 _generator/build_deck.py <дек>/src` → `dist/index.html`.
-Гейт greenfield (1-я сборка): линтер + `audit.py` (браузер) + глаз (render.py). render-identity — со 2-й сборки.
+## accent_tag
+`span` (buffon-стиль, дефолт канона Р16).

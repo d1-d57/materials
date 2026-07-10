@@ -1,0 +1,22 @@
+<svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <g stroke="var(--ink)" stroke-width="3">
+    <!-- 2×10, одно замощение доминошками (верт/гор) -->
+    <rect x="60"  y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="120" y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="180" y="120" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="180" y="230" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="300" y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="360" y="120" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="360" y="230" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="480" y="120" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="480" y="230" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="600" y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="660" y="120" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="660" y="230" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="780" y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="840" y="120" width="60" height="220" fill="var(--mustard)"/>
+    <rect x="900" y="120" width="120" height="110" fill="var(--cgreen)"/>
+    <rect x="900" y="230" width="120" height="110" fill="var(--cgreen)"/>
+  </g>
+  <text x="1020" y="240" font-family="'Glacial Indifference',sans-serif" font-size="90" fill="var(--brick)">?</text>
+</svg>
