@@ -236,4 +236,80 @@ check("15b l_{n+2}=f_{n+2}+f_n", lambda n: l(n+2), lambda n: f(n+2)+f(n))
 check("15b' l_n=f_n+f_{n-2}", lambda n: l(n), lambda n: f(n)+f(n-2), range(2,9))
 check("15c f_{2n+1}=l_{n+1} f_n", lambda n: f(2*n+1), lambda n: l(n+1)*f(n), range(0,6))
 
+# ═══════════ КОНСТРУКЦИИ (по замечаниям adversarial-рецензента) ═══════════
+print("\nКонструкции (не только итоговые тождества):")
+
+# A↔E — ЯВНАЯ биекция (Утв.7): допиши квадрат, режь после каждого квадрата
+def A_to_E(parts):
+    ext = list(parts) + [1]; blocks = []; cur = 0
+    for p in ext:
+        cur += p
+        if p == 1: blocks.append(cur); cur = 0
+    return tuple(blocks)
+for n in range(1, 8):
+    assert is_bijection(A(n), E(n), A_to_E), f"A↔E n={n}"
+print("  A↔E — явная биекция (не только |E|=f) ✓")
+
+# Утв.10 (задача 4) — ИСПРАВЛЕННАЯ конструкция: классификация по ПЕРВОМУ КВАДРАТУ.
+# (a) A_{2n} без сплошь-ДОМИНОШЕЧНОГО: первый квадрат после j доминошек → остаток нечёт.
+def first_square_j(parts):
+    j = 0
+    for p in parts:
+        if p == 1: return j
+        j += 1
+    return None  # сплошь доминошки
+for n in range(1, 6):
+    buckets = {}
+    alldom = 0
+    for t in A(2 * n):
+        j = first_square_j(t)
+        if j is None: alldom += 1; continue
+        buckets[j] = buckets.get(j, 0) + 1
+    assert alldom == 1, f"4a: ожидали 1 сплошь-домино, n={n}"
+    # bucket j: 1 квадрат на месте 2j+1 (j доминошек до) → остаток длины 2n-2j-1 → f_{2n-2j-1}
+    for j, cnt in buckets.items():
+        assert cnt == f(2 * n - 2 * j - 1), f"4a bucket n={n} j={j}: {cnt}!={f(2*n-2*j-1)}"
+    assert sum(buckets.values()) == f(2 * n) - 1
+print("  4a конструкция «по первому квадрату, исключить сплошь-домино» ✓")
+for n in range(1, 6):  # (b) A_{2n+1}: первый квадрат всегда есть → остаток чёт
+    buckets = {}
+    for t in A(2 * n + 1):
+        j = first_square_j(t)
+        assert j is not None
+        buckets[j] = buckets.get(j, 0) + 1
+    for j, cnt in buckets.items():
+        assert cnt == f(2 * n - 2 * j), f"4b bucket n={n} j={j}"
+print("  4b конструкция «по первому квадрату» (остаток чётной длины) ✓")
+
+# Утв.12a (задача 7а) — 2-to-1: A_{n+1} ⊔ A_{n-2} → A_n, ровно 2 прообраза у каждого
+def phi7a_images(n):
+    imgs = []
+    for S in A(n + 1):
+        if S[-1] == 1: imgs.append(S[:-1])            # снять квадрат
+        else: imgs.append(S[:-1] + (1,))              # снять доминошку, приписать квадрат
+    for S in A(n - 2):
+        imgs.append(S + (2,))                          # приписать доминошку
+    return imgs
+for n in range(2, 8):
+    from collections import Counter
+    cnt = Counter(phi7a_images(n))
+    assert set(cnt) == set(A(n)) and all(v == 2 for v in cnt.values()), f"7a: не 2-to-1, n={n}"
+print("  7a: A_{n+1}⊔A_{n-2}→A_n — ровно 2 прообраза у каждого ✓")
+
+# Утв.17 (задача 10) — ОБЕ формы f_{2n+1}
+for n in range(0, 6):
+    s1 = sum(comb(n + 1, k) * f(k - 1) for k in range(1, n + 2))
+    assert s1 == f(2 * n + 1), f"10 форма1 n={n}: {s1}"
+    s2 = sum(comb(n - j, i) * comb(n - i, j) for i in range(0, n + 1) for j in range(0, n + 1))
+    assert s2 == f(2 * n + 1), f"10 форма2 n={n}: {s2}"
+print("  10: f_{2n+1}=ΣC(n+1,k)f_{k-1} и двойная сумма ΣC(n-j,i)C(n-i,j) ✓")
+
+# 11г (Каталан) — ИСПРАВЛЕННАЯ формула: f_n² − f_{n-t}f_{n+t} = (−1)^{n-t+1} f_{t-1}²
+for n in range(1, 9):
+    for t in range(1, n + 1):
+        lhs = f(n) ** 2 - f(n - t) * f(n + t)
+        rhs = (-1) ** (n - t + 1) * f(t - 1) ** 2
+        assert lhs == rhs, f"11г n={n},t={t}: {lhs}!={rhs}"
+print("  11г Каталан (ИСПРАВЛЕНО): f_n²−f_{n-t}f_{n+t}=(−1)^{n-t+1}·f_{t-1}² ✓")
+
 print("\n════════ ВСЕ ПРОВЕРКИ ПРОЙДЕНЫ ✓ ════════")
