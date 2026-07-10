@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пределы вычислимого — макет курса для чтения (v2)</title>
+<style>
+  :root{
+    --paper:#f6f1e6; --paper2:#efe8d8; --ink:#241f1b; --ink-soft:#4a423a;
+    --rule:#d8cdb6; --accent:#8c2f1e;
+    --s-limit:#8c2f1e; --s-time:#2f6285; --s-human:#5a7a36; --s-meta:#6d4c8c;
+    --warm:#b06a12;
+    --maxw:61rem;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0; background:var(--paper); color:var(--ink); font:18px/1.72 Georgia,"PT Serif","Times New Roman",serif; text-rendering:optimizeLegibility}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 1.4rem}
+  .col{max-width:39rem}
+  h1,h2,h3,.kicker,.label,.chip,.masthead,.lede,.parts,.cue,.legend-grid,.tl,.pcard,.spine,.ln,.ladder{font-family:"Inter","Helvetica Neue",Arial,system-ui,sans-serif}
+
+  .masthead{border-bottom:3px double var(--ink); margin-top:2.2rem; padding-bottom:1.1rem}
+  .masthead .top{display:flex; justify-content:space-between; font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft)}
+  h1{font-size:2.9rem; line-height:1.03; margin:.7rem 0 .2rem; letter-spacing:-.01em; font-family:Georgia,serif}
+  h1 .sub{display:block; font-size:1.15rem; font-weight:600; color:var(--accent); letter-spacing:0; margin-top:.5rem; font-family:Inter,system-ui,sans-serif}
+  .lede{font-size:1.06rem; color:var(--ink-soft); max-width:42rem; margin:.8rem 0 0}
+  .meta-line{font-size:.8rem; letter-spacing:.03em; color:var(--ink-soft); margin-top:.7rem; font-family:Inter,system-ui,sans-serif}
+
+  section{padding:2.2rem 0; border-bottom:1px solid var(--rule)}
+  .kicker{font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700}
+  h2{font-size:1.95rem; line-height:1.12; margin:.35rem 0 .2rem; letter-spacing:-.01em; font-family:Georgia,serif}
+  .lec-num{font-family:Inter,system-ui,sans-serif; font-weight:800; color:var(--accent); font-size:.95rem; letter-spacing:.05em}
+  .role{font-family:Inter,system-ui,sans-serif; font-size:.82rem; color:var(--ink-soft); margin:.1rem 0 .2rem}
+  .budget{font-family:Inter,system-ui,sans-serif; font-size:.78rem; color:#fff; background:var(--ink); display:inline-block; padding:.15em .6em; border-radius:3px; margin:.3rem 0 1rem}
+  h3{font-size:1.04rem; letter-spacing:.02em; margin:1.4rem 0 .3rem; font-weight:700; font-family:Inter,system-ui,sans-serif}
+  h3 .h3tag{font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:#fff; background:var(--accent); padding:.12em .5em; border-radius:3px; vertical-align:.18em; margin-right:.5em}
+  p{margin:.55rem 0}
+  .col p,.col h3,.col ul,.col .eq,.col .claimbox,.col .parts,.col .cue{max-width:39rem}
+  strong{font-weight:700} em{font-style:italic} a{color:var(--accent)}
+
+  aside.note{
+    float:right; clear:right; width:15.5rem; margin:.35rem -17.5rem 1.05rem 1.8rem;
+    font-family:Inter,system-ui,sans-serif; font-size:.78rem; line-height:1.5;
+    background:#fff; border:1px solid var(--rule); border-left:4px solid var(--ink-soft);
+    border-radius:4px; padding:.6rem .75rem; color:var(--ink-soft)}
+  aside.note .nt{display:block; font-weight:700; font-size:.64rem; letter-spacing:.13em; text-transform:uppercase; margin-bottom:.25rem; color:var(--ink)}
+  aside.thread{border-left-color:var(--s-meta)} aside.thread .nt{color:var(--s-meta)}
+  aside.honest{border-left-color:#9a8f78; font-style:italic; background:#faf6ec} aside.honest .nt{color:#7c6f56; font-style:normal}
+  aside.baika{border-left-color:var(--warm); background:#fdf4e6} aside.baika .nt{color:var(--warm)}
+  .ln{display:inline-block; font-weight:800; font-size:.7rem; padding:.05em .42em; border-radius:3px; background:var(--paper2); color:var(--ink); border:1px solid var(--rule); white-space:nowrap}
+  .spine{display:inline-block; font-weight:700; font-size:.64rem; letter-spacing:.05em; text-transform:uppercase; padding:.12em .5em; border-radius:10px; color:#fff; white-space:nowrap}
+  .sp-limit{background:var(--s-limit)} .sp-time{background:var(--s-time)} .sp-human{background:var(--s-human)} .sp-meta{background:var(--s-meta)}
+
+  .eq{font-family:"Cambria Math",Georgia,serif; background:#fffdf7; border:1px solid var(--rule); border-radius:5px; padding:.6rem .8rem; margin:.8rem 0; font-size:1.04rem; overflow-x:auto}
+  .m{font-family:"Cambria Math",Georgia,serif; white-space:nowrap}
+
+  /* parts strip */
+  .parts{display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin:1rem 0; font-size:.8rem}
+  .parts .pt{background:var(--paper2); border:1px solid var(--rule); border-radius:5px; padding:.5rem .6rem}
+  .parts .pt b{display:block; font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:.2rem}
+  .parts .mw{display:inline-block; font-size:.6rem; padding:.05em .4em; border-radius:8px; background:#fff; border:1px solid var(--rule); color:var(--ink-soft); margin-top:.25rem}
+
+  .cue{background:#fffdf7; border:1px dashed var(--rule); border-radius:5px; padding:.55rem .8rem; margin:.9rem 0; font-size:.85rem; color:var(--ink-soft)}
+  .cue b{font-family:Inter,system-ui,sans-serif; color:var(--ink); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase}
+
+  .claimbox{background:var(--paper2); border:1px solid var(--rule); border-radius:5px; padding:.7rem .9rem; margin:1.1rem 0}
+  .claimbox .nt{font-family:Inter,system-ui,sans-serif; font-weight:700; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); display:block; margin-bottom:.35rem}
+  .claimbox ul{margin:.2rem 0; padding-left:1.1rem} .claimbox li{margin:.28rem 0; font-size:.95rem}
+
+  /* how-to + ladder + legend */
+  .howto{background:#fffdf7; border:1px solid var(--rule); border-radius:6px; padding:1rem 1.15rem; margin:1.4rem 0 0}
+  .legend-grid{display:grid; grid-template-columns:1fr 1fr; gap:.5rem .9rem; font-size:.83rem; margin-top:.5rem}
+  .legend-grid .it{display:flex; gap:.5rem; align-items:flex-start} .swatch{flex:none; width:.95rem; height:.95rem; border-radius:3px; margin-top:.2rem}
+  .spinekey{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.7rem}
+  .ladder{margin:1rem 0; border-collapse:collapse; width:100%; font-size:.86rem}
+  .ladder td{border:1px solid var(--rule); padding:.5rem .65rem; vertical-align:top} .ladder .q{color:var(--ink-soft)} .ladder .a{background:var(--paper2)}
+  .ladder .st{font-weight:800; color:var(--accent); white-space:nowrap; font-family:Inter,system-ui,sans-serif}
+
+  /* timeline */
+  .tl{border-collapse:collapse; width:100%; font-size:.82rem; margin:1rem 0}
+  .tl th{font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); text-align:left; padding:.3rem .5rem; border-bottom:2px solid var(--ink)}
+  .tl td{border-bottom:1px solid var(--rule); padding:.32rem .5rem; vertical-align:top}
+  .tl .yr{font-weight:800; color:var(--accent); white-space:nowrap; font-family:Inter,system-ui,sans-serif}
+  .tl .world{color:var(--ink-soft)}
+  .tl tr.key td{background:#fdf4e6}
+
+  /* idea map */
+  .ideamap{margin:1rem 0} .ideamap .row{display:flex; gap:.6rem; padding:.45rem 0; border-bottom:1px dotted var(--rule)}
+  .ideamap .nm{flex:none; width:11rem; font-family:Inter,system-ui,sans-serif; font-weight:700; font-size:.8rem; color:var(--s-meta)}
+  .ideamap .fl{font-size:.9rem}
+
+  /* gallery */
+  .gallery{display:grid; grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr)); gap:.9rem; margin-top:1.2rem}
+  .pcard{background:#fff; border:1px solid var(--rule); border-radius:6px; overflow:hidden; display:flex; flex-direction:column}
+  .pcard .ph{position:relative; aspect-ratio:1/1; background:linear-gradient(135deg,#e7ddc6,#d8cdb6); display:grid; place-items:center}
+  .pcard .ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 20%}
+  .pcard .mono{font-weight:800; font-size:1.7rem; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .pcard .pin{padding:.5rem .6rem}
+  .pcard .pn{font-weight:700; font-size:.85rem; line-height:1.15}
+  .pcard .pd{font-size:.66rem; color:var(--ink-soft); margin:.1rem 0 .35rem}
+  .pcard .pl{font-size:.76rem; line-height:1.38; color:var(--ink-soft)}
+  .pcard .where{margin-top:.4rem; display:flex; flex-wrap:wrap; gap:.2rem}
+  .pcard.alive .ph{background:linear-gradient(135deg,#cdbf9f,#bcae8c)}
+  .pcard .badge{position:absolute; top:.3rem; right:.3rem; font-size:.58rem; letter-spacing:.04em; background:rgba(0,0,0,.55); color:#fff; padding:.1em .45em; border-radius:3px}
+
+  .closing{background:var(--ink); color:#f3ead6; border:0}
+  .closing .wrap{padding-top:2.2rem; padding-bottom:2.4rem}
+  .closing h2{color:#fff} .closing a{color:#e9b8a4} .closing .kicker{color:#e0a48f}
+  footer.src{font-family:Inter,system-ui,sans-serif; font-size:.74rem; color:var(--ink-soft); padding:1.6rem 0 3rem}
+
+  @media (max-width:62rem){
+    .col{max-width:none}
+    aside.note{float:none; width:auto; margin:.9rem 0}
+    .parts{grid-template-columns:1fr} .legend-grid{grid-template-columns:1fr} h1{font-size:2.1rem}
+    .ideamap .row{flex-direction:column; gap:.15rem} .ideamap .nm{width:auto}
+  }
+  @media print{aside.note{float:none;width:auto;margin:.7rem 0} body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="top"><span>Летний онлайн-курс · научпоп-математика</span><span>Макет для чтения · v2 · 7 лекций · июнь 2026</span></div>
+    <h1>Пределы вычислимого<span class="sub">Что умеет машина — и где у каждой её способности стена</span></h1>
+    <p class="lede">Это сжатый макет будущей «глянцевой» вещи: по нему видно, какой станет полная — с математикой, историей, фотографиями и байками. Длинные куски нарочно сжаты до полстраницы. Цель — чтобы ты прочитал и почувствовал, работает ли курс.</p>
+    <p class="meta-line">Рабочее название. Семь лекций (потом, возможно, сократим). Содержание добрано до 10/10 по ТЗ (прогон + изолированный судья); факты сверены, ошибки исходных данных исправлены.</p>
+  </div>
+</header>
+
+<section id="intro">
+  <div class="wrap"><div class="col">
+    <p class="kicker">Если одной фразой</p>
+    <h2 style="max-width:39rem">Одно поколение между 1936 и 1950 годом построило вычислительную машину — и тем же движением нашло у каждой её способности стену. А в конце упёрлось в вопрос, с которого всё началось: может ли она думать?</h2>
+    <p>Мы привыкли, что компьютер — вещь инженерная: транзисторы, провода, Кремниевая долина. Но за десять лет, пока шла самая страшная война, горстка людей в разных странах — Тьюринг в Англии, Гёдель и фон Нейман в Принстоне, Шеннон и Хэмминг в лабораториях Белла, Канторович и Колмогоров в СССР — придумала компьютер как <em>математический объект</em> раньше, чем его спаяли. И тем же движением нашла его пределы. Поразительная симметрия: человек, придумавший способность, обычно тем же доказательством очерчивал, чего она не сможет никогда.</p>
+    <p>На этой симметрии и держится курс. Каждая лекция берёт одну способность машины и доводит до её стены — причём стена не метафора «у всего есть предел», а конкретная доказанная теорема о невозможности. Считать вообще — но есть задачи, которые не решит никакая программа. Находить лучшее — но за иные ответы платишь перебором, который не ускорить. Хранить секрет — но дешевле некоторого предела его не спрятать. И так далее, до последней способности — мыслить.</p>
+    <p><strong>После этого выбор именно этих семи кажется единственно возможным:</strong> убери любую — пропадёт одна из стен, и карта вычислимого станет дырявой.</p>
+
+    <div class="howto">
+      <h3 style="margin-top:0">Как читать поля и метки</h3>
+      <p style="margin-top:.2rem; font-size:.92rem">В основном тексте — история и математика. На полях (на узком экране — врезками между абзацами) четыре вида пометок; они и есть «сшивка напоказ» — видно, чем каждая вещь держится за остальной курс.</p>
+      <div class="legend-grid">
+        <div class="it"><span class="swatch" style="background:var(--s-meta)"></span><div><b>нить</b> — мост в другую лекцию: <span class="ln">→ Л7</span> и чем связаны.</div></div>
+        <div class="it"><span class="swatch" style="background:var(--ink)"></span><div><b>хребет</b> — к какой сквозной линии относится момент (цвет).</div></div>
+        <div class="it"><span class="swatch" style="background:#9a8f78"></span><div><b>честно</b> — где связь это подмигивание, упрощение или спорное. Не прячем.</div></div>
+        <div class="it"><span class="swatch" style="background:var(--warm)"></span><div><b>байка</b> — отступление-история, которое можно развернуть на сцене.</div></div>
+      </div>
+      <p style="margin:.7rem 0 .3rem; font-size:.88rem">У каждой лекции внизу — её <b>части</b> с бюджетом времени (≈1,5 часа: ~30–45 мин чистой математики + остальное научпоп) и <b>что на доске / интерактив</b>.</p>
+      <div class="spinekey">
+        <span class="spine sp-limit">хребет: предел / стена</span>
+        <span class="spine sp-time">хребет: ось времени 1936–50</span>
+        <span class="spine sp-human">хребет: человек → машина</span>
+        <span class="spine sp-meta">мета-рифма: универсальность</span>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<section id="order">
+  <div class="wrap"><div class="col">
+    <p class="kicker">Порядок не случаен</p>
+    <h2 style="max-width:39rem">Лестница: каждая лекция оставляет вопрос, на который отвечает следующая</h2>
+    <p>Стены выстроены по нарастанию строгости запрета: нельзя вообще → нельзя быстро → нельзя дёшево → нельзя плотнее → … Курс читается как путь, но связь не «сериальная»: любую лекцию можно пропустить, хребты всплывают рифмами, а не как «серия N требует серию N−1».</p>
+    <table class="ladder">
+      <tr><td class="st">Л1 → Л2</td><td class="q">Кое-что машина не может вообще. Значит, остальное — может. <em>А как из возможного найти лучшее?</em></td><td class="a">Оптимизация: симплекс находит оптимум, прыгая по вершинам многогранника.</td></tr>
+      <tr><td class="st">Л2 → Л3</td><td class="q">Оптимум найти можно — <em>но всегда ли быстро?</em></td><td class="a">Сложность: есть задачи, что легко проверить, но (возможно) нельзя решить быстро никогда.</td></tr>
+      <tr><td class="st">Л3 → Л4</td><td class="q">Проверить легко, решить трудно — <em>идеальный замок. Как превратить трудность в защиту?</em></td><td class="a">Криптография: трудность и случайность как запор; монетка доказывает простоту и хранит секрет.</td></tr>
+      <tr><td class="st">Л4 → Л5</td><td class="q">Секрет прячут, но «ключ не короче сообщения» — <em>это про количество информации. Что это и как мерить?</em></td><td class="a">Информация: бит, энтропия; измерить, сжать и защитить знание.</td></tr>
+      <tr><td class="st">Л5 → Л6</td><td class="q">Информацию считаем, когда есть формула. <em>А если формулы нет?</em></td><td class="a">Случайность как машина: бросаем кубик (Монте-Карло), цепи Маркова.</td></tr>
+      <tr><td class="st">Л6 → Л7</td><td class="q">Из сэмплинга и цепей рождается обучение: ChatGPT сэмплит слово. <em>Но может ли машина думать — и почему вообще учится?</em></td><td class="a">Финал: тест Тьюринга → почему сеть учится → стена Гёделя.</td></tr>
+      <tr><td class="st">Л7 → Л1</td><td class="q">Финал возвращает к вопросу Тьюринга 1950 —</td><td class="a">…замыкая кольцо к пределу Тьюринга 1936. Один человек, два вопроса, 14 лет.</td></tr>
+    </table>
+  </div></div>
+</section>
+
+<main>
+
+<!-- ════ Л1 ════ -->
+<section id="l1"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 1</span> · вход / структурный хребет</p>
+  <h2>Границы возможного: чего машина не может</h2>
+  <p class="role">Теория: вычислимость + теория множеств · удовольствие: детектив</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин чистой математики + ~55 мин научпоп · 2 ухода в математику</span>
+
+  <p>Начинаем с голосования: «Можно ли написать программу, которая заранее скажет — зависнет другая программа или завершится?» Зал говорит «да»: ведь антивирусы пытаются, среда подчёркивает мёртвый код, компиляторы ловят бесконечные циклы. Всё это — частичные решения; полного не существует, и это в 1936-м, в 24 года, <strong>до первого компьютера</strong>, доказал Алан Тьюринг — одним движением изобретя и машину, и её предел. В зале строим машину Тьюринга (таблица в пять строк, гоняем хором по ленте), а потом за пять минут проделываем диагональ: пусть есть <span class="m">Halt</span>; строим антагониста <span class="m">D</span>, который делает наоборот, запускаем <span class="m">D</span> на самом себе — противоречие. Настоящее доказательство, которое зал переоткрывает руками.</p>
+  <aside class="note thread"><span class="nt">нить → Л7</span>Тот же приём «программа наоборот» вернётся в финале как напоминание о пределе. И это <strong>самая красивая рифма курса: одна диагональ — три теоремы</strong> (Кантор → Гёдель → Тьюринг). <span class="ln">→ Л7</span> <span class="ln">→ Л3</span></aside>
+  <p>Дальше — живой фронтир. Пятое «число усердного бобра» <span class="m">BB(5) = 47 176 870</span>: машину-рекордсмена нашли ещё в 1989-м, а доказать, что она чемпион, не могли 35 лет — пока в мае 2024-го аноним под ником mxdys не выложил доказательство на 40 000 строк в Coq, и краудсорс из полусотни любителей не закрыл вопрос. Поэтическая деталь: Аллен Брэди, добывший BB(4) в 1983-м, <strong>умер за 19 дней до публикации</strong>. А шестое число — уже стена: одна 6-клеточная машина, «Антигидра», останавливается тогда и только тогда, когда расходится некий Collatz-<em>подобный</em> процесс — то есть вычислить её значит решить задачу, до которой математика не доросла. И финал арки: ИИ берёт золото Международной олимпиады (2025) — но стена Гёделя стоит, медаль её не двигает.</p>
+  <aside class="note honest"><span class="nt">честно</span>«Антигидра» завязана на Collatz-<em>подобное</em> отображение, а НЕ на саму гипотезу Коллатца (частая ошибка — поправили). И мы не делаем вывод «значит, машина не думает» (без аргумента Лукаса–Пенроуза) — показываем границу.</aside>
+  <aside class="note baika"><span class="nt">байка</span>Гёдель на экзамене на гражданство США (1947, при Эйнштейне) заявил, что нашёл в Конституции лазейку к легальной диктатуре. Тьюринг бегал марафон за 2:46 и держал кружку прикованной к батарее. Обоих — бережно: трагедии 1954 и 1978.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>машина Тьюринга + диагональ остановки<span class="mw">тяжёлая математика · ядро руками</span></div>
+    <div class="pt"><b>Часть 2</b>Гёдель и неполнота через лжеца; эквивалентность остановке<span class="mw">средняя математика</span></div>
+    <div class="pt"><b>Часть 3</b>Бобёр BB(5), цепь сводимости к 10-й Гильберта, золото ИИ<span class="mw">подмигивание · named-факты</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> симулятор машины Тьюринга (зал «исполняет» её хором) · анимация диагонали «программа наоборот» · визуал роста бобра. <b>Референс:</b> Veritasium «Math’s Fundamental Flaw», Quanta про Busy Beaver, Computerphile.</div>
+</div></div></section>
+
+<!-- ════ Л2 ════ -->
+<section id="l2"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 2</span> · ядро / тело</p>
+  <h2>Оптимизация: как найти лучшее (и оптимальный транспорт)</h2>
+  <p class="role">Теория: линейное программирование + оптимальный транспорт · удовольствие: расчёт</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин математики + ~55 мин научпоп</span>
+
+  <p>1939 год, Беркли. Аспирант Джордж Данциг опаздывает на лекцию, переписывает с доски два примера, приняв за домашку, — а это были две недоказанные теоремы статистики. Через несколько дней сдаёт; они станут его диссертацией. В 1947-м он изобретает симплекс-метод и 3 октября приходит с ним в Принстон к <strong>фон Нейману</strong>: тот нетерпеливо бросает «Ближе к делу», Данциг пишет задачу на доске — «А, это!» — и полтора часа читает ему теорию двойственности. Ядро зал щупает руками: задача о рационе рисует выпуклый многоугольник, лектор берёт <strong>линейку под углом цены</strong> и ведёт к последней вершине — вот оптимум, и видно, <em>почему</em> он всегда в углу. Острое «ого» — универсальность: один симплекс решает все задачи планирования сразу.</p>
+  <aside class="note"><span class="nt">хребет</span><span class="spine sp-meta">универсальность</span> <span class="spine sp-human">человек → машина</span><br>Диета Стиглера: 9 клерков за 120 человеко-дней нашли рацион за $39,69; Стиглер вручную промахнулся на 0,6%. Машина — за секунды. <span class="ln">→ Л6</span></aside>
+  <p>Второй козырь — <strong>оптимальный транспорт</strong>, и это мост в самый финал. Гаспар Монж в 1781-м решает военную задачу: как перевезти грунт для фортификаций с наименьшей работой («выемки и насыпи»). Задача стоит полтора века. <strong>Леонид Канторович</strong> — тот самый, что вывел линейное программирование из задачи фанерного треста, в блокаду пересчитывал на льду Дороги жизни расстояния между машинами, был отвергнут Госпланом и получил единственный советский Нобель по экономике — переоткрывает её (о связи с Монжем узнаёт лишь в 1948-м). Бренье доказывает то, что не смог Монж; за теорию вокруг дают <strong>две медали Филдса</strong> — Виллани (с брошью-пауком) и Фигалли (в 18 не умел брать производную). А сегодня оптимальный транспорт — это движок Stable Diffusion. Один сюжет: <strong>фортификации XVIII века → советский Нобель в блокаду → две Филдсовские → генерация картинок</strong>.</p>
+  <aside class="note thread"><span class="nt">нить → Л7</span>Оптимальный транспорт двигает распределения «по плану перевозки масс» — это и есть диффузионные модели. Мощный обратный мост из оптимизации прямо в финал про нейросети. <span class="ln">→ Л7</span></aside>
+  <aside class="note honest"><span class="nt">честно</span>Популярное «авиабронирование SABRE и логистика UPS — это ЛП» оказалось неверным; заменили на проверенные кейсы: распределение донорских почек (Нобель-2012), расписания экипажей, планирование лучевой терапии. И в диффузионках связь с транспортом явна в WGAN/rectified flow, в ранних DDPM — постфактум.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>геометрия многогранника + скользящая линейка<span class="mw">ядро руками</span></div>
+    <div class="pt"><b>Часть 2</b>двойственность (фон Нейман за полтора часа)<span class="mw">тяжёлый слот</span></div>
+    <div class="pt"><b>Часть 3</b>сага транспорта: Монж → Канторович → Филдс → Stable Diffusion<span class="mw">научпоп</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> зал крутит угол цены — оптимум скачет по вершинам · игра «дешёвая диета» (симплекс бьёт догадки) · «перетекание масс» с переходом в морфинг картинок. <b>Референс:</b> Quanta про оптимизацию, Виллани «Рождение теоремы».</div>
+</div></div></section>
+
+<!-- ════ Л3 ════ -->
+<section id="l3"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 3</span> · ядро / тело</p>
+  <h2>Сложность: что можно, но, возможно, никогда не быстро</h2>
+  <p class="role">Теория: теория сложности + сводимость · удовольствие: погоня</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин математики + ~50 мин научпоп</span>
+
+  <p>Собрать пазл из тысячи деталей — долго; проверить собранный — мгновенно. Перемножить <span class="m">17×23 = 391</span> — секунда; разложить 391 обратно — перебор. Эта асимметрия «проверить легко, решить трудно» и есть сердце класса NP, а вопрос «P против NP» — всегда ли быстрая проверка означает быстрое решение. Самый ранний след вопроса — <strong>письмо Гёделя фон Нейману (1956)</strong>: если бы нашлась машина, решающая логический поиск за ~<span class="m">k·n</span> шагов, «умственную работу математика можно было бы заменить машиной». Ядро зала — сводимость руками: показываем, как одну задачу переводят в другую и трудность переезжает с переводом. Это прямое продолжение хребта из Л1: тот же приём, только там он давал запрет, здесь — цену.</p>
+  <aside class="note thread"><span class="nt">нить → Л1</span>Цепь сводимости целиком: проблема остановки (1936) → 10-я проблема Гильберта → SAT. Живое звено — Матиясевич: 22 года, утром нашёл решение, к вечеру ошибку, наутро исправил; ключ — числа Фибоначчи. <span class="ln">→ Л1</span></aside>
+  <aside class="note baika"><span class="nt">байка</span>P=NP родилась дважды по разные стороны занавеса: Кук (1971; за год до того ему отказали в Беркли) и Левин (Москва; степень не присвоили, эмигрировал). Премия Клэя — $1 млн. Ааронсон: «Если P=NP, всякий, кто способен оценить симфонию, был бы Моцартом».</aside>
+  <p>А дальше — человек→машина в чистом виде. SAT-решатели, которые «не должны» работать быстро, на практике так ускорились (DPLL→CDCL), что <strong>верифицируют процессоры Intel</strong> и <strong>доказывают теоремы перебором</strong>: булевы пифагоровы тройки — доказательство на <strong>200 терабайт</strong> (2016), число Шура S(5)=160 — на <strong>2 петабайта</strong>. То, что было творческим ручным поиском, делает машина. Честный фронтир: P=NP не сдаётся — список из 116 серьёзных «доказательств», все опровергнуты; заявку 2010 года разобрали и похоронили за шесть дней.</p>
+  <aside class="note honest"><span class="nt">честно</span>Трудность факторизации — НЕ NP-полна (она в NP∩co-NP); но если P=NP, криптография падает. И 1971-й — контролируемое исключение по времени: корень (сводимость) — в Л1-1936.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>что такое сводимость (остановка → Гильберт-10 → SAT)<span class="mw">средняя математика · ядро</span></div>
+    <div class="pt"><b>Часть 2</b>NP-полнота: одна задача SAT, к которой сводится всё (Кук–Левин, Карп-21)<span class="mw">тяжёлый слот</span></div>
+    <div class="pt"><b>Часть 3</b>SAT-солверы на практике + драма попыток доказать P=NP<span class="mw">научпоп</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> «сведи судоку к SAT» (клетки → булевы переменные) · график, как солверы прошли путь от тысяч переменных к миллионам · карта Карпа-21 (одна трудность в 21 костюме). <b>Референс:</b> Quanta «A Short Guide to Hard Problems», лекции Ицыксона/Шеня.</div>
+</div></div></section>
+
+<!-- ════ Л4 ════ -->
+<section id="l4"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 4</span> · ядро / тело</p>
+  <h2>Криптография: трудность и случайность как замок</h2>
+  <p class="role">Теория: теория чисел + рандомизированные алгоритмы + стойкость · удовольствие: фокус</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин математики + ~55 мин научпоп</span>
+
+  <p>Как браузер за миллисекунду убеждается, что 600-значное число простое, <strong>не раскладывая</strong> его? Бросает монетку. Как доказать, что знаешь пароль, <strong>не называя</strong> его? Два вопроса — один мотив: <strong>случайность как доказательство</strong>. На пальцах: малая теорема Ферма (<span class="m">2⁶ ≡ 1 mod 7</span>), тест Миллера–Рабина — составное ловится с вероятностью <span class="m">≥ ¾</span> за бросок, 10 бросков → ошибка <span class="m">&lt; 10⁻⁶</span>; числа Кармайкла (561) — «лжецы». А доказательство с нулевым разглашением играем целиком в зале: раскраска графа в три цвета «докажи, что умеешь, не показав раскраску», плюс пещера Али-Бабы за две минуты.</p>
+  <aside class="note thread"><span class="nt">нить → Л6</span>Та же монетка — буквально приём Монте-Карло и MCMC. «Случайность как инструмент» сшивает крипто и вероятностную лекцию. <span class="ln">→ Л6</span></aside>
+  <p>А теперь байки, которые вернулись в курс. <strong>RSA придумали дважды.</strong> Публично — Ривест, Шамир и Адлеман в ночь Песаха 1977-го (это была 42-я попытка). Но раньше и тайно: в британском GCHQ Клиффорд Кокс в 1973-м построил по сути RSA «за полчаса» — и это засекретили на 24 года, до 1997-го; Джеймс Эллис, чья была идея, умер за месяц до признания. Драма стойкости: вызов <strong>RSA-129</strong> (1977, Ривест оценил взлом в «40 квадриллионов лет») сломали в 1994-м — 600 добровольцев, 1600 машин, восемь месяцев; внутри пряталась фраза <em>«The Magic Words are Squeamish Ossifrage»</em>. А в 2012-м оказалось, что тысячи реальных ключей в интернете делят общий простой множитель из-за слабой случайности — и вскрываются мгновенно. И предел через лицо: <strong>Шеннон</strong> в войну математически доказал нераскрываемость линии Черчилль–Рузвельт (ключом служил тепловой шум на виниловых пластинках) — отсюда теорема: абсолютная стойкость требует ключа не короче самого сообщения.</p>
+  <aside class="note baika"><span class="nt">байка</span>Весной 1943-го в лабораториях Белла Шеннон пил чай с заехавшим Тьюрингом — два отца двух революций в одной столовой. А нулевое разглашение позже вышло в физику: в Принстоне им проверяют подлинность боеголовки, не раскрывая конструкции.</aside>
+  <aside class="note honest"><span class="nt">честно</span>Шеннон — аналитик стойкости, не строитель железа. HTTPS сегодня уже почти без RSA-обмена (TLS 1.3 → эллиптика). И «квантовый компьютер сломает RSA за часы» — миф: нужны миллионы кубитов, постквант уже стандартизуют.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>Миллер–Рабин + RSA (монетка, замок-факторизация) с байками<span class="mw">ядро руками + научпоп</span></div>
+    <div class="pt"><b>Часть 2</b>нулевое разглашение (раскраска, Али-Баба, боеголовка)<span class="mw">ядро в парах</span></div>
+    <div class="pt"><b>Часть 3</b>стойкость Шеннона (ключ ≥ сообщения, SIGSALY)<span class="mw">тяжёлый слот</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> «брось монетку — поймай составное» · раскраска графа в парах (один прячет, другой проверяет) · мини-RSA на малых числах. <b>Референс:</b> Numberphile про шифрование, Quanta «How Do You Prove a Secret?», Сингх «Книга шифров».</div>
+</div></div></section>
+
+<!-- ════ Л5 ════ -->
+<section id="l5"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 5</span> · ядро / тело</p>
+  <h2>Информация: как измерить, сжать и защитить знание</h2>
+  <p class="role">Теория: теория информации + теория кодирования · удовольствие: игра</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин математики + ~50 мин научпоп</span>
+
+  <p>Wordle: какое первое слово лучше — CRANE или AUDIO? Чтобы ответить математически, нужно изобрести «бит информации» — ровно то, что <strong>Шеннон</strong> сделал в 1948-м (его магистерская 1937-го «превратила проектирование схем из искусства в науку»; он же жонглировал на одноколёсном велосипеде в коридорах лабораторий Белла). Этажом ниже <strong>Хэмминг</strong> бесился, что машина по выходным роняла его расчёты без оператора, — и придумал код, исправляющий собственные ошибки. В зале: бит как <span class="m">−log₂ p</span> (монета = 1 бит, кубик ≈ 2,58), энтропия как ожидаемая неопределённость, оптимальный ход в Wordle = максимум информации. Потом код Хэмминга (7,4) на доске, и красивый факт: <span class="m">16·(1+7) = 128 = 2⁷</span> — шары радиуса 1 <strong>точно заполняют</strong> весь куб, это «совершенный код».</p>
+  <aside class="note thread"><span class="nt">нить → Л1 · Л6 · Л7</span>Единицу информации «ban» Тьюринг ввёл в Блетчли ещё <em>до</em> Шеннона. А «предсказание = сжатие» поведёт прямо в языковые модели. <span class="ln">→ Л1</span> <span class="ln">→ Л6</span> <span class="ln">→ Л7</span></aside>
+  <p>Энтропия (1948) — это ZIP, JPEG и MP3. Дальше — теорема, а не метафора: <strong>хороший предсказатель есть хороший архиватор</strong>; большая языковая модель сжимает картинки лучше PNG, а звук лучше FLAC. Код Хэмминга (1950) — это QR (читается при 30% повреждения), CD, ECC-память и «Вояджер», шлющий данные с 25 миллиардов километров на 23 ваттах. И физический предел: стереть один бит — выделить не меньше <span class="m">kT·ln2</span> тепла (предел Ландауэра, подтверждён экспериментом 2012). Информация — физична.</p>
+  <aside class="note baika"><span class="nt">байка</span>Слово «бит» придумал не Шеннон, а Джон Тьюки. Код Хаффмана родился, когда студент выбрал курсовую вместо экзамена у Фано — и нашёл дерево лучше, чем у учителя. Хэмминг оставил лекцию «You and Your Research».</aside>
+  <aside class="note honest"><span class="nt">честно</span>Колмогоровская сложность равна энтропии Шеннона только «в среднем», и сама она невычислима — красивый мост, но не тождество в каждой точке.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>бит и энтропия + Wordle руками<span class="mw">ядро руками</span></div>
+    <div class="pt"><b>Часть 2</b>код Хэмминга (7,4), шары в кубе, совершенный код<span class="mw">средняя-тяжёлая математика</span></div>
+    <div class="pt"><b>Часть 3</b>предсказание = сжатие (модель &gt; PNG) + предел Ландауэра<span class="mw">тяжёлый слот</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> Wordle с подсчётом бит за ход · куб Хэмминга (шары точно заполняют пространство) · энтропия-симулятор (монета/кубик/буквы). <b>Референс:</b> 3Blue1Brown «Wordle по теории информации» и «Коды Хэмминга».</div>
+</div></div></section>
+
+<!-- ════ Л6 ════ -->
+<section id="l6"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 6</span> · ядро / лучшая входная история</p>
+  <h2>Случайность как машина: от пасьянса до ChatGPT</h2>
+  <p class="role">Теория: вероятность + цепи Маркова + Монте-Карло · удовольствие: азарт</p>
+  <span class="budget">≈ 1,5 часа · ~35 мин математики + ~50 мин научпоп</span>
+
+  <p>1946 год. <strong>Станислав Улам</strong>, выздоравливая после операции на мозге, раскладывает пасьянс и думает: какова вероятность, что сойдётся? Формула безнадёжна — а если просто сыграть сто раз и посчитать долю? Он пишет письмо <strong>фон Нейману</strong>, и MANIAC начинает так считать нейтроны бомбы; имя «Монте-Карло» — от казино, куда занимал дядя Улама. В зале оцениваем π дартсом: доля точек, попавших в круг, ≈ <span class="m">π/4</span>. Вторая половина — 1913 год: <strong>Марков</strong> спорит с богословом, выводившим из независимости событий свободу воли, берёт «Евгения Онегина» и вручную считает 20 000 букв — как часто за гласной идёт согласная. Так родилась первая «языковая модель». На доске — матрица переходов 2×2 на его реальных данных, элементарно находим стационарное распределение.</p>
+  <aside class="note"><span class="nt">хребет</span><span class="spine sp-human">человек → машина</span><br>Марков карандашом по «Онегину» → ChatGPT. Та же дуга, что клерки Стиглера и SAT-доказательства. <span class="ln">→ Л2</span> <span class="ln">→ Л7</span></aside>
+  <p>Пасьянс Улама → MANIAC → сегодня: симуляции CERN, оценка рисков, климат — и случайность <strong>внутри ChatGPT</strong>: разные ответы на один запрос это сэмплинг, «кубик внутри машины». Цепи Маркова (1913) → стационарное распределение = <strong>PageRank</strong> (страницы — состояния, по ним блуждает «случайный сёрфер»). А ещё цепи Маркова попадают в зал суда: тысячи случайных нарезок округов показали, что карта Пенсильвании несправедливее почти любой случайной, — и в 2018-м Верховный суд штата её аннулировал.</p>
+  <aside class="note thread"><span class="nt">нить → Л4 · Л7</span>Монетка Улама — буквально приём Миллера–Рабина из Л4. А сэмплинг ChatGPT (кубик) и аппроксимация (функция) — две грани, которые встретятся в финале. <span class="ln">→ Л4</span> <span class="ln">→ Л7</span></aside>
+  <aside class="note honest"><span class="nt">честно</span>«Сэмплинг ChatGPT = Монте-Карло» — родство по духу (выбираем случайно вместо перебора), а не дословно «интеграл Улама». Перегруз этой темы из прошлой версии снят — вероятностная ветка теперь одна лекция, а не две.</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>Монте-Карло (π дартсом, нейтроны бомбы)<span class="mw">ядро руками</span></div>
+    <div class="pt"><b>Часть 2</b>цепи Маркова («Онегин» 2×2 → стационарное)<span class="mw">ядро руками</span></div>
+    <div class="pt"><b>Часть 3</b>PageRank + сэмплинг ChatGPT (MCMC как мост)<span class="mw">тяжёлый слот</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> дартс-π (зал бросает точки, копится оценка) · генератор «марковского» текста по матрице из «Онегина» · визуал нарезок округов. <b>Референс (золотой):</b> Veritasium «The Strange Math That Predicts (Almost) Anything» — готовая драматургия, берём каркас, дозируем математику, кидаем мосты.</div>
+</div></div></section>
+
+<!-- ════ Л7 ════ -->
+<section id="l7"><div class="wrap"><div class="col">
+  <p class="kicker"><span class="lec-num">Лекция 7</span> · финал · замыкает кольцо к Л1</p>
+  <h2>Может ли машина думать</h2>
+  <p class="role">Теория: теория аппроксимации (универсальная аппроксимация · Колмогоров–Арнольд) · удовольствие: открытый вопрос</p>
+  <span class="budget">≈ 1,5 часа · ~30 мин математики + ~55 мин научпоп</span>
+
+  <aside class="note"><span class="nt">как выбрана рамка</span>Финал собран не по вкусу, а прогоном кандидатов через ворота: «тест Тьюринга» (сильный вход, но нет теоремы в зале) · «аппроксимация» (сильное ядро, слабый вход, не замыкает кольцо) · <strong>синтез</strong> — берёт ядро у второй и драму у первой. Победил синтез.</aside>
+  <p>Курс открылся вопросом Тьюринга 1936 года «чего машина не может», а закрывается вторым вопросом того же Тьюринга, заданным через 14 лет: «может ли машина думать?» (игра в имитацию, 1950). <strong>Один человек, два вопроса — кольцо курса.</strong> Ядро руками — теорема об универсальной аппроксимации: сеть с одним скрытым слоем приближает любую непрерывную функцию. Переоткрываем интуицию ступеньками: один нейрон ≈ одна ступенька; ставим несколько разной высоты, складываем — выходит любая кривая. Это <strong>финальный костюм мета-рифмы «универсальность»</strong>: одна машина считает всё (Л1) · всё сводится к SAT (Л3) · один симплекс решает всё планирование (Л2) · одна сеть приближает любую функцию.</p>
+  <aside class="note thread"><span class="nt">нить ← Л2 · Л6</span>Оптимальный транспорт из Л2 возвращается движком Stable Diffusion; сэмплинг из Л6 — вторая грань ChatGPT (кубик), аппроксимация — первая (функция). <span class="ln">← Л2</span> <span class="ln">← Л6</span></aside>
+  <p>Перцептрон Розенблатта (шкаф с фотоэлементами и моторчиками, Корнелл, 1960) → глубокие сети → ChatGPT. Колмогоров возвращается теоремой о суперпозиции (1957), породившей в 2024-м нашумевшие сети KAN; фон Нейман — клеточными автоматами и Игрой жизни. Финал замыкает хребет предела: машина берёт золото олимпиады (2025), а в 2025-м же GPT-4.5 в контролируемом тесте принимали за человека чаще, чем настоящего человека, — но <strong>стена Гёделя стоит, медаль её не двигает</strong>. Тот самый Гёдель, что в первой лекции гулял с Эйнштейном, возвращается последним словом. Курс кончается не ответом, а вопросом — единственная лекция, которая оставляет зал думать.</p>
+  <aside class="note honest"><span class="nt">честно</span>Ступеньки показывают, <em>почему</em> сеть может учиться, а не дословно доказывают теорему Цыбенко. Колмогорова–Арнольда руками не переоткрыть — даём named-фактом. Вывода «значит, не думает» не делаем (без Лукаса–Пенроуза): показываем границу, вопрос оставляем открытым.</aside>
+  <aside class="note baika"><span class="nt">байка</span>Пресса 1958-го обещала, что перцептрон «научится ходить, говорить и воспроизводить себя»; Минский с Папертом разгромили идею (1969), настала «зима ИИ». Розенблатт утонул в свой 43-й день рождения, не дожив до триумфа; Минский в 1988-м подписал переиздание «памяти Фрэнка Розенблатта».</aside>
+  <div class="parts">
+    <div class="pt"><b>Часть 1</b>тест Тьюринга — философский вход, кольцо к Л1<span class="mw">научпоп + история</span></div>
+    <div class="pt"><b>Часть 2</b>почему сеть учится (аппроксимация, ступеньки → кривая)<span class="mw">ядро руками</span></div>
+    <div class="pt"><b>Часть 3</b>стена Гёделя для ИИ-золота + открытый вопрос залу<span class="mw">тяжёлый слот + философия</span></div>
+  </div>
+  <div class="cue"><b>На доске / интерактив:</b> «сложи кривую из ступенек» (ползунки-нейроны подгоняют кривую) · глайдеры Игры жизни (Тьюринг-полнота в действии) · «две грани ChatGPT» (тот же запрос: сэмплинг даёт разные ответы, аппроксимация — саму функцию). <b>Референс:</b> 3Blue1Brown «Neural networks» + первоисточник Тьюринга (Mind, 1950).</div>
+</div></div></section>
+
+<!-- ════ СВЯЗУЮЩИЕ АРТЕФАКТЫ ════ -->
+<section id="svyaz"><div class="wrap">
+  <p class="kicker">Связка — не только портреты</p>
+  <h2 style="max-width:39rem">Четыре врезки, которые показывают «один мир»</h2>
+  <p class="col" style="margin-bottom:1.2rem">Это контент для будущих визуальных вставок между лекциями. Каждая бьёт по своей оси: время, идеи, места, повседневность. На них видно, что курс — единый организм, а не семь тем рядом.</p>
+
+  <h3>1 · Таймлайн одновременности</h3>
+  <p class="col" style="font-size:.92rem; margin-top:0">Люди в Англии, США, Франции и СССР, не сговариваясь и на фоне войны, между 1936 и 1950 годом построили машину и её пределы. Жирным — два вопроса Тьюринга, обрамляющие курс.</p>
+  <table class="tl">
+    <tr><th>Год</th><th>Математика (рождение машины)</th><th>Мир</th><th>Лекция</th></tr>
+    <tr><td class="yr">1900</td><td>Гильберт: 23 проблемы (2-я, 10-я, 13-я аукнутся в курсе)</td><td class="world">—</td><td>Л1·Л3·Л7</td></tr>
+    <tr><td class="yr">1913</td><td>Марков: «Онегин», 20 000 букв → цепи</td><td class="world">—</td><td>Л6</td></tr>
+    <tr><td class="yr">1931</td><td>Гёдель: теоремы о неполноте (в 25 лет)</td><td class="world">—</td><td>Л1</td></tr>
+    <tr class="key"><td class="yr">1936</td><td><strong>Тьюринг: машина и проблема остановки</strong>; Чёрч: λ-исчисление</td><td class="world">канун войны</td><td>Л1·Л7</td></tr>
+    <tr><td class="yr">1939</td><td>Данциг / Канторович: линейное программирование</td><td class="world">начало WWII</td><td>Л2</td></tr>
+    <tr><td class="yr">1943</td><td>Маккалок–Питтс: формальный нейрон; SIGSALY</td><td class="world">война</td><td>Л4·Л7</td></tr>
+    <tr><td class="yr">1945</td><td>фон Нейман: EDVAC; Шеннон: отчёт о стойкости</td><td class="world">Хиросима</td><td>Л4·Л6·Л7</td></tr>
+    <tr><td class="yr">1946</td><td>ENIAC; Улам: пасьянс → Монте-Карло</td><td class="world">начало холодной войны</td><td>Л6</td></tr>
+    <tr><td class="yr">1947</td><td>Данциг: симплекс; фон Нейман: двойственность (3 окт)</td><td class="world">план Маршалла</td><td>Л2</td></tr>
+    <tr><td class="yr">1948</td><td>Шеннон: теория информации, «бит»</td><td class="world">Берлинский воздушный мост</td><td>Л5</td></tr>
+    <tr class="key"><td class="yr">1950</td><td><strong>Тьюринг: «может ли машина думать»</strong>; Хэмминг: коды</td><td class="world">Корейская война</td><td>Л5·Л7</td></tr>
+    <tr><td class="yr">1957</td><td>Колмогоров–Арнольд: суперпозиция</td><td class="world">спутник</td><td>Л7</td></tr>
+    <tr><td class="yr">1970–72</td><td>Матиясевич: 10-я Гильберта; Кук/Левин: P=NP</td><td class="world">—</td><td>Л3·Л7</td></tr>
+    <tr><td class="yr">1973/77</td><td>Кокс (GCHQ, тайно) / RSA</td><td class="world">—</td><td>Л4</td></tr>
+  </table>
+  <p class="col" style="font-size:.82rem; color:var(--ink-soft)">Контролируемые исключения (Л3-1971, Л4-1973/77) — флешфорвардом; корень каждой в окне (сводимость Л1-1936, секретность Шеннона-1945).</p>
+
+  <h3>2 · Карта идей: что из чего выросло</h3>
+  <div class="ideamap">
+    <div class="row"><div class="nm">Диагональ</div><div class="fl">один приём — три теоремы: Кантор → Гёдель (Л1) → Тьюринг (Л1) → возврат «программой наоборот» в финал (Л7).</div></div>
+    <div class="row"><div class="nm">Сводимость</div><div class="fl">остановка (Л1, 1936) → 10-я Гильберта (Матиясевич, Л3) → SAT/NP-полнота (Л3) → «всё сводится к одному» = универсальность (Л7).</div></div>
+    <div class="row"><div class="nm">Универсальность</div><div class="fl">машина Тьюринга считает всё (Л1) · симплекс решает всё планирование (Л2) · всё сводится к SAT (Л3) · сеть приближает любую функцию (Л7).</div></div>
+    <div class="row"><div class="nm">Предел / стена</div><div class="fl">нельзя вообще (Л1) → нельзя быстро (Л3) → нельзя дешевле (Шеннон, Л4) → нельзя плотнее (Хэмминг, Л5) → предел стирания бита (Л5) → предел для ИИ (Гёдель, Л7).</div></div>
+    <div class="row"><div class="nm">Случайность-инструмент</div><div class="fl">Миллер–Рабин и ZKP (Л4) → Монте-Карло и MCMC (Л6) → сэмплинг генеративных моделей (Л7).</div></div>
+    <div class="row"><div class="nm">Спрятанная геометрия</div><div class="fl">вершина многогранника + транспорт (Л2) → эллиптические кривые (Л4) → шары в кубе (Л5) → стопка ступенек (Л7).</div></div>
+    <div class="row"><div class="nm">Предсказание = сжатие</div><div class="fl">энтропия Шеннона (Л5) → колмогоровская сложность (Л5) → языковые модели как компрессоры (Л6, Л7).</div></div>
+    <div class="row"><div class="nm">Человек → машина</div><div class="fl">клерки Стиглера (Л2) · SAT-доказательства (Л3) · Марков карандашом / ENIAC (Л6) · перцептрон и золото ИИ (Л1, Л7).</div></div>
+  </div>
+
+  <div class="col">
+  <h3>3 · Где и когда</h3>
+  <p style="font-size:.92rem"><strong>Принстон / IAS</strong> — Гёдель, фон Нейман, Эйнштейн, заехавший Тьюринг (1936–38), встреча с Данцигом (1947), Вигдерсон (Л1·Л2·Л4·Л6). <strong>Лаборатории Белла</strong> — Шеннон и Хэмминг (соседи), чай с Тьюрингом (1943) (Л4·Л5·Л6). <strong>Лос-Аламос</strong> — Улам, фон Нейман, Метрополис, бомба (Л6). <strong>Ленинград/СССР</strong> — Канторович, Марков, Колмогоров, Матиясевич, Левин (Л2·Л3·Л6). <strong>Блетчли-Парк</strong> — Тьюринг, «ban» (Л1·Л5). <strong>GCHQ</strong> — тайный RSA (Л4). <strong>Корнелл</strong> — перцептрон (Л7).</p>
+
+  <h3>4 · Встречаешь каждый день</h3>
+  <table class="tl">
+    <tr><th>В кармане</th><th>Математика</th><th>Лекция</th></tr>
+    <tr><td>HTTPS, мессенджеры</td><td>теория чисел, ZKP, эллиптика</td><td>Л4</td></tr>
+    <tr><td>QR-код</td><td>код Рид–Соломона (30% повреждения)</td><td>Л5</td></tr>
+    <tr><td>ZIP / JPEG / MP3</td><td>энтропия, код Хаффмана</td><td>Л5</td></tr>
+    <tr><td>«Вояджер», ECC-память, CD</td><td>исправляющие ошибки коды</td><td>Л5</td></tr>
+    <tr><td>Google PageRank</td><td>стационарное распределение цепи Маркова</td><td>Л6</td></tr>
+    <tr><td>ChatGPT (две грани)</td><td>сэмплинг + аппроксимация</td><td>Л6·Л7</td></tr>
+    <tr><td>Stable Diffusion</td><td>оптимальный транспорт</td><td>Л2·Л7</td></tr>
+    <tr><td>Обмен донорскими почками</td><td>целочисленное программирование (Нобель-2012)</td><td>Л2</td></tr>
+    <tr><td>Проверка процессоров</td><td>SAT-солверы</td><td>Л3</td></tr>
+    <tr><td>Антивирусы / линтеры</td><td>предел вычислимости (теорема Райса)</td><td>Л1</td></tr>
+  </table>
+  <p style="font-size:.85rem; color:var(--ink-soft)">Убери любую из этих математик — и привычный день встанет. У каждой способности — доказанная стена.</p>
+  </div>
+</div></section>
+
+<!-- ════ ДЕЙСТВУЮЩИЕ ЛИЦА ════ -->
+<section id="lica"><div class="wrap">
+  <p class="kicker">Действующие лица</p>
+  <h2 style="max-width:39rem">Состав, который сам рассказывает эпоху</h2>
+  <p class="col" style="margin-bottom:.2rem">Семь кочующих героев (по 2–4 лекции) и портреты-якоря. Их связи между собой — отдельный сюжет: Принстон сводит Гёделя, фон Неймана, Эйнштейна и заехавшего Тьюринга; лаборатории Белла — Шеннона и Хэмминга (и чай с Тьюрингом, 1943); Лос-Аламос — Улама и фон Неймана; СССР даёт независимые параллели.</p>
+
+  <p class="kicker" style="margin-top:1.4rem; font-size:.7rem">Кочующие</p>
+  <div class="gallery">
+    <div class="pcard"><div class="ph"><span class="mono">фН</span><img loading="lazy" alt="фон Нейман" src="https://commons.wikimedia.org/wiki/Special:FilePath/JohnvonNeumann-LosAlamos.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Джон фон Нейман</div><div class="pd">1903–1957 · Венгрия → США</div><div class="pl">Коннектор эпохи: двойственность ЛП за полтора часа, письмо Улама → MANIAC, архитектура машины.</div><div class="where"><span class="ln">Л1</span><span class="ln">Л2</span><span class="ln">Л6</span><span class="ln">Л7</span></div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">АТ</span><img loading="lazy" alt="Тьюринг" src="https://commons.wikimedia.org/wiki/Special:FilePath/Alan_Turing_%281951%29_%28crop%29.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Алан Тьюринг</div><div class="pd">1912–1954 · Британия</div><div class="pl">В 24 года — машина и её предел (1936); в 1950-м — «может ли думать». Кольцо курса. Единица «ban» до Шеннона.</div><div class="where"><span class="ln">Л1</span><span class="ln">Л4</span><span class="ln">Л5</span><span class="ln">Л7</span></div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">КШ</span><img loading="lazy" alt="Шеннон" src="https://commons.wikimedia.org/wiki/Special:FilePath/ClaudeShannon_MFO3807.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Клод Шеннон</div><div class="pd">1916–2001 · США</div><div class="pl">SIGSALY и стойкость (1945/49), бит и энтропия (1948); предок языковых моделей.</div><div class="where"><span class="ln">Л4</span><span class="ln">Л5</span><span class="ln">Л6</span></div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">АК</span><img loading="lazy" alt="Колмогоров" src="https://commons.wikimedia.org/wiki/Special:FilePath/Andrej_Nikolajewitsch_Kolmogorov.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Андрей Колмогоров</div><div class="pd">1903–1987 · СССР</div><div class="pl">Аксиоматика вероятности (1933), цепи Маркова, сложность ≈ энтропия, суперпозиция К–А → KAN.</div><div class="where"><span class="ln">Л5</span><span class="ln">Л6</span><span class="ln">Л7</span></div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">КГ</span><img loading="lazy" alt="Гёдель" src="https://commons.wikimedia.org/wiki/Special:FilePath/1925_kurt_g%C3%B6del.png?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Курт Гёдель</div><div class="pd">1906–1978 · Австрия → США</div><div class="pl">Неполнота (1931); прогулки с Эйнштейном; письмо фон Нейману (1956) — предчувствие P vs NP; возвращается последним словом.</div><div class="where"><span class="ln">Л1</span><span class="ln">Л3</span><span class="ln">Л7</span></div></div></div>
+    <div class="pcard alive"><div class="ph"><span class="mono">ЮМ</span><img loading="lazy" alt="Матиясевич" src="https://commons.wikimedia.org/wiki/Special:FilePath/Yuri_Matiyasevich._Portrait_1969.jpg?width=320" onerror="this.remove()"><span class="badge">наш современник</span></div><div class="pin"><div class="pn">Юрий Матиясевич</div><div class="pd">р. 1947 · СССР / Россия</div><div class="pl">В 22 года (1970) закрыл 10-ю проблему Гильберта числами Фибоначчи — звено цепи сводимости.</div><div class="where"><span class="ln">Л1</span><span class="ln">Л3</span></div></div></div>
+    <div class="pcard alive"><div class="ph"><span class="mono">АВ</span><img loading="lazy" alt="Вигдерсон" src="https://commons.wikimedia.org/wiki/Special:FilePath/Avi_Wigderson_%282005%29.jpg?width=320" onerror="this.remove()"><span class="badge">наш современник</span></div><div class="pin"><div class="pn">Ави Вигдерсон</div><div class="pd">р. 1956 · Израиль / США</div><div class="pl">Нулевое разглашение для всего NP (1991); дерандомизация. Абелевская премия и премия Тьюринга.</div><div class="where"><span class="ln">Л4</span><span class="ln">Л6</span></div></div></div>
+  </div>
+
+  <p class="kicker" style="margin-top:1.5rem; font-size:.7rem">Портреты-якоря</p>
+  <div class="gallery">
+    <div class="pcard"><div class="ph"><span class="mono">ЛК</span><img loading="lazy" alt="Канторович" src="https://commons.wikimedia.org/wiki/Special:FilePath/Leonid_Kantorovich_1975.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Леонид Канторович</div><div class="pd">1912–1986 · СССР · Л2</div><div class="pl">ЛП из фанерного треста (1939); лёд Дороги жизни в блокаду; единственный советский Нобель по экономике.</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">ГМ</span><img loading="lazy" alt="Монж" src="https://commons.wikimedia.org/wiki/Special:FilePath/Gaspard_monge_litho_delpech.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Гаспар Монж</div><div class="pd">1746–1818 · Франция · Л2</div><div class="pl">Задача о выемках и насыпях (1781) для фортификаций — корень оптимального транспорта.</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">СВ</span><img loading="lazy" alt="Виллани" src="https://commons.wikimedia.org/wiki/Special:FilePath/C%C3%A9dric_Villani.jpeg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Седрик Виллани</div><div class="pd">р. 1973 · Франция · Л2</div><div class="pl">Цилиндр и брошь-паук; медаль Филдса (2010) за теорию вокруг оптимального транспорта.</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">АФ</span><img loading="lazy" alt="Фигалли" src="https://commons.wikimedia.org/wiki/Special:FilePath/Alessio_Figalli_-2019_%28cropped%29.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Алессио Фигалли</div><div class="pd">р. 1984 · Италия · Л2</div><div class="pl">В 18 не умел брать производную, пришёл через олимпиаду; медаль Филдса (2018).</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">ДД</span><img loading="lazy" alt="Данциг" src="https://commons.wikimedia.org/wiki/Special:FilePath/George_B._Dantzig_at_National_Medal_of_Science_Awards_Ceremony%2C_1976.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Джордж Данциг</div><div class="pd">1914–2005 · США · Л2</div><div class="pl">Принял две недоказанные теоремы за домашку (1939); симплекс-метод (1947).</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">СУ</span><img loading="lazy" alt="Улам" src="https://commons.wikimedia.org/wiki/Special:FilePath/Stanislaw_Ulam.tif?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Станислав Улам</div><div class="pd">1909–1984 · Польша → США · Л6</div><div class="pl">Пасьянс в больнице → метод Монте-Карло (1946). Лучшая входная история курса.</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">АМ</span><img loading="lazy" alt="Марков" src="https://commons.wikimedia.org/wiki/Special:FilePath/Andrei_Markov.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Андрей Марков</div><div class="pd">1856–1922 · Россия · Л6</div><div class="pl">Вручную считал 20 000 букв «Онегина», опровергая Некрасова, — первая «языковая модель» (1913).</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">ФР</span><img loading="lazy" alt="Розенблатт" src="https://commons.wikimedia.org/wiki/Special:FilePath/Frank_Rosenblatt.jpg?width=320" onerror="this.remove()"></div><div class="pin"><div class="pn">Фрэнк Розенблатт</div><div class="pd">1928–1971 · США · Л7</div><div class="pl">Перцептрон Mark I (шкаф с моторчиками, 1960); утонул в 43-й день рождения, не дожив до триумфа идеи.</div></div></div>
+    <div class="pcard"><div class="ph"><span class="mono">РХ</span></div><div class="pin"><div class="pn">Ричард Хэмминг</div><div class="pd">1915–1998 · США · Л5</div><div class="pl">Ярость на машину, ронявшую расчёты по выходным → самоисправляющиеся коды (1950).</div></div></div>
+  </div>
+  <p class="col" style="font-size:.82rem; color:var(--ink-soft); margin-top:1rem">Фото проверены на Wikimedia Commons (15 из 16; портрет Хэмминга не нашёлся — добрать). Лицензии разнятся — при публикации указать автора. Кук и Левин (рождение P=NP) даны в тексте Л3.</p>
+</div></section>
+
+<!-- ════ УТВЕРЖДЕНИЯ ════ -->
+<section id="utver"><div class="wrap">
+  <p class="kicker">Что разбираем моделями</p>
+  <h2 style="max-width:39rem">Математическое наполнение — по лекциям</h2>
+  <p class="col" style="margin-bottom:1rem">Жирным — то, что зал переоткрывает руками; остальное — арки и named-факты.</p>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(16.5rem,1fr)); gap:1rem">
+    <div class="claimbox"><span class="nt">Л1 · границы</span><ul><li><strong>Неразрешимость остановки</strong> (диагональ <span class="m">Halt→D→D(D)</span>)</li><li>Неполнота Гёделя ≡ остановке</li><li>Бобёр <span class="m">BB(n)</span> невычислим; BB(6) ↔ Collatz-подобное</li><li>Предел сохраняется для ИИ</li></ul></div>
+    <div class="claimbox"><span class="nt">Л2 · оптимизация</span><ul><li><strong>Оптимум ЛП — в вершине</strong> (скользящая линейка)</li><li>Симплекс универсален; двойственность</li><li>Оптимальный транспорт = градиент выпуклой функции (Бренье)</li></ul></div>
+    <div class="claimbox"><span class="nt">Л3 · сложность</span><ul><li><strong>Сводимость переносит трудность</strong></li><li>SAT NP-полна (Кук–Левин, Карп-21)</li><li>10-я проблема Гильберта неразрешима</li><li>Факторизация в NP∩co-NP</li></ul></div>
+    <div class="claimbox"><span class="nt">Л4 · криптография</span><ul><li><strong>Миллер–Рабин</strong>: ошибка <span class="m">≤(¼)ᵏ</span>; Ферма; Кармайкл 561</li><li><strong>Нулевое разглашение</strong> для всякой задачи NP</li><li>Совершенная стойкость ⇒ ключ ≥ сообщения</li></ul></div>
+    <div class="claimbox"><span class="nt">Л5 · информация</span><ul><li><strong>Бит <span class="m">−log₂p</span>, энтропия</strong>; Wordle = макс. информации</li><li><strong>Хэмминг (7,4)</strong>: шары точно заполняют куб (совершенный код)</li><li>Предсказание = сжатие; предел Ландауэра</li></ul></div>
+    <div class="claimbox"><span class="nt">Л6 · случайность</span><ul><li><strong>π дартсом</strong> (закон больших чисел)</li><li><strong>Стационарное распределение цепи</strong> 2×2 («Онегин»)</li><li>PageRank = стационарное блуждание; джерримендеринг</li></ul></div>
+    <div class="claimbox"><span class="nt">Л7 · может ли думать</span><ul><li><strong>Универсальная аппроксимация</strong>: ступеньки → кривая</li><li>Колмогоров–Арнольд о суперпозиции</li><li>Предел Гёделя для любых вычислений</li></ul></div>
+  </div>
+</div></section>
+
+<!-- ════ КАК СШИТО ════ -->
+<section id="sshito"><div class="wrap"><div class="col">
+  <p class="kicker">Как это сшито — и где честный недобор</p>
+  <h2 style="max-width:39rem">Четыре сквозных линии и трезвый остаток</h2>
+  <p>Связь держат не «части сериала», а сеть мотивов в разных костюмах. Четыре линии проходят через пять и более лекций из семи (в прошлой версии таких было ровно три — это и была главная дыра, теперь закрыта):</p>
+  <p style="margin:.5rem 0"><span class="spine sp-limit">предел / стена</span> Л1·Л3·Л4·Л5·Л7 · <span class="spine sp-time">ось времени 1936–50</span> Л1·Л2·Л5·Л6·Л7 · <span class="spine sp-human">человек → машина</span> Л1·Л2·Л3·Л6·Л7 · <span class="spine sp-meta">формат-арка</span> все 7</p>
+  <p>Кочующие люди: фон Нейман (4 лекции), Тьюринг (4), Шеннон (3), Колмогоров (3), Гёдель (3), Матиясевич (2), Вигдерсон (2). Парные рифмы: спрятанная геометрия, случайность-инструмент, предсказание=сжатие, диагональ. Изолированный судья (другая модель) подтвердил: все квоты пройдены реальными связями, фейков нет.</p>
+
+  <div class="howto" style="border-left:4px solid #9a8f78; background:#faf6ec">
+    <h3 style="color:#7c6f56; margin-top:0">Честный остаток — не закрашиваем</h3>
+    <ul style="margin:.4rem 0 0; padding-left:1.1rem; font-size:.9rem; line-height:1.55">
+      <li>Часть осей честно на «3, не 4»: не каждая пара лекций даёт ≥2 прямых моста; местами порядок держится на нарративе, а не на строгой необходимости.</li>
+      <li>Имя курса не финализировано — «Пределы вычислимого» рабочее (финал за тобой).</li>
+      <li>Это <strong>описание</strong>, доведённое до 10/10 по ТЗ; «вау-чтение» полной вещи — следующий слой (реальные слайды, интерактив, иллюстрации).</li>
+      <li>Зато добор вернул потерянное и поймал 8 фактических ошибок (BB(6) — Collatz-<em>подобное</em>; факторизация в NP∩co-NP; SABRE/UPS — не ЛП; и др.) — курс стал не только связнее, но и честнее.</li>
+    </ul>
+  </div>
+</div></div></section>
+
+<!-- ════ ЗАКРЫТИЕ ════ -->
+<section class="closing"><div class="wrap"><div class="col">
+  <p class="kicker">Прочитай как историю</p>
+  <h2>Семь стен — и один открытый вопрос в конце</h2>
+  <p>Если стержень держится, всё стягивается в одну фразу: <em>одно поколение построило машину и доказало каждую её стену — а под конец упёрлось в вопрос, может ли она думать.</em> Перед тобой сжатый макет: по нему видно, какой станет полная вещь — с математикой, историей, фотографиями и байками, переплетёнными в один мир.</p>
+  <p>Главные вопросы к тебе: <strong>зажгло ли</strong> — захотелось бы такой курс пройти или вести; где сюжет <strong>звучит сильно</strong>, а где ещё <strong>тонко или скучно</strong>; и складываются ли семь историй в нечто большее, чем их сумма. Отметь — и пойдём углублять конкретные места.</p>
+  <p style="margin-top:1rem">Твои открытые решения: финальное <strong>название</strong>; и что в итоге <strong>сократить</strong> из семи лекций (держим семь временно). Остальное — материал для следующего круга.</p>
+</div></div></section>
+
+</main>
+
+<footer class="src"><div class="wrap"><div class="col">
+  <p>Источник содержания: <code>opisanie-kursa-v2/</code> (концепции 7 лекций · манифест · связующее · действующие лица · теории · доказательство · scorecard). Факты сверены веб-ресёрчем; спорное помечено честно. Портреты — Wikimedia Commons (грузятся в браузере; где файл не подтверждён — карточка). Это макет для чтения (Pass 3 проекта), не финальная вёрстка и не слайды.</p>
+</div></div></footer>
+
+</body>
+</html>

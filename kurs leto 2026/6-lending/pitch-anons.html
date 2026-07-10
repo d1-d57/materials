@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пределы вычислимого — летний курс</title>
+<style>
+  :root{
+    --paper:#F4EDDF;
+    --ink:#2A2420;
+    --muted:#857868;
+    --warm:#B14A2A;      /* терракота — технологии/лекции */
+    --cool:#355A6E;      /* слейт-синий — даты/вопросы Тьюринга */
+    --hair:rgba(42,36,32,.14);
+    --serif:Georgia,'Palatino Linotype','Book Antiqua','Times New Roman',serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 820px at 50% -12%, #FBF6EC 0%, #F4EDDF 58%, #ECE3D0 100%);
+    color:var(--ink);
+    font-family:var(--serif);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    padding:clamp(1.4rem,3vw,3.4rem) clamp(1.1rem,4vw,2rem);
+  }
+  .page{
+    width:100%;
+    max-width:44rem;
+    margin:auto 0;
+    animation:rise .8s ease-out both;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.page{animation:none}}
+
+  .eyebrow{
+    font-family:var(--sans);
+    text-transform:uppercase;
+    letter-spacing:.2em;
+    font-size:.72rem;
+    font-weight:600;
+    color:var(--muted);
+    margin:0 0 1.1rem;
+  }
+  .eyebrow b{color:var(--warm);font-weight:700}
+
+  h1.title{
+    font-size:clamp(2.5rem,1.7rem+3.1vw,3.9rem);
+    line-height:1.04;
+    letter-spacing:-.012em;
+    font-weight:700;
+    margin:0;
+    color:var(--ink);
+  }
+  .subtitle{
+    font-style:italic;
+    color:var(--muted);
+    font-size:clamp(1.08rem,1rem+.5vw,1.34rem);
+    line-height:1.42;
+    margin:.7rem 0 0;
+    max-width:36ch;
+  }
+  .rule{
+    width:3.4rem;height:3px;border-radius:2px;
+    background:var(--warm);
+    margin:1.5rem 0 .2rem;
+  }
+
+  .prose{margin-top:1.3rem}
+  .prose p{
+    font-size:clamp(1.08rem,1rem+.52vw,1.24rem);
+    line-height:1.62;
+    margin:1.02em 0;
+    max-width:63ch;
+    text-wrap:pretty;
+  }
+  .prose p.lead{margin-top:.2em}
+  .prose p.lead::first-letter{
+    float:left;
+    font-size:3.15em;
+    line-height:.78;
+    padding:.02em .1em 0 0;
+    color:var(--warm);
+    font-weight:700;
+  }
+
+  .tech{color:var(--warm);font-weight:500}
+  .lec{color:var(--warm);font-weight:700}
+  .field{font-style:italic;color:var(--muted)}
+  .year{color:var(--cool);font-weight:700;letter-spacing:.01em}
+  .q{color:var(--cool);font-style:italic}
+  .name{font-weight:700;color:var(--ink)}
+  .closer{
+    font-weight:700;
+    color:var(--ink);
+    box-shadow:inset 0 -.5em 0 rgba(177,74,42,.12);
+  }
+
+  .cta{
+    margin-top:2rem;
+    padding-top:1.4rem;
+    border-top:1px solid var(--hair);
+    font-size:clamp(1.12rem,1rem+.6vw,1.3rem);
+    line-height:1.5;
+    color:var(--ink);
+    max-width:63ch;
+  }
+  .cta .go{color:var(--warm);font-weight:700}
+
+  @media (max-width:640px){
+    body{align-items:flex-start}
+    .prose p{font-size:1.1rem;line-height:1.6}
+    .prose p.lead::first-letter{font-size:2.7em}
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <p class="eyebrow">Летний курс&ensp;·&ensp;<b>7 лекций</b></p>
+
+    <h1 class="title">Пределы вычислимого</h1>
+    <p class="subtitle">Семь лекций о том, что вычислительная машина может, чего не может, и кто это выяснил.</p>
+
+    <div class="rule"></div>
+
+    <div class="prose">
+      <p class="lead">Математики придумали компьютер как гипотетический инструмент за десять лет до первого механизма. Они открывали его возможности — и обнаруживали их пределы. Так появилась техника, на которой в вашем телефоне держится все: <span class="tech">шифрование переписки</span>, <span class="tech">сжатие музыки</span>, <span class="tech">поисковая выдача</span>, <span class="tech">расписания рейсов</span>, <span class="tech">ответы чат-бота</span>.</p>
+
+      <p>Наш курс — об этих изобретениях. Мы поймем, почему компьютеры так изменили жизнь и где они бессильны, через семь лекций: <span class="lec">Вычислимость</span> и <span class="lec">Сложность</span>, <span class="lec">Информация</span> и <span class="lec">Криптография</span>, <span class="lec">Случайность</span>, <span class="lec">Оптимизация</span> и <span class="lec">Мышление</span>.</p>
+
+      <p>Как всегда, будем открывать все заново: изучать примеры, доказывать теоремы, решать упражнения. Столкнемся с самыми красивыми сюжетами в <span class="field">логике</span>, <span class="field">комбинаторике</span>, <span class="field">теории чисел</span>, <span class="field">теории вероятностей</span>, <span class="field">выпуклой геометрии</span> и <span class="field">анализе</span>.</p>
+
+      <p>Компьютер создали ученые военного поколения: в Блетчли под Лондоном они ломали немецкие шифры, в Лос-Аламосе делали бомбу. Мы пройдем их путем между двумя вопросами <span class="name">Алана Тьюринга</span>: в <span class="year">1936</span>-м он спросил, <span class="q">«чего машина не может»</span>, а в <span class="year">1950</span>-м <span class="q">«может ли она думать»</span>. Нам помогут <span class="name">фон Нейман</span> и <span class="name">Гёдель</span>, <span class="name">Шеннон</span>, <span class="name">Колмогоров</span> и <span class="name">Винер</span>. <span class="closer">Каждый из них упёрся в собственный предел не только в математике, но и в жизни.</span></p>
+    </div>
+
+    <p class="cta">Если это про вас, <span class="go">напишите мне</span>. Собираю небольшую группу.</p>
+  </main>
+</body>
+</html>

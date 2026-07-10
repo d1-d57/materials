@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "procedura/scorecard.schema.json",
+  "title": "Scorecard темы (одна тема = один объект)",
+  "description": "Типизированный контракт фитнеса (rubric.md). Ключи латиницей; значения enum — кириллицей дословно как в rubric.md, чтобы structured_output не падал на маппинге вердиктов. g1..g8 — ворота лекции; n1..n4 — ворота набора (на уровне темы = вклад/пригодность темы к набору, жёсткое применение в ASSEMBLE).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tema", "oblast", "motiv",
+    "g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8",
+    "n1", "n2", "n3", "n4",
+    "a1", "a2", "a3", "a4", "a5",
+    "b1", "b2", "b3", "b4",
+    "dvizhki", "vs_yakor", "verdikt", "rol", "sources"
+  ],
+  "properties": {
+    "tema":   { "type": "string", "minLength": 1, "description": "Название темы-кандидата" },
+    "oblast": { "type": "string", "minLength": 1, "description": "Область сетки (напр. 'вероятность/случайность')" },
+    "motiv":  { "type": "string", "minLength": 1, "description": "Мотив сетки (DF/ОП/ДЛ/Щуп/КЗ/МХ или развёрнуто)" },
+
+    "g1": { "type": "boolean", "description": "Г1 Матядро — теорема/вычисление, проделываемое в зале" },
+    "g2": { "type": "boolean", "description": "Г2 Крючок-заход — сегодняшнее «в кармане»" },
+    "g3": { "type": "boolean", "description": "Г3 Драматургия + «ого»" },
+    "g4": { "type": "boolean", "description": "Г4 Пересказуемая фраза" },
+    "g5": { "type": "boolean", "description": "Г5 Честное упрощение" },
+    "g6": { "type": "boolean", "description": "Г6 Петля соучастия (есть что додумать)" },
+    "g7": { "type": "boolean", "description": "Г7 Автор тянет (рассказать И доказать)" },
+    "g8": { "type": "boolean", "description": "Г8 Честность обещания" },
+
+    "n1": { "type": "boolean", "description": "Н1 ≤2 дорогих — тема не нарушает лимит дорогих (или не дорогая)" },
+    "n2": { "type": "boolean", "description": "Н2 Единство — держится сама, throughline-как-мотив, не зависимость" },
+    "n3": { "type": "boolean", "description": "Н3 Контекст — вписана в «математику компьютеров»" },
+    "n4": { "type": "boolean", "description": "Н4 Покрытие — вносит свою область математики" },
+
+    "a1": { "type": "integer", "minimum": 0, "maximum": 3, "description": "A1 Killer-заголовок" },
+    "a2": { "type": "integer", "minimum": 0, "maximum": 3, "description": "A2 Ширина аудитории (не-айтишники!)" },
+    "a3": { "type": "integer", "minimum": 0, "maximum": 3, "description": "A3 Драма и лица" },
+    "a4": { "type": "integer", "minimum": 0, "maximum": 3, "description": "A4 Визуальный вау" },
+    "a5": { "type": "integer", "minimum": 0, "maximum": 3, "description": "A5 Вписанность в имя-центр" },
+
+    "b1": { "type": "integer", "minimum": 0, "maximum": 3, "description": "B1 Самоценность/глубина" },
+    "b2": { "type": "integer", "minimum": 0, "maximum": 3, "description": "B2 Теор. содержание" },
+    "b3": { "type": "integer", "minimum": 0, "maximum": 3, "description": "B3 Домашка руками" },
+    "b4": { "type": "integer", "minimum": 0, "maximum": 3, "description": "B4 Интерактив" },
+
+    "dvizhki": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kviz", "obydennoe", "dvoynaya", "discovery_fiction"],
+      "properties": {
+        "kviz":             { "type": "string", "enum": ["⊕", "–", "сильный"], "description": "квиз-аффорданс" },
+        "obydennoe":        { "type": "string", "enum": ["⊕", "–", "сильный"], "description": "обыденное-понятие" },
+        "dvoynaya":         { "type": "string", "enum": ["⊕", "–", "сильный"], "description": "двойная-ценность (мост)" },
+        "discovery_fiction":{ "type": "string", "enum": ["⊕", "–", "сильный"], "description": "discovery-fiction (keystone)" }
+      }
+    },
+
+    "vs_yakor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a", "b"],
+      "properties": {
+        "a": { "type": "string", "enum": ["лучше", "=", "хуже"], "description": "Pugh по оси A к Монте-Карло" },
+        "b": { "type": "string", "enum": ["лучше", "=", "хуже"], "description": "Pugh по оси B к Монте-Карло" }
+      }
+    },
+
+    "verdikt": {
+      "type": "string",
+      "enum": ["ядро", "продажник", "тело", "связка", "доработать", "выбыла"],
+      "description": "Роль-вердикт дословно по rubric.md §E"
+    },
+    "rol": { "type": "string", "description": "Роль в наборе (свободный текст: вход/середина/финал/разогрев…)" },
+    "dorabotat": { "type": "string", "description": "Если ворот провален или ✅ условно — одной строкой что докрутить" },
+
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Источник-на-факт",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fakt", "istochnik"],
+        "properties": {
+          "fakt":      { "type": "string", "minLength": 1 },
+          "istochnik": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}
