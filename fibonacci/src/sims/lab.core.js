@@ -465,10 +465,13 @@
       if (!cssW) return;
       ctx.clearRect(0, 0, cssW, cssH);
       var stage = curStage();
-      if (stage) canvas.style.cursor = (stage === 'recur') ? 'pointer' : 'default';
+      if (stage) canvas.style.cursor = (stage === 'recur' || stage === 'bijection') ? 'pointer' : 'default';
       if (stage === 'empty') { return; }                    // картинка после формулировки: низ чист
       if (stage === 'examples') { drawExamples(); return; }
       if (stage === 'recur') { drawRecurMech(); drawFlash(); return; }
+      if (stage === 'bijection') {                          // биекция с A: полоска-замощение (верх) ↔ образ модели (низ), выровнены; клик по полоске
+        st._L = drawStrip(st.parts, cssH * STRIP_CY, {}); drawImage(); drawFlash(); drawHint(); return;
+      }
       if (st.mode === 'cassini') { drawCassini(); return; }
       if (st.mode === 'zeck') { drawZeck(); drawFlash(); drawHint(); return; }
       st._L = drawStrip(st.parts, cssH * STRIP_CY, { hi: (st.mode === 'recur' || st.mode === 'sum' || st.mode === 'firstsq') ? firstHi() : null });
@@ -503,20 +506,26 @@
     if (slideEl && window.MutationObserver)   // сцена сменилась (движок повесил .scene-k) → перерисовать сразу
       new MutationObserver(function () { draw(); }).observe(slideEl, { attributes: true, attributeFilter: ['class'] });
     canvas.addEventListener('click', function (e) {
-      if (stages.length) {                    // staged: клик активен только на сцене «рекуррента» (редактировать последовательность)
-        if (curStage() === 'recur') {
-          syncSize();
-          var rr = canvas.getBoundingClientRect();
-          if (!rr.width || !rr.height) return;   // защита: слайд ещё не отмасштабирован (scale 0) → деление на 0
-          var px = (e.clientX - rr.left) / rr.width * cssW, py = (e.clientY - rr.top) / rr.height * cssH, done;
-          if (st.mode === 'subset') done = editSubset(px, py);
-          else if (st.mode === 'tiling') done = editTiling(px);
-          else if (st.mode === 'perm') done = editPerm(px);
-          else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
-          else done = editSeq(px);
-          if (done === true) draw();
+      if (stages.length) {                    // staged: клик активен на сценах «рекуррента» и «биекция»
+        var stg = curStage();
+        if (stg !== 'recur' && stg !== 'bijection') return;   // прочие сцены — навигация кликером/клавишами
+        syncSize();
+        var rr = canvas.getBoundingClientRect();
+        if (!rr.width || !rr.height) return;   // слайд ещё не отмасштабирован (scale 0) → деление на 0
+        var px = (e.clientX - rr.left) / rr.width * cssW, py = (e.clientY - rr.top) / rr.height * cssH;
+        if (stg === 'bijection') {            // двусторонний развитый канвас: клик по образу (низ, editimg) ИЛИ по полоске (верх)
+          if (editImg && py > cssH * 0.5) { if (toggleImage(px, py) === true) draw(); return; }
+          if (st._L && toggleAt(st.parts, px, st._L)) { st._lastPair = -1; draw(); }
+          return;
         }
-        return;                               // прочие сцены — навигация кликером/клавишами, не по канвасу
+        var done;                              // recur
+        if (st.mode === 'subset') done = editSubset(px, py);
+        else if (st.mode === 'tiling') done = editTiling(px);
+        else if (st.mode === 'perm') done = editPerm(px);
+        else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
+        else done = editSeq(px);
+        if (done === true) draw();
+        return;
       }
       syncSize();
       var r = canvas.getBoundingClientRect();
