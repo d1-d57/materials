@@ -12,9 +12,8 @@ slide_order:
   - s02-hook
   - s03-strip
   - s04-recur
-  - s05-masks
-  - s07-code
   - s08-subset
+  - s07-code
   - s09-perm
   - s13-hwalk
   - s10-sum

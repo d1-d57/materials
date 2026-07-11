@@ -188,11 +188,13 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s05-masks" data-scenes="2">
+<section class="slide" data-kind="tall" id="s08-subset" data-scenes="4">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Восемь масок — одно лицо.</span> В листке множества A, B, C … H: на вид зоопарк, а считаются одним и тем же fₙ.</p>
-<p data-scene-from="2">Не доказываем все 28 пар. Каждую маску связываем с полоской <span class="acc">Aₙ</span> — хаб и семь спиц, не паутина. Дальше — три спицы вживую.</p></div></div>
-    <div class="board"><div class="panel" data-ill="star"></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Bₙ — подмножества множества {1, …, n−1}, в которых нет двух соседних элементов</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="subset" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4" data-editimg="1"></canvas></div></div>
   </div>
 </section>
 
@@ -203,16 +205,6 @@ body.blanked #stage { visibility: hidden; }
       <div class="anchor-body"><div class="t-body"><p>Cₙ — последовательности длины n из нулей и единиц без двух нулей подряд, оканчивающиеся на 1</p></div></div>
     </div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="code" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
-  </div>
-</section>
-
-<section class="slide" data-kind="tall" id="s08-subset" data-scenes="4">
-  <div class="grid">
-    <div class="zone copy anchored">
-      <div class="anchor-kicker kicker-def">Определение</div>
-      <div class="anchor-body"><div class="t-body"><p>Bₙ — подмножества множества {1, …, n−1}, в которых нет двух соседних элементов</p></div></div>
-    </div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="subset" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4" data-editimg="1"></canvas></div></div>
   </div>
 </section>
 
@@ -307,27 +299,6 @@ body.blanked #stage { visibility: hidden; }
     <rect x="560" y="175" width="140" height="70" fill="var(--mustard)"/>
     <rect x="700" y="175" width="70"  height="70" fill="var(--cgreen)"/>
   </g>
-</svg>
-</template>
-<template id="ill-star"><svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <g stroke="var(--steel)" stroke-width="4">
-    <line x1="450" y1="260" x2="180" y2="90"/><line x1="450" y1="260" x2="450" y2="70"/>
-    <line x1="450" y1="260" x2="720" y2="90"/><line x1="450" y1="260" x2="770" y2="260"/>
-    <line x1="450" y1="260" x2="720" y2="430"/><line x1="450" y1="260" x2="450" y2="450"/>
-    <line x1="450" y1="260" x2="180" y2="430"/>
-  </g>
-  <g font-family="'Forum',serif" font-size="34" fill="var(--ink)" text-anchor="middle" stroke="var(--ink)" stroke-width="2">
-    <circle cx="180" cy="90"  r="40" fill="var(--card)"/><circle cx="450" cy="70"  r="40" fill="var(--card)"/>
-    <circle cx="720" cy="90"  r="40" fill="var(--card)"/><circle cx="770" cy="260" r="40" fill="var(--card)"/>
-    <circle cx="720" cy="430" r="40" fill="var(--card)"/><circle cx="450" cy="450" r="40" fill="var(--card)"/>
-    <circle cx="180" cy="430" r="40" fill="var(--card)"/>
-  </g>
-  <g font-family="'Forum',serif" font-size="34" fill="var(--ink)" text-anchor="middle" dominant-baseline="middle">
-    <text x="180" y="90">B</text><text x="450" y="70">C</text><text x="720" y="90">D</text>
-    <text x="770" y="260">E</text><text x="720" y="430">F</text><text x="450" y="450">G</text><text x="180" y="430">H</text>
-  </g>
-  <circle cx="450" cy="260" r="62" fill="var(--brick)" stroke="var(--ink)" stroke-width="3"/>
-  <text x="450" y="260" font-family="'Glacial Indifference',sans-serif" font-size="40" fill="var(--card)" text-anchor="middle" dominant-baseline="middle">Aₙ</text>
 </svg>
 </template>
 <template id="ill-title-art"><svg viewBox="0 0 1200 180" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
