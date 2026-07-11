@@ -1,22 +1,19 @@
 <svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <g stroke="var(--ink)" stroke-width="3">
-    <!-- 2×10, одно замощение доминошками (верт/гор) -->
-    <rect x="60"  y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="120" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="180" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="180" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="300" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="360" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="360" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="480" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="480" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="600" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="660" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="660" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="780" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="840" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="900" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="900" y="230" width="120" height="110" fill="var(--cgreen)"/>
+  <!-- Задача 1, условие: пустой прямоугольник 2×10 — «сколькими способами замостить доминошками?» -->
+  <g fill="var(--card)" stroke="var(--ink)" stroke-width="4">
+    <rect x="130" y="150" width="740" height="148"/>
   </g>
-  <text x="1020" y="240" font-family="'Glacial Indifference',sans-serif" font-size="90" fill="var(--brick)">?</text>
+  <g stroke="var(--ink)" stroke-width="2" opacity="0.85">
+    <line x1="204" y1="150" x2="204" y2="298"/>
+    <line x1="278" y1="150" x2="278" y2="298"/>
+    <line x1="352" y1="150" x2="352" y2="298"/>
+    <line x1="426" y1="150" x2="426" y2="298"/>
+    <line x1="500" y1="150" x2="500" y2="298"/>
+    <line x1="574" y1="150" x2="574" y2="298"/>
+    <line x1="648" y1="150" x2="648" y2="298"/>
+    <line x1="722" y1="150" x2="722" y2="298"/>
+    <line x1="796" y1="150" x2="796" y2="298"/>
+    <line x1="130" y1="224" x2="870" y2="224"/>
+  </g>
+  <text x="965" y="272" font-family="'Forum',serif" font-size="150" fill="var(--brick)">?</text>
 </svg>

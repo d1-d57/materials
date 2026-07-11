@@ -13,13 +13,10 @@ slide_order:
   - s03-strip
   - s04-recur
   - s05-masks
-  - s06-star
   - s07-code
   - s08-subset
   - s09-perm
   - s10-sum
-  - s11-cassini
-  - s12-close
 ---
 
 # fibonacci — источник дека (курс «Числа Фибоначчи»)

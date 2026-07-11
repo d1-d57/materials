@@ -182,13 +182,6 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s06-star" data-scenes="1">
-  <div class="grid">
-    <div class="zone copy"><div class="t-body"><p>Не будем доказывать все 28 пар. Свяжем каждое множество с одним — с полоской Aₙ. Восемь масок — одно лицо; нужно <span class="acc">семь спиц</span>, а не паутина.</p></div></div>
-    <div class="board"><div class="panel" data-ill="star"></div></div>
-  </div>
-</section>
-
 <section class="slide" id="s07-code" data-scenes="1">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">Полоска ↔ строка 0/1.</span> Читаем плитки слева направо: квадрат пишет «1», доминошка — «01». Двух нулей подряд не будет.</p>
@@ -219,22 +212,6 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" id="s11-cassini" data-scenes="1">
-  <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">fₙ² − fₙ₋₁·fₙ₊₁ = ±1.</span> Разница всегда единица — почему так аккуратно?</p>
-<p>Пары лент спариваются переклейкой хвостов (инволюция). Спарились все, кроме одной — этот одинокий остаток и есть ±1.</p></div></div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="cassini" data-n="6"></canvas></div></div>
-  </div>
-</section>
-
-<section class="slide" data-kind="cover" id="s12-close" data-scenes="1">
-  <div class="wrap"><div class="head">
-    <div class="t-display">2 × 10 = 89</div>
-    <div class="sub">каждое тождество Фибоначчи — красивая биекция, а не формула</div>
-  </div></div>
-  <div class="art"><div class="ill-box" data-ill="bridge"></div></div>
-</section>
-
 
 </div></div>
 <div id="lect-zone" style="position:fixed;left:0;bottom:0;width:100%;height:14px;z-index:200;cursor:pointer"></div>
@@ -244,40 +221,42 @@ body.blanked #stage { visibility: hidden; }
 
 <!-- ===== [3] ASSETS REGISTRY ===== -->
 <template id="ill-hook-2xn"><svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <g stroke="var(--ink)" stroke-width="3">
-    <!-- 2×10, одно замощение доминошками (верт/гор) -->
-    <rect x="60"  y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="120" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="180" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="180" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="300" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="360" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="360" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="480" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="480" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="600" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="660" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="660" y="230" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="780" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="840" y="120" width="60" height="220" fill="var(--mustard)"/>
-    <rect x="900" y="120" width="120" height="110" fill="var(--cgreen)"/>
-    <rect x="900" y="230" width="120" height="110" fill="var(--cgreen)"/>
+  <!-- Задача 1, условие: пустой прямоугольник 2×10 — «сколькими способами замостить доминошками?» -->
+  <g fill="var(--card)" stroke="var(--ink)" stroke-width="4">
+    <rect x="130" y="150" width="740" height="148"/>
   </g>
-  <text x="1020" y="240" font-family="'Glacial Indifference',sans-serif" font-size="90" fill="var(--brick)">?</text>
+  <g stroke="var(--ink)" stroke-width="2" opacity="0.85">
+    <line x1="204" y1="150" x2="204" y2="298"/>
+    <line x1="278" y1="150" x2="278" y2="298"/>
+    <line x1="352" y1="150" x2="352" y2="298"/>
+    <line x1="426" y1="150" x2="426" y2="298"/>
+    <line x1="500" y1="150" x2="500" y2="298"/>
+    <line x1="574" y1="150" x2="574" y2="298"/>
+    <line x1="648" y1="150" x2="648" y2="298"/>
+    <line x1="722" y1="150" x2="722" y2="298"/>
+    <line x1="796" y1="150" x2="796" y2="298"/>
+    <line x1="130" y1="224" x2="870" y2="224"/>
+  </g>
+  <text x="965" y="272" font-family="'Forum',serif" font-size="150" fill="var(--brick)">?</text>
 </svg>
 </template>
 <template id="ill-strip-transform"><svg viewBox="0 0 1120 420" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <!-- Задача 1, доказательство: свёртка столбца 2×n → плитка 1×n.
+       ЦВЕТ СОГЛАСОВАН: вертикальная доминошка (зелёная) → зелёный квадрат;
+       пара горизонтальных (горчичная) → горчичная доминошка. -->
   <g stroke="var(--ink)" stroke-width="3">
-    <!-- слева: столбцы 2×3 -->
-    <rect x="60"  y="120" width="70" height="200" fill="var(--mustard)"/>
-    <rect x="130" y="120" width="140" height="95"  fill="var(--cgreen)"/>
-    <rect x="130" y="215" width="140" height="105" fill="var(--cgreen)"/>
+    <!-- слева: 2×4 = вертикаль · пара горизонталей · вертикаль -->
+    <rect x="80"  y="110" width="70"  height="200" fill="var(--cgreen)"/>
+    <rect x="150" y="110" width="140" height="100" fill="var(--mustard)"/>
+    <rect x="150" y="210" width="140" height="100" fill="var(--mustard)"/>
+    <rect x="290" y="110" width="70"  height="200" fill="var(--cgreen)"/>
   </g>
-  <text x="330" y="235" font-family="'Glacial Indifference',sans-serif" font-size="70" fill="var(--ink)">→</text>
+  <text x="398" y="232" font-family="'Glacial Indifference',sans-serif" font-size="70" fill="var(--ink)">→</text>
   <g stroke="var(--ink)" stroke-width="3">
-    <!-- справа: полоска 1×3 (квадрат + доминошка) -->
-    <rect x="440" y="160" width="90"  height="90" fill="var(--cgreen)"/>
-    <rect x="530" y="160" width="180" height="90" fill="var(--mustard)"/>
+    <!-- справа: полоска 1×4 = квадрат · доминошка · квадрат (1×1 vs 1×2) -->
+    <rect x="490" y="175" width="70"  height="70" fill="var(--cgreen)"/>
+    <rect x="560" y="175" width="140" height="70" fill="var(--mustard)"/>
+    <rect x="700" y="175" width="70"  height="70" fill="var(--cgreen)"/>
   </g>
 </svg>
 </template>
