@@ -151,42 +151,42 @@ body.blanked #stage { visibility: hidden; }
   <div class="art"><div class="ill-box" data-ill="title-art"></div></div>
 </section>
 
-<section class="slide" id="s02-hook" data-scenes="1">
+<section class="slide" id="s02-hook" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p>Сколькими способами замостить прямоугольник <span class="acc">2 × 10</span> доминошками?</p>
-<p>Перебрать руками нельзя. Мы не угадаем формулу — мы построим ответ так, чтобы его стало видно.</p></div></div>
+<p data-scene-from="2">Перебрать руками нельзя. Мы не угадаем формулу — мы построим ответ так, чтобы его стало видно.</p></div></div>
     <div class="board"><div class="panel" data-ill="hook-2xn"></div></div>
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s03-strip" data-scenes="1">
+<section class="slide" data-kind="tall" id="s03-strip" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p>Первый ход — снять лишнее измерение.</p>
-<p>Левый столбец закрыт вертикальной доминошкой либо парой горизонтальных. Задача про 2 × n превращается в задачу про <span class="acc">полоску 1 × n</span>.</p></div></div>
+<p data-scene-from="2">Левый столбец закрыт вертикальной доминошкой либо парой горизонтальных. Задача про 2 × n превращается в задачу про <span class="acc">полоску 1 × n</span>.</p></div></div>
     <div class="board"><div class="panel" data-ill="strip-transform"></div></div>
   </div>
 </section>
 
-<section class="slide" id="s04-recur" data-scenes="1">
+<section class="slide" id="s04-recur" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p>Полоска из квадратов (это «1») и доминошек (это «2»). Число замощений — fₙ; f₀=1, f₁=1, f₂=2, f₃=3, f₄=5.</p>
-<p>Чем закрыта <span class="acc">первая</span> клетка? Квадрат → осталось n−1. Доминошка → осталось n−2. Отсюда fₙ = fₙ₋₁ + fₙ₋₂.</p></div></div>
+<p data-scene-from="2">Чем закрыта <span class="acc">первая</span> клетка? Квадрат → осталось n−1. Доминошка → осталось n−2. Отсюда fₙ = fₙ₋₁ + fₙ₋₂.</p></div></div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="recur" data-n="7"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s05-masks" data-scenes="1">
+<section class="slide" data-kind="tall" id="s05-masks" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">Восемь масок — одно лицо.</span> В листке множества A, B, C … H: на вид зоопарк, а считаются одним и тем же fₙ.</p>
-<p>Не доказываем все 28 пар. Каждую маску связываем с полоской <span class="acc">Aₙ</span> — хаб и семь спиц, не паутина. Дальше — три спицы вживую.</p></div></div>
+<p data-scene-from="2">Не доказываем все 28 пар. Каждую маску связываем с полоской <span class="acc">Aₙ</span> — хаб и семь спиц, не паутина. Дальше — три спицы вживую.</p></div></div>
     <div class="board"><div class="panel" data-ill="star"></div></div>
   </div>
 </section>
 
-<section class="slide" id="s07-code" data-scenes="1">
+<section class="slide" id="s07-code" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">Полоска ↔ строка 0/1.</span> Читаем плитки слева направо: квадрат пишет «1», доминошка — «01». Двух нулей подряд не будет.</p>
-<p>Меняй ленту — строка меняется сама.</p></div></div>
+<p data-scene-from="2">Меняй ленту — строка меняется сама.</p></div></div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="code" data-n="8"></canvas></div></div>
   </div>
 </section>
@@ -205,26 +205,26 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" id="s10-sum" data-scenes="1">
+<section class="slide" id="s10-sum" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">f₀ + f₁ + … + fₙ = fₙ₊₂ − 1.</span></p>
-<p>Возьми все полоски длины n+2. Особая — сплошь квадраты. У любой другой найди первую доминошку: перед ней k квадратов, хвост даёт fₖ. Пробегая k — вся сумма.</p></div></div>
+<p data-scene-from="2">Возьми все полоски длины n+2. Особая — сплошь квадраты. У любой другой найди первую доминошку: перед ней k квадратов, хвост даёт fₖ. Пробегая k — вся сумма.</p></div></div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="sum" data-n="9"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s11-square" data-scenes="1">
+<section class="slide" id="s11-square" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">Суммы «через одну».</span> f₁+f₃+…+f₂ₙ₋₁ = f₂ₙ−1;  f₀+f₂+…+f₂ₙ = f₂ₙ₊₁.</p>
-<p>Тот же счёт, но по первому <span class="acc">квадрату</span>: перед ним j доминошек — сам он на клетке 2j+1, а нечётный хвост даёт очередное слагаемое. Сплошь доминошки — особый случай (только чётная длина), это «−1».</p></div></div>
+<p data-scene-from="2">Тот же счёт, но по первому <span class="acc">квадрату</span>: перед ним j доминошек — сам он на клетке 2j+1, а нечётный хвост даёт очередное слагаемое. Сплошь доминошки — особый случай (только чётная длина), это «−1».</p></div></div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="firstsq" data-n="9"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s12-zeck" data-scenes="1">
+<section class="slide" id="s12-zeck" data-scenes="2">
   <div class="grid">
     <div class="zone copy"><div class="t-body"><p><span class="acc">Теорема Цекендорфа.</span> Каждое число — единственная сумма <span class="acc">несоседних</span> чисел Фибоначчи.</p>
-<p>Жадный ход: бери наибольшее f ≤ N; остаток меньше — соседнее уже не нужно. А «несоседние Фибоначчи» — это ровно полоска без соседей, наш эталон Bₙ. Значит числа 1…fₙ — те же fₙ замощений. Круг замкнулся.</p></div></div>
+<p data-scene-from="2">Жадный ход: бери наибольшее f ≤ N; остаток меньше — соседнее уже не нужно. А «несоседние Фибоначчи» — это ровно полоска без соседей, наш эталон Bₙ. Значит числа 1…fₙ — те же fₙ замощений. Круг замкнулся.</p></div></div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="zeck"></canvas></div></div>
   </div>
 </section>
