@@ -1,0 +1,17 @@
+<svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <!-- Задача 1, сцена 2: одно замощение доски 2×10 доминошками —
+       4 вертикали (зелёные, дальше станут квадратами) + 3 пары горизонталей
+       (горчичные, дальше станут доминошками) = 7 плиток на верхней строке. -->
+  <g stroke="var(--ink)" stroke-width="3">
+    <rect x="130" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="204" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="204" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="352" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="426" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="426" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="574" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="648" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="648" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="796" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+  </g>
+</svg>

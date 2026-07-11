@@ -93,6 +93,75 @@ def native_H(length):             # строки длины `length` над {1..
     return res
 
 
+# ───────────────────────── новые модели D, E, G (заход ДОБИВ, все 8 объектов) ─────────────────────────
+def native_D(n):                  # упорядоченные разбиения n+2 на части ≥2
+    def comps(total, mn):
+        if total == 0:
+            return [()]
+        res = []
+        for p in range(mn, total + 1):
+            for r in comps(total - p, mn):
+                res.append((p,) + r)
+        return res
+    return set(comps(n + 2, 2))
+
+
+def native_E(n):                  # упорядоченные разбиения n+1 на нечётные
+    def comps(total):
+        if total == 0:
+            return [()]
+        res = []
+        p = 1
+        while p <= total:
+            for r in comps(total - p):
+                res.append((p,) + r)
+            p += 2
+        return res
+    return set(comps(n + 1))
+
+
+def native_G(n):                  # (a1..a_{n-1}) 0/1 с a1≤a2≥a3≤…
+    L = n - 1
+    if L <= 0:
+        return {()}
+    out = set()
+    for x in range(2 ** L):
+        s = tuple((x >> i) & 1 for i in range(L))
+        ok = all((s[i] <= s[i + 1]) if i % 2 == 0 else (s[i] >= s[i + 1]) for i in range(L - 1))
+        if ok:
+            out.add(s)
+    return out
+
+
+# ── карты замощение→объект (= биекция A_n↔X_n по рекурренте; ровно те, что рисует движок в сцене «биекция») ──
+def tiling_to_D(parts):           # квадрат-первый → часть+1 (D_{n-1}); доминошка-первая → приписать 2 (D_{n-2})
+    if not parts:
+        return (2,)
+    d = tiling_to_D(parts[1:])
+    return (d[0] + 1,) + d[1:] if parts[0] == 1 else (2,) + d
+
+
+def tiling_to_E(parts):           # приписать квадрат справа, резать после квадратов → нечётные блоки 2j+1
+    out, run = [], 0
+    for p in parts:
+        if p == 1:
+            out.append(2 * run + 1); run = 0
+        else:
+            run += 1
+    out.append(2 * run + 1)
+    return tuple(out)
+
+
+def tiling_to_G(parts, n):        # доминошка→'11'+G_{n-2}; квадрат→'0'+инверсия(G_{n-1})
+    if n <= 1:
+        return ()
+    if parts[0] == 2:
+        sub = tiling_to_G(parts[1:], n - 2)
+        return (1, 1) + sub if (n - 1) >= 2 else (1,)
+    sub = tiling_to_G(parts[1:], n - 1)
+    return (0,) + tuple(1 - x for x in sub)
+
+
 # ───────────────────────── проверки ─────────────────────────
 def check_counts(NMAX):
     ok = True
@@ -160,17 +229,59 @@ def check_zeck(NMAX):             # задача 5в: биекция C_n → {1.
     return ok
 
 
+def check_deg(NMAX):              # D,E,G: счёт=f_n · карта замощение→объект — БИЕКЦИЯ A_n↔X_n · split по первому
+    ok = True
+    print("n :  f_n | D   E   G")
+    for n in range(0, NMAX + 1):
+        fn = fib(n)
+        d, e, g = len(native_D(n)), len(native_E(n)), len(native_G(n))
+        row_ok = (d == fn and e == fn and g == fn)
+        ok = ok and row_ok
+        print("%2d : %4d | %-3d %-3d %-3d  %s" % (n, fn, d, e, g, "✓" if row_ok else "✗"))
+    # карты замощение→объект инъективны и накрывают нативные множества (⇒ биекция A_n↔X_n)
+    bij = True
+    for n in range(0, NMAX + 1):
+        T = enum_tilings(n)
+        imgD = set(tiling_to_D(t) for t in T)
+        imgE = set(tiling_to_E(t) for t in T)
+        imgG = set(tiling_to_G(t, n) for t in T)
+        bij = bij and (len(imgD) == len(T) and imgD == native_D(n)
+                       and len(imgE) == len(T) and imgE == native_E(n)
+                       and len(imgG) == len(T) and imgG == native_G(n))
+    print("карты замощение→объект D/E/G = нативные D_n/E_n/G_n (n≤%d, инъективно ⇒ биекция A_n↔X_n): %s" % (NMAX, "✓" if bij else "✗"))
+    # split «по первому элементу» D/E/G корректен
+    sp = True
+    for n in range(2, NMAX + 1):
+        D = native_D(n)
+        dY = set(x for x in D if x[0] >= 3)          # ≥3 → уменьшить на 1 → D_{n-1}
+        dZ = set(x for x in D if x[0] == 2)          # =2 → отбросить → D_{n-2}
+        d_ok = (dY | dZ == D and len(dY) + len(dZ) == len(D)
+                and set((x[0] - 1,) + x[1:] for x in dY) == native_D(n - 1)
+                and set(x[1:] for x in dZ) == native_D(n - 2))
+        E = native_E(n)
+        eY = set(x for x in E if x[0] == 1)          # 1 → отбросить → E_{n-1}
+        eZ = set(x for x in E if x[0] >= 3)          # ≥3 → уменьшить на 2 → E_{n-2}
+        e_ok = (eY | eZ == E and len(eY) + len(eZ) == len(E)
+                and set(x[1:] for x in eY) == native_E(n - 1)
+                and set((x[0] - 2,) + x[1:] for x in eZ) == native_E(n - 2))
+        sp = sp and d_ok and e_ok
+    print("split «по первому» D (=2→D_{n-2}·≥3→D_{n-1}) и E (=1→E_{n-1}·≥3→E_{n-2}) (n≤%d): %s" % (NMAX, "✓" if sp else "✗"))
+    return ok and bij and sp
+
+
 def main():
     NMAX = 10
     print("──────── verify_models (Л1 серия моделей) ────────")
     r1 = check_counts(NMAX)
     print("-" * 46)
+    r5 = check_deg(NMAX)
+    print("-" * 46)
     r2 = check_images(NMAX)
     r3 = check_split(NMAX)
     r4 = check_zeck(NMAX)
     print("-" * 46)
-    if r1 and r2 and r3 and r4:
-        print("PASS · счёт=f_n, образы-биекции верны, split корректен, Цекендорф = {1..f_n}.")
+    if r1 and r2 and r3 and r4 and r5:
+        print("PASS · счёт=f_n (8/8), образы-биекции верны, split корректен, Цекендорф = {1..f_n}.")
         return 0
     print("FAIL · см. строки со ✗ выше.")
     return 1

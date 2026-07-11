@@ -129,20 +129,46 @@ body.blanked #stage { visibility: hidden; }
 .slide .zone.copy .lead { font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .01em; color: var(--ink); font-size: 30px; margin-bottom: 12px; display:block; }
 
-/* опорная точка — формат C (§3 + правки владельца): цветное СЛОВО-надзаголовок красивым Forum-шрифтом.
-   «Задача» — brick(красный) + крупный НОМЕР; «Определение» — steel (без номера/линейки). Текст —
-   НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
+/* опорная точка — формат «цветное слово» (SPEKA слой1 + правки владельца): надзаголовок Forum caps.
+   «Задача» — brick + крупный НОМЕР; «Определение» — cgreen (без номера); «Утверждение»/«Теорема» —
+   общий steel (не различаются). Текст — НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
 .slide .copy.anchored .anchor-kicker { display: block; font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .03em; font-size: 44px; line-height: 1; margin-bottom: 22px; }
 .slide .copy.anchored .kicker-def   { color: var(--cgreen); }
 .slide .copy.anchored .kicker-task  { color: var(--brick); }
-.slide .copy.anchored .kicker-claim { color: var(--mustard); }
-.slide .copy.anchored .kicker-thm   { color: var(--brick); }
-.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; }
+.slide .copy.anchored .kicker-claim { color: var(--steel); }
+.slide .copy.anchored .kicker-thm   { color: var(--steel); }
+.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; font-size: 1.7em; line-height: .7; vertical-align: -.16em; }
+
+/* списки-опись (Обзор и др.): тире-маркер вместо browser-default диска (base.css уже занулил margin/padding) */
+.slide .tlist { list-style: none; }
+.slide .tlist li { position: relative; padding-left: 30px; margin-top: 12px; }
+.slide .tlist li:first-child { margin-top: 0; }
+.slide .tlist li::before { content: '—'; position: absolute; left: 0; color: var(--steel); }
 
 /* full-illu: короткая лента, большая доска */
 .slide[data-kind="tall"] .grid { grid-template-rows: 40px auto 1fr 28px; }
 .slide[data-kind="tall"] .board .panel { inset: 30px 60px; }
+
+/* две колонки (s05-cols «Обзор»): слева определения на всю высоту, справа узкая доска-колонка примеров */
+.slide[data-kind="cols"] .grid { grid-template-columns: 64px 1fr 360px 56px; grid-template-rows: 56px 1fr 40px; }
+.slide[data-kind="cols"] .copy { grid-area: 1 / 2 / 3 / 3; }
+.slide[data-kind="cols"] .board { grid-area: 1 / 3 / 4 / 4; }
+#s05-cols .zone.copy { --t-body: 26px; }
+.slide[data-kind="cols"] .board .examples-col { position: absolute; inset: 44px 30px; display: flex;
+  flex-direction: column; justify-content: space-between; }
+.slide[data-kind="cols"] .ex-row { display: flex; align-items: baseline; gap: 14px; }
+.slide[data-kind="cols"] .ex-tag { font-family: 'Forum', serif; font-size: 24px; color: var(--steel); width: 24px; }
+.slide[data-kind="cols"] .ex-val { font-family: 'Glacial Indifference', monospace; font-weight: 700;
+  font-size: 29px; color: var(--ink); white-space: nowrap; }
+
+/* payoff-ряд (s-langs «Задача 3а»): один элемент Aₙ показан на языке B…H в ряд */
+.langs-row { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-evenly; }
+.langs-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.langs-tag { font-family: 'Forum', serif; font-size: 26px; color: var(--steel); text-transform: uppercase; }
+.langs-val { font-family: 'Glacial Indifference', monospace; font-weight: 700; font-size: 32px; color: var(--ink); white-space: nowrap; }
+.langs-item.langs-src .langs-tag { color: var(--brick); }
+.langs-tiles { width: 132px; height: 40px; display: block; }
 
 /* canvas на доске */
 .slide .board canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -153,38 +179,56 @@ body.blanked #stage { visibility: hidden; }
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ===== [2] SLIDES ===== -->
+<!-- ===== [2] SLIDES (роутер — SPEKA.md слой 2, порядок = единственная истина) ===== -->
 <section class="slide" data-kind="cover" id="s01-title" data-scenes="1">
   <div class="wrap"><div class="head">
     <div class="t-display">Числа Фибоначчи</div>
-    <div class="sub">комбинаторно-биективный взгляд · каждое тождество — картинка</div>
   </div></div>
   <div class="art"><div class="ill-box" data-ill="title-art"></div></div>
 </section>
 
-<section class="slide" id="s02-hook" data-scenes="2">
+<section class="slide" id="s02-hook" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p>Сколькими способами замостить прямоугольник <span class="acc">2 × 10</span> доминошками?</p>
-<p data-scene-from="2">Перебрать руками нельзя. Мы не угадаем формулу — мы построим ответ так, чтобы его стало видно.</p></div></div>
-    <div class="board"><div class="panel" data-ill="hook-2xn"></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-task">Задача <span class="anchor-num">1</span></div>
+      <div class="anchor-body"><div class="t-body"><p>Сколькими способами можно разрезать доску <span style="white-space:nowrap">2×10</span> на доминошки?</p>
+<p data-scene-from="3">Разбиение восстанавливается по верхней строке. Оставим только её — полоску 1×10 из квадратов и доминошек</p></div></div>
+    </div>
+    <div class="board">
+      <div class="panel" data-scene-until="2" data-ill="hook-2xn"></div>
+      <div class="panel" data-scene-from="2" data-scene-until="3" data-ill="hook-2xn-fill"></div>
+      <div class="panel" data-scene-from="3" data-ill="strip-transform"></div>
+    </div>
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s03-strip" data-scenes="2">
-  <div class="grid">
-    <div class="zone copy"><div class="t-body"><p>Первый ход — снять лишнее измерение.</p>
-<p data-scene-from="2">Левый столбец закрыт вертикальной доминошкой либо парой горизонтальных. Задача про 2 × n превращается в задачу про <span class="acc">полоску 1 × n</span>.</p></div></div>
-    <div class="board"><div class="panel" data-ill="strip-transform"></div></div>
-  </div>
-</section>
-
-<section class="slide" data-kind="tall" id="s04-recur" data-scenes="3">
+<section class="slide" data-kind="tall" id="s04-recur" data-scenes="4">
   <div class="grid">
     <div class="zone copy anchored">
       <div class="anchor-kicker kicker-def">Определение</div>
       <div class="anchor-body"><div class="t-body"><p>Aₙ — упорядоченные разбиения числа n в сумму единиц и двоек. То же самое — замощения полоски 1×n квадратами и доминошками. Число таких замощений обозначим fₙ, положим f₀ = 1</p></div></div>
     </div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="tiling" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="tiling" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" id="s05-cols" data-kind="cols" data-scenes="1">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Те же числа Фибоначчи считают и другие объекты. Вот ещё семь</p>
+<ul class="tlist"><li>Bₙ — подмножества множества {1, …, n−1}, в которых нет двух соседних элементов</li><li>Cₙ — последовательности длины n из нулей и единиц без двух нулей подряд, оканчивающиеся на 1</li><li>Dₙ — упорядоченные разбиения числа n+2 в сумму слагаемых, больших 1</li><li>Eₙ — упорядоченные разбиения числа n+1 в сумму нечётных слагаемых</li><li>Fₙ — перестановки π множества {1, …, n}, для которых |π(i) − i| ≤ 1</li><li>Gₙ — последовательности (a₁, …, a_{n−1}) нулей и единиц, для которых a₁ ≤ a₂ ≥ a₃ ≤ a₄ ≥ …</li><li>Hₙ — последовательности длины n цифр от 1 до 4, где вначале стоит 1 и рядом стоят соседние цифры</li></ul>
+<p>Дальше разберём их по одному. У каждого — то же определение → примеры → та же рекуррента → соответствие с полоской</p></div></div>
+    </div>
+    <div class="board"><div class="examples-col">
+      <div class="ex-row"><span class="ex-tag">B</span><span class="ex-val">{1, 4}</span></div>
+      <div class="ex-row"><span class="ex-tag">C</span><span class="ex-val">01101</span></div>
+      <div class="ex-row"><span class="ex-tag">D</span><span class="ex-val">2+3+2</span></div>
+      <div class="ex-row"><span class="ex-tag">E</span><span class="ex-val">3+3</span></div>
+      <div class="ex-row"><span class="ex-tag">F</span><span class="ex-val">21354</span></div>
+      <div class="ex-row"><span class="ex-tag">G</span><span class="ex-val">1100</span></div>
+      <div class="ex-row"><span class="ex-tag">H</span><span class="ex-val">123432</span></div>
+    </div></div>
   </div>
 </section>
 
@@ -208,47 +252,128 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s09-perm" data-scenes="3">
+<section class="slide" data-kind="tall" id="s-modelD" data-scenes="4">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Dₙ — упорядоченные разбиения числа n+2 в сумму слагаемых, больших 1</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="compGE2" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="tall" id="s-modelE" data-scenes="4">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Eₙ — упорядоченные разбиения числа n+1 в сумму нечётных слагаемых</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="compOdd" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="tall" id="s09-perm" data-scenes="4">
   <div class="grid">
     <div class="zone copy anchored">
       <div class="anchor-kicker kicker-def">Определение</div>
       <div class="anchor-body"><div class="t-body"><p>Fₙ — перестановки π множества {1, …, n}, для которых |π(i) − i| ≤ 1</p></div></div>
     </div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="perm" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="perm" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" data-kind="tall" id="s13-hwalk" data-scenes="3">
+<section class="slide" data-kind="tall" id="s-modelG" data-scenes="4">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Gₙ — последовательности (a₁, …, a_{n−1}) нулей и единиц, для которых a₁ ≤ a₂ ≥ a₃ ≤ a₄ ≥ …</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="zigzag" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="tall" id="s13-hwalk" data-scenes="4">
   <div class="grid">
     <div class="zone copy anchored">
       <div class="anchor-kicker kicker-def">Определение</div>
       <div class="anchor-body"><div class="t-body"><p>Hₙ — последовательности цифр от 1 до 4, где вначале стоит 1 и рядом стоят соседние цифры</p>
 <p><em>(в листке длина n даёт fₙ₋₁; берём длину n+1 — тогда ровно fₙ)</em></p></div></div>
     </div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="hwalk" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="hwalk" data-n="6" data-stages="empty examples recur bijection" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s10-sum" data-scenes="2">
+<section class="slide" id="s-puanta" data-scenes="2">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">f₀ + f₁ + … + fₙ = fₙ₊₂ − 1.</span></p>
-<p data-scene-from="2">Возьми все полоски длины n+2. Особая — сплошь квадраты. У любой другой найди первую доминошку: перед ней k квадратов, хвост даёт fₖ. Пробегая k — вся сумма.</p></div></div>
+    <div class="zone copy"><div class="t-body"><p>У всех объектов одна и та же рекуррента и одно и то же начало: |X₀| = |X₁| = 1, дальше fₙ = fₙ₋₁ + fₙ₋₂. Значит все они считают числа Фибоначчи</p>
+<p data-scene-from="2" class="t-small">Мало того — между любыми двумя есть и прямое соответствие</p></div></div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="subset" data-n="6" data-stages="empty bijection" data-editimg="1"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="tall" id="s-langs" data-scenes="1">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-task">Задача <span class="anchor-num">3</span></div>
+      <div class="anchor-body"><div class="t-body"><p>Рассмотрим элементы Aₙ, в которых сначала идёт k единиц, а потом двойка. Чему они соответствуют в каждом из объектов?</p></div></div>
+    </div>
+    <div class="board"><div class="panel">
+      <div class="langs-row">
+        <div class="langs-item langs-src">
+          <span class="langs-tag">A</span>
+          <svg class="langs-tiles" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="46" height="50" fill="var(--cgreen)" stroke="var(--ink)" stroke-width="2"/>
+            <rect x="52" y="5" width="46" height="50" fill="var(--cgreen)" stroke="var(--ink)" stroke-width="2"/>
+            <rect x="102" y="5" width="96" height="50" fill="var(--mustard)" stroke="var(--ink)" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="langs-item"><span class="langs-tag">B</span><span class="langs-val">{3}</span></div>
+        <div class="langs-item"><span class="langs-tag">C</span><span class="langs-val">1101</span></div>
+        <div class="langs-item"><span class="langs-tag">D</span><span class="langs-val">4+2</span></div>
+        <div class="langs-item"><span class="langs-tag">E</span><span class="langs-val">1+1+3</span></div>
+        <div class="langs-item"><span class="langs-tag">F</span><span class="langs-val">1243</span></div>
+        <div class="langs-item"><span class="langs-tag">G</span><span class="langs-val">011</span></div>
+        <div class="langs-item"><span class="langs-tag">H</span><span class="langs-val">12123</span></div>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide" id="s10-sum" data-scenes="3">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-task">Задача <span class="anchor-num">3</span></div>
+      <div class="anchor-body"><div class="t-body"><p><span class="acc">f₀ + f₁ + f₂ + … + fₙ = fₙ₊₂ − 1</span></p>
+<p data-scene-from="2">Замощения длины n+2 разбиты по первой доминошке</p>
+<p data-scene-from="3">Добавляется красная доминошка — это и есть ответ</p></div></div>
+    </div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="sum" data-n="9"></canvas></div></div>
   </div>
 </section>
 
 <section class="slide" id="s11-square" data-scenes="2">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Суммы «через одну».</span> f₁+f₃+…+f₂ₙ₋₁ = f₂ₙ−1;  f₀+f₂+…+f₂ₙ = f₂ₙ₊₁.</p>
-<p data-scene-from="2">Тот же счёт, но по первому <span class="acc">квадрату</span>: перед ним j доминошек — сам он на клетке 2j+1, а нечётный хвост даёт очередное слагаемое. Сплошь доминошки — особый случай (только чётная длина), это «−1».</p></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-task">Задача <span class="anchor-num">4</span></div>
+      <div class="anchor-body"><div class="t-body"><p><span class="acc">а) f₁ + f₃ + … + f₂ₙ₋₁ = f₂ₙ − 1;  б) f₀ + f₂ + … + f₂ₙ = f₂ₙ₊₁</span></p>
+<p data-scene-from="2">Разбор по первому квадрату</p></div></div>
+    </div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="firstsq" data-n="9"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s12-zeck" data-scenes="2">
+<section class="slide" id="s12-zeck" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Теорема Цекендорфа.</span> Каждое число — единственная сумма <span class="acc">несоседних</span> чисел Фибоначчи.</p>
-<p data-scene-from="2">Жадный ход: бери наибольшее f ≤ N; остаток меньше — соседнее уже не нужно. А «несоседние Фибоначчи» — это ровно полоска без соседей, наш эталон Bₙ. Значит числа 1…fₙ — те же fₙ замощений. Круг замкнулся.</p></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-task">Задача <span class="anchor-num">5</span></div>
+      <div class="lead">Теорема Цекендорфа</div>
+      <div class="anchor-body"><div class="t-body"><p><span class="acc">Каждое натуральное число единственным образом представляется суммой различных чисел Фибоначчи, среди которых нет двух соседних</span></p></div></div>
+      <div data-scene-from="2">
+        <div class="anchor-kicker kicker-claim">Утверждение</div>
+        <div class="anchor-body"><div class="t-body"><p>каждой последовательности из Cₙ отвечает число Σ (1 − aₙ)·fₙ — это ровно числа от 1 до fₙ</p></div></div>
+      </div>
+      <div class="t-body t-small" data-scene-from="3"><p>Несоседние — снова несоседние. Тот же запрет, что у полоски</p></div>
+    </div>
     <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="zeck"></canvas></div></div>
   </div>
 </section>
@@ -279,6 +404,24 @@ body.blanked #stage { visibility: hidden; }
     <line x1="130" y1="224" x2="870" y2="224"/>
   </g>
   <text x="965" y="272" font-family="'Forum',serif" font-size="150" fill="var(--brick)">?</text>
+</svg>
+</template>
+<template id="ill-hook-2xn-fill"><svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <!-- Задача 1, сцена 2: одно замощение доски 2×10 доминошками —
+       4 вертикали (зелёные, дальше станут квадратами) + 3 пары горизонталей
+       (горчичные, дальше станут доминошками) = 7 плиток на верхней строке. -->
+  <g stroke="var(--ink)" stroke-width="3">
+    <rect x="130" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="204" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="204" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="352" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="426" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="426" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="574" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+    <rect x="648" y="150" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="648" y="224" width="148" height="74"  fill="var(--mustard)"/>
+    <rect x="796" y="150" width="74"  height="148" fill="var(--cgreen)"/>
+  </g>
 </svg>
 </template>
 <template id="ill-strip-transform"><svg viewBox="0 0 1120 420" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
@@ -349,6 +492,22 @@ body.blanked #stage { visibility: hidden; }
   function code(parts) { return parts.map(function (x) { return x === 1 ? '1' : '01'; }).join(''); }
   function subset(parts) { var pos = 1, s = []; parts.forEach(function (x) { if (x === 2) s.push(pos); pos += x; }); return s; }
   function perm(parts) { var pi = [], i = 1; parts.forEach(function (x) { if (x === 1) { pi.push(i); i++; } else { pi.push(i + 1); pi.push(i); i += 2; } }); return pi; }
+  /* ── карты замощение→объект для D/E/G (= биекция A_n↔X_n по рекурренте; сверено verify_models.py) ── */
+  function tilingToD(parts) {       // D: квадрат-первый → часть+1 (D_{n-1}); доминошка → приписать 2 (D_{n-2})
+    if (!parts.length) return [2];
+    var d = tilingToD(parts.slice(1));
+    return parts[0] === 1 ? [d[0] + 1].concat(d.slice(1)) : [2].concat(d);
+  }
+  function tilingToE(parts) {        // E: приписать квадрат справа, резать после квадратов → нечётные блоки 2j+1
+    var out = [], run = 0;
+    parts.forEach(function (p) { if (p === 1) { out.push(2 * run + 1); run = 0; } else { run++; } });
+    out.push(2 * run + 1); return out;
+  }
+  function tilingToG(parts, n) {     // G: доминошка→'11'+G_{n-2}; квадрат→'0'+инверсия(G_{n-1})
+    if (n <= 1) return [];
+    if (parts[0] === 2) { var s = tilingToG(parts.slice(1), n - 2); return (n - 1) >= 2 ? [1, 1].concat(s) : [1]; }
+    var s2 = tilingToG(parts.slice(1), n - 1); return [0].concat(s2.map(function (x) { return 1 - x; }));
+  }
   var SUBS = { '0': '₀','1': '₁','2': '₂','3': '₃','4': '₄','5': '₅','6': '₆','7': '₇','8': '₈','9': '₉' };
   function sub(x) { return String(x).replace(/[0-9]/g, function (d) { return SUBS[d]; }); }
   function plural(n, one, few, many) { var t = n % 10, h = n % 100; return (t === 1 && h !== 11) ? one : (t >= 2 && t <= 4 && (h < 12 || h > 14)) ? few : many; }
@@ -372,6 +531,24 @@ body.blanked #stage { visibility: hidden; }
       res = nx;
     }
     return res;
+  }
+  function enumD(n) {                    // D: упорядоченные разбиения n+2 на части ≥2
+    function comps(total, mn) { if (total === 0) return [[]]; var r = []; for (var p = mn; p <= total; p++) comps(total - p, mn).forEach(function (t) { r.push([p].concat(t)); }); return r; }
+    return comps(n + 2, 2);
+  }
+  function enumE(n) {                    // E: упорядоченные разбиения n+1 на нечётные
+    function comps(total) { if (total === 0) return [[]]; var r = []; for (var p = 1; p <= total; p += 2) comps(total - p).forEach(function (t) { r.push([p].concat(t)); }); return r; }
+    return comps(n + 1);
+  }
+  function enumG(n) {                    // G: (a1..a_{n-1}) 0/1 с a1≤a2≥a3≤…
+    var L = n - 1; if (L <= 0) return [[]];
+    var out = [];
+    for (var x = 0; x < (1 << L); x++) {
+      var s = []; for (var i = 0; i < L; i++) s.push((x >> i) & 1);
+      var ok = true; for (var j = 0; j < L - 1; j++) { if (j % 2 === 0) { if (!(s[j] <= s[j + 1])) { ok = false; break; } } else { if (!(s[j] >= s[j + 1])) { ok = false; break; } } }
+      if (ok) out.push(s);
+    }
+    return out;
   }
   function parseRange(str) {             // "1-4" → [1,2,3,4]; "3" → [3]
     var m = /^(\d+)(?:-(\d+))?$/.exec((str || '').trim());
@@ -421,6 +598,9 @@ body.blanked #stage { visibility: hidden; }
     st.recurSub = subset(randParts(n));  // рекуррента (подмножества B): случайное валидное подмножество {1..n-1} без соседних
     st.recurParts = randParts(n);        // рекуррента (замощения A / перестановки F): случайное замощение (общая база); клик по плитке
     var _hw = enumWalksH(n + 1); st.recurH = _hw[Math.floor(Math.random() * _hw.length)] || [1, 2];  // рекуррента (цифры H): случайный обход длины n+1
+    var _d = enumD(n); st.recurD = _d[Math.floor(Math.random() * _d.length)] || [2];    // рекуррента D: случайное разбиение n+2 на части ≥2
+    var _e = enumE(n); st.recurE = _e[Math.floor(Math.random() * _e.length)] || [1];    // рекуррента E: случайное разбиение n+1 на нечётные
+    var _g = enumG(n); st.recurG = _g[Math.floor(Math.random() * _g.length)] || [];     // рекуррента G: случайный зигзаг длины n−1
     function activeScene() {
       if (!slideEl) return 1;
       for (var k = 9; k >= 1; k--) if (slideEl.classList.contains('scene-' + k)) return k;
@@ -487,6 +667,18 @@ body.blanked #stage { visibility: hidden; }
     }
     function arc(x1, x2, y, u) { ctx.beginPath(); ctx.moveTo(x1, y); ctx.quadraticCurveTo((x1 + x2) / 2, y - u * 0.9, x2, y); ctx.stroke(); }
 
+    function drawObjRow(str) {                       // биекция D/E/G/H: объект, соответствующий полоске (низ band'а), по центру
+      var by = cssH * IMG_CY, ch = Math.min(cssH * 0.13, cssW * 0.52 / Math.max(1, str.length));
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = COL.ink;
+      ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      ctx.fillText(str, cssW / 2, by);
+    }
+    function walkForTiling(parts) {                  // A↔H: биекция по индексу (оба множества размера f_n)
+      var nn = parts.reduce(function (a, x) { return a + x; }, 0), key = parts.join(','), T = enumTilings(nn), W = enumWalksH(nn + 1);
+      for (var i = 0; i < T.length; i++) if (T[i].join(',') === key) return W[i] || [1];
+      return W[0] || [1];
+    }
+
     /* ── ОБРАЗ (низ), выровненный по колонкам полоски st._L. Собирает st._hit
          для редактируемых режимов (subset/code). ── */
     function drawImage() {
@@ -547,6 +739,11 @@ body.blanked #stage { visibility: hidden; }
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(qk == null ? 'сплошь доминошки — особое (только при чётном n)'
           : (pd / 2) + ' ' + plural(pd / 2, 'доминошка', 'доминошки', 'доминошек') + ' · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
+      } else if (st.mode === 'compGE2') { drawObjRow(tilingToD(st.parts).join('+'));            // D: разбиение под полоской
+      } else if (st.mode === 'compOdd') { drawObjRow(tilingToE(st.parts).join('+'));            // E: нечётное разбиение
+      } else if (st.mode === 'zigzag') { var _g2 = tilingToG(st.parts, st.n); drawObjRow(_g2.length ? _g2.join('') : '∅');  // G: зигзаг
+      } else if (st.mode === 'tiling') { drawStrip(st.parts, by, {});                            // A: тождество — та же полоска ниже
+      } else if (st.mode === 'hwalk') { drawObjRow(walkForTiling(st.parts).join(''));            // H: обход по индекс-биекции
       }
     }
 
@@ -612,6 +809,9 @@ body.blanked #stage { visibility: hidden; }
        пишем (виден); рекуррента — интерактивный механизм «по первому символу», без подписей. ── */
     function objList(nn) {                        // все объекты модели длины n в РОДНОМ представлении (строки)
       if (st.mode === 'hwalk') return enumWalksH(nn + 1).map(function (w) { return w.join(''); });
+      if (st.mode === 'compGE2') return enumD(nn).map(function (c) { return c.join('+'); });     // D: разбиение 2+3
+      if (st.mode === 'compOdd') return enumE(nn).map(function (c) { return c.join('+'); });      // E: разбиение 1+1+3
+      if (st.mode === 'zigzag') return enumG(nn).map(function (c) { return c.length ? c.join('') : ''; });  // G: строка 010
       var T = enumTilings(nn);
       if (st.mode === 'perm') return T.map(function (t) { return perm(t).join(''); });        // F: однострочная запись π
       if (st.mode === 'subset') return T.map(function (t) { var s = subset(t); return s.length ? '{' + s.join(',') + '}' : '∅'; });  // B: множество
@@ -668,6 +868,9 @@ body.blanked #stage { visibility: hidden; }
       if (st.mode === 'tiling') { drawRecurTiling(); return; }
       if (st.mode === 'perm') { drawRecurPerm(); return; }
       if (st.mode === 'hwalk') { drawRecurHwalk(); return; }
+      if (st.mode === 'compGE2') { drawRecurGlyph(st.recurD.map(String), 1); return; }
+      if (st.mode === 'compOdd') { drawRecurGlyph(st.recurE.map(String), 1); return; }
+      if (st.mode === 'zigzag') { drawRecurGlyph(st.recurG.map(String), 1); return; }
       var seq = st.recurSeq, n = seq.length;
       var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.98;
       var x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
@@ -775,6 +978,16 @@ body.blanked #stage { visibility: hidden; }
       if (n > 2) braceUnder(x0 + g * 1.6, x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
       recurHint('клик — другой пример обхода');
     }
+    function drawRecurGlyph(gl, firstLen) {         // D/E/G: ряд глифов объекта, первый элемент подсвечен, скобка над остатком; клик — другой пример
+      var n = gl.length;
+      var g = Math.min(cssW * 0.5 / Math.max(1, n), cssH * 0.24), ch = g * 0.9, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      if (!n) { ctx.fillStyle = COL.steel; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = Math.round(cssH * 0.13) + "px 'Glacial Indifference',sans-serif"; ctx.fillText('∅', cssW / 2, cy); recurHint('клик — другой пример'); return; }
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * Math.max(1, firstLen), ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      for (var i = 0; i < n; i++) { ctx.fillStyle = COL.ink; ctx.fillText(gl[i], x0 + g * i, cy); }
+      if (firstLen < n) braceUnder(x0 + g * (firstLen - 0.4), x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      recurHint('клик — другой пример');
+    }
 
     function draw() {
       if (!cssW) return;
@@ -838,6 +1051,9 @@ body.blanked #stage { visibility: hidden; }
         else if (st.mode === 'tiling') done = editTiling(px);
         else if (st.mode === 'perm') done = editPerm(px);
         else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
+        else if (st.mode === 'compGE2') { var Dk = enumD(st.n); st.recurD = Dk[Math.floor(Math.random() * Dk.length)]; done = true; }
+        else if (st.mode === 'compOdd') { var Ek = enumE(st.n); st.recurE = Ek[Math.floor(Math.random() * Ek.length)]; done = true; }
+        else if (st.mode === 'zigzag') { var Gk = enumG(st.n); st.recurG = Gk[Math.floor(Math.random() * Gk.length)]; done = true; }
         else done = editSeq(px);
         if (done === true) draw();
         return;

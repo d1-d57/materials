@@ -34,6 +34,22 @@
   function code(parts) { return parts.map(function (x) { return x === 1 ? '1' : '01'; }).join(''); }
   function subset(parts) { var pos = 1, s = []; parts.forEach(function (x) { if (x === 2) s.push(pos); pos += x; }); return s; }
   function perm(parts) { var pi = [], i = 1; parts.forEach(function (x) { if (x === 1) { pi.push(i); i++; } else { pi.push(i + 1); pi.push(i); i += 2; } }); return pi; }
+  /* ── карты замощение→объект для D/E/G (= биекция A_n↔X_n по рекурренте; сверено verify_models.py) ── */
+  function tilingToD(parts) {       // D: квадрат-первый → часть+1 (D_{n-1}); доминошка → приписать 2 (D_{n-2})
+    if (!parts.length) return [2];
+    var d = tilingToD(parts.slice(1));
+    return parts[0] === 1 ? [d[0] + 1].concat(d.slice(1)) : [2].concat(d);
+  }
+  function tilingToE(parts) {        // E: приписать квадрат справа, резать после квадратов → нечётные блоки 2j+1
+    var out = [], run = 0;
+    parts.forEach(function (p) { if (p === 1) { out.push(2 * run + 1); run = 0; } else { run++; } });
+    out.push(2 * run + 1); return out;
+  }
+  function tilingToG(parts, n) {     // G: доминошка→'11'+G_{n-2}; квадрат→'0'+инверсия(G_{n-1})
+    if (n <= 1) return [];
+    if (parts[0] === 2) { var s = tilingToG(parts.slice(1), n - 2); return (n - 1) >= 2 ? [1, 1].concat(s) : [1]; }
+    var s2 = tilingToG(parts.slice(1), n - 1); return [0].concat(s2.map(function (x) { return 1 - x; }));
+  }
   var SUBS = { '0': '₀','1': '₁','2': '₂','3': '₃','4': '₄','5': '₅','6': '₆','7': '₇','8': '₈','9': '₉' };
   function sub(x) { return String(x).replace(/[0-9]/g, function (d) { return SUBS[d]; }); }
   function plural(n, one, few, many) { var t = n % 10, h = n % 100; return (t === 1 && h !== 11) ? one : (t >= 2 && t <= 4 && (h < 12 || h > 14)) ? few : many; }
@@ -57,6 +73,24 @@
       res = nx;
     }
     return res;
+  }
+  function enumD(n) {                    // D: упорядоченные разбиения n+2 на части ≥2
+    function comps(total, mn) { if (total === 0) return [[]]; var r = []; for (var p = mn; p <= total; p++) comps(total - p, mn).forEach(function (t) { r.push([p].concat(t)); }); return r; }
+    return comps(n + 2, 2);
+  }
+  function enumE(n) {                    // E: упорядоченные разбиения n+1 на нечётные
+    function comps(total) { if (total === 0) return [[]]; var r = []; for (var p = 1; p <= total; p += 2) comps(total - p).forEach(function (t) { r.push([p].concat(t)); }); return r; }
+    return comps(n + 1);
+  }
+  function enumG(n) {                    // G: (a1..a_{n-1}) 0/1 с a1≤a2≥a3≤…
+    var L = n - 1; if (L <= 0) return [[]];
+    var out = [];
+    for (var x = 0; x < (1 << L); x++) {
+      var s = []; for (var i = 0; i < L; i++) s.push((x >> i) & 1);
+      var ok = true; for (var j = 0; j < L - 1; j++) { if (j % 2 === 0) { if (!(s[j] <= s[j + 1])) { ok = false; break; } } else { if (!(s[j] >= s[j + 1])) { ok = false; break; } } }
+      if (ok) out.push(s);
+    }
+    return out;
   }
   function parseRange(str) {             // "1-4" → [1,2,3,4]; "3" → [3]
     var m = /^(\d+)(?:-(\d+))?$/.exec((str || '').trim());
@@ -106,6 +140,9 @@
     st.recurSub = subset(randParts(n));  // рекуррента (подмножества B): случайное валидное подмножество {1..n-1} без соседних
     st.recurParts = randParts(n);        // рекуррента (замощения A / перестановки F): случайное замощение (общая база); клик по плитке
     var _hw = enumWalksH(n + 1); st.recurH = _hw[Math.floor(Math.random() * _hw.length)] || [1, 2];  // рекуррента (цифры H): случайный обход длины n+1
+    var _d = enumD(n); st.recurD = _d[Math.floor(Math.random() * _d.length)] || [2];    // рекуррента D: случайное разбиение n+2 на части ≥2
+    var _e = enumE(n); st.recurE = _e[Math.floor(Math.random() * _e.length)] || [1];    // рекуррента E: случайное разбиение n+1 на нечётные
+    var _g = enumG(n); st.recurG = _g[Math.floor(Math.random() * _g.length)] || [];     // рекуррента G: случайный зигзаг длины n−1
     function activeScene() {
       if (!slideEl) return 1;
       for (var k = 9; k >= 1; k--) if (slideEl.classList.contains('scene-' + k)) return k;
@@ -172,6 +209,18 @@
     }
     function arc(x1, x2, y, u) { ctx.beginPath(); ctx.moveTo(x1, y); ctx.quadraticCurveTo((x1 + x2) / 2, y - u * 0.9, x2, y); ctx.stroke(); }
 
+    function drawObjRow(str) {                       // биекция D/E/G/H: объект, соответствующий полоске (низ band'а), по центру
+      var by = cssH * IMG_CY, ch = Math.min(cssH * 0.13, cssW * 0.52 / Math.max(1, str.length));
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = COL.ink;
+      ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      ctx.fillText(str, cssW / 2, by);
+    }
+    function walkForTiling(parts) {                  // A↔H: биекция по индексу (оба множества размера f_n)
+      var nn = parts.reduce(function (a, x) { return a + x; }, 0), key = parts.join(','), T = enumTilings(nn), W = enumWalksH(nn + 1);
+      for (var i = 0; i < T.length; i++) if (T[i].join(',') === key) return W[i] || [1];
+      return W[0] || [1];
+    }
+
     /* ── ОБРАЗ (низ), выровненный по колонкам полоски st._L. Собирает st._hit
          для редактируемых режимов (subset/code). ── */
     function drawImage() {
@@ -232,6 +281,11 @@
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(qk == null ? 'сплошь доминошки — особое (только при чётном n)'
           : (pd / 2) + ' ' + plural(pd / 2, 'доминошка', 'доминошки', 'доминошек') + ' · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
+      } else if (st.mode === 'compGE2') { drawObjRow(tilingToD(st.parts).join('+'));            // D: разбиение под полоской
+      } else if (st.mode === 'compOdd') { drawObjRow(tilingToE(st.parts).join('+'));            // E: нечётное разбиение
+      } else if (st.mode === 'zigzag') { var _g2 = tilingToG(st.parts, st.n); drawObjRow(_g2.length ? _g2.join('') : '∅');  // G: зигзаг
+      } else if (st.mode === 'tiling') { drawStrip(st.parts, by, {});                            // A: тождество — та же полоска ниже
+      } else if (st.mode === 'hwalk') { drawObjRow(walkForTiling(st.parts).join(''));            // H: обход по индекс-биекции
       }
     }
 
@@ -297,6 +351,9 @@
        пишем (виден); рекуррента — интерактивный механизм «по первому символу», без подписей. ── */
     function objList(nn) {                        // все объекты модели длины n в РОДНОМ представлении (строки)
       if (st.mode === 'hwalk') return enumWalksH(nn + 1).map(function (w) { return w.join(''); });
+      if (st.mode === 'compGE2') return enumD(nn).map(function (c) { return c.join('+'); });     // D: разбиение 2+3
+      if (st.mode === 'compOdd') return enumE(nn).map(function (c) { return c.join('+'); });      // E: разбиение 1+1+3
+      if (st.mode === 'zigzag') return enumG(nn).map(function (c) { return c.length ? c.join('') : ''; });  // G: строка 010
       var T = enumTilings(nn);
       if (st.mode === 'perm') return T.map(function (t) { return perm(t).join(''); });        // F: однострочная запись π
       if (st.mode === 'subset') return T.map(function (t) { var s = subset(t); return s.length ? '{' + s.join(',') + '}' : '∅'; });  // B: множество
@@ -353,6 +410,9 @@
       if (st.mode === 'tiling') { drawRecurTiling(); return; }
       if (st.mode === 'perm') { drawRecurPerm(); return; }
       if (st.mode === 'hwalk') { drawRecurHwalk(); return; }
+      if (st.mode === 'compGE2') { drawRecurGlyph(st.recurD.map(String), 1); return; }
+      if (st.mode === 'compOdd') { drawRecurGlyph(st.recurE.map(String), 1); return; }
+      if (st.mode === 'zigzag') { drawRecurGlyph(st.recurG.map(String), 1); return; }
       var seq = st.recurSeq, n = seq.length;
       var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.98;
       var x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
@@ -460,6 +520,16 @@
       if (n > 2) braceUnder(x0 + g * 1.6, x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
       recurHint('клик — другой пример обхода');
     }
+    function drawRecurGlyph(gl, firstLen) {         // D/E/G: ряд глифов объекта, первый элемент подсвечен, скобка над остатком; клик — другой пример
+      var n = gl.length;
+      var g = Math.min(cssW * 0.5 / Math.max(1, n), cssH * 0.24), ch = g * 0.9, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      if (!n) { ctx.fillStyle = COL.steel; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = Math.round(cssH * 0.13) + "px 'Glacial Indifference',sans-serif"; ctx.fillText('∅', cssW / 2, cy); recurHint('клик — другой пример'); return; }
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * Math.max(1, firstLen), ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      for (var i = 0; i < n; i++) { ctx.fillStyle = COL.ink; ctx.fillText(gl[i], x0 + g * i, cy); }
+      if (firstLen < n) braceUnder(x0 + g * (firstLen - 0.4), x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      recurHint('клик — другой пример');
+    }
 
     function draw() {
       if (!cssW) return;
@@ -523,6 +593,9 @@
         else if (st.mode === 'tiling') done = editTiling(px);
         else if (st.mode === 'perm') done = editPerm(px);
         else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
+        else if (st.mode === 'compGE2') { var Dk = enumD(st.n); st.recurD = Dk[Math.floor(Math.random() * Dk.length)]; done = true; }
+        else if (st.mode === 'compOdd') { var Ek = enumE(st.n); st.recurE = Ek[Math.floor(Math.random() * Ek.length)]; done = true; }
+        else if (st.mode === 'zigzag') { var Gk = enumG(st.n); st.recurG = Gk[Math.floor(Math.random() * Gk.length)]; done = true; }
         else done = editSeq(px);
         if (done === true) draw();
         return;

@@ -43,20 +43,46 @@
 .slide .zone.copy .lead { font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .01em; color: var(--ink); font-size: 30px; margin-bottom: 12px; display:block; }
 
-/* опорная точка — формат C (§3 + правки владельца): цветное СЛОВО-надзаголовок красивым Forum-шрифтом.
-   «Задача» — brick(красный) + крупный НОМЕР; «Определение» — steel (без номера/линейки). Текст —
-   НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
+/* опорная точка — формат «цветное слово» (SPEKA слой1 + правки владельца): надзаголовок Forum caps.
+   «Задача» — brick + крупный НОМЕР; «Определение» — cgreen (без номера); «Утверждение»/«Теорема» —
+   общий steel (не различаются). Текст — НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
 .slide .copy.anchored .anchor-kicker { display: block; font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .03em; font-size: 44px; line-height: 1; margin-bottom: 22px; }
 .slide .copy.anchored .kicker-def   { color: var(--cgreen); }
 .slide .copy.anchored .kicker-task  { color: var(--brick); }
-.slide .copy.anchored .kicker-claim { color: var(--mustard); }
-.slide .copy.anchored .kicker-thm   { color: var(--brick); }
-.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; }
+.slide .copy.anchored .kicker-claim { color: var(--steel); }
+.slide .copy.anchored .kicker-thm   { color: var(--steel); }
+.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; font-size: 1.7em; line-height: .7; vertical-align: -.16em; }
+
+/* списки-опись (Обзор и др.): тире-маркер вместо browser-default диска (base.css уже занулил margin/padding) */
+.slide .tlist { list-style: none; }
+.slide .tlist li { position: relative; padding-left: 30px; margin-top: 12px; }
+.slide .tlist li:first-child { margin-top: 0; }
+.slide .tlist li::before { content: '—'; position: absolute; left: 0; color: var(--steel); }
 
 /* full-illu: короткая лента, большая доска */
 .slide[data-kind="tall"] .grid { grid-template-rows: 40px auto 1fr 28px; }
 .slide[data-kind="tall"] .board .panel { inset: 30px 60px; }
+
+/* две колонки (s05-cols «Обзор»): слева определения на всю высоту, справа узкая доска-колонка примеров */
+.slide[data-kind="cols"] .grid { grid-template-columns: 64px 1fr 360px 56px; grid-template-rows: 56px 1fr 40px; }
+.slide[data-kind="cols"] .copy { grid-area: 1 / 2 / 3 / 3; }
+.slide[data-kind="cols"] .board { grid-area: 1 / 3 / 4 / 4; }
+#s05-cols .zone.copy { --t-body: 26px; }
+.slide[data-kind="cols"] .board .examples-col { position: absolute; inset: 44px 30px; display: flex;
+  flex-direction: column; justify-content: space-between; }
+.slide[data-kind="cols"] .ex-row { display: flex; align-items: baseline; gap: 14px; }
+.slide[data-kind="cols"] .ex-tag { font-family: 'Forum', serif; font-size: 24px; color: var(--steel); width: 24px; }
+.slide[data-kind="cols"] .ex-val { font-family: 'Glacial Indifference', monospace; font-weight: 700;
+  font-size: 29px; color: var(--ink); white-space: nowrap; }
+
+/* payoff-ряд (s-langs «Задача 3а»): один элемент Aₙ показан на языке B…H в ряд */
+.langs-row { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-evenly; }
+.langs-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.langs-tag { font-family: 'Forum', serif; font-size: 26px; color: var(--steel); text-transform: uppercase; }
+.langs-val { font-family: 'Glacial Indifference', monospace; font-weight: 700; font-size: 32px; color: var(--ink); white-space: nowrap; }
+.langs-item.langs-src .langs-tag { color: var(--brick); }
+.langs-tiles { width: 132px; height: 40px; display: block; }
 
 /* canvas на доске */
 .slide .board canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -67,15 +93,20 @@
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ===== [2] SLIDES ===== -->
+<!-- ===== [2] SLIDES (роутер — SPEKA.md слой 2, порядок = единственная истина) ===== -->
 {{SLIDE:s01-title}}
 {{SLIDE:s02-hook}}
-{{SLIDE:s03-strip}}
 {{SLIDE:s04-recur}}
+{{SLIDE:s05-cols}}
 {{SLIDE:s08-subset}}
 {{SLIDE:s07-code}}
+{{SLIDE:s-modelD}}
+{{SLIDE:s-modelE}}
 {{SLIDE:s09-perm}}
+{{SLIDE:s-modelG}}
 {{SLIDE:s13-hwalk}}
+{{SLIDE:s-puanta}}
+{{SLIDE:s-langs}}
 {{SLIDE:s10-sum}}
 {{SLIDE:s11-square}}
 {{SLIDE:s12-zeck}}
@@ -88,6 +119,7 @@
 
 <!-- ===== [3] ASSETS REGISTRY ===== -->
 <template id="ill-hook-2xn">{{ILL:hook-2xn}}</template>
+<template id="ill-hook-2xn-fill">{{ILL:hook-2xn-fill}}</template>
 <template id="ill-strip-transform">{{ILL:strip-transform}}</template>
 <template id="ill-title-art">{{ILL:title-art}}</template>
 
