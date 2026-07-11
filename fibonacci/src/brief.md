@@ -16,6 +16,7 @@ slide_order:
   - s07-code
   - s08-subset
   - s09-perm
+  - s13-hwalk
   - s10-sum
   - s11-square
   - s12-zeck

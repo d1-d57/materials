@@ -43,6 +43,17 @@
 .slide .zone.copy .lead { font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .01em; color: var(--ink); font-size: 30px; margin-bottom: 12px; display:block; }
 
+/* опорная точка — формат C (§3 + правки владельца): цветное СЛОВО-надзаголовок красивым Forum-шрифтом.
+   «Задача» — brick(красный) + крупный НОМЕР; «Определение» — steel (без номера/линейки). Текст —
+   НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
+.slide .copy.anchored .anchor-kicker { display: block; font-family: 'Forum', serif; text-transform: uppercase;
+  letter-spacing: .03em; font-size: 44px; line-height: 1; margin-bottom: 22px; }
+.slide .copy.anchored .kicker-def   { color: var(--cgreen); }
+.slide .copy.anchored .kicker-task  { color: var(--brick); }
+.slide .copy.anchored .kicker-claim { color: var(--mustard); }
+.slide .copy.anchored .kicker-thm   { color: var(--brick); }
+.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; }
+
 /* full-illu: короткая лента, большая доска */
 .slide[data-kind="tall"] .grid { grid-template-rows: 40px auto 1fr 28px; }
 .slide[data-kind="tall"] .board .panel { inset: 30px 60px; }
@@ -65,6 +76,7 @@
 {{SLIDE:s07-code}}
 {{SLIDE:s08-subset}}
 {{SLIDE:s09-perm}}
+{{SLIDE:s13-hwalk}}
 {{SLIDE:s10-sum}}
 {{SLIDE:s11-square}}
 {{SLIDE:s12-zeck}}

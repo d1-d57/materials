@@ -129,6 +129,17 @@ body.blanked #stage { visibility: hidden; }
 .slide .zone.copy .lead { font-family: 'Forum', serif; text-transform: uppercase;
   letter-spacing: .01em; color: var(--ink); font-size: 30px; margin-bottom: 12px; display:block; }
 
+/* опорная точка — формат C (§3 + правки владельца): цветное СЛОВО-надзаголовок красивым Forum-шрифтом.
+   «Задача» — brick(красный) + крупный НОМЕР; «Определение» — steel (без номера/линейки). Текст —
+   НИЖЕ слова, у левого поля, на ВСЮ ширину (не узкая колонка). */
+.slide .copy.anchored .anchor-kicker { display: block; font-family: 'Forum', serif; text-transform: uppercase;
+  letter-spacing: .03em; font-size: 44px; line-height: 1; margin-bottom: 22px; }
+.slide .copy.anchored .kicker-def   { color: var(--cgreen); }
+.slide .copy.anchored .kicker-task  { color: var(--brick); }
+.slide .copy.anchored .kicker-claim { color: var(--mustard); }
+.slide .copy.anchored .kicker-thm   { color: var(--brick); }
+.slide .copy.anchored .anchor-num   { font-family: 'Forum', serif; }
+
 /* full-illu: короткая лента, большая доска */
 .slide[data-kind="tall"] .grid { grid-template-rows: 40px auto 1fr 28px; }
 .slide[data-kind="tall"] .board .panel { inset: 30px 60px; }
@@ -167,11 +178,13 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" id="s04-recur" data-scenes="2">
+<section class="slide" data-kind="tall" id="s04-recur" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p>Полоска из квадратов (это «1») и доминошек (это «2»). Число замощений — fₙ; f₀=1, f₁=1, f₂=2, f₃=3, f₄=5.</p>
-<p data-scene-from="2">Чем закрыта <span class="acc">первая</span> клетка? Квадрат → осталось n−1. Доминошка → осталось n−2. Отсюда fₙ = fₙ₋₁ + fₙ₋₂.</p></div></div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="recur" data-n="7"></canvas></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Aₙ — упорядоченные разбиения числа n в сумму единиц и двоек. То же самое — замощения полоски 1×n квадратами и доминошками. Число таких замощений обозначим fₙ, положим f₀ = 1</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="tiling" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
@@ -183,25 +196,44 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
-<section class="slide" id="s07-code" data-scenes="2">
+<section class="slide" data-kind="tall" id="s07-code" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Полоска ↔ строка 0/1.</span> Читаем плитки слева направо: квадрат пишет «1», доминошка — «01». Двух нулей подряд не будет.</p>
-<p data-scene-from="2">Меняй ленту — строка меняется сама.</p></div></div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="code" data-n="8"></canvas></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Cₙ — последовательности длины n из нулей и единиц без двух нулей подряд, оканчивающиеся на 1</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="code" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s08-subset" data-scenes="1">
+<section class="slide" data-kind="tall" id="s08-subset" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Полоска ↔ подмножество без соседних.</span> Отметим левые края доминошек — получим числа из {1, …, n−1}, где нет двух соседних.</p></div></div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="subset" data-n="8" data-editimg="1"></canvas></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Bₙ — подмножества множества {1, …, n−1}, в которых нет двух соседних элементов</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="subset" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
-<section class="slide" id="s09-perm" data-scenes="1">
+<section class="slide" data-kind="tall" id="s09-perm" data-scenes="3">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p><span class="acc">Полоска ↔ перестановка.</span> Квадрат оставляет число на месте, доминошка меняет местами двух соседей. Перестановка, двигающая каждого не дальше соседа, — это замощение.</p></div></div>
-    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="perm" data-n="6"></canvas></div></div>
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Fₙ — перестановки π множества {1, …, n}, для которых |π(i) − i| ≤ 1</p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="perm" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
+  </div>
+</section>
+
+<section class="slide" data-kind="tall" id="s13-hwalk" data-scenes="3">
+  <div class="grid">
+    <div class="zone copy anchored">
+      <div class="anchor-kicker kicker-def">Определение</div>
+      <div class="anchor-body"><div class="t-body"><p>Hₙ — последовательности цифр от 1 до 4, где вначале стоит 1 и рядом стоят соседние цифры</p>
+<p><em>(в листке длина n даёт fₙ₋₁; берём длину n+1 — тогда ровно fₙ)</em></p></div></div>
+    </div>
+    <div class="board"><div class="panel"><canvas data-sim="fib-strip" data-mode="hwalk" data-n="6" data-stages="empty examples recur" data-examples="1-4"></canvas></div></div>
   </div>
 </section>
 
@@ -339,7 +371,8 @@ body.blanked #stage { visibility: hidden; }
     sq: tok('--cgreen', '#7ea474'), dom: tok('--mustard', '#c9a23c'),
     ink: tok('--ink', '#333333'), card: tok('--card', '#ffffff'),
     brick: tok('--brick', '#bf5b4f'), steel: tok('--steel', '#8195ad'),
-    board: tok('--board', '#a7c2cb'), rule: tok('--rule', '#c3cedd')
+    board: tok('--board', '#a7c2cb'), rule: tok('--rule', '#c3cedd'),
+    blush: tok('--blush', '#f0e2de')
   };
   function randParts(n) { var p = [], s = 0; while (s < n) { var two = (n - s >= 2) && Math.random() < 0.5; p.push(two ? 2 : 1); s += two ? 2 : 1; } return p; }
   function code(parts) { return parts.map(function (x) { return x === 1 ? '1' : '01'; }).join(''); }
@@ -348,6 +381,35 @@ body.blanked #stage { visibility: hidden; }
   var SUBS = { '0': '₀','1': '₁','2': '₂','3': '₃','4': '₄','5': '₅','6': '₆','7': '₇','8': '₈','9': '₉' };
   function sub(x) { return String(x).replace(/[0-9]/g, function (d) { return SUBS[d]; }); }
   function plural(n, one, few, many) { var t = n % 10, h = n % 100; return (t === 1 && h !== 11) ? one : (t >= 2 && t <= 4 && (h < 12 || h > 14)) ? few : many; }
+
+  /* ── перечислители всех Xₙ для сцены «примеры» (счёт обязан = fₙ; сверено verify_models.py) ── */
+  function enumTilings(n) {              // все замощения 1×n квадратами(1)/доминошками(2), квадрато-первые впереди
+    if (n <= 0) return [[]];
+    if (n === 1) return [[1]];
+    var out = [];
+    enumTilings(n - 1).forEach(function (t) { out.push([1].concat(t)); });
+    enumTilings(n - 2).forEach(function (t) { out.push([2].concat(t)); });
+    return out;
+  }
+  var H_NB = { 1: [2], 2: [1, 3], 3: [2, 4], 4: [3] };   // путь P4: соседние цифры отличаются на 1
+  function enumWalksH(len) {             // строки длины len над {1..4}, старт 1 (|H_n| при len=n+1 = f_n)
+    if (len <= 0) return [];
+    var res = [[1]];
+    for (var s = 1; s < len; s++) {
+      var nx = [];
+      res.forEach(function (w) { H_NB[w[w.length - 1]].forEach(function (u) { nx.push(w.concat(u)); }); });
+      res = nx;
+    }
+    return res;
+  }
+  function parseRange(str) {             // "1-4" → [1,2,3,4]; "3" → [3]
+    var m = /^(\d+)(?:-(\d+))?$/.exec((str || '').trim());
+    if (!m) return [1, 2, 3, 4];
+    var a = +m[1], b = m[2] ? +m[2] : a, r = [];
+    for (var i = a; i <= b; i++) r.push(i);
+    return r;
+  }
+  function randC(n) { return code(randParts(n)); }   // случайная ВАЛИДНАЯ C-строка (не из одних единиц)
 
   /* ── примитив: модель-уровневая правка полоски по НОМЕРУ клетки (1-based) ──
      клетка в доминошке → расщепить на два квадрата; клетка-квадрат →
@@ -378,6 +440,25 @@ body.blanked #stage { visibility: hidden; }
     var n = parseInt(canvas.dataset.n || '8', 10);
     var editImg = canvas.dataset.editimg === '1';
     var st = { parts: randParts(n), n: n, mode: mode, pairB: randParts(n), sel: [], _L: null, _hit: [], _flash: 0, _lastPair: -1 };
+    /* ── секвенсор сцен: слайд задаёт data-stages="empty examples recur"; индекс = активная сцена.
+         Активную сцену читаем из класса .scene-k, который движок (engine.js) ставит на .slide —
+         engine.js НЕ трогаем. Нет data-stages ⇒ прежний интерактив (эталон subset не ломается). ── */
+    var stages = (canvas.dataset.stages || '').split(/\s+/).filter(Boolean);
+    var exRange = parseRange(canvas.dataset.examples || '1-4');
+    var slideEl = canvas.closest('.slide');
+    st.recurSeq = randC(n);              // рекуррента (строки C): случайная валидная C-строка; клик по символу редактирует
+    st.recurSub = subset(randParts(n));  // рекуррента (подмножества B): случайное валидное подмножество {1..n-1} без соседних
+    st.recurParts = randParts(n);        // рекуррента (замощения A / перестановки F): случайное замощение (общая база); клик по плитке
+    var _hw = enumWalksH(n + 1); st.recurH = _hw[Math.floor(Math.random() * _hw.length)] || [1, 2];  // рекуррента (цифры H): случайный обход длины n+1
+    function activeScene() {
+      if (!slideEl) return 1;
+      for (var k = 9; k >= 1; k--) if (slideEl.classList.contains('scene-' + k)) return k;
+      return 1;
+    }
+    function curStage() {
+      if (!stages.length) return null;
+      return stages[Math.max(1, Math.min(stages.length, activeScene())) - 1];
+    }
     var ctx = canvas.getContext('2d');
     var cssW = 0, cssH = 0;
     var STRIP_CY = 0.30, IMG_CY = 0.70;   // центры двух band'ов (доля высоты)
@@ -554,9 +635,184 @@ body.blanked #stage { visibility: hidden; }
       ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = COL.brick; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(st._flash.x, st._flash.y, st._flash.r, 0, 7); ctx.stroke(); ctx.restore();
     }
+    /* ══════════ СЦЕНЫ (data-stages): пусто → примеры(в языке модели) → рекуррента(механизм) ══════════
+       Правки владельца (wireframe-v1): объекты рисуем в ИХ языке (C = строки 0/1), без доминошек и
+       без фиксированных разбиений; примеры — блоками по n (n=0 включён), «n=k» крупно слева, счёт НЕ
+       пишем (виден); рекуррента — интерактивный механизм «по первому символу», без подписей. ── */
+    function objList(nn) {                        // все объекты модели длины n в РОДНОМ представлении (строки)
+      if (st.mode === 'hwalk') return enumWalksH(nn + 1).map(function (w) { return w.join(''); });
+      var T = enumTilings(nn);
+      if (st.mode === 'perm') return T.map(function (t) { return perm(t).join(''); });        // F: однострочная запись π
+      if (st.mode === 'subset') return T.map(function (t) { var s = subset(t); return s.length ? '{' + s.join(',') + '}' : '∅'; });  // B: множество
+      return T.map(code);                         // C: строки 0/1 (= нативный C_n, сверено verify_models)
+    }
+    function drawSeq(str, x, cy, ch) {            // строка цифр от левого края x; возвращает ширину
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      if (str === '') { ctx.fillStyle = COL.steel; ctx.fillText('∅', x + ch * 0.35, cy); return ch * 0.7; }
+      var g = ch * 0.62;
+      for (var i = 0; i < str.length; i++) { ctx.fillStyle = COL.ink; ctx.fillText(str[i], x + g * (i + 0.5), cy); }
+      return str.length * g;
+    }
+    function drawTileRow(parts, x, cy, u) {       // A: мини-полоска квадрат/доминошка от левого края x; возвращает ширину
+      if (!parts.length) { ctx.fillStyle = COL.steel; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = Math.round(u * 1.1) + "px 'Glacial Indifference',sans-serif"; ctx.fillText('∅', x, cy); return u * 0.7; }
+      var xx = x, top = cy - u / 2; ctx.lineWidth = Math.max(1, u * 0.06); ctx.strokeStyle = COL.ink;
+      parts.forEach(function (p) { var w = p * u; ctx.fillStyle = p === 1 ? COL.sq : COL.dom; ctx.fillRect(xx, top, w, u); ctx.strokeRect(xx, top, w, u); xx += w; });
+      return xx - x;
+    }
+    function drawExamples() {                      // таблица (реш. владельца): столбец n │ список объектов; минимализм, без линий, без «n=», одна гарнитура
+      var ns = [0]; exRange.forEach(function (k) { if (k > 0) ns.push(k); });   // 0,1,2,3,4
+      var rows = ns.length, padL = cssW * 0.06, padT = cssH * 0.08, padB = cssH * 0.08;
+      var rowH = (cssH - padT - padB) / rows, numRight = padL + cssW * 0.045, objX = padL + cssW * 0.13;
+      var tiling = st.mode === 'tiling', availW = cssW - objX - padL;
+      var big = tiling ? enumTilings(ns[ns.length - 1]) : objList(ns[ns.length - 1]), maxItems = big.length;
+      var maxLen = tiling ? ns[ns.length - 1] : big.reduce(function (a, s) { return Math.max(a, s === '' ? 1 : s.length); }, 1);
+      var ch = rowH * 0.5;
+      for (var t = Math.min(rowH * 0.6, 72); t >= 14; t -= 2) {   // подгон под самый длинный ряд
+        var g = t * 0.62;
+        if (maxItems * maxLen * g + (maxItems - 1) * t * 0.95 <= availW) { ch = t; break; }
+      }
+      ns.forEach(function (nn, ri) {
+        var cy = padT + rowH * (ri + 0.5);
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = COL.steel;   // число n — та же гарнитура, приглушённое
+        ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',sans-serif";
+        ctx.fillText(String(nn), numRight, cy);
+        var gp = ch * 0.95, x = objX;
+        if (tiling) {
+          enumTilings(nn).forEach(function (t2) { x += drawTileRow(t2, x, cy, ch * 0.62) + gp; });
+        } else {
+          var gg = ch * 0.62;
+          objList(nn).forEach(function (s) { drawSeq(s, x, cy, ch); x += (s === '' ? ch * 0.7 : s.length * gg) + gp; });
+        }
+      });
+    }
+    function braceUnder(x1, x2, y) {               // скобка ПОД отрезком: «остаток — меньшая последовательность»
+      var mid = (x1 + x2) / 2; ctx.strokeStyle = COL.steel; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(x1, y); ctx.quadraticCurveTo(x1, y + 8, mid - 8, y + 8);
+      ctx.quadraticCurveTo(mid, y + 8, mid, y + 15); ctx.quadraticCurveTo(mid, y + 8, mid + 8, y + 8);
+      ctx.quadraticCurveTo(x2, y + 8, x2, y); ctx.stroke();
+    }
+    function drawRecurMech() {                     // механизм «по первому элементу»; клик редактирует объект, сохраняя валидность
+      if (st.mode === 'subset') { drawRecurSubset(); return; }
+      if (st.mode === 'tiling') { drawRecurTiling(); return; }
+      if (st.mode === 'perm') { drawRecurPerm(); return; }
+      if (st.mode === 'hwalk') { drawRecurHwalk(); return; }
+      var seq = st.recurSeq, n = seq.length;
+      var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.98;
+      var x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      var firstBlock = seq.charAt(0) === '1' ? 1 : 2;   // '1'→блок 1; '0'→обязана идти '1', блок «01»
+      ctx.fillStyle = COL.blush;                        // бледный кирпич: «смотрим на первый символ»
+      ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * firstBlock, ch * 1.24);
+      st._seqHit = [];
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      for (var i = 0; i < n; i++) {
+        var cx = x0 + g * i;
+        ctx.fillStyle = COL.ink; ctx.fillText(seq.charAt(i), cx, cy);
+        ctx.strokeStyle = COL.rule; ctx.lineWidth = 2;   // тонкое подчёркивание = символ редактируемый
+        ctx.beginPath(); ctx.moveTo(cx - g * 0.27, cy + ch * 0.56); ctx.lineTo(cx + g * 0.27, cy + ch * 0.56); ctx.stroke();
+        st._seqHit.push({ x: cx, i: i, g: g });
+      }
+      if (firstBlock < n) braceUnder(x0 + g * (firstBlock - 0.4), x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = COL.steel; ctx.textAlign = 'center';
+      ctx.font = "16px ui-monospace,monospace"; ctx.fillText('клик по любому символу — меняет 0 ⇄ 1', cssW / 2, cssH * 0.93); ctx.restore();
+    }
+    function editSeq(px) {                          // клик по ближайшему символу → переключить, сохраняя валидность C (нет «00», конец = 1)
+      if (!st._seqHit) return false;
+      var best = null, bd = 1e9;
+      st._seqHit.forEach(function (h) { var d = Math.abs(px - h.x); if (d < bd) { bd = d; best = h; } });
+      if (!best || bd > best.g * 0.7) return false;
+      var s = st.recurSeq.split(''), n = s.length, i = best.i, bad = { x: best.x, y: cssH * 0.44, r: best.g * 0.5, a: 1 };
+      if (s[i] === '0') { s[i] = '1'; st.recurSeq = s.join(''); return true; }        // убрать 0 — всегда можно
+      if (i === n - 1) { st._flash = bad; flashAnim(); return 'blocked'; }             // конец обязан быть 1
+      if (s[i - 1] === '0' || s[i + 1] === '0') { st._flash = bad; flashAnim(); return 'blocked'; }  // «00» нельзя
+      s[i] = '0'; st.recurSeq = s.join(''); return true;
+    }
+    function drawRecurSubset() {                    // B: позиции 1..n-1 кружками; крайний подсвечен; клик вкл/выкл (нет соседних)
+      var m = st.n - 1, inS = {}; st.recurSub.forEach(function (p) { inS[p] = 1; });
+      var g = Math.min(cssW * 0.5 / Math.max(1, m), cssH * 0.24), r = g * 0.34;
+      var cx0 = cssW / 2 - g * (m - 1) / 2, cy = cssH * 0.42;
+      if (m >= 1) { ctx.fillStyle = COL.blush; ctx.fillRect(cx0 + g * (m - 1) - g * 0.55, cy - r * 1.7, g * 1.1, r * 3.4); }  // «смотрим на крайний элемент»
+      st._subHit = [];
+      for (var p = 1; p <= m; p++) {
+        var x = cx0 + g * (p - 1), filled = !!inS[p], placeable = !inS[p] && !inS[p - 1] && !inS[p + 1], disabled = !filled && !placeable;
+        ctx.globalAlpha = disabled ? 0.32 : 1;
+        ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fillStyle = filled ? COL.brick : COL.card; ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = COL.ink; ctx.stroke(); ctx.globalAlpha = 1;
+        ctx.fillStyle = filled ? COL.card : (disabled ? COL.steel : COL.ink);
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = Math.round(r * 1.15) + "px 'Glacial Indifference',sans-serif";
+        ctx.fillText(String(p), x, cy);
+        st._subHit.push({ x: x, y: cy, r: r * 1.35, p: p, active: !disabled });
+      }
+      var restEnd = inS[m] ? m - 2 : m - 1;          // остаток: крайний вне → 1..m-1 (B_{n-1}); в → 1..m-2 (B_{n-2})
+      if (restEnd >= 1) braceUnder(cx0 - g * 0.45, cx0 + g * (restEnd - 1) + g * 0.45, cy + r * 2.3);
+      ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = COL.steel; ctx.textAlign = 'center';
+      ctx.font = "16px ui-monospace,monospace"; ctx.fillText('клик по числу — вкл/выкл в подмножество', cssW / 2, cssH * 0.93); ctx.restore();
+    }
+    function editSubset(px, py) {                   // клик по кружку → вкл/выкл (запрет соседних — фидбек)
+      if (!st._subHit) return false;
+      for (var i = 0; i < st._subHit.length; i++) {
+        var h = st._subHit[i];
+        if (Math.abs(px - h.x) <= h.r && Math.abs(py - h.y) <= h.r) {
+          if (!h.active) { st._flash = { x: h.x, y: h.y, r: h.r, a: 1 }; flashAnim(); return 'blocked'; }
+          var idx = st.recurSub.indexOf(h.p);
+          if (idx >= 0) st.recurSub.splice(idx, 1); else st.recurSub.push(h.p);
+          return true;
+        }
+      }
+      return false;
+    }
+    function recurHint(txt) { ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = COL.steel; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.font = "16px ui-monospace,monospace"; ctx.fillText(txt, cssW / 2, cssH * 0.93); ctx.restore(); }
+    function drawRecurTiling() {                    // A: полоска, первая плитка подсвечена, скобка над остатком; клик по плитке — квадрат ⇄ доминошка
+      var parts = st.recurParts, cells = parts.reduce(function (a, x) { return a + x; }, 0);
+      var u = Math.min(cssW * 0.5 / cells, cssH * 0.2), x0 = cssW / 2 - u * cells / 2, cy = cssH * 0.44, top = cy - u / 2;
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - u * 0.14, top - u * 0.16, parts[0] * u + u * 0.28, u + u * 0.32);
+      var x = x0; ctx.lineWidth = Math.max(2, u * 0.05); ctx.strokeStyle = COL.ink;
+      parts.forEach(function (p) { var w = p * u; ctx.fillStyle = p === 1 ? COL.sq : COL.dom; ctx.fillRect(x, top, w, u); ctx.strokeRect(x, top, w, u); x += w; });
+      st._tileL = { x0: x0, u: u, cells: cells };
+      var restX = x0 + parts[0] * u;
+      if (restX < x0 + cells * u) braceUnder(restX, x0 + cells * u, cy + u * 0.85);
+      recurHint('клик по плитке — квадрат ⇄ доминошка');
+    }
+    function editTiling(px) {                        // клик → перекладка плитки под курсором (валидное замощение)
+      var L = st._tileL; if (!L) return false;
+      var cell = Math.floor((px - L.x0) / L.u) + 1;
+      if (cell < 1 || cell > L.cells) return false;
+      return toggleCell(st.recurParts, cell, true);
+    }
+    function drawRecurPerm() {                       // F: однострочная π, первый блок подсвечен (π(1)=1 или транспозиция 21), скобка над остатком
+      var pi = perm(st.recurParts), n = pi.length, fb = st.recurParts[0] === 1 ? 1 : 2;
+      var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.95, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * fb, ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      for (var i = 0; i < n; i++) { ctx.fillStyle = COL.ink; ctx.fillText(String(pi[i]), x0 + g * i, cy); }
+      st._permL = { x0: x0, g: g, n: n };
+      if (fb < n) braceUnder(x0 + g * (fb - 0.4), x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      recurHint('клик по числу — переставить соседей');
+    }
+    function editPerm(px) {                          // клик по позиции → та же перекладка плиток (сосед. транспозиция)
+      var L = st._permL; if (!L) return false;
+      var pos = Math.floor((px - L.x0) / L.g + 0.5) + 1;
+      if (pos < 1 || pos > L.n) return false;
+      return toggleCell(st.recurParts, pos, true);
+    }
+    function drawRecurHwalk() {                      // H: обход цифр, первый шаг (1→2) подсвечен, скобка над остатком; клик — новый пример
+      var w = st.recurH, n = w.length;
+      var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.95, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * 2, ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      for (var i = 0; i < n; i++) { ctx.fillStyle = COL.ink; ctx.fillText(String(w[i]), x0 + g * i, cy); }
+      if (n > 2) braceUnder(x0 + g * 1.6, x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      recurHint('клик — другой пример обхода');
+    }
+
     function draw() {
       if (!cssW) return;
       ctx.clearRect(0, 0, cssW, cssH);
+      var stage = curStage();
+      if (stage) canvas.style.cursor = (stage === 'recur') ? 'pointer' : 'default';
+      if (stage === 'empty') { return; }                    // картинка после формулировки: низ чист
+      if (stage === 'examples') { drawExamples(); return; }
+      if (stage === 'recur') { drawRecurMech(); drawFlash(); return; }
       if (st.mode === 'cassini') { drawCassini(); return; }
       if (st.mode === 'zeck') { drawZeck(); drawFlash(); drawHint(); return; }
       st._L = drawStrip(st.parts, cssH * STRIP_CY, { hi: (st.mode === 'recur' || st.mode === 'sum' || st.mode === 'firstsq') ? firstHi() : null });
@@ -588,7 +844,24 @@ body.blanked #stage { visibility: hidden; }
       })(t0);
     }
 
+    if (slideEl && window.MutationObserver)   // сцена сменилась (движок повесил .scene-k) → перерисовать сразу
+      new MutationObserver(function () { draw(); }).observe(slideEl, { attributes: true, attributeFilter: ['class'] });
     canvas.addEventListener('click', function (e) {
+      if (stages.length) {                    // staged: клик активен только на сцене «рекуррента» (редактировать последовательность)
+        if (curStage() === 'recur') {
+          syncSize();
+          var rr = canvas.getBoundingClientRect();
+          if (!rr.width || !rr.height) return;   // защита: слайд ещё не отмасштабирован (scale 0) → деление на 0
+          var px = (e.clientX - rr.left) / rr.width * cssW, py = (e.clientY - rr.top) / rr.height * cssH, done;
+          if (st.mode === 'subset') done = editSubset(px, py);
+          else if (st.mode === 'tiling') done = editTiling(px);
+          else if (st.mode === 'perm') done = editPerm(px);
+          else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
+          else done = editSeq(px);
+          if (done === true) draw();
+        }
+        return;                               // прочие сцены — навигация кликером/клавишами, не по канвасу
+      }
       syncSize();
       var r = canvas.getBoundingClientRect();
       var x = (e.clientX - r.left) / r.width * cssW;
