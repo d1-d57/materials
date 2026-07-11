@@ -35,6 +35,7 @@
   function perm(parts) { var pi = [], i = 1; parts.forEach(function (x) { if (x === 1) { pi.push(i); i++; } else { pi.push(i + 1); pi.push(i); i += 2; } }); return pi; }
   var SUBS = { '0': '₀','1': '₁','2': '₂','3': '₃','4': '₄','5': '₅','6': '₆','7': '₇','8': '₈','9': '₉' };
   function sub(x) { return String(x).replace(/[0-9]/g, function (d) { return SUBS[d]; }); }
+  function plural(n, one, few, many) { var t = n % 10, h = n % 100; return (t === 1 && h !== 11) ? one : (t >= 2 && t <= 4 && (h < 12 || h > 14)) ? few : many; }
 
   /* ── примитив: модель-уровневая правка полоски по НОМЕРУ клетки (1-based) ──
      клетка в доминошке → расщепить на два квадрата; клетка-квадрат →
@@ -175,13 +176,13 @@
         for (j = 0; j < lim; j++) pre += st.parts[j];
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(kk == null ? 'сплошь квадраты — особое, это «−1»'
-          : pre + ' квадрат(ов) · доминошка · A' + sub(st.n - pre - 2), cssW / 2, by);
+          : pre + ' ' + plural(pre, 'квадрат', 'квадрата', 'квадратов') + ' · доминошка · A' + sub(st.n - pre - 2), cssW / 2, by);
       } else if (st.mode === 'firstsq') {
         var qk = firstHi(), pd = 0, lim2 = qk == null ? st.parts.length : qk, jj;
         for (jj = 0; jj < lim2; jj++) pd += st.parts[jj];   // клеток до первого квадрата (все доминошки → pd = 2·#дом)
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(qk == null ? 'сплошь доминошки — особое (только при чётном n)'
-          : (pd / 2) + ' доминош(ек) · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
+          : (pd / 2) + ' ' + plural(pd / 2, 'доминошка', 'доминошки', 'доминошек') + ' · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
       }
     }
 

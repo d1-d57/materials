@@ -177,8 +177,9 @@ body.blanked #stage { visibility: hidden; }
 
 <section class="slide" data-kind="tall" id="s05-masks" data-scenes="1">
   <div class="grid">
-    <div class="zone copy"><div class="t-body"><p>В листке <span class="acc">восемь</span> множеств: A, B, C … H. На вид — зоопарк, но каждое считается тем же числом fₙ.</p></div></div>
-    <div class="board"><div class="panel" data-ill="masks-fan"></div></div>
+    <div class="zone copy"><div class="t-body"><p><span class="acc">Восемь масок — одно лицо.</span> В листке множества A, B, C … H: на вид зоопарк, а считаются одним и тем же fₙ.</p>
+<p>Не доказываем все 28 пар. Каждую маску связываем с полоской <span class="acc">Aₙ</span> — хаб и семь спиц, не паутина. Дальше — три спицы вживую.</p></div></div>
+    <div class="board"><div class="panel" data-ill="star"></div></div>
   </div>
 </section>
 
@@ -276,25 +277,6 @@ body.blanked #stage { visibility: hidden; }
   </g>
 </svg>
 </template>
-<template id="ill-masks-fan"><svg viewBox="0 0 1120 440" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <g font-family="'Forum',serif" font-size="52" fill="var(--ink)" text-anchor="middle">
-    <g stroke="var(--ink)" stroke-width="2.5">
-      <rect x="40"  y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="190" y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="340" y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="660" y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="810" y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="960" y="60" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="115" y="250" width="120" height="120" rx="10" fill="var(--card)"/>
-      <rect x="885" y="250" width="120" height="120" rx="10" fill="var(--card)"/>
-    </g>
-    <text x="100" y="140">A</text><text x="250" y="140">B</text><text x="400" y="140">C</text>
-    <text x="720" y="140">D</text><text x="870" y="140">E</text><text x="1020" y="140">F</text>
-    <text x="175" y="330">G</text><text x="945" y="330">H</text>
-    <text x="560" y="230" font-family="'Glacial Indifference',sans-serif" font-size="72" fill="var(--brick)">= fₙ</text>
-  </g>
-</svg>
-</template>
 <template id="ill-star"><svg viewBox="0 0 900 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
   <g stroke="var(--steel)" stroke-width="4">
     <line x1="450" y1="260" x2="180" y2="90"/><line x1="450" y1="260" x2="450" y2="70"/>
@@ -323,23 +305,6 @@ body.blanked #stage { visibility: hidden; }
     <rect x="555" y="45" width="90" height="90" fill="var(--cgreen)"/>
     <rect x="645" y="45" width="180" height="90" fill="var(--mustard)"/>
     <rect x="825" y="45" width="90" height="90" fill="var(--cgreen)"/>
-  </g>
-</svg>
-</template>
-<template id="ill-bridge"><svg viewBox="0 0 1200 170" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <g stroke="var(--ink)" stroke-width="3">
-    <rect x="120" y="60" width="70" height="70" fill="var(--cgreen)"/>
-    <rect x="190" y="60" width="140" height="70" fill="var(--mustard)"/>
-    <rect x="330" y="60" width="70" height="70" fill="var(--cgreen)"/>
-    <rect x="400" y="60" width="70" height="70" fill="var(--cgreen)"/>
-  </g>
-  <text x="560" y="105" font-family="'Glacial Indifference',sans-serif" font-size="56" fill="var(--ink)" text-anchor="middle">↔</text>
-  <g stroke="var(--ink)" stroke-width="3" fill="none">
-    <circle cx="830" cy="95" r="70" stroke="var(--ink)"/>
-    <path d="M 830 25 A 70 70 0 0 1 900 95" fill="var(--mustard)"/>
-    <path d="M 900 95 A 70 70 0 0 1 830 165" fill="var(--cgreen)"/>
-    <path d="M 830 165 A 70 70 0 0 1 760 95" fill="var(--cgreen)"/>
-    <path d="M 760 95 A 70 70 0 0 1 830 25" fill="var(--mustard)"/>
   </g>
 </svg>
 </template>
@@ -382,6 +347,7 @@ body.blanked #stage { visibility: hidden; }
   function perm(parts) { var pi = [], i = 1; parts.forEach(function (x) { if (x === 1) { pi.push(i); i++; } else { pi.push(i + 1); pi.push(i); i += 2; } }); return pi; }
   var SUBS = { '0': '₀','1': '₁','2': '₂','3': '₃','4': '₄','5': '₅','6': '₆','7': '₇','8': '₈','9': '₉' };
   function sub(x) { return String(x).replace(/[0-9]/g, function (d) { return SUBS[d]; }); }
+  function plural(n, one, few, many) { var t = n % 10, h = n % 100; return (t === 1 && h !== 11) ? one : (t >= 2 && t <= 4 && (h < 12 || h > 14)) ? few : many; }
 
   /* ── примитив: модель-уровневая правка полоски по НОМЕРУ клетки (1-based) ──
      клетка в доминошке → расщепить на два квадрата; клетка-квадрат →
@@ -522,13 +488,13 @@ body.blanked #stage { visibility: hidden; }
         for (j = 0; j < lim; j++) pre += st.parts[j];
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(kk == null ? 'сплошь квадраты — особое, это «−1»'
-          : pre + ' квадрат(ов) · доминошка · A' + sub(st.n - pre - 2), cssW / 2, by);
+          : pre + ' ' + plural(pre, 'квадрат', 'квадрата', 'квадратов') + ' · доминошка · A' + sub(st.n - pre - 2), cssW / 2, by);
       } else if (st.mode === 'firstsq') {
         var qk = firstHi(), pd = 0, lim2 = qk == null ? st.parts.length : qk, jj;
         for (jj = 0; jj < lim2; jj++) pd += st.parts[jj];   // клеток до первого квадрата (все доминошки → pd = 2·#дом)
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(qk == null ? 'сплошь доминошки — особое (только при чётном n)'
-          : (pd / 2) + ' доминош(ек) · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
+          : (pd / 2) + ' ' + plural(pd / 2, 'доминошка', 'доминошки', 'доминошек') + ' · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
       }
     }
 
