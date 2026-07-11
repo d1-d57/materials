@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Информация и коды — карта источников и архитектура</title>
+<style>
+  :root{
+    --ink:#1d1c1a; --muted:#6b675f; --line:#e0dbcf; --bg:#faf8f2; --card:#fffdf8;
+    --l1:#b5651d; --l2:#2f6f6a; --l3:#7a4b8a; --l4:#8a6d1a; --safe:#2f6f6a; --hold:#b23b3b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+  h1{font:600 30px/1.2 Georgia,"Times New Roman",serif;margin:0 0 4px}
+  h2{font:600 21px/1.25 Georgia,serif;margin:44px 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+  h3{font:600 16px/1.3 -apple-system,sans-serif;margin:22px 0 8px}
+  p{margin:10px 0}
+  .lead{color:var(--muted);font-size:17px;margin:0 0 8px}
+  .spine{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--l2);
+    border-radius:8px;padding:16px 20px;margin:18px 0}
+  .spine b{color:var(--l2)}
+  small,.note{color:var(--muted);font-size:13.5px}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px;background:var(--card)}
+  th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}
+  th{background:#f2eee3;font-weight:600}
+  .tag{display:inline-block;font-size:12px;font-weight:600;color:#fff;border-radius:4px;padding:1px 7px;white-space:nowrap}
+  .t1{background:var(--l1)} .t2{background:var(--l2)} .t3{background:var(--l3)} .t4{background:var(--l4)}
+  .safe{color:var(--safe);font-weight:600} .hold{color:var(--hold);font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin:14px 0}
+  .src{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+  .src b{font-size:14.5px} .src p{margin:6px 0 0;font-size:13.5px;color:var(--muted)}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:12px 0}
+  .opt.rec{border-left:4px solid var(--l2)}
+  .rec-badge{font-size:12px;font-weight:700;color:var(--l2)}
+  ol,ul{margin:8px 0 8px 4px;padding-left:20px} li{margin:4px 0}
+  .arc{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .arc .step{flex:1;min-width:190px;background:var(--card);border:1px solid var(--line);border-top:3px solid;border-radius:8px;padding:12px 14px}
+  .arc .s1{border-top-color:var(--l1)} .arc .s2{border-top-color:var(--l2)}
+  .arc .s3{border-top-color:var(--l3)} .arc .s4{border-top-color:var(--l4)}
+  .arc .step b{display:block;margin-bottom:4px;font-size:14.5px}
+  .arc .step small{display:block}
+  .q{background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 16px;margin:10px 0}
+  .footer{margin-top:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Информация и коды</h1>
+  <p class="lead">Карта источников и архитектура курса — синтез всех проходов. Черновик для обсуждения.</p>
+
+  <div class="spine">
+    <b>Сквозная идея — передать информацию.</b> Кодирование и шифрование — разные вещи: шифр про <i>секретность</i>, курс про <i>информацию</i> (сколько её; как записать нулями-единицами; как защитить от ошибок; каков предел). Поэтому <b>шифры — это дверь (Л1), а не сам дом.</b> Держим линию информации и не растворяемся в криптографии.
+  </div>
+
+  <h2>1. Что нашлось (инвентарь)</h2>
+  <div class="grid">
+    <div class="src"><b>Командный листок «Криптография»</b><span class="tag t1">Л1</span><p>Крипто-10 часы · 30 вышивка · 50 шестерёнки (декод); Крипто-20 коды доступа = счёт → Л2; Крипто-40 радиокод = ошибки → Л3. Держится на рисунках (нужны из PDF).</p></div>
+    <div class="src"><b>25 этюдов о шифрах</b> (Дориченко-Ященко)<span class="tag t1">Л1</span><p>§2.4 классика: Цезарь, Сциталь, Виженер, замена, перестановка + история §1.4. §2.1 «в двоичный вид» → Л2. Приложение (олимп-крипта ИКСИ) — тяжело → Л3/Л4.</p></div>
+    <div class="src"><b>problems.ru, тема «Криптография»</b><span class="tag t1">Л1</span> <span class="tag t2">Л2</span> <span class="tag t3">Л3</span><p>30 задач, у каждой сложность+классы. ~7 играбельных кл.5-7; остальное кл.8-11 (жёсткая крипта). Есть двоичные (#35786) и «код с исправлением» (#60648) — это резерв Л2/Л3.</p></div>
+    <div class="src"><b>Матпраздник 2023-2026</b><span class="tag t1">Л1</span><p>Общая олимпиада 6-7 кл. Немного по теме: 2026 «закодируй/фокус», 2024 буквенная арифметика.</p></div>
+    <div class="src"><b>Клепцын «Квантик» №7</b> (магические карточки)<span class="tag t2">Л2</span><p>Угадать 0-15 за 4 да/нет → двоичная запись. Сердце Л2 (объект-нить курса).</p></div>
+    <div class="src"><b>Клепцын «Квантик» №8</b> (чётность→Хэмминг)<span class="tag t3">Л3</span><p>Бит чётности → обнаружение; коды 001-111 → исправление 1 ошибки. Ядро Л3.</p></div>
+    <div class="src"><b>ФКН, гл.12 «Разрешающие деревья»</b><span class="tag t2">Л2</span> <span class="tag t3">Л3</span><p>Угадывание, деление пополам, нижние оценки, взвешивания, приём «противник». Оценки для Л2/Л3.</p></div>
+    <div class="src"><b>Квант-1977 (Виленкин)</b> · <b>КФУ «Криптография для школьников»</b><span class="tag t1">Л1</span><p>Научпоп-контекст + пособие с упражнениями (референс, 48 с.). Под добор Л1.</p></div>
+  </div>
+
+  <h2>2. Куда что идёт — и что <span class="hold">беречь</span> для скудных лекций</h2>
+  <p class="note">Главный принцип: в Л1 берём только то, что <b>дальше не всплывёт</b> (чистый декод/секретность). Всё про двоичное, счёт сообщений, угадывание, чётность/ошибки, оценки — <b class="hold">резерв</b> Л2-Л4, где задачи искать труднее.</p>
+  <table>
+    <tr><th>Тип задач</th><th>Куда</th><th>Источники</th><th>Заметка</th></tr>
+    <tr><td>Классические шифры (Цезарь, Сциталь, Виженер, замена, перестановка, тарабарская, pigpen)</td><td><span class="tag t1">Л1</span></td><td>25 этюдов §2.4; problems.ru #88134 #88133 #35764 #35683 #35638 #35650; листок Крипто-30</td><td class="safe">Секретность. Л1 и только — не возвращаются.</td></tr>
+    <tr><td>Декод-головоломки (часы, шестерёнки, вышивка)</td><td><span class="tag t1">Л1</span></td><td>Крипто-10/30/50; problems.ru #35745</td><td class="safe">Чистый декод. Л1.</td></tr>
+    <tr><td>Коды переменной длины / однозначность (Робот; декод по номерам)</td><td><span class="tag t1">Л1</span>→<span class="tag t2">Л2</span></td><td>problems.ru #65600 #88080 #88151</td><td>Пограничные: идея «однозначность декодирования» — уже Л2. В Л1 брать как фан, смысл не выжимать.</td></tr>
+    <tr><td>Сколько сообщений? (счёт кодов, коды доступа, решётки)</td><td><span class="tag t2">Л2</span></td><td>Крипто-20; problems.ru #35667</td><td class="hold">Информация = число вариантов. Беречь для Л2.</td></tr>
+    <tr><td>Двоичная запись (любую инфу → 0/1)</td><td><span class="tag t2">Л2</span></td><td>25 этюдов §2.1; problems.ru #35786 (телеграф)</td><td class="hold">Ядро Л2. Беречь.</td></tr>
+    <tr><td>Угадай число за да/нет + магические карточки</td><td><span class="tag t2">Л2</span></td><td>Клепцын №7; ФКН §12.1</td><td class="hold">Сердце Л2. Беречь.</td></tr>
+    <tr><td>Оценки / деревья / взвешивания</td><td><span class="tag t2">Л2</span>-<span class="tag t3">Л3</span></td><td>ФКН §12.4</td><td class="hold">Нижние оценки. Беречь.</td></tr>
+    <tr><td>Чётность → обнаружение/исправление ошибок</td><td><span class="tag t3">Л3</span></td><td>Клепцын №8; Крипто-40; problems.ru #60648</td><td class="hold">Избыточность защищает. Задач МАЛО — беречь строго!</td></tr>
+    <tr><td>Мудрецы / колпаки</td><td><span class="tag t3">Л3</span>-<span class="tag t4">Л4</span></td><td>искать: ШМК, Турнир городов</td><td class="hold">Кульминация Хэмминга. Беречь.</td></tr>
+    <tr><td>Прячем информацию (протокол карт)</td><td><span class="tag t3">Л3</span>-<span class="tag t4">Л4</span></td><td>problems.ru #105089 (Шаповалов)</td><td class="hold">Про информацию. Беречь.</td></tr>
+    <tr><td>Сжатие / энтропия (Хаффман); коды в жизни (штрихкод, QR)</td><td><span class="tag t4">Л4</span></td><td>искать: Квант, научпоп</td><td>Кандидаты Л4. Задач нет — нужен отдельный ресёрч.</td></tr>
+  </table>
+
+  <h2>3. Архитектура — предложение</h2>
+  <p>Сейчас план фактически на 3 занятия, Л4 «непонятная». На линии «информации» естественно раскладывается так:</p>
+  <div class="arc">
+    <div class="step s1"><b>Л1 · Шифры</b><small>Секретные коды: декод-разнобой (25 этюдов, командный листок, problems.ru). Дверь в тему.</small></div>
+    <div class="step s2"><b>Л2 · Сколько информации</b><small>Да/нет, двоичная запись, магические карточки, счёт вариантов, оценки.</small></div>
+    <div class="step s3"><b>Л3 · Защита от ошибок</b><small>Чётность → Хэмминг, восстановление, мудрецы/колпаки.</small></div>
+    <div class="step s4"><b>Л4 · Кульминация</b><small>Сжатие/энтропия наглядно + коды в жизни (QR, штрихкод) + гранд-мудрецы.</small></div>
+  </div>
+
+  <div class="opt rec">
+    <span class="rec-badge">РЕКОМЕНДУЮ · одна крипто-лекция</span>
+    <p style="margin:6px 0 0">Л1 — <b>одна</b> лекция шифров (богатый листок, чистая секретность), потом чистый разворот к смыслу. Крипто — дверь, а не полкурса; «разнобой» ты сам считаешь слабым — поэтому один яркий вход и дальше осмысленная линия. Все двоично-ошибочно-оценочные задачи <b class="hold">бережём</b> под Л2-Л3.</p>
+  </div>
+  <div class="opt">
+    <span class="note">АЛЬТЕРНАТИВА · крипто на ~1.5-2 лекции</span>
+    <p style="margin:6px 0 0">Растянуть шифры, а магические карточки/угадывание дать <b>в конце Л2</b> как хук «на подумать дома», и уже с Л3 продолжить оценками. Минус: смысл наступает позже, «разнобоя» больше. Твоя же идея — держу как вариант.</p>
+  </div>
+  <p><b>Про Л4:</b> предлагаю «коды в жизни + кульминация» — где всё это живёт (QR/штрихкод/ISBN), наглядное сжатие, и гранд-задача про мудрецов = переоткрытие Хэмминга. Задач тут нет в руках → нужен отдельный ресёрч (Квант, Турнир городов, ШМК).</p>
+
+  <h2>4. Чистый Л1 (без спойлеров) — что предлагаю в листок</h2>
+  <p>Только секретность/декод; из моего листка <b>убираю</b> #35786 (двоичное → Л2) и #60648 (чётность/ошибки → Л3) — их в резерв.</p>
+  <ul>
+    <li><b>Разминка (доска):</b> тарабарская грамота (#88134) · декод по номерам букв (#88151).</li>
+    <li><b>Простые:</b> «Алиса в Зазеркалье» (#88133) · какой криб легче (#35764) · классика Цезарь/Сциталь (25 этюдов).</li>
+    <li><b>Средние:</b> три шестерёнки (#35745 или Крипто-50) · вышивка-перестановка (Крипто-30) · сломанные часы (Крипто-10) · Виженер с {А,Б,В} (#35683) · буквы↔цифры за 5 вопросов (#66987).</li>
+    <li><b>Гробы:</b> перестановка+замена, восстановить (#35638) · три текста → МОСКВА (#35650).</li>
+    <li class="note">Пограничные (коды-однозначность): Робот (#65600) — можно взять как фан, но идею «однозначность» не вскрывать (это Л2).</li>
+  </ul>
+
+  <h2>5. Решить с тобой</h2>
+  <div class="q"><p><b>1. Крипто:</b> одна лекция (реком.) или растянуть на ~2?</p></div>
+  <div class="q"><p><b>2. Всего занятий:</b> 4 (с предложенным Л4 «коды в жизни + кульминация») или 3?</p></div>
+  <div class="q"><p><b>3. Магические карточки / угадывание:</b> центр Л2 (реком.) или хук в конце Л2 «на подумать дома»?</p></div>
+  <div class="q"><p><b>4. Л4:</b> направление «коды в жизни + кульминация» — годится? (тогда ставлю отдельный ресёрч)</p></div>
+
+  <div class="footer">
+    Источники в руках — <code>istochniki/pdf/</code> (+ MANIFEST/VYCHITANO, где записан полный каталог 30 задач problems.ru с уровнями). Черновой листок Л1 — <code>kartoteka/L1-listok-shifry.md</code> (будет поправлен под non-spoiler после решения по архитектуре).
+  </div>
+
+</div>
+</body>
+</html>
