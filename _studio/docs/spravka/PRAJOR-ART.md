@@ -31,5 +31,17 @@
 - [Anthropic — context engineering](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) · [Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) · [LangGraph persistence](https://docs.langchain.com/oss/python/langgraph/persistence) · [12-factor agents](https://github.com/humanlayer/12-factor-agents)
 - [Base64 SVG (CSS-Tricks)](https://css-tricks.com/probably-dont-base64-svg/) · [SVGO](https://svgo.dev/) · [reproducible builds](https://reproducible-builds.org/docs/deterministic-build-systems/)
 
+## Источники для научпоп-геометрии (6 кл, кружковый формат) — арка geometria-6
+Проверено в арке `2026-07-11_geometria-6-nagliadnaya`.
+- **Кружки МЦНМО** — `old.mccme.ru/circles/mccme/<год>/<класс>/` — листки по классам/темам (6 кл, geom_7); базовый источник простых наглядных задач.
+- **Квантик** — `kvantik.com` — журнал 4–8 кл, визуально, целевой возраст; рубрикатор статей Квант+Квантик по темам.
+- **Квант** — `kvant.mccme.ru` (зеркало `kvant.digital`) — наглядные научпоп-статьи.
+- **Математические этюды** — `etudes.ru`, `en.etudes.ru/models` — визуальные модели (Мёбиус, Рёло, конические, многогранники, паркеты). «Математическая составляющая» — `book.etudes.ru` — вау-эссе (напр. Рёло).
+- **Книги:** **Шарыгин-Ерганжиева «Наглядная геометрия 5–6»** (МИРОС 1992) — якорь, покрывает почти все наглядные темы; **Мерзон-Ященко «Длина, площадь, объём»** (МЦНМО) — масштаб/размерность, готовые листки; Гарднер (головоломки); Кадзуо Хага «Оригамика».
+- **Готовые листки с решениями:** «Математический театр» (sch2000).
+- **Тематически:** `elementy.ru/problems`, `n+1`, Habr; Г. Мерзон «Оптическое свойство» (`dev.mccme.ru/~merzon`).
+
+Метод: рус. приоритет, по темам, гейт доступности 6 кл, регистрация в реестре зоны. Как искать — `../kak-delat/PROGRAMMA-KURSA.md`.
+
 ---
 *Находки ресёрча. Что из них решено — `../pochemu-i-videnie/RESHENIYA.md` (Р7–Р10).*
