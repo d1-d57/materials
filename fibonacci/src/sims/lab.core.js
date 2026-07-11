@@ -64,7 +64,7 @@
     var mode = canvas.dataset.mode || 'code';
     var n = parseInt(canvas.dataset.n || '8', 10);
     var editImg = canvas.dataset.editimg === '1';
-    var st = { parts: randParts(n), n: n, mode: mode, pairB: randParts(n), _L: null, _hit: [], _flash: 0, _lastPair: -1 };
+    var st = { parts: randParts(n), n: n, mode: mode, pairB: randParts(n), sel: [], _L: null, _hit: [], _flash: 0, _lastPair: -1 };
     var ctx = canvas.getContext('2d');
     var cssW = 0, cssH = 0;
     var STRIP_CY = 0.30, IMG_CY = 0.70;   // центры двух band'ов (доля высоты)
@@ -185,6 +185,44 @@
       }
     }
 
+    /* ── Цекендорф (задача 5): кирпичи-числа Фибоначчи, выбор НЕСОСЕДНИХ (тот же
+         запрет-во-вводе, что у эталона B_n) → сумма = число. ── */
+    function drawZeck() {
+      var fibs = [1, 2, 3, 5, 8, 13, 21], m = fibs.length;
+      var bw = Math.min(cssW * 0.108, cssH * 0.30), gap = bw * 0.30;
+      var x0 = (cssW - (m * bw + (m - 1) * gap)) / 2, by = cssH * 0.52, bh = bw;
+      var isSel = {}; st.sel.forEach(function (i) { isSel[i] = 1; });
+      st._hit = [];
+      var sum = st.sel.reduce(function (a, i) { return a + fibs[i]; }, 0);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = COL.brick; ctx.font = "bold " + Math.round(cssH * 0.16) + "px 'Glacial Indifference',sans-serif";
+      ctx.fillText(sum > 0 ? String(sum) : '?', cssW / 2, cssH * 0.19);
+      for (var i = 0; i < m; i++) {
+        var x = x0 + i * (bw + gap), selected = !!isSel[i];
+        var disabled = !selected && (isSel[i - 1] || isSel[i + 1]);
+        ctx.globalAlpha = disabled ? 0.3 : 1;
+        ctx.fillStyle = selected ? COL.sq : COL.card; ctx.strokeStyle = COL.ink; ctx.lineWidth = 2.5;
+        ctx.fillRect(x, by, bw, bh); ctx.strokeRect(x, by, bw, bh);
+        ctx.fillStyle = selected ? COL.card : (disabled ? COL.steel : COL.ink);
+        ctx.font = Math.round(bw * 0.4) + "px 'Glacial Indifference',sans-serif";
+        ctx.fillText(String(fibs[i]), x + bw / 2, by + bh / 2);
+        ctx.globalAlpha = 1;
+        st._hit.push({ x: x + bw / 2, y: by + bh / 2, r: bw / 2, idx: i, active: !disabled });
+      }
+    }
+    function toggleZeck(px, py) {
+      for (var i = 0; i < st._hit.length; i++) {
+        var h = st._hit[i];
+        if (Math.abs(px - h.x) <= h.r && Math.abs(py - h.y) <= h.r) {
+          if (h.active === false) { st._flash = { x: h.x, y: h.y, r: h.r, a: 1 }; flashAnim(); return 'blocked'; }
+          var p = st.sel.indexOf(h.idx);
+          if (p >= 0) st.sel.splice(p, 1); else st.sel.push(h.idx);
+          return true;
+        }
+      }
+      return false;
+    }
+
     function drawCassini() {
       drawStrip(st.parts, cssH * 0.3, {});
       drawStrip(st.pairB, cssH * 0.62, {});
@@ -207,6 +245,7 @@
       if (!cssW) return;
       ctx.clearRect(0, 0, cssW, cssH);
       if (st.mode === 'cassini') { drawCassini(); return; }
+      if (st.mode === 'zeck') { drawZeck(); drawFlash(); drawHint(); return; }
       st._L = drawStrip(st.parts, cssH * STRIP_CY, { hi: (st.mode === 'recur' || st.mode === 'sum' || st.mode === 'firstsq') ? firstHi() : null });
       drawImage();
       drawFlash();
@@ -242,6 +281,7 @@
       var x = (e.clientX - r.left) / r.width * cssW;
       var y = (e.clientY - r.top) / r.height * cssH;
       if (st.mode === 'cassini') { st.parts = randParts(st.n); st.pairB = randParts(st.n); draw(); return; }
+      if (st.mode === 'zeck') { if (toggleZeck(x, y) === true) draw(); return; }
       if (editImg && y > cssH * 0.5) { var res = toggleImage(x, y); if (res === true) draw(); return; }
       if (st._L && toggleAt(st.parts, x, st._L)) { st._lastPair = -1; draw(); }
     });

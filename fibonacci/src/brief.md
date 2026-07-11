@@ -17,6 +17,8 @@ slide_order:
   - s08-subset
   - s09-perm
   - s10-sum
+  - s11-square
+  - s12-zeck
 ---
 
 # fibonacci — источник дека (курс «Числа Фибоначчи»)
