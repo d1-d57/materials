@@ -12,6 +12,7 @@ slide_order:
   - s02-hook
   - s04-recur
   - s05-cols
+  - s03-task2
   - s08-subset
   - s07-code
   - s-modelD
@@ -19,7 +20,6 @@ slide_order:
   - s09-perm
   - s-modelG
   - s13-hwalk
-  - s-puanta
   - s-langs
   - s10-sum
   - s11-square

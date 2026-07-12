@@ -143,6 +143,11 @@
     var _d = enumD(n); st.recurD = _d[Math.floor(Math.random() * _d.length)] || [2];    // рекуррента D: случайное разбиение n+2 на части ≥2
     var _e = enumE(n); st.recurE = _e[Math.floor(Math.random() * _e.length)] || [1];    // рекуррента E: случайное разбиение n+1 на нечётные
     var _g = enumG(n); st.recurG = _g[Math.floor(Math.random() * _g.length)] || [];     // рекуррента G: случайный зигзаг длины n−1
+    var hasExamples = stages.indexOf('examples') >= 0;   // сцена «определение» показывает столбик n=0..4 заранее
+    st.bijFirst = 1;                       // A-биекция (сцена 4): первый элемент замощения длины n (1=квадрат, 2=доминошка)
+    st.bijRest5 = randParts(n - 1);        // остаток при первом квадрате → A_{n−1}
+    st.bijRest4 = randParts(Math.max(0, n - 2));  // остаток при первой доминошке → A_{n−2}
+    var MODEL_LETTER = { tiling: 'A', subset: 'B', code: 'C', compGE2: 'D', compOdd: 'E', perm: 'F', zigzag: 'G', hwalk: 'H' };   // для метки «↔ Aₙ» на биекции
     function activeScene() {
       if (!slideEl) return 1;
       for (var k = 9; k >= 1; k--) if (slideEl.classList.contains('scene-' + k)) return k;
@@ -269,18 +274,8 @@
         ctx.lineTo((restStart + restEnd) / 2, by - L.u * 0.5); ctx.stroke();
         ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.085) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText((f0 === 1 ? 'квадрат' : 'доминошка') + ' + A' + sub(st.n - f0), (L.x0 + restEnd) / 2, by);
-      } else if (st.mode === 'sum') {
-        var kk = firstHi(), pre = 0, lim = kk == null ? st.parts.length : kk, j;
-        for (j = 0; j < lim; j++) pre += st.parts[j];
-        ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
-        ctx.fillText(kk == null ? 'сплошь квадраты — особое, это «−1»'
-          : pre + ' ' + plural(pre, 'квадрат', 'квадрата', 'квадратов') + ' · доминошка · A' + sub(st.n - pre - 2), cssW / 2, by);
-      } else if (st.mode === 'firstsq') {
-        var qk = firstHi(), pd = 0, lim2 = qk == null ? st.parts.length : qk, jj;
-        for (jj = 0; jj < lim2; jj++) pd += st.parts[jj];   // клеток до первого квадрата (все доминошки → pd = 2·#дом)
-        ctx.fillStyle = COL.ink; ctx.font = Math.round(cssH * 0.082) + "px 'Glacial Indifference',sans-serif";
-        ctx.fillText(qk == null ? 'сплошь доминошки — особое (только при чётном n)'
-          : (pd / 2) + ' ' + plural(pd / 2, 'доминошка', 'доминошки', 'доминошек') + ' · квадрат · A' + sub(st.n - pd - 1), cssW / 2, by);
+      } else if (st.mode === 'sum') { /* з.3б: ответ = подсветка первой доминошки на ленте (без подписи, реш. владельца) */
+      } else if (st.mode === 'firstsq') { /* з.4: ответ = подсветка первого квадрата (без подписи) */
       } else if (st.mode === 'compGE2') { drawObjRow(tilingToD(st.parts).join('+'));            // D: разбиение под полоской
       } else if (st.mode === 'compOdd') { drawObjRow(tilingToE(st.parts).join('+'));            // E: нечётное разбиение
       } else if (st.mode === 'zigzag') { var _g2 = tilingToG(st.parts, st.n); drawObjRow(_g2.length ? _g2.join('') : '∅');  // G: зигзаг
@@ -373,7 +368,7 @@
       parts.forEach(function (p) { var w = p * u; ctx.fillStyle = p === 1 ? COL.sq : COL.dom; ctx.fillRect(xx, top, w, u); ctx.strokeRect(xx, top, w, u); xx += w; });
       return xx - x;
     }
-    function drawExamples() {                      // таблица (реш. владельца): столбец n │ список объектов; минимализм, без линий, без «n=», одна гарнитура
+    function drawExamples(ghost) {                 // таблица (реш. владельца): столбец n │ список объектов; ghost=true → только столбик n=0..4 полупрозрачно (сцена «определение»)
       var ns = [0]; exRange.forEach(function (k) { if (k > 0) ns.push(k); });   // 0,1,2,3,4
       var rows = ns.length, padL = cssW * 0.06, padT = cssH * 0.08, padB = cssH * 0.08;
       var rowH = (cssH - padT - padB) / rows, numRight = padL + cssW * 0.045, objX = padL + cssW * 0.13;
@@ -387,9 +382,12 @@
       }
       ns.forEach(function (nn, ri) {
         var cy = padT + rowH * (ri + 0.5);
-        ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = COL.steel;   // число n — та же гарнитура, приглушённое
+        ctx.save(); if (ghost) ctx.globalAlpha = 0.3;
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = ghost ? COL.ink : COL.steel;   // число n; на «определении» — полупрозрачное
         ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',sans-serif";
         ctx.fillText(String(nn), numRight, cy);
+        ctx.restore();
+        if (ghost) return;                         // сцена «определение»: только столбик n, объекты дорисуем на сцене «примеры»
         var gp = ch * 0.95, x = objX;
         if (tiling) {
           enumTilings(nn).forEach(function (t2) { x += drawTileRow(t2, x, cy, ch * 0.62) + gp; });
@@ -408,11 +406,11 @@
     function drawRecurMech() {                     // механизм «по первому элементу»; клик редактирует объект, сохраняя валидность
       if (st.mode === 'subset') { drawRecurSubset(); return; }
       if (st.mode === 'tiling') { drawRecurTiling(); return; }
-      if (st.mode === 'perm') { drawRecurPerm(); return; }
-      if (st.mode === 'hwalk') { drawRecurHwalk(); return; }
-      if (st.mode === 'compGE2') { drawRecurGlyph(st.recurD.map(String), 1); return; }
-      if (st.mode === 'compOdd') { drawRecurGlyph(st.recurE.map(String), 1); return; }
-      if (st.mode === 'zigzag') { drawRecurGlyph(st.recurG.map(String), 1); return; }
+      if (st.mode === 'perm') { drawRecurPermPic(); return; }
+      if (st.mode === 'hwalk') { drawRecurWalk(); return; }
+      if (st.mode === 'compGE2') { drawRecurComp(); return; }
+      if (st.mode === 'compOdd') { drawRecurComp(); return; }
+      if (st.mode === 'zigzag') { drawRecurZig(); return; }
       var seq = st.recurSeq, n = seq.length;
       var g = Math.min(cssW * 0.56 / n, cssH * 0.26), ch = g * 0.98;
       var x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
@@ -530,22 +528,154 @@
       if (firstLen < n) braceUnder(x0 + g * (firstLen - 0.4), x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
       recurHint('клик — другой пример');
     }
+    /* ── F: перестановка КАРТИНКОЙ (точки + дуги соседних транспозиций), первый блок подсвечен; клик — переставить соседей ── */
+    function drawRecurPermPic() {
+      var pi = perm(st.recurParts), n = pi.length, fb = st.recurParts[0] === 1 ? 1 : 2;
+      var g = Math.min(cssW * 0.6 / Math.max(1, n), cssH * 0.2), x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44, r = Math.max(6, g * 0.16);
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - g * 0.75, g * fb, g * 1.5);
+      ctx.lineWidth = Math.max(2, g * 0.06); ctx.strokeStyle = COL.steel;
+      for (var i = 0; i < n; i++) if (pi[i] === i + 2) arc(x0 + g * i, x0 + g * (i + 1), cy, g);
+      st._permL = { x0: x0, g: g, n: n };
+      for (var k = 0; k < n; k++) { ctx.beginPath(); ctx.arc(x0 + g * k, cy, r, 0, 7);
+        ctx.fillStyle = pi[k] === k + 1 ? COL.sq : COL.dom; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = COL.ink; ctx.stroke(); }
+      if (fb < n) braceUnder(x0 + g * (fb - 0.4), x0 + g * (n - 1 + 0.4), cy + g * 0.95);
+      recurHint('клик по точке — переставить соседей');
+    }
+    /* ── G: зигзаг РЕДАКТИРУЕМЫМИ цифрами (клик — 0 ⇄ 1, если сохраняется a₁≤a₂≥a₃≤…) ── */
+    function zigOK(s) { for (var j = 0; j < s.length - 1; j++) { if (j % 2 === 0) { if (s[j] > s[j + 1]) return false; } else { if (s[j] < s[j + 1]) return false; } } return true; }
+    function drawRecurZig() {
+      var s = st.recurG, n = s.length;
+      if (!n) { ctx.fillStyle = COL.steel; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = Math.round(cssH * 0.13) + "px 'Glacial Indifference',sans-serif"; ctx.fillText('∅', cssW / 2, cssH * 0.44); return; }
+      var g = Math.min(cssW * 0.5 / n, cssH * 0.24), ch = g * 0.9, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g, ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      st._zigL = { x0: x0, g: g, n: n };
+      for (var i = 0; i < n; i++) { var cx = x0 + g * i; ctx.fillStyle = COL.ink; ctx.fillText(String(s[i]), cx, cy);
+        ctx.strokeStyle = COL.rule; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - g * 0.27, cy + ch * 0.56); ctx.lineTo(cx + g * 0.27, cy + ch * 0.56); ctx.stroke(); }
+      if (n > 1) braceUnder(x0 + g * 0.6, x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+      recurHint('клик по цифре — 0 ⇄ 1');
+    }
+    function editZig(px) {
+      var L = st._zigL; if (!L) return false;
+      var i = Math.round((px - L.x0) / L.g); if (i < 0 || i >= L.n) return false;
+      var s = st.recurG.slice(); s[i] = 1 - s[i];
+      if (zigOK(s)) { st.recurG = s; return true; }
+      st._flash = { x: L.x0 + L.g * i, y: cssH * 0.44, r: L.g * 0.5, a: 1 }; flashAnim(); return 'blocked';
+    }
+    /* ── H: обход РЕДАКТИРУЕМЫМИ цифрами (клик — следующее допустимое значение, |diff|=1 с соседями); без комментария ── */
+    function drawRecurWalk() {
+      var w = st.recurH, n = w.length;
+      var g = Math.min(cssW * 0.5 / n, cssH * 0.24), ch = g * 0.9, x0 = cssW / 2 - g * (n - 1) / 2, cy = cssH * 0.44;
+      ctx.fillStyle = COL.blush; ctx.fillRect(x0 - g * 0.5, cy - ch * 0.62, g * 2, ch * 1.24);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = "bold " + Math.round(ch) + "px 'Glacial Indifference',monospace";
+      st._walkL = { x0: x0, g: g, n: n };
+      for (var i = 0; i < n; i++) { var cx = x0 + g * i; ctx.fillStyle = i === 0 ? COL.steel : COL.ink; ctx.fillText(String(w[i]), cx, cy);
+        if (i > 0) { ctx.strokeStyle = COL.rule; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - g * 0.27, cy + ch * 0.56); ctx.lineTo(cx + g * 0.27, cy + ch * 0.56); ctx.stroke(); } }
+      if (n > 2) braceUnder(x0 + g * 1.6, x0 + g * (n - 1 + 0.4), cy + ch * 0.86);
+    }
+    function editWalk(px) {
+      var L = st._walkL; if (!L) return false;
+      var i = Math.round((px - L.x0) / L.g); if (i < 1 || i >= L.n) return false;   // первая цифра фиксирована (=1)
+      var w = st.recurH.slice(), cands = [];
+      for (var v = 1; v <= 4; v++) { if (v === w[i]) continue; if (Math.abs(v - w[i - 1]) !== 1) continue; if (i + 1 < w.length && Math.abs(w[i + 1] - v) !== 1) continue; cands.push(v); }
+      if (!cands.length) { st._flash = { x: L.x0 + L.g * i, y: cssH * 0.44, r: L.g * 0.5, a: 1 }; flashAnim(); return 'blocked'; }
+      w[i] = cands[0]; st.recurH = w; return true;
+    }
+    /* ── D/E: композиция как ОТРЕЗОК С ПЕРЕГОРОДКАМИ; D — перегородки ставим/убираем (части ≥2), E — клик даёт другой пример ── */
+    function drawRecurComp() {
+      var parts = st.mode === 'compGE2' ? st.recurD : st.recurE;
+      var M = parts.reduce(function (a, x) { return a + x; }, 0) || 1;
+      var u = Math.min(cssW * 0.6 / M, cssH * 0.15), x0 = cssW / 2 - u * M / 2, cy = cssH * 0.45, top = cy - u / 2;
+      st._compL = { x0: x0, u: u, M: M };
+      ctx.lineWidth = Math.max(1, u * 0.05); ctx.strokeStyle = COL.rule; ctx.fillStyle = COL.card;
+      for (var c = 0; c < M; c++) { ctx.fillRect(x0 + u * c, top, u, u); ctx.strokeRect(x0 + u * c, top, u, u); }
+      var cut = 0; ctx.strokeStyle = COL.brick; ctx.lineWidth = Math.max(3, u * 0.14);
+      parts.forEach(function (p, idx) { cut += p; if (idx < parts.length - 1) { var bx = x0 + u * cut; ctx.beginPath(); ctx.moveTo(bx, top - u * 0.22); ctx.lineTo(bx, top + u * 1.22); ctx.stroke(); } });
+      ctx.strokeStyle = COL.ink; ctx.lineWidth = Math.max(2, u * 0.08); ctx.strokeRect(x0, top, u * M, u);
+      recurHint(st.mode === 'compGE2' ? 'клик по границе клеток — поставить/убрать перегородку' : 'клик — другой пример');
+    }
+    function editComp(px) {
+      if (st.mode === 'compOdd') { var Ek = enumE(st.n); st.recurE = Ek[Math.floor(Math.random() * Ek.length)]; return true; }
+      var L = st._compL; if (!L) return false;
+      var g = Math.round((px - L.x0) / L.u); if (g < 1 || g > L.M - 1) return false;
+      var cuts = [], acc = 0; st.recurD.forEach(function (p, i) { acc += p; if (i < st.recurD.length - 1) cuts.push(acc); });
+      var pos = cuts.indexOf(g);
+      if (pos >= 0) { cuts.splice(pos, 1); }
+      else {
+        var prev = 0, next = L.M;
+        for (var i = 0; i < cuts.length; i++) { if (cuts[i] < g) prev = cuts[i]; if (cuts[i] > g) { next = cuts[i]; break; } }
+        if (g - prev < 2 || next - g < 2) { st._flash = { x: L.x0 + L.u * g, y: cssH * 0.45, r: L.u * 0.6, a: 1 }; flashAnim(); return 'blocked'; }
+        cuts.push(g); cuts.sort(function (a, b) { return a - b; });
+      }
+      var np = [], p0 = 0; cuts.forEach(function (cc) { np.push(cc - p0); p0 = cc; }); np.push(L.M - p0);
+      st.recurD = np; return true;
+    }
 
+    function drawStripIn(parts, bx, byy, bw, bh, alpha) {   // замощение, вписанное в прямоугольник зоны (низ A-биекции)
+      var cells = parts.reduce(function (a, x) { return a + x; }, 0) || 1;
+      var u = Math.min((bw * 0.82) / cells, bh * 0.4);
+      var x = bx + (bw - u * cells) / 2, top = byy + bh * 0.56 - u / 2;
+      ctx.save(); ctx.globalAlpha = alpha; ctx.lineWidth = Math.max(1.5, u * 0.05); ctx.strokeStyle = COL.ink;
+      parts.forEach(function (p) { var w = p * u; ctx.fillStyle = p === 1 ? COL.sq : COL.dom; ctx.fillRect(x, top, w, u); ctx.strokeRect(x, top, w, u); x += w; });
+      ctx.restore();
+    }
+    function drawTilingBijection() {               // A, сцена биекции: f_n = f_{n−1} + f_{n−2} как биекция A_n ↔ A_{n−1} ⊔ A_{n−2}
+      var n = st.n;
+      var rest = st.bijFirst === 1 ? st.bijRest5 : st.bijRest4;
+      var top = [st.bijFirst].concat(rest);
+      var L = drawStrip(top, cssH * 0.24, {}); st._bijTopL = L;
+      ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = COL.blush;      // первый элемент подсвечен
+      ctx.fillRect(L.x0, L.y - 3, st.bijFirst * L.u, L.side + 6); ctx.restore();
+      ctx.fillStyle = COL.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';   // подпись f₆ = f₅ + f₄
+      ctx.font = "bold " + Math.round(cssH * 0.072) + "px 'Glacial Indifference',sans-serif";
+      ctx.fillText('f' + sub(n) + ' = f' + sub(n - 1) + ' + f' + sub(n - 2), cssW / 2, cssH * 0.45);
+      var by = cssH * 0.71, boxH = cssH * 0.29, midGap = cssW * 0.05;
+      var boxW = (cssW * 0.82 - midGap) / 2, x0 = cssW * 0.09;
+      st._bijZones = [
+        { side: 1, x: x0, y: by - boxH / 2, w: boxW, h: boxH, rest: st.bijRest5, lbl: 'A' + sub(n - 1) },
+        { side: 2, x: x0 + boxW + midGap, y: by - boxH / 2, w: boxW, h: boxH, rest: st.bijRest4, lbl: 'A' + sub(n - 2) }
+      ];
+      st._bijZones.forEach(function (z) {
+        var active = z.side === st.bijFirst;
+        ctx.save();
+        ctx.globalAlpha = active ? 1 : 0.45; ctx.fillStyle = COL.card; ctx.fillRect(z.x, z.y, z.w, z.h);
+        ctx.globalAlpha = 1; ctx.lineWidth = active ? 4 : 1.5; ctx.strokeStyle = active ? COL.brick : COL.rule;
+        ctx.strokeRect(z.x, z.y, z.w, z.h);
+        ctx.fillStyle = active ? COL.brick : COL.steel; ctx.globalAlpha = active ? 1 : 0.6;
+        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.font = "bold " + Math.round(cssH * 0.05) + "px 'Glacial Indifference',sans-serif";
+        ctx.fillText(z.lbl, z.x + 12, z.y + 8);
+        ctx.restore();
+        drawStripIn(z.rest, z.x, z.y, z.w, z.h, active ? 1 : 0.5);
+      });
+      ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = COL.steel; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+      ctx.font = "16px ui-monospace,monospace";
+      ctx.fillText('клик по нижней зоне или по первой плитке — квадрат ⇄ доминошка', cssW / 2, cssH * 0.965); ctx.restore();
+    }
     function draw() {
       if (!cssW) return;
       ctx.clearRect(0, 0, cssW, cssH);
       var stage = curStage();
       if (stage) canvas.style.cursor = (stage === 'recur' || stage === 'bijection') ? 'pointer' : 'default';
-      if (stage === 'empty') { return; }                    // картинка после формулировки: низ чист
-      if (stage === 'examples') { drawExamples(); return; }
-      if (stage === 'recur') { drawRecurMech(); drawFlash(); return; }
-      if (stage === 'bijection') {                          // биекция с A: полоска-замощение (верх) ↔ образ модели (низ), выровнены; клик по полоске
-        st._L = drawStrip(st.parts, cssH * STRIP_CY, {}); drawImage(); drawFlash(); drawHint(); return;
+      if (stage === 'empty') { if (hasExamples) drawExamples(true); return; }   // «определение»: полупрозрачный столбик n=0..4
+      if (stage === 'examples') { drawExamples(false); return; }
+      if (stage === 'recur') {                              // рекуррента: нативный интерактив в языке объекта
+        if (st.mode === 'tiling') { drawTilingBijection(); drawFlash(); return; }   // A: f=f+f (картинка + две версии)
+        drawRecurMech(); drawFlash(); return;
+      }
+      if (stage === 'bijection') {                          // биекция с A_n: полоска-замощение (верх) ↔ образ модели (низ)
+        if (st.mode === 'tiling') { st._L = drawStrip(st.parts, cssH * STRIP_CY, {}); drawHint(); drawFlash(); return; }   // A — эталон: сама полоска
+        st._L = drawStrip(st.parts, cssH * STRIP_CY, {}); drawImage();
+        ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = COL.steel; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.font = "bold " + Math.round(cssH * 0.048) + "px 'Glacial Indifference',sans-serif";
+        ctx.fillText((MODEL_LETTER[st.mode] || 'X') + sub(st.n) + ' ↔ A' + sub(st.n), cssW - 16, 12); ctx.restore();   // метка «↔ Aₙ»
+        drawFlash(); drawHint(); return;
       }
       if (st.mode === 'cassini') { drawCassini(); return; }
       if (st.mode === 'zeck') { drawZeck(); drawFlash(); drawHint(); return; }
-      st._L = drawStrip(st.parts, cssH * STRIP_CY, { hi: (st.mode === 'recur' || st.mode === 'sum' || st.mode === 'firstsq') ? firstHi() : null });
-      drawImage();
+      var revealAns = !(st.mode === 'sum' || st.mode === 'firstsq') || activeScene() >= 2;   // з.3/4: сцена 1 — вопрос (голая лента), ответ — со сцены 2
+      st._L = drawStrip(st.parts, cssH * STRIP_CY, { hi: (revealAns && (st.mode === 'recur' || st.mode === 'sum' || st.mode === 'firstsq')) ? firstHi() : null });
+      if (revealAns) drawImage();
       drawFlash();
       drawHint();
     }
@@ -583,19 +713,30 @@
         var rr = canvas.getBoundingClientRect();
         if (!rr.width || !rr.height) return;   // слайд ещё не отмасштабирован (scale 0) → деление на 0
         var px = (e.clientX - rr.left) / rr.width * cssW, py = (e.clientY - rr.top) / rr.height * cssH;
-        if (stg === 'bijection') {            // двусторонний развитый канвас: клик по образу (низ, editimg) ИЛИ по полоске (верх)
+        if (stg === 'bijection') {            // биекция с A_n: клик по образу (низ, editimg) ИЛИ по полоске (верх)
           if (editImg && py > cssH * 0.5) { if (toggleImage(px, py) === true) draw(); return; }
           if (st._L && toggleAt(st.parts, px, st._L)) { st._lastPair = -1; draw(); }
           return;
         }
-        var done;                              // recur
+        if (st.mode === 'tiling') {            // A: f_n=f_{n−1}+f_{n−2} — клик по зоне выбирает ветку, по первой плитке переключает
+          if (st._bijZones) { for (var bz = 0; bz < st._bijZones.length; bz++) { var Z = st._bijZones[bz];
+            if (px >= Z.x && px <= Z.x + Z.w && py >= Z.y && py <= Z.y + Z.h) { st.bijFirst = Z.side; draw(); return; } } }
+          if (st._bijTopL) { var TL = st._bijTopL;
+            if (px >= TL.x0 && px <= TL.x0 + TL.u * st.n && py >= TL.y - 6 && py <= TL.y + TL.side + 6) {
+              var cell = Math.floor((px - TL.x0) / TL.u) + 1;
+              if (cell <= st.bijFirst) { st.bijFirst = st.bijFirst === 1 ? 2 : 1; }
+              else { var rst = st.bijFirst === 1 ? st.bijRest5 : st.bijRest4; toggleCell(rst, cell - st.bijFirst, true); }
+              draw(); return;
+            } }
+          return;
+        }
+        var done;                              // B–H: нативная правка объекта в его языке
         if (st.mode === 'subset') done = editSubset(px, py);
-        else if (st.mode === 'tiling') done = editTiling(px);
         else if (st.mode === 'perm') done = editPerm(px);
-        else if (st.mode === 'hwalk') { var Wk = enumWalksH(st.n + 1); st.recurH = Wk[Math.floor(Math.random() * Wk.length)]; done = true; }
-        else if (st.mode === 'compGE2') { var Dk = enumD(st.n); st.recurD = Dk[Math.floor(Math.random() * Dk.length)]; done = true; }
-        else if (st.mode === 'compOdd') { var Ek = enumE(st.n); st.recurE = Ek[Math.floor(Math.random() * Ek.length)]; done = true; }
-        else if (st.mode === 'zigzag') { var Gk = enumG(st.n); st.recurG = Gk[Math.floor(Math.random() * Gk.length)]; done = true; }
+        else if (st.mode === 'hwalk') done = editWalk(px);
+        else if (st.mode === 'compGE2') done = editComp(px);
+        else if (st.mode === 'compOdd') done = editComp(px);
+        else if (st.mode === 'zigzag') done = editZig(px);
         else done = editSeq(px);
         if (done === true) draw();
         return;

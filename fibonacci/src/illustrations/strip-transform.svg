@@ -1,19 +1,15 @@
-<svg viewBox="0 0 1120 420" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-  <!-- Задача 1, доказательство: свёртка столбца 2×n → плитка 1×n.
-       ЦВЕТ СОГЛАСОВАН: вертикальная доминошка (зелёная) → зелёный квадрат;
-       пара горизонтальных (горчичная) → горчичная доминошка. -->
+<svg viewBox="0 0 1120 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <!-- Задача 1, сцена 3: свёртка «по верхней строке». Это НЕ новая картинка —
+       от уже раскрашенной доски 2×10 (hook-2xn-fill) остаётся её ВЕРХНЯЯ строка = полоска 1×10.
+       X-координаты и цвета совпадают с доской: вертикаль → зелёный квадрат, горизонт. пара → горчичная доминошка.
+       На кроссфейде 2→3 нижняя строка (y≥224) гаснет, верхняя (y=150..224) остаётся. -->
   <g stroke="var(--ink)" stroke-width="3">
-    <!-- слева: 2×4 = вертикаль · пара горизонталей · вертикаль -->
-    <rect x="80"  y="110" width="70"  height="200" fill="var(--cgreen)"/>
-    <rect x="150" y="110" width="140" height="100" fill="var(--mustard)"/>
-    <rect x="150" y="210" width="140" height="100" fill="var(--mustard)"/>
-    <rect x="290" y="110" width="70"  height="200" fill="var(--cgreen)"/>
-  </g>
-  <text x="398" y="232" font-family="'Glacial Indifference',sans-serif" font-size="70" fill="var(--ink)">→</text>
-  <g stroke="var(--ink)" stroke-width="3">
-    <!-- справа: полоска 1×4 = квадрат · доминошка · квадрат (1×1 vs 1×2) -->
-    <rect x="490" y="175" width="70"  height="70" fill="var(--cgreen)"/>
-    <rect x="560" y="175" width="140" height="70" fill="var(--mustard)"/>
-    <rect x="700" y="175" width="70"  height="70" fill="var(--cgreen)"/>
+    <rect x="130" y="150" width="74"  height="74" fill="var(--cgreen)"/>
+    <rect x="204" y="150" width="148" height="74" fill="var(--mustard)"/>
+    <rect x="352" y="150" width="74"  height="74" fill="var(--cgreen)"/>
+    <rect x="426" y="150" width="148" height="74" fill="var(--mustard)"/>
+    <rect x="574" y="150" width="74"  height="74" fill="var(--cgreen)"/>
+    <rect x="648" y="150" width="148" height="74" fill="var(--mustard)"/>
+    <rect x="796" y="150" width="74"  height="74" fill="var(--cgreen)"/>
   </g>
 </svg>
