@@ -4,7 +4,7 @@
 >
 > **Правило регистрации.** Новый узел → строка в индексе ТЕМ ЖЕ ходом. Любой `id` из `связи` обязан резолвиться здесь.
 >
-> **Статус: волна 1 закрыта, волна докачки Downloads добавила 4 карточки (2026-07-16), 89 узлов.** Зоны A (категория→CCC) и B (функторы→NNO) размечены. **Не размечено: LCCC · топос как отдельная зона · Ω-детали · пучки · мост в HoTT** — долг волны 2 (но у Маклейна гл.4 и Riehl §4.5 теперь есть на диске как заготовки — см. `riehl-lccc-donor`, `maclane-topos-v-glave-sopryazhennyh`).
+> **Статус: волна 1 закрыта, волна докачки Downloads +4, волна «Ландшафт» +2 (2026-07-16/17), 91 узел.** Зоны A (категория→CCC) и B (функторы→NNO) размечены. **LCCC: вердикт по «Рифме» вынесен** (Riehl §4.5 прочитан целиком — `riehl-lccc-donor` черновик + `verdict-rifma-lccc`). **Ещё не размечено: топос как отдельная зона · Ω-детали · пучки · мост в HoTT** — долг волны 2 (Маклейн гл.4 — `maclane-topos-v-glave-sopryazhennyh`).
 >
 > **Уровень зала — фильтр всех карточек:** `../SPEKA.md §Калибровка`. Матрицы — отлично; векторные пространства — помнят; группа/кольцо — слайд; модули — не знают.
 
@@ -12,10 +12,10 @@
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `verdict-rifma-lccc`
 - **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma`
-- **находка:** `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo`
+- **находка:** `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -35,6 +35,7 @@
 # 🔴 ДВА КОНФЛИКТА В ЗАПРОСЕ ЗАКАЗЧИКА (главное из волны)
 
 **Дыра №1 — уже была названа** (`../SPEKA.md §Темп`): LCCC к 5-й требует Σ ⊣ f\* ⊣ Π, то есть сопряжений, а у Куклева расписаны только 3 занятия — путь к LCCC не показан.
+> **→ РАЗРЕШЕНО волной «Ландшафт» (2026-07-16), см. `verdict-rifma-lccc`.** Посылка «требует сопряжений как вход» — ложна: у Riehl LCCC ОПРЕДЕЛЕНА через «каждый слайс — CCC» (Def 4.5.2, с.157), а Σ⊣f*⊣Π — эквивалентная теорема (Prop 4.5.6, с.158). Остаётся ОДНА реальная новая конструкция — зависимое произведение Πf (слайс-экспонента), и она же — мост в цель финала (Martin-Löf, с.163). Смета «Рифмы» («пуллбэк — единственное новое») в этой части поправлена.
 
 **Дыра №2 — найдена волной.** Письмо требует одновременно: **(а) CCC к 3-й** · **(б) фундаментальный группоид в Л1** (единственное «обязательно» во всём его плане) · **(в) Л3 = NNO**. Три требования, одни и те же 270 минут. Группоид съедает лекцию, нужную под категорию + ч.у. + крючок; NNO садится поверх плотнейшей Л3. **Если Л1 уходит под фундаментальный группоид — три лекции ломаются.** Сказать заказчику до старта, а не после Л3.
 
@@ -455,6 +456,9 @@ id: zachem-zakryvat
   а объект внутри. Отсюда прямой ответ на «зачем»: только в такой категории можно ГОВОРИТЬ О
   ВЫЧИСЛЕНИИ внутри неё самой — функция становится данным. Это же ответ, почему CCC =
   семантика λ-исчисления, и почему заказчику (язык + машинная проверка) это нужно.
+  ⚠ [Ландшафт 16.07] ЭТАЛОН БОЛЕЗНИ. На живом зале НЕ встала: объясняет «зачем замкнутость» через
+  «категория знает про себя» / внутренний Hom — то есть через уже-понятый язык, работает только для
+  того, кто УЖЕ понял. По этому образцу помечены остальные карточки-мотивации. Формулировку правит аналитик.
 связи: ccc-opredelenie, curry-howard-lambek, eksponenta-opredelenie
 уровень: зал берёт
 источник: https://golem.ph.utexas.edu/category/2006/08/cartesian_closed_categories_an_1.html
@@ -653,6 +657,10 @@ id: motivation-EM
   ⚠ ПОПРАВКА АТРИБУЦИИ: цитата «categories are what one must define in order to define
   functors...» — это ФРЕЙД (введение к «Abelian Categories»), НЕ Маклейн. Ходовая
   атрибуция Маклейну не подтверждена. На слайд — с атрибуцией Фрейду.
+  ⚠ [Ландшафт 16.07] риск болезни `zachem-zakryvat`, но ИНОГО рода (не круг, а предпосылка):
+  наглядность держится на V*/V** (дуал/двойной дуал), а `../SPEKA.md §Калибровка` метит Hom-пространства
+  как «требует пояснения» — зал их твёрдо не держит. Спасаемо: показать на конкретных координатах (базис
+  руками), без абстрактного дуала. Не приговор, а риск. Только пометка, решает аналитик.
 связи: dual-not-natural-proof, double-dual, nat-transf, transpose-contravariant
 уровень: зал берёт
 источник: https://www.ams.org/journals/tran/1945-058-00/S0002-9947-1945-0013131-6/S0002-9947-1945-0013131-6.pdf
@@ -736,6 +744,9 @@ id: motivation-scalar-product-is-choice
   и нижние индексы — это ковариантность и контравариантность, и слова буквально те же не
   случайно. Матричная форма: uᵀAv; ортонормированный базис = «выбрали A = I и забыли, что
   выбирали». ⚠ Синтез агента, готовой ссылки под теоркат-подачу нет.
+  ⚠ [Ландшафт 16.07] тот же риск-предпосылка, что у `motivation-EM`: мотивация идёт через V ≅ V*
+  (дуал), который зал твёрдо не держит (`../SPEKA.md §Калибровка`). Физическая подача (индексы, метрика)
+  частично спасает. Только пометка.
 связи: currying-bilinear, dual-functor, motivation-EM
 уровень: зал берёт
 источник: связка стандартна в дифгеоме; конкретной ссылки нет — синтез
@@ -1036,6 +1047,9 @@ id: motivation-hom-language
   потребовало языка. ⚠ Живая деталь (в 1945-м боялись, что редактор отклонит статью как
   «слишком far out»; предмет в шутку звали «general abstract nonsense») — только вторичные
   источники, первоисточник НЕ верифицирован.
+  ⚠ [Ландшафт 16.07] мягкая форма болезни: «совпадение» мотивирует через группы расширений и гомологии
+  Стинрода p-адического соленоида — зал не держит НИ ОДНОГО из двух. Как чистая история («два трудных
+  ответа неожиданно совпали») ещё едет; по существу — нет. Только пометка.
 связи: motivation-EM, hom-functor
 уровень: зал берёт (как история)
 источник: вторичные (arXiv:1404.6240) — НЕ верифицировано
@@ -1050,6 +1064,9 @@ id: motivation-adjoint-everywhere
   та же тройка, снятая с логики на геометрию слоёв). Мотивация: «почему ∃ и ∀ ходят парой и
   двойственны? потому что они — два сопряжённых к одному и тому же». ⚠ Точную ссылку на
   Ловера агент не верифицировал.
+  ⚠ [Ландшафт 16.07] болезнь `zachem-zakryvat` в чистом виде (круг): мотивирует сопряжение через
+  «кванторы сопряжены» — но чтобы это УВИДЕТЬ, ⊣ уже нужен. Работает только для того, кто уже понял ⊣.
+  Только пометка, формулировку правит аналитик.
 связи: adjunction, floor-ceiling, chl
 уровень: требует приручения
 источник: Mac Lane CWM §IV — ссылка на Ловера НЕ верифицирована
@@ -1297,17 +1314,68 @@ id: lawvere-medlennyj-tempo
 ```
 id: riehl-lccc-donor
 род: мостик
-суть: Riehl, «Category Theory in Context», гл.4 §4.5 — целый параграф про LCCC
+суть: Riehl §4.5 прочитан ЦЕЛИКОМ — донор LCCC для лектора + карта страниц (был seed, теперь содержание)
 котёл: математика
-находка: Дыра №1 (зафиксирована волной 1) — LCCC к 5-й лекции требует Σ⊣f*⊣Π, у заказчика путь
-  не показан. Riehl §4.5 «Locally cartesian closed categories» (гл.4 «Adjunctions») — прямой
-  кандидат в источники ДЛЯ ЛЕКТОРА (не для зала целиком). Содержание параграфа не прочитано —
-  только заголовок и место в структуре книги. Долг: свести §4.5 к минимальному пути перед
-  версткой лекции 8 (слайсы) / лекции про LCCC.
-связи: nno-prodolzhenie, adjunction
+находка: §4.5 «Locally cartesian closed categories» лежит внутри гл.4 «Adjunctions» — и всё же
+  дословное Def 4.5.2 (печ. с.157): «A locally cartesian closed category is a category C for which
+  the category C/X is cartesian closed for all X ∈ C.» — БЕЗ функторов, БЕЗ гипотезы «конечные
+  пределы» (они выводятся: Lemma 4.5.4 — пуллбэки всегда; все конечные пределы при терминальном).
+  Prop 4.5.6 (с.158) — «alternate characterization»: Σf⊣∆f⊣Πf ЭКВИВАЛЕНТНА Def 4.5.2, доказана в обе
+  стороны. Терминал в слайсе = id_X, произведение в слайсе = пуллбэк (Lemma 4.5.4). Экспонента в
+  слайсе = Πa∆a (Cor 4.5.13, с.163): требует зависимое произведение Πf — «right adjoint... defined
+  by a pullback diagram... that requires some explanation» (с.158–159). Example 4.5.7 (с.159–160):
+  Set — LCCC, слайс = индексированные семейства, Πf = зависимая функция. ⭐ с.163: «deep connections
+  ... Martin–Löf dependent type theory»; Σ/Π = ∃/∀ = зависимые сумма/произведение — прямой мост в
+  цель финала (унивалентные основания). Вердикт по «Рифме» — в `verdict-rifma-lccc`.
+связи: verdict-rifma-lccc, nno-prodolzhenie, adjunction, dva-vhoda-v-ccc, ccc-opredelenie
+уровень: требует приручения (донор для лектора, не для зала целиком)
+источник: `../istochniki/pdf/riehl-category-theory-in-context.pdf` §4.5 печ. с.156–164 (pdf 176–184): Def 4.5.2 с.157 · Prop 4.5.6 с.158 · Example 4.5.7 с.159–160 · Cor 4.5.13 + MLTT-связь с.163
+статус: черновик
+```
+```
+id: verdict-rifma-lccc
+род: утверждение
+суть: ВЕРДИКТ по «Рифме»: подтверждена в несущей (логической) части, с обязательной поправкой к смете
+котёл: математика
+находка: Riehl §4.5 читан целиком. ✅ ПОДТВЕРЖДЕНО дословно: LCCC ОПРЕДЕЛЯЕТСЯ через «каждый слайс
+  C/X — CCC» (Def 4.5.2, с.157), без функторов и сопряжений; тройка Σ⊣f*⊣Π — это Prop 4.5.6 (с.158),
+  «alternate characterization», ДОКАЗАННАЯ эквивалентной, а не предпосылка. ⇒ посылка «дыры №1»
+  (LCCC ТРЕБУЕТ аппарат сопряжений как вход) ЛОЖНА: до определения LCCC доходишь инструментами Л1–4
+  (терминал, пуллбэк, экспонента-через-ev, как в `ccc-opredelenie`/`dva-vhoda-v-ccc`). ⚠ ПОПРАВКА =
+  частичное опровержение сметы «Рифмы»: экспонента в слайсе НЕ «та же этажом выше», и пуллбэк НЕ
+  «единственная новая конструкция». Слайс-экспонента = Πa∆a (Cor 4.5.13, с.163) — нужен ЗАВИСИМОЕ
+  ПРОИЗВЕДЕНИЕ Πf, вторая и более трудная конструкция; замкнутость в слайс даром НЕ поднимается. Πf —
+  настоящая, неустранимая цена LCCC, платится при ЛЮБОМ из двух определений. Честный формат (SPEKA
+  «беглое упоминание»): Set-случай показать руками (зависимые функции, Example 4.5.7), общий Πf
+  объявить-и-отложить. БОНУС: Riehl (с.163) прямо вяжет LCCC ↔ Martin-Löf, Πf = Π-тип = зависимая
+  функция ⇒ «цена» и есть мост в цель финала (унивалентные основания), не издержка. Ловушка №1
+  названа, не поддался (§4.5 внутри гл.«Adjunctions», но определение функторов не требует).
+связи: riehl-lccc-donor, ccc-opredelenie, dva-vhoda-v-ccc, nno-prodolzhenie
 уровень: требует приручения
-источник: `../istochniki/pdf/riehl-category-theory-in-context.pdf` гл.4 §4.5
-статус: seed
+источник: Riehl §4.5 — Def 4.5.2 с.157 · Prop 4.5.6 с.158 · Cor 4.5.13 + MLTT-связь с.163 — `../istochniki/pdf/riehl-category-theory-in-context.pdf`
+статус: черновик
+```
+```
+id: lawvere-exponenta-motivaciya
+род: находка
+суть: Проверил ход Ловера ПЕРЕД экспонентой (§2.3 захода). Есть Галилей-аналог — но НЕ сильнее нашей планки
+котёл: математика
+находка: Искал: есть ли у Ловера перед экспонентой вопрос сильнее нашего (`kategorifikaciya-arifmetiki` +
+  `zakon-stepenej-karrirovanie`: «школа дала +,×,^; зал переизобрёл +,× как НОК/НОД — где третья?» + «(x^y)^z =
+  каррирование»). Ловер (Session 30, печ. с.320–322; Article V, с.313–315) мотивирует ТРОЯКО: (1) Галилей-аналог —
+  «выход зависит от ВСЕГО процесса, не от входа»: энергия ходьбы Буффало→Рочестер зависит от всего движения, а
+  движение само есть отображение ⇒ хотим пространство процессов объектом; (2) калькулятор: случайный набор имён X
+  либо не назовёт какое-то T→Y, либо назовёт дважды — Y^T именует ВСЕ идеально (вход в УС); (3) экспонента =
+  терминальный объект категории «схем именования», тот же ход, что произведение этажом ниже. ВЕРДИКТ: **НЕ сильнее
+  нашего** для НАШЕГО зала/throughline — Ловеров хук про «функциональное пространство/путь» вариационно-аналитичен,
+  зал его не держит (Галилей для произведения был элементарен, тут — нет); наша планка тянет узор, который зал
+  переизобрёл САМ, и склейку с ФП (каррирование), обе под throughline (категорификация→NNO→топос). ⇒ планка остаётся.
+  СТОИТ УКРАСТЬ: калькулятор-как-универсальный-имядатель — чистый вход в УС экспоненты; «зависит от всего процесса»
+  — как вторичный живой пример, не первичный хук.
+связи: eksponenta-opredelenie, kategorifikaciya-arifmetiki, zakon-stepenej-karrirovanie, lawvere-medlennyj-tempo, galiley-proizvedenie
+уровень: зал берёт (наша планка держится; калькулятор-УС — зал берёт)
+источник: lawvere-schanuel-conceptual-mathematics-2ed.pdf — Article V «Map objects» печ. с.313–315, Session 30 «Exponentiation» печ. с.320–322
+статус: черновик
 ```
 
 ---

@@ -1,0 +1,479 @@
+# Category Theory Illustrated - Orders
+
+> Источник: [https://abuseofnotation.github.io/category-theory-illustrated/04_order/](https://abuseofnotation.github.io/category-theory-illustrated/04_order/)
+> Автор: Boris Marinov (abuseofnotation)
+> Сохранено: 2026-07-16
+> Лицензия: **Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)** (http://creativecommons.org/licenses/by-nc/4.0/) — сверено 2026-07-16.
+> ⚠ **NonCommercial.** Курс, для которого собирается материал, — платный. Прямое заимствование картинок без разрешения автора конфликтует с NC. Решение за владельцем.
+
+---
+
+# Orders
+
+Given a set of objects, there can be numerous criteria, based on which to order them (depending on the objects themselves) — size, weight, age, alphabetical order etc.
+
+However, currently we are not interested in the *criteria* that we can use to order objects, but in the *nature of the relationships* that define order. Of which there can be several types as well.
+
+Mathematically, the order as a construct is represented (much like a monoid) by two components.
+
+> An order is a set of elements, together with a *binary relation* between these elements, denoted with $≤$ (“bigger or equal to”) that obeys certain laws.
+
+We denote the elements of our set, as usual, like this.
+
+![Balls](../04_order/balls.svg)
+
+And the *binary relation* is a relation between two elements, which is often denoted with an arrow.
+
+![Binary relation](../04_order/binary_relation.svg)
+
+As for the laws, they are different depending on the type of order.
+
+## Linear order
+
+Let’s start with an example — the most straightforward type of order that you think of is *linear order* i.e. one in which every object has its place depending on every other object. In this case the ordering criteria is completely deterministic and leaves no room for ambiguity in terms of which element comes before which. For example, order of colors, sorted by the length of their light-waves (or by how they appear in the rainbow).
+
+![Linear order](../04_order/linear_order.svg)
+
+Using set theory, we can represent this order, as well as any other order, as a sets of pairs of the order’s underlying set with itself (a subset of the product set).
+
+![Binary relation as a product](../04_order/binary_relation_product.svg)
+
+And in programming, orders are defined by providing a function which, given two objects, tells us which one of them is “bigger” (comes first) and which one is “smaller”. It isn’t hard to see that this function defines a set of pairs (we are given a pair and we have to say whether or not it belongs to the set).
+
+```
+[1, 3, 2].sort((a, b) => { 
+  if (a > b) {
+    return true 
+  } else {
+    return false
+  } 
+})
+```
+
+However (this is where it gets interesting) not all such functions (and not all sets of pairs) define orders. For such function to really define an order i.e. to have the same output every time, independent of how the objects were shuffled initially, it has to obey several rules.
+
+Incidentally, (or rather not incidentally at all), these rules are nearly equivalent to the mathematical laws that define the criteria of the order relationship i.e. those are the rules that define which element can point to which.
+
+> A linear order is a set of elements, together with a *binary relation* between these elements, that obeys the laws of reflexivity, transitivity, antisymmetry, totality.
+
+Let’s check what they are.
+
+### Reflexivity
+
+Let’s get the boring law out of the way — each object has to be bigger or equal to itself, or $a ≤ a$ for all $a$ (the relationship between elements in an order is commonly denoted as $≤$ in formulas, but it can also be represented with an arrow from first object to the second.)
+
+![Reflexivity](../04_order/reflexivity.svg)
+
+This law only exist to cover the “base case”: we can formulate it the opposite way too and say that each object should *not* have the relationship to itself, in which case we would have a relation than resembles *bigger than*, as opposed to *bigger or equal to* and a slightly different type of order, sometimes called a *strict* order.
+
+### Transitivity
+
+The second law is maybe the least obvious, (but probably the most essential) — it states that if object $a$ is bigger than object $b$, it is automatically bigger than all objects that are smaller than $b$ or $a ≤ b \land b ≤ c \to a ≤ c$.
+
+![Transitivity](../04_order/transitivity.svg)
+
+This is the law that to a large extend defines what an order is: if I am better at playing soccer than my grandmother, then I would also be better at it than my grandmother’s friend, whom she beats, otherwise I wouldn’t really be better than her.
+
+### Antisymmetry
+
+The third law is called antisymmetry. It states that the function that defines the order should not give contradictory results (or in other words you have $x ≤ y$ and $y ≤ x$ only if $x = y$).
+
+![antisymmetry](../04_order/antisymmetry.svg)
+
+It also means that no ties are permitted — either I am better than my grandmother at soccer or she is better at it than me.
+
+### Totality
+
+The last law is called *totality* (or *connexity*) and it mandates that all elements that belong to the order should be *comparable* ($a ≤ b \lor b ≤ a$). That is, for any two elements, one would always be “bigger” than the other.
+
+By the way, the law of totality makes the reflexivity law redundant, as reflexivity is just a special case of totality when $a$ and $b$ are one and the same object, but I still want to present it for reasons that will become apparent soon.
+
+![connexity](../04_order/connexity.svg)
+
+Actually, here are the reasons: the law of totality can be removed. Orders, that don’t follow the totality law are called *partial orders*, (and linear orders are also called *total orders*.)
+
+**Task 1:** Previously, we covered a relation that is pretty similar to this. Do you remember it? What is the difference?
+
+**Task 2:** Think about some orders that you know about and figure out whether they are partial or total.
+
+Partial orders are actually much more interesting than linear/total orders. But before we dive into them, let’s say a few things about numbers.
+
+### The order of natural numbers
+
+Natural numbers form a linear order under the operation *bigger or equal to* (the symbol of which we have been using in our formulas.)
+
+![numbers](../04_order/numbers.svg)
+
+In many ways, natural numbers are the quintessential order — every finite order of objects is isomorphic to a subset of the order of numbers, as we can map the first element of any order to the number $1$, the second one to the number $2$ etc (and we can do the opposite operation as well).
+
+If we think about it, this isomorphism is actually closer to the everyday notion of a linear order, than the one defined by the laws — when most people think of order, they aren’t thinking of a *transitive, antisymmetric* and *total* relation, but are rather thinking about criteria based on which they can decide which object comes first, which comes second etc. So it’s important to notice that the two notions are equivalent.
+
+![Linear order isomorphisms](../04_order/linear_order_isomorphism.svg)
+
+From the fact that any finite order of objects is isomorphic to the natural numbers, it also follows that all linear orders of the same magnitude are isomorphic to one another.
+
+So, the linear order is simple, but it is also (and I think that this isomorphism proves it) the most *boring* order ever, especially when looked from a category-theoretic viewpoint — all finite linear orders (and most infinite ones) are just isomorphic to the natural numbers and so all of their diagrams look the same way.
+
+![Linear order (general)](../04_order/general_linear_order.svg)
+
+However, this is not the case with partial orders that we will look into next.
+
+## Partial order
+
+Law of totality does not look so “set in stone” as the rest of the laws i.e. we can probably think of some situations in which it does not apply. For example, if we aim to order all people based on soccer skills there are many ways in which we can rank a person compared to their friends their friend’s friends etc. but there isn’t a way to order groups of people who never played with one another.
+
+Remove the law of totality from the laws of linear orders and we get a *partial order* (also a *partially-ordered set*, or *poset*).
+
+> An partial order is a set of elements, together with a *binary relation* between those elements, that obeys the laws of reflexivity, transitivity and antisymmetry.
+
+Every linear order is also a partial order (just as a group is still a monoid), but not the other way around.
+
+We can even create an *order of orders*, based on which is more general.
+
+Partial orders are also related to the concept of an *equivalence relations* that we covered in chapter 1, except that *symmetry* law is replaced with *antisymmetry*.
+
+If we revisit the example of the soccer players rank list, we can see that the first version that includes just **m**yself, my **g**randmother and her **f**riend is a linear order.
+
+![Linear soccer player order](../04_order/player_order_linear.svg)
+
+However, including this **o**ther person whom none of us played yet, makes the hierarchy non-linear i.e. a partial order.
+
+![Soccer player order - leftover element](../04_order/player_order_leftover.svg)
+
+This is the main difference between partial and total orders — partial orders cannot provide us with a definite answer of the question who is better than who. But sometimes this is what we need — in sports, as well as in other domains, there isn’t always an appropriate way to rate elements linearly.
+
+### Chains
+
+Before, we said that all linear orders can be represented by the same chain-like diagram, we can reverse this statement and say that all diagrams that look something different than the said diagram represent partial orders.
+
+An example of this is a partial order that contains a bunch of linearly-ordered subsets, e.g. in our soccer example we can have separate groups of friends who play together and are ranked with each other, but not with anyone from other groups.
+
+![Soccer order - two hierarchies](../04_order/player_order_two.svg)
+
+The different linear orders that make up the partial order are called *chains*. There are two chains in this diagram $m \to g \to f$ and $d \to o$.
+
+The chains in an order don’t have to be completely disconnected from each other in order for it to be partial. They can be connected as long as the connections are not all *one-to-one* i.e. ones when the last element from one chain is connected to the first element of the other one (this would effectively unite them into one chain.)
+
+![Soccer order - two hierarchies and a join](../04_order/player_order_two_join.svg)
+
+The above set is not linearly-ordered — although we know that $d ≤ g$ and that $f ≤ g$, the relationship between $d$ and $f$ is *not* known — any element can be bigger than the other one.
+
+### Greatest and least objects
+
+Although partial orders don’t give us a definitive answer to “Who is better than who?”, some of them still can give us an answer to the more important question (in sports, as well as in other domains), namely “Who is number one?” i.e. who is the champion, the player who is better than anyone else. Or, more generally, the element that is bigger than all other elements.
+
+> The *greatest element* of an order is an element $a$, such that we have we have $x ≤ a$ for any other element $x$, Some (not all) partial orders do have such element — in our last diagram $m$ is the greatest element, in this diagram, the green element is the biggest one.
+
+![Join diagram with one more element](../04_order/join_additional_element.svg)
+
+Sometimes we have more than one elements that are bigger than all other elements, in this case none of them is the greatest.
+
+![A diagram with no greatest element](../04_order/non_maximal_element.svg)
+
+In addition to the greatest element, a partial order may also have a least (smallest) element, which is defined in the same way.
+
+### Joins
+
+The *least upper bound* of two elements that are connected as part of an order is called the *join* of these elements, e.g. the green element is a join of the other two.
+
+![Join](../04_order/join.svg)
+
+The join of $a$ and $b$ is the smallest element $c$ that is bigger than then, formally:
+
+> The *join* of objects $A$ and $B$ is an object $G$, such that:
+
+> 1. It is bigger than both of these objects, so $A ≤ G$ and $B ≤ G$.
+
+> 2. It is smaller than any other object that is bigger than them, so for any other object $P$ such that $P ≤ A$ and $P ≤ B$ then we should also have $G ≤ P$.
+
+![Join with other elements](../04_order/join_other_elements.svg)
+
+Given any two elements in which one is bigger than the other (e.g. $a ≤ b$), the join is this bigger element (in this case $b$)
+
+![two connected balls, one is higher than the other (and is the join of the two)](../04_order/join_bigger_element.svg)
+
+e.g. in a linear orders, the *join* of any two elements is just the bigger element.
+
+Like with the greatest element, if two elements have several upper bounds that are equally big, then none of them is a *join* (a join must be unique).
+
+![A non-join diagram](../04_order/non_join.svg)
+
+If, however, one of those elements is established as smaller than the rest of them, it immediately qualifies.
+
+![A join diagram](../04_order/non_join_fix.svg)
+
+**Task 3:** Which concept in category theory reminds you of joins?
+
+### Meets
+
+Given two elements, the biggest element that is smaller than both of them is called the *meet* of these elements.
+
+![Meet](../04_order/meet.svg)
+
+The same rules as for the joins apply, but in reverse.
+
+### Hasse diagrams
+
+The diagrams that we use in this section are called “Hasse diagrams” and they work much like our usual diagrams, however they have an additional rule that is followed — “bigger” elements are always positioned above smaller ones.
+
+In terms of arrows, the rule means that if you add an arrow to a point, the point *to* which the arrow points must always be above the one *from* which it points.
+
+Hasse diagrams allow us to compare any two points by just seeing which one is above the other e.g. we can determine the *join* of two elements, by just identifying the elements that they connect to and see which one is lowest.
+
+![A join diagram with a valid join](../04_order/hasse.svg)
+
+Likewize, we immediately see if two elements have no join.
+
+![A join diagram](../04_order/hasse_2.svg)
+
+### Color-mixing partial order
+
+We all know many examples of total orders (any form of chart or ranking is a total order), but there are probably not so many obvious examples of partial orders that we can think of off the top of our head. So let’s see some. This will gives us some context, and will help us understand what joins are.
+
+To stay true to our form, let’s revisit our color-mixing monoid and create a *color-mixing partial order* in which all colors point to colors that contain them.
+
+![A color mixing poset](../04_order/color_mixing_poset.svg)
+
+If you go through it, you will notice a curious property of the join
+
+> In the color-mixing order, the join of any two colors is the color that they make up when mixed.
+
+![Join in a color mixing poset](../04_order/color_mixing_poset_join.svg)
+
+### The partial order of numbers by division
+
+We saw that when we order numbers by “bigger or equal to”, they form a linear order. But numbers can also form a partial order, for example they form a partial order if we order them by which divides which, i.e. if $a$ divides $b$, then $a$ is before $b$ e.g. because $2 \times 5 = 10$, $2$ and $5$ come before $10$ (but $3$, for example, does not come before $10$.)
+
+![Divides poset](../04_order/divides_poset.svg)
+
+And it so happens (actually for very good reason) that the join operation again corresponds to an operation that is relevant in the context of the objects:
+
+> In the partial order of numbers by division, the join of any two numbers is their *least common multiple*. And their *meet* is their *greatest common divisor*.
+
+![Divides poset](../04_order/divides_poset_meet.svg)
+
+Let’s dig a bit into why this happens.
+
+### The inclusion partial order
+
+Given a collection of sets containing a combination of a given set of elements…
+
+![A color mixing poset](../04_order/color_mixing_poset_inclusion_subsets.svg)
+
+…we can define what is called the *inclusion order* of those sets.
+
+> The *inclusion order* of a given collection of sets (usually sets that contain some common elements) is an order, based on the following binary relation: $A$ comes before $B$ if $A$ *includes* $B$, or in other words if $B$ is a *subset* of $A$.
+
+![A color mixing poset, ordered by inclusion](../04_order/color_mixing_poset_inclusion.svg)
+
+This means that…
+
+> the *join* operation of two sets in an inclusion order is their *union*, and the *meet* operation is their set *intersection*.
+
+### Birkhoff’s representation theorem
+
+This diagram might remind you of something — if we take the colors that are contained in each set and mix them into one color, we get the color-blending partial order that we saw earlier.
+
+![A color mixing poset, ordered by inclusion](../04_order/color_mixing_poset_blend.svg)
+
+The order example with the number dividers is also isomorphic to an inclusion order, namely the inclusion order of all possible sets of *prime* numbers, including repeating ones (or alternatively the set of all *prime powers*). This is confirmed by the fundamental theory of arithmetic, which states that every number can be written as a product of primes in exactly one way.
+
+![Divides poset](../04_order/divides_poset_inclusion.svg)
+
+So far, we saw two different partial orders, one based on color mixing, and one based on number division, that can be represented by the inclusion orders of all possible combinations of sets of some *basic elements* (the primary colors in the first case, and the prime numbers (or prime powers) in the second one.) Many other partial orders can be defined in this way. Which ones exactly, is a question that is answered by an amazing result called *Birkhoff’s representation theorem*. They are the *finite* partial orders that meet the following two criteria:
+
+1. All elements have *joins* and *meets*.
+
+2. Those *meet* and *join* operations *distribute* over one another, that is if we denote joins as meets as $∨$ or $∧$, then $x ∨ (y ∧ z) = (x ∨ y) ∧ (x ∨ z)$.
+
+The partial orders that meet the first criteria are called *lattices*. The ones that meet the second one are called *distributive lattices*. Let’s write that down:
+
+> Partial orders in which all elements have *joins* and *meets* is called a *lattice*. A lattice whose *meet* and *join* operations *distribute* over one another is called a distributive lattice.
+
+And the “prime” elements which we use to construct the inclusion order are the elements that are not the *join* of any other elements. They are also called *join-irreducible* elements.
+
+So we may phrase the theorem like this:
+
+> Each distributive lattice is isomorphic to an inclusion order of its *join-irreducible* elements.
+
+By the way, the partial orders that are *not* distributive lattices are also isomorphic to inclusion orders, it is just that they are isomorphic to inclusion orders that *do not contain all possible combinations* of elements.
+
+## Lattices
+
+We will now talk more about *lattices* (the orders for which Birkhoff’s theorem applies). Lattices are partial orders, in which every two elements have a *join* and a *meet*. So every lattice is also partial order, but not every partial order is a lattice (we will see even more members of this hierarchy).
+
+Most partial orders that are created based on some sort of rule are distributive lattices, like for example the partial orders from the previous section are also distributive lattices when they are drawn in full, for example the color-mixing order.
+
+![A color mixing lattice](../04_order/color_mixing_lattice.svg)
+
+Notice that we added the black ball at the top and the white one at the bottom. We did that because otherwise the top three elements wouldn’t have a *join* element, and the bottom three wouldn’t have a *meet*.
+
+### Bounded lattices
+
+Our color-mixing lattice, has a *greatest element* (the black ball) and a *least element* (the white one). Lattices that have a least and greatest elements are called *bounded lattices*. It isn’t hard to see that all finite lattices are also bounded.
+
+**Task 4:** Prove that all finite lattices are bounded.
+
+### Order isomorphisms
+
+We mentioned order isomorphisms several times already so this is about time to elaborate on what they are.
+
+Given two sets (we will use partial order of numbers by division and the prime inclusion order as an example) an isomorphism between them is comprised of the following two functions:
+
+1. One function from the prime inclusion order, to the number order (which in this case is just the *multiplication* of all the elements in the set)
+
+2. One function from the number order to the prime inclusion order (which is an operation called *prime factorization* of a number, consisting of finding the set of prime numbers that result in that number when multiplied with one another).
+
+![An isomorphism between the divides poset and the corresponding inclusion order](../04_order/divides_poset_isomorphism.svg)
+
+An order isomorphism is essentially an isomorphism between the orders’ underlying sets (invertible function). However, besides their underlying sets, orders also have the arrows that connect them, so there is one more condition: in order for an invertible function to constitute an order isomorphism, it has to *respect those arrows*.
+
+> An isomorphism between two orders is an invertible function between their underlying sets, such that applying this function (let’s call it $F$) to any two elements that have a certain order in one set (let’s call them $a$ and $b$) should result in two elements that have a corresponding order in the other set (i.e. $a ≤ b$ if and only if $F(a) ≤ F(b)$).
+
+Such functions are called *order-preserving* functions.
+
+## Preorder
+
+In the previous section, we saw how removing the law of *totality* from the laws of (linear) order produces a different (and somewhat more interesting) structure, called *partial order*. Now let’s see what will happen if we remove another one of the laws, namely the *antisymmetry* law.
+
+The antisymmetry law mandated that you cannot have an object that is at the same time smaller and bigger than another one. (or that $a ≤ b ⟺ b ≰ a$).
+
+|  | Linear order | Partial order | Preorder |
+|---|---|---|---|
+| Element Comparability | $a ≤ b$ or $b ≤ a$ | $a ≤ b$ or $b ≤ a$ or neither | $a ≤ b$ or $b ≤ a$ or neither or both |
+| Reflexivity | X | X | X |
+| Transitivity | X | X | X |
+| Antisymmetry | X | X | - |
+| Totality | X | - | - |
+
+The result is a structure called a *preorder*:
+
+> An preorder is a set of elements, together with a *binary relation* between the elements of the set, that obeys the laws of reflexivity and transitivity.
+
+Preorder is not exactly an order in the everyday sense — it can have arrows coming from any point to any other: if a partial order can be used to model who is better than who at soccer, then a preorder can be used to model who has beaten who, either directly (by playing him) or indirectly.
+
+![preorder](../04_order/preorder.svg)
+
+Preorders have just one law — *transitivity* $a ≤ b \land b ≤ c \to a ≤ c$ (well, two, if we count *reflexivity*). The part about the indirect wins is a result of this law. Due to it, all indirect wins (ones that are wins not against the player directly, but against someone who had beat them) are added as a direct result of its application, as seen here (we show indirect wins in lighter tone).
+
+![preorder in sport](../04_order/preorder_sports.svg)
+
+And as a result of that, all “circle” relationships (e.g. where you have a weaker player beating a stronger one) result in just a bunch of objects that are all connected to one another.
+
+All of that structure arises naturally from the simple law of transitivity.
+
+### Preorders and equivalence relations
+
+Preorders may be viewed as a middle-ground between *partial orders* and *equivalence relations*, as they are missing exactly the property on which those two structures differ — (anti)symmetry. Because of that, if we have a bunch of objects in a preorder that follow the law of *symmetry*, those objects form an equivalence relation. And if they follow the reverse law of *antisymmetry*, they form a partial order.
+
+| Equivalence relation | Preorder | Partial order |
+|---|---|---|
+| Reflexivity | Reflexivity | Reflexivity |
+| Transitivity | Transitivity | Transitivity |
+| Symmetry | - | Antisymmetry |
+
+In particular, any subset of objects that are connected with one another both ways (like in the example above) follows the *symmetry* requirement. So if we group all elements that have such connection, we would get a bunch of sets, all of which define different *equivalence relations* based on the preorder, called the preorder’s *equivalence classes*.
+
+![preorder](../04_order/preorder_equivalence.svg)
+
+And, even more interestingly, if we transfer the preorder connections between the elements of these sets to connections between the sets themselves, these connections would follow the *antisymmetry* requirement, which means that they would form a *partial order.*
+
+![preorder](../04_order/preorder_partial_order.svg)
+
+In short, for every preorder, we can define the *partial order of the equivalence classes of this preorder*.
+
+## Preorders as categories
+
+We saw that preorders are a powerful concept, so let’s take a deeper look at the law that governs them — the transitivity law. What this law tells us that if we have two pairs of relationship $a ≤ b$ and $b ≤ c$, then we automatically have a third one $a ≤ c$.
+
+![Transitivity](../04_order/transitivity.svg)
+
+In other words, the transitivity law tells us that the $≤$ relationship composes i.e. if we view the “bigger than” relationship as a morphism we would see that the law of transitivity is actually the categorical definition of *composition*.
+
+![Transitivity as functional composition](../04_order/transitivity_composition.svg)
+
+(we have to also verify that the relation is associative, but that’s easy)
+
+### Formal definition
+
+So, we suspect that preorders are categories, but is it really so? Let’s review the definition of a category again.
+
+> A category is a collection of *objects* (we can think of them as points) and *morphisms* (arrows) that go from one object to another, where:
+
+> 1. Each object has to have the identity morphism.
+
+> 2. There should be a way to compose two morphisms with an appropriate type signature into a third one in a way that is associative.
+
+Looks like we have law number 2 covered, with transitivity. What about the identity law? We have it too, under the name *reflexivity*.
+
+![Reflexivity](../04_order/reflexivity.svg)
+
+So it’s official — preorders are categories (sounds kinda obvious, especially after we also saw that preorders can be reduced to sets and functions using the inclusion order, and sets and functions form a category in their own right).
+
+Preorders are categories, but not all categories are preorders. Most categories have many different morphisms between given two objects. For example, in the category of sets where there are potentially infinite amount of functions from, say, the set of integers and the set of boolean values, as well as a lot of functions that go the other way around.
+
+![Orders compared to other categories](../04_order/order_category.svg)
+
+Whereas preorders, two object, whereas have *at most one morphism*, that is, we either have $A ≤ B$ or we do not.
+
+![Orders compared to other categories](../04_order/arrows_one_arrow.svg)
+
+So, like a monoid is a category that has one object, an order is a category that has at most one *morphism* between two objects.
+
+> A preorder, any preorder, can be seen as a *category with at most one morphism between two given objects*— for any $A$ and $B$, we say that if $A ≤ B$ then a morphism $A \to B$ exists. The identity morphism exist because of reflexivity. The converse is also true: any category with no more than one morphism between two objects can be seen as a preorder.
+
+An interesting fact that follows from they having at most one morphism between given two objects, is that in preorders *all diagrams commute automatically*.
+
+**Task 6:** Prove this.
+
+### Partial orders and total orders as categories
+
+We said that partial orders and total orders are preorders. This means that they are categories as well.
+
+Preorders in particular are what is known in category theory as *skeletal* categories — categories in which there are no isomorphic objects i.e. in which all isomorphic objects are identical.
+
+And total orders I guess we don’t have a specific “categorical” name for them, but they are a certain type of categories as well.
+
+### Products and coproducts
+
+While we are rehashing diagrams from the previous chapters, let’s look at the diagram defining the *coproduct* of two objects in a category, from chapter 2.
+
+![Joins as coproduct](../04_order/coproduct_join.svg)
+
+If you recall, this is an operation that corresponds to *set inclusion* in the category of sets.
+
+![Joins as coproduct](../04_order/coproduct_inclusion.svg)
+
+But wait, wasn’t there some other operation that that corresponded to set inclusion? Oh yes, the *join* operation in orders. And not merely that, but joins in orders are defined in the exact same way as the categorical coproducts.
+
+> The coproduct of $A$ and $B$, denoted $A + B$, is an object, such that:
+
+> 1. There exists two “projection” morphisms $A \to A + B$ and $B \to A + B$.
+
+> 2. For any impostor coproduct $I$, that also has such projection morphisms ($A \to I$ and $B \to I$), there must also exist a unique morphism with the type signature $g: A + B \to I$, that converts the real coproduct to the impostor, such that the projections of the impostor would be just the composition of $g$ with the projections of the product.
+
+![Joins as coproduct](../04_order/coproduct_morphisms.svg)
+
+In the realm of orders, we define join as:
+
+> The *join* of objects $A$ and $B$ is an object $G$, such that:
+
+> 1. It is bigger than both of these objects, so $A ≤ G$ and $B ≤ G$.
+
+> 2. It is smaller than any other object that is bigger than them, so for any other object $P$ such that $P ≤ A$ and $P ≤ B$ then we should also have $G ≤ P$.
+
+We can see that the two definitions, and their corresponding diagrams, are basically the same, we just replaced “bigger” with “has a unique morphism” (because in orders all morphisms are unique).
+
+Speaking in category-theoretic terms, we can say that:
+
+> The *categorical coproduct* in the *category of preorders* is the *join* operation.
+
+Which of course means that *products* correspond to *meets* (duality).
+
+### Thin categories
+
+In category-theoretic terms, orders (categories that have at most one morphism with a given type signature) are known as “thin” categories.
+
+Thin categories are often used for exploring categorical concepts in a context that is easier to understand than in normal (non-thin) categories. For example, as we saw, understanding the *order-theoretic* concepts of meets and joins would help you better understand the *more general categorical* concepts of products and coproducts.
+
+Thin categories are also helpful in contexts when we want to keep it simple and we aren’t particularly interested in the differences between the morphisms that go from one object to another. We will see an example of that in the next chapter.
