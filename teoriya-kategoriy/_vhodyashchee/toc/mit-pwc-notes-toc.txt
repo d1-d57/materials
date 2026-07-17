@@ -1,0 +1,562 @@
+Programming with Categories (DRAFT)
+Brendan Fong
+
+Bartosz Milewski
+
+David I. Spivak
+
+(Last updated: October 6, 2020)
+
+Contents
+Preface
+vii
+Learning programming . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ix
+Installing Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+x
+Haskell points . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . xi
+Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . xiv
+1
+
+Categories, Types, and Functions
+1.1 Programming: the art of composition . . . . . . . . . . . . . . . . . . . .
+1.2 Two fundamental ideas: sets and functions . . . . . . . . . . . . . . . . .
+1.2.1 What is a set? . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.2 Functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.2.3 Some intuitions about functions . . . . . . . . . . . . . . . . . . .
+1.3 Categories . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3.1 Motivation: the category of sets . . . . . . . . . . . . . . . . . . . .
+1.3.2 The definition of a category . . . . . . . . . . . . . . . . . . . . . .
+1.3.3 Examples of categories . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3.4 Thinking in a category: the Yoneda perspective . . . . . . . . . .
+1.4 Categories and Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.1 The lambda calculus . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.2 Types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.3 Haskell functions . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.4 Composing functions . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.4.5 Thinking categorically about Haskell . . . . . . . . . . . . . . . .
+
+1
+1
+3
+3
+4
+6
+9
+9
+12
+14
+20
+23
+23
+26
+28
+30
+33
+
+2
+
+Universal constructions and the algebra of types
+2.1 Constructing datatypes . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Universal constructions . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.1 Terminal objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.2 Initial objects . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2.3 Products . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+35
+35
+37
+37
+39
+40
+
+ii
+
+CONTENTS
+
+iii
+
+2.2.4 Coproducts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Type constructors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.1 Type constructors . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.2 Unit and void . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.3 Tuple types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3.4 Sum types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Exponentials and function types . . . . . . . . . . . . . . . . . . . . . . .
+2.4.1 Interlude: Distributivity . . . . . . . . . . . . . . . . . . . . . . . .
+2.4.2 Exponential objects . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4.3 Function types, and currying in Haskell . . . . . . . . . . . . . . .
+
+43
+44
+45
+46
+48
+53
+56
+56
+57
+60
+
+3
+
+Functors, natural transformations, and type polymorphism
+3.1 Relationships, relationships, relationships . . . . . . . . . . . . . . . . . .
+3.2 Functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2.1 Definition . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2.2 Examples of functors . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2.3 Functors and shapes . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2.4 The category of categories . . . . . . . . . . . . . . . . . . . . . . .
+3.3 Type classes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.3.1 Polymorphism in Haskell . . . . . . . . . . . . . . . . . . . . . . .
+3.3.2 Defining type classes and instances . . . . . . . . . . . . . . . . .
+3.4 Functors in Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4.1 The Functor type class . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4.2 First examples of functors in Haskell . . . . . . . . . . . . . . . . .
+3.4.3 Bifunctors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4.4 A first glance at profunctors . . . . . . . . . . . . . . . . . . . . . .
+3.5 Natural transformations . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5.1 Definition . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.5.2 Natural transformations in Haskell . . . . . . . . . . . . . . . . . .
+3.6 Bonus: Representable functors and the Yoneda embedding . . . . . . . .
+
+65
+65
+66
+66
+67
+71
+74
+74
+74
+75
+79
+79
+81
+83
+86
+88
+88
+89
+92
+
+4
+
+Algebras and recursive data structures
+97
+4.1 The string before the knot . . . . . . . . . . . . . . . . . . . . . . . . . . . 98
+4.2 What you can do with recursive data types . . . . . . . . . . . . . . . . . 100
+4.3 Algebras . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 103
+4.4 Initial algebras . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 105
+4.4.1 Lambek’s lemma . . . . . . . . . . . . . . . . . . . . . . . . . . . . 107
+4.5 Recursive data structures . . . . . . . . . . . . . . . . . . . . . . . . . . . . 108
+4.5.1 Returning to expression trees . . . . . . . . . . . . . . . . . . . . . 110
+4.5.2 The essence of recursion . . . . . . . . . . . . . . . . . . . . . . . . 112
+4.5.3 Algebras, catamorphsims, and folds . . . . . . . . . . . . . . . . . 113
+4.6 Coalgebras, anamorphsims, and unfolds . . . . . . . . . . . . . . . . . . . 114
+
+2.3
+
+2.4
+
+CONTENTS
+
+iv
+
+4.7
+
+4.6.1 The type of streams, as a terminal coalgebra . . . . . . . . . . . . 116
+4.6.2 The stream of prime numbers . . . . . . . . . . . . . . . . . . . . . 117
+Fixed points in Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 120
+4.7.1 Implementing initial algebras by universal property . . . . . . . . 121
+4.7.2 Implementing terminal coalgebras by universal property . . . . . 123
+
+5
+
+Monads
+125
+5.1 A teaser . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 125
+5.2 Different ways of working with monads . . . . . . . . . . . . . . . . . . . 127
+5.2.1 Monads in terms of the “fish” . . . . . . . . . . . . . . . . . . . . . 127
+5.2.2 Monads in terms of join . . . . . . . . . . . . . . . . . . . . . . . . 127
+5.2.3 Monads in terms of bind . . . . . . . . . . . . . . . . . . . . . . . . 130
+5.2.4 Monads in terms of the do notation . . . . . . . . . . . . . . . . . 131
+5.2.5 Monads and effects . . . . . . . . . . . . . . . . . . . . . . . . . . . 134
+5.3 Examples of monads . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 134
+5.3.1 The exceptions monads . . . . . . . . . . . . . . . . . . . . . . . . 134
+5.3.2 The list monad and nondeterminism . . . . . . . . . . . . . . . . . 135
+5.3.3 The writer monads . . . . . . . . . . . . . . . . . . . . . . . . . . . 136
+5.3.4 The reader monads . . . . . . . . . . . . . . . . . . . . . . . . . . . 137
+5.3.5 The state monads . . . . . . . . . . . . . . . . . . . . . . . . . . . . 139
+5.3.6 The continuation monads . . . . . . . . . . . . . . . . . . . . . . . 140
+5.3.7 The IO monad . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 141
+
+6
+
+Monoidal Categories
+143
+6.1 Lax Monoidal Functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 143
+6.1.1 Monad as Applicative . . . . . . . . . . . . . . . . . . . . . . . . . 143
+6.2 Strength and enrichment . . . . . . . . . . . . . . . . . . . . . . . . . . . . 146
+
+7
+
+Profunctors
+149
+7.1 Profunctors revisited . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 149
+7.2 Ends and Coends . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 153
+7.3 Profunctors in Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 156
+7.4 Category of profunctors . . . . . . . . . . . . . . . . . . . . . . . . . . . . 158
+7.4.1 Category of profunctors in Haskell . . . . . . . . . . . . . . . . . . 160
+7.5 Day convolution . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 161
+7.5.1 Day convolution in Haskell . . . . . . . . . . . . . . . . . . . . . . 163
+7.6 Optics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 163
+7.6.1 Motivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 163
+7.6.2 Tensorial optics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 164
+7.6.3 Lens . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 164
+7.6.4 Lens in Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 165
+7.6.5 Prism . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 165
+
+CONTENTS
+
+7.7
+
+Index
+
+v
+
+7.6.6 Prism in Haskell . . . . . . . . . . . . . . . . . . . . . . . . . . . . 166
+Profunctor optics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 166
+7.7.1 Tambara modules . . . . . . . . . . . . . . . . . . . . . . . . . . . . 166
+7.7.2 Profunctor optics in Haskell . . . . . . . . . . . . . . . . . . . . . . 167
+169
+
+Preface
+This book is about how to think using category theory. What does this mean? Category
+theory is a favorite tool of ours for structuring our thoughts, whether they be about
+pure math, science, programming, engineering, or society. It’s a formal, rigorous
+toolkit designed to emphasise notions of relationship, composition, and connection.
+It’s a mathematical tool, and so is about abstraction, stripping away details and noticing
+patterns; one power it gains from this is that it is very concise. It’s great for compressing
+thoughts, and communicating them in short phrases that can be reliably decoded.
+The flip side of this is that it can feel very unfamiliar at first – a strange, new mode
+of thought – and also that it often needs to be complemented by more concrete tools to
+fully realise its practicality. One also needs to practice a certain art, or taste, in knowing
+when an abstraction is useful for structuring thought, and when it should be broken,
+or approximated. Programmers know this well, of course: a programming language
+never fully meets its specification; there are always implementation details that the best
+must be familiar with.
+In this book, we’ve chosen programming, in particular functional programming, as
+the vehicle through which we’ll learn how to think using category theory. This choice
+is not arbitrary: category theory is older than digital computing itself, and has heavily
+influenced the design of modern functional programming languages such as Haskell.
+As we’ll see, it’s also influenced best practice for how to structure code using these
+languages.
+Thinking is not just an abstract matter; the best thought has practical consequences.
+In order to teach you how to think using category theory, we believe that it’s important
+to give a mechanism for implementation and feedback on how category theory is
+affecting your thought. So in this book, we’ll complement the abstraction of category
+theory – lessons on precise definitions of important mathematical structures – with
+an introduction to programming in Haskell, and lessons on how category theoretic
+abstractions are approximated to perform practical programming tasks.
+That said, this book is not intended to be a book about Haskell, and there are many
+other programming languages that you could use as a world in which to try out these
+categorical ideas. In fact, we hope you do! Thinking categorically is about using a set
+vii
+
+viii
+
+PREFACE
+
+of design patterns that emphasise composition, universal constructions, and algebraic
+structure. Used judiciously, we believe this style of thought can improve the clarity
+and correctness of code in any language, including those currently popular, and those
+that will be developed in the years to come.
+Category theory is a vast toolbox, that is still under active construction. A vibrant
+community of mathematicians and computer scientists is working hard to find new
+perspectives, structures, and definitions that lead to compact, insightful ways to reason
+about the world. We won’t teach all of it. In fact, we’ll teach a very small core, some
+central ideas all over fifty years old.
+The first we’ll teach is the namesake: categories. Programming is about composition: it’s about taking programs, some perhaps just single functions, and making them
+work in sync to construct a larger, usually more expressive, program. We call this way
+of making them work in sync composition. A category is a world in which things may
+be composed. In programming these things are called, well, programs, but in category
+theory we use the more abstract word morphism. Morphisms are often thought of
+as processes or relationships. Processes have an input and an output; similarly, relationships form between objects. Morphisms are similar: categories also have objects,
+and morphisms have an input object, called a domain, and an output object, called a
+codomain.
+Since programming is about composition, and categories model the essence of composition, one interesting game to play is to think of – we’ll say model – a programming
+language as a category. In this model, morphisms correspond to programs. What do
+the domain and codomain of a morphism correspond to? The objects of the category
+correspond to types, like int or string. In a category, we can only compose a morphism
+f with a morphism 1 if the codomain of f is the same as the domain of 1. If we’re
+modelling a programming language as a category, this suggests we want to only allow
+composition of programs f and 1 if the output type of f is the same as the input type
+of 1. A program that consumes an int shouldn’t be able to accept a string! Haskell is
+designed with this principle in mind, and checks for this sort of error at compile time,
+only allowing construction of programs that are well-typed.
+Category theory is about relationships, and as part of this viewpoint, relationships
+between categories are very important. The basic sort of relationship is known as a
+functor. A functor between categories C and D must give an object of D for every
+object of C. These correspond to type constructors (which a bit of additional structure).
+Going deeper still, the basic sort of relationship between functors is known as a natural
+transformation. These too are useful for thinking about programming: they are used to
+model polymorphic functions.
+As may be now clear, types play an a fundamental role in thinking about programming from a categorical viewpoint. We’ll next talk about how category theory lends
+insight into methods for constructing new types: first algebraic datatypes, and then
+recursive datatypes.
+
+LEARNING PROGRAMMING
+
+ix
+
+In category theory, this becomes a question of how to construct new objects from
+given objects. In category theory we privilege the notion of relationship, and a deep,
+beautiful part of theory concerns how to construct new objects just by characterizing
+them as having a special place in the web of relationships that is a category. For
+example, in Haskell there is the unit type (), and this has the special property that
+every other type a has a unique function a → (). We say that the unit type thus has a
+special universal property, and in fact if we didn’t know the unit type existed, we could
+recover or construct it by giving this property. More complicated universal properties
+exist, and we can construct new types in this way. In fact, we’ll see that it’s nice if our
+programming language can be modelled using a special sort of category known as a
+cartesian closed category; if so, then our programming language has product types and
+function types.
+Another way of constructing types is using the (perhaps confusingly named) notion
+of algebras and coalgebras for a functor. In particular, specifying a functor lets us talk
+about universal constructions known as initial algebras and final coalgebras. These
+allow us to construct recursive datatypes, and methods for accessing them. Examples
+include lists and trees.
+Functional programming is very neat and easy to reason about. It’s lovely to be
+able to talk simply about the program square : int → int, for example, that takes
+an integer, and returns its square. But what happens if we also want this program
+to wait for an input integer, or print the result, or keep a log, or modify some state
+variable? We call these side effects of the program. Functional programming teaches
+that we should be very careful about side effects, as they can happen away from the
+type system, and this can make programs less explicit and modular, and more difficult
+to reason about. Nonetheless, we can’t be too dogmatic. We do want to print results!
+Monads are special functors that each describe a certain sort of side effect, and are a
+useful way of being careful about side effects.
+
+Learning programming
+Throughout this book you’ll be learning to program in Haskell. One way of learning
+a programming language is to start with formal syntax and semantics (although very
+few programming languages have formal semantics). This is very different from how
+most people learn languages, be it natural or computer languages. A child learns the
+meaning of words and sentences not by analyzing their structure and looking up the
+definitions in Wikipedia. In fact, a child’s understanding of language is very similar to
+how we work in category theory. We derive the meaning of objects from the network
+of interactions with other objects. This is easy in mathematics, where we can say that
+an object is defined by the totality of its interactions with possibly infinite set of other
+objects (we’ll see that when we talk about the Yoneda lemma). In real life we don’t
+have the time to explore the infinity, so we can only approximate this process. We do
+
+PREFACE
+
+x
+
+this by living on credit.
+This is how we are going to learn Haskell. We’ll be using things, from day one,
+without fully understanding their meaning, thus constantly incurring a conceptual
+debt. Some of this debt will be paid later. Some of it will stay with us forever. The
+alternative would be to first learn about cartesian closed categories and domain theory,
+formally define simply typed lambda calculus, build its categorical model, and only
+then wave our hands a bit and claim that at its core Haskell approximates this model.
+We emphasize that this book is not intended to be a complete introduction to Haskell.
+While we will end up introducing all that is essential for learning to express categorical
+ideas in Haskell, there many beautiful features of the language that we will not touch
+upon, such as lazy compilation or list comprehensions. For the reader interested
+in learning Haskell itself, there are many good resources out there; see Hutton for
+example.
+
+Installing Haskell
+Start by downloading and installing the Haskell Platform on your computer. (On the
+Mac or Linux, you’ll have to close and reopen the terminal after installation, to initialize
+the environment.) To start an interactive session from the command line, type ghci
+(GHC stands for the Glasgow Haskell Compiler or, more affectionately, the Glorious
+Haskell Compiler; and ’i’ stands for interactive). You can start by evaluating simple
+expressions at the prompt, e.g.:
+$ ghci
+GHCi, version 8.6.5: http://www.haskell.org/ghc/
+Prelude> 2 * (3 + 4)
+14
+Prelude> 1/2
+0.5
+Prelude> 2^64
+18446744073709551616
+Prelude> cos pi
+-1.0
+Prelude> mod 8 3
+2
+Prelude> :q
+Leaving GHCi.
+
+:? for help
+
+Prelude is the name of the standard Haskell library, which is automatically included
+in every Haskell program and in every ghci session.
+As you can see, besides basic arithmetic operations, you have access to some standard functions. Notice that a function call does not require the the arguments to be
+parenthesized, even for two-argument functions like mod (division modulo). This is
+
+LEARNING PROGRAMMING
+
+xi
+
+something you will have to get used to, but it will make a lot of sense later, when we
+talk about partial application and currying (that’s the kind of conceptual debt we were
+talking about).
+To exit the command loop, type :q
+The interactive environment is great for trying things out, but real programs have
+to be compiled from files. We’ll be mostly working with single-file programs. Use your
+favorite editor to create and edit Haskell source files, which are files with the extension
+.hs. To begin with, create a file main.hs and put this line of code in it:
+main = putStrLn "Hello Haskell!"
+Compile this file using the command:
+ghc main
+and then run the resulting executable. The details depend on the operating system.
+For instance, you might have to invoke the program by typing ./main at the command
+prompt:
+$ ./main
+Hello Haskell!
+If you name your file something else, it will be treated as a separate module, and will
+have to include a module declaration at the top. For instance, a file named hello.hs
+will have to start with:
+module Hello where
+main = putStrLn "Hello Haskell!"
+(Module names must start with upper case.)
+
+Haskell points
+Throughout the book, elements of Haskell will be interspersed with concepts from
+category theory, so it makes sense to periodically summarize what we have learned in
+a more organized way. For instance, we have just learned that you can do arithmetic
+in Haskell.
+Operators You have at your disposal the usual operators +, -, *, and /, as well as the
+power operator ^. You can apply them to integers and floating-point numbers (except
+for the power, which only allows integer exponents).
+Unary minus There is a little gotcha with the unary minus: when you write a negative
+literal, like -8, it is treated like the application of the function negate to a literal 8. This
+is why you sometimes have to parenthesize it, as in:
+
+PREFACE
+
+xii
+mod (-8) 3
+or
+2 * (-3)
+
+Without parentheses, the Haskell compiler will issue one of its infamously cryptic error
+messages.
+Functions Here are some useful functions: abs, floor, ceiling, round; there is
+integral division div and mod satisfying the equality:
+(div x
+
+y) * y + (mod x y) == x
+
+We have square root , sqrt, the usual trigonometric functions, and the constant pi,
+natural exponential exp and logarithm log.
+Let syntax When using the interactive environment, ghci, variables are defined using
+the let syntax, e.g.:
+let x = sin (pi / 4)
+let llama = cos (pi / 4)
+x^2 + llama^2
+Expressions are immediately evaluated and the results are printed (if they are printable). Variable names must start with a lowercase letter. Conveniently, following
+mathematical usage, variable names may contain apostrophes, as in
+let x' = 2 * x
+Multi-line modes in GHCi To input multiple lines of Haskell into the interactive
+environment at once, wrap the code in :{ and :}, e.g.:
+:{
+let abs x | x >= 0 = x
+| otherwise = -x
+:}
+Modules When working source files, the module definition has to be included at the
+top (except if the file is called main.hs, in which case the module statement can be
+omitted). For example, if the file is called test.hs, it must start with something like:
+module Test where
+The module name Test can be replaced with anything that starts an uppercase letter,
+and may contain periods, as in Data.List.
+If you want to compile and execute a Haskell file, it must contain the definition of
+main.
+
+LEARNING PROGRAMMING
+
+xiii
+
+Input/Output In general, input and output are performed in main. Unlike in imperative languages, I/O is special in Haskell and it requires the use of the IO monad. We
+will eventually talk about monads, but for now, we’ll just follows a few simple rules. To
+begin with, we can print any string in main using putStrLn. We can also print things
+that can be displayed, like numbers or lists, using print. For instance:
+main = print (2^31 - 1)
+Remember to enclose composite expressions in parentheses when passing them to
+print.
+If you want to do multiple I/O operations in main, you have to put them in the do
+block:
+main = do
+putStrLn "This is a prime number"
+print (2^31 - 1)
+Statements in a block must be all indented by the same amount. Haskell is whitespace
+sensitive.
+Comments To make your code more readable to humans, you might want to include
+comments. An end-of-line comment starts with a double hyphen and extends till the
+end of line
+id :: a -> a -- identity function
+A multi-line comment starts with {- (curly brace, dash) and ends with -}.
+Language pragmas Language pragmas have to be listed at the very top of a source file
+(before imports). Formally, these are just comments, but they are used by the compiler
+to influence the parsing.
+{-# language ExplicitForAll #-}
+Alternatively, pragmas can be set in GHCi using the command :set
+Prelude> :set -XTypeApplications
+Prelude> :t id
+id :: a -> a
+Prelude> :t id @Int
+id @Int :: Int -> Int
+Further resources Here are some useful online resources:
+• https://hoogle.haskell.org. Hoogle lets you look up Haskell function definitions,
+either by name or by type signature.
+• https://www.cs.dartmouth.edu/ cbk/classes/8/handouts/CheatSheet.pdf, Haskell
+cheat sheet
+
+xiv
+
+PREFACE
+
+Acknowledgments
+The authors would like to thank David A. Dalrymple, Eliana Lorch, Nelson Niu, Paolo
+Perrone, and Gioele Zardini for many helpful comments.
+Work by Spivak and Fong was sponsored in part by AFOSR grants and Topos
+Institute.
+
+Chapter 1
+
+Categories, Types, and Functions
+1.1
+
+Programming: the art of composition
+
+What is programming? In some sense, programming is just about giving instructions
+to a computer, a strange, very literal beast with whom communication takes some
+art. But this alone does not explain why more and more people are programming,
+and why so many (perhaps including you, dear reader) are interested in learning to
+program better. Programming is about using the immense power of a computer to
+solve problems. Programming, and computers, allow us to solve big problems, such
+as forecasting the weather, controlling a lunar landing, or instantaneously sending a
+photo to your mom on the other side of the planet.
+How do we write programs to solve these big problems? We decompose the big
+problems into smaller ones. And if they are still too big, we decompose them again,
+and again, until we are left writing the very simple functions that come at the base of a
+programming language, such as concatenating two lists (or even modifying a register).
+Then, by solving these small problems and composing the solutions, we arrive at a
+solution to the larger problem.
+To take a very simple example, suppose we wanted to take a sentence, and count
+how many words it contains. This capability is usually not provided to us in the
+base library of a programming language, such as Haskell’s Prelude. Luckily, we can
+perform the task by composition.
+Our first ingredient will be the function words, which takes a sentence (encoded as
+a string) and turns it into a comma-separated list of words. For example, here’s what
+happens if we call it on the sentence "Hello world":
+Prelude> words "Hello world"
+["Hello","world"]
+Our second ingredient is the function length, which counts the number of entries
+in a list. For example, we might run:
+1
+
+

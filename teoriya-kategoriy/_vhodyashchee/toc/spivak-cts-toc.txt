@@ -1,0 +1,525 @@
+Category Theory for Scientists
+(Old Version)
+David I. Spivak
+September 19, 2013
+
+an	  observa*on	  
+when	  executed	  
+results	  in	  
+
+analyzed	  by	  a	  
+person	  yields	  
+
+an	  experiment	  
+
+a	  hypothesis	  
+
+mo*vates	  the	  
+speciﬁca*on	  of	  
+
+analyzed	  by	  a	  
+person	  produces	  
+
+a	  predic*on	  
+
+How can mathematics make this diagram meaningful?
+
+2
+
+Preface
+An early version of this book was put on line in February 2013 to serve as the textbook for
+my course Category Theory for Scientists taught in the spring semester of 2013 at MIT.
+During that semester, students provided me with hundreds of comments and questions,
+which led to a substantial improvement (and the addition of 50 pages) to the original
+document.
+In the summer of 2013 I signed a contract with the MIT Press to publish a new
+version of this work under the title Category Theory for the Sciences. Because I am
+committed to the open source development model I insisted that a version of this book,
+namely the one you are reading, remain freely available online. The MIT Press version
+will of course not be free.
+Other than the title, there are two main differences between the present version and
+the MIT Press version. The first difference is that I will do a full edit with the help
+of professional editors from the Press. The second difference is that I will write up
+solutions to the book’s (approximately 280) exercises; some of these will be included in
+the published version, whereas the rest will be available by way of a password-protected
+page, accessible only to professors who teach the subject.
+
+3
+
+4
+
+Contents
+1 Introduction
+1.1 A brief history of category theory . . . . . . . . . . . . . . . . . . . . . . .
+1.2 Intention of this book . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.3 What is requested from the student . . . . . . . . . . . . . . . . . . . . . .
+1.4 Category theory references . . . . . . . . . . . . . . . . . . . . . . . . . . .
+1.5 Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+7
+9
+10
+12
+12
+12
+
+2 The category of sets
+2.1 Sets and functions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Commutative diagrams . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.3 Ologs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.4 Products and coproducts . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.5 Finite limits in Set . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.6 Finite colimits in Set . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2.7 Other notions in Set . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+15
+15
+22
+23
+32
+41
+49
+56
+
+3 Categories and functors, without admitting it
+69
+3.1 Monoids . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 69
+3.2 Groups . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82
+3.3 Graphs . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 86
+3.4 Orders . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 93
+3.5 Databases: schemas and instances . . . . . . . . . . . . . . . . . . . . . . 102
+4 Basic category theory
+113
+4.1 Categories and Functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . 113
+4.2 Categories and functors commonly arising in mathematics . . . . . . . . . 129
+4.3 Natural transformations . . . . . . . . . . . . . . . . . . . . . . . . . . . . 143
+4.4 Categories and schemas are equivalent, Cat » Sch . . . . . . . . . . . . . 165
+4.5 Limits and colimits . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 169
+4.6 Other notions in Cat . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 192
+5 Categories at work
+201
+5.1 Adjoint functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 201
+5.2 Categories of functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 218
+5.3 Monads . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 235
+5.4 Operads . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 247
+
+5
+
+6
+
+CONTENTS
+
+Chapter 1
+
+Introduction
+The title page of this book contains a graphic that we reproduce here.
+an	  observa*on	  
+when	  executed	  
+results	  in	  
+
+analyzed	  by	  a	  
+person	  yields	  
+
+an	  experiment	  
+
+a	  hypothesis	  
+
+mo*vates	  the	  
+speciﬁca*on	  of	  
+
+analyzed	  by	  a	  
+person	  produces	  
+
+a	  predic*on	  
+
+(1.1)
+
+It is intended to evoke thoughts of the scientific method.
+A hypothesis analyzed by a person produces a prediction, which motivates the
+specification of an experiment, which when executed results in an observation,
+which analyzed by a person yields a hypothesis.
+This sounds valid, and a good graphic can be exceptionally useful for leading a reader
+through the story that the author wishes to tell.
+Interestingly, a graphic has the power to evoke feelings of understanding, without
+really meaning much. The same is true for text: it is possible to use a language such as
+English to express ideas that are never made rigorous or clear. When someone says “I
+believe in free will,” what does she believe in? We may all have some concept of what
+she’s saying—something we can conceptually work with and discuss or argue about. But
+to what extent are we all discussing the same thing, the thing she intended to convey?
+Science is about agreement. When we supply a convincing argument, the result of
+this convincing is agreement. When, in an experiment, the observation matches the
+hypothesis—success!—that is agreement. When my methods make sense to you, that is
+7
+
+8
+
+CHAPTER 1. INTRODUCTION
+
+agreement. When practice does not agree with theory, that is disagreement. Agreement
+is the good stuff in science; it’s the high fives.
+But it is easy to think we’re in agreement, when really we’re not. Modeling our
+thoughts on heuristics and pictures may be convenient for quick travel down the road,
+but we’re liable to miss our turnoff at the first mile. The danger is in mistaking our
+convenient conceptualizations for what’s actually there. It is imperative that we have
+the ability at any time to ground out in reality. What does that mean?
+Data. Hard evidence. The physical world. It is here that science touches down and
+heuristics evaporate. So let’s look again at the diagram on the cover. It is intended
+to evoke an idea of how science is performed. Is there hard evidence and data to back
+this theory up? Can we set up an experiment to find out whether science is actually
+performed according to such a protocol? To do so we have to shake off the stupor evoked
+by the diagram and ask the question: “what does this diagram intend to communicate?”
+In this course I will use a mathematical tool called ologs, or ontology logs, to give
+some structure to the kinds of ideas that are often communicated in pictures like the
+one on the cover. Each olog inherently offers a framework in which to record data about
+the subject. More precisely it encompasses a database schema, which means a system of
+interconnected tables that are initially empty but into which data can be entered. For
+example consider the olog below
+
+a mass
+
+o has as mass
+
+an object of mass
+m held at height h
+above the ground
+
+has as height
+in meters
+
+when dropped has
+as number of seconds till hitting the
+ground
+?
+
+
+a real number h
+
+?
+
+2h˜9.8
+
+&
+/ a real number
+
+This olog represents a framework in which to record data about objects held above the
+ground, their mass, their height, and a comparison (the ?-mark in the middle) between
+the number of seconds till they hit the ground and a certain real-valued function of their
+height. We will discuss ologs in detail throughout this course.
+The picture in (1.1) looks like an olog, but it does not conform to the rules that
+we lay out for ologs in Section 2.3. In an olog, every arrow is intended to represent a
+mathematical function. It is difficult to imagine a function that takes in predictions and
+outputs experiments, but such a function is necessary in order for the arrow
+motivates the specification of
+
+a prediction ÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÝÑ an experiment
+in (1.1) to make sense. To produce an experiment design from a prediction probably
+requires an expert, and even then the expert may be motivated to specify a different
+experiment on Tuesday than he is on Monday. But perhaps our criticism has led to a
+way forward: if we say that every arrow represents a function when in the context of
+a specific expert who is actually doing the science at a specific time, then Figure (1.1)
+begins to make sense. In fact, we will return to the figure in Section 5.3 (specifically
+Example 5.3.3.10), where background methodological context is discussed in earnest.
+
+1.1. A BRIEF HISTORY OF CATEGORY THEORY
+
+9
+
+This course is an attempt to extol the virtues of a new branch of mathematics,
+called category theory, which was invented for powerful communication of ideas between
+different fields and subfields within mathematics. By powerful communication of ideas I
+actually mean something precise. Different branches of mathematics can be formalized
+into categories. These categories can then be connected together by functors. And the
+sense in which these functors provide powerful communication of ideas is that facts and
+theorems proven in one category can be transferred through a connecting functor to
+yield proofs of analogous theorems in another category. A functor is like a conductor of
+mathematical truth.
+I believe that the language and toolset of category theory can be useful throughout
+science. We build scientific understanding by developing models, and category theory is
+the study of basic conceptual building blocks and how they cleanly fit together to make
+such models. Certain structures and conceptual frameworks show up again and again in
+our understanding of reality. No one would dispute that vector spaces are ubiquitous.
+But so are hierarchies, symmetries, actions of agents on objects, data models, global
+behavior emerging as the aggregate of local behavior, self-similarity, and the effect of
+methodological context.
+Some ideas are so common that our use of them goes virtually undetected, such as settheoretic intersections. For example, when we speak of a material that is both lightweight
+and ductile, we are intersecting two sets. But what is the use of even mentioning this
+set-theoretic fact? The answer is that when we formalize our ideas, our understanding
+is almost always clarified. Our ability to communicate with others is enhanced, and the
+possibility for developing new insights expands. And if we are ever to get to the point
+that we can input our ideas into computers, we will need to be able to formalize these
+ideas first.
+It is my hope that this course will offer scientists a new vocabulary in which to think
+and communicate, and a new pipeline to the vast array of theorems that exist and are
+considered immensely powerful within mathematics. These theorems have not made their
+way out into the world of science, but they are directly applicable there. Hierarchies are
+partial orders, symmetries are group elements, data models are categories, agent actions
+are monoid actions, local-to-global principles are sheaves, self-similarity is modeled by
+operads, context can be modeled by monads.
+
+1.1
+
+A brief history of category theory
+
+The paradigm shift brought on by Einstein’s theory of relativity brought on the realization that there is no single perspective from which to view the world. There is no
+background framework that we need to find; there are infinitely many different frameworks and perspectives, and the real power lies in being able to translate between them.
+It is in this historical context that category theory got its start. 1
+Category theory was invented in the early 1940s by Samuel Eilenberg and Saunders
+Mac Lane. It was specifically designed to bridge what may appear to be two quite
+different fields: topology and algebra. Topology is the study of abstract shapes such as
+7-dimensional spheres; algebra is the study of abstract equations such as y 2 z “ x3 ´ xz 2 .
+People had already created important and useful links (e.g. cohomology theory) between
+these fields, but Eilenberg and Mac Lane needed to precisely compare different links with
+1 The following history of category theory is far too brief, and perhaps reflects more of the author’s
+aesthetic than any kind of objective truth, whatever that may mean. Here are some much better
+references: [Kro], [Mar1], [LM].
+
+10
+
+CHAPTER 1. INTRODUCTION
+
+one another. To do so they first needed to boil down and extract the fundamental nature
+of these two fields. But the ideas they worked out amounted to a framework that fit not
+only topology and algebra, but many other mathematical disciplines as well.
+At first category theory was little more than a deeply clarifying language for existing
+difficult mathematical ideas. However, in 1957 Alexander Grothendieck used category
+theory to build new mathematical machinery (new cohomology theories) that granted
+unprecedented insight into the behavior of algebraic equations. Since that time, categories have been built specifically to zoom in on particular features of mathematical
+subjects and study them with a level of acuity that is simply unavailable elsewhere.
+Bill Lawvere saw category theory as a new foundation for all mathematical thought.
+Mathematicians had been searching for foundations in the 19th century and were reasonably satisfied with set theory as the foundation. But Lawvere showed that the category
+of sets is simply a category with certain nice properties, not necessarily the center of
+the mathematical universe. He explained how whole algebraic theories can be viewed
+as examples of a single system. He and others went on to show that higher order logic
+was beautifully captured in the setting of category theory (more specifically toposes).
+It is here also that Grothendieck and his school worked out major results in algebraic
+geometry.
+In 1980 Joachim Lambek showed that the types and programs used in computer
+science form a specific kind of category. This provided a new semantics for talking about
+programs, allowing people to investigate how programs combine and compose to create
+other programs, without caring about the specifics of implementation. Eugenio Moggi
+brought the category theoretic notion of monads into computer science to encapsulate
+ideas that up to that point were considered outside the realm of such theory.
+It is difficult to explain the clarity and beauty brought to category theory by people
+like Daniel Kan and André Joyal. They have each repeatedly extracted the essence of a
+whole mathematical subject to reveal and formalize a stunningly simple yet extremely
+powerful pattern of thinking, revolutionizing how mathematics is done.
+All this time, however, category theory was consistently seen by much of the mathematical community as ridiculously abstract. But in the 21st century it has finally come
+to find healthy respect within the larger community of pure mathematics. It is the language of choice for graduate-level algebra and topology courses, and in my opinion will
+continue to establish itself as the basic framework in which mathematics is done.
+As mentioned above category theory has branched out into certain areas of science
+as well. Baez and Dolan have shown its value in making sense of quantum physics, it
+is well established in computer science, and it has found proponents in several other
+fields as well. But to my mind, we are the very beginning of its venture into scientific
+methodology. Category theory was invented as a bridge and it will continue to serve in
+that role.
+
+1.2
+
+Intention of this book
+
+The world of applied mathematics is much smaller than the world of applicable mathematics. As alluded to above, this course is intended to create a bridge between the
+vast array of mathematical concepts that are used daily by mathematicians to describe
+all manner of phenomena that arise in our studies, and the models and frameworks of
+scientific disciplines such as physics, computation, and neuroscience.
+To the pure mathematician I’ll try to prove that concepts such as categories, functors, natural transformations, limits, colimits, functor categories, sheaves, monads, and
+
+1.2. INTENTION OF THIS BOOK
+
+11
+
+operads—concepts that are often considered too abstract for even math majors—can
+be communicated to scientists with no math background beyond linear algebra. If this
+material is as teachable as I think, it means that category theory is not esoteric but
+somehow well-aligned with ideas that already make sense to the scientific mind. Note,
+however, that this book is example-based rather than proof-based, so it may not be
+suitable as a reference for students of pure mathematics.
+To the scientist I’ll try to prove the claim that category theory includes a formal
+treatment of conceptual structures that the scientist sees often, perhaps without realizing
+that there is well-oiled mathematical machinery to be employed. We will work on the
+structure of information; how data is made meaningful by its connections, both internal
+and outreaching, to other data. Note, however, that this book should most certainly
+not be taken as a reference on scientific matters themselves. One should assume that
+any account of physics, materials science, chemistry, etc. has been oversimplified. The
+intention is to give a flavor of how category theory may help us model scientific ideas,
+not to explain these ideas in a serious way.
+Data gathering is ubiquitous in science. Giant databases are currently being mined
+for unknown patterns, but in fact there are many (many) known patterns that simply
+have not been catalogued. Consider the well-known case of medical records. A patient’s
+medical history is often known by various individual doctor-offices but quite inadequately
+shared between them. Sharing medical records often means faxing a hand-written note
+or a filled-in house-created form between offices.
+Similarly, in science there exists substantial expertise making brilliant connections
+between concepts, but it is being conveyed in silos of English prose known as journal
+articles. Every scientific journal article has a methods section, but it is almost impossible
+to read a methods section and subsequently repeat the experiment—the English language
+is inadequate to precisely and concisely convey what is being done.
+The first thing to understand in this course is that reusable methodologies can be
+formalized, and that doing so is inherently valuable. Consider the following analogy.
+Suppose you want to add up the area of a region in space (or the area under a curve).
+You break the region down into small squares, each of which you know has area A; then
+you count the number of squares, say n, and the result is that the region has an area of
+about nA. If you want a more precise and accurate result you repeat the process with
+half-size squares. This methodology can be used for any area-finding problem (of which
+there are more than a first-year calculus student generally realizes) and thus it deserves
+to be formalized. But once we have formalized this methodology, it can be taken to its
+limit and out comes integration by Riemann sums.
+I intend to show that category theory is incredibly efficient as a language for experimental design patterns, introducing formality while remaining flexible. It forms a rich
+and tightly woven conceptual fabric that will allow the scientist to maneuver between
+different perspectives whenever the need arises. Once one builds that fabric for oneself,
+he or she has an ability to think about models in a way that simply would not occur
+without it. Moreover, putting ideas into the language of category theory forces a person
+to clarify their assumptions. This is highly valuable both for the researcher and for his
+or her audience.
+What must be recognized in order to find value in this course is that conceptual chaos
+is a major problem. Creativity demands clarity of thinking, and to think clearly about a
+subject requires an organized understanding of how its pieces fit together. Organization
+and clarity also lead to better communication with others. Academics often say they are
+paid to think and understand, but that is not true. They are paid to think, understand,
+
+12
+
+CHAPTER 1. INTRODUCTION
+
+and communicate their findings. Universal languages for science—languages such as
+calculus and differential equations, matrices, or simply graphs and pie-charts—already
+exist, and they grant us a cohesiveness that makes scientific research worthwhile. In this
+book I will attempt to show that category theory can be similarly useful in describing
+complex scientific understandings.
+
+1.3
+
+What is requested from the student
+
+I will do my best to make clear the value of category theory in science, but I am not a
+scientist. To that end I am asking for your help in exploring how category theory may
+be useful in your specific field.
+I also want you to recognize that the value of mathematics is not generally obvious
+at first. A good student learning a good subject with a good teacher will see something
+compelling almost immediately, but may not see how it will be useful in real life. This
+will come later. I hope you will work hard to understand even without yet knowing what
+its actual value in your life and research will be. Like a student of soccer is encouraged
+to spend hours juggling the ball when he or she could be practicing penalty shots, it
+is important to gain facility with the materials you will be using. Doing exercises is
+imperative for learning mathematics.
+
+1.4
+
+Category theory references
+
+I wrote this book because the available books on category theory are almost all written
+for mathematicians (the rest are written for computer scientists). There is one book by
+Lawvere and Schanuel, called Conceptual Mathematics [LS], that offers category theory
+to a wider audience, but its style is not appropriate for this course. Still, it is very well
+written and clear.
+The “bible” of category theory is Categories for the working mathematician by Mac
+Lane [Mac]. But as the title suggests, it was written for working mathematicians and
+will be quite opaque to my target audience. However, once a person has read my book,
+Mac Lane’s book may become a valuable reference.
+Other good books include Steve Awodey’s book Category theory [Awo] and Barr and
+Wells book Category theory for computing science, [BW]. A paper by Brown and Porter
+called Category Theory: an abstract setting for analogy and comparison [BP1] is more
+in line with the style of this book, only much shorter. Online, I find wikipedia and a site
+called the nlab to be quite useful.
+This book attempts to explain category theory by examples and exercises rather than
+by theorems and proofs. I hope this approach will be valuable to the working scientist.
+
+1.5
+
+Acknowledgments
+
+I would like to express my deep appreciation for the many scientists who I have worked
+with over the past five years. It all started with Paea LePendu who first taught me about
+databases when I was naively knocking on doors in the University of Oregon computer
+science department. This book would never have been written if Tristan Nguyen and
+Dave Balaban had not noticed my work and encouraged me to continue. Dave Balaban
+and Peter Gates have been my scientific partners since the beginning, working hard to
+
+1.5. ACKNOWLEDGMENTS
+
+13
+
+understand what I’m offering and working just as hard to help me understand all that
+I’m missing. Peter Gates has deepened my understanding of data in profound ways.
+I have also been tremendously lucky to know Haynes Miller, who made it possible
+for me set down at MIT, with the help of Clark Barwick and Jacob Lurie. I knew that
+MIT would be the best place in the world for me to pursue this type of research, and
+it has really come through. Researchers like Markus Buehler and his graduate students
+Tristan Giesa and Dieter Brommer have been a pleasure to work with, and the many
+materials science examples scattered throughout this book is a testament to how much
+our work together has influenced my thinking.
+I’d also like to thank my collaborators and conversation partners with whom I have
+discussed subjects written about in this book. Other than people mentioned above, these
+include Steve Awodey, Allen Brown, Adam Chlipala, Carlo Curino, Dan Dugger, Henrik
+Forssell, David Gepner, Jason Gross, Bob Harper, Ralph Hutchison, Robert Kent, Jack
+Morava, Scott Morrison, David Platt, Joey Perricone, Dylan Rupel, Guarav Singh, Sam
+Shames, Nat Stapleton, Patrick Schultz, Ka Yu Tam, Ryan Wisnesky, Jesse Wolfson,
+and Elizabeth Wood.
+I would like to thank Peter Kleinhenz and Peter Gates for reading this book and
+providing invaluable feedback before I began teaching the 18-S996 class at MIT in Spring
+2013. In particular the cover image is a mild alteration of something Gates sent me to
+help motivate the book to scientists. I would also like to greatly thank the 18-S996
+course grader Darij Grinberg, who was not only the best grader I’ve had in my 14 years
+of teaching, but gave me more comments than anyone else on the book itself. I’d also like
+to thank the students from the 18-S996 class at MIT who helped me find typos, pointed
+me to unclear explanations, and generally helped me improve the book in many ways.
+Other than the people listed above, these include Aaron Brookner, Leon Dimas, Dylan
+Erb, Deokhwan Kim, Taesoo Kim, Owen Lewis, Yair Shenfeld, and Adam Strandberg.
+I would like to thank my teacher, Peter Ralston, who taught me to repeatedly question
+the obvious. My ability to commit to a project like this one and to see it to fruition has
+certainly been enhanced since studying with him.
+Finally, I acknowledge my appreciation for support from the Office of Naval Research
+2
+without which this book would not have been remotely possible. I believe that their
+funding of basic research is an excellent way of ensuring that the US remains a global
+leader in the years to come.
+
+2 Grant numbers: N000140910466, N000141010841, N000141310260
+
+14
+
+CHAPTER 1. INTRODUCTION
+
+Chapter 2
+
+The category of sets
+The theory of sets was invented as a foundation for all of mathematics. The notion of
+sets and functions serves as a basis on which to build our intuition about categories in
+general. In this chapter we will give examples of sets and functions and then move on
+to discuss commutative diagrams. At this point we can introduce ologs which will allow
+us to use the language of category theory to speak about real world concepts. Then we
+will introduce limits and colimits, and their universal properties. All of this material is
+basic set theory, but it can also be taken as an investigation of our first category, the
+category of sets, which we call Set. We will end this chapter with some other interesting
+constructions in Set that do not fit into the previous sections.
+
+2.1
+
+Sets and functions
+
+2.1.1
+
+Sets
+
+In this course I’ll assume you know what a set is. We can think of a set X as a collection
+of things x P X, each of which is recognizable as being in X and such that for each pair
+of named elements x, x1 P X we can tell if x “ x1 or not. 1 The set of pendulums is the
+collection of things we agree to call pendulums, each of which is recognizable as being a
+pendulum, and for any two people pointing at pendulums we can tell if they’re pointing
+at the same pendulum or not.
+Notation 2.1.1.1. The symbol H denotes the set with no elements. The symbol N
+denotes the set of natural numbers, which we can write as
+N :“ t0, 1, 2, 3, 4, . . . , 877, . . .u.
+The symbol Z denotes the set of integers, which contains both the natural numbers and
+their negatives,
+Z :“ t. . . , ´551, . . . , ´2, ´1, 0, 1, 2, . . .u.
+If A and B are sets, we say that A is a subset of B, and write A Ď B, if every element
+of A is an element of B. So we have N Ď Z. Checking the definition, one sees that
+1 Note that the symbol x1 , read “x-prime”, has nothing to do with calculus or derivatives. It is simply
+
+notation that we use to name a symbol that is suggested as being somehow like x. This suggestion
+of kinship between x and x1 is meant only as an aid for human cognition, and not as part of the
+mathematics.
+
+15
+
+

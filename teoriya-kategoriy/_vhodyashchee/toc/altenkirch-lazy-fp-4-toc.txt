@@ -1,0 +1,516 @@
+4
+
+Products, coproducts and exponentials
+
+4.1
+
+Products
+
+The product of two sets A, B : Set is A ⇥ B its elements are tuples, that is given
+a : A and b : B we can form (a, b) : A ⇥ B which are the only elements of this
+type. We can define the projections:
+⇡1 : A ⇥ B ! A
+⇡1 (a, b) = a
+
+⇡2 : A ⇥ B ! A
+⇡2 (a, b) = b
+
+Moreover given another set C : Set and functions f : A ! C and g : B ! C
+we define
+[f, g] : C ! A ⇥ B
+
+[f, g] c = (f c, g c)
+
+this is the unique function that makes the following diagram commute
+C
+f
+
+A
+
+⇡1
+
+[f,g]
+
+A⇥B
+
+g
+⇡2
+
+B
+
+The uniqueness is indicated by the dashed arrow.
+By unique we mean that for any other function h : C ! A ⇥ B which
+makes this diagram commute we have that h = [f, g]. Using extensionality it is
+sufficient to show that h x = [f, g] x :
+[f, g] x = (f x, g x)
+= ((⇡1 h) x, ⇡2 h) x)
+= (⇡1 (h x), ⇡2 (h x))
+= ( z.(⇡1 z, ⇡2 z)) h
+
+Using the fact that all elements of A ⇥ B are tuples it is easy to see that
+z.(⇡1 z, ⇡2 z)) = z.z = id and hence
+( z.(⇡1 z, ⇡2 z)) h = id h
+=h
+
+21
+
+Moreover, [ , ] is natural, this means that [f, g] h = [f
+
+h, g h]:
+
+([f, g] h) x = [f, g] (h x)
+= (f (h x), g (h x))
+= ((f
+
+h) x), (g h) x))
+
+= [f
+
+h, g h] x
+
+We abstract from products in Set and say that in any category C a product
+A ⇥ B of two objects A, B is given by two morphisms ⇡1 : C(A ⇥ B, A) and ⇡2 :
+C(A⇥B, B) and for any pair of morphisms f : C(C, A) and g : C(C, B) a unique
+morphism [f, g] : C(C, A ⇥ B) that makes the following diagram commute:
+C
+f
+
+A
+
+⇡1
+
+[f,g]
+
+A⇥B
+
+g
+⇡2
+
+B
+
+Moreover this assignment is natural, i.e. [f, g] h = [f
+
+h, g h].
+
+Question 30 Has the category !, which corresponds to  on natural numbers,
+got products? In general what are products for a preorder?
+As for terminal and initial objects we can show that products are unique up
+to isomorphism. This also implies that A ⇥ B ⇠
+= B ⇥ A because it is easy to see
+that B ⇥ A is a product of A and B.
+We have only defined binary products, what about ternary products? There
+are at least two ways to derive them from binary propducts A ⇥ (B ⇥ C) and
+(A ⇥ B) ⇥ C.
+Exercise 31 Show that A ⇥ (B ⇥ C) ⇠
+= (A ⇥ B) ⇥ C.
+This suggests that we can indeed derive all non-empty products from binary
+products. The only things which is missing is the empty product, which corresponds to the terminal object. Hence we say that a category has finite products
+if it has a terminal object and binary products. Note that this also means that
+we chose a particular terminal object 1 and for any pair of object A and B
+another object A ⇥ B.
+
+4.2
+
+Coproducts
+
+It is easy to say what are coproducts: they are simply products in the opposite
+category. However, it is useful to develop some intuition by looking at coproducts 12 in Set first: Given A, B : Set we define A + B : Set whose elements
+12 They are also called disjoint union due to the way they are defined in set theory. However,
+since unions don’t make sense in type theory this isn’t a very good name. A better alternative
+to coproducts is sums.
+
+22
+
+are inj1 a : A + B for a : A and inj2 b : A + B for b : B and hthese
+i are the only
+elements. Now given f : A ! C and g : B ! C we define fg : A + B ! C
+which allows us to do case analysis:
+h i
+f (inj a) = f a
+1
+g
+h i
+f (inj b) = g b
+2
+g
+This is the unique function which makes the following diagram commute:
+C
+f
+
+A
+
+inj1
+
+
+
+f
+g
+
+A+B
+
+g
+
+inj2
+
+B
+
+h i h
+i
+f = h f .
+g
+h g
+h i
+Exercise 32 Verify unicity and naturality of fg .
+
+Moreover this assignment is natural, i.e. h
+
+This leads directly to the definition of binary coproducts in a category C,
+a coproduct A + B of A and B is given by injections: inj1 : C(A, A + B)
+for and inj2 b : C(B, A + B) andh fori any pair of morphisms f : C(A, C) and
+g : C(B, C) a unique morphism fg : C(A + B, C) that makes the following
+diagram commute:
+C
+f
+
+A
+
+inj1
+
+
+
+f
+g
+
+A+B
+
+Moreover this assignment is natural, i.e. h
+
+g
+
+inj2
+
+B
+
+h i h
+i
+f = h f .
+g
+h g
+
+Question 33 Has the category !, which corresponds to  on natural numbers,
+got coproducts? In general what are coproducts for a preorder?
+As for produts we say that a category has all finite coproducts if it has an
+initial object and all binary coproducts.
+In Set and actually in many categories products and coproducts are very
+di↵erent, but this is not always the case. We have already seen that in Mon
+ths initial object and the terminal object coincide. For the following consider
+the category of commutative monoids CMon which is like monoids but with
+the additional property that x ⇤ y = y ⇤ x for any object (A, e, ⇤ ). Given two
+commutative monoids (A, e, ⇤ ), (B, z, + ) we define A B as (A⇥B, (e, z), • )
+where (a, b) • (a0 , b0 ) = (a ⇤ a0 , b + b0 ). It is easy to see that this is a commutative
+monoid again.
+23
+
+Exercise 34 Show that A
+B.
+
+B is both a product and a coproduct of A and
+
+Question 35 What happens if we give up commutativity, i.e. if we consider
+Mon instead.
+Products and coproducts can also be defined as an adjunction: Given a
+category C we write C2 = C ⇥ C 13 whose objects are pairs of objects and
+whose morphsims are pairs of morphisms in C. There is a functor : C ! C2
+(called the diagonal functor) which just copies, that is A = (A, A) and the
+same on morphisms. Now if C has binary products and coproducts resepctively
+we also have ⇥ , + : C2 ! C
+Exercise 36 Define the morphism parts of these functors using only the
+properties of products / coproducts.
+Moreover, they are left and right adjoint to
+
+:
+
+C
++
+
+a
+
+a
+
+⇥
+
+C2
+Exercise 37 Verify these adjunctions, i.e. show that
+C(X, Z) ⇥ C(Y, Z) ⇠
+= C(X + Y, Z)
+⇠
+C(Z, X ⇥ Y ) = C(Z, X) ⇥ C(Z, Y )
+are natural isomorphisms.
+
+4.3
+
+Exponentials
+
+Next we look at the set of functions which is called an exponential in category
+theory. One of the basic properties of functions in functional programming is
+currying, which is the following isomorphism:
+A,B,C
+
+A⇥B !C
+
+⇠
+=
+A,B,C
+
+A ! (B ! C)
+
+where
+A,B,C : (A ⇥ B ! C) ! (A ! (B ! C))
+
+f = x. y.f (x, y)
+
+A,B,C : (A ! (B ! C)) ! (A ⇥ B ! C)
+
+g = p.g (⇡1 p) (⇡2 p)
+
+13 Yes, this is a product in the category of categories which is not a category in our sense.
+
+We already develop a taste for higher categories. . .
+
+24
+
+Exercise 38 Verify that
+
+and
+
+are inverse to each other.
+
+If we fix B this looks like an adjunction, namely the functors ⇥ B, B ! :
+Set ! Set form an adjunction. All that is left is to check naturality:
+Exercise 39 Derive the morphism part of ⇥ B and B ! and check that
+0
+0
+A,B,C is natural in A, C, that is given f : A ! A and g : C ! C
+A,B,C
+
+A⇥B !C
+
+A ! (B ! C)
+
+h.g h (f ⇥B)
+
+A0 ⇥ B ! C 0
+
+k.(B!g) k f
+
+A0 ,B,C 0
+
+A0 ! (B ! C 0 )
+
+This directly leads to the definition of exponentials (aka function objects) for
+a category C with products, we say that for a fixed object B : |C| an exponential
+B ) or ( )B is the right adjoint to ⇥ B. We can compare ) with homsets
+C( , ) both take two objects as input but the first one returns an object while
+the latter returns a set. This is why exponentials are also called internal homs.
+Only on Set the two are actually the same.
+By definition B )C is a covariant functor C ! C but exponentials also
+give rise to a contravariant functor:
+Exercise 40 Show that )C C is a contravariant functor, i.e.
+) C : Cop ! C.
+A category which has all finite products and exponentials is called a a cartesian closed category (CCC) if it is also has coproducts it is a Bicartesian closed
+category (BiCCC). As we have already observed Set is cartesian closed and has
+finite coproducts hence it is a bicartesian closed category.
+The following example of a bicartesian closed category is a good justification
+for the notation: the category of finite sets Fin: its objects are natural numbers,
+and its homsets are defined as Fin(m, n) = Fin m ! Fin n where Fin k = {i :
+N | i < k}, i.e. Fin k has exactly k elements. Fin has (given m, n : |Fin| = N):
+an initial object
+0
+coproducts
+m+n
+a terminal object 1
+products
+m⇥n
+exponentials
+m ! n = nm
+Exercise 41 Verify that these definitions indeed have the required properties.
+Another standard example for a bicartesian closed category is the category
+of propositions Prop: its objects are propositions and its homsets are given
+by implication (which correspond to functions): Prop(P, Q) = P ! Q. This
+25
+
+category is a preorder (because all its homs are propositions) and it has (given
+P, Q : Prop) :
+an initial object
+False
+coproducts
+P _Q
+a terminal object True
+products
+P ^Q
+exponentials
+P !Q
+Exercise 42 Verify that these definitions indeed have the required properties.
+A bicartesian closed category which is a preorder is called a Heyting algebra,
+it is a model for intuitionistic propositional logic.
+In every bicartesian closed category products and coproducts distribute as
+in ordinary algebra. That means we have the following isomorphisms
+0⇥A⇠
+=0
+(B + C) ⇥ A ⇠
+=B⇥A+C ⇥A
+We don’t need the symmetric cases since we alreay know that commutativity of
+products (A ⇥ B ⇠
+= B ⇥ A) and coproducts (A + B ⇠
+= B + A) are isomorphisms.
+The easiest way to show this is to use the corollary from the Yoneda lemma:
+to show an isomorphism it is enough to show that the homsets out of (or into)
+these objects are naturally isomorphic. Let’s do the 2nd isomorphism:
+C((B + C) ⇥ A, X) ⇠
+= C(B + C, A )C X)
+⇠
+= C(B, A )C X) ⇥ C(C, A )C X)
+⇠
+= C(B ⇥ A, X) ⇥ C(C ⇥ A, X)
+⇠
+= C(B ⇥ A + C ⇥ A, X)
+
+and hence (B + C) ⇥ A ⇠
+= B ⇥ A + C ⇥ A. In each line we only used the
+adjunctions defining ⇥, + and ).
+Exercise 43 Prove the first isomorphism 0 ⇥ A ⇠
+= 0 using the same idea. Note
+that C(0, A) ⇠
+=1
+Not every category with products and coproducts is distributive. A counterexample is Mon where the terminal object and the initial object agree, i.e.
+0⇠
+= 1. hence we can just use the first isomorphism to show that every object is
+isomorphic to the initial object (and the terminal):
+A⇠
+=1⇥A
+⇠
+=0⇥A
+⇠
+=0
+
+But this is certainly not true in Mon, hence we can conclude that Mon is not
+cartesian closed.
+
+26
+
+Exercise 44 Is ! (bi)cartesian closed? What about ! op ?
+An important example for a bicartesian closed category is the category of
+presheaves of a given category PSh C. Its objects are functors F : Cop ! Set
+and its morphisms are natural transformations. Products (and coproducts) are
+calculated pointwise: That is given F, G : Cop ! Set
+(F ⇥ G) A = F A ⇥ G A
+(F + G) A = F A + G A
+Exercise 45 Verify that these are indeed products and coproducts in PSh C.
+But what about exponentials? We cannot have (F )PSh C G) A = F A !
+G A because this wouldn’t be a contravariant functor since F appears on the left
+hand side of the exponential. The construction of the exponential is actually a
+nice application of the Yoneda lemma: If we assume that the exponential exists
+we have then
+Z
+(F )PSh C G) A =
+C(X, A) ! (F )PSh C G) X
+X:C
+
+= PSh C(C( , A), F )PSh C G)
+
+= PSh C(C( , A) ⇥ F, G)
+Z
+=
+C(X, A) ⇥ F X ! G X
+X:C
+Z
+=
+C(X, A) ! F X ! G X
+X:C
+
+So the last line is a candidate for the exponential but in this case we do need
+to think about size. If the type of objects is not small (for example it could be
+Set) then the set of natural transformations isn’t small either. However, if we
+assume that |C| is small we can just define
+Z
+(F )PSh C G) A =
+C(X, A) ! F X ! G X
+X:C
+
+We also need to check that this definition actually satisfies the universal property:
+Exercise 46 Show that the above definition of F )PSh C G satisfies the
+universal property of exponentials, i.e. for H : PSh C
+PSh C(H ⇥ F, G) ' PSh C(H, F )PSh C G)
+i.e.
+
+Z
+
+X:C
+
+H X ⇥ F X ! GX '
+
+Z
+
+X:C
+
+27
+
+H X ! (F )PSh C G) X
+
+This shows that the category or presheaves over a small category (i.e. a
+category with a small type of objects) is cartesian closed. However, it does
+for example not imply that the category of presheaves over Set, i.e. functors
+Setop ! Set is cartesian closed.
+Given a preorder, that is |R| : Set and R : |R| ! |R| ! Prop that is
+reflexive and transitive, a propositional presheaf P : Rop ! Prop is just a
+predicate P : |R| ! Prop that is inverse monotone wrt R, i.e. if P x and y R x
+then P y. Morphisms are given by pointwise inclusion
+(PSh R)(P, Q) = 8x : |R|.P x ! Q x.
+This is a bicartesian closed category the constructions are simplified versions of
+the ones for set valued presehaves, in particular
+(P ) Q) x = 8y : |R|.y R x ! P y ! Q y
+These categories are called Kripke models and the fact that they are bicartesian
+closed corresponds to the fact that they model intuitionistic propositional logic.
+Exercise 47 Use Kripke models to show that the law of the excluded middle
+P _ ¬P is not derivable in intuitionistic logic.
+You may have noticed that bicartesian closed categories are a bit asymmetric.
+They have a right adjoint to ⇥ B but what about a left adjoint to B + ? Let’s
+denote such an object as
+B (minus); it should satisfy the following natural
+isomorphism:
+C(A, B + C) ⇠
+= C(A B, C)
+natural in C.
+An example for such a symmetric cartesian closed category is the category
+of booleans which is similar to the category of propositions, but we use booleans
+instead of propositions. In particular, the type of objects is Bool and the homsets
+are given as Bool(p, q) = T p ! T q where T : Bool ! Prop is defined as
+T b = (b = true). We can define products, coproducts and exponentials as for
+Prop, i.e. by using the usual truthtable semantics. Subtraction can be defines
+as p q = p ^ ¬q.
+Exercise 48 Check that Bool is a symmetric cartesian closed category.
+You may notice that this example is a preorder. This is no accident because
+all symmetric cartesian closed categories are preorders. This is because in such
+a category also the dual form of distributivity hold:
+1+A⇠
+=1
+(B ⇥ C) + A ⇠
+= (B + A) ⇥ (C + A)
+The first one is already suspicious because it implies in particular that 1+1 = 1,
+which basically says that true = false in Bool. Moreover:
+
+28
+
+Exercise 49 In a bicartesian closed category with 1 = 1 + 1 all morphisms
+are equal (i.e. it is a preorder).
+You may wonder wether symmetry already implies excluded middle P _ ¬P ,
+which certainly holds in Bool. The answer is no, because we can extend Kripke
+semantics to the symmetric logic (using boolean valued presheaves over finite
+preorders) and uses this to show that excluded middle isn’t implied.
+Exercise 50 Show that the category 1 + ! is a symmetric cartesian closed
+category. It’s definition is similar to ! its objects are the natural numbers and
+a top element ! such that i  ! for all elements.
+
+29
+
+

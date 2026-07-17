@@ -1,0 +1,516 @@
+This book is currently out of print. Upon kind permission of the
+M.I.T.-Press, it is available on
+ftp.ens.fr/pub/dmi/users/longo/CategTypesStructures
+All references should be made to the published book.
+
+CATEGORIES
+TYPES
+AND STRUCTURES
+An Introduction to Category Theory for the working computer scientist
+
+Andrea Asperti
+Giuseppe Longo
+
+FOUNDATIONS
+
+OF
+
+COMPUTING
+
+M.I.T. PRESS, 1991
+
+I
+
+SERIES
+
+INTRODUCTION
+The main methodological connection between programming language theory and category theory is
+the fact that both theories are essentially “theories of functions.” A crucial point, though, is that the
+categorical notion of morphism generalizes the set-theoretical description of function in a very broad
+sense, which provides a unified understanding of various aspects of the theory of programs. This is
+one of the reasons for the increasing role of category theory in the semantic investigation of programs
+if compared, say, to the set-theoretic approach. However, the influence of this mathematical
+discipline on computer science goes beyond the methodological issue, as the categorical approach to
+mathematical formalization seems to be suitable for focusing concerns in many different areas of
+computer science, such as software engineering and artificial intelligence, as well as automata theory
+and other theoretical aspects of computation.
+This book is mostly inspired by this specific methodological connection and its applications to the
+theory of programming languages. More precisely, as expressed by the subtitle, it aims at a selfcontained introduction to general category theory (part I) and at a categorical understanding of the
+mathematical structures that constituted, in the last twenty or so years, the theoretical background of
+relevant areas of language design (part II). The impact on functional programming, for example, of
+the mathematical tools described in part II, is well known, as it ranges from the early dialects of Lisp,
+to Edinburgh ML, to the current work in polymorphisms and modularity. Recent applications, such
+as CAML, which will be described, use categorical formalization for the purposes of implementation.
+In addition to its direct relevance to theoretical knowledge and current applications, category theory
+is often used as an (implicit) mathematical jargon rather than for its explicit notions and results.
+Indeed, category theory may prove useful in construction of a sound, unifying mathematical
+environment, one of the purposes of theoretical investigation. As we have all probably experienced, it
+is good to know in which “category” one is working, i.e., which are the acceptable morphisms and
+constructions, and the language of categories may provide a powerful standardization of methods and
+language. In other words, many different formalisms and structures may be proposed for what is
+essentially the same concept; the categorical language and approach may simplify through abstraction,
+display the generality of concepts, and help to formulate uniform definitions. This has been the case,
+for example, in the early applications of category theory to algebraic geometry.
+The first part of this book should encourage even the reader with no specific interest in
+programming language theory to acquire at least some familiarity with the categorical way of looking
+at formal descriptions. The explicit use of deeper facts is a further step, which becomes easier with
+access to this information. Part II and some chapters in part I are meant to take this further step, at
+
+II
+
+least in one of the possible directions, namely the mathematical semantics of data types and programs
+as objects and morphisms of categories.
+We were urged to write the general introduction contained in part I, since most available books in
+category theory are written for the “working mathematician” and, as the subject is greatly indebted to
+algebraic geometry and related disciplines, the examples and motivations can be understood only by
+readers with some acquaintance with nontrivial facts in algebra or geometry. For most computer
+scientists, it is not much help in the understanding of “natural transformations” to see an involved
+example based on tensor products in categories of sheaves. Thus our examples will be based on
+elementary mathematical notions, such as the definition of monoid, group, or topological space, say,
+and on structures familiar for readers with some acquaintance with the tools in programming language
+semantics. In particular, partial orders and the various categories of domains for denotational
+semantics will often be mentioned or introduced, as well as basic results from computability theory.
+For example, we will try to present the fundamental operation of “currying” for cartesian closed
+categories with reference to the connection between the universal function and the g del- numbering
+of the partial recursive functions. Partial morphisms will be presented as a generalization of a
+common notion in theory of computation.
+Category theory may be presented in a very abstract way: as a pure game of arrows and diagrams.
+It is useful to reach the point where acquaintance with the formal (essentially, equational) approach is
+so firm that it makes sense independently of any “structural” understanding. In this book, though, we
+will stress the role of structures, and we will always try to give an independent meaning to abstract
+notions and results. Each definition and fact will be exemplified, or even derived, from applications
+or structures in some way indebted to computing. However, in order to stress the role of the purely
+equational view, the last chapters of each part (essentially chapters 7 and 11) will be largely based on
+a formal, computational approach. Indeed, even if mathematically very abstract, the equational
+arguments turn out to be particularly relevant from a computer science perspective.
+The early versions of this book grew out of two graduate courses taught by Longo in Pisa, in
+1984/85, and at Carnegie Mellon University, in 1987/88. Then the book was entirely revised under
+the influence of Asperti’s work for his Ph.D. dissertation. In particular, chapters 7 and 11, the
+technically most difficult, are part of his dissertation.
+We are indebted to several people. The joint work with Simone Martini and Eugenio Moggi in
+several papers directly influenced many chapters. Moreover, Eugenio suggested, in handwritten notes
+and electronic mail messages, the basic ideas for the categorical understanding of polymorphism via
+internal categories and realizability toposes. Their mathematical insights and suggestions also
+influenced other parts of the book.
+We must acknowledge the influence on our approach of the ideas and work of Dana Scott and
+Gordon Plotkin, who also encouraged us and made comments on early drafts. Pino Rosolini helped
+
+III
+
+us with comments and many suggestions. Jean Yves Girard and Yves Lafont brought to our attention
+the tidy categorical meaning of linear logic and its applications to computing. Roberto Amadio and
+many students helped us by detecting errors and incompleteness in the presentation. We are looking
+forward to aknowledge the readers who will detect the remaining errors.
+The first draft of this book was completed while the authors were visiting Carnegie Mellon
+University, in 1987/88. Longo would like to thank the Computer Science Dept. of CMU for its very
+generous hospitality while he was teaching there that academic year. The circulation of the draft, its
+complete revision, and the writing of the final version of the book have been made possible by the
+Joint Collaboration Contract ST2J-0374-C (EDB) of the European Economic Community and by the
+Italian CNR "Stanford-grant" #89.00002.26. The authors would like to thank INRIA, Rocquencourt,
+for a postdoc granted to Asperti while completing this work and l’Ecole Normale Supérieure, Paris,
+for inviting Longo to teach a graduate course in 1989/90 based partly on this book.
+
+IV
+
+TABLE OF CONTENTS
+
+PART I: Categories and Structures
+CATEGORIES ......................................................................................1
+1.1 Category: Definition and Examples..................................................1
+1.2 Diagrams................................................................................3
+1.3 Categories out of Categories .........................................................4
+1.4 Monic, Epic, and Principal Morphisms ............................................5
+1.5 Subobjects .............................................................................8
+CONSTRUCTIONS.............................................................................. 10
+2.1 Initial and Terminal Objects ........................................................ 10
+2.2 Products and Coproducts........................................................... 12
+2.3 Exponentials.......................................................................... 15
+2.4 Examples of CCC’s ................................................................. 20
+2.4.1 Scott Domains ............................................................ 20
+2.4.2 Coherent Domains........................................................ 24
+2.5 Equalizers and Pullbacks ........................................................... 27
+2.6 Partial Morphisms and Complete Objects........................................ 31
+2.7 Subobject Classifiers and Topoi ................................................... 35
+FUNCTORS AND NATURAL TRANSFORMATIONS ................................... 40
+3.1 Functors .............................................................................. 40
+3.2 Natural Transformations............................................................ 45
+3.3 Cartesian and Cartesian Closed Categories Revisited ........................... 51
+3.4 More Examples of CCC’s .......................................................... 54
+3.4.1 Partial Equivalence Relations ........................................... 54
+3.4.2 Limit and Filter Spaces .................................................. 55
+3.5 Yoneda's Lemma .................................................................... 58
+3.6 Presheaves............................................................................ 60
+CATEGORIES DERIVED FROM FUNCTORS AND
+NATURAL TRANSFORMATIONS........................................................... 63
+4.1 Algebras Derived from Functors................................................... 63
+
+V
+
+4.2 From monoids to monads .......................................................... 67
+4.3 Monoidal and monoidal closed categories ........................................ 72
+4.4 Monoidal Categories and Linear Logic............................................ 79
+UNIVERSAL ARROWS AND ADJUNCTIONS ............................................ 88
+5.1 Universal arrows .................................................................... 89
+5.2 From Universal Arrows toward Adjunctions .................................... 93
+5.3 Adjunctions........................................................................... 97
+5.4 Adjunctions and Monads ..........................................................104
+5.5 More on Linear Logic ..............................................................110
+CONES AND LIMITS ..........................................................................120
+6.1 Limits and Colimits.................................................................120
+6.2 Some Constructions Revisited ....................................................123
+6.3 Existence of limits ..................................................................125
+6.4 Preservation and Creation of Limits..............................................127
+6.5 ω-limits ..............................................................................130
+INDEXED AND INTERNAL CATEGORIES...............................................132
+7.1 Indexed Categories .................................................................132
+7.2 Internal Category Theory ..........................................................136
+7.3 Internal Presheaves.................................................................143
+7.4 Externalization ......................................................................150
+7.5 Internalization .......................................................................156
+Appendix .................................................................................158
+
+PART II: Types as Objects
+FORMULAE, TYPES, AND OBJECTS .....................................................166
+8.1 λ-Notation...........................................................................167
+8.2 The Typed λ-Calculus with Explicit Pairs (λβηπt) ............................168
+8.3 The Intuitionistic Calculus of Sequents ..........................................171
+8.4 The Cut-Elimination Theorem.....................................................176
+8.5 Categorical Semantics of Derivations ............................................185
+8.6 The Cut-Elimination Theorem Revisited.........................................187
+8.7 Categorical Semantics of the Simply Typed Lambda Calculus................191
+8.8 Fixpoint Operators and CCCs.....................................................197
+
+VI
+
+REFLEXIVE OBJECTS AND
+THE TYPE-FREE LAMBDA CALCULUS..................................................204
+9.1 Combinatory Logic.................................................................206
+9.2 From Categories to Functionally Complete Applicative Structures...........208
+9.3 Categorical Semantics of the λ-Calculus.........................................214
+9.4 The Categorical Abstract Machine ................................................217
+9.5 From Applicative Structures to Categories ......................................220
+9.6 Typed and Applicative Structures: Applications and Examples ...............225
+Part 1: Provable isomorphisms of types .....................................226
+Part 2: Higher type objects as models of the type-free l-calculus .........234
+RECURSIVE DOMAIN EQUATIONS.......................................................241
+10.1 The Problem of Contravariant Functors........................................242
+10.2 0-Categories .......................................................................245
+SECOND ORDER LAMBDA CALCULUS..................................................251
+11.1 Syntax ..............................................................................252
+11.2 The External Model ...............................................................254
+11.3 The External Interpretation.......................................................257
+11.4 The Internal Model................................................................258
+11.5 The Internal Interpretation........................................................261
+11.6 Relating Models ...................................................................263
+EXAMPLES OF INTERNAL MODELS .....................................................272
+12.1 Provable Retractions..............................................................272
+12.2 PER inside ω -Set..................................................................275
+12.3 PL-Categories Inside Their Groethendiek Completion .......................277
+BIBLIOGRAPHY ...............................................................................283
+
+VII
+
+1. Categories
+
+Chapter 1
+CATEGORIES
+Category Theory studies “objects” and “morphisms” between them. These concepts are both
+primitive in Category Theory: objects are not collections of “elements,” and morphisms do not need
+to be functions between sets (thus morphisms cannot be applied to “elements” but only composed
+with other morphisms). Any immediate access to the internal structure of objects is prevented: all
+properties of objects must be specified by properties of morphisms (existence of particular
+morphisms, their unicity, validity of some equations among them, and so on). This is quite similar to
+considering objects as “abstract data types,” that is, data specifications that are independent of any
+particular implementation. The relevance of Category Theory for programming languages comes
+from the previous consideration: it offers a highly formalized language especially suited for stating
+abstract properties of structures. Thus, it relates to widely used programming methodologies and
+provides as well a formal setting for the mathematical investigation of the semantics of programming
+languages.
+
+1.1 Category: Definition and Examples
+As we have mentioned, Category Theory is a theory of functions, and the only basic operation is
+composition. The concept of Category embodies some abstract properties of the composition
+operator “˚” for functions that “reasonably” must be guaranteed. In particular, if g: a→b and h:
+b→c, then there exist h ˚ g: a→c; moreover, composition must be associative and an identity must
+exist for all objects.
+This is the formal definition:
+1.1.1 Definition A category C is
+- a collection ObC of objects, denoted by a, b . . . A, B . . .
+- a collection MorC of morphisms (arrows), denoted by f, g . . . ,
+- two operations dom, cod assigning to each arrow f two objects respectively called domain
+(source) and codomain (target) of f
+- an operation id assigning to each object b a morphism idb (the identity of b) such that
+dom(idb) = cod(idb) = b
+- an operation “ ˚ ” (composition) assigning to each pair f, g of arrows with dom(f) = cod(g) an
+arrow f ˚ g such that dom( f ˚ g ) = dom(g), cod( f ˚ g ) = cod(f)
+- identity and composition, moreover, must satisfy the following conditions:
+
+1
+
+1. Categories
+
+identity law: for any arrows f, g such that cod(f) = b = dom(g)
+idb ˚ f = f
+g ˚ idb = g
+associative law: for any arrows f, g, h such that dom(f) = cod(g) and dom(g) = cod(h)
+(f˚g)˚h=f˚(g˚h)
+We write f: a → b to denote a morphism whose source and target are respectively a and b. Given
+two objects a and b, the collection of all morphisms f such that f: a → b is denoted by C[a,b]; the
+writing f∈C[a,b] is thus a third way to express the fact that dom(f) = a, and cod(f) = b. For the
+moment we shall use one notation or the other indifferently
+The following table lists some common categories by specifying their objects and arrows, letting
+the definition of their operators as an exercise for the reader:
+Category
+
+Objects
+
+Morphisms
+
+Set
+Top
+Vect
+Grp
+PO
+
+sets
+topological spaces
+vector spaces
+groups
+partially ordered sets
+
+functions
+continuous functions
+linear transformations
+group homomorphisms
+monotone functions
+
+The intuition of the notion of “category” suggested by the previous examples is to consider the
+objects as a collection of “structured” sets and the morphisms as the “associated” or “acceptable”
+functions with respect to the structure. This is too restrictive, though, since no requirement is made in
+the definition which may force the morphisms to be “single valued” or to be functions in extenso: a
+simple example is the category Rel with sets as objects and relations as morphisms.
+The simplest category has only one object and one arrow (the identity for that object): this
+category is usually called 1. Note that, by definition, if C is a category, then every object b of C
+has an identity idb: b→b. The identity is unique, since if idb' is another identity for b, then for
+the identity law, idb' = idb ° idb' = idb . A category is called discrete if every arrow is the identity
+of some object: in this case a category is fully determined by the collection of its objects. 1 is a
+discrete category.
+A category is called a preorder if for every pair of objects a, b there is at most one morphism
+f: a→b. The reason for the name is that a preorder category is fully determined by a preordering
+relation among its objects. Indeed, in a preorder C, there is only one way that composition may be
+defined; thus C is known when the collection of morphisms MorC and the operations dom and cod
+are known. But every arrow f: a→b may be identified with the pair (a,b), since once the source and
+
+2
+
+1. Categories
+
+target are known there is no choice about what the arrow is to be; thus, all the information about the
+category C is given by the relation RC = {(a,b) / there is an arrow f∈C[a,b]}, that is, by a preorder
+relation.(Exercise: prove that the relation RC is a preorder for every category C ).
+Every discrete category is a preorder. The simplest nondiscrete category which is a preorder is
+the category 2, which has two objects, let us call them 0 and 1, and three arrows: the two identities
+id0 , id1 and an arrow (0,1): 0→1. In a similar way we can define for each natural number n a
+preorder category n, from the usual ordering on the set {0,1, . . . n-1}. Preorder categories have a
+common property: they may have plenty of objects, but given two objects, there exists at most one
+morphism between them.
+A dual situation is given by monoids, viewed as categories. A monoid is a set having an
+associative binary operation and an identity element. A category with just one object yields a monoid,
+where composition of morphisms is the binary operation. Conversely, any monoid (A, . ) is a
+category with just one object. For example, the category with the set of natural numbers as unique
+object and the recursive functions as morphisms yields the monoid of the recursive functions.
+As well as preorders, another example where objects are not necessarily understood as
+“structured sets” is given by deductive systems as categories. In these categories propositions are
+objects and each morphism f : a→b corresponds to (a suitable equivalence class of) a proof of a |−
+b (a entails b). Observe that a category is obtained easily in the presence of the identical entailment
+ia : a→a and the associative composition of proofs
+f : a→b g : b→c
+________________
+g ° f : a→c
+This approach to deduction is very relevant in the categorical understanding of logics of a
+constructive nature, such as Intuitionistic Logic, where the intended interpretation of proofs is given
+by (effective) operations. It will be the main paradigm for understanding the relation between types
+and objects investigated in the second part of this book.
+
+1.2 Diagrams
+An important tool in the practice of Category Theory is the use of diagrams for representing
+equations. In a diagram a morphism f∈C[a,b] is drawn as an arrow from a to b labeled f. A diagram
+commutes if the composition of the morphism along any path between two fixed objects is equal.
+For example, the associative and identity laws of the definition of “category” may be nicely visualized
+by the following commuting diagrams:
+
+3
+
+1. Categories
+
+Diagrams are a typical way, in Category Theory, to describe equational reasoning and turn out to
+be particularly effective when dealing with several equations at a time. In particular, assertions such
+as “if diagram 1 and . . . diagram n commute, then diagram commutes” express conditional
+statements about equalities.
+We hope that the reader, while using this book, will acquire some familiarity with diagrams and
+will learn how to go back and forth from diagrams to equations. Our extended use of equations in
+this book comes from our desire to stress the “computational” nature of most categorical reasoning.
+
+1.3 Categories out of Categories
+A main feature of Category Theory is the facility to define new, more structured categories out of
+simpler ones. In this section we consider only a few simple constructions; a number of other
+examples occur throughout the book.
+1.3.1 Definition A category D is a subcategory of a category C, if
+1. ObD ⊆ ObC;
+2. for all a, b in ObD, D[a,b] ⊆ C[a,b];
+3. composition and identities in D coincide with those of C.
+A subcategory is full if for all a, b in ObD D[a,b] = C[a,b].
+A full subcategory is fully determined by its collection of objects.
+1.3.2 Definition The dual category C op of a category C has the same objects and the same
+morphisms of C, idopb = idb, domop(f) = cod(f), codop(f) = dom(f), and f °op g = g ° f.
+Note that Cop[b,a] = C[a,b] and (Cop)op = C.
+Exercise Setop is a subcategory of Rel, but not of Set. Is it a full subcategory?
+Duality is a very powerful technique of Category Theory. If P is a generic proposition expressed
+in the language of Category Theory, the dual of P (Pop) is the statement obtained by replacing the
+
+4
+
+1. Categories
+
+word “dom” by “cod,” “cod” by “dom,” “g ° h” by “h ° g.” If P is true in a category C, then Pop
+is true in Cop; if P is true in every category, then also Pop is, since every category is the dual of its
+dual.
+Duality may be applied to diagrams as well: given a diagram in a category C, the dual diagram in
+op
+C is obtained by simply reverting the arrows; of course, a dual diagram commutes if and only if
+the original one does.
+1.3.3 Definition Given two Categories C and D, the product category C× D has for objects
+the pairs (a,b) where a and b are respectively objects of C and D, and for morphisms pairs (f,g):
+(a,b)→(a',b') where f: a→a' and g: b→b' are respectively morphisms of C and D. Finally, id(a,b)
+= (ida,idb) and (f,g) ° (f',g') = (f ° f', g ° g').
+1.3.4 Definition Given a category C and an object a in ObC , the category C ↓ a of objects
+over a is so defined: ObC ↓ a = {f∈ Mor C / cod(f) = a}; given two objects f: b→ a, g: c→ a, a
+morphism with source f and target g is an arrow h∈C[b, c] such that g ° h = f. Identities and
+composition in C↓a are inherited from C.
+In case C is Set in the above definition, it is useful to think of an object g: B→A in Set↓A as an
+A-indexed family of disjoint sets, namely, {g-1(a)}a∈A (these sets are the inverse images of
+elements in A under g). Then h: B→B' is a morphism from g: B→A to g': B'→A if and only if
+it is consistent with the “decomposition” of B and C induced by g and g', i.e., if and only if (iff)
+∀b b∈g-1(a) ⇒ h(b)∈g'-1(a).
+Since the intended meaning behind the construction of a category C↓I is that to consider an
+object g: A→I as a collection {{i}×g -1 (i)} i∈I , it is usual to call C↓I a slice category over I
+(denoted C/I). An object g: A→I of the slice category is then called a generalized object of C at
+stage I. A section of g: A→I is a function s: I→A such that g ° s = idI; the idea is that s gives,
+for each index i∈I, an element s(i)∈g-1(i).
+Exercise Define the dual notion, that is, the category C↑a of objectsunder a, whose objects are
+the arrows with source a.
+
+1.4
+
+Monic, Epic, and Principal Morphisms
+
+A function f between two sets A and B is called “injective” when, for all a , a' ∈ A , if f(a) =
+f(a') then a = a'. In particular, given any two functions g, h : C→Α, if for all c∈C f(g(c)) =
+f(h(c)), then for all c∈C g(c) = h(c) or, also, if f ° g = f ° h then g = h . Thus, every injective
+function behaves like a left identity (it is left cancellable). The converse is also true: given f: A→Β, if
+
+5
+
+1. Categories
+
+for any pair of functions g, h : C→Α , f ° g = f ° h implies g = h , then f is injective. For suppose
+otherwise: then there are a and a' such that f(a) = f(a') but a ≠ a' ; define then g and h by g(c)
+= a for all c∈ C , and h(c) = a' for all c∈ C; of course f ° g = f ° h but g ≠ h , that is, a
+contradiction.
+We have proved thus that a function f is injective if and only if f ° g = f ° h implies g = h . In a
+similar way it is not difficult to prove that f is surjective if and only if g ° f = h ° f implies g = h.
+These considerations motivate the following definitions.
+1.4.1 Definition. Let C be a category and a, b∈ Ob C . Then
+i. an arrow h∈ C[a,b] is epic (is an epimorphism) iff
+g˚h=f˚h ⇒ g=f;
+ii. an arrow h∈ C[a,b] is monic (is a monomorphism) iff
+h˚g=h˚f ⇒ g=f;
+iii. an arrow h∈C[a,b] is iso (is an isomorphism) iff there exists g∈C[b,a] such that
+g ˚ h = id and h ˚ g = id .
+Two objects a and b are isomorphic (a ≅ b) if there exists an isomorphism h∈C[a,b]. Clearly,
+any isomorphism is monic and epic; the converse, though, does not need to be true (see the example
+and the exercises below).
+A monic (or epic) h∈C[a,b] (or h'∈C[a,b]) is split if there exist g∈C[b,a] (or g'∈C[b,a])
+such that g ˚ h = id (h' ˚ g' = id).
+Although the intuition of regarding mono- and epimorphisms as injective and surjective maps is
+correct for many interesting categories, sometimes it can be misleading. Consider, say, the category
+Mon of monoids and the inclusion inc from ω, the positive integers, into z, the relative ones. Clearly
+mono, inc is also epi, though. As a matter of fact, take g,h∈Mon[z,a] for some monoid a, and write
+\g(n) for g(-n). Then g ˚ inc = h ˚ inc implies g = h for g(-n) = \g(n) =\h(n) = h(-n) (that is, the
+behavior of the monoids’ homomorphism g or h on z is entirely determined by their behavior on
+ω). As a side consequence, we may also conclude that not every arrow that is both monic and epic is
+an isomorphism: this is clearly in contrast to the set-theoretic intuition.
+Exercises
+1. Give an epi which is not surjective in Top.
+2. Find a counterexample for the following assertion: let C be a category; if f∈C[a,b] and g∈C[b,a]
+are mono, then a is isomorphic to b. (Note that the assertion is true in Set.)
+3. Prove that a split monic is an iso.
+1.4.2 Definition Let C be a category and a, b∈ ObC. Then
+i. an arrow h∈C[a,b] is a principal morphism iff
+
+6
+
+1. Categories
+
+∀f∈C[a,b] ∃g∈C[a,a] f = h˚ g ;
+ii. a pair of arrows f∈C[a,b] and g∈C[b,a] is a retraction pair iff g ˚ f=id. Then, a is called a
+retract of b (a<b) via the retraction pair (f,g).
+By diagrams, h is principal iff for all f there is a g such that
+
+Principal morphisms have been inspired by recursion theory; the idea they are based on essentially
+corresponds to a classical notion of reducibility (see the category EN in section 2.2 below).
+1.4.3 Proposition Let C be a category and a, b∈ ObC . Then
+1. if a<b via (i,h), then h is epi and principal, i is mono;
+2. if h∈C[a,b] is principal and there exists an epi k∈C[a,b,], then h is epi;
+3. if a<b and f∈C[b,a] is principal, then there exists g∈C[a,b] such that a<b via (g,f).
+Proof 1. g˚h = f˚h ⇒ g˚h˚i = f˚h˚i ⇒ g = f, for h˚i = id.
+The proof that h is principal is a simple diagram chase:
+
+That is, ∀f ∃g f = h˚g. Just take g = i˚f; then h˚g = h˚i˚f = f.
+Finally, i˚g = i˚f ⇒ h˚i˚g = h˚i˚f ⇒ g = f.
+2. g˚h = f˚h ⇒ g˚k = g˚h˚g' = f˚h˚g' = f˚k (for a suitable g') ⇒ g = f .
+3. Let a<b via (j,i). Since f is principal, ∃s∈C[b,b] j = f°s. Then, for g = s°i, one has f°g = j°i =
+ida. As a diagram,
+
+♦
+
+7
+
+1. Categories
+
+Exercises
+1. Characterize retractions in terms of split monos and epis.
+2. Show that, given a category C, one can define a category CRet whose objects are the same of C
+and whose morphisms are retraction pairs in C, that is F∈CRet[a,b] iff F=(f,g) and a<b via (f,g) in
+C.
+If (f:a→b, g:b→a) is a retraction pair, then the function h = f ° g: b→b is idempotent, that is, h ° h
+= h . Indeed, h ° h = (f ° g) ° (f ° g) = f ° (g ° f) ° g = f ° g = h . This property suggests the following
+definition:
+1.4.4 Definition Given a category C and an object b∈ Ob C , the category of idempotents on
+b (Retb) is so defined:
+ObRetb = { f∈C[b,b] / f ° f = f }
+MorRetb = { (f, k, g) / f, g∈ ObRetb, k∈ C[b,b], k = g ° k ° f }
+dom( (f, k, g) ) = f, cod( (f, k, g) ) = g
+idf = (f, f, f)
+(f, k, g) ° (g', k', f) = (g', k ° k', g)
+We leave as an exercise for the reader to check the identity and associative laws for the previous
+category. Retb will be used in several places because of its relevance to this book.
+
+1.5
+
+Subobjects
+
+The concept of subobject is the categorical version of the set-theoretical subset . The main idea is to
+regard a subset A of a given object B as a monomorphism f: D→B (intuitively, a monomorphism
+f such that “f(D) = A”). Of course, many different monic arrows may define the same subset; thus,
+it is necessary to introduce a reasonable equivalence relation, and define subobjects up to this
+equivalence.
+Let C be a category. If f: b→a and g: c→a are two monic arrows with common target a, then
+we say f ≤ g if and only if there exists h: b→c such that g ° h = f. Note that in this case, the unique
+h must be monic too, indeed h ° k = h ° k' ⇒ g ° h ° k = g ° h ° k' ⇒ f ° k = f ° k' ⇒ k = k'.
+Exercise Prove that the preorder ≤ is the full subcategory of C↓a determined by monomorphisms
+only.
+
+8
+
+

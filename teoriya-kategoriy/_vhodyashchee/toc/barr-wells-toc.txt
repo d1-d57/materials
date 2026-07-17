@@ -1,0 +1,534 @@
+Category Theory
+for
+Computing Science
+
+Michael Barr
+Charles Wells
+
+c
+°Michael Barr and Charles Wells, 1998
+
+Category Theory
+for
+Computing Science
+
+Michael Barr
+Department of Mathematics and
+Statistics
+McGill University
+Charles Wells
+Department of Mathematics
+Case Western Reserve University
+
+For
+Becky, Adam and Joe
+and
+Matt and Peter
+
+Contents
+Preface
+
+xi
+
+1 Preliminaries
+1.1 Sets
+1.2 Functions
+1.3 Graphs
+1.4 Homomorphisms of graphs
+
+1
+1
+3
+8
+11
+
+2 Categories
+2.1 Basic definitions
+2.2 Functional programming languages as categories
+2.3 Mathematical structures as categories
+2.4 Categories of sets with structure
+2.5 Categories of algebraic structures
+2.6 Constructions on categories
+2.7 Properties of objects and arrows in a category
+2.8 Monomorphisms and subobjects
+2.9 Other types of arrow
+2.10 Factorization systems
+
+15
+15
+20
+23
+27
+32
+35
+40
+47
+53
+58
+
+3 Functors
+3.1 Functors
+3.2 Actions
+3.3 Types of functors
+3.4 Equivalences
+3.5 Quotient categories
+
+65
+65
+74
+80
+84
+88
+
+4 Diagrams, naturality and sketches
+4.1 Diagrams
+4.2 Natural transformations
+4.3 Natural transformations between functors
+4.4 The Godement calculus of natural transformations
+4.5 The Yoneda Lemma and universal elements
+4.6 Linear sketches (graphs with diagrams)
+4.7 Linear sketches with constants: initial term models
+4.8 2-categories
+
+93
+93
+101
+109
+117
+121
+127
+133
+140
+
+vii
+
+viii
+
+Contents
+
+5 Products and sums
+5.1 The product of two objects in a category
+5.2 Notation for and properties of products
+5.3 Finite products
+5.4 Sums
+5.5 Natural numbers objects
+5.6 Deduction systems as categories
+5.7 Distributive categories
+
+153
+153
+157
+168
+178
+182
+186
+188
+
+6 Cartesian closed categories
+6.1 Cartesian closed categories
+6.2 Properties of cartesian closed categories
+6.3 Typed λ-calculus
+6.4 λ-calculus to category and back
+6.5 Arrows vs. terms
+6.6 Fixed points in cartesian closed categories
+
+195
+195
+202
+208
+210
+212
+215
+
+7 Finite product sketches
+7.1 Finite product sketches
+7.2 The sketch for semigroups
+7.3 Notation for FP sketches
+7.4 Arrows between models of FP sketches
+7.5 The theory of an FP sketch
+7.6 Initial term models for FP sketches
+7.7 Signatures and FP sketches
+
+219
+220
+225
+231
+234
+237
+239
+245
+
+8 Finite discrete sketches
+8.1 Sketches with sums
+8.2 The sketch for fields
+8.3 Term algebras for FD sketches
+
+251
+251
+254
+257
+
+9 Limits and colimits
+9.1 Equalizers
+9.2 The general concept of limit
+9.3 Pullbacks
+9.4 Coequalizers
+9.5 Cocones
+9.6 More about sums
+9.7 Unification as coequalizer
+9.8 Properties of factorization systems
+
+265
+265
+268
+273
+277
+280
+285
+289
+294
+
+Contents
+
+ix
+
+10 More about sketches
+10.1 Finite limit sketches
+10.2 Initial term models of FL sketches
+10.3 The theory of an FL sketch
+10.4 General definition of sketch
+
+299
+299
+304
+307
+309
+
+11 The category of sketches
+11.1 Homomorphisms of sketches
+11.2 Parametrized data types as pushouts
+11.3 The model category functor
+
+313
+313
+315
+320
+
+12 Fibrations
+12.1 Fibrations
+12.2 The Grothendieck construction
+12.3 An equivalence of categories
+12.4 Wreath products
+
+327
+327
+332
+338
+341
+
+13 Adjoints
+13.1 Free monoids
+13.2 Adjoints
+13.3 Further topics on adjoints
+13.4 Locally cartesian closed categories
+
+347
+347
+350
+356
+360
+
+14 Algebras for endofunctors
+14.1 Fixed points for a functor
+14.2 Recursive categories
+14.3 Triples
+14.4 Factorizations of a triple
+14.5 Scott domains
+
+363
+363
+368
+372
+374
+376
+
+15 Toposes
+15.1 Definition of topos
+15.2 Properties of toposes
+15.3 Is a two-element poset complete?
+15.4 Presheaves
+15.5 Sheaves
+15.6 Fuzzy sets
+15.7 External functors
+15.8 The realizability topos
+
+383
+384
+387
+391
+393
+395
+400
+403
+408
+
+x
+
+Contents
+
+16 Categories with monoidal structure
+16.1 Closed monoidal categories
+16.2 Properties of A −◦ C
+16.3 ∗-autonomous categories
+16.4 The Chu construction
+
+413
+413
+417
+422
+424
+
+Solutions to the exercises
+Solutions for Chapter 1
+Solutions for Chapter 2
+Solutions for Chapter 3
+Solutions for Chapter 4
+Solutions for Chapter 5
+Solutions for Chapter 6
+Solutions for Chapter 7
+Solutions for Chapter 8
+Solutions for Chapter 9
+Solutions for Chapter 10
+Solutions for Chapter 11
+Solutions for Chapter 12
+Solutions for Chapter 13
+Solutions for Chapter 14
+Solutions for Chapter 15
+Solutions for Chapter 16
+
+431
+431
+433
+442
+449
+460
+467
+471
+475
+477
+488
+489
+491
+494
+498
+506
+510
+
+Bibliography
+
+517
+
+Index
+
+531
+
+Preface
+This book is a textbook in basic category theory, written specifically to be
+read by researchers and students in computing science. We expound the constructions we feel are basic to category theory in the context of examples and
+applications to computing science. Some categorical ideas and constructions
+are already used heavily in computing science and we describe many of these
+uses. Other ideas, in particular the concept of adjoint, have not appeared as
+widely in the computing science literature. We give here an elementary exposition of those ideas we believe to be basic categorical tools, with pointers
+to possible applications when we are aware of them.
+In addition, this text advocates a specific idea: the use of sketches as a
+systematic way to turn finite descriptions into mathematical objects. This
+aspect of the book gives it a particular point of view. We have, however,
+taken pains to keep most of the material on sketches in separate sections. It
+is not necessary to read to learn most of the topics covered by the book.
+As a way of showing how you can use categorical constructions in the
+context of computing science, we describe several examples of modeling linguistic or computational phenomena categorically. These are not intended
+as the final word on how categories should be used in computing science;
+indeed, they hardly constitute the initial word on how to do that! We are
+mathematicians, and it is for those in computing science, not us, to determine which is the best model for a given application.
+The emphasis in this book is on understanding the concepts we have
+introduced, rather than on giving formal proofs of the theorems. We include proofs of theorems only if they are enlightening in their own right. We
+have attempted to point the reader to the literature for proofs and further
+development for each topic.
+In line with our emphasis on understanding, we frequently recommend
+one or another way of thinking about a concept. It is typical of most of the
+useful concepts in mathematics that there is more than one way of perceiving or understanding them. It is simply not true that everything about a
+mathematical concept is contained in its definition. Of course it is true that
+in some sense all the theorems are inherent in its definition, but not what
+makes it useful to mathematicians or to scientists who use mathematics. We
+believe that the more ways you have of perceiving an idea, the more likely
+you are to recognize situations in your own work where the idea is useful.
+xi
+
+xii
+
+Preface
+
+We have acted on the belief just outlined with many sentences beginning
+with phrases such as ‘This concept may be thought of as . . .’. We have been
+warned that doing this may present difficulties for a nonmathematician who
+has only just mastered one way of thinking about something, but we feel it
+is part of learning about a mathematical topic to understand the contextual
+associations it has for those who use it.
+
+About categories
+Categories originally arose in mathematics out of the need of a formalism to
+describe the passage from one type of mathematical structure to another. A
+category in this way represents a kind of mathematics, and may be described
+as category as mathematical workspace.
+A category is also a mathematical structure. As such, it is a common
+generalization of both ordered sets and monoids (the latter are a simple
+type of algebraic structure that include transition systems as examples),
+and questions motivated by those topics often have interesting answers for
+categories. This is category as mathematical structure.
+A third point of view is emphasized in this book. A category can be seen
+as a structure that formalizes a mathematician’s description of a type of
+structure. This is the role of category as theory. Formal descriptions in
+mathematical logic are traditionally given as formal languages with rules for
+forming terms, axioms and equations. Algebraists long ago invented a formalism based on tuples, the method of signatures and equations, to describe
+algebraic structures. In this book, we advocate categories in their role as formal theories as being in many ways superior to the others just mentioned.
+Continuing along the same path, we advocate sketches as finite specifications
+for the theories.
+
+Changes in the second and third editions
+The second edition contained new examples and exercises, many new items
+in the bibliography, and new sections or chapters on 2-categories, distributive categories, monoidal categories and ∗-autonomous categories. The third
+edition contains some new examples and exercises as well as new material
+on factorization, final algebras and Chu objects. In contrast to the second
+edition, this third edition contains in the printed text all the chapters as well
+as answers to all the exercises.
+Lists of errors and corrections to each of the three editions is available by
+anonymous FTP from ftp.math.mcgill.ca/pub/barr, as well as by web
+browser at http://www.cwru.edu/artsci/math/wells/pub/papers.html.
+
+Preface
+
+xiii
+
+Topics
+Chapter 1 contains preliminary material on graphs, sets and functions. The
+reader who has taken a discrete mathematics course may wish to skip this
+chapter. However, some fine points concerning sets and functions are discussed that may be worth looking at.
+Chapter 2 introduces categories and gives many examples. We also give
+certain simple constructions on categories and describe elementary properties
+of objects and arrows.
+Chapter 3 introduces functors, which are the mappings that preserve
+the structure of categories. We make certain constructions here that will be
+needed in later chapters.
+Chapter 4 deals with three related topics: diagrams, natural transformations and sketches. Probably the first thing noncategorists notice about
+category theory is the proliferation of diagrams: here we begin the heavy
+use of diagrams in this book. We discuss representable functors, universal
+objects and the Yoneda embedding, which are fundamental tools for the categorist. We also introduce 2-categories in this chapter, as well as a very weak
+version of sketch called a linear sketch.
+Chapter 5 introduces products and sums. This allows one to use categories, in their role as theories, to specify functions of several variables and
+to specify alternatives. In programming languages these appear as record
+structures and variant records.
+Chapter 6 is an introduction to cartesian closed categories, which have
+been a major source of interest to computer scientists because they are
+equivalent in theoretical power to typed lambda calculus. In this chapter,
+we outline briefly the process of translating between typed lambda calculus and cartesian closed categories. Normally, in learning a new language,
+one should plunge right in speaking it instead of translating. However, it
+may be helpful for the suspicious reader to see that translation is possible.
+We outline two translation processes in this book: the one mentioned here
+and another in Chapter 7. Except for those two places, category theory is
+everywhere presented in its own terms.
+Chapter 7 introduces finite product sketches, which have the expressive
+power of multisorted universal algebra. These sketches provide a formalism
+for universal algebra that provide a natural definition of models in categories other than the category of sets, and being based on graphs, they also
+incorporated multisortedness into the definition in an intrinsic way. In this
+chapter, a method is given for translating between finite product sketches
+and the formalism of signatures and equations used in traditional universal
+algebra. More expressive types of sketches are described in Chapters 8, 10
+and 11.
+
+xiv
+
+Preface
+
+Chapter 8 introduces finite discrete sketches, which have more expressive
+power than universal algebra, in that they allow one to express alternatives.
+Chapter 9 introduces the general concepts of limit and colimit of which
+the constructions in Chapter 5 were a special case. These are basic constructions in category theory that allow the formation of equationally defined
+subtypes and quotients. We describe unification in terms of coequalizers of
+free models of a certain kind of theory (free theory).
+Chapter 10 describes finite limite sketches, which are more powerful than
+universal algebra in a different way from the finite discrete sketches of Chapter 8, allowing partial operations, but only those whose domain can be described equationally. These sketches have somewhat more expressive power
+than universal Horn theories. We also describe briefly the most general types
+of sketches.
+Chapter 11 introduces mappings between sketches, which are applied to
+the description of parametrized data types. In this chapter, sketches are also
+shown to be institutions in the sense of Goguen and Burstall.
+Chapter 12 describes fibrations and the Grothendieck construction, which
+have applications to programming language semantics. We also consider
+wreath products, a type of fibration which has been used in the study of
+automata.
+Chapter 13 discusses the concept of adjointness, which is one of the grand
+unifying ideas of category theory. It is closely related to two other ideas:
+representable functors and the Yoneda Lemma. Many of the constructions
+in preceding chapters are examples of adjoints.
+We discuss representable functors, universal objects and the Yoneda
+Lemma in Chapter 4, but we have deliberately postponed adjoints until
+we have several examples of them in applications. The concept of adjoint
+appears difficult and unmotivated if introduced too early. Nevertheless, with
+some exceptions, Chapter 13 can be read after having finished Section 4.5.
+(This is discussed in more detail in the introduction to Chapter 13.)
+Chapter 14 contains a miscellany of topics centered around the idea of
+the algebra for a functor. We use this to define fixed points for a functor, to
+introduce the notion of a triple (monad), and to develop the Smyth-Plotkin
+technique for constructing Scott domains.
+Chapter 15 introduces toposes. A topos is a kind of generalized set theory in which the logic is intuitionistic instead of classical. Toposes (or computable subcategories thereof) have often been thought the correct arena for
+programming language semantics. Categories of fuzzy sets are recognized as
+almost toposes, and modest sets, which are thought by many to be the best
+semantic model of polymorphic lambda calculus, live in a specific topos.
+Chapter 16 introduces monoidal categories, ∗-autonomous categories and
+the Chu construction. The latter form a model of linear logic.
+
+Preface
+
+xv
+
+Most sections have exercises which provide additional examples of the
+concepts and pursue certain topics further. Many exercises can be solved
+by carefully keeping track of the definitions of the terms involved. A few
+exercises are harder and are marked with a dagger. Some of those so marked
+require a certain amount of ingenuity (although we do not expect the reader
+to agree in every case with our judgment on this!). Others require familiarity
+with some particular type of mathematical structure. For example, although
+we define monoids in the text, a problem asking for an example of a monoid
+with certain behavior can be difficult for someone who has never thought
+about them before reading this book.
+This third edition contains solutions to all the exercises. The solutions
+to the easy exercises, especially in the early chapters, go into considerable
+detail. The solutions to the harder exercises often omit routine verifications.
+
+Other categorical literature
+Nearly all of the topics in category theory in this book are developed further
+in the authors’ monograph [Barr and Wells, 1985]. Indeed, the present text
+could be used as an introduction to that monograph. Most of the topics,
+except sketches, are also developed further in [Mac Lane, 1971], [McLarty,
+1992], [Freyd and Scedrov, 1990] and [Borceux, 1994]. Other texts specifically
+concerning applications to computing science include [Asperti and Longo,
+1991], [Crole, 1994], [Gunter, 1992], [Manes and Arbib, 1986], [Pierce, 1991],
+[Rydeheard and Burstall, 1988] and [Walters, 1991]. Various aspects of the
+close relationship between logic and categories (in their role as theories) are
+treated in [Makkai and Reyes, 1977], [Lambek and Scott, 1986], [Bell, 1988]
+and [Adámek and Rosičky, 1994]. Recent collections of papers in computer
+science which have many applications of category theory are [Pitt et al.,
+1986], [Pitt, Poigné and Rydeheard, 1987], [Ehrig et al., 1988], [Main et al.,
+1988], [Gray and Scedrov, 1989], [Pitt et al., 1989], [Pitt et al., 1991], [Fourman, Johnstone and Pitts, 1992], [Seely, 1992], [Pitt, Rydeheard and Johnstone, 1995] and [Moggi and Rosolini, 1997]. The reader may find useful the
+discussions of the uses of category theory in computing science in [Goguen,
+1991], [Fokkinga, 1992] and in the tutorials in [Pitt et al., 1986].
+Since this is an expository text, we make no effort to describe the history
+of the concepts we introduce or to discover the earliest references to theorems
+we state. In no case does our statement of a theorem constitute a claim that
+the theorem is original with us. In the few cases where it is original, we have
+announced the theorem in a separate research article.
+We do give an extensive bibliography; however, the main criteria for
+inclusion of a work in the bibliography are its utility and availability, not
+the creation of a historical record.
+
+

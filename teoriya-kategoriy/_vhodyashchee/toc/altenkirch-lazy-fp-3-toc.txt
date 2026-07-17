@@ -1,0 +1,774 @@
+3
+
+Functors and natural transformations
+
+3.1
+
+Functors
+
+A functor is a morphism between categories, the standard example is the List
+functor which is an endofunctor on the category of sets, i.e. it is a functor from
+Set to Set, I write List : Set ! Set overloading !6 . The list functor has an
+e↵ect on objects, i.e. sets, given A : Set we obtain List A : Set which is the set
+of lists over A which we write as [a0 , a1 , . . . , an 1 ], this includes the empty list
+[]. The List functor comes with a function which “maps” a function f : A ! B
+to List f : List A ! List B, which is defined as
+List f [a0 , a1 , . . . , an 1 ] = [f a0 , f a1 , . . . , f an 1 ]
+Note that we overload List to mean at the same time a map on objects and a map
+on morphisms. List also preserves the categorical structure, it maps identity to
+identity, that is List idA = idList A and List (f g) = (List f ) (List g). This can
+be easily seen by showing that both sides are pointwise equal when applied to
+a generic list
+List idA [a0 , a1 , . . . , an 1 ] = [id a0 , id a1 , . . . , id an 1 ]
+= [a0 , a1 , . . . , an 1 ]
+= idList A [a0 , a1 , . . . , an 1 ]
+and
+List (f
+
+g) [a0 , a1 , . . . , an 1 ] = [(f
+
+g) a0 , (f
+
+g) a1 , . . . , (f
+
+g) an 1 ]
+
+= [f (g a0 ), f (g a1 ), . . . , f (g an 1 )]
+= List f [g a0 , g a1 , . . . , g an 1 ]
+= List f (List g [a0 , a1 , . . . , an 1 ])
+= ((List f ) (List g)) [a0 , a1 , . . . , an 1 ]
+More formally the proofs proceed by list induction.
+Inspired by List we define the notion of a functor in general: given categories
+C and D a functor F : C ! D is given by a map on objects F : |C| ! |D|
+and a map on morphisms F : C(A, B) ! D(F A, F B) that preserves identities
+F idA = idF A and composition F (f g) = (F f ) (F g).
+Exercise 13 Show that every functor preserves isomorphisms. That is if
+A ! B is an isomorphism then so is F : F A ! F B.
+
+:
+
+We note that functors between preorder categories are simply monotone
+maps, i.e. correspond to morphisms in Pre and functors between monoids
+are monoid morphisms, i.e. correspond to morphisms in Mon. Given these
+observations above it may appear a good idea to define a category of categories
+6 In the literature people often write [Set, Set].
+
+9
+
+with functors as morphisms. You find this definition in many classical text
+books. We will not do this because it isn’t clear what equality of functors is,
+they do not form a set in our sense. 7
+Categories form another structure, a higher category. Functors between two
+categories don’t form a set they form a category themselves. The morphisms between functors are called natural transformations and in the case of endofunctors
+on sets they correspond to a well known concept from functional programming:
+polymorphic functions.
+
+3.2
+
+Natural transformations
+
+Let’s look at an example: the reverse function on lists. Given a set A we have
+a function revA : List A ! List A which reverses its input, i.e.
+revA [a0 , a1 , . . . , an 1 ] = [an 1 , . . . , a1 , a0 ]
+This is a family of functions, but using a bit of type-theoretic mumbo jumbo we
+can view it as one function rev : ⇧A:Set List A ! List A and we agree to omit
+the set parameter (or put it in subscript).
+This function has an important property it is natural, which means that it
+commutes with the map operation on lists, that is given any function f : A ! B
+List A
+
+revA
+
+List f
+
+List B
+
+List A
+List f
+
+revB
+
+List B
+
+Let’s check that this diagram commutes by applying both paths from the top
+left to the bottom right to a generic list:
+(revB
+
+List f ) [a0 , a1 , . . . , an 1 ] = revB (List f [a0 , a1 , . . . , an 1 ])
+= revB [f a0 , f a1 , . . . , f an 1 ])
+= [f an 1 , . . . , f a1 , f a0 ])
+= List f [an 1 , . . . , a1 , a0 ]
+= List f (revA [a0 , a1 , . . . , an 1 ])
+= (List f
+
+revA ) [a0 , a1 , . . . , an 1 ]
+
+and we conclude that revB List f = List f revA . As before formally the proof
+uses list induction to get rid of the . . . .
+Naturality actually corresponds to the idea of parametricity in functional
+programming: rev is defined uniformly for all sets. It is good to look at a
+counterexample but actually we cannot define one because in type theory and
+in functional programming all functions are parametric and hence natural. To
+7 We can however, define the category of strict categories, i.e. categories whose objects
+form a set. Because in this case equality of functors is a proposition and hence functors form
+a set.
+
+10
+
+get our hands on an unnatural function let us allow for the moment to define a
+weird function which analyses a set, that is we define
+weird : ⇧A:Set List A ! List A
+by
+weirdBool = revBool
+weirdA = idList A
+
+for all other A : Set
+
+That is weird reverses lists of booleans but is the identity every else. weird
+has the same type as rev hence we have to check the same naturality square.
+Consider the function even : N ! Bool which returns true if the input is an even
+number and false otherwise and apply both sides to the input [1, 2, 3] : List N:
+(weirdBool List even) [1, 2, 4]
+= weirdBool (List even) [1, 2, 4])
+= weirdBool ([false, true, true])
+= [true, true, false]
+(List even weirdN ) [1, 2, 4]
+= List f (weirdN [1, 2, 4])
+= List f [1, 2, 4]
+= [false, true, true]
+Hence, clearly the diagram doesn’t commute since [true, true, false] 6= [false, true, true].
+Here is some notation for the type of natural transformations. As we use ⇧
+in type theory we use an integral in category theory, that is we write 8
+Z
+rev :
+List A ! List A
+A:Set
+
+The integral here is a general concept called an end (see subsection 3.5 for the
+general definition of ends). There are also coends (corresponding to ⌃-types in
+type theory) which also use the integral notation but the index is on the top.
+We define in general, what a natural transformation is: Given two functors
+F, G : C ! D a natural transformation ↵ from F to G is given by a family of
+morphisms:
+↵ : ⇧A:|C| D(F A, G A)
+such that the following diagram commutes:
+FA
+
+↵A
+
+Ff
+
+FB
+
+GA
+Gf
+
+↵B
+
+FB
+
+8 Just think of parametric ⇧ type when you see the integral.
+
+11
+
+To express that ↵ is a natural transformation we write:
+Z
+↵:
+D(F A, G A)
+A:|C|
+
+Exercise 14
+1. Show that Maybe : Set ! Set where Maybe A is given by the constructors:
+nothing
+
+: Maybe A
+
+just
+
+: A ! Maybe A
+
+is a functor.
+2. Show that the function hd : ⇧A:Set List A ! Maybe A which is defined as
+hd []
+
+= nothing
+
+hd [a0 , a1 , . . . , an 1 ]
+
+= a0
+
+is a natural transformation (i.e. hd :
+
+R
+
+A:Set
+
+List A ! Maybe A).
+
+Functors between any two categories C, D and natural transformations form
+a category, the functor category C!D. It’s objects are functors F : C ! D
+9
+Rand given two functors F, G the homset is the set of natural
+R transformations
+D(F
+X,
+G
+X),
+the
+identity
+natural
+transformation
+id : X:|C| D(F X, F X)
+X:|C|
+R
+R
+is given by idX = idF X and given ↵ : X:|C| D(F X, G X), : X:|C| D(G X, H X)
+their composition is
+Z
+(
+↵) :
+D(F X, H X)
+X:|C|
+
+(
+
+↵)X =
+
+X
+
+↵X
+
+Exercise 15 Check that these are indeed natural transformations and that the
+laws for a category hold.
+
+3.3
+
+Adjunctions
+
+An important class of functors are the forgetful functors which just forget some
+property or structure; they are usually denoted by U , for example U : Mon !
+Set which assigns to any monoid the carrier of the monoid, i.e. U (A, e, ⇤ ) = A.
+Since functions between monoids are given by functions on the carrier that
+9 This is a set in our sense because two natural transformations are equal when they are
+pointwise equal (and we don’t need to talk about equality of objects). However, they are not
+necessarily small. The natural transformations between two endofunctors on Seti are not in
+Seti because we quantify over all small sets.
+
+12
+
+preserve the structure the morphism part of the functor and the functor laws
+are straightforward.
+Is there an interesting functor in the other direction, that is F : Set ! Mon?
+Indeed there is: we can use the fact that lists form a monoid with append
+++ : List A ! List A ! List A and [] : List A, hence on objects we can define
+F A = (List A, [], ++ )
+We have already observed that List is a functor but to show that F is a functor
+we also need that List f is a monoid morphism:
+Exercise 16 Show that for any f : A ! B, List f : List A ! List B is a
+monoid morphism, that is
+List f [] = []
+List f (l ++m) = (List f l) ++(List f m)
+Hence we can define F f = List f , the functor laws follow because List is a
+functor on Set.
+The monoid constructed with lists is special, it is the free monoid over a
+given set. Here free means that it only satisfies the laws of a monoid but is not
+subject to any other laws. There are other functors with the type Set ! Mon
+for example the finite multisets or the finite sets over a given set. These do
+satisfy additional laws, the counterpart to the append operation is commutative
+in the case of multisets l ++m = m ++l and idempotent in the case of finite sets
+l ++l = l, hence they are not free over monoids.
+How can we say in the language of category theory that a functor is a free
+functor? We can do this by using the forgetful functor U : Mon ! Set.
+Because the free functor doesn’t impose any additional laws there is a (natural)
+isomorphism between the monoid morphisms between F A and a monoid M =
+(|M |, e, ⇤ ) and A and the underlying set |M | = U M of the monoid. We say
+that the two functors form an adjunction, where F is the left adjoint and U is
+the right adjoint. We write this as F a U or in a diagram:
+Mon
+a
+
+F
+
+U
+
+Set
+Let’s go through this in detail, a monoid morphism f : Mon(F A, M ) is
+given by a function f : List A ! |M | that preserves the monoid structure. We
+obtain a function A,M f : A ! |M | by just using f on singleton lists:
+f a = f [a]
+On the other hand given a function g : A ! |M | we can define a function
+A,M g : List A ! |M | using
+g [] = e
+g [a0 , a1 , . . . , an 1 ] = (g a0 ) ⇤ (g a1 ) ⇤ · · · ⇤ (g an )
+13
+
+Exercise 17 Show that
+
+g is a monoid morphism, i.e.
+
+g : Mon(F A, M )
+
+Hence we have constructed functions:
+A,M
+
+Mon(F A, M )
+
+Set(A, U M )
+A,M
+
+Next we show that this is an isomorphism, i.e. and are inverse to each
+other. To show that
+= id we use extensionality and apply it to an arbitrary
+g : A ! |M | and a : A and show that (
+) g a = id g a :
+(
+
+)ga =
+=
+
+( g) a
+g [a]
+
+= ga
+= (id g) a
+The other direction is a bit more interesting: to show that
+= id we
+again use extensionality and apply both sides to f : List A ! |M | and an
+arbitrary [a0 , a1 , . . . , an 1 ] : List A and show that (
+) f [a0 , a1 , . . . , an 1 ] =
+id f [a0 , a1 , . . . , an 1 ]:
+(
+
+) f [a0 , a1 , . . . , an 1 ] =
+
+( f ) [a0 , a1 , . . . , an 1 ]
+
+= ( f a0 ) ⇤ ( f a1 ) ⇤ · · · ⇤ ( f [an ])
+= (f [a0 ]) ⇤ (f [a1 ]) ⇤ · · · ⇤ (f an )
+= f ([a0 ] ++[a1 ] ++ . . . ++[an ])
+
+since f is a monoid morphism!
+= f [a0 , a1 , . . . , an 1 ]
+= (id f ) [a0 , a1 , . . . , an 1 ]
+Exercise 18 Verify that
+is a natural transformation, that is for any f :
+Set(B, A) and g : Mon(M, N ) the following diagram commutes:
+Mon(F A, M )
+
+A,M
+
+Set(A, U M )
+
+h.g h (F f )
+
+Mon(F B, N )
+
+B,N
+
+k.(U g) k f
+
+Set(B, U N )
+
+Question 19 Why don’t we need to verify that
+
+is a natural transformation?
+
+In practice one rarely checks naturality conditions because they follow from the
+construction.
+14
+
+Question 20 What goes wrong if we would have used one of the other functors,
+e.g. finite multisets or finite sets?
+We abstract from the concrete case and define adjunctions in general: Given
+functors L : C ! D and R : D ! C an adjunction is given by a natural
+isomorphism (in A, B): that is there is a family of isomorphisms
+A,B
+
+C(L A, B)
+
+D(A, R B)
+
+⇠
+=
+A,B
+
+which is natural in A, B,i.e. f or f : D(A, C) and g : C(B, D) the following
+diagram commutes
+A,B
+
+C(L A, B)
+
+D(A, R B)
+
+h.g h (L f )
+
+C(L C, D)
+
+k.(R g) k f
+
+D(C, R D)
+
+C,D
+
+In this case we say that L is left adjoint to R (or that R is right adjoint to L)
+and write L a R or in a diagram:
+C
+L
+
+a
+
+R
+
+D
+We can actually obtain the list functor as the composition of the forgetful
+and the free functor: List = F U . We will return to this observation later,
+because functors which are obtained by composing a free and a forgetful functor
+are always monads and indeed List is a monad.
+Exercise 21 There is also a forgetful functor from the category of preorders
+to the category of endorelations U : Pre ! Rel, which is defined just as for
+preorders but without any conditions, i.e. the objects are sets X : Set with a
+relation R : X ! X ! Prop and morphisms are defined as functions that
+preserve the relation (as for Pre). Now U doesn’t do anything but it just forgets
+that the relation is a preorder. Can you find a left adjoint F : Rel ! Pre which
+constructs the free preorder over a given relation?
+There are many ways to define adjunctions, the one I have given here is
+maybe not the best, especially the naturality conditions are quite complicated.
+A popular alternative is to observe that we can obtain two natural transformations from the natural equivalence, which are called the unit and the counit of
+
+15
+
+an adjunction:
+⌘:
+
+✏:
+
+Z
+Z
+
+D(A, R (L A))
+A:D
+
+⌘A =
+
+A,L A idL A
+
+C(L (R B), B)
+B:C
+
+✏B =
+
+R B,B idR B
+
+which make the following diagrams commute (the triangle laws):
+LA
+
+L ⌘A
+
+L (R (L A))
+
+RB
+
+⌘R B
+
+R (L (R B))
+
+✏L A
+
+R ✏B
+
+LA
+
+RB
+
+Exercise 22 Give explicit definitions of ⌘ and ✏ for the adjunction between
+Mon and Set we have defined.
+Exercise 23 Show that the two definitions of an adjunctions between two functors L : C ! D and R : D ! C are equivalent:
+• An adjunction is given by a natural isomorphism
+C(L A, B) ⇠
+= D(A, R B)
+• A adjunction is given by two natural transformations:
+Z
+⌘:
+D(B, R (L B))
+B:D
+Z
+✏:
+C(F (G B), B)
+A:C
+
+s.t. ✏L A L ⌘A = idL A and R ✏B
+
+3.4
+
+⌘R B = idR B .
+
+The Yoneda lemma
+
+The Yoneda lemma is famous for mystifying the students of category theory, not
+so much because it is difficult to prove but rather because it is not immediately
+obvious what it is good for. But then it shows up, maybe unexpectedly again
+and again, and many constructions proceed with the magic appeal to Yoneda.
+Let F be a functor Cop ! Set this is called a presheaf 10 . Rather than
+thinking of presheaves as functors from the dual category, it’s useful to treat
+10 This immediately triggers the question: what is a sheaf ? but the answer is beyond this
+course. It suffices to say that in order to say what a sheaf is we need a topological structure
+on the category.
+
+16
+
+them as contravariant functors: on objects, they behave the same as usual
+functors (sending objects X : |C| to sets F (X) : Set), but on morphisms, they’re
+“flipped around”: for f : C(A, B), F (f ) is a function from F (B) to F (A).
+An example for such a functor is C( , A) 11 where A : |C|, in this case the
+functor is called representable. The morphism part is given by composition, that
+is given f : C(B, C) = Cop (C, B):
+C(f, A) : C(C, A) ! C(B, A)
+C(f, A) g = g f
+
+Exercise 24 Check that C( , A) satisfies the functor laws.
+Indeed, since we already learnt that functors and natural transformations form
+a category, presheaves over C form a category which we denote as PSh C. Now
+using the other input of the homset of C we can form a functor Y : C ! PSh C,
+called the Yoneda embedding, which is defined on objects as Y A = C( , A). To
+define the morphism part assume f : C(A, B):
+Z
+Yf :
+C(X, A) ! C(X, B)
+X:C
+
+(Y f )X g = f
+
+g
+
+Exercise 25 Check that Y f is a natural transformation and that Y satisfies
+the functor laws.
+Maybe you wondered why presheaves are defined as contravariant functors. The
+reason is that this way the Yoneda embedding is covariant (otherwise it could
+be hardly called an embedding).
+For any presheaf F : Cop ! Set we can use its morphism part to define
+Z
+:
+F
+X
+!
+(Y X) Y ! F Y
+X
+Y :C
+Z
+:FX!
+C(Y, X) ! F Y
+Y :C
+
+as
+
+X x f = F f x.
+
+Exercise 26 Check that
+
+is natural in X : C.
+
+11 As indicated in the preliminaries we write C( , A) for X.C(X, A). In particular we can
+apply it, e.g. C( , A) B = C(B, A).
+
+17
+
+Now the Yoneda lemma says that this is a natural isomorphism. It is easy
+to define the inverse (fixing X : C):
+Z
+:(
+C(Y, X) ! F Y ) ! F X
+Y :C
+
+↵ = ↵ id
+
+Now we need to verify that these functions are inverse to each other: We need
+to prove that
+= id which by extensionality means that (
+) x = x where
+x:FX
+(
+
+) x = ( ( x)
+=
+
+x id
+
+= F id x
+=x
+In the other direction we have to show
+R = id which again by extensionality means that (
+) ↵ = ↵ where ↵ : Y :C C(Y, X) ! F Y is a natural
+transformation. Actually we need to go further and apply this to Y : C and
+f : C(Y, X). If as usual we hide the application to Y using extensionality we
+need to show that (
+)↵f = ↵f
+(
+
+)↵f =
+
+( ↵) f
+
+= F f ( ↵)
+= F f (↵ id)
+At this point we are a bit stuck and it is helpful to draw a diagram. To do this
+observe that
+F f (↵ id) = (F f
+
+↵) id
+
+We need to exploit that ↵ is natural, that means that the following square
+commutes:
+↵X
+C(X, X)
+FX
+Ff
+
+C(f,X)
+
+C(Y, X)
+
+↵Y
+
+FY
+
+Hence using naturality we can continue:
+(F f
+
+↵) id = (↵ C(f, X)) id
+= ↵ (C(f, X) id)
+= ↵ (id f )
+= ↵f
+
+Hence (
+) ↵ f = ↵ f and using extensionality we can conclude
+= id
+so together with
+= id we have established that they constitute a natural
+isomorphism (we have already checked the is natural which is sufficient).
+18
+
+.
+An important corollary of the Yoneda lemma is that the Yoneda embedding
+is full and faithful, that is the e↵ect of the functor on morphisms is both injective
+(faithful) and surjective (full) which is a good reason why it deserves the name
+embedding. We can see this by applying the Yoneda lemma to Y Z
+Z
+Z
+:
+(Y Z) X ⇠
+(Y X) Y ! (Y Z) Y
+=
+X:C
+Y :C
+Z
+Z
+:
+C(X, Z) ⇠
+(Y X) Y ! (Y Z) Y
+=
+X:C
+
+Y :C
+
+this looks like the morphism part of Y but is it? We need to do a little calculation:
+X f g = YZgf
+
+= C(g, Z) f
+=g f
+= Yf g
+and hence the e↵ect of Y on morphisms is an isomorphism and Y is full and
+faithful.
+We can expand the isomorphism further:
+Z
+Z
+Y:
+C(X, Z) ⇠
+(Y X) Y ! (Y Z) Y
+=
+X:C
+Y :C
+Z
+Z
+:
+C(X, Z) ⇠
+C(Y, X) ! C(Y, Z)
+=
+X:C
+
+Y :C
+
+We know that every functor preserves isomorphisms, a functor which is full and
+faithful also reflects them. That is if Y f is an isomorphism then f is one.
+Exercise 27 Proof that every full and faithful functor reflects isomorphisms.
+This gives rise to a useful corollary: to show that f : C(A, B) is an isomorphism
+it is enough to show that Y A and Y B are naturally isomorphic, i.e.
+Z
+C(A, X) ⇠
+= C(B, X),
+X:C
+
+and this is often easier because we can just calculate with natural isomorphisms.
+Sometimes we need the Yoneda lemma for covariant functors but this is no
+problem we just have to replace C by Cop . Hence another way to show that
+f : C(A, B) is an isomorphism is to show
+Z
+C(X, A) ⇠
+= C(X, B).
+X:C
+
+19
+
+3.5
+
+Ends and coends
+
+R
+Since I have introduced the notation A:|C| D(F A, G A) to define natural transformations, you are maybe wondering what the general meaning of these integrals are. It is clear that D(F A, G A) is an function from |C| but it is neither
+co- nor contravariant. However, it is a profunctor that is a functor of the type
+F : Cop ⇥ C ! Set 12
+if we define it as F (A , A+ ) = D(F A , G A+ ).
+Exercise 28 Fill in the morphism part of F .
+R
+Now given a profunctor F : Cop ⇥ C ! Set we define its end X:C F (X, X) as
+a subset of the dependent function type ↵ : ⇧X:|C| F (X, X) such the following
+diagram commutes for any f : C(A, B) in Set:
+1
+↵B
+
+↵A
+
+F (A, A)
+
+F (B, B)
+
+F (A,f )
+
+F (f ,B)
+
+F (A, B)
+That is we define
+Z
+F (X, X) = {↵ : ⇧X:|C| F (X, X) | 8f : C(A, B).F (A, f ) ↵A ) = F (f, B) ↵B }
+X:C
+
+Exercise 29 Show that instantiating the definition of ends given here
+R gives rise
+to the definition of natural transformations given previously. That is A:|C| D(F A, G A)
+is the set of natural transformations.
+R X:C
+Dually we define coends
+F (X, X) as a quotient of a ⌃-type. That is
+we consider ⌃X:|C| F (X, X)/ ⇠ where for any z : F (B, A) and f : C(A, B) and
+z : F (B, A) , (A, F (A, f ) z) ⇠ (B, F (f, B) z). We can use coends to interpret
+the concept of an abstract datatype.
+To remember when to use subscripts or superscripts we notice that in the
+case of ends the index is closer to the end of the page while for coends it is closer
+to the coend, i.e. the bginning, of the page.
+
+12 Here C ⇥ D is the product of categories: the objects are pairs of objects : |C ⇥ D| = |C| ⇥
+|D| and the morpshisms are pairs of morphisms: C ⇥ D((C0 , D0 ), (C1 , D1 )) = C(C0 , C1 ) ⇥
+D(D0 , D1 ).
+
+20
+
+

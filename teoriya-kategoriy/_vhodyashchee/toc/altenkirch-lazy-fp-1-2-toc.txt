@@ -1,0 +1,439 @@
+Categories for the lazy functional programmer
+Lecture notes
+Thorsten Altenkirch
+April 7, 2024
+Abstract
+The course is an introduction to category theory emphasising applications in computer science, especially functional programming, from a
+type theoretic perspective. We cover the basic concepts of category theory: categories, duality, functors and natural transformations, adjunctions, the Yoneda lemma, products, coproducts and exponentials, initial
+algebras and terminal coagebras, limits and colimits.
+
+Contents
+1 Preliminaries
+
+2
+
+2 Categories
+2.1 From sets to categories . . . . . . . . . . . . . . . . . . . . . . . .
+2.2 Terminal and initial objects . . . . . . . . . . . . . . . . . . . . .
+2.3 Preorders and monoids . . . . . . . . . . . . . . . . . . . . . . . .
+2.4 Monos and epis . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+3
+3
+4
+5
+6
+
+3 Functors and natural transformations
+3.1 Functors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.2 Natural transformations . . . . . . . . . . . . . . . . . . . . . . .
+3.3 Adjunctions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3.4 The Yoneda lemma . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+9
+9
+10
+12
+16
+
+4 Products, coproducts and exponentials
+20
+4.1 Products . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+4.2 Coproducts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21
+4.3 Exponentials . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+5 Initial algebras and terminal coalgebras
+28
+5.1 Natural numbers . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+5.2 Initial algebras . . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+5.3 Lambek’s lemma . . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+
+1
+
+5.4
+5.5
+
+Streams . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Terminal coalgebras . . . . . . . . . . . . . . . . . . . . . . . . .
+
+33
+35
+
+6 Limits and colimits
+37
+6.1 Pullbacks and equalizers . . . . . . . . . . . . . . . . . . . . . . . 37
+6.2 Pushouts and coequalizers . . . . . . . . . . . . . . . . . . . . . . 40
+6.2.1 Pushouts . . . . . . . . . . . . . . . . . . . . . . . . . . . 40
+
+1
+
+Preliminaries
+
+We will use naive type theory as a metalanguage, this is not very di↵erent from
+a disciplined use of set theory. It is not necessary to have any knowledge about
+the formalism of type theory in as much as it is not necessary to know the
+axioms of set theory when using set theory naively.
+However, a few notes are in place. We write a : A to mean that a is an
+element of the type A unlike a 2 A in set theory this is a judgement not a
+proposition, i.e. it is a static property.
+We write Set for the type of sets and Prop for the type of truth values,
+which we do not assume to be equal to Bool. We have an embedding from Prop
+to Set which is justified by the proposition as types translation: a proposition
+corresponds to a set with at most one inhabitant, it is true if the type is nonempty. For every A : Set we have an equality relation, that is for a, b : A we
+have a = b : Prop, expressing that a and b are equal. Set is a type but not
+every type is a set, and we avoid talking about equality of elements of types
+that are not sets1 . On the other hand Prop : Set and equality of propositions
+is logical equivalence.
+We will assume that there is a hierarchy of of types, eg. Type0 : Type1 :
+. . . and correspondingly Seti , Propi : Typei+1 and Propi : Seti+1 . 2 We
+usually assume implicitly that we are working for some fixed level i and write
+Type, Set, Prop for Typei , Seti , Propi . We say types (sets, propositions) are
+small if they are in Seti and large if they are in Seti+1 .
+We also use function types (sets, propositions) A ! B extensively, we view
+them as primitive and not defined as relations. Given f : A ! B and a : A we
+write application as juxtaposition f a : B as usual in functional programming
+and type theory. We assume functional extensionality: two functions are equal,
+if they are pointwise equal.
+We borrow Agda’s convention to write mixfix operations by using where the
+arguments should go, e.g. a binary infix operator is written + : N ! N ! N.
+There are some notations I borrow from set theory, e.g. I am going to write
+finite sets as {c0 , c1 , . . . , cn } where ci are some names for the constructors. I also
+use comprehension notation {x : A | P x} where A is a type and P : A ! Prop,
+1 That is I adopt an agnostic view you can view types as Zermelo-Fraenkel sets or as types
+in the sense of HoTT
+2 Some people like to assume that Prop : Set which is a consequence of Prop = Bool.
+0
+i
+i
+
+2
+
+type theoretically this can be interpreted as the type of pairs (a, p) where a : A
+and p : P a.
+
+2
+
+Categories
+
+2.1
+
+From sets to categories
+
+We start with the standard example of a category: the category of sets Set. To
+define a category we need a type of objects which is Set . We write |Set| = Set.
+Given two objects A, B : Set we define the set of morphisms which in this case
+is the set of functions, Set(A, B) = A ! B. For every object A : Set we have
+an identity function idA : A ! A which is defined as idA a = a, given functions
+f : B ! C and g : A ! B we define function composition f g : A ! C
+as (f g) a = f (g a). The strange order of arguments in composition is a
+consequence of the fact that we write function application this way around,
+hence there is no change of direction in the definition of . We observe that there
+are a number of laws for function composition: identity is neutral, that is given
+f : A ! B we have that idB f = f and f idA = f and moreover it is associative,
+that is given three composable function f : C ! D, g : B ! C, h : A ! B we
+have that f (g h) = (f g) h.
+Exercise 1 Write down the proofs that identity is neutral and composition is
+associative in detail.
+We abstract from this example to define what is a category: A category
+C is given by a type of objects |C| and given two objects A, B : |C|, a set of
+morphisms C(A, B) : Set called the homset. For every object A : |C| we have
+an identity function3 idA : C(A, A), given functions f : C(B, C) and g : C(A, B)
+there is a composite f g : C(A, C) satisfying the following laws: identity is
+neutral, that is given f : C(A, B) we have that idB f = f and f idA = f
+and moreover it is associative, that is given three composable functions f :
+C(A, B), g : C(B, C), h : C(C, D) we have that h (g h) = (h g) f .
+Equations in category theory are often shown as commuting diagrams. Composition corresponds to completing a triangle
+A
+
+f
+
+B
+g
+
+f g
+
+C
+I am using a dashed arrow to indicate that this is the unique arrow that makes
+this diagram commute. The identity laws can be drawn as follows where I use
+3 We are overloading id and
+to be precise we should annotate these symbols with the
+category, i.e. write idC and C . However, it is usually clear from the context which category
+is meant.
+
+3
+
+a double line to indicate an identity arrow:
+f
+
+A
+
+B
+
+A
+
+f
+
+A
+f
+
+f
+
+B
+
+B
+
+The associativity law can be drawn as below, the arrow on the right makes both
+the big triangle and the small triangle commute corresponding to the two sides
+of the associativity law:
+D
+(h g) f
+
+h g
+
+h
+
+C
+
+h (g f )
+
+g
+
+g f
+
+f
+
+A
+
+B
+
+A good intuition for a commuting diagram is to consider that the inside of the
+diagram is filled so that a path on the one side can be continuously transformed
+into a path on the other side. In the diagram for associativity we use the rule
+that we can also complete tetraeders, hence the bottom side of the tetraeder
+commutes and hence because composition is unique, associativity holds.
+The sort of geometric, or rather homotopic, thinking suggest a clear path to
+higher categories, but this is beyond the scope of this course.
+
+2.2
+
+Terminal and initial objects
+
+Here is an example how we can use the language of category theory to define
+concepts in the category of sets. We are interested in the concept of a set with
+exactly one element, but there are lots of choices for this element: some people
+write () and in Agda it is called tt other people write ⇤. In category theory
+we avoid this confusion and say that a terminal object 1 is an object such that
+there is exactly one morphisms from any other object, let’s say
+A
+
+!A
+
+1
+
+Clearly one element sets are terminal objects in the category of sets. Now
+terminal objects are unique up to isomorphism.
+We say that two objects A, B are isomorphic if there are morphisms f : A !
+B and g : B ! A such that there compositions are identities: f g = idB and
+g f = idA .
+f
+idA
+
+A
+
+B
+
+idB
+
+g
+
+We call f and g isomorphisms. We write f : A ⇠
+= B or omitting the witness we
+write A ⇠
+= B to express that A and B are isomorphic.
+4
+
+Exercise 2 Show that inverses are unique, i.e. if (f, g) and (f, g 0 ) are an isomorphisms then g = g 0 .
+Now given two terminal objects 1, 10 we have !01 : 1 ! 10 and !10 : 1 ! 10 .
+There compositions are the identity because for example !10 !10 : 1 ! 1 but
+there is also the identity id1 : 1 ! 1 and since we said that there is exactly one
+morphism from any object to the terminal object it must be that !10 !10 =!1 =
+id1 . The same reasoning shows that the other composition is also the identity.
+In category theory we are only interested in concepts up to isomorphism and
+all constructions are preserved by isomorphism. In the category of sets isomorphic objects have the same elements up to a renaming given by the isomorphism.
+Hence we ignore the irrelevant detail how the elements are called.
+There is also a dual concept: the empty set is an initial object 0, that is
+there is a unique morphism from the empty set into any set,
+0
+
+?A
+
+A
+
+this exists trivially because we don’t have to say what the functions returns
+since there are no elements in its domain. In this case we are lucky there is
+only one way to write the initial object. We can make the symmetry precise
+by introducing the concept of a dual category: given a category C the opposite
+category Cop has the same objects as C but the homsets are given by reversing
+the order Cop (A, B) = C(B, A) and consequently composition also reverses
+op
+order f C g = g C f . We can now say that an initial object is a terminal
+object in the opposite category, or vice versa a terminal object is an initial
+object in the opposite category. We use the syllable co- in this situation, we
+could say that an initial object is a co-terminal object or that a terminal object
+is a co-initial object (but nobody says this).
+Exercise 3 Prove explicitly that initial objects are unique upto isomorphism.
+When I say that a category has a terminal or initial object this also indicates
+that I assume that we have chosen one which I indicate by 1 or 0 respectively.
+The same principle applies to all categorical constructs we are going to introduce. We will later discuss the concept of univalent categories which entails
+that categorical constructions are unique.
+
+2.3
+
+Preorders and monoids
+
+Let us look at some other examples of categories. We can use the natural
+numbers to define some categories: The category ! has as objects the natural
+numbers and morphisms are given as !(m, n) = m  n. This is a category
+because  is reflexive and transitive and those properties give rise to identity
+and composition. The laws hold trivial because there is at most one element of
+a proposition. This category is an example of a degenerate case of a category:
+it is a preorder, i.e. a relation that is reflexive and transitive.
+
+5
+
+Question 4 Has this category an initial or a terminal object?
+Another category we can be build from natural numbers has only one object
+and its morphisms are the natural numbers. The identity morphism is 0 and
+composition is given by addition. The laws follow from the fact that 0 is neutral
+(n + 0 = n = 0 + n) and associative (l + m) + n = l + (m + n). Here we exploit
+the algebraic properties of +, namely that it is a monoid ; hence categories with
+one object correspond to monoids.
+Question 5 Has this category an initial or a terminal object?
+In Mathematics we are also interested in equivalence relations (preorders that
+are symmetric) and groups (monoids that have a inverses), like the integers Z
+with addition on negation). We can also do this for categories by saying that
+a category is a groupoid, if for every morphism f : A ! B there is an inverse
+f 1 : B ! A such that f f 1 = id and f 1 f = id. A groupoid whose
+homsets are propositions is an equivalence relation and a groupoid with one
+object is a group.
+Exercise 6 Show that sets with isomorphisms are a groupoid. Here the objects
+are sets and the homsets are isomorphisms. First you need to show that this is
+indeed a category.
+A rich source of categories are sets with structure. For example we define
+the category of preorders Pre: Its objects are preorders that is a set A together
+with a relation R : A ! A ! Prop which is reflexive and transitive. Given
+preorders (A, R) and (B, S) a morphism is a function f : A ! B which preserves
+the relation that is if R a a0 then S (f a) (f a0 ). We use identity and composition
+as in Set, we need to check that identity is a preorder morphism and that the
+composition of preorder morphisms is a preorder morphism.
+Another example is the category of monoids Mon: Its objects are monoids,
+that is a set A with a neutral element e : A and a binary operation ⇤ such
+that the laws of a monoid hold (x ⇤ e = x, e ⇤ x = x, x ⇤ (y ⇤ z) = (x ⇤ y) ⇤ z). A
+morphism between monoids (A, e, ⇤ ) and (B, e0 , ⇤0 ) is a function f : A ! B
+which preserves the structure, i.e. f e = e0 and f (x ⇤ y) = (f x) ⇤0 (f y). Again
+we only have to show that identity is a morphism and that morphisms are closed
+under composition to see that this is a category.
+Question 7 Do the categories Pre and Mon have initial and terminal objects?
+
+2.4
+
+Monos and epis
+
+A function f : A ! B is injective if every element appears at most once in the
+image, i.e. 8x, y : A.f x = f y =) x = y, it is surjective if every element of
+the codomain is in the image: 8y : B.9x : A.f x = y, it is bijective if it is both
+injective and surjective.
+So for example the function double : N ! N which doubles its input is
+injective (but not surjective), while the function half : N ! N which divides by
+6
+
+2 ignoring remainders (eg. half 5 = 2) is surjective but not injective. On the
+other hand the function swap : N ! N which sends every even number to its
+successor and every odd number to its predecessor (e.g. swap 5 = 4, swap 4 = 5
+is both injective and surjective and hence it is a bijection.
+We can translate these notions into the language of category theory by noting
+that an injective function can be cancelled on the left side of a composition that
+is if i : A ! B is injective then for all f, g : C ! A it is the case that if i f = i g
+then f = g. We call such a function a monomorphism or short mono. We draw
+monos with a tail at the end of the arrow:
+A
+
+i
+
+B
+
+On the other hand a surjective function can be cancelled on the right hand
+side. That is given a surjective function e : A ! B and f, g : B ! C then if
+f e = g e then f = g. We call a function with this property an epimorphism
+or short an epi. We draw epis with a double arrowhead:
+A
+
+e
+
+B
+
+Exercise 8 Show that the monos in Set are exactly the injective functions and
+the epis are exactly the surjective functions.
+4
+
+If a function f : A ! B has a left inverse l : B ! A with l f = id then it
+is mono, because
+f
+
+g=f
+
+h =)
+
+l (f
+
+g) = l (f
+
+h)
+
+=)
+
+(l f ) g = (l f ) h
+
+=)
+
+id g = id h
+
+=)
+
+g=h
+
+Exercise 9 Explicitly prove the dual construction: if f : A ! B has a left
+inverse r : B ! A with f r = id then it is an epi.
+Since half double = id we can conclude that double is a mono (because it has
+a left inverse) and half is an epi (because it has a right inverse). On the other
+hand swap is self inverse that is swap swap = id hence it has both a left and
+a right inverse (itself) and hence it is both a mono and an epi. Indeed it is
+isomorphism and from the above it is easy to see that isomorphisms are always
+monos and epis.
+In Set the inverse direction is also true:
+4 To prove that an epimorphism is a surjection, you need to use (e↵ective) quotients: If
+A : Set and R : A ! A ! Prop is an equivalence relation then A/R : Set with [ ] : A ! A/R
+and R a a0 () [a] = [a0 ] and given f : A ! B such that R a a0 then we have fˆ : A/R ! B
+with fˆ [a] = f a.
+
+7
+
+Exercise 10 Show that in Set a morphism that is both mono and epi (i.e.
+bijections) is an isomorphism. 5
+However, this is not true in general: consider the embedding i : N ! Z, this is
+a monoid morphism i : Mon((N, + , 0), (Z, + , 0)).
+Exercise 11 Show that i is both an epi and a mono. But it cannot be an iso.
+Why?
+However, if we know that the function is a mono and an epi because of inverses
+(we say it is a split mono and a split epi) that it is always an isomorphism:
+Exercise 12 Show that in any category a function that has both an left and a
+right inverse is always an isomorphism.
+
+5 One direction uses the principle of unique choice, that is for R : A ! B ! Prop
+
+(8x : A.9!y : B.R x y) ! 9f : A ! B.8x : A.R x (f x)
+where 9! means there exists unique, i.e. 9!x : A. x = 9x : A. x ^ 8y : A. y ! x = y. This
+principle is provable from univalence in Homotopy Type Theory.
+
+8
+
+

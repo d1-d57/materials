@@ -99,4 +99,67 @@
 
 ## ВОПРОСЫ — (заполняет исполнитель)
 
+1. **Item 6 (Spivak) — идентификация неточная**, прошу подтвердить владельцу/аналитику: скачан **arXiv 1302.6946, «Category Theory for Scientists» (Old Version, 2013-09-19)** — препринт-предшественник издания MIT Press 2014 «Category Theory for the Sciences». Ссылка на само издание MIT Press (Internet Archive `cattheory.pdf`) не открылась — среда, в которой я работаю, не достучалась до `archive.org` (см. ниже, п.3 ловушки). Содержание по всей видимости то же (тот же автор, та же книга на разных стадиях), но титульный лист называется иначе. Файл помечен `⚠ идентификация неточна` в `INVENTAR.md`.
+2. Термины не попадались (страницы силлабусов/конспектов на английском, специфической русской терминологии не извлекал — это не моя задача в этом заходе).
+
 ## ОТЧЁТ — (заполняет исполнитель)
+
+### Таблица «10 пунктов × исход»
+
+| # | Что | Исход | Комментарий |
+|---|---|---|---|
+| 1 | Cambridge CAT 2025–26 | **принесён** | `web/cam-cat-2526-syllabus.md` + `web/cam-cat-2526-materials.md` (обе страницы открылись) |
+| 2 | MIT 18.S097 Programming with Categories | **принесён** | `web/mit-programming-with-categories-syllabus.md` + `pdf/mit-programming-with-categories-notes.pdf` (183 стр., DRAFT, Fong–Milewski–Spivak). Проверено субагентом: это именно «Programming with Categories», НЕ «Applied Category Theory»/Seven Sketches |
+| 3 | Nottingham «Categories for the lazy functional programmer» | **принесён** | `web/nott-lazy-fp-syllabus.md` + 4 pdf лекций (`pdf/cftlfp-1-2.pdf`, `-3.pdf`, `-4.pdf`, `-5.pdf`) |
+| 4 | Peter Smith, «Introducing Category Theory» | **уже был в библиотеке** | найден на диске первым же `ls`: `istochniki/pdf/smith-introducing-category-theory-3ed.pdf` — сосед («Внешняя мерка») принёс раньше. Не качал повторно |
+| 5 | Barr–Wells, «Category Theory for Computing Science» | **принесён** | `pdf/barr-wells-category-theory-computing-science.pdf`, 556 стр., прямая ссылка сработала |
+| 6 | Spivak, «Category Theory for the Sciences» | **принесён, ⚠ идентификация неточна** | получена ранняя версия под другим заглавием (arXiv 1302.6946, «Category Theory for Scientists», 2013) — см. `## ВОПРОСЫ` п.1. MIT Press издание не удалось скачать: среда не смогла подключиться к `archive.org` (`curl: (28) Failed to connect... Couldn't connect to server`, проверено дважды, включая прямой тест из основного потока) |
+| 7 | Asperti–Longo, «Categories, Types, and Structures» | **принесён** | `pdf/asperti-longo-categories-types-structures.pdf`, 300 стр., прямая ссылка с сайта Giuseppe Longo сработала |
+| 8 | Pierce, «Basic Category Theory for Computer Scientists» | **уже был в библиотеке** | найден на диске первым же `ls`: `istochniki/pdf/pierce-basic-category-theory-cs-1991.pdf` — сосед принёс раньше. Задача предупреждала «вероятно НЕ свободна» — по факту уже была решена соседом, обходных путей не искал |
+| 9 | Oxford C2.7 Category Theory 2025–26 | **принесён** | `web/ox-c27-2526.md` — страница открылась без логина (Moodle-страница курса оказалась публичной) |
+| 10 | Logic Matters — курируемый список | **принесён** | `web/logicmatters-ct-notes.md` |
+
+### `ls -R teoriya-kategoriy/_vhodyashchee/`
+
+```
+INVENTAR.md
+pdf/  (8 файлов)
+  asperti-longo-categories-types-structures.pdf
+  barr-wells-category-theory-computing-science.pdf
+  cftlfp-1-2.pdf
+  cftlfp-3.pdf
+  cftlfp-4.pdf
+  cftlfp-5.pdf
+  mit-programming-with-categories-notes.pdf
+  spivak-category-theory-for-the-sciences.pdf
+toc/  (8 файлов, по одному на каждый pdf)
+web/  (6 файлов)
+  cam-cat-2526-materials.md
+  cam-cat-2526-syllabus.md
+  logicmatters-ct-notes.md
+  mit-programming-with-categories-syllabus.md
+  nott-lazy-fp-syllabus.md
+  ox-c27-2526.md
+```
+
+Итого 8 pdf + 6 web = 14 принесённых файлов → 14 строк в `INVENTAR.md` (8 в таблице pdf/, 6 в таблице web/) — числа сходятся. Плюс 8 файлов `toc/` (по одному на pdf, все непустые — текстовый слой у всех восьми есть) и сам `INVENTAR.md`. Всего в каталоге 23 файла.
+
+### Что НЕ трогал
+
+`istochniki/**` только читал (`MANIFEST.md`, `ls`), не писал. Не делал дайджестов, не сверял с нашим курсом, не заводил карточек в картотеке, не трогал `TERMINY-russkie.md`, `SPEKA.md`, программу. Коммит — только `teoriya-kategoriy/_vhodyashchee/**` и сам этот файл-заход.
+
+### Ловушка похожих названий — поддался или нет
+
+**Не поддался на пп.1–5, 7, 9–10.** На п.6 (Spivak) — **частично поддался, но зафиксировал явно**: нужная книга («Category Theory for the Sciences», MIT Press 2014) оказалась недостижима физически (среда не пробилась до `archive.org`), и вместо слепой замены на первый похожий файл я взял препринт-предшественника с arXiv **и прямо пометил его `⚠ идентификация неточна`** в паспорте, не выдав его молча за финальное издание. Пункты 4 и 8 (Smith, Pierce) — не качал вовсе, они уже лежали в библиотеке от соседа; отдельно свои названия и версии не перепроверял (доверился `MANIFEST.md`, где уже зафиксирована верная идентификация — «3-е издание», «MIT Press 1991»).
+
+### Термины
+
+Не попадались — весь материал этого захода на английском (силлабусы, лекционные PDF), специфических русских терминов не извлекал.
+
+### Вопросы
+
+См. `## ВОПРОСЫ` выше.
+
+### Время прогона + токены
+
+Начало — первый `git checkout`, конец — этот отчёт: около **20 минут** реального времени (основная задержка — 8 параллельных/последовательных субагентов-качалок, один из них — Spivak — упёрся в недоступность `archive.org` и потратил ~3.5 минуты на таймауты прежде чем переключиться на arXiv-зеркало). Точного числа токенов среда не отдаёт — раскрытая деталь, не нарушение критерия.
