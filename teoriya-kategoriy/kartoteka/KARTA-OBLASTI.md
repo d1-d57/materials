@@ -12,10 +12,10 @@
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `verdict-rifma-lccc` `omega-bez-yonedy`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `verdict-rifma-lccc` `omega-bez-yonedy` `nno-initial-rig`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
-- **находка:** `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya`
+- **находка:** `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -608,9 +608,21 @@ id: nno-prodolzhenie
   «мы категорифицировали арифметику» — и NNO есть буквально ОБЪЕКТ, который эту арифметику
   несёт. Порядок «CCC → категорификация → NNO» склеивает Л3 в одну историю. ⚠ Но по минутам
   это перегруз — см. дыру №2.
-связи: kategorifikaciya-arifmetiki, ccc-opredelenie, nno
+  🔴 **ДВЕ ПОМЕТКИ ЗАХОДА `kod_nno-i-shkolnye-opory` (17.07) — тело карточки НЕ правлю (§3, лоссово):**
+  1. **«по минутам это перегруз» — МЁРТВО.** Дважды: владелец 17.07 («перебора на Л3 нет — вопрос
+     дозировки») и проверка по существу — NNO на Л3 не вводит НИ ОДНОГО нового инструмента, весь
+     аппарат (терминальный объект, начальный объект, УС, произведение) стоит с Л2. Это дозировка,
+     а не структурный блокер ⇒ вопрос прибору. См. `verdict-nno-adres`.
+  2. **«Ловер–Шануэль Part IV» в поле `источник` — ФАКТИЧЕСКИ НЕВЕРНО.** Проверено глазами: у Ловера
+     слова «natural numbers object» нет ни разу (греп: 0), а (N, σ) и его УС живут в **Part III**,
+     Session 15, печ. с.176–186 — то есть РАНЬШЕ Part IV «Elementary universal mapping properties»
+     (начинается печ. с.213). Ошибка работала В ПОЛЬЗУ «NNO дорогой»: отсылала на 30 страниц позже
+     реального места. Верный адрес — `lawvere-n-do-us`.
+  ⇒ Сама рифма («NNO несёт арифметику, которую Л3 категорифицировала») **устояла и усилилась**:
+  шов назван в источниках словом `rig` (`nno-initial-rig`).
+связи: kategorifikaciya-arifmetiki, ccc-opredelenie, nno, verdict-nno-adres, lawvere-n-do-us, nno-initial-rig
 уровень: требует приручения
-источник: ../ZAPROS-zakazchika.md §Источник B; Ловер–Шануэль Part IV
+источник: ../ZAPROS-zakazchika.md §Источник B; ~~Ловер–Шануэль Part IV~~ → **Ловер Part III, Session 15, печ. с.176–186** (исправлено заходом 17.07, сверено глазами)
 статус: черновик
 ```
 
@@ -1069,9 +1081,26 @@ id: recursion-nno
   определяет функцию», и «определяет однозначно» разом. Эквивалентно: N — начальная алгебра
   функтора X ↦ 1 + X, то есть «ℕ — наименьшее, что замкнуто относительно +1» = индукция.
   5 строк. Иначе NNO выглядит как бессмысленная переупаковка ℕ.
-связи: nno, scene-nno-staircase
+  ✅ **ПРОВЕРЕНО заходом `kod_nno-i-shkolnye-opory` (17.07) — §2.1 вопрос 2 закрыт: тезис ДЕРЖИТСЯ
+  на источниках, это не фраза аналитика.** Тремя книгами независимо, все сверены глазами:
+  · **Awodey** печ. с.246: «Thus, the UMP of an NNO says **precisely that such an object supports
+    recursive definitions**.»
+  · **Riehl** печ. с.54: «**The principle of mathematical recursion asserts** that the natural numbers ℕ,
+    the successor function s, and the element 0 define the universal discrete dynamical system.»
+  · **Маклейн-рус** печ. с.331: «…в терминах которой функции f: N → X можно определить **рекурсивно**,
+    указав f(0) и композицию f∘s.»
+  🔴 **Но одна формулировка сильнее источника — правку не делаю (§3), фиксирую:** «УС **не** описывает ℕ»
+  (см. `nno` §суть) неточно. Awodey печ. с.246 прямо: «The characterization of N in terms of the UMP of
+  recursive definitions is therefore **equivalent to the usual logical definition using the Peano axioms
+  in Sets**» — то есть в Sets УС описывает ℕ с точностью до изоморфизма. Верная (и более сильная) версия
+  тезиса — у Awodey там же: NNO «makes sense in many categories where the **Peano axioms do not make any
+  sense**, since the latter involve logical operations like quantifiers». Не «не описывает ℕ», а
+  «работает там, где про ℕ спросить нельзя». Решение — за аналитиком.
+  ⚠ Вторая половина («эквивалентно: начальная алгебра функтора X↦1+X») — верна, но это ВТОРОЙ вход,
+  не канонический: ни один из четырёх источников так NNO не вводит. См. `nno-dva-vhoda`.
+связи: nno, scene-nno-staircase, nno-dva-vhoda, nno-arifmetika-rekursiej, verdict-nno-adres, lawvere-n-do-us
 уровень: требует приручения
-источник: https://ncatlab.org/nlab/show/natural+numbers+object
+источник: ~~только nLab~~ → **поднято до книг заходом 17.07:** Awodey Def 9.40 печ. с.246 (pdf 263) · Riehl Example 2.1.1 печ. с.54 (pdf 74) · Маклейн-рус `-clean-text.txt` печ. с.331–332 · Ловер Ex.12 печ. с.186. nLab оставлен как исходная ссылка: https://ncatlab.org/nlab/show/natural+numbers+object
 статус: черновик
 ```
 ```
@@ -2043,11 +2072,18 @@ id: l8-tri-syuzheta-verdikt
   NNO не клеится ни по одному шву: другая категория (Set), другое понятие алгебры, другой вопрос
   (рекурсия, не композиция). **Резать или переносить — решает аналитик, не заход**; карта уже
   держит `nno-prodolzhenie` («NNO — естественное продолжение зоны A», рифма с Л3), это его
-  развилка. ⚠ Донор на дорогу, которой не пошли: если алгебры монад залу всё же понадобятся,
+  развилка.
+  ✅ **РАЗВИЛКА ЗАКРЫТА заходом `kod_nno-i-shkolnye-opory` (17.07): NNO → Л3** (`verdict-nno-adres`).
+  Вердикт этой карточки устоял целиком и получил вторую опору: «алгебра эндофунктора» — не просто
+  чужой для NNO шов, а **вообще неканонический вход** (у Awodey это отдельная тема §10.5 печ. с.266+,
+  а определение NNO стоит в Def 9.40 печ. с.246 и функтора не содержит; так же у Riehl печ. с.54,
+  Ловера печ. с.178–186 и Маклейна печ. с.331–332 — см. `nno-dva-vhoda`). ⇒ NNO уходит с Л8 не как
+  «третий лишний кусок», а по адресу, где его рифма названа в источниках словом `rig`
+  (`nno-initial-rig`). **Л8 остаётся парой монады+Йонеда, как эта карточка и предписала.** ⚠ Донор на дорогу, которой не пошли: если алгебры монад залу всё же понадобятся,
   единственная НЕ-программистская мотивация в источниках — Riehl §5.2, печ. с.187–188, аффинные
   пространства («a vector space that has forgotten its origin»; «affine linear combinations can
   be evaluated»), и это осознанный педагогический ход (благодарность Полу Леви, pdf с.18).
-связи: mot-otkuda-sigma, yoneda-elementarnye-preobrazovaniya, nno, recursion-nno, nno-prodolzhenie, free-vect-monad, yoneda, cayley
+связи: mot-otkuda-sigma, yoneda-elementarnye-preobrazovaniya, nno, recursion-nno, nno-prodolzhenie, free-vect-monad, yoneda, cayley, verdict-nno-adres, nno-dva-vhoda
 уровень: вне курса (мета — для конструирования Л8)
 источник: Awodey упр.10.6.2 печ. с.274 · Awodey печ. с.269 · Awodey Предл.10.14 печ. с.272 · Riehl Example 5.2.6(i) печ. с.189 (сверено глазами) · Riehl §5.2 печ. с.187–188. Baez–Dolan к монадам отношения не имеет: слова «monad» в файле 0 вхождений (греп)
 статус: черновик
@@ -2203,6 +2239,261 @@ id: zavisimaya-dokazatelstvo-vseh
 уровень: зал берёт (∀ — родное) / требует приручения (как мост)
 источник: `pf-est-pi-tip` (KARTA) → HoTT §1.4 печ. с.32 «read Π as „for all"», Table 1 печ. с.11; `../TZ-zakazchika.md §Ограничения` (исключение КХЛ)
 статус: seed
+```
+
+---
+## Карточки — адрес NNO + школьные опоры (заход `kod_nno-i-shkolnye-opory.md`, 17.07)
+
+```
+id: verdict-nno-adres
+род: находка
+суть: ВЕРДИКТ §2.1: NNO садится на Л3. Не по минутам, а по существу — вход элементарный (функторы НЕ нужны), плата арифметическая, рифма с категорификацией названа в источниках одним словом: rig
+котёл: математика
+находка: ⭐ Три кандидата убиты источниками, не вкусом. (1) **Л6/Л7 отпадает:** ни один из
+  ЧЕТЫРЁХ источников не вводит NNO через функторы — Awodey Def 9.40 (печ. с.246), Riehl
+  Example 2.1.1 (печ. с.54), Ловер Session 15 (печ. с.178–186), Маклейн-рус (печ. с.331–332).
+  Всем хватает: терминальный объект + две стрелки + начальность. Всё это готово на Л2 ⇒ ждать
+  функторов = платить тремя лекциями за то, чего предмет не просит. (2) **Л8 отпадает дважды:**
+  `l8-tri-syuzheta-verdikt` уже доказал несклейку, а теперь видно и почему обоснование вообще
+  возникло — «алгебра эндофунктора» есть НЕканонический вход в NNO (у Awodey это отдельная тема
+  §10.5, печ. с.266+, а не определение). (3) **«Вырезать» отпадает:** NNO платит школьной
+  арифметикой (`nno-arifmetika-rekursiej`) и рифмуется с throughline (`nno-initial-rig`).
+  ⚠ Довод «по минутам перегруз» (`nno-prodolzhenie`) перепроверен ПО СУЩЕСТВУ, а не по памяти:
+  NNO на Л3 не вводит ни одного нового инструмента — весь аппарат стоит с Л2. Значит это не
+  структурный блокер, а дозировка ⇒ вопрос прибору, не вердикт захода (SPEKA §Слой напоминаний, 5:0).
+  ⚠ Честная альтернатива, которой не было в списке кандидатов: **минимальные зависимости у NNO —
+  Л2**, и Riehl ставит его ПЕРВЫМ примером УС в главе. Л3 выбран не по зависимостям, а по рифме:
+  арифметическая кульминация курса — там. Двигать лекции — не моё дело, говорю словами (§ФЛАГ).
+связи: nno, recursion-nno, nno-prodolzhenie, l8-tri-syuzheta-verdikt, nno-dva-vhoda, nno-arifmetika-rekursiej, nno-initial-rig, kategorifikaciya-arifmetiki, lawvere-n-do-us
+уровень: вне курса (мета — для конструирования программы)
+источник: Awodey Def 9.40 печ. с.246 · Awodey Example 9.41 печ. с.247 · Riehl Example 2.1.1 + сноски 2–3 печ. с.54 · Ловер печ. с.178, 181, 186, 334 · Маклейн-рус печ. с.331–332 · Baez–Dolan §4 (все сверены глазами 17.07)
+статус: черновик
+```
+```
+id: nno-dva-vhoda
+род: находка
+суть: У NNO ДВА входа, как у CCC: элементарный (1→N→N + начальность, без единого функтора) и функторный (начальная алгебра X↦1+X). Канон — первый; курс шёл вторым
+котёл: математика
+находка: ⭐ Точная рифма с `dva-vhoda-v-ccc`, и цена та же. Элементарный вход: Awodey Def 9.40
+  (печ. с.246) — «a natural numbers object (NNO) in C is a structure of the form 1 →⁰ N →ˢ N
+  **which is initial among all such structures**»; Riehl (печ. с.54, сноска 3) — «a natural
+  numbers object is a diagram ∗ → N → N that defines the **initial discrete dynamical system**»;
+  Маклейн-рус (печ. с.331–332) — «объект натуральных чисел (NNO) можно описать как множество N
+  с начальным объектом 0: 1 → N и функцией следования s: N → N… найдётся **единственная**
+  стрелка». Ни в одном определении функтора нет. Awodey отдельно: NNO «is due to F.W. Lawvere»
+  и «makes sense in many categories where the **Peano axioms do not make any sense**, since the
+  latter involve logical operations like quantifiers».
+  ⚠ Ловушка №2 в чистом виде: Awodey ФИЗИЧЕСКИ кладёт Def 9.40 в гл.9 «Adjoints» (§9.8), Riehl —
+  в гл.2 к Йонеде, Маклейн — в Дополнение про основания (аксиома ETCS, Lawvere 1964). Три автора,
+  три разных места, одно и то же элементарное определение. **Место в книге говорит про книгу, а
+  не про предмет.**
+связи: nno, dva-vhoda-v-ccc, verdict-nno-adres, recursion-nno, l8-tri-syuzheta-verdikt, lawvere-n-do-us
+уровень: зал берёт (вход 1) / вне курса (вход 2, только для лектора)
+источник: Awodey Def 9.40 печ. с.246 (pdf 263) · Riehl печ. с.54 сноска 3 (pdf 74) · Маклейн-рус `-clean-text.txt` печ. с.331–332 · функторный вход — Awodey §10.5 «Algebras for endofunctors» печ. с.266+
+статус: черновик
+```
+```
+id: nno-arifmetika-rekursiej
+род: пример
+суть: Из УС NNO выводятся школьные сложение и умножение — рекурсивными равенствами, за полстраницы
+котёл: математика
+находка: ⭐ ЭТО ТО, ЧТО NNO ПЛАТИТ ЗАЛУ, и это не программирование, а школьная арифметика.
+  Awodey Example 9.41 (печ. с.247), дословно: подставив в УС саму тройку (N, a, s), получаем
+  единственную fₐ с «recursion equations» fₐ(0)=a, fₐ(s(n))=s(fₐ(n)) — «If we write fₐ(n) = a + n,
+  then the above equations become **the familiar recursive definition of addition**: a+0=a,
+  a+(sn)=s(a+n)». Подставив теперь a+(−) вместо s, получаем gₐ(0)=0, gₐ(sn)=a+gₐ(n) — «the
+  familiar recursive **definition of multiplication**: a·0=0, a·(sn)=a+a·n».
+  **Узор здоровой мотивации точно: «вот что вы делали всю жизнь»** — зал складывает и умножает
+  с шести лет и не знает, что обе операции ВЫНУЖДЕНЫ одной диаграммой. Родня `mot-otkuda-sigma`
+  («откуда Σ_j») — тот же ход, другая опора.
+  ⚠ Граница честная: третий пример Awodey (9.41.3, печ. с.247–248 — n-я итерация эндофунктора
+  F: C→C) залу не годится, функторный. Берём первые два.
+связи: nno, recursion-nno, verdict-nno-adres, kategorifikaciya-arifmetiki, scene-nno-staircase, mot-otkuda-sigma
+уровень: зал берёт — сложение и умножение он держит твёрже матриц
+источник: `../istochniki/pdf/awodey-category-theory-2ed.pdf` Example 9.41(1)–(2), печ. с.247 (pdf 264, сверено глазами 17.07)
+статус: черновик
+```
+```
+id: nno-initial-rig
+род: утверждение
+суть: ℕ = НАЧАЛЬНОЕ полукольцо (rig), а FinSet₀ = его категорификация. Шов между NNO и Л3 назван в источниках одним словом — rig
+котёл: математика
+находка: ⭐ Рифма §2.1-Q3 оказалась настоящей, но НЕ той, что предполагал аналитик: не с
+  экспонентой 2³, а с `chto-ne-kategorificiruetsya`, и держится на одном термине с двух сторон.
+  Riehl (печ. с.54, сноска 2): «Another universal property describes the natural numbers as the
+  **initial rig**, i.e., a "ring without negatives"». Baez–Dolan (§3): «The natural numbers form
+  a **rig** under addition and multiplication: that is, a "ring without negatives". We thus
+  expect FinSet to be some sort of **categorified version of a rig**» и дальше прямо: «The
+  decategorification of FinSet₀ is still N, and **FinSet₀ plays a role in the theory of symmetric
+  rig categories very much like that N plays in the theory of commutative rigs**».
+  ⇒ Л3 говорит «арифметика — тень FinSet»; NNO говорит «и сама ℕ задана УС — тем же приёмом,
+  этажом ниже». Одна фраза «ring without negatives» стоит в ОБОИХ источниках независимо — она же
+  объясняет, почему вычитание не категорифицируется (`chto-ne-kategorificiruetsya`): rig, не ring.
+  ⚠ У ℕ, таким образом, ДВА разных УС (Riehl говорит «another»): начальная дискретная динамическая
+  система и начальный rig. Это не одно и то же; для курса несущее — первое.
+связи: nno, kategorifikaciya-arifmetiki, chto-ne-kategorificiruetsya, dekategorifikaciya-teryaet, verdict-nno-adres
+уровень: требует приручения (слово «полукольцо» — не из §Калибровки; но «сложение и умножение есть, вычитания нет» зал берёт без термина)
+источник: `../istochniki/pdf/riehl-category-theory-in-context.pdf` печ. с.54 сноска 2 (pdf 74) · `../istochniki/pdf/baez-dolan-finite-sets-to-feynman-diagrams.pdf` §3, pdf с.9 и §4, pdf с.20 (сверено глазами 17.07)
+статус: черновик
+```
+```
+id: lawvere-n-do-us
+род: находка
+суть: Ловер вводит (N, σ) в Part III — ДО терминального объекта, произведения и вообще до слов «универсальное свойство». Сократически, руками студента
+котёл: математика
+находка: ⭐ Самый дешёвый вход в NNO из найденных — и он в якоре №1 проекта, где его никто не искал,
+  потому что **слова «natural numbers object» у Ловера нет ни разу** (греп: 0; есть successor и
+  recursion). Session 15 «Objectification of properties in dynamical systems» (печ. с.175–186) —
+  это Part III «Categories of structured sets», а Part IV «Elementary universal mapping properties»
+  начинается только на печ. с.213. Ход: Ловер спрашивает «is it possible to have an element without
+  any special positive property at all?» — и отвечает **студент**: «Danilo: Take the natural numbers
+  with the endomap which adds one» (печ. с.178). Дальше §4 «The philosophical role of N» (печ. с.180–181):
+  «the maps N → S **'are' the states of S**, and precomposing with N →σ N effects the 'next state'
+  operation» — это УС, произнесённое без термина. Ex.12 (печ. с.186) закрывает: «there is **exactly
+  one** sequence u… (Hint: Reduce this to the **universal property of N = (N, σ)**)».
+  ⇒ Предпосылка П2 захода («у Ловера successor живёт в динамических системах, а не в арифметике»)
+  **подтвердилась — и это оказалось не дефектом, а находкой**: Riehl называет ровно ту же категорию
+  («initial discrete dynamical system», печ. с.54), то есть язык Ловера и термин NNO — одно и то же.
+  ⚠ Цена: у Ловера это про состояния и время, не про счёт. Арифметику из NNO даёт Awodey
+  (`nno-arifmetika-rekursiej`), не Ловер.
+связи: nno, nno-dva-vhoda, recursion-nno, verdict-nno-adres, lawvere-medlennyj-tempo
+уровень: зал берёт — «нажать кнопку → следующее состояние» держится без всякой подготовки
+источник: `../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf` Session 15: печ. с.178 (pdf 191), с.180–181 (pdf 193–194), Ex.12 печ. с.186 (pdf 199), Ex.3 печ. с.334 (pdf 347). Смещение pdf−13=печ., сверено по колонтитулам. Всё читано глазами 17.07
+статус: черновик
+```
+
+```
+id: opora-kombinatorika-l3
+род: находка
+суть: Комбинаторика на Л3 — НЕ натяжка: у Ловера 2³=8 считается прямым перебором, а закон степеней зал выводит из ПРАВИЛА ПРОИЗВЕДЕНИЯ. Опора уже в курсе, просто не названа
+котёл: математика
+находка: ⭐ Гипотеза аналитика («2³ подано как арифметика, не как комбинаторика») проверена и
+  **подтверждена — с поправкой: комбинаторика там не натянута, а спрятана**. Ловер, Session 3
+  «Composing maps and counting maps» (печ. с.32–34): «Now let's see if we can find a way to tell
+  **the number of maps** between any two finite sets… The most immediate way I can think of is to
+  **draw them** (taking care not to repeat any and not to omit any), **and then count them**» —
+  и дальше буквально таблица 3→2:8, 3→3:27, 2→3:9, записанная как 2³, 3³, 3². Это `eksponenta-2v3`,
+  найденный в книге: у карточки до сих пор стоял источник «SPEKA §Визуал + wikipedia», **книги не было**.
+  ⭐⭐ Главное — печ. с.34, где закон степеней выводит СТУДЕНТ: «Chad: for every element of the domain
+  there are as many possibilities as there are elements in the codomain, and since the choices for
+  the different elements of the domain are **independent**, we must **multiply** all these values».
+  Это школьное **правило произведения**, дословно. И Ловер тут же его проблематизирует: «**Why
+  multiply? What does 'independent' mean?** If John has some apples and Mary has some apples… if you
+  put them all in a bag do you add them or multiply them? Why?» — то есть опора не только названа,
+  но и подана как вопрос, на который зал отвечает сам (`pereizobretaem`).
+  ⚠ Граница: тяжёлая комбинаторика в корпусе тоже есть (Baez–Dolan §4 — species Жуайаля,
+  производящие функции, числа Каталана через B=1+xB²; Riehl печ. с.100–101 — species), но она
+  выше §Калибровки и в опору зала не годится. См. `opora-kombinatorika-potolok`.
+связи: eksponenta-2v3, zakon-stepenej-karrirovanie, kategorifikaciya-arifmetiki, verdict-shkolnye-opory, opora-kombinatorika-potolok
+уровень: зал берёт — правило произведения школьное, и Ловер разбирает его на завтраке (John/Mary/Sam → eggs/coffee)
+источник: `../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf` Session 3, печ. с.32–34 (pdf 45–47, смещение −13, сверено глазами 17.07)
+статус: черновик
+```
+```
+id: opora-kombinatorika-potolok
+род: находка
+суть: Настоящий комбинаторный сюжет в корпусе есть — species, производящие функции, числа Каталана (Baez–Dolan §4). Но он ВЫШЕ зала: это потолок, а не опора
+котёл: математика
+находка: Честная граница, чтобы её не открывали заново. Baez–Dolan §4 «Power Series and Structure
+  Types» (pdf с.17–21) — полноценная комбинаторика: «In combinatorics, a standard problem is to
+  count the number of structures of a given type that can be put on a finite set»; производящая
+  функция |F|(x)=Σ|Fₙ|xⁿ/n!; |F+G|=|F|+|G|, |FG|=|F||G| через биномиальный коэффициент; двоичные
+  деревья **B = 1 + xB²** → «Now comes the miracle» → |B|(x)=(1−√(1−4x))/2x → ряд 1+x+2x²+5x³+14x⁴+42x⁵
+  → **числа Каталана** cₙ=(1/(n+1))C(2n,n). Дальше — species Жуайаля: «A structure type is a functor
+  F: FinSet₀ → FinSet».
+  ⚠ **Против зала три вещи разом:** ряд Тейлора от √(1−4x), биномиальные коэффициенты в свёртке и
+  функтор в самом определении species. §Калибровка этого не держит, а ТЗ запрещает абстракцию ради
+  абстракции. ⇒ **как опора не годится**; как камео («вот куда это уходит») — возможно, решает не заход.
+  ⚠ Но одна строка отсюда несущая и уходит в `nno-initial-rig`: FinSet{x} — «a kind of **categorified
+  version of the rig of formal power series** N{x}». Это единственное место в корпусе, где многочлены
+  и категорификация встречаются (см. `verdict-shkolnye-opory` §Многочлены).
+связи: opora-kombinatorika-l3, kategorifikaciya-arifmetiki, nno-initial-rig, verdict-shkolnye-opory
+уровень: вне курса (потолок; камео — на усмотрение аналитика)
+источник: `../istochniki/pdf/baez-dolan-finite-sets-to-feynman-diagrams.pdf` §4, pdf с.17–21 (сверено глазами 17.07); Riehl печ. с.100–101 (species, по разведке — глазами не читал)
+статус: черновик
+```
+```
+id: chain-rule-est-funktorialnost
+род: пример
+суть: ⭐ Цепное правило ЕСТЬ функториальность производной — и функтор садится прямо в Mat, первую категорию курса. Две опоры зала в одном примере
+котёл: математика
+находка: ⭐⭐ ГЛАВНАЯ НАХОДКА §2.2. Закрывает опору «начала матанализа» — и делает это через опору
+  «матрицы», то есть через то, что зал держит твёрже всего. Два независимых источника.
+  **Riehl** (Example 1.3.2(x), печ. с.15–16): «**The chain rule expresses the functoriality of the
+  derivative**… The total derivative of f: Rⁿ→Rᵐ… gives rise to a matrix called the **Jacobian
+  matrix**… This defines the action on morphisms of **a functor D: Euclid∗ → Mat_R**… functoriality
+  of D asserts that **the product of the Jacobian of f at a with the Jacobian of g at f(a) equals
+  the Jacobian of gf at a. This is the chain rule from multivariable calculus.**»
+  **Perrone** (Example 1.3.25 «(calculus)», печ. с.35–36) мотивирует ещё прямее: «In different fields
+  of mathematics, the functoriality condition F(g∘f)=Fg∘Ff appears under different names. **One name
+  under which this condition is known is chain rule**»; функтор D: Euc∗ → Vect, «the derivative of
+  the identity map… is just **the identity matrix**».
+  **Почему это ложится на Л6 без единой натяжки:** (1) кодомен функтора у Riehl — буквально **Mat**,
+  та самая категория, с которой курс начался на Л1 (`mat-pervaya-kategoriya`); (2) узор здоровой
+  мотивации точно — «вот что вы делали всю жизнь»: зал дифференцировал сложную функцию руками;
+  (3) в одномерном случае матрица Якоби 1×1 и всё сводится к школьному (g∘f)′=g′(f(a))·f′(a) —
+  дозировка позволяет и не ходить в многомерность.
+  ⚠ Не путать с `lawvere-exponenta-motivaciya` (вариационный хук Ловера, зал не держит) — это ДРУГОЙ
+  вход в анализ, и отрицательный результат по Ловеру его не закрывает.
+связи: functor, mat-pervaya-kategoriya, verdict-shkolnye-opory, motivation-EM, lawvere-exponenta-motivaciya
+уровень: зал берёт (одномерно — школьное цепное правило + матрицы) / требует приручения (матрица Якоби, частные производные)
+источник: `../istochniki/pdf/riehl-category-theory-in-context.pdf` Example 1.3.2(x), печ. с.15–16 (pdf 35–36) · `../istochniki/pdf/perrone-notes-on-category-theory.pdf` Example 1.3.25, печ. с.35–36 (pdf 36–37). Оба сверены глазами 17.07
+статус: черновик
+```
+
+```
+id: opora-mnogochleny-l7
+род: пример
+суть: Кольцо многочленов R[x] = свободное кольцо на одном образующем, а его УС — буквально ПОДСТАНОВКА значения. Садится на Л7, рядом с free⊣forgetful. Цена — слайд про кольцо
+котёл: математика
+находка: ⭐ Опора «многочлены» закрыта — двумя источниками, и оба дают ровно узор «вот что вы делали
+  всю жизнь»: подставить число в многочлен = применить единственный гомоморфизм.
+  **Awodey** (Example 9.10 «Polynomial rings», печ. с.218–219, внутри §9.3 «Examples of adjoints»):
+  элементы R[x] «all look like this: r₀ + r₁x + r₂x² + ⋯ + rₙxⁿ» — школьная запись; и УС: «Given any
+  ring A, homomorphism α: R → A, and **element a ∈ A**, there is a **unique** homomorphism a\*: R[x] → A
+  such that **a\*(x) = a**». Это подстановка x ↦ a. Дальше — сопряжение: функтор, «that **adjoins an
+  indeterminate**», «η: R → R[x] is the **unit of the adjunction**». Awodey сам называет выигрыш: УС даёт
+  характеризацию R[x], «one that **does not depend on the somewhat vague description in terms of
+  "formal polynomial expressions"**».
+  **Riehl** (Example 2.1.5(v), печ. с.56–57) — тот же объект другим углом: «The forgetful functor
+  U: Ring → Set is represented by the unital ring **ℤ[x]**… A unital ring homomorphism φ: ℤ[x] → R is
+  **uniquely determined by the image of x**; put another way, **ℤ[x] is the free unital ring on a single
+  generator**». ⇒ на Л8 (представимость/Йонеда) тот же пример ложится вторым заходом, если понадобится.
+  **Почему Л7:** там уже стоит `free-forgetful-vect` (свободное векторное пространство) — R[x] это тот же
+  приём для колец, соседняя строка того же сюжета.
+  ⚠ **Цена названа честно:** нужен объект «кольцо», а §Калибровка даёт по нему «слышали, не более ⇒ нужен
+  слайд», и SPEKA отдельно запрещает абстрактную алгебру ради абстракции. ⇒ это **дозировка, а не адрес**:
+  вопрос «сколько кольца» — прибору (тот же ход, что с `ker/im` и `V*`), вопрос «куда» — закрыт здесь.
+связи: adjunction, free-forgetful-vect, unit-counit, verdict-shkolnye-opory, representable, hom-functor
+уровень: требует приручения (кольцо — слайд) / зал берёт (сама подстановка в многочлен — школьная)
+источник: `../istochniki/pdf/awodey-category-theory-2ed.pdf` Example 9.10, печ. с.218–219 (pdf 235–236) · `../istochniki/pdf/riehl-category-theory-in-context.pdf` Example 2.1.5(v), печ. с.56–57 (pdf 76–77). Оба сверены глазами 17.07
+статус: черновик
+```
+```
+id: verdict-shkolnye-opory
+род: находка
+суть: ВЕРДИКТ §2.2: три опоры — три разных исхода. Матанализ садится на Л6 (цепное правило = функториальность), многочлены на Л7 (R[x] = свободное кольцо), комбинаторика на Л3 — и она там УЖЕ СТОИТ, просто не названа
+котёл: математика
+находка: ⭐ Девять лекций пройдены; ни один пример не сочинён — все из книг, со страницами.
+  **Матанализ → Л6, чисто.** `chain-rule-est-funktorialnost`: Riehl печ. с.15–16 + Perrone печ. с.35–36.
+  Функтор производной садится в **Mat** — категорию, с которой курс начался. Две опоры зала разом.
+  **Многочлены → Л7, с ценой.** `opora-mnogochleny-l7`: Awodey печ. с.218–219 (R[x] = свободное кольцо,
+  УС = подстановка) + Riehl печ. с.56–57. Цена — слайд про кольцо.
+  **Комбинаторика → Л3, и это не добавление, а переименование.** `opora-kombinatorika-l3`: Ловер
+  печ. с.32–34 — 2³=8 перебором и правило произведения из уст студента. Опора уже несёт Л3 под именем
+  `eksponenta-2v3`; **нового материала не нужно, нужно назвать вслух**. Слабее — Л2: Ловер печ. с.56,
+  «|Isom(A,B)| = |Aut(A)|… **This fact we can prove without counting**» (биективное доказательство —
+  ровно метод курса). Потолок — `opora-kombinatorika-potolok`.
+  🔴 **Шесть лекций из девяти три опоры НЕ берут, и это факт про предмет, а не недоработка:** Л1, Л4, Л5,
+  Л8, Л9 — пусто по всем трём (у Л8 только слабый ℤ[x] как представимый, дубль Л7). Корпус вычитан на
+  10 книг + 11 web; там, где опоры нет, её нет. **Натягивать нечего и не надо** — курс тянет матрицы,
+  делимость и множества, и три новые опоры добавляют ТРИ адреса, а не девять.
+  ⚠ Книг не хватило — **ноль**: докачка не потребовалась ни по одной опоре. Это тоже результат: библиотека
+  на 15 pdf покрыла все три требования владельца, просто места лежали не там, где их искали.
+связи: chain-rule-est-funktorialnost, opora-mnogochleny-l7, opora-kombinatorika-l3, opora-kombinatorika-potolok, verdict-nno-adres, floor-ceiling, lawvere-exponenta-motivaciya
+уровень: вне курса (мета — для конструирования программы)
+источник: сводка по 10 pdf + 11 web; поимённо — в связанных карточках. Все страницы сверены глазами 17.07 (заход `kod_nno-i-shkolnye-opory.md`)
+статус: черновик
 ```
 
 ---
