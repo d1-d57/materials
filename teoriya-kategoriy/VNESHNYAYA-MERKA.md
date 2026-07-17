@@ -23,7 +23,7 @@
 | Мерка | Что это | Формат | Открыто |
 |---|---|---|---|
 | **Cambridge CAT 2025–26** | Part II CST, живой курс текущего года | **8 лекций × 2 ч = 16 ч**, 14 тем | [`cl.cam.ac.uk/teaching/2526/CAT/`](https://www.cl.cam.ac.uk/teaching/2526/CAT/) — силлабус дословно |
-| **Oxford C2.7 2025–26** | Part C (4-й курс MMath, M-level), матфак | **16 лекций**, 7 блоков | Офиц. синопсис факультета, **печ. с.23**, §11.1–11.6 |
+| **Oxford C2.7 2025–26** | Part C (4-й курс MMath, M-level), матфак | **16 лекций**, 7 блоков | Офиц. синопсис факультета, **печ. с.23**, §11.1–11.6. ⭐ **Дополнено 17.07 при приёмке `kod_chego-net`: полный текст силлабуса лежит на диске** — `istochniki/web/ox-c27-2526.md` (принёс заход `kod_biblioteka-vhodyashchee`). Он **полнее этой выжимки**: п.7 дословно — «**Пределы, копределы, pullbacks и pushouts**», чего в мерке не было. Расхождение нашёл `kod_chego-net`, чинить чужой файл не полез, назвал словами — **дисциплина зоны сработала** |
 | **MIT 18.S097 «Programming with Categories»** | Fong · Milewski · Spivak, IAP 2020 | Jan 7–31, MTWRF, 1 ч/день ≈ **17 занятий** | `brendanfong.com/programmingcats.html` |
 | **Nottingham «Categories for the lazy functional programmer»** | Altenkirch, MGS (аспиранты 1–2 года) | **5 × 1 ч** + 4 упражненческих | 4 конспекта `cftlfp-1-2/3/4/5.pdf`, греп мой |
 | **Smith, «Introducing Category Theory»** | ⚠️ **3-е изд., v.3.4a, май 2026, xvii+510** — не 2-е, как думал заход | книга | Скачана в `pdf/`, оглавление + преамбула + 8 несущих мест |

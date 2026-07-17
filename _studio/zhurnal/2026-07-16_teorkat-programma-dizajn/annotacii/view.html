@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Теория категорий — программа (черновик)</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1335px;margin:0 auto;padding:1.6rem 30px 130px}
+.doc-head,.runtime-note{max-width:1015px}
+.doc-head{font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .1em}
+.gen-note{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 1.4rem}
+.runtime-note{font-family:var(--sans);font-size:.82rem;line-height:1.5;background:#fff8e6;
+  border:1px solid #e6d7a2;border-radius:6px;padding:.7rem .9rem;margin:0 0 1.6rem;color:#6a5a1e}
+.runtime-note code{background:#f0e6c8;padding:0 .25em;border-radius:3px}
+
+/* ── §4 макет трёх зон: [оглавление 210px][текст ≤820][жёлоб .mn ~195] (порт catalan/kurs) ── */
+.layout{display:grid;grid-template-columns:210px minmax(0,1015px);gap:46px}
+.layout.solo{grid-template-columns:minmax(0,1015px)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
+  font-family:var(--sans);font-size:.83rem;line-height:1.4;border-right:1px solid var(--rule);padding-right:14px}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:.74rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{counter-increment:toc;margin:.16em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;font-variant-numeric:tabular-nums}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:820px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.18rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:.98rem;letter-spacing:.01em}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+.proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:1rem}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:#faf8f3}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+.mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
+  font-family:var(--sans);font-size:.8rem;line-height:1.5;color:var(--muted);
+  border-left:2px solid var(--rule);padding-left:.75em}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .mn{float:none;width:auto;margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+.insight{background:var(--insight-bg);border-left:4px solid var(--accent);
+  padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
+.insight .tag{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:.5em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+.stream-meta{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:0 0 1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+.stream-meta .status{font-weight:700;color:var(--text)}
+.stream-meta .debt{color:var(--flag-open);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>Теория категорий — программа (черновик)</h1>
+  <p class="gen-note">Вид doc-движка · вкладки = потоки-«котёл» (стадия склада сюжетов). Источник истины — markdown; правь его и пересобирай (0 токенов).</p>
+</div>
+<div class="runtime-note">Математика набрана <b>KaTeX через CDN</b> — это <b>авторский рантайм-вид для вычитки</b> (Р7), единственная внешняя зависимость. Офлайн формулы деградируют в сырой <code>$…$</code>, страница не падает. Финальный дек несёт статический кэш формул, не рантайм.</div>
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Программа</label>
+</nav>
+<section class="panel" id="panel-0"><div class="stream-meta"><span><span class="status">status: chernovik</span></span> <span>регистр: читаемый</span> <span><span class="debt">⚑ открытых долгов: 4</span></span> <span>источник: kurs.md</span></div><div class="layout"><details class="toc" open><summary>Содержание</summary><ol><li><a href="#s0-h-1">Из чего курс собран — три вещи, которые стоит знать заранее</a></li><li><a href="#s0-h-2">Что нужно знать заранее</a></li><li><a href="#s0-h-3">1 · Композиция. Определение категории</a></li><li><a href="#s0-h-4">2 · Универсальные свойства. Произведение, двойственность</a></li><li><a href="#s0-h-5">3 · Экспонента. Декартово замкнутые категории 🔒. Категорификация арифметики</a></li><li><a href="#s0-h-6">4 · Категории над объектом. Расслоённое произведение</a></li><li><a href="#s0-h-7">5 · Локально декартово замкнутые категории 🔒. Зависимая функция</a></li><li><a href="#s0-h-8">6 · Функторы и естественные преобразования</a></li><li><a href="#s0-h-9">7 · Сопряжения. Расплата за четвёртую и пятую</a></li><li><a href="#s0-h-10">8 · Монады. Лемма Йонеды (+ объект натуральных чисел — см. флаг)</a></li><li><a href="#s0-h-11">9 · Топос. Мост в унивалентные основания 🔒</a></li></ol></details><main><article class="stream"><aside class="note"><strong>ЧЕРНОВИК, НЕ ОТПРАВЛЯТЬ.</strong> Растущий источник (<code>build_doc.py</code>, лестница <code>status:</code>); статус лекций — не отсюда, а <code>python3 _generator/tools/check_kartoteka.py teoriya-kategoriy/kartoteka/KARTA-OBLASTI.md --speka teoriya-kategoriy/SPEKA.md</code>. <strong>Состояние 17.07: девять аннотаций из девяти. Все девять лекций прошли механические гейты (9/9); мотивации Л1, Л4, Л5, Л6, Л8, Л9 подтверждены живым прибором.</strong> <strong>Что мешает финалу — два, и оба к владельцу, не к ресёрчу:</strong> арифметика хвоста (куда девать объект натуральных чисел, перебор Л3 на ~10 мин) · длина текста (цель 3–4 страницы, сейчас больше — резать после того, как порядок замрёт). Визуал НЕ делаем (Фаза II), место размечено <code>🖼</code>.</aside>
+<h1>Теория категорий</h1>
+<p>## Девять лекций от школьной арифметики до места, где у натурального ряда нет невычислимых функций</p>
+<p>Первая задача курса ставится на десятой минуте, и для неё не нужно ни одного нового слова.</p>
+<blockquote>Декартово произведение множеств. Наибольший общий делитель. Пересечение подпространств. Прямая сумма. <strong>Четыре теоремы — или одна?</strong></blockquote>
+<p>Ответ придёт через лекцию, и зал выведет его сам. В этом и метод: ни одно определение здесь не падает с потолка. Каждое сначала изобретается вслух, и только потом получает имя.</p>
+<h2 id="s0-h-1">Из чего курс собран — три вещи, которые стоит знать заранее</h2>
+<p><strong>Опора одна, и это матрицы.</strong> Зал — инженеры, которые математику учили и забыли; матрицы они помнят твёрдо. Курс возвращается к ним семь раз из девяти: категория матриц даёт все аксиомы бесплатно (ассоциативность зал проверил в институте, единица — единичная матрица); в ней же первый объект оказывается <strong>не множеством</strong>, и прививка «категория ≠ множества со структурой» ставится на десятой минуте, а не отдельным сюжетом про экзотику. Дальше матрицы ломаются ровно в кульминации третьей лекции — и это лучшая её сцена. А на восьмой выясняется, что умножение матриц, которое зал делает двадцать лет, <strong>и есть</strong> композиция Клейсли, а $\sum_j$ в нём — это $\mu$.</p>
+<p><strong>Вторая опора — школьная арифметика, и она несёт больше, чем кажется.</strong> Делимость на $\mathbb{N}$ — частично упорядоченное множество, то есть категория, где между объектами не больше одной стрелки. В ней НОД оказывается произведением, НОК — копроизведением, импликация — экспонентой, а вся конструкция — алгеброй Гейтинга. Зал знает это с шестого класса и не знает, что знает.</p>
+<p><strong>Сквозной вопрос, который задаётся на первой лекции и закрывается на девятой.</strong> Мы определим изоморфизм, ни разу не сказав «биекция». На второй окажется, что «единственный» в математике почти всегда значит «единственный с точностью до изоморфизма», а требовать настоящего равенства — значит требовать выбора, которого никто не делает. На третьей — что $2+3=5$ и $3+2=5$ это одно равенство, но биекций между двумя множествами много, и <strong>число не помнит, какая из них была. Число забывает. Категория помнит.</strong> Вопрос «а изоморфизм-то какой?» — это и есть теория категорий целиком, и последняя лекция отвечает на него так, как отвечают сегодня.</p>
+<h2 id="s0-h-2">Что нужно знать заранее</h2>
+<p>Конкретно, без «желательно знакомство с»: <strong>умножение матриц</strong> — им курс открывается, и на нём всё держится; <strong>векторные пространства</strong> — конкретные, не по аксиомам; <strong>школьная арифметика</strong> — делимость, НОД и НОК, законы степеней. Про группы и кольца достаточно слышать. Ядро и образ линейного отображения, дуальное пространство — напомним слайдом там, где понадобятся. Топология, модули, тензоры не нужны нигде.</p>
+<p>---</p>
+<h1>Девять лекций</h1>
+<aside class="note"><strong>порядок и разбивка НЕ финальны.</strong> Ворота заказчика (декартово замкнутые к 3-й, локально декартово замкнутые к 5-й) держим — но восьмая лекция под подозрением, см. «Что ещё решается».</aside>
+<h2 id="s0-h-3">1 · Композиция. Определение категории</h2>
+<p><strong>Зачем — и ответ честнее, чем принято.</strong> Категория сама по себе низачем, и это не кокетство. Её определили, чтобы можно было определить функтор, а функтор — чтобы можно было определить естественное преобразование; вопрос, ради которого построено всё, вы увидите на шестой лекции. Так говорят сами Эйленберг и Маклейн — это не наша шутка. <strong>А пока — категория уже у вас в руках, и называется она «умножение матриц».</strong></p>
+<p><strong>Математика.</strong> Категория матриц: объекты — натуральные числа, стрелки $n\to m$ — матрицы $m\times n$, композиция — умножение. <strong>Все аксиомы уже проверены школой:</strong> ассоциативность зал знает, единица — единичная матрица. Аксиомы стоят ноль минут. Определение категории падает <strong>последним</strong>, как ответ. Множества — вторым примером, не первым. Делимость на $\mathbb{N}$ как частично упорядоченное множество, диаграмма Хассе делителей 60. Изоморфизм.</p>
+<p><strong>Чем держим.</strong> Объект «3» в категории матриц — <strong>не множество ни в каком смысле.</strong> Прививка «категория ≠ множества со структурой» ставится на первом же примере и бесплатно — там, где заказчик просил экзотику вроде tangles и ribbons. Дорого здесь не определение, а осознание, что <strong>стрелка не обязана быть функцией</strong>.</p>
+<p><strong>Что зал изобретает сам.</strong> Аксиомы категории — он их уже знает про матрицы, надо только спросить. Изоморфизм определяем, <strong>ни разу не сказав «биекция»</strong> и не упомянув элемент.</p>
+<p><strong>🖼 Сцены.</strong> Диаграмма Хассе делителей 60: одна картинка, на которой позже будут видны глазами НОД, НОК, терминальный объект (60), начальный (1) и импликация Гейтинга. <strong>Вся вторая и половина третьей лекции — на объекте из шестого класса.</strong> · Камео: категория, где стрелка — путь, композиция — склейка, а равенство означает непрерывную деформацию. Геометрия, зерно финала.</p>
+<p><strong>Куда ведёт.</strong> → <strong>Л6</strong>: обещание, данное здесь, там отдаётся — и группоид из камео оказывается нужен технически. → <strong>Л9</strong>: курс кончится там, где начался.</p>
+<h2 id="s0-h-4">2 · Универсальные свойства. Произведение, двойственность</h2>
+<p><strong>Зачем.</strong> Ответ на задачу с десятой минуты. Четыре объекта из школы и первого курса — а теорема одна.</p>
+<p><strong>Математика.</strong> Терминальный объект как простейшее универсальное свойство; единственность с точностью до единственного изоморфизма — первое настоящее категорное доказательство курса, полное и честное, за девяносто секунд. Произведение через универсальное свойство. Двойственность: $C^{op}$, копроизведение не определяем — переворачиваем стрелки. Начальный объект. Бипроизведение в категории матриц.</p>
+<p><strong>Чем держим.</strong> Галилей открывает «Conceptual Mathematics» ровно этим, за триста лет до Эйленберга: движение снаряда распадается на горизонталь и вертикаль, две тени точки определяют точку. Это буквально $\langle f,g\rangle$ и его единственность — в физике, без единой формулы. Дальше НОД: школьное определение («общий» и «наибольший») <strong>уже</strong> является универсальным свойством, записанным словами.</p>
+<p><strong>Что зал изобретает сам.</strong> Произведение — дав три кандидата и попросив сравнить. И копроизведение: «переверните стрелки в определении и посмотрите, что вышло в множествах». Выходит <strong>дизъюнктное</strong> объединение — привычный ответ ($\cup$) универсальное свойство отсеивает. Первое ощущение, что это прибор, а не украшение.</p>
+<p><strong>🖼 Сцены.</strong> Точка и две её тени: тени двигаются синхронно, двигаем тени независимо — точка находится однозначно. · Анимация переворота: переворачиваем <strong>не диаграмму, а множества под ней</strong> — стрелки те же, а внизу $6$ превращается в $5$. Зал видит, что двойственность даёт <strong>другой ответ</strong>, а не симметрию.</p>
+<p><strong>Куда ведёт.</strong> → Л4 (произведение → расслоённое произведение). → <strong>Л9</strong>: «почему до изоморфизма, а не единственен» — мост в унивалентность закладывается здесь, а не в финале.</p>
+<h2 id="s0-h-5">3 · Экспонента. Декартово замкнутые категории 🔒. Категорификация арифметики</h2>
+<p><strong>Зачем.</strong> Школа дала три операции: плюс, умножить, степень. Две зал переизобрёл на второй лекции. <strong>Где третья?</strong> Зуд от неполноты узора, который зал достраивает сам.</p>
+<p><strong>Математика.</strong> $2^3=8$ считаем до слова «экспонента». Вычисление $\mathrm{ev}$ и его универсальное свойство. Каррирование. <strong>CCC = терминальный объект + произведения + экспоненты — и ни одного функтора.</strong> Словарь категорификации: $+=\sqcup$, $\times=\times$, степень = экспонента, $0=\varnothing$, $1=\{*\}$. Делимость как вырожденный CCC = алгебра Гейтинга. Карри–Ховард–Ламбек панорамой, три колонки, без доказательства.</p>
+<p><strong>Чем держим.</strong> $(x^y)^z = x^{y\cdot z}$ — закон степеней из седьмого класса — <strong>оказывается каррированием</strong>. Школа и работа склеиваются в одной формуле.</p>
+<p><strong>Кульминация — и она против зала.</strong> Векторные пространства <strong>не</strong> декартово замкнуты. Доказательство в одну строку, инструментом, выданным десять минут назад: в CCC $X\times 0\cong 0$, а в Vect $V\oplus 0=V$, откуда $V\cong 0$ — абсурд. Зал своим же инструментом доказывает, что его родная территория — не обетованная земля. И это рифмуется со школьным $x\cdot 0=0$.</p>
+<p><strong>🖼 Сцены.</strong> $2^3$: восемь табличек из трёх строк по два значения, зал пересчитывает сам. · Исключённое третье ломается за минуту: $U$ = прямая минус точка, $\neg U=\varnothing$, $\neg\neg U$ = вся прямая. Ломается <strong>не по идеологии, а по геометрии</strong> — точка не влезает обратно.</p>
+<p><strong>Куда ведёт.</strong> Четыре ребра — больше всех. → Л5 (CCC понята → «локально» читается буквально). → Л8 (категорификация → объект, который её несёт). → <strong>Л9</strong> трижды: «число забывает» → много путей $a=b$; сломанное исключённое третье → «а где живёт эта логика?»; КХЛ → внутренний язык топоса.</p>
+<p class="flag open">⚑ Флаг: перебор ~10 минут. Клапаны названы — дистрибутивность в общем виде и КХЛ-панорама до пяти минут.</p>
+<h2 id="s0-h-6">4 · Категории над объектом. Расслоённое произведение</h2>
+<p><strong>Зачем.</strong> Пространство решений $Ax=b$ расслаивается над правой частью: слой — это $x_0+\ker A$. А подстановка $b=Cy$ — это и есть расслоённое произведение. <strong>Зал решает эту систему двадцать лет и не знает, что решает расслоение.</strong></p>
+<p><strong>Математика.</strong> Слайс-категория $C/X$ как категория расслоений над базой. Терминальный объект в ней — $\mathrm{id}_X$, бесплатно. Произведение в ней — расслоённое произведение в $C$. Подстановка. Ни одного функтора.</p>
+<p><strong>🖼 Сцена.</strong> База со слайдером; подстановка тянет слой назад — над точкой $y$ загорается слой из $f(y)$. Два $y$ в один $x$ — слой дублируется; в $x$ никто не попал — слой исчезает. Единый приём курса («гонка двух путей по диаграмме») здесь <strong>не работает</strong>: соль расслоённого произведения в универсальности и слоях, а не в коммутативности маршрутов. Слоям нужна своя сцена, и вот она.</p>
+<p><strong>Куда ведёт.</strong> → Л7: то, что построено здесь руками, получит имя.</p>
+<h2 id="s0-h-7">5 · Локально декартово замкнутые категории 🔒. Зависимая функция</h2>
+<p><strong>Зачем.</strong> $n\mapsto I_n$ — единичная матрица $n\times n$. Зал писал эту функцию сто раз. А одного кодомена у неё нет: $\mathbb{R}^{n\times n}$ растёт вместе с $n$. Обычный тип $X\to B$ теряет, что выход именно $n\times n$; зависимый — помнит. <strong>Рифма с третьей лекцией точная: число забывает, категория помнит.</strong></p>
+<p><strong>Математика.</strong> «Локально» значит буквально «над каждым объектом». LCCC = каждый слайс декартово замкнут — определение Riehl (Def 4.5.2, печ. с.157), <strong>без функторов и сопряжений</strong>. Экспонента в слайсе — единственная новая тяжёлая вещь: она факторизуется как $\Pi_a\Delta_a$ и требует зависимого произведения. В множествах показываем руками (слайс над $X$ = индексированные семейства, экспонента поточечная), общий $\Pi_f$ называем и откладываем.</p>
+<p><strong>Почему это важнее, чем кажется.</strong> $\Sigma_f$ и $\Pi_f$ — это зависимые сумма и произведение, они же $\exists$ и $\forall$, они же Σ- и Π-типы. <strong>Мост в финал держится на одном этом понятии.</strong> Зависимые типы после этого выглядят не изобретением, а неизбежностью.</p>
+<p class="flag open">⚑ Флаг: примеров зависимой функции нужно больше одного — зал должен увидеть узор, а не фокус. В работе.</p>
+<h2 id="s0-h-8">6 · Функторы и естественные преобразования</h2>
+<p><strong>Зачем.</strong> $V$ и $V^*$ изоморфны — но только если выбрать базис, и с другим базисом изоморфизм другой. $V$ и $V^{**}$ изоморфны без всякого выбора. <strong>В чём разница?</strong> В 1945 году теорию категорий изобрели ровно ради ответа на этот вопрос; сами категории оказались побочным продуктом. У Эйленберга и Маклейна это первый же мотивирующий пример статьи.</p>
+<p><strong>Математика.</strong> Функтор. Контравариантность — <strong>не через $C^{op}$</strong>, а через $(AB)^T=B^TA^T$: формулу зал помнит и никогда не спрашивал, почему ломается порядок. Ответ — определение контравариантности. Естественное преобразование, квадрат естественности. Дуальный функтор, второй дуальный.</p>
+<p><strong>Кульминация.</strong> На группоиде конечномерных пространств естественного изоморфизма $\mathrm{Id}\Rightarrow(-)^*$ <strong>нет</strong> — доказательство в три строки на скалярных матрицах: $\lambda\cdot\eta_V=\lambda^{-1}\cdot\eta_V$ ⇒ $\lambda^2=1$ для всех $\lambda\neq0$; при $\lambda=2$ противоречие. Самое дешёвое настоящее доказательство курса — и единственная причина, по которой зал поверит, что «естественно» слово техническое, а не вкусовщина. Зал находит его сам: «а что если растянуть пространство вдвое?»</p>
+<p><strong>🖼 Сцена.</strong> Не один квадрат, а <strong>лента квадратов</strong>: слайдер по объектам, всё перерисовывается, а формула на $\eta$ остаётся та же. <strong>Естественность — то, что не мигает, когда мигает всё остальное.</strong> Обратная сцена для $V\cong V^*$: формула каждый раз новая — зал видит произвол глазами.</p>
+<p><strong>Куда ведёт.</strong> → Л7: «без произвола» получит окончательную форму.</p>
+<h2 id="s0-h-9">7 · Сопряжения. Расплата за четвёртую и пятую</h2>
+<p><strong>Зачем.</strong> Потолок и пол сопряжены к вложению целых в вещественные: $\lceil x\rceil\le n \iff x\le n$. Проверяется за десять секунд, и это настоящее сопряжение, а не аналогия.</p>
+<p><strong>Осторожно, и это поправка к самим себе.</strong> Пол с потолком дают <strong>форму</strong>, но не <strong>силу</strong>: зал скажет «ну да, и что». Нужна пара — свободный ⊣ забывающий: $\mathrm{Hom}(F(X),W)\cong\mathrm{Hom}(X,U(W))$ есть дословно «линейное отображение однозначно задаётся образами базисных векторов, и на базисе можно задать что угодно». <strong>Это его собственная теорема первого курса, названная новым словом.</strong> Одна без другой не продаёт.</p>
+<p><strong>Математика.</strong> Сопряжение через hom-биекцию, <strong>не через треугольные тождества</strong> — те дороги и для зала бессмысленны. Единица и коединица. Единственность сопряжённого.</p>
+<p><strong>Расплата.</strong> $\Sigma_f \dashv f^* \dashv \Pi_f$ — вот имя тому, что зал строил руками на четвёртой и пятой. Подстановка зажата между двумя сопряжёнными — <strong>ровно как то вложение между полом и потолком двадцатью минутами раньше</strong>. Один приём, показанный дважды.</p>
+<p><strong>Куда ведёт.</strong> ← Л6: «левый сопряжённый» — это определение, а не выбор. Ровно то, чего не хватало изоморфизму $V\cong V^*$.</p>
+<h2 id="s0-h-10">8 · Монады. Лемма Йонеды <em>(+ объект натуральных чисел — см. флаг)</em></h2>
+<p><strong>Зачем — один вопрос на всю лекцию: что такое умножение матриц на самом деле?</strong> Почему оно вот это вот? Откуда $\sum_j$? Стандартный ответ («композиция линейных отображений») сделан ровно из того, чего у зала нет: «матрица — это запись линейного отображения» ему сказали двадцать лет назад, он не понял и прекрасно работал дальше. <strong>Формула осталась, обоснование испарилось.</strong></p>
+<p><strong>Математика.</strong> Свободное векторное пространство на множестве. Монада: $\eta$, $\mu$, аксиомы. <strong>Категория Клейсли свободного векторного пространства — это в точности матрицы.</strong> Композиция Клейсли — умножение матриц. Оболочка (линейная, выпуклая) как монада, которую можно нарисовать. Стохастические матрицы. Лемма Йонеды: «подставь $\mathrm{id}_A$». Теорема Кэли.</p>
+<p><strong>Два ответа на один вопрос — и в этом вся склейка.</strong> - <strong>Монады отвечают, ОТКУДА.</strong> Столбец матрицы — это вход, которому сопоставлена не одна координата, а смесь выходов с весами. Две такие подряд не подставляются: вторая ждёт вход, а получает смесь ⇒ её обязаны продлить на смеси, а смесь смесей — схлопнуть. Схлопывание есть $\mu$, и оно буквально $\sum_j a_{ij}b_{jk}$. <strong>$\sum_j$ — не определение, а следствие: единственный способ вообще склеить две такие стрелки.</strong> - <strong>Йонеда отвечает, что оно ИСЧЕРПЫВАЕТ.</strong> Чтобы применить операцию над строками к матрице, достаточно применить её к <strong>единичной</strong> — и умножить. Зал делал это сто раз и знает как рецепт: элементарная матрица. <strong>Это метод Гаусса.</strong> А «подставь $\mathrm{id}_A$» из леммы Йонеды — буквально «подставь единичную матрицу». Не рецепт, а теорема.</p>
+<p><strong>Финал лекции.</strong> Композиция Клейсли стохастических матриц — это уравнение Чепмена–Колмогорова. <strong>Уравнение, которое зал знает из теорвера, оказывается аксиомой ассоциативности монады.</strong></p>
+<p><strong>🖼 Сцены.</strong> Оболочка затягивается резинкой; применяем ещё раз — <strong>кадр не дрогнул</strong>. Идемпотентность видна как отсутствие движения: «вот это и есть $\mu$». · Смесь смесей раскрывается в двойную сумму, скобки схлопываются, остаётся $\sum_j a_{ij}b_{jk}$ — формула, которую зал писал сотни раз, выпадает из абстрактного $\mu$.</p>
+<p class="flag open">⚑ <strong>Флаг: объект натуральных чисел — третий сюжет, и он НЕ склеивается.</strong> Проверено доказательно: алгебра функтора $X\mapsto 1+X$ даёт (точка, преемник), а аксиома единицы <strong>монады</strong> ровно преемника и убивает. Сюжеты не разные — противонаправленные. Куда девать NNO — решается вместе с арифметикой хвоста.</p>
+<h2 id="s0-h-11">9 · Топос. Мост в унивалентные основания 🔒</h2>
+<p><strong>Зачем.</strong> Ваш пруф-чекер не даёт рассуждать от противного, и вы двадцать лет считаете это <strong>запретом</strong>: конструктивизм — дисциплина, нам нельзя. На третьей лекции вы видели, как исключённое третье ломается <strong>само</strong> — на прямой с выколотой точкой, за минуту, по геометрии, а не по идеологии. Никто ничего не запрещал. <strong>Ваш пруф-чекер и та прямая дают одну и ту же логику. Совпадение — или ваш пруф-чекер где-то живёт?</strong></p>
+<p><strong>Математика.</strong> Классификатор подобъектов: мономорфизм $t: 1\rightarrowtail\Omega$, через который каждый подобъект пропускается единственным декартовым квадратом. <strong>Определение работает в любой категории с терминальным объектом — функторы и лемма Йонеды в нём не участвуют.</strong> Топос = конечные пределы + классификатор + декартова замкнутость. Пучки: истинностное значение — открытое множество, где утверждение верно. Аксиомы не доказываем (граница ТЗ).</p>
+<p><strong>Что теряется, и мы это называем.</strong> Без Йонеды $\Omega$ <strong>определить</strong> можно, а вот <strong>почему он канонический</strong> — придётся принять на слово: это представимость функтора подобъектов. Для нашей задачи не нужно; но знать, что мы здесь платим, стоит.</p>
+<p><strong>Финал.</strong> Эффективный топос: место, где у натурального ряда нет других эндоморфизмов, кроме вычислимых. И не по запрету — стрелка там обязана нести с собой программу-свидетеля, а <strong>невычислимой нечем себя предъявить</strong>. Тезис Чёрча становится теоремой.</p>
+<p><strong>Мост, ради которого всё строилось.</strong> Равенство — это тип; его элементы — пути; путей между $a$ и $b$ бывает много. <strong>Все три семени посеяны заранее:</strong> группоид на первой лекции (стрелка — путь), «до изоморфизма» на второй, «число забывает, категория помнит» на третьей. Поэтому цепь проходится за пятнадцать минут, а не за отдельную главу. Унивалентность: равенство <strong>есть</strong> изоморфизм.</p>
+<p class="flag open"><strong>⚑ Честная граница — говорим вслух.</strong> «Гомотопическая теория типов — внутренний язык $(\infty,1)$-топоса» <strong>не теорема</strong>: книга сама пишет «details remain to be worked out». Унивалентность — <strong>аксиома</strong>, не доказывается. <strong>Курс честно доходит до порога унивалентных оснований и там останавливается.</strong> Дальше — второй курс.</p>
+<p><strong>Куда ведёт.</strong> Шесть входящих рёбер — самая связанная лекция курса. Финал оплачен заранее, а не приделан.</p>
+<p>---</p>
+<h1>Что ещё решается</h1>
+<aside class="note">сюда — честно, что не закрыто. В версию заказчику пойдёт не этот раздел, а его следствия.</aside>
+<ul><li><strong>Арифметика хвоста — единственный настоящий блокер.</strong> Куда девать объект натуральных чисел (доказано, что к монадам он не клеится) и чем гасить перебор Л3 на ~10 минут. <strong>Ресёрч тут бессилен: сколько влезает в живую лекцию, знает лектор.</strong></li><li><strong>Длина.</strong> Цель — 3–4 страницы; сейчас больше. Резать после того, как порядок замрёт: резать раньше — дважды.</li><li><strong>Ветка Б («беглый LCCC»)</strong> — резерв. Вердикт Riehl подтвердил ветку А, но замена лежит готовой.</li><li><strong>Долги, названные вслух:</strong> оригинал Хайленда не читан (вердикт по эффективному топосу стоит на качественных вторичных) · «$\Omega$ топоса — алгебра Гейтинга» на диске не написано никем, стык наш · на Л3 зал видит решётку, а на Л9 $\Omega$ — пучок; одна фраза чинит, но её надо не забыть.</li></ul></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) { a.classList.add("active"); current = a; }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+</script>
+</body>
+</html>

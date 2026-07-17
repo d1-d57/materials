@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>konspekt</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1335px;margin:0 auto;padding:1.6rem 30px 130px}
+.doc-head,.runtime-note{max-width:1015px}
+.doc-head{font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .1em}
+.gen-note{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 1.4rem}
+.runtime-note{font-family:var(--sans);font-size:.82rem;line-height:1.5;background:#fff8e6;
+  border:1px solid #e6d7a2;border-radius:6px;padding:.7rem .9rem;margin:0 0 1.6rem;color:#6a5a1e}
+.runtime-note code{background:#f0e6c8;padding:0 .25em;border-radius:3px}
+
+/* ── §4 макет трёх зон: [оглавление 210px][текст ≤820][жёлоб .mn ~195] (порт catalan/kurs) ── */
+.layout{display:grid;grid-template-columns:210px minmax(0,1015px);gap:46px}
+.layout.solo{grid-template-columns:minmax(0,1015px)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
+  font-family:var(--sans);font-size:.83rem;line-height:1.4;border-right:1px solid var(--rule);padding-right:14px}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:.74rem;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{counter-increment:toc;margin:.16em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;font-variant-numeric:tabular-nums}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:820px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.18rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:.98rem;letter-spacing:.01em}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+.proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:1rem}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:#faf8f3}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+.mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
+  font-family:var(--sans);font-size:.8rem;line-height:1.5;color:var(--muted);
+  border-left:2px solid var(--rule);padding-left:.75em}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .mn{float:none;width:auto;margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+.insight{background:var(--insight-bg);border-left:4px solid var(--accent);
+  padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
+.insight .tag{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:.5em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+.stream-meta{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:0 0 1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+.stream-meta .status{font-weight:700;color:var(--text)}
+.stream-meta .debt{color:var(--flag-open);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>konspekt</h1>
+  <p class="gen-note">Вид doc-движка · вкладки = потоки-«котёл» (стадия склада сюжетов). Источник истины — markdown; правь его и пересобирай (0 токенов).</p>
+</div>
+<div class="runtime-note">Математика набрана <b>KaTeX через CDN</b> — это <b>авторский рантайм-вид для вычитки</b> (Р7), единственная внешняя зависимость. Офлайн формулы деградируют в сырой <code>$…$</code>, страница не падает. Финальный дек несёт статический кэш формул, не рантайм.</div>
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Лекция 1</label>
+</nav>
+<section class="panel" id="panel-0"><div class="stream-meta"><span><span class="status">status: chernovik</span></span> <span>регистр: читаемый</span> <span><span class="debt">⚑ открытых долгов: 1</span></span> <span>источник: 01-lekciya-1.md</span></div><div class="layout"><details class="toc" open><summary>Содержание</summary><ol><li><a href="#s0-h-1">Откуда это взялось</a></li><li><a href="#s0-h-2">Вопрос</a></li><li><a href="#s0-h-3">Почему это не делается голыми руками</a></li><li><a href="#s0-h-4">Инструмент: категория</a></li><li><a href="#s0-h-5">Зоопарк</a></li><li><a href="#s0-h-6">Что значит «одинаковы»</a></li><li><a href="#s0-h-7">Определение объекта одной стрелкой</a></li><li><a href="#s0-h-8">Руками и контрольная сумма</a></li><li><a href="#s0-h-9">Пуанта</a></li></ol></details><main><article class="stream"><h1>Что останется, если запретить заглядывать внутрь</h1>
+<h2 id="s0-h-1">Откуда это взялось</h2>
+<p>Три тысячи лет люди обобщали понятие числа, и каждый шаг был приобретением. Натуральных не хватало, чтобы вычитать, — добавили отрицательные. Не хватало, чтобы делить, — добавили дроби. Не хватало, чтобы извлекать корни, — добавили комплексные. Всякий раз получали новую свободу и не платили ничем: сложение и умножение оставались ассоциативными ($(ab)c = a(bc)$) и коммутативными ($ab = ba$), и перемножить можно было любые два числа.</p>
+<p>Впервые заплатили в 1843 году. Гамильтон искал числа, которыми описывались бы вращения трёхмерного пространства, и нашёл кватернионы ценой коммутативности: там $ij = k$, а $ji = -k$. Это не досадная помеха, а ровно то, что делает кватернионы годными для вращений: повернуть вокруг одной оси, потом вокруг другой — не то же самое, что наоборот. Пятнадцатью годами позже Кэли определил умножение матриц, и потерялся второй закон, такой привычный, что его никто и не считал законом: <strong>перемножить можно не любые две матрицы, а только совместимые по размерам.</strong> Матрицу $3 \times 2$ на матрицу $2 \times 5$ перемножить можно; те же две в обратном порядке нельзя, произведение не определено.</p>
+<p class="flag open">⚑ Даты, имена и мотив Гамильтона — по памяти, не по источнику. Сверить по библиотеке арки «Ландшафт».</p>
+<p>Кэли не выдумывал правило умножения матриц. Он определил его так, чтобы оно совпало с <strong>композицией</strong> линейных отображений: матрица $3 \times 2$ — это отображение из $\mathbb{R}^2$ в $\mathbb{R}^3$, а произведение матриц — это «сделай одно, потом другое». И тогда обе потери объясняются разом, потому что обе оказываются свойствами композиции. Композиция ассоциативна: $h \circ (g \circ f) = (h \circ g) \circ f$, потому что и слева, и справа стоит одно и то же действие, только по-разному расставлены скобки. Композиция некоммутативна: надеть носки, потом ботинки — не то же, что ботинки, потом носки. И компоновать можно только совместимое: выход первого отображения обязан быть входом второго, иначе второму нечего подавать.</p>
+<p>Отсюда весь смысл справки: <strong>обобщая число до упора, приезжаешь в композицию.</strong> Не композиция похожа на арифметику — арифметика оказалась частным случаем композиции.</p>
+<p>История на этом кончилась и дальше не понадобится: ни Гамильтон, ни Кэли, ни кватернионы больше не встретятся ни разу. Понадобится ровно одно наблюдение, которое она дала: композиция, ассоциативная и определённая только на совместимых парах. Матрицы вернутся — но уже не как история, а как пример.</p>
+<h2 id="s0-h-2">Вопрос</h2>
+<p>Одноточечное множество мы называем в единственном числе — «одноточечное множество», — хотя их бесконечно много: $\{0\}$, $\{1\}$, $\{\varnothing\}$, $\{\text{Луна}\}$. Так же говорят «тривиальная группа», «нулевое пространство», «пустое множество». За единственным числом прячется утверждение: все они одинаковы, разница неважна, можно взять любое.</p>
+<p><strong>Вопрос.</strong> Можно ли определить объект, ни разу не сказав, из чего он состоит, — и будет ли такое определение задавать объект однозначно?</p>
+<p>Вторая половина вопроса пока бессмысленна: «однозначно» значит «с точностью до одинаковости», а что такое одинаковость — не определено. Значит сперва разбираемся с ней.</p>
+<h2 id="s0-h-3">Почему это не делается голыми руками</h2>
+<p>Определения одинаковости мы знаем, и не одно.</p>
+<ul><li>Множества $A$ и $B$ одинаковы, если есть <strong>биекция</strong> $\varphi: A \to B$ — отображение, при котором у каждого элемента $B$ ровно один прообраз.</li><li>Группы $G$ и $H$ одинаковы, если есть биекция $\varphi: G \to H$, для которой $\varphi(xy) = \varphi(x)\varphi(y)$ при всех $x, y \in G$.</li><li>Векторные пространства $V$ и $W$ одинаковы, если есть биекция $\varphi: V \to W$, для которой $\varphi(u+v) = \varphi(u) + \varphi(v)$ и $\varphi(\lambda v) = \lambda \varphi(v)$.</li><li><strong>Частично упорядоченное множество</strong> — это множество $P$ с отношением $\le$, для которого выполнено три условия: $a \le a$ при любом $a$ (рефлексивность); из $a \le b$ и $b \le a$ следует $a = b$ (антисимметричность); из $a \le b$ и $b \le c$ следует $a \le c$ (транзитивность). Два таких, $(P, \le)$ и $(Q, \preceq)$, одинаковы, если есть биекция $\varphi: P \to Q$, для которой $a \le b$ равносильно $\varphi(a) \preceq \varphi(b)$.</li></ul>
+<p>Теперь ткнём пальцем. Во всех четырёх строчках стоит одно и то же слово — <strong>биекция</strong>, — а всё остальное своё. Соблазн сказать: общий рецепт есть, он звучит «биекция, сохраняющая структуру». Но это не определение, а инструкция человеку: посмотри, какая тут структура, и потребуй, чтобы она сохранялась. Слова «структура» в списке нет и взять его неоткуда — в каждой строке структура своя, и определяется она отдельно, задолго до всякого сравнения.</p>
+<p>Хуже: общая часть у четырёх определений не просто мала — она <strong>пуста</strong>. Слово «биекция» само по себе не значит ничего. Возьмём $\mathbb{Z}/4$ (остатки при делении на $4$, складываются с приведением по модулю $4$) и $\mathbb{Z}/2 \times \mathbb{Z}/2$ (пары остатков при делении на $2$, складываются покоординатно). В обеих по четыре элемента, значит биекций между ними ровно $24$ — и ни одна не делает эти группы одинаковыми: в первой $1 + 1 = 2 \ne 0$, а во второй $x + x = 0$ для <strong>каждого</strong> элемента, и биекция это не починит. Вся содержательная часть каждого определения сидит в приправе; общее слово не несёт ни грамма.</p>
+<p>Природа препятствия, стало быть, не в размере работы. Можно выписать пятую строку списка, сотую, тысячную — общего определения из них не выйдет <strong>в принципе</strong>, потому что обобщать можно только общее, а общее здесь пусто. Помочь может ровно одно: найти нечто, что, во-первых, есть во всех мирах сразу, во-вторых, само по себе содержательно.</p>
+<p>Кандидат уже назван — справкой. <strong>Отображения.</strong> В каждом мире они свои: функции между множествами, гомоморфизмы между группами, линейные операторы между пространствами, отображения, сохраняющие порядок ($a \le b \Rightarrow \varphi(a) \preceq \varphi(b)$), между частично упорядоченными множествами. Но ведут они себя всюду одинаково: их компонуют, композиция ассоциативна, у каждого объекта есть тождественное отображение. Ровно тот остаток, к которому пришла арифметика.</p>
+<p>Отсюда ставка, на которую играет весь курс: <strong>выкинуть из языка элементы и оставить одни отображения.</strong> Если после этого удастся сказать «одинаковы» — ставка сыграла.</p>
+<h2 id="s0-h-4">Инструмент: категория</h2>
+<div class="stmt defn" id="s0-d-1"><span class="lbl">Определение 1 (категория).</span> Категория $\mathcal{C}$ состоит из следующих данных: класса <strong>объектов</strong>; для каждой пары объектов $A, B$ — множества <strong>стрелок</strong> $\mathcal{C}(A,B)$; операции <strong>композиции</strong>, которая паре стрелок $f \in \mathcal{C}(A,B)$ и $g \in \mathcal{C}(B,C)$ сопоставляет стрелку $g \circ f \in \mathcal{C}(A,C)$; и для каждого объекта $A$ — выделенной стрелки $1_A \in \mathcal{C}(A,A)$. Требуется два тождества: $h \circ (g \circ f) = (h \circ g) \circ f$ всякий раз, когда обе части определены, и $f \circ 1_A = f = 1_B \circ f$ для любой $f \in \mathcal{C}(A,B)$.</div>
+<p class="mn">Композиция — часть данных категории, а не операция, которую определяют потом. Категория приходит уже со своей композицией; именно поэтому в определении 1 её не «вводят», а перечисляют наравне с объектами и стрелками.</p>
+<p class="mn">В книгах стрелки почти всегда называют <strong>морфизмами</strong>, а множество $\mathcal{C}(A,B)$ пишут $\mathrm{Hom}(A,B)$. Это те же самые вещи, и, открыв любой источник, вы увидите там именно эти слова. Мы говорим «стрелка», потому что «морфизм» подсказывает читателю «это какое-то отображение», а вся лекция ровно про то, что не отображение.</p>
+<p>Всё. Больше в категории нет ничего. Посмотрим, чего в определении 1 <strong>не написано</strong>. Не написано, что объекты — множества. Не написано, что стрелки — отображения. Не написано даже, что стрелку можно к чему-нибудь применить. Стрелка $f \in \mathcal{C}(A,B)$ — это элемент какого-то множества, у которого есть начало $A$ и конец $B$; единственное, что с ней разрешено делать, это компоновать с соседними по правилам определения 1. Ровно это и было ставкой.</p>
+<h2 id="s0-h-5">Зоопарк</h2>
+<div class="example"><span class="lbl">Пример 2 (множества).</span> Категория $\mathbf{Set}$: объекты — множества; стрелки $A \to B$ — функции из $A$ в $B$; композиция — обычная композиция функций, $(g \circ f)(a) = g(f(a))$; $1_A$ — тождественная функция, $1_A(a) = a$. Обе аксиомы проверяются подстановкой.</div>
+<div class="example"><span class="lbl">Пример 3 (частично упорядоченное множество — целиком категория).</span> Возьмём $(P, \le)$ из списка выше. Объекты — элементы $P$. Стрелки: между $a$ и $b$ ставим <strong>ровно одну</strong> стрелку $a \to b$, если $a \le b$, и не ставим ни одной, если $a \le b$ неверно. Композиция стрелок $a \to b$ и $b \to c$ — единственная стрелка $a \to c$; она существует, потому что из $a \le b$ и $b \le c$ следует $a \le c$ (транзитивность). Тождественная стрелка $1_a: a \to a$ существует, потому что $a \le a$ (рефлексивность). Обе аксиомы выполняются даром: между двумя объектами стрелка не больше одной, значит любые две стрелки $a \to c$ равны просто потому, что их некуда различать.</div>
+<div class="example"><span class="lbl">Пример 4 (делимость — тот же пример, но с числами).</span> На $\mathbb{N} = \{0, 1, 2, \dots\}$ положим $a \le b$, когда $a$ делит $b$ (то есть $b = a \cdot k$ при некотором натуральном $k$). Это частично упорядоченное множество: $a$ делит $a$; если $a$ делит $b$ и $b$ делит $a$, то $a = b$; если $a$ делит $b$ и $b$ делит $c$, то $a$ делит $c$. Значит по примеру 3 получилась категория: объекты — натуральные числа, и есть ровно одна стрелка $3 \to 12$, потому что $3$ делит $12$, и ни одной стрелки $12 \to 3$.</div>
+<p>Здесь надо притормозить, потому что это единственное место лекции, где нормальный человек выпадает, и выпадает справедливо.</p>
+<p>Стрелка $3 \to 12$ — <strong>не функция.</strong> Между числами $3$ и $12$ нет и не может быть никакого отображения: отображать нечего, у числа $3$ нет элементов, оно не мешок с чем-то внутри. Стрелка здесь есть <strong>факт</strong>: «три делит двенадцать». Она либо есть, либо её нет; вопрос «а что она такое сама по себе, из чего состоит» ответа не имеет и в ответе не нуждается. Определение 1 такого вопроса и не задаёт, оно требует только, чтобы стрелки умели компоноваться. Композиция здесь есть транзитивность: из «три делит двенадцать» и «двенадцать делит шестьдесят» получается «три делит шестьдесят», и это ровно $\left(12 \to 60\right) \circ \left(3 \to 12\right) = \left(3 \to 60\right)$. Тождественная стрелка $1_3$ — факт «три делит три».</p>
+<p>Если это место прожёвано, дальше уже не страшно ничего. Категория — не про множества и не про функции. Слова «объект» и «стрелка» в определении 1 не значат ничего, кроме того, что про них написано в определении 1.</p>
+<div class="example"><span class="lbl">Пример 5 (матрицы).</span> Категория $\mathbf{Mat}$: объекты — натуральные числа $0, 1, 2, \dots$; стрелка $m \to n$ — вещественная матрица размера $n \times m$; композиция — умножение матриц (размеры сходятся: $n \times m$ на $m \times k$ даёт $n \times k$); $1_n$ — единичная матрица $n \times n$. Ассоциативность умножения матриц — известный факт; тождества $A \cdot I_m = A = I_n \cdot A$ — тоже.</div>
+<p class="mn">При $m = 0$ или $n = 0$ матрица размера $n \times m$ пуста — в ней нет ни одной клетки, и такая матрица ровно одна. Это законно и удобно: объект $0$ ведёт себя как нулевое пространство $\mathbb{R}^0 = \{0\}$, в которое и из которого есть ровно одно линейное отображение.</p>
+<div class="example"><span class="lbl">Пример 6 (моноид).</span> <strong>Моноид</strong> — множество $M$ с операцией $\cdot$, которая ассоциативна ($(xy)z = x(yz)$) и имеет нейтральный элемент $e$ ($ex = xe = x$ при любом $x$). Категория из моноида: <strong>один</strong> объект (назовём его $\star$, что это такое — неважно и не спрашивается); стрелки $\star \to \star$ — элементы $M$; композиция — операция моноида; $1_\star = e$. Аксиомы определения 1 — это ровно аксиомы моноида, слово в слово.</div>
+<div class="insight"><span class="tag">Что уже видно</span> Частично упорядоченное множество — категория. Моноид — категория. То есть определение 1 накрывает одним махом отношение порядка и алгебраическую операцию — вещи из разных миров, у которых на первый взгляд нет ничего общего. Общее нашлось: и то и другое — правило, как компоновать.</div>
+<div class="rasskaz"><span class="lbl">Рассказ (карта, дальше не работает).</span> И не всё на свете вообще про множества. Есть категория, в которой объекты — наборы окружностей, а стрелки — поверхности, у которых край поделён на «вход» и «выход»: стрелка из двух окружностей в одну — это штаны. Композиция из определения 1 здесь — склейка двух поверхностей по общей окружности: приставили к штанинам ещё одни штаны, получили новую поверхность, и она снова стрелка. Тождественная стрелка на окружности — цилиндр: приклей его к чему угодно, ничего не изменится, а это ровно $f \circ 1_A = f$. Дальше в тексте штаны не появятся ни разу; они здесь затем, чтобы одна картинка сделала то, чего не сделают три абзаца: объекты бывают не множествами, стрелки — не отображениями, и определение 1 это позволяет не по недосмотру, а нарочно.</div>
+<figure class="ill-ph"><div class="ill-badge">🖼 ИЛЛЮСТРАЦИЯ · 3 сцен</div><figcaption>Три панели бок о бок: (1) окружность и цилиндр над ней — тождественная стрелка; (2) штаны — стрелка из двух окружностей в одну; (3) склейка штанов с цилиндром по общей окружности, дающая снова штаны.</figcaption></figure>
+<h2 id="s0-h-6">Что значит «одинаковы»</h2>
+<div class="stmt defn" id="s0-d-7"><span class="lbl">Определение 7 (изоморфизм).</span> Стрелка $f: A \to B$ категории $\mathcal{C}$ называется <strong>изоморфизмом</strong>, если найдётся стрелка $g: B \to A$, для которой $g \circ f = 1_A$ и $f \circ g = 1_B$. Объекты $A$ и $B$ называются <strong>изоморфными</strong> (пишем $A \cong B$), если между ними есть хотя бы один изоморфизм.</div>
+<p>Перечитаем определение 7 и поищем в нём слово «элемент». Его там нет. Нет и слова «биекция», и слова «структура». Есть только стрелки и композиция. Проверим, что вышло.</p>
+<div class="stmt thm" id="s0-t-8"><span class="lbl">Предложение 8 (что такое изоморфизм в зоопарке).</span> (i) В $\mathbf{Set}$ функция $f: A \to B$ — изоморфизм тогда и только тогда, когда она биекция. (ii) В категории частично упорядоченного множества (пример 3) изоморфизмы — только тождественные стрелки $1_a$; в частности, из $a \cong b$ следует $a = b$. (iii) В $\mathbf{Mat}$ изоморфизмы $n \to n$ — в точности обратимые матрицы.</div>
+<div class="proof"><span class="lbl">Логика (полное доказательство).</span> (i) Пусть $f$ — изоморфизм и $g$ — стрелка из определения 7. Прообраз есть у каждого $b \in B$: годится $g(b)$, так как $f(g(b)) = 1_B(b) = b$. Прообраз один: если $f(a) = f(a')$, то $a = 1_A(a) = g(f(a)) = g(f(a')) = 1_A(a') = a'$. Значит $f$ — биекция. Обратно, пусть $f$ — биекция; положим $g(b)$ равным тому единственному элементу, чей образ есть $b$. Тогда $f \circ g = 1_B$ прямо по построению, а $g\circ f = 1_A$ потому, что $g(f(a))$ — единственный прообраз элемента $f(a)$, и $a$ им является. (ii) Изоморфизм $a \to b$ даёт вдобавок стрелку $b \to a$, то есть $a \le b$ и $b \le a$; по антисимметричности $a = b$. А стрелка $a \to a$ в этой категории ровно одна, и это $1_a$. (iii) Матрица $A$ размера $n \times n$ — изоморфизм по определению 7 ровно тогда, когда найдётся $B$ с $BA = I_n$ и $AB = I_n$. Это дословно определение обратимости.</div>
+<div class="tech"><span class="lbl">Техфакт (со ссылкой, без вывода).</span> При $m \ne n$ изоморфизмов $m \to n$ в $\mathbf{Mat}$ нет: из $BA = I_m$ и $AB = I_n$ следует $m = n$, потому что размерность — инвариант (любой курс линейной алгебры).</div>
+<p>Вот первый результат, и он больше, чем кажется. Определение 7 не «обобщает» три известных определения одинаковости — оно их <strong>вычисляет</strong>. Мы не собирали общее из частных случаев: мы же выяснили, что это невозможно, общая часть пуста. Мы написали одно определение, не знающее ни про элементы, ни про структуру, и в каждом мире оно <strong>само</strong> развернулось в правильный ответ: в множествах биекция, в порядке равенство, в матрицах обратимость. И заодно ответило там, где спросить было не у кого: в делимости, в моноиде, в штанах.</p>
+<p>Ставка сыграла. Идём дальше.</p>
+<h2 id="s0-h-7">Определение объекта одной стрелкой</h2>
+<p>Вернёмся к вопросу лекции. Начнём с самого скромного объекта, какой есть, — одноточечного множества. Что мы про него знаем на языке стрелок? Вот что: из <strong>любого</strong> множества $A$ в $\{*\}$ есть ровно одна функция — та, что отправляет всё в единственную точку. Ровно одна, потому что выбирать нечего: значение только одно.</p>
+<p>Заметим, что произошло. Свойство «быть одноточечным» переформулировалось без слова «элемент» — через количество стрелок. Возведём это в определение.</p>
+<div class="stmt defn" id="s0-d-9"><span class="lbl">Определение 9 (терминальный и начальный объект).</span> Объект $T$ категории $\mathcal{C}$ называется <strong>терминальным</strong>, если для каждого объекта $A$ множество $\mathcal{C}(A,T)$ состоит ровно из одной стрелки. Объект $I$ называется <strong>начальным</strong>, если для каждого объекта $A$ множество $\mathcal{C}(I,A)$ состоит ровно из одной стрелки.</div>
+<p>Половину вопроса определение 9 закрыло: внутрь $T$ оно не заглядывает, про устройство $T$ не говорит ни слова, всё сказанное — про то, как на $T$ смотрят остальные. Осталась вторая половина: задаёт ли оно объект однозначно?</p>
+<p>Дословно — нет, и требовать этого глупо: в $\mathbf{Set}$ терминальны и $\{0\}$, и $\{1\}$, и $\{\text{Луна}\}$, буквальной единственности не будет никогда. Но теперь у нас есть определение 7, и вопрос ставится честно: единственность <strong>с точностью до изоморфизма</strong> — есть?</p>
+<div class="stmt thm" id="s0-t-10"><span class="lbl">Теорема 10 (единственность терминального объекта).</span> Пусть $T$ и $T'$ — терминальные объекты категории $\mathcal{C}$. Тогда существует изоморфизм $f: T \to T'$, и такой изоморфизм ровно один. Тем же свойством обладают начальные объекты.</div>
+<div class="proof"><span class="lbl">Логика (полное доказательство).</span> Так как $T'$ терминален, стрелка $T \to T'$ ровно одна; назовём её $f$. Так как $T$ терминален, стрелка $T' \to T$ ровно одна; назовём её $g$. Теперь $g \circ f$ — стрелка $T \to T$. Но $T$ терминален, значит стрелка $T \to T$ ровно одна; а одна такая нам известна — это $1_T$, она есть по определению 1. Двух разных быть не может, следовательно $g \circ f = 1_T$. Дословно так же: $f \circ g$ — стрелка $T' \to T'$, объект $T'$ терминален, стрелок $T' \to T'$ ровно одна, и $1_{T'}$ — одна из них, значит $f \circ g = 1_{T'}$. По определению 7 стрелка $f$ — изоморфизм. Единственность: любой изоморфизм $T \to T'$ есть, в частности, стрелка $T \to T'$, а таких ровно одна — та самая $f$. Про начальные объекты: пусть $I$ и $I'$ начальны; стрелка $f: I \to I'$ ровно одна, потому что $I$ начален; стрелка $g: I' \to I$ ровно одна, потому что $I'$ начален; $g \circ f$ и $1_I$ — обе стрелки $I \to I$, а таких ровно одна, значит они равны; так же $f \circ g = 1_{I'}$. Текст тот же, разница ровно одна: здесь считаются стрелки <strong>из</strong> объекта, а не <strong>в</strong> объект.</div>
+<p>Посмотрим, чего в доказательстве теоремы 10 нет. Нет ни единого слова о том, что такое $T$. Использованы только определение 1 (композиция и единица) и определение 9 (счёт стрелок). Значит теорема 10 доказана разом в $\mathbf{Set}$, в делимости, в матрицах, в моноиде, в штанах — и в любой категории, которую придумают через сто лет.</p>
+<p>И заметим силу формулировки: не «изоморфизм существует», а «существует, и ровно один». Это сильнее, и разница между двумя версиями видна в числах.</p>
+<h2 id="s0-h-8">Руками и контрольная сумма</h2>
+<div class="example"><span class="lbl">Пример 11 (начальные и терминальные объекты зоопарка — руками).</span> <strong>$\mathbf{Set}$:</strong> терминальный — любое одноточечное $\{*\}$, потому что функция $A \to \{*\}$ ровно одна; начальный — пустое множество $\varnothing$, потому что функция $\varnothing \to A$ ровно одна (задавать нечего, и это законное задание). <strong>Они не изоморфны:</strong> из $\{*\}$ в $\varnothing$ нет ни одной функции, а изоморфизм требует стрелок в обе стороны. <strong>Группы</strong> (объекты — группы, стрелки $G \to H$ — гомоморфизмы, то есть отображения $\varphi$ с $\varphi(xy) = \varphi(x)\varphi(y)$, композиция обычная): терминальный — тривиальная группа $1$, состоящая из одного нейтрального элемента, потому что гомоморфизм $G \to 1$ ровно один; начальный — <strong>она же</strong>, потому что гомоморфизм $1 \to G$ обязан вести нейтральный в нейтральный (из $\varphi(e)\varphi(e) = \varphi(ee) = \varphi(e)$ следует $\varphi(e) = e$), и такой ровно один. <strong>Совпали.</strong> <strong>Делимость $(\mathbb{N}, \mid)$</strong> (пример 4): терминальный — число, которое делится на всё, то есть $\mathbf{0}$, потому что $0 = a \cdot 0$ при любом $a$; начальный — число, которое делит всё, то есть $\mathbf{1}$. <strong>Различны.</strong> <strong>$\mathbf{Mat}$:</strong> терминальный — объект $\mathbf{0}$, потому что матрица размера $0 \times m$ ровно одна (пустая); начальный — он же. <strong>Совпали.</strong> <strong>Моноид $M$:</strong> стрелки $\star \to \star$ — элементы $M$, и их ровно одна тогда и только тогда, когда $|M| = 1$; значит при $|M| \gt 1$ терминального объекта <strong>нет вовсе</strong>, как и начального.</div>
+<p>Терминальный и начальный объекты, как видно, бывают разными (множества, делимость), бывают одним и тем же (группы, матрицы), а бывает, что их нет совсем (моноид). Определение 9 ничего не обещает — оно спрашивает.</p>
+<p><strong>Контрольная сумма — первый счёт, числами.</strong> Теорема 10 обещает: между двумя терминальными объектами изоморфизм <strong>ровно один</strong>. Проверим в $\mathbf{Set}$ перебором, не пользуясь теоремой. Терминальные объекты $\{0\}$ и $\{1\}$. Функций из $\{0\}$ в $\{1\}$ ровно одна — значение у неё может быть только $1$; она биекция, значит изоморфизм по предложению 8(i). Изоморфизмов <strong>один</strong>. Сошлось. А теперь возьмём два двухэлементных множества $\{0,1\}$ и $\{a,b\}$: они изоморфны, но изоморфизмов между ними <strong>два</strong> — это $0 \mapsto a,\ 1 \mapsto b$ и $0 \mapsto b,\ 1 \mapsto a$. Теорема 10 про них ничего не говорит и не должна: двухэлементное множество не терминально (функций $A \to \{0,1\}$ вообще-то $2^{|A|}$).</p>
+<p><strong>$1$ против $2$</strong> — и в этом всё дело. Отождествить два объекта — значит предъявить между ними изоморфизм в смысле определения 7; других отождествлений у нас в языке нет. Тогда «определён однозначно» для терминального объекта значит не только «все они изоморфны», но и «отождествление ровно одно, и выбирать не из чего». Для двухэлементного множества второе ломается: изоморфизмов два, и ни один не лучше другого — а значит, говоря «двухэлементное множество» в единственном числе, вы что-то заметаете под ковёр, а говоря «одноточечное множество» — нет. Разница между «изоморфны» и «изоморфны единственным образом» — это разница между «есть» и «можно предъявить». Она вернётся в лекции 3 и окажется там главным вопросом.</p>
+<p><strong>Контрольная сумма — второй счёт, той же теоремой в другой категории.</strong> Возьмём делимость $(\mathbb{N}, \mid)$. По предложению 8(ii) изоморфные объекты здесь <strong>равны</strong>. По теореме 10 терминальный объект единствен с точностью до изоморфизма. Складываем: терминальный объект в делимости единствен буквально, то есть <strong>число, которое делится на всё, ровно одно</strong>. Но это же школьная теорема, и доказывается она в школе так: если $m$ и $m'$ оба делятся на всё, то $m \mid m'$ и $m' \mid m$, значит $m = m'$ по антисимметричности. Три строки, никакой теории категорий.</p>
+<p>Развернём теперь доказательство теоремы 10 в этой категории и посмотрим, что от него останется. Стрелка $f: T \to T'$ — это факт $T \mid T'$. Стрелка $g: T' \to T$ — это факт $T' \mid T$. Проверка $g \circ f = 1_T$ проходит даром: стрелка $T \to T$ здесь и так одна, различать нечего. Остаётся: $T \mid T'$, $T' \mid T$, следовательно $T = T'$. <strong>Ровно школьный текст, слово в слово.</strong></p>
+<p>Ветки сошлись — и вторая оказалась первой. Это и есть честный отчёт о том, что мы сделали: теорема 10 <strong>не сообщает про $\mathbb{N}$ ничего нового.</strong> Она берёт школьное доказательство единственности наибольшего элемента, вынимает из него порядок — и оказывается, что порядок в нём и не участвовал, работала одна композиция. Всё новое в теореме 10 — не про числа, а про то, что то же самое доказательство верно для множеств, для матриц, для групп и для штанов.</p>
+<h2 id="s0-h-9">Пуанта</h2>
+<p>Ставка была: выкинуть из языка элементы. Она сыграла дважды — определение 7 вычислило три разных понятия одинаковости, теорема 10 доказала единственность разом во всех мирах. Но самое смешное впереди.</p>
+<div class="stmt thm" id="s0-t-12"><span class="lbl">Предложение 12 (элементы вернулись сами).</span> Для любого множества $A$ функции $\{*\} \to A$ находятся в биекции с элементами $A$: функции $x$ отвечает элемент $x(*)$.</div>
+<div class="proof"><span class="lbl">Логика (полное доказательство).</span> Функция $\{*\} \to A$ — это правило, сопоставляющее единственной точке $*$ какой-то элемент $A$, и больше в ней ничего нет: вся функция — это одно значение $x(*)$. Любой элемент $A$ годится быть этим значением. Разным функциям отвечают разные элементы (совпали бы значения — совпали бы и функции), разным элементам — разные функции. Это и есть биекция.</div>
+<p>То есть: <strong>элемент множества $A$ — это стрелка из терминального объекта в $A$.</strong> Мы выгнали элементы из языка, а они вернулись через дверь, уже в виде стрелок. И теперь их можно спрашивать где угодно — в том числе там, где никаких точек нет.</p>
+<div class="note"><span class="lbl">Замечание 13 (и тут же ловушка).</span> Не надо думать, будто стрелки из терминального объекта — это всегда элементы. В группах терминальный объект — тривиальная группа $1$ (пример 11), и гомоморфизм $1 \to G$ ровно один при любом $G$: стрелки из терминального объекта не видят в группе вообще ничего. Элементы группы ловятся другим объектом — это $\mathbb{Z}$, и гомоморфизмы $\mathbb{Z} \to G$ находятся в биекции с элементами $G$. В $\mathbf{Set}$ два разных объекта случайно склеились в один: $\{*\}$ и терминален, и ловит элементы. Отсюда мораль: <strong>$\mathbf{Set}$ — обманчивая категория</strong>, на ней очень легко выучить неправду и потом всю жизнь удивляться.</div>
+<div class="proof"><span class="lbl">Логика (полное доказательство).</span> Гомоморфизм $\varphi: \mathbb{Z} \to G$ полностью определён значением $\varphi(1)$: из $\varphi(m+n) = \varphi(m)\varphi(n)$ следует $\varphi(n) = \varphi(1)^n$ при $n \ge 0$, а $\varphi(-n) = \varphi(n)^{-1}$. Обратно, любой $g \in G$ годится: отображение $n \mapsto g^n$ — гомоморфизм. Значит $\varphi \mapsto \varphi(1)$ — биекция между гомоморфизмами $\mathbb{Z} \to G$ и элементами $G$.</div>
+<p>Теперь можно ответить на вопрос лекции, и ответ двойной. <strong>Да</strong>, объект определяется, ни разу не заглянув внутрь: определение 9 не говорит про $T$ ничего, кроме того, как на него смотрят все остальные объекты. И <strong>да</strong>, такое определение задаёт объект однозначно: теорема 10, с точностью до единственного изоморфизма, и лучшей однозначности не бывает в принципе — буквальная невозможна, а эта не оставляет никакого выбора.</p>
+<p>Терминальный объект — самый скромный пример определения такого сорта: одна строчка, счёт стрелок, и объект пойман. Такие определения называют <strong>универсальными свойствами</strong>; этими словами мы здесь больше не пользуемся, они всего лишь вывеска для лекции 2. А лекция 2 будет про то, что почти всё, что вы знаете из алгебры, определено ровно так же — просто вам этого не сказали вслух.</p>
+<p><em>Кусок закрыт; дальше: лекция 2 — универсальные свойства, произведение, копроизведение, двойственность.</em></p></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) { a.classList.add("active"); current = a; }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+</script>
+</body>
+</html>

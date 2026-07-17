@@ -1065,11 +1065,22 @@ id: nno
 род: понятие
 суть: объект N со стрелками 0: 1 → N и s: N → N, универсальный среди таких троек
 котёл: математика
-находка: универсальное свойство NNO — НЕ описание ℕ, это описание РЕКУРСИИ. «Определить
-  функцию рекурсией» = «воспользоваться единственностью h».
-связи: recursion-nno, ccc-opredelenie, nno-prodolzhenie, scene-nno-staircase
+находка: универсальное свойство NNO описывает РЕКУРСИЮ. «Определить функцию рекурсией» =
+  «воспользоваться единственностью h». Обе школьные операции вынуждены этим одним УС:
+  подставив (N,a,s), получаем сложение; подставив a+(−) — умножение (Awodey Ex.9.41 печ. с.247).
+  🔧 **ИСПРАВЛЕНО аналитиком 17.07 по ВОПРОСу 1 захода `kod_nno-i-shkolnye-opory` — тезис был
+  СИЛЬНЕЕ источника и в таком виде ЛОЖЕН.** Стояло: «УС — **НЕ** описание ℕ». Неверно: Awodey
+  печ. с.246 — «The characterization of N in terms of the UMP of recursive definitions is therefore
+  **equivalent to the usual logical definition using the Peano axioms in Sets**» ⇒ в Sets УС
+  описывает ℕ с точностью до изоморфизма. **Верная версия сильнее и лежит там же:** NNO «makes
+  sense in many categories where the **Peano axioms do not make any sense**, since the latter
+  involve logical operations like quantifiers». ⇒ не «не описывает ℕ», а **«работает там, где про ℕ
+  спросить нельзя»** — потому что аксиомы Пеано требуют кванторов, а у произвольной категории
+  внутренней логики может не быть. ⭐ **Это лучше и для курса: тезис теперь смотрит в Л9** (внутренний
+  язык топоса — там кванторы появляются) вместо того, чтобы быть красивым парадоксом ни о чём.
+связи: recursion-nno, ccc-opredelenie, nno-prodolzhenie, scene-nno-staircase, nno-arifmetika-rekursiej, verdict-nno-adres, nno-dva-vhoda, omega-opredelenie
 уровень: требует приручения
-источник: https://ncatlab.org/nlab/show/natural+numbers+object (определение Ловера 1963)
+источник: ~~только nLab~~ → **поднято до книг заходом 17.07:** Awodey Def 9.40 печ. с.246 · Riehl Example 2.1.1 печ. с.54 · Ловер Session 15 печ. с.178–186 · Маклейн-рус печ. с.331–332. nLab оставлен как исходная ссылка: https://ncatlab.org/nlab/show/natural+numbers+object
 статус: черновик
 ```
 ```
