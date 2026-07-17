@@ -15,7 +15,7 @@
 - **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `verdict-rifma-lccc` `omega-bez-yonedy` `nno-initial-rig`
 - **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
-- **находка:** `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -1420,6 +1420,80 @@ id: dva-vhoda-v-ccc
 связи: ccc-opredelenie, eksponenta-opredelenie, adjunction, maclane-topos-v-glave-sopryazhennyh
 уровень: зал берёт (путь 1) / вне курса (путь 2, только для лектора)
 источник: lawvere Article V (pdf ~стр.313–317); awodey гл.6 (стр.136–140); maclane-ru-fizmatlit2004 §4.6 (печ. с.115–117)
+статус: черновик
+```
+```
+```
+id: mit-tozhdestvo-est-nol
+род: находка
+суть: Единичную стрелку мотивируют нулём: «прибавить 0 ничего не делает — и ровно поэтому 0 central»
+котёл: математика
+находка: ⭐ ПРИЁМ MIT, украден заходом `kod_dajdzhesty-i-mit` 17.07. Дословно (печ. с.9, §1.3.1):
+  «0 is what defines the relationship between 6 and -6: they add to 0» — цитата сверена аналитиком
+  по живому PDF. Лечит вечную болезнь Л1: тождественная стрелка выглядит бюрократической
+  формальностью («ну есть и есть»), и зал её проглатывает, не поняв, зачем она в аксиомах.
+  Ход: не «вот аксиома», а «вы уже знаете такую вещь — это ноль; он ничего не делает, и потому
+  им определяются все отношения». РАБОТАЕТ БЕЗ HASKELL (чистая арифметика) — а MIT весь остальной
+  материал везёт на коде. Опора — §Калибровка, школьная арифметика: сильнее матриц.
+связи: kategoriya-opredelenie, mat-pervaya-kategoriya, mot-obratimost-i-universum
+уровень: зал берёт
+источник: `../istochniki/pdf/mit-programming-with-categories-notes.pdf` печ. с.9 §1.3.1; дайджест — `../istochniki/VYCHITANO.md` `mit-pwc-notes`
+статус: черновик
+```
+```
+id: mit-slogany-aksiomy
+род: находка
+суть: Каждую аксиому — в одну запоминаемую фразу: «how you parenthesize doesn't matter»
+котёл: математика
+находка: ⭐ ПРИЁМ MIT (печ. с.10–11), цитата сверена по живому PDF: «When composing functions,
+  how you parenthesize doesn't matter: you'll get the same answer». Аксиомы категории зал не
+  запоминает формулами — запоминает слоганами. Ассоциативность = «скобки неважны»;
+  единица = «композиция с тождеством ничего не делает». Сквозной приём Л1→Л5: у КАЖДОГО
+  определения курса должен быть слоган, который зал унесёт. Стоит НОЛЬ минут — это способ
+  произнести то, что и так произносится. ⚠ Не путать с упрощением: формулировка остаётся
+  строгой, слоган идёт РЯДОМ, а не вместо.
+связи: kategoriya-opredelenie, ccc-opredelenie, zavisimoe-proizvedenie
+уровень: зал берёт
+источник: `../istochniki/pdf/mit-programming-with-categories-notes.pdf` печ. с.10–11
+статус: черновик
+```
+```
+id: mit-perspektiva-yonedy-rano
+род: находка
+суть: «Объект есть не более и не менее, чем то, как он относится к другим» — перспектива Йонеды на 20-й странице, до всякого аппарата
+котёл: математика
+находка: ⭐⭐ ПРИЁМ MIT (печ. с.20–22, §1.3.4). Дословно, сверено по живому PDF: «an object is
+  no more, nor less, than how it relates to others» + вход через ОБОБЩЁННЫЙ ЭЛЕМЕНТ (стрелка
+  1→X), и изоморфизм мотивирован сравнением 2={0,1} против {apple,pear}: «same number of
+  elements», «map back and forth without losing information». ⇒ Главная мысль Йонеды подаётся
+  как ПЕРСПЕКТИВА на конечных множествах — без Hom-функтора, без представимости, без кода.
+  У нас Йонеда только на Л8; этот приём позволяет посеять её оптику с Л2 («характеризуем
+  стрелками, не элементами») и собрать на Л8. ⚠ Полный разбор дороже нуля — но перспектива
+  бесплатна. ⚠ И помнить `SPEKA §Возврат ≠ узнавание`: разрыв Л2→Л8 в шесть лекций ⇒ на Л8
+  это ПОВТОР, а не узнавание.
+связи: yoneda, hom-functor, universalnoe-svojstvo, mot-obratimost-i-universum, yoneda-elementarnye-preobrazovaniya
+уровень: зал берёт (как перспектива) / требует приручения (как теорема)
+источник: `../istochniki/pdf/mit-programming-with-categories-notes.pdf` печ. с.20–22 §1.3.4
+статус: черновик
+```
+```
+id: mit-lestnica-rodstva
+род: находка
+суть: Лестница «а как относятся друг к другу ОНИ?» — отношения → категории → функторы → ЕП; ею и открыли категории
+котёл: математика
+находка: ⭐⭐ ПРИЁМ MIT (печ. с.65, §3.1). Дословно, сверено по живому PDF: «…in a beautiful
+  example of categorical thinking, this is what led to the discovery of categories themselves.
+  That is, mathematicians discovered categories not on their own…». Ход: задать вопрос «как
+  относятся друг к другу X?» и применять его РЕКУРСИВНО — объекты относятся стрелками; а как
+  относятся категории? функторами; а как относятся функторы? естественными преобразованиями.
+  ⭐⭐ ПОПАДАЕТ ТОЧНО В ХУК Л1: у нас `mot-kategoriya-radi-funktora` («категория определена ради
+  функтора, функтор — ради ЕП») — тот же факт, но у нас он звучит как ИСТОРИЧЕСКАЯ СПРАВКА, а у
+  MIT как ЛЕСТНИЦА, по которой зал лезет сам. Это разница между «так вышло» и «так и вы бы
+  сделали». Дешевле нуля: заменяет формулировку, ничего не добавляя. Годится и на Л6 (второй
+  виток лестницы = ЕП).
+связи: mot-kategoriya-radi-funktora, kategoriya-pobochnyj-produkt, functor, nat-transf
+уровень: зал берёт
+источник: `../istochniki/pdf/mit-programming-with-categories-notes.pdf` печ. с.65 §3.1
 статус: черновик
 ```
 ```
