@@ -31,12 +31,14 @@ The course is an introduction to category theory emphasizing applications in com
 
 ## Lecture Notes (to be updated)
 
-| Part | Topic | File |
-|------|-------|------|
-| 1–2 | Preliminaries and Categories | `cftlfp-1-2.pdf` |
-| 3 | Functors and natural transformations | `cftlfp-3.pdf` |
-| 4 | Products, coproducts and exponentials | `cftlfp-4.pdf` |
-| 5 | Initial algebras and terminal coalgebras | `cftlfp-5.pdf` |
+| Part | Topic | File (на сайте) | **У нас в `istochniki/pdf/`** |
+|------|-------|------|---|
+| 1–2 | Preliminaries and Categories | `cftlfp-1-2.pdf` | `altenkirch-lazy-fp-1-2.pdf` |
+| 3 | Functors and natural transformations | `cftlfp-3.pdf` | `altenkirch-lazy-fp-3.pdf` |
+| 4 | Products, coproducts and exponentials | `cftlfp-4.pdf` | `altenkirch-lazy-fp-4.pdf` |
+| 5 | Initial algebras and terminal coalgebras | `cftlfp-5.pdf` | `altenkirch-lazy-fp-5.pdf` |
+
+> ⚠ **Столбец «у нас» добавлен аналитиком 17.07 при вливании отстойника.** Имена на сайте автора (`cftlfp-*`) не по образцу библиотеки — файлы переименованы, **имена на сайте оставлены как есть, чтобы ссылка на источник не потерялась**. Оглавления — `istochniki/toc/altenkirch-lazy-fp-*-toc.txt`.
 
 All lecture notes are designated as "to be updated."
 
