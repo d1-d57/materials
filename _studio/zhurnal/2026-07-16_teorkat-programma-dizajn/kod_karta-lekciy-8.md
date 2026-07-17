@@ -132,6 +132,92 @@
 
 ## ПЛАН — (заполняет исполнитель)
 
+**Задача.** Заполнить 8 блоков (`Л1 Л2 Л3 Л4 Л6 Л7 Л8 Л9`) в `KARTA-LEKCIY.md §Лекции` по образцу Л5. Консолидация, не ресёрч.
+
+### Состояние на входе (разведка прогнана)
+- Ветка `teorkat-istochniki` ✅. Зона (`KARTA-LEKCIY.md`, этот файл) чиста в HEAD — точку отката не фабрикую (по заходу).
+- `sostoyanie_lekcii.py --all` → **1/9** (только Л5). Карточек по лекциям: Л1=14 · Л2=17 · Л3=25 · Л4=6 · Л6=16 · Л7=12 · Л8=16 · Л9=15.
+- `sostoyanie_lekcii.py Л5` → представление богатое, всё подтягивается JOIN'ом (СТЫКОВКА-дата, VNESHNYAYA, гейты 3/4 из FK). **Это цель для восьми.**
+- `sostoyanie_lekcii.py --gates` → сейчас 8 ❌ «записи нет». Это мой гейт-критерий №2: hook/razvyazka/izobretenie существуют + в карте лекции + не seed.
+- `check_kartoteka.py` → **9/9 ✅**, граф замкнут, 137 карточек. Baseline, держу зелёным (картотеку не трогаю).
+
+### Подход
+1. **Механическая выписка карточек — 4 субагента** (по 2 лекции; id из карты SPEKA §Слой 2): род·статус·проверено-на-приборе·суть·находка·связи, дословно. Запущены.
+2. **Суждение — моё** (не делегирую): для каждой лекции выбрать `hook` (вопрос в начале, обычно род `мотивация`) · `razvyazka` (ответ в конце, обычно `утверждение`/`находка`) · `izobretenie` (где зал изобретает, обычно `сцена`/`пример`) · написать `zamysel` и `programma` (трассируется в id карточек лекции, ни одного факта извне).
+3. **НЕ кладу** производные поля (`opory/vneshnyaya/stykovka/karty/pribor`) — они подтянутся JOIN'ом. Гейт-критерий №3.
+4. **Проверка:** `--gates` зелёный по сделанным · `--all` = N/9 · `check_kartoteka` остаётся 9/9 · греп запрещённых полей · трассировка каждой `programma` в id (в отчёт).
+5. **Коммит** только двух путей зоны. Стоп до цели разрешён: выдохся — сказать ГРОМКО, сколько сделал.
+
+### Предварительная раскладка ролей (хуки — из роутера SPEKA §Слой 2; развязку/изобретение уточняю по выпискам)
+| Лек | hook (вопрос) | razvyazka/izobretenie — где искать | flagi (уровень лекции) |
+|---|---|---|---|
+| Л1 | `mot-kategoriya-radi-funktora` | понятие дефицит (1/14) ⇒ разв./изобр. из `пример`/`находка`/`сцена` | `mot-obratimost-i-universum` = seed и единств. носитель изоморфизма; `monoid-odin-obekt` «первый кандидат на выброс»; плотность=пандус (прибор снял) |
+| Л2 | `vopros-chetyre-teoremy` | разв.: двойственность / `pochemu-do-izo`; изобр.: `scena-dve-teni`/`scena-perevorot` | — |
+| Л3 | «где третья операция?» (уточню id) | разв.: `ccc-opredelenie`/категорификация; изобр.: `eksponenta-2v3`/`scene-nno-staircase` | `nno-initial-rig` просит «кольцо» на 4 лекции раньше плана (не несущая) |
+| Л4 | `mot-sloi-reshenija-sistemy` | 6 карточек всего; изобр.: `scena-podstanovka-tjanet-sloj` | `mot-sloi-spektr` = seed (вторая мотивация) |
+| Л6 | `motivation-EM` | разв.: `dual-not-natural-proof` (кульминация V≅V* с произволом); изобр.: сцена | оба носителя «группоида» на Л1 под выброс, а Л6/Л9 на нём стоят |
+| Л7 | `motivation-floor-ceiling` | разв.: `adjoint-unique`/`motivation-adjoint-everywhere`; изобр.: `scene-numberline` | 🔴 ДЫРА 1: `adjoint-unique` доказывается Йонедой (Л8, позже); не несущая |
+| Л8 | `mot-otkuda-sigma` | разв.: `l8-tri-syuzheta-verdikt`; изобр.: `scene-kleisli-sigma`/`scene-yoneda-probe` | 🔴 ДЫРА 2: `cayley` на «зал видел Кэли» (калибровка «слышали»); `chl` в карте Л8 по смыслу Л3/Л9 (дефект карты → отчёт) |
+| Л9 | `mot-gde-zhivet-vasha-logika` | разв.: `cep-univalentnost`/`tip-tozhdestva`; изобр.: `omega-scena-edinstvennaya` | финал = ОПЕРЕЖЕНИЕ, не узнавание (STYKOVKA: Л9 20.09 раньше их HoTT); калибровка молчит про проф-знания зала |
+
+### Предпосылки — проверка по живым файлам (§1 Карпатов)
+- ⚠️ **SPEKA §549 устарел:** «Л1/Л8/Л9 не имеют карточки рода `мотивация`» — а `check_kartoteka` считает Л1=2, Л8=1, Л9=1 мотивации (mot-карточки заведены позже §549). Хуки этих трёх лекций есть. Дефицит именно `понятие` (Л1: 1/14, CHEGO-NET подтверждает) — под него и предупреждение захода.
+- **Заход прав** про Л1: `понятие` дефицит ⇒ разв./изобр. беру из `пример`/`находка`/`сцена`. Скажу вслух, что сделал.
+- **Образец Л5** — оценю на дефект по ходу; предварительно формат чистый.
+- **STYKOVKA-правило** (несёт programma Л5, Л9): ни одна `programma` не говорит «зал знает из курса типов» — говорит «встретит» либо вводит сама.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 
+Все словами, ничего вне зоны не трогал.
+
+1. **🔴 Дефект карты Л8 — аналитику.** `chl` стоит в строке `Л8` (SPEKA §Слой 2), но по связям (`ccc-opredelenie, currying-adjunction, nno, curry-howard-lambek` — всё Л3/Л7) и по вердикту `l8-tri-syuzheta-verdikt` («Л8 — пара монады+Йонеда») принадлежит Л3/Л9, не Л8. Ни одной связи с монадами/Клейсли/Йонедой. В сюжет Л8 и в `programma` его НЕ включил. Карту не правлю (вне зоны) — перенести `chl`?
+2. **🔴 Л4 `mot-sloi-spektr` — долг РЕСЁРЧА (не аналитика: лицо заинтересованное).** Вторая мотивация Л4 («варьирующийся слой», спектр V=⊕V_λ) — seed, и прибор её НЕ поднял: подтвердил форму («очень цепляет»), но не смысл («сам не понимаю смысла»). Блокер второй оси. Нужна внятность лектору + источник (спектр как объект C/X — расслоение или метафора?). Пока Л4 несёт лишь тривиальное расслоение — самая тонкая лекция.
+3. **🟡 SPEKA §549 устарел — аналитику.** Текст «три лекции не имеют карточки рода `мотивация`: Л1, Л8, Л9» опровергнут: `check_kartoteka` считает Л1=2, Л8=1, Л9=1, и хуки этих лекций — mot-карточки (`mot-kategoriya-radi-funktora`, `mot-otkuda-sigma`, `mot-gde-zhivet-vasha-logika`). Дефицит именно `понятие` (Л1: 1/14). SPEKA read-only — не чинил.
+4. **🟡 Мои развилочные суждения — на сверку (могут провалиться).** Принцип, которым держал согласованность: **`razvyazka` = карточка сквозной нити изоморфизма из роутера** — Л2 `pochemu-do-izo`, Л3 `dekategorifikaciya-teryaet`, Л6 `dual-not-natural-proof`, Л7 `adjoint-unique`, Л9 `cep-univalentnost`. Спорные:
+   - **Л3:** взял `dekategorifikaciya-teryaet` (нить изоморфизма, мост Л9←Л3), а НЕ `curry-howard-lambek` (карточка помечена «Финал Л3»). Если для зала «ваш пруф-чекер = CCC» — более сильный «ответ в конце», развязку надо поменять. `curry-howard-lambek` в `programma` Л3 присутствует как кульминация.
+   - **Л1:** развязка = `mot-zabytoe-otobrazhenie` (прибор назвал её ВЫХЛОПОМ, «в конец»), а не изоморфизм-семя — Л1 особый случай (у категории своей мотивации нет). Изоморфизм посеян в середине через `mot-obratimost-i-universum`.
+   - **Л8:** развязка = `scene-kleisli-sigma` (кульминация μ=Σ_j, род `сцена`); izobretenie = `yoneda-elementarnye-preobrazovaniya` (род `пример`). У Л8 нет изоморфизм-роли в роутере (нить — опора «Клейсли=матрицы»), принцип не применялся.
+
 ## ОТЧЁТ — (заполняет исполнитель)
+
+### Что сделал + ЗАЧЕМ
+Заполнил **8 блоков** таблицы `лекция` в `KARTA-LEKCIY.md` — **Л1 Л2 Л3 Л4 Л6 Л7 Л8 Л9** — по образцу Л5. Л5 не трогал (принят). Каждый блок: `nazvanie` (дословно из роутера) · `zamysel` (что+зачем, корень программы) · `hook`/`razvyazka`/`izobretenie` (FK на id карточек — суждение моё) · `gejt5` (честно про лекцию, не карточку) · `flagi` (долги уровня лекции) · `programma` (авторский текст для заказчика, 1–5 абз., адресат — математик) · `status: черновик`. ЗАЧЕМ: это внутренняя база, из которой генерится текст заказчику и по которой Claude гоняет гейты; раньше была заполнена 1/9.
+
+### Как выбирал роли (суждение — не делегировал)
+- `hook` — род `мотивация`, вопрос в начале (по роутеру SPEKA §Слой 2).
+- `razvyazka` — карточка сквозной нити изоморфизма (см. ВОПРОС 4); для Л1/Л8 — исключения, названы.
+- `izobretenie` — где зал изобретает сам (сцена/пример; на Л1 — `пример`, т.к. понятие-дефицит, как и предупреждал заход).
+- **seed-карточки в FK-роль не брал** (гейт-критерий №2): обошёл `mot-sloi-spektr`, `most-sloi-iz-proizvedenija` (Л4), `currying-bilinear` (Л7), `effektivnyj-topos-obraz`, `eff-topos-verifikaciya` (Л9).
+
+### Трассировка `programma` → id (критерий №4; факт без id я вычёркивал)
+- **Л1:** mot-kategoriya-radi-funktora · kategoriya-pobochnyj-produkt · mat-pervaya-kategoriya · kategoriya-opredelenie · set-kategoriya · chum-kategoriya · hasse-scena · monoid-odin-obekt · kobordizmy-kameo · maclane-gruppoid-ne-2-5 · mot-obratimost-i-universum · mot-zabytoe-otobrazhenie
+- **Л2:** vopros-chetyre-teoremy · galiley-proizvedenie · scena-dve-teni · universalnoe-svojstvo · proizvedenie-opredelenie · nod-universalnoe · terminalnyj-obekt · edinstvennost-terminalnogo · dvojstvennost-princip · koproizvedenie-diz-obedinenie · mat-biproduct · dvojstvennost-ne-simmetriya · nachalnyj-obekt · pochemu-do-izo
+- **Л3:** kategorifikaciya-arifmetiki · eksponenta-2v3 · eksponenta-opredelenie · ccc-opredelenie · karrirovanie · zakon-stepenej-karrirovanie · vect-lovushka · vect-ne-ccc · chto-ne-kategorificiruetsya · dekategorifikaciya-teryaet · heyting-vyrozhdennyj-ccc · iskl-tretie-lomaetsya · curry-howard-lambek · nno · recursion-nno · nno-arifmetika-rekursiej · nno-initial-rig
+- **Л4:** mot-sloi-reshenija-sistemy · lawvere-stacking-fibering · most-sloi-iz-proizvedenija · scena-podstanovka-tjanet-sloj · mot-sloi-spektr (последние две — seed, поданы честно как «в разработке»)
+- **Л6:** motivation-EM · functor · contravariance · transpose-contravariant · dual-functor · nat-transf · naturality-square · dual-not-natural-proof · gl-action-dual · double-dual · motivation-scalar-product-is-choice · det-natural · scene-det-square · chain-rule-est-funktorialnost
+- **Л7:** motivation-floor-ceiling · floor-ceiling · free-forgetful-vect · adjunction · unit-counit · adjoint-unique · motivation-adjoint-everywhere · currying-adjunction · opora-mnogochleny-l7
+- **Л8:** mot-otkuda-sigma · monad · free-vect-monad · kleisli · scene-kleisli-sigma · closure-monad · scene-hull · stochastic-matrices · yoneda · scene-yoneda-probe · hom-functor · yoneda-elementarnye-preobrazovaniya · cayley (`chl` НЕ включён — дефект карты, ВОПРОС 1)
+- **Л9:** mot-gde-zhivet-vasha-logika · omega-opredelenie · omega-scena-edinstvennaya · omega-bez-yonedy · put-ccc-topos · maclane-topos-v-glave-sopryazhennyh · omega-otkrytye-mnozhestva · omega-otkrytye-verifikaciya · puchok-primer · effektivnyj-topos-obraz · eff-topos-verifikaciya · pf-est-pi-tip · tip-tozhdestva · cep-univalentnost · granica-hott-topos
+
+### Как проверил (результат верификатора)
+- **Критерий №1** `sostoyanie_lekcii.py --all` → **9/9** записей, у всех гейт3-хук ✅ · гейт3-разв ✅ · гейт4 ✅.
+- **Критерий №2 (главный, машинный)** `sostoyanie_lekcii.py --gates` → **«✅ все зелёные»** — hook/razvyazka/izobretenie у всех восьми существуют, лежат в карте своей лекции, не `seed`.
+- **Критерий №3** греп `^(opory|vneshnyaya|stykovka|karty|pribor):` → **пусто** ✅ (производные поля не копировал — подтягиваются JOIN'ом).
+- **Критерий №5** `check_kartoteka.py` → **9/9 ✅**, граф замкнут, 137 карточек (картотеку не трогал).
+- **Критерий №6** коммит — только два пути зоны (см. ниже).
+- **Гейт 5** честно ❌ у всех девяти (включая Л1 и образец Л5): прибор нигде не давал вердикта «не умирает на 40-й минуте» по лекции ЦЕЛИКОМ — только по карточкам/входам. Правил Л1 (сначала скрипт читал «ЧАСТИЧНО» как ✅) на честный ❌.
+- **Самопроверка глазами:** прогнал `sostoyanie_lekcii.py Лn` — представления богатые, JOIN'ы (дата STYKOVKA, вердикты прибора, опоры CHEGO-NET, внешняя мерка) тянутся; бедным не выглядит даже Л4 (тонкая честно, не криво).
+
+### Что НЕ трогал
+Картотеку (`KARTA-OBLASTI.md`), SPEKA, CHEGO-NET, VNESHNYAYA-MERKA, STYKOVKA, генератор, глоссарий, блок Л5, порядок лекций. Нашёл проблемы вне зоны → в ВОПРОСЫ словами. Термины-кальки на пути к заказчику не ловил (в отличие от прецедента 17.07 — здесь их не возникло; тексты `programma` по русской практике).
+
+### Оспоренные предпосылки (§1 Карпатов)
+- **«Образец Л5 хорош»** — ✅ дефекта не нашёл: формат чистый, FK валидны, `programma` трассируется. (Известное ограничение, которое Л5 сам называет: `check_kartoteka` не метит `seed` в роде `пример` — слепое пятно скрипта, не дефект блока.)
+- **«Карточек хватает на восемь»** — в основном да; на Л1 понятие-дефицит (1/14) обошёл через `пример`/`находка` (сказал вслух, как просил заход); Л4 реально тонкая (6 карточек, 2 seed, throughline провисает — флаг). Ни одна лекция не осталась без валидного hook/razvyazka/izobretenie.
+- **SPEKA §549** — ложна на сегодня (ВОПРОС 3).
+
+### Открытое «возвращаться»
+Ничего не бросил на полдороге — **дошёл до цели (8/8), стоп до цели не понадобился.** Что осталось за пределами зоны (в ВОПРОСЫ): дефект карты Л8 (`chl`), долг ресёрча Л4 (`mot-sloi-spektr`), устаревший §549. Все — уровень аналитика/ресёрча, не переделка блоков.
+
+### Время прогона + токены
+Среда не отдаёт агенту точные метрики главного цикла. Что известно: **4 субагента** (по 2 лекции, sonnet, механическая дословная выписка карточек из `KARTA-OBLASTI.md`) — суждение (hook/razvyazka/izobretenie, тексты `programma`) не делегировал. Их расход: ~100k/144k/161k/172k токенов; длительности ~364/416/767/908 с (шли параллельно, волной ≤4). Сборку 8 блоков в файл сделал скриптом (безопаснее ручного перенабора; писал только зонный `KARTA-LEKCIY.md`, с проверками «ровно 8 блоков / ровно 1 Л5 / Л5 дословно сохранён»).
