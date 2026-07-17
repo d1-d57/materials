@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Кривая дракона · Л2 — разборы</title>
+<!--
+  Л2, 18.07.2026. Вкладка на задачу листка Л1. Самодостаточно: ни сети, ни сборки.
+  Управление: 1..8 — вкладка · ПРОБЕЛ — следующий шаг · Z — сначала · переключатель углов — в строке снизу.
+
+  ⚠ НУМЕРАЦИЯ — ПЕЧАТНАЯ (`kartoteka/L1-print.html`): 4 = раскраска (ядро) · 7 = зеркало ·
+     9 = все ранга 4 · 11 = Луна.
+
+  ═══ КАНОН (SLOVAR-primitivov.md + STANDART-oformlenia.md §6) ═══
+    · ВНУТРИ РИСУНКА — ТОЛЬКО МЕТКА. Проза — одна строка подписи ПОД рисунком (`#cap`).
+    · СМЫСЛ НЕСЁТ ГРАФИКА: `.s-node-r` = «объект, о котором речь» · `.s-accent` = «что изменилось»
+      · `.s-dash` = ось/построение · `.s-ar-m` = направление. Подписи «точка»/«вдоль стрелки» не нужны.
+    · Цвет — только классом. `role="img"` + `aria-label`.
+    · Примитив #12 «путь со скруглёнными углами». СКРУГЛЕНИЕ — ВИД, НЕ ПРЕДМЕТ: касания считаются
+      по ЛОМАНОЙ (целые вершины), рисуются по дугам. Оба вида доступны переключателем — решение
+      владельца 17.07: «с закруглением видно, что нет самопересечений; с квадратиками понятнее,
+      что имеется в виду; лучше иметь обе».
+
+  ═══ ВСЁ, ЧТО ПОКАЗАНО, ПРОВЕРЕНО МАШИНОЙ (эталон razbor/gen_ill.py) ═══
+    · знак сгиба p определён буквой сгиба ЕГО шага n−v2(p) ⇒ складывать можно ПОШАГОВО;
+    · порядок сгибов у word() ОБРАТНЫЙ физическому: f1,f2,f3 → word(3,[f3,f2,f1]);
+    · вкладка 8: вторая половина = первая, ПОВОРОТ НА −90° ВОКРУГ ТОЧКИ СТЫКА + обход назад
+      (проверено на рангах 3→4, 4→5, 5→6 — поэтому копию вращаем именно вокруг стыка);
+    · вкладка 6, ранг 4: у дракона 1 касание, у чередующегося 3 (НЕ «0 против 1» — так на ранге 3);
+    · вкладка 5: длина 64 → 64,45,32,23,16,11; ранг 6 → 8;  · вкладка 10: ранг 5 — 4 касания;
+    · вкладка 3: ранг 3 → 8 приколотых / 2 формы;  · вкладка 9: ранг 4 → 16 / 4.
+
+  ГЕЙТ ПОСЛЕ КАЖДОЙ ПРАВКИ:  node L2/check_page.js L2/L2-razbory.html
+-->
+<style>
+  :root{ --paper:#e6e5e1; --card:#fff; --ink:#333; --brick:#bf5b4f; --steel:#8195ad;
+         --rule:#c3cedd; --p2:#7b9bd1; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
+       font:15px/1.4 "Glacial Indifference","Helvetica Neue",Arial,sans-serif}
+  #wrap{height:100%;max-width:1500px;margin:0 auto;padding:10px 18px 12px;
+        display:flex;flex-direction:column;gap:8px}
+  nav{display:flex;gap:5px;flex:0 0 auto;align-items:baseline}
+  nav .ttl{font:400 17px/1 Forum,Georgia,serif;margin-right:10px;color:var(--steel)}
+  nav button{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:5px;
+             padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+  nav button.on{background:var(--steel);color:#fff;border-color:var(--steel)}
+  .stage{flex:1 1 auto;min-height:0;background:var(--card);border:1px solid var(--rule);
+         border-radius:6px;padding:6px}
+  svg#stage{width:100%;height:100%;display:block}
+  .under{flex:0 0 auto;display:flex;gap:12px;align-items:center;min-height:34px}
+  #cap{font-size:15px;color:var(--ink);flex:1 1 auto}     /* подпись под рисунком — единственная проза */
+  #cap b{color:var(--brick);font-weight:600}
+  .ctl{display:flex;gap:6px;align-items:center}
+  .seg{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden;background:var(--card)}
+  .seg button{border:0;background:transparent;color:var(--ink);padding:5px 10px;font:inherit;
+              font-size:13px;cursor:pointer}
+  .seg button.on{background:var(--steel);color:#fff}
+  .seg button:disabled{color:#c8c8c8;cursor:default}
+  .seg .lbl{padding:5px 8px;font-size:12px;color:var(--steel);border-right:1px solid var(--rule)}
+  .kbd{font:11px/1 ui-monospace,Menlo,monospace;background:var(--paper);border:1px solid var(--rule);
+       border-radius:3px;padding:2px 5px;color:var(--steel)}
+
+  .s-line{fill:none;stroke:var(--ink);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-accent{fill:none;stroke:var(--brick);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-alt{fill:none;stroke:var(--p2);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-ghost{fill:none;stroke:var(--rule);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--steel);stroke-width:1.4}
+  .s-dash{fill:none;stroke:var(--steel);stroke-width:1.4;stroke-dasharray:5 4}
+  .s-grid{fill:none;stroke:var(--rule);stroke-width:1}
+  .s-ar-m{fill:var(--steel);stroke:none}
+  .s-node-r{fill:var(--brick);stroke:none}
+  .s-ring{fill:none;stroke:var(--brick);stroke-width:2.2}
+  .s-rib{fill:none;stroke:var(--card);stroke-linejoin:round;stroke-linecap:butt}
+  .s-rib-a{fill:none;stroke:var(--brick);stroke-linejoin:round;stroke-linecap:butt}
+  .s-rib-e{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
+  .s-box{fill:none;stroke:var(--rule);stroke-width:1}
+</style>
+
+<div id="wrap">
+  <nav id="nav"><span class="ttl">Кривая дракона</span></nav>
+  <div class="stage"><svg id="stage" viewBox="0 0 1400 620" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-label="разбор задачи"></svg></div>
+  <div class="under">
+    <span id="cap"></span>
+    <span class="ctl" id="ctl"></span>
+    <span class="ctl" id="mode"></span>
+    <span class="kbd">пробел</span>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ═════════ геометрия (эталон razbor/gen_ill.py) ═════════ */
+function flip(s){ let r=''; for(let i=s.length-1;i>=0;i--) r+=(s[i]==='L'?'R':'L'); return r; }
+function word(n, choices){ const ch=choices||Array(n).fill('L'); let s='';
+  for(let i=0;i<n;i++) s = s + ch[i] + flip(s); return s; }
+function wordByFolds(f){ return word(f.length, f.slice().reverse()); }   // порядок word() обратный
+function v2(k){ let r=0; while(k%2===0){ k/=2; r++; } return r; }
+function birthStep(n,p){ return n - v2(p); }
+function polyAngles(w, ang, seg){
+  const L=seg||1; let x=L,y=0,dx=L,dy=0; const out=[[0,0],[L,0]];
+  for(let i=0;i<w.length;i++){
+    const s=(w[i]==='L')?1:-1, a=(ang[i+1]||0)*Math.PI/180*s;
+    const co=Math.cos(a), si=Math.sin(a);
+    const nx=dx*co-dy*si, ny=dx*si+dy*co;
+    dx=nx; dy=ny; x+=dx; y+=dy; out.push([x,y]);
+  }
+  return out;
+}
+function poly(w, a, seg){ const o={}; for(let p=1;p<=w.length;p++) o[p]=(a===undefined?90:a);
+  return polyAngles(w,o,seg); }
+function keyPinned(w){ return poly(w).map(p=>Math.round(p[0])+','+Math.round(p[1])).join(' '); }
+function rot90(P,k){ let R=P; for(let i=0;i<(k%4);i++) R=R.map(p=>[-p[1],p[0]]); return R; }
+function keyShape(w){
+  const P=poly(w).map(p=>[Math.round(p[0]),Math.round(p[1])]); let best=null;
+  for(const rf of [false,true]){ const Q=rf?P.map(p=>[p[0],-p[1]]):P;
+    for(let k=0;k<4;k++){ const R=rot90(Q,k);
+      for(const rv of [false,true]){ const S=rv?R.slice().reverse():R; const [x0,y0]=S[0];
+        const t=S.map(p=>(p[0]-x0)+','+(p[1]-y0)).join(' '); if(best===null||t<best) best=t; } } }
+  return best;
+}
+/** касания — по ЛОМАНОЙ (целые вершины). Скругление это ВИД: считать по нему нельзя. */
+function touches(w){
+  const m=new Map();
+  for(const p of poly(w)){ const k=Math.round(p[0])+','+Math.round(p[1]); m.set(k,(m.get(k)||0)+1); }
+  return [...m.entries()].filter(e=>e[1]>1).map(e=>e[0].split(',').map(Number));
+}
+/** поворот вокруг точки на k·90° (вкладка 8: вторая половина = первая, k=3 вокруг стыка) */
+function rotAbout(P, c, deg){
+  const a=deg*Math.PI/180, co=Math.cos(a), si=Math.sin(a);
+  return P.map(([x,y])=>{ const dx=x-c[0], dy=y-c[1];
+    return [c[0]+dx*co-dy*si, c[1]+dx*si+dy*co]; });
+}
+
+/* ═════════ рисование ═════════ */
+const NS='http://www.w3.org/2000/svg';
+const stage=document.getElementById('stage'), cap=document.getElementById('cap'),
+      ctl=document.getElementById('ctl'), modeBox=document.getElementById('mode');
+const VB=[1400,620];
+/* Вид углов; предмет от него не зависит. ПО УМОЛЧАНИЮ ПРЯМЫЕ — решение владельца 17.07:
+   «анимация с круглыми часто работает плохо, с квадратными лучше, поэтому сначала показывать
+   квадратные». Круглые — переключателем, когда нужно показать, что самопересечений нет. */
+let ROUND=false;
+function el(n,a,par){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]);
+  (par||stage).appendChild(e); return e; }
+function clear(){ stage.textContent=''; }
+function dot(p,cls,r){ el('circle',{cx:p[0],cy:p[1],r:r||5.5,class:cls||'s-node-r'}); }
+function box(b){ el('rect',{x:b.x+2,y:b.y+2,width:b.w-4,height:b.h-4,rx:4,class:'s-box'}); }
+
+/** ПРИМИТИВ #12: угол → дуга. Возвращает d целиком либо, если split задан, ДВА куска,
+    разрезанных по СЕРЕДИНЕ дуги в вершине split — иначе на стыке половин остаётся острая зазубрина
+    (живой дефект, пойман владельцем на вкладках 4 и 8). */
+function roundPath(P, split){
+  const f=0.5, parts=[]; let d='';
+  const seg=(s)=>{ d+=s; };
+  if(P.length<3){ const s='M '+P.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L ');
+    return split===undefined ? s : [s,'']; }
+  seg('M '+P[0][0].toFixed(2)+' '+P[0][1].toFixed(2));
+  for(let i=1;i<P.length-1;i++){
+    const u=P[i-1], v=P[i], w=P[i+1];
+    const a=[v[0]-u[0], v[1]-u[1]], b=[w[0]-v[0], w[1]-v[1]];
+    const la=Math.hypot(a[0],a[1]), lb=Math.hypot(b[0],b[1]);
+    const cross=a[0]*b[1]-a[1]*b[0];
+    if(Math.abs(cross)<1e-9||la<1e-9||lb<1e-9) continue;
+    const c=Math.min(la*f, lb*f), sw=cross>0?1:0;
+    const p1=[v[0]-a[0]/la*c, v[1]-a[1]/la*c], p2=[v[0]+b[0]/lb*c, v[1]+b[1]/lb*c];
+    seg(' L '+p1[0].toFixed(2)+' '+p1[1].toFixed(2));
+    if(i===split){                              // режем дугу пополам: центр O, середина дуги M
+      const O=[v[0]-a[0]/la*c+b[0]/lb*c, v[1]-a[1]/la*c+b[1]/lb*c];
+      const m=[(p1[0]-O[0])+(p2[0]-O[0]), (p1[1]-O[1])+(p2[1]-O[1])];
+      const lm=Math.hypot(m[0],m[1]);
+      const M=[O[0]+m[0]/lm*c, O[1]+m[1]/lm*c];
+      seg(' A '+c.toFixed(2)+' '+c.toFixed(2)+' 0 0 '+sw+' '+M[0].toFixed(2)+' '+M[1].toFixed(2));
+      parts.push(d);
+      d='M '+M[0].toFixed(2)+' '+M[1].toFixed(2)
+       +' A '+c.toFixed(2)+' '+c.toFixed(2)+' 0 0 '+sw+' '+p2[0].toFixed(2)+' '+p2[1].toFixed(2);
+      continue;
+    }
+    seg(' A '+c.toFixed(2)+' '+c.toFixed(2)+' 0 0 '+sw+' '+p2[0].toFixed(2)+' '+p2[1].toFixed(2));
+  }
+  const L=P[P.length-1];
+  seg(' L '+L[0].toFixed(2)+' '+L[1].toFixed(2));
+  if(split===undefined) return d;
+  parts.push(d); return parts;
+}
+function sharpD(P){ return 'M '+P.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L '); }
+function curve(P, cls, w, forceSharp){
+  const d = (ROUND && !forceSharp) ? roundPath(P) : sharpD(P);
+  return el('path',{d, class:cls||'s-line', ...(w?{'stroke-width':w}:{})});
+}
+/** две половины одной кривой: стык скруглён и поделён поровну (или острый — по переключателю) */
+function curveHalves(P, k, clsA, clsB){
+  if(ROUND){ const [d1,d2]=roundPath(P,k);
+    el('path',{d:d1,class:clsA}); el('path',{d:d2,class:clsB}); }
+  else { el('path',{d:sharpD(P.slice(0,k+1)),class:clsA}); el('path',{d:sharpD(P.slice(k)),class:clsB}); }
+}
+/** ЛЕНТА — вид полоски бумаги. Ширина w НЕПРЕРЫВНА до 0: при w→0 лента становится ровно той
+    кривой, в которую разворачивается (красная половина → красная линия, белая → чёрная линия).
+    Поэтому «бумага» и «кривая» — не два разных рисунка, а один и тот же в двух положениях ручки.
+    ⚠ Красная половина — СПЛОШНОЙ красный штрих, а не красное поверх белого: иначе в сложенном
+    виде (слои совпадают) она замазывает всё, и лента выглядит целиком красной (дефект 17.07). */
+function ribbonHalves(P, w, k){
+  const A=P.slice(0,k+1), B=P.slice(k);
+  const dA = ROUND ? roundPath(A) : sharpD(A), dB = ROUND ? roundPath(B) : sharpD(B);
+  el('path',{d:dB, class:'s-rib-e', 'stroke-width':w+3});     // белая половина: край…
+  if(w>0.5) el('path',{d:dB, class:'s-rib', 'stroke-width':w});   // …и бумага внутри
+  el('path',{d:dA, class:'s-rib-a', 'stroke-width':w+3});     // цветная половина — сплошная
+}
+function fit(P, b, common){
+  const pad=b.pad===undefined?26:b.pad;
+  let x0,x1,y0,y1;
+  if(common){ ({x0,x1,y0,y1}=common); }
+  else { const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+    x0=Math.min(...xs); x1=Math.max(...xs); y0=Math.min(...ys); y1=Math.max(...ys); }
+  const s=Math.min((b.w-2*pad)/Math.max(x1-x0,1e-6),(b.h-2*pad)/Math.max(y1-y0,1e-6));
+  const ox=b.x+pad+((b.w-2*pad)-s*(x1-x0))/2, oy=b.y+pad+((b.h-2*pad)-s*(y1-y0))/2;
+  const g=p=>[ox+(p[0]-x0)*s, b.y+b.h-(oy-b.y)-(p[1]-y0)*s];
+  g.s=s; return g;
+}
+
+const ease=t=> t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+function anim(from,to,ms,step){ return new Promise(res=>{ const t0=performance.now();
+  (function fr(now){ const t=Math.min(1,(now-t0)/ms); step(from+(to-from)*ease(t));
+    if(t<1) requestAnimationFrame(fr); else res(); })(t0); }); }
+/** пауза-«повисеть»: владелец 17.07 — «должно так зависнуть и, повисев, плавно превратиться» */
+function pause(ms){ return new Promise(r=>setTimeout(r,ms)); }
+const PACK=168;
+function allAng(v){ const o={}; for(let p=1;p<=63;p++) o[p]=v; return o; }
+
+/* ═════════ 3 — все случаи ═════════ */
+const T3={ num:3, title:'Все случаи',
+  aria:'полоска, приколотая точкой к стрелке, складывается по одному сгибу и раскрывается в ломаную',
+  S:66, PIN:[300,300], ARROW:2.6, folds:[], busy:false, opened:false, found:new Map(), ang:{},
+  reset(){ this.folds=[]; this.opened=false; this.ang={}; for(let p=1;p<=7;p++) this.ang[p]=0;
+    cap.innerHTML='выбери, куда идёт дальняя половина'; this.render(); },
+  word(){ const f=this.folds.slice(); while(f.length<3) f.push('L'); return wordByFolds(f); },
+  draw(){ clear();
+    const [ax,ay]=this.PIN, x2=ax+this.ARROW*this.S;
+    el('line',{x1:ax,y1:ay,x2:x2,y2:ay,class:'s-thin'});
+    el('path',{d:'M '+x2+','+(ay-4)+' l9,4 -9,4 z',class:'s-ar-m'});
+    const P=polyAngles(this.word(),this.ang).map(p=>[ax+p[0]*this.S, ay-p[1]*this.S]);
+    curve(P,'s-line',null,!this.opened);            // гармошка — всегда острая: это сложенная бумага
+    dot(P[0]);
+    this.gallery();
+  },
+  gallery(){
+    const all=[]; for(const a of 'LR') for(const b of 'LR') for(const c of 'LR') all.push([a,b,c]);
+    const cw=150, gap=10, x0=(VB[0]-(8*cw+7*gap))/2;
+    all.forEach((f,i)=>{
+      const w=wordByFolds(f), b={x:x0+i*(cw+gap), y:470, w:cw, h:140, pad:16};
+      box(b);
+      if(!this.found.has(keyPinned(w))) return;
+      const g=fit(poly(w),b,{x0:-2,x1:3,y0:-3,y1:3});      // общий габарит — сравнимость
+      curve(poly(w).map(g),'s-line',2.2); dot(g(poly(w)[0]),null,4);
+    });
+  },
+  async step(k,v){
+    if(this.busy) return; this.busy=true;
+    if(this.opened || k<=this.folds.length){
+      if(this.ang[4]>0) await anim(1,0,300,t=>{ for(const p in this.ang) this.ang[p]*=t; this.draw(); });
+      for(let p=1;p<=7;p++) this.ang[p]=0; this.opened=false;
+      const nf=this.folds.slice(0,k-1); nf[k-1]=v; this.folds=nf; this.render();
+      for(let i=1;i<=this.folds.length;i++) await this.fold(i);
+    } else { this.folds[k-1]=v; this.render(); await this.fold(k); }
+    cap.innerHTML = this.folds.length<3 ? 'сгиб '+this.folds.length+' готов'
+                                        : '<b>гармошка</b> — формы пока нет';
+    this.busy=false; this.render();
+  },
+  async fold(k){ const born=[]; for(let p=1;p<=7;p++) if(birthStep(3,p)===k) born.push(p);
+    await anim(0,PACK,620,a=>{ born.forEach(p=>this.ang[p]=a); this.draw(); }); },
+  async space(){
+    if(this.busy) return;
+    if(this.folds.length<3){ cap.innerHTML='сначала выбери все три сгиба'; return; }
+    if(this.opened){ this.reset(); return; }
+    this.busy=true; cap.innerHTML='разворачиваем до прямых углов…';
+    await pause(300);
+    await anim(PACK,90,2200,a=>{ for(let p=1;p<=7;p++) this.ang[p]=a; this.draw(); });
+    await pause(350);
+    this.opened=true; this.found.set(keyPinned(this.word()), this.word());
+    this.busy=false; this.draw(); this.render();
+    cap.innerHTML = this.found.size<8 ? 'картинок нашли <b>'+this.found.size+'</b> из 8'
+                                      : 'все <b>8</b> — и все разные: конец и направление приколоты';
+  },
+  render(){
+    ctl.textContent='';
+    for(let k=1;k<=3;k++){
+      const d=document.createElement('div'); d.className='seg';
+      const l=document.createElement('span'); l.className='lbl'; l.textContent=k; d.appendChild(l);
+      for(const o of [{v:'L',t:'верх'},{v:'R',t:'низ'}]){
+        const b=document.createElement('button'); b.textContent=o.t;
+        if(this.folds[k-1]===o.v) b.classList.add('on');
+        if(k>this.folds.length+1 || this.busy) b.disabled=true;
+        b.addEventListener('click',()=>this.step(k,o.v)); d.appendChild(b);
+      }
+      ctl.appendChild(d);
+    }
+    this.draw();
+  },
+  mount(){ this.reset(); }
+};
+
+/* ═════════ 4 — раскраска (ЯДРО): лента → складываем → ЗАВИСАЕМ → медленно разворачиваем ═════════
+   ⚠ Способ рисования ОДИН на все фазы — лента. Раньше на разжатии он менялся на линию, и чёрная
+   кривая появлялась «вдруг» (дефект, пойман владельцем 17.07). Теперь 3D→2D — это плавное
+   сужение ленты (w→0), а не подмена картинки. */
+const T4={ num:4, title:'Раскраска',
+  aria:'лента с раскрашенной половиной складывается пять раз и медленно разворачивается в две ломаные ранга 4',
+  /* ⚠ ШИРИНА ЛЕНТЫ — ЭТО ВИД, А НЕ УКРАШЕНИЕ. Полоска шириной видна только СВЕРХУ, пока лежит
+     плашмя. Листок: «сложи, разверни и ПОСТАВЬ НА РЕБРО — что видно сверху?» Поставленная на ребро
+     полоска видна с торца как КРАЙ, то есть линия: её ширина ушла вверх, из плоскости картинки.
+     Поэтому w: 1 → 0 и есть момент «ставим на ребро», и он идёт ДО складывания. Раньше я вёл
+     широкую ленту сквозь всё складывание — слои замазывали друг друга, и гармошка выходила
+     сплошной красной (дефект, пойман владельцем 17.07). Тонкими линиями слои видны оба цвета. */
+  /* ⚠ РАМКА КАДРА СЧИТАЕТСЯ ПО САМОЙ ЛЕНТЕ: текущее положение + итоговая кривая. Тогда камера
+     едет ровно так, как укорачивается лента, — сама, без таймеров.
+     Две попытки до этого были неверны, обе пойманы гейтом:
+       1) переключать кадр «прямая лента» → «готовая кривая» на фазе — картинка ПРЫГАЛА в угол
+          (это и увидел владелец 17.07);
+       2) смешивать эти два кадра по времени складывания — камера уезжала быстрее, чем лента
+          укорачивается, и прямая лента (32 звена) ТОРЧАЛА за сцену на 300+px.
+     Объединение «текущая + итоговая» непрерывно по углам и всегда вмещает обе. */
+  i:0, busy:false, ang:{}, ring:false, w:1,
+  mount(){ this.i=0; this.ring=false; this.w=1; this.ang={};
+    for(let p=1;p<=31;p++) this.ang[p]=0;
+    this.draw(); cap.innerHTML='половину ленты раскрасили — смотрим на неё <b>сверху</b>'; },
+  draw(){ clear(); ctl.textContent='';
+    const w=word(5), P=polyAngles(w,this.ang);
+    const g=fit(P.concat(poly(w)),{x:0,y:0,w:VB[0],h:VB[1],pad:70});
+    const full=Math.max(9, Math.min(26, g.s*0.30));
+    ribbonHalves(P.map(g), full*this.w, 16);
+    dot(g(P[0]));
+    if(this.ring){ const m=g(P[16]); el('circle',{cx:m[0],cy:m[1],r:20,class:'s-ring'}); }
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.busy=true;                    // ставим на ребро: ширина уходит вверх
+      cap.innerHTML='ставим на <b>ребро</b> — теперь виден только край ленты';
+      await anim(1,0,1500,v=>{ this.w=v; this.draw(); });
+      this.i=1; this.busy=false;
+      cap.innerHTML='край ленты. Цветная половина и белая — обе на месте. Складываем'; return; }
+    if(this.i===1){ this.busy=true; this.i=2;
+      for(let k=1;k<=5;k++){ const born=[]; for(let p=1;p<=31;p++) if(birthStep(5,p)===k) born.push(p);
+        cap.innerHTML='складываем: сгиб <b>'+k+'</b>';
+        await anim(0,PACK,620,a=>{ born.forEach(p=>this.ang[p]=a); this.draw(); });   // кадр едет сам
+        await pause(260); }
+      await pause(500);
+      cap.innerHTML='<b>гармошка</b> — формы пока нет, но два цвета уже видно';
+      this.busy=false; return; }
+    if(this.i===2){ this.busy=true;
+      cap.innerHTML='разворачиваем — медленно, до прямых углов…';
+      await anim(PACK,90,3400,a=>{ for(let p=1;p<=31;p++) this.ang[p]=a; this.draw(); });
+      this.i=3; await pause(800);                          // повисеть: пусть увидят две картинки
+      cap.innerHTML='две ломаные ранга <b>4</b>: цветная и белая — одинаковые, под прямым углом';
+      this.busy=false; return; }
+    if(this.i===3 && !this.ring){ this.ring=true; this.draw();
+      cap.innerHTML='кружок — стык: там и есть тот самый прямой угол. Это и есть правило рисования'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 5 — линейка (ответа нет) ═════════ */
+const T5={ num:5, title:'Линейка',
+  aria:'одна и та же полоска, сложенная от одного до пяти раз; пунктиром — расстояние между концами',
+  i:1,
+  mount(){ this.i=1; this.draw(); },
+  space(){ this.i = this.i>=5 ? 1 : this.i+1; this.draw(); },
+  draw(){ clear(); ctl.textContent='';
+    const cw=VB[0]/6, SC=cw-46;
+    for(let n=0;n<=5;n++){
+      const b={x:n*cw, y:0, w:cw, h:VB[1]};
+      box(b);
+      if(n>this.i) continue;
+      const seg=1/Math.pow(2,n);
+      const P = n===0 ? [[0,0],[1,0]] : poly(word(n),90,seg);
+      const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+      const mx=(Math.min(...xs)+Math.max(...xs))/2, my=(Math.min(...ys)+Math.max(...ys))/2;
+      const g=p=>[b.x+cw/2+(p[0]-mx)*SC, VB[1]/2-(p[1]-my)*SC];   // масштаб ОБЩИЙ: полоска одна и та же
+      curve(P.map(g),'s-line',2.6,n===0);
+      const a=g(P[0]), z=g(P[P.length-1]);
+      el('line',{x1:a[0],y1:a[1],x2:z[0],y2:z[1],class:'s-dash'});
+      dot(a,null,4.5); dot(z,null,4.5);
+    }
+    cap.innerHTML='полоска одна и та же; пунктир — то, что меряет линейка';
+  }
+};
+
+/* ═════════ 6 — чередуя: ДВА разворота одновременно ═════════ */
+const T6={ num:6, title:'Чередуя',
+  aria:'две гармошки — сложенная с чередованием и сложенная в одну сторону — разворачиваются одновременно в разные ломаные',
+  i:0, busy:false, a:PACK, ring:false,
+  W:[null,null],
+  mount(){ this.i=0; this.a=PACK; this.ring=false;
+    this.W=[wordByFolds(['L','R','L','R']), wordByFolds(['L','L','L','L'])];
+    this.draw(); cap.innerHTML='слева складывали <b>чередуя</b> стороны, справа — <b>в одну</b>. Что выйдет?'; },
+  draw(){ clear(); ctl.textContent='';
+    const cls=['s-alt','s-line'];
+    this.W.forEach((w,j)=>{
+      const P=polyAngles(w, allAng(this.a));
+      const full=poly(w);                                  // рамка по РАЗВЁРНУТОЙ — картинка не прыгает
+      const b={x:j*VB[0]/2, y:0, w:VB[0]/2, h:VB[1], pad:70};
+      const g=fit(full,b);
+      curve(P.map(g), cls[j], null, this.a>120);
+      dot(g(P[0]));
+      if(this.ring) for(const t of touches(w)){ const q=g(t);
+        el('circle',{cx:q[0],cy:q[1],r:14,class:'s-ring'}); }
+    });
+    el('line',{x1:VB[0]/2,y1:30,x2:VB[0]/2,y2:VB[1]-30,class:'s-thin'});
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.busy=true; cap.innerHTML='разворачиваем обе разом…';
+      await anim(PACK,90,2800,a=>{ this.a=a; this.draw(); });
+      await pause(450); this.i=1; cap.innerHTML='ломаные разные — и не совмещаются никаким поворотом';
+      this.busy=false; return; }
+    if(this.i===1 && !this.ring){ this.ring=true; this.draw();
+      const t0=touches(this.W[0]).length, t1=touches(this.W[1]).length;
+      cap.innerHTML='чередуя — касается себя <b>'+t0+'</b> раза, дракон — <b>'+t1+'</b>. Вот и разница';
+      return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 7 — зеркало: ДВЕ гармошки, вторая перевёрнута ДО разворота ═════════
+   Задача именно в этом: одну и ту же сложенную полоску кладут на стол разными рёбрами. Поэтому
+   переворачиваем ПАКЕТ, а не готовую картинку, и разворачиваем обе разом — они уезжают в разные
+   стороны сами. (Замечание владельца 17.07: «переверни в момент, когда ещё не развернул — в этом
+   же задача».) Перевёрнутая гармошка = та же геометрия при y → −y: сгибы те же, рёбра разные. */
+const T7={ num:7, title:'Зеркало',
+  aria:'две одинаковые гармошки, нижняя положена другим ребром, разворачиваются в зеркальные ломаные',
+  i:0, busy:false, a:PACK,
+  mount(){ this.i=0; this.a=PACK; this.draw();
+    cap.innerHTML='одна и та же гармошка, положена на стол <b>разными рёбрами</b>. Что выйдет?'; },
+  draw(){ clear(); ctl.textContent='';
+    const w=word(4);
+    const mir=(P,j)=> j ? P.map(p=>[p[0],-p[1]]) : P;       // нижняя — та же лента другим ребром
+    [0,1].forEach(j=>{
+      const P=mir(polyAngles(w, allAng(this.a)), j);
+      const full=mir(poly(w), j);
+      const b={x:0, y:j*VB[1]/2, w:VB[0], h:VB[1]/2, pad:34};
+      const g=fit(full,b);                                  // рамка по развёрнутой — не прыгает
+      curve(P.map(g), j?'s-accent':'s-line', null, this.a>120);
+      dot(g(P[0]));
+    });
+    el('line',{x1:40,y1:VB[1]/2,x2:VB[0]-40,y2:VB[1]/2,class:'s-dash'});   // стол — он же ось
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.busy=true; cap.innerHTML='разворачиваем обе разом…';
+      await anim(PACK,90,2600,a=>{ this.a=a; this.draw(); });
+      this.i=1; await pause(400);
+      cap.innerHTML='зеркало: каждый поворот — наоборот. Полоска та же, сгибы те же — другое ребро';
+      this.busy=false; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 8 — правило: копия поворачивается вокруг стыка ═════════ */
+const T8={ num:8, title:'Правило',
+  aria:'копия ломаной поворачивается на 90 градусов вокруг своего конца и достраивает следующий ранг',
+  n:4, i:0, busy:false, rot:0,
+  mount(){ this.n=4; this.i=0; this.rot=0; this.draw();
+    cap.innerHTML='ломаная ранга <b>'+this.n+'</b> — её уже умеем'; },
+  /* ПРОВЕРЕНО: вторая половина = первая, поворот на −90° ВОКРУГ СТЫКА (+ обход назад) */
+  draw(){ clear(); ctl.textContent='';
+    const n=this.n, A=poly(word(n)), B=poly(word(n+1));
+    const joint=A[A.length-1];
+    const g=fit(B,{x:0,y:0,w:VB[0],h:VB[1],pad:56});     // рамка по итогу — при повороте не прыгает
+    if(this.i>=3){ curveHalves(B.map(g), Math.pow(2,n), 's-line', 's-accent'); dot(g(B[0]));
+      el('circle',{cx:g(joint)[0],cy:g(joint)[1],r:16,class:'s-ring'}); return; }
+    curve(A.map(g),'s-line'); dot(g(A[0]));
+    if(this.i>=1){ const C=rotAbout(A, joint, -this.rot); curve(C.map(g),'s-accent'); }
+    el('circle',{cx:g(joint)[0],cy:g(joint)[1],r:16,class:'s-ring'});
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.i=1; this.rot=0; this.draw();
+      cap.innerHTML='берём <b>копию</b> — пока лежит поверх оригинала'; return; }
+    if(this.i===1){ this.busy=true; this.i=2; cap.innerHTML='поворачиваем копию вокруг кружка…';
+      await anim(0,90,2200,r=>{ this.rot=r; this.draw(); });
+      await pause(500); this.i=3; this.draw();
+      cap.innerHTML='ранг <b>'+(this.n+1)+'</b> готов: две копии ранга '+this.n+' под прямым углом';
+      this.busy=false; return; }
+    if(this.i===3){ if(this.n>=5){ this.mount(); return; }
+      this.n++; this.i=0; this.rot=0; this.draw();
+      cap.innerHTML='ломаная ранга <b>'+this.n+'</b> — теперь строим следующую'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 9 — все неподобные ранга 4 ═════════ */
+const T9={ num:9, title:'Все ранга 4',
+  aria:'шестнадцать приколотых ломаных ранга 4 и четыре формы, в которые они склеиваются',
+  i:0,
+  mount(){ this.i=0; this.draw(); },
+  space(){ this.i=(this.i+1)%2; this.draw(); },
+  draw(){ clear(); ctl.textContent='';
+    const all=[]; for(const a of 'LR') for(const b of 'LR') for(const c of 'LR') for(const d of 'LR')
+      all.push([a,b,c,d]);
+    const COMMON={x0:-4,x1:5,y0:-5,y1:5};              // посчитанный габарит всех 16 — иначе режет
+    if(this.i===0){
+      const cw=VB[0]/8, ch=VB[1]/2;
+      all.forEach((f,i)=>{
+        const b={x:(i%8)*cw, y:Math.floor(i/8)*ch, w:cw, h:ch, pad:14};
+        box(b);
+        const w=wordByFolds(f), g=fit(poly(w),b,COMMON);
+        curve(poly(w).map(g),'s-line',2.2); dot(g(poly(w)[0]),null,4);
+      });
+      cap.innerHTML='<b>16</b> способов сложить — <b>16</b> приколотых картинок, все разные';
+      return;
+    }
+    const cls=new Map();
+    for(const f of all){ const w=wordByFolds(f), k=keyShape(w);
+      if(!cls.has(k)) cls.set(k,[]); cls.get(k).push(w); }
+    const cw=VB[0]/4;
+    [...cls.values()].forEach((ws,i)=>{
+      const b={x:i*cw, y:0, w:cw, h:VB[1], pad:44};
+      box(b);
+      const g=fit(poly(ws[0]),b);
+      curve(poly(ws[0]).map(g),'s-line'); dot(g(poly(ws[0])[0]));
+    });
+    cap.innerHTML='а существенно разных — <b>4</b>: если разрешить вертеть, 16 склеиваются по четыре';
+  }
+};
+
+/* ═════════ 10 — касания: ОБА вида рядом ═════════ */
+const T10={ num:10, title:'Касания',
+  aria:'ломаная дракона ранга 5 на клетчатой бумаге и она же дугами; отмечены точки касания',
+  i:0,
+  mount(){ this.i=0; this.draw(); },
+  space(){ this.i=(this.i+1)%2; this.draw(); },
+  draw(){ clear(); ctl.textContent='';
+    const w=word(5), P=poly(w), T=touches(w);
+    /* владелец 17.07: «с квадратиками понятнее, что имеется в виду; с закруглением видно, что
+       нет самопересечений; лучше иметь обе» — поэтому здесь оба вида рядом, всегда */
+    [0,1].forEach(j=>{
+      const b={x:j*VB[0]/2, y:0, w:VB[0]/2, h:VB[1], pad:54};
+      const g=fit(P,b);
+      if(j===0){                                   // клетчатая бумага — задача про неё
+        const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+        for(let x=Math.min(...xs)-1;x<=Math.max(...xs)+1;x++){
+          const a=g([x,Math.min(...ys)-1]), c=g([x,Math.max(...ys)+1]);
+          el('line',{x1:a[0],y1:a[1],x2:c[0],y2:c[1],class:'s-grid'}); }
+        for(let y=Math.min(...ys)-1;y<=Math.max(...ys)+1;y++){
+          const a=g([Math.min(...xs)-1,y]), c=g([Math.max(...xs)+1,y]);
+          el('line',{x1:a[0],y1:a[1],x2:c[0],y2:c[1],class:'s-grid'}); }
+        el('path',{d:sharpD(P.map(g)),class:'s-line'});
+      } else {
+        el('path',{d:roundPath(P.map(g)),class:'s-line'});
+      }
+      dot(g(P[0]));
+      if(this.i===1) for(const t of T){ const q=g(t); el('circle',{cx:q[0],cy:q[1],r:14,class:'s-ring'}); }
+    });
+    el('line',{x1:VB[0]/2,y1:30,x2:VB[0]/2,y2:VB[1]-30,class:'s-thin'});
+    cap.innerHTML = this.i===0
+      ? 'ломаная ранга <b>5</b>: слева по клеткам, справа дугами. Где она касается сама себя?'
+      : 'касаний ровно <b>'+T.length+'</b> · тройных нет · себя не пересекает — справа это видно';
+  }
+};
+
+/* ═════════ сборка ═════════ */
+const TABS=[T3,T4,T5,T6,T7,T8,T9,T10];
+let cur=null;
+const nav=document.getElementById('nav');
+TABS.forEach((t,i)=>{ const b=document.createElement('button'); b.textContent=t.num+' · '+t.title;
+  b.addEventListener('click',()=>show(i)); nav.appendChild(b); });
+function renderMode(){
+  modeBox.textContent='';
+  const d=document.createElement('div'); d.className='seg';
+  const l=document.createElement('span'); l.className='lbl'; l.textContent='углы'; d.appendChild(l);
+  for(const o of [{v:true,t:'круглые'},{v:false,t:'прямые'}]){
+    const b=document.createElement('button'); b.textContent=o.t;
+    if(ROUND===o.v) b.classList.add('on');
+    b.addEventListener('click',()=>{ ROUND=o.v; renderMode(); if(cur&&cur.draw) cur.draw(); });
+    d.appendChild(b);
+  }
+  modeBox.appendChild(d);
+}
+function show(i){
+  cur=TABS[i];
+  [...nav.querySelectorAll('button')].forEach((b,j)=>b.classList.toggle('on', j===i));
+  stage.setAttribute('aria-label', cur.aria);
+  clear(); ctl.textContent=''; cap.textContent='';
+  cur.mount(); renderMode();
+}
+addEventListener('keydown',e=>{
+  const n=parseInt(e.key,10);
+  if(n>=1 && n<=TABS.length && !e.metaKey && !e.ctrlKey){ show(n-1); return; }
+  if(e.code==='Space'){ e.preventDefault(); if(cur&&cur.space) cur.space(); return; }
+  if((e.key==='z'||e.key==='Z'||e.key==='я'||e.key==='Я') && cur&&cur.mount){ cur.mount(); renderMode(); }
+});
+show(0);
+
+/* ─── самопроверка: расходиться с эталоном нельзя ─── */
+(function selfCheck(){
+  const r=[];
+  for(const n of [3,4]){
+    const all=[]; (function rec(c){ if(c.length===n){ all.push(c.slice()); return; }
+      for(const x of ['L','R']){ c.push(x); rec(c); c.pop(); } })([]);
+    const pin=new Set(), sh=new Set();
+    for(const f of all){ const w=wordByFolds(f); pin.add(keyPinned(w)); sh.add(keyShape(w)); }
+    r.push(pin.size+'/'+sh.size);
+  }
+  const t5=touches(word(5)).length;
+  const t6=[touches(wordByFolds(['L','R','L','R'])).length, touches(wordByFolds(['L','L','L','L'])).length];
+  // вкладка 8: вторая половина = первая, поворот −90° вокруг стыка
+  const A=poly(word(4)), B=poly(word(5)), joint=A[A.length-1];
+  const C=rotAbout(A, joint, -90).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+  const H=B.slice(16).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+  const rotOK = JSON.stringify(C.slice().reverse())===JSON.stringify(H);
+  const ok = r[0]==='8/2' && r[1]==='16/4' && t5===4 && t6[0]===3 && t6[1]===1 && rotOK;
+  console.log('[Л2] ранг3 '+r[0]+' · ранг4 '+r[1]+' · касаний ранга5 '+t5+
+              ' · вкл.6 чередуя/дракон '+t6[0]+'/'+t6[1]+' · вкл.8 поворот вокруг стыка '+(rotOK?'да':'НЕТ')+
+              ' → '+(ok?'СХОДИТСЯ с эталоном':'РАСХОДИТСЯ'));
+  if(!ok) document.title='⚠ модель разошлась с эталоном';
+})();
+</script>

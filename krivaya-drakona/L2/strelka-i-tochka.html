@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Стрелка и точка — все картинки ранга 3</title>
+<!--
+  ВИДЖЕТ Л2 «Стрелка + точка» — приём владельца, доведённый до операции.
+  Самодостаточен: ни сети, ни сборки. Открыть в браузере, показывать с проектора.
+
+  ЗАЧЕМ. Владелец (17.07): после складывания выходит ГАРМОШКА — «лежит размяписто,
+  чёткой формы нет; от такой бумажки до рисунка большой прыжок». Виджет прыгает этот
+  прыжок непрерывно: гармошка → раскрытие до прямых углов → ломаная, конец приколот.
+
+  ГЕОМЕТРИЯ не нарисована руками, а считается — эталон razbor/gen_ill.py:
+    слово ранга n:  s = s + x + bar(s)   |  ломаная: шаг 1, поворот на угол при каждом сгибе
+    угол 90° → ломаная дракона; угол → 180° → сложенный пакет (гармошка)
+
+  ⚠ ПОРЯДОК СГИБОВ (проверено машиной; наивная привязка «сгиб 1 → choices[0]» ВРЁТ):
+    сгиб в позиции p рождается на шаге n − v2(p)  ⇒  СЕРЕДИНА = ПЕРВЫЙ сгиб.
+    В word(n,[c1..cn]) середина = c_n  ⇒  физические f1,f2,f3 → word(3,[f3,f2,f1]).
+
+  ПРИКОЛОТОСТЬ: старт всегда в точке (0,0), первое звено всегда вдоль стрелки (+x).
+    Ни сдвинуть, ни повернуть нельзя ⇒ 8 способов сложить дают 8 РАЗНЫХ картинок.
+    Масштаб и точка фиксированы (S, PIN) — картинки сравнимы между собой; в галерее
+    тоже общий масштаб, иначе сравнение врёт.
+
+  Композиция посчитана, не подобрана на глаз: габарит по всем 8 вариантам и всем фазам
+  = x∈[−2,8], y∈[−4,4] (10×8 звеньев) ⇒ сцена 900×720, S=80px/звено, PIN=(210,360).
+  Высоту диктует ПЕРЕХОД: на первом сгибе дальняя половина проходит через вертикаль
+  (+4 звена вверх) — сцена 16:9 её съедала бы, и ломаная выходила мелкой.
+  Примитивы — по _studio/konvejer/09-illustracii/SLOVAR-primitivov.md
+  (#4 ломаная .s-line · #1 узел .s-node-r · #10 стрелка .s-thin+.s-ar-m · #11 метка .s-txt).
+-->
+<style>
+  :root{
+    --paper:#e6e5e1; --card:#fff; --ink:#333; --brick:#bf5b4f; --steel:#8195ad;
+    --mustard:#c9a23c; --rule:#c3cedd; --board:#a7c2cb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.5 "Glacial Indifference","Helvetica Neue",Arial,sans-serif}
+  #wrap{max-width:1460px;margin:0 auto;padding:18px 22px 26px}
+  h1{font:400 34px/1.1 Forum,Georgia,serif;margin:0 0 2px}
+  .sub{color:var(--steel);margin:0 0 16px;font-size:15px;max-width:900px}
+  .cols{display:flex;gap:22px;align-items:flex-start}
+  .stage-col{flex:1 1 auto;min-width:0}
+  .side{flex:0 0 468px}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:14px}
+  svg{display:block;width:100%;height:auto}
+
+  /* примитивы словаря */
+  .s-line{fill:none;stroke:var(--ink);stroke-width:3.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--steel);stroke-width:1.4}
+  .s-ar-m{fill:var(--steel);stroke:none}
+  .s-node-r{fill:var(--brick);stroke:none}
+  .s-txt{font:400 14px/1 "Glacial Indifference",Arial,sans-serif;fill:var(--steel)}
+  .s-txt-m{font:400 13px/1 ui-monospace,Menlo,monospace;fill:var(--steel)}
+
+  .controls{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .fold{display:flex;align-items:center;gap:7px;background:var(--card);
+        border:1px solid var(--rule);border-radius:6px;padding:7px 9px}
+  .fold b{font-weight:600;color:var(--steel);font-size:13px}
+  .seg{display:flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+  .seg button{border:0;background:var(--card);color:var(--ink);padding:5px 9px;
+              font:inherit;font-size:13px;cursor:pointer}
+  .seg button.on{background:var(--steel);color:#fff}
+  .go{border:0;border-radius:6px;background:var(--brick);color:#fff;padding:10px 18px;
+      font:inherit;font-size:15px;cursor:pointer}
+  .go.ghost{background:var(--card);color:var(--ink);border:1px solid var(--rule)}
+  .phase{color:var(--steel);font-size:14px;min-width:230px}
+
+  .side h2{font:400 21px/1.2 Forum,Georgia,serif;margin:0 0 3px}
+  .side p.note{margin:0 0 10px;font-size:13px;color:var(--steel)}
+  .gal{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+  .cell{background:var(--card);border:1px solid var(--rule);border-radius:5px;
+        aspect-ratio:1;position:relative;overflow:hidden}
+  .cell.empty{border-style:dashed;opacity:.45}
+  .cell.hit{border-color:var(--brick);box-shadow:0 0 0 2px rgba(191,91,79,.15)}
+  .cell .w{position:absolute;left:0;right:0;bottom:2px;text-align:center;
+           font:11px/1 ui-monospace,Menlo,monospace;color:var(--steel);letter-spacing:.5px}
+  .count{margin:11px 0 0;font-size:14px}
+  .count b{color:var(--brick);font-size:17px}
+  .two{margin-top:16px;padding-top:14px;border-top:1px solid var(--rule)}
+  .shapes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+  .shape{background:var(--card);border:1px solid var(--rule);border-radius:5px;
+         aspect-ratio:1.25;position:relative;overflow:hidden}
+  .shape .lab{position:absolute;left:7px;bottom:4px;font-size:12px;color:var(--steel)}
+  .hint{margin-top:9px;font-size:13px;color:var(--steel)}
+  .kbd{font:12px/1 ui-monospace,Menlo,monospace;background:var(--paper);
+       border:1px solid var(--rule);border-radius:3px;padding:2px 5px}
+</style>
+
+<div id="wrap">
+  <h1>Стрелка и точка</h1>
+  <p class="sub">Точка ленточки — на точку бумаги, ленточка — вдоль стрелки. Пока конец и направление
+    приколоты, повернуть картинку нельзя: каждый способ сложить даёт свою, отдельную картинку.</p>
+
+  <div class="cols">
+    <div class="stage-col">
+      <div class="card"><svg id="stage" viewBox="0 0 900 720" aria-label="сцена"></svg></div>
+
+      <div class="controls">
+        <div class="fold"><b>сгиб 1</b>
+          <div class="seg" data-f="0"><button data-v="L">через верх</button><button data-v="R">под низ</button></div>
+        </div>
+        <div class="fold"><b>сгиб 2</b>
+          <div class="seg" data-f="1"><button data-v="L">через верх</button><button data-v="R">под низ</button></div>
+        </div>
+        <div class="fold"><b>сгиб 3</b>
+          <div class="seg" data-f="2"><button data-v="L">через верх</button><button data-v="R">под низ</button></div>
+        </div>
+        <button class="go" id="run">Сложить и раскрыть</button>
+        <button class="go ghost" id="next">Следующий способ</button>
+        <span class="phase" id="phase">выбери, куда класть дальнюю половину</span>
+      </div>
+      <p class="hint"><span class="kbd">пробел</span> — сложить и раскрыть ·
+        <span class="kbd">→</span> — следующий способ · <span class="kbd">R</span> — очистить галерею
+        <label style="margin-left:14px"><input type="checkbox" id="showword"> показывать слово из букв</label></p>
+    </div>
+
+    <div class="side">
+      <div class="card">
+        <h2>Нарисуй все случаи</h2>
+        <p class="note">Приколото стрелкой. Сколько способов сложить — столько и картинок.
+          Масштаб общий: картинки сравнимы.</p>
+        <div class="gal" id="gal"></div>
+        <p class="count">нашли <b id="found">0</b> из 8</p>
+
+        <div class="two" id="twobox" hidden>
+          <h2>А сколько существенно разных?</h2>
+          <p class="note">Открепим: разрешим поворачивать и переворачивать. Восемь картинок
+            складываются всего в две формы — по четыре в каждую.</p>
+          <div class="shapes" id="shapes"></div>
+          <p class="hint">Это <i>другой</i> вопрос. «Нарисуй все случаи» — их&nbsp;8.
+            «Сколько существенно разных» — их&nbsp;2.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ─────────────────── геометрия (эталон — razbor/gen_ill.py) ─────────────────── */
+function bar(s){ let r=''; for(let i=s.length-1;i>=0;i--) r += (s[i]==='L'?'R':'L'); return r; }
+
+/** Слово ранга n. choices — в порядке word(): c1..cn, где c_n = ПЕРВЫЙ физический сгиб. */
+function word(n, choices){ let s=''; for(let i=0;i<n;i++) s = s + choices[i] + bar(s); return s; }
+
+/** Слово по ФИЗИЧЕСКИМ сгибам f1..fn (f1 — первый сгиб, он же середина слова). */
+function wordByFolds(folds){ return word(folds.length, folds.slice().reverse()); }
+
+/** Показатель двойки; сгиб в позиции p рождается на шаге n − v2(p). */
+function v2(k){ let r=0; while(k%2===0){ k/=2; r++; } return r; }
+function birthStep(n,p){ return n - v2(p); }
+
+/** Вершины ломаной. angleByPos[p] — угол сгиба в позиции p (0 = прямая, 90 = дракон,
+    →180 = сложено). Приколото: старт (0,0), первое звено вдоль +x. */
+function polyAngles(w, angleByPos){
+  let x=1, y=0, dx=1, dy=0;
+  const out=[[0,0],[1,0]];
+  for(let i=0;i<w.length;i++){
+    const s=(w[i]==='L')?1:-1;                      // L — поворот против часовой = «через верх»
+    const a=(angleByPos[i+1]||0)*Math.PI/180*s;
+    const co=Math.cos(a), si=Math.sin(a);
+    const nx=dx*co-dy*si, ny=dx*si+dy*co;
+    dx=nx; dy=ny; x+=dx; y+=dy; out.push([x,y]);
+  }
+  return out;
+}
+/** Ломаная при одном угле на всех сгибах (90 → дракон). */
+function poly(w, ang){ const a={}; for(let p=1;p<=w.length;p++) a[p]=ang; return polyAngles(w,a); }
+
+/* ─────────────── канон картинки: приколото / с точностью до подобия ─────────────── */
+function keyPinned(w){ return poly(w,90).map(p=>Math.round(p[0])+','+Math.round(p[1])).join(' '); }
+function keyShape(w){
+  const P = poly(w,90).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+  let best=null;
+  for(const refl of [false,true]){
+    const Q = refl ? P.map(p=>[p[0],-p[1]]) : P;
+    for(let k=0;k<4;k++){
+      let R=Q; for(let i=0;i<k;i++) R=R.map(p=>[-p[1],p[0]]);
+      for(const rev of [false,true]){
+        const S = rev ? R.slice().reverse() : R;
+        const [x0,y0]=S[0];
+        const t = S.map(p=>(p[0]-x0)+','+(p[1]-y0)).join(' ');
+        if(best===null || t<best) best=t;
+      }
+    }
+  }
+  return best;
+}
+
+/* ─────────────────── рисование ─────────────────── */
+const NS='http://www.w3.org/2000/svg';
+function el(n,a){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); return e; }
+function d(P){ return P.map(p=>p[0].toFixed(2)+','+p[1].toFixed(2)).join(' '); }
+
+const stage=document.getElementById('stage');
+const S=80, PIN=[210,360];        // посчитано по общему габариту x∈[−2,8], y∈[−4,4]
+const ARROW=3;                    // стрелка — метка направления у точки, а не линейка во всю ленточку
+const N=3, NC=Math.pow(2,N)-1;    // сгибов
+const PACK=168;                   // «сложено»: чуть меньше 180°, иначе гармошка вырождается в отрезок
+
+function drawPaper(){
+  const [ax,ay]=PIN, x2=ax+ARROW*S;
+  stage.appendChild(el('line',{x1:ax,y1:ay,x2:x2,y2:ay,class:'s-thin'}));
+  stage.appendChild(el('path',{d:'M '+x2+','+(ay-4)+' l9,4 -9,4 z', class:'s-ar-m'}));   // словарь #10
+  const t=el('text',{x:ax+ARROW*S+16, y:ay+5, class:'s-txt'});
+  t.textContent='вдоль стрелки'; stage.appendChild(t);
+  const t2=el('text',{x:ax-10, y:ay+21, class:'s-txt', 'text-anchor':'end'});
+  t2.textContent='точка'; stage.appendChild(t2);
+}
+function draw(w, angleByPos, showWord){
+  stage.textContent='';
+  drawPaper();
+  const [ax,ay]=PIN;
+  const P=polyAngles(w,angleByPos).map(p=>[ax+p[0]*S, ay-p[1]*S]);
+  stage.appendChild(el('polyline',{points:d(P), class:'s-line'}));                        // словарь #4
+  stage.appendChild(el('circle',{cx:P[0][0], cy:P[0][1], r:6, class:'s-node-r'}));        // словарь #1
+  if(showWord){ const t=el('text',{x:20,y:32,class:'s-txt-m'}); t.textContent='слово: '+w; stage.appendChild(t); }
+}
+function flat(w, showWord){ const a={}; for(let p=1;p<=NC;p++) a[p]=0; draw(w,a,showWord); }
+
+/** Мини-картинка. ОБЩИЙ масштаб и общая точка для всех 8 — иначе сравнение врёт. */
+const MINI={x0:-2, x1:3, y0:-3, y1:3};        // габарит финальных ломаных по всем 8 вариантам
+function miniSVG(w, box, common){
+  const P0=poly(w,90).map(p=>[Math.round(p[0]),Math.round(p[1])]);
+  let x0,x1,y0,y1;
+  if(common){ ({x0,x1,y0,y1}=MINI); }
+  else { const xs=P0.map(p=>p[0]), ys=P0.map(p=>p[1]);
+         x0=Math.min(...xs); x1=Math.max(...xs); y0=Math.min(...ys); y1=Math.max(...ys); }
+  const pad=9, W=box, H=box;
+  const s=Math.min((W-2*pad)/Math.max(x1-x0,1), (H-2*pad)/Math.max(y1-y0,1));
+  const ox=pad+((W-2*pad)-s*(x1-x0))/2, oy=pad+((H-2*pad)-s*(y1-y0))/2;
+  const P=P0.map(p=>[ox+(p[0]-x0)*s, H-(oy+(p[1]-y0)*s)]);
+  const svg=el('svg',{viewBox:'0 0 '+W+' '+H});
+  svg.appendChild(el('polyline',{points:d(P), class:'s-line', 'stroke-width':2.4}));
+  svg.appendChild(el('circle',{cx:P[0][0], cy:P[0][1], r:3.2, class:'s-node-r'}));
+  return svg;
+}
+
+/* ─────────────────── состояние ─────────────────── */
+let folds=['L','L','L'];                 // ФИЗИЧЕСКИЕ сгибы f1,f2,f3
+let busy=false;
+const ALL=[]; for(const a of 'LR') for(const b of 'LR') for(const c of 'LR') ALL.push([a,b,c]);
+const found=new Map();                   // keyPinned -> слово
+const showWord=()=>document.getElementById('showword').checked;
+
+const gal=document.getElementById('gal');
+function renderGal(){
+  gal.textContent='';
+  for(const f of ALL){
+    const w=wordByFolds(f), k=keyPinned(w), hit=found.has(k);
+    const c=document.createElement('div');
+    c.className='cell'+(hit?' hit':' empty');
+    if(hit){
+      c.appendChild(miniSVG(w,100,true));
+      if(showWord()){ const l=document.createElement('div'); l.className='w'; l.textContent=w; c.appendChild(l); }
+    }
+    gal.appendChild(c);
+  }
+  document.getElementById('found').textContent=found.size;
+  document.getElementById('twobox').hidden = found.size<8;
+  if(found.size===8) renderShapes();
+}
+function renderShapes(){
+  const box=document.getElementById('shapes'); box.textContent='';
+  const cls=new Map();
+  for(const f of ALL){ const w=wordByFolds(f), k=keyShape(w);
+    if(!cls.has(k)) cls.set(k,[]); cls.get(k).push(w); }
+  cls.forEach(ws=>{
+    const dv=document.createElement('div'); dv.className='shape';
+    dv.appendChild(miniSVG(ws[0],160,false));
+    const l=document.createElement('div'); l.className='lab'; l.textContent='таких — '+ws.length;
+    dv.appendChild(l); box.appendChild(dv);
+  });
+}
+
+/* ─────────────────── анимация ─────────────────── */
+const phase=document.getElementById('phase');
+const ease=t=> t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+function anim(from,to,ms,step){
+  return new Promise(res=>{ const t0=performance.now();
+    (function frame(now){ const t=Math.min(1,(now-t0)/ms); step(from+(to-from)*ease(t));
+      if(t<1) requestAnimationFrame(frame); else res(); })(t0); });
+}
+
+async function run(){
+  if(busy) return; busy=true;
+  const w=wordByFolds(folds);
+  const ang={}; for(let p=1;p<=NC;p++) ang[p]=0;
+  draw(w,ang,showWord());
+  await new Promise(r=>setTimeout(r,200));
+
+  for(let k=1;k<=N;k++){                                   // складываем: шаг за шагом
+    const born=[]; for(let p=1;p<=NC;p++) if(birthStep(N,p)===k) born.push(p);
+    phase.textContent='сгиб '+k+' — '+(folds[k-1]==='L'?'через верх':'под низ');
+    await anim(0,PACK,640,a=>{ born.forEach(p=>ang[p]=a); draw(w,ang,showWord()); });
+  }
+  phase.textContent='гармошка — формы пока нет';
+  await new Promise(r=>setTimeout(r,450));
+
+  phase.textContent='раскрываем до прямых углов…';         // раскрываем: все сгибы разом
+  await anim(PACK,90,1050,a=>{ for(let p=1;p<=NC;p++) ang[p]=a; draw(w,ang,showWord()); });
+
+  const k=keyPinned(w), isNew=!found.has(k);
+  found.set(k,w); renderGal();
+  phase.textContent = isNew ? 'новая картинка — в галерею' : 'такая уже была';
+  busy=false;
+}
+
+/* ─────────────────── управление ─────────────────── */
+function syncSegs(){
+  document.querySelectorAll('.seg').forEach(seg=>{
+    const i=+seg.dataset.f;
+    seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===folds[i]));
+  });
+}
+function pick(f){
+  folds=f.slice(); syncSegs(); flat(wordByFolds(folds), showWord());
+  phase.textContent='выбрано: '+folds.map((x,j)=>(j+1)+':'+(x==='L'?'верх':'низ')).join('  ');
+}
+document.querySelectorAll('.seg').forEach(seg=>{
+  const i=+seg.dataset.f;
+  seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    if(busy) return; const f=folds.slice(); f[i]=b.dataset.v; pick(f);
+  }));
+});
+document.getElementById('run').addEventListener('click',run);
+document.getElementById('next').addEventListener('click',()=>{
+  if(busy) return;
+  const rest=ALL.filter(f=>!found.has(keyPinned(wordByFolds(f))));
+  pick((rest.length?rest:ALL)[0]);
+});
+document.getElementById('showword').addEventListener('change',()=>{
+  renderGal(); if(!busy) flat(wordByFolds(folds), showWord());
+});
+addEventListener('keydown',e=>{
+  if(e.code==='Space'){ e.preventDefault(); run(); }
+  else if(e.code==='ArrowRight'){ document.getElementById('next').click(); }
+  else if(e.key==='r'||e.key==='R'||e.key==='к'||e.key==='К'){ found.clear(); renderGal(); }
+});
+
+/* старт */
+syncSegs(); renderGal(); flat(wordByFolds(folds), false);
+
+/* ─── самопроверка модели в браузере: расходиться с эталоном нельзя ─── */
+(function selfCheck(){
+  const pin=new Set(), sh=new Set();
+  for(const f of ALL){ const w=wordByFolds(f); pin.add(keyPinned(w)); sh.add(keyShape(w)); }
+  const ok = pin.size===8 && sh.size===2;
+  console.log('[виджет] ранг 3: приколотых картинок '+pin.size+', форм '+sh.size+' → '+(ok?'СХОДИТСЯ с эталоном':'РАСХОДИТСЯ'));
+  if(!ok) document.title='⚠ модель разошлась с эталоном';
+})();
+</script>

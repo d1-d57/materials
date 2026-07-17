@@ -3,3 +3,31 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# ── krivaya-drakona: порождаемое. Храним источник, не оттиск.
+# Правило: файл делает команда — его тут нет; файл никто не делает — он в git.
+#
+# ⚠⚠ В .gitignore НЕТ комментариев в конце строки: «#» работает только с начала
+# строки, иначе пояснение становится частью самого шаблона и он молчит вхолостую.
+# Поэтому пояснения — над строкой. Проверять `git check-ignore -v <файл>`.
+#
+# ⚠ НЕ игнорируется и игнорироваться не должно: krivaya-drakona/istochniki/pdf/ —
+# сканы «Квант» 1970 (главный якорь, все 12 задач) и 2020. Их никто не порождает,
+# восстановить нельзя. Весят 7.2 МБ — вес тут не довод: порождаемое весит 56 КБ.
+
+# ← assemble.py (из razbor/tekst/*.md)
+krivaya-drakona/razbor/build/
+# ← gen_ill.py
+krivaya-drakona/razbor/ill/
+# ← gen_l1_figs.py; в листок вклеен инлайном, файлом на него никто не ссылается
+krivaya-drakona/kartoteka/L1-fig2.svg
+# ← gen_l2_figs.py; то же
+krivaya-drakona/kartoteka/L2-fig-*.svg
+# ← build_L2_print.py (из L2-print-tmpl.html). В git шаблон, чтобы они не разъехались
+krivaya-drakona/kartoteka/L2-print.html
+# ← weasyprint (из соответствующего HTML)
+krivaya-drakona/kartoteka/*-print.pdf
+
+# ⚠ Асимметрия Л1/Л2 намеренная, не чините её вслепую: L1-print.html — ИСТОЧНИК
+# (SVG вклеен руками, шаблона нет), L2-print.html — порождается из шаблона.
+# Свести Л1 к шаблонной схеме — открытая задача; до тех пор L1-print.html в git.

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Листок 2 — печать</title>
+<!-- ШАБЛОН. Правится он; L2-print.html собирается из него: python3 build_L2_print.py -->
+<style>
+  @page{ size:A4; margin:12mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;font:11pt/1.34 Georgia,"Times New Roman",serif}
+  /* Нумерация продолжает листок 1 (задачи 1–12): дети держат оба листа сразу,
+     сквозной счёт снимает путаницу «какая это задача 4». */
+  .sheet{max-width:186mm;margin:0 auto;counter-reset:z 12}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:9mm}
+  .head .t{font-weight:700;font-size:12.5pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  /* WeasyPrint: flex здесь разваливает страницу — только float/inline-block.
+     Inline-SVG схлопывается при width:auto — размеры в мм ставит build_L2_print.py. */
+  .figrow{text-align:center;margin:0 0 9mm}
+  .figrow figure{display:inline-block;vertical-align:middle;margin:0 9mm}
+  ol{margin:0;padding:0;list-style:none}
+  li{counter-increment:z;position:relative;padding-left:28px;margin:0 0 7mm;
+    break-inside:avoid;page-break-inside:avoid}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  .mono{font-family:"Courier New",monospace;letter-spacing:.02em;font-weight:700}
+  @media screen{ body{background:#eceae6;padding:18px 0}
+    .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:12mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Кривая дракона</span>
+    <span class="m">6 класс &middot; занятие 2 &middot; 18.07.2026</span>
+  </div>
+
+  <div class="figrow">
+    <figure><!--RANG4--></figure>
+    <figure><!--TREUG--></figure>
+  </div>
+
+  <ol>
+    <li>Ползи по ломаной дракона ранга&nbsp;<span class="mono">4</span> от отмеченного конца (картинка слева). Сколько раз повернёшь налево, сколько направо? Посчитай то же самое для рангов&nbsp;<span class="mono">1</span>, <span class="mono">2</span> и&nbsp;<span class="mono">3</span>. Запиши все пары чисел в строчку, найди закономерность и предскажи оба числа для ранга&nbsp;<span class="mono">10</span>.</li>
+
+    <li>Может ли ломаная дракона повернуть четыре раза подряд в одну и ту же сторону? А три раза подряд?</li>
+
+    <li>Начерти ломаную дракона ранга&nbsp;<span class="mono">2</span> &mdash; в ней четыре звена. На каждом звене, как на гипотенузе, построй равнобедренный прямоугольный треугольник; на соседних звеньях треугольники смотрят в разные стороны. На картинке справа так сделано с рангом&nbsp;<span class="mono">1</span>: сама ломаная жирная, треугольники пунктирные. Теперь сотри ломаную и оставь одни катеты. Что получилось?</li>
+
+    <li>На картинке слева все семнадцать вершин ранга&nbsp;<span class="mono">4</span> пронумерованы от отмеченного конца. Соедини по порядку вершины с чётными номерами: <span class="mono">0</span>, <span class="mono">2</span>, <span class="mono">4</span>, &hellip;, <span class="mono">16</span>. Что вышло? А если соединить нечётные?</li>
+  </ol>
+</div>
+</body>
+</html>
