@@ -13,13 +13,13 @@
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
 - **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
-- **затравка:** `effektivnyj-topos-obraz`
+- **затравка:** `effektivnyj-topos-obraz` `assoc-linal-vysshaya-algebra` `assoc-ordinaly-maclane` `assoc-topologiya-razlichit-figury` `assoc-graf-so-strelkami-kolchan`
 
 ## Нити
 
@@ -3165,6 +3165,247 @@ id: verdict-shkolnye-opory
 **Коммутативная диаграмма — анимация по природе, потому что она утверждает РАВЕНСТВО ДВУХ ПУТЕЙ.** Значит каждую диаграмму курса показывать как **гонку двух точек по двум маршрутам, которые встречаются**. Квадрат естественности, треугольники сопряжения, аксиомы монады, NNO — всё это «два пути, одна финишная точка». **Один приём на весь курс.**
 
 ⚠ **Готовых анимаций в открытом доступе НЕТ** — только статичные иллюстрации (Category Theory Illustrated, math3ma). Анимации делаем сами (Manim). Заложить в бюджет.
+
+---
+## Карточки — введение L1 (диалог 18–19.07)
+
+> Консолидация арки `../../_studio/zhurnal/2026-07-18_teorkat-l1/` (SKELET-vvedenie · ZOOPARK-i-zachem · GIPOTEZY-L1 · MERKA-pervaya-lekcia · SESSIYA). Задача владельца: идеальное МОТИВИРОВАННОЕ введение (~2–3 лекции), из которого режем реальную L1; нагрузить примерами, связная картина, каждый кусок сразу «вау». Статус карточек — `черновик` (на приборе не гонялись, кроме отмеченного).
+
+```
+id: throughline-kolco-vvedeniya
+род: находка
+суть: Ось идеального введения (~2–3 лекции) замкнута в КОЛЬЦО: открыли числами (объекты как числа) → язык стрелок объединяет математику → в финале логика оказывается той же арифметикой объектов (КХЛ), что в начале
+котёл: научпоп
+находка: ⭐ Скелет держится на ОДНОЙ оси, замкнутой в кольцо, — это и есть «связная картина»,
+  которую просил владелец, а не россыпь. Четыре движения: I числа↔объекты (арифметика объектов,
+  категорификация, законы степеней); II одно понятие много лиц (делимость=НОД/НОК → называем
+  «категорию» → изоморфизм); III машина-переводчик (функторы, инварианты-вердикты, Розетта);
+  IV зеркала и кольцо (эквивалентность, дуальность, финал КХЛ). Открыли числами — закрыли
+  логикой-как-числами. Из введения ВЫРЕЗАЕМ реальную L1 (движения I–II + тизер функтора); границу
+  режем с Василием.
+связи: kategorifikaciya-arifmetiki, dekategorifikaciya-teryaet, zakon-stepenej-karrirovanie, mot-obratimost-i-universum, curry-howard-lambek, chl, dvojstvennost-princip, rosetta-baez-svyaznaya-kartina, invariant-vynosit-verdikt, ekvivalentnost-primery-vp-boole
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SKELET-vvedenie.md §THROUGHLINE + §Порядок
+статус: черновик
+```
+```
+id: glava-ne-lekciya
+род: находка
+суть: Первая ГЛАВА учебника ≠ первая ЛЕКЦИЯ: глава переоценивает лекцию в 2–3 раза
+котёл: математика
+находка: Мерка объёма по 6 источникам (реальное чтение PDF субагентами). Первые главы Riehl
+  (51 стр.), Mac Lane (24), Awodey (28) доходят до функторов + естественных преобразований —
+  блок на 2–3 занятия. Реальная первая ЛЕКЦИЯ (Altenkirch 6 стр.; Ловер-сессии) доходит до
+  изоморфизма (+ терминал/mono-epi) и СТОП перед функторами. ⇒ поправка владельца подтверждена
+  цифрами: меру нельзя брать в лоб с главы. Что реально помещается в одну L1: категория + зоопарк +
+  изоморфизм; функторы = L2+.
+связи: kategoriya-pobochnyj-produkt, functor
+уровень: (мерка курса)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/MERKA-pervaya-lekcia.md §Выводы 1–2
+статус: черновик
+```
+```
+id: kak-otkryvayut-vvedeniya
+род: находка
+суть: Донор приёмов-открытия из великих введений: у кого что крадём, чтобы каждый кусок начинался с вау
+котёл: научпоп
+находка: Разбор, как ОТКРЫВАЮТ лучшие введения (не главы учебников, а лекционные заходы). Крадём:
+  ФОРМАТ — Fong–Spivak «Seven Sketches» (один домен + одна конструкция на кусок, «пилообразная»
+  сложность, каждый кусок самодостаточен и кончается вау; их зал = наш); МЕТОД — Spivak «CT4S»
+  (показать 8–12 категорий ДО аксиом, «categories without admitting it» + литания «X повсюду»);
+  КРЮЧКИ — Cheng («отношения, а не элементы», «композиция — весь смысл»; темп её НЕ берём —
+  определение к середине); ОТКРЫТИЕ — Leinster («вид с высоты птичьего полёта; чем НОК похож на
+  прямую сумму?»); связная картина — Розетта Баэза.
+связи: rosetta-baez-svyaznaya-kartina, throughline-kolco-vvedeniya, chum-kategoriya, kategorifikaciya-arifmetiki
+уровень: (донор приёмов)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SKELET-vvedenie.md §Что у кого крадём + SESSIYA.md §2026-07-19
+статус: черновик
+```
+```
+id: invariant-vynosit-verdikt
+род: находка
+суть: Стратегия «зачем» для введения: ИНВАРИАНТ ВЫНОСИТ ВЕРДИКТ, недоступный в лоб — сильнее всего отвечает на вопрос владельца «зачем структура объекта раскрывает объект»
+котёл: научпоп
+находка: ⭐ Ресёрч поправил прежний тезис «зачем = унификация»: унификация отвечает на «зачем
+  ДИСЦИПЛИНА» (один язык, одно доказательство), но для смешанного зала как ОТКРЫТИЕ похожа на
+  бухгалтерию и недодаёт вау. Вопрос владельца был другой — «зачем структура объекта помогает
+  понять объект», — и сильнее всего на него отвечают: инвариант выносит вердикт, недоступный
+  напрямую (Галуа — ярче всех; π₁; 3-раскраска узла), + «богатый уровень помнит больше»
+  (категорификация). Драматургия: вердикт-пример → рамка «объект = его связи» (Йонеда+овцы) →
+  унификация ФИНАЛОМ.
+связи: galua-verdikt, raskraska-3-uzla-verdikt, gomologii-grafa-funktor-vect, kategorifikaciya-arifmetiki, motivation-hom-language, dekategorifikaciya-teryaet
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/ZOOPARK-i-zachem.md §C + SESSIYA.md §зоопарк+зачем
+статус: черновик
+```
+```
+id: rosetta-baez-svyaznaya-kartina
+род: находка
+суть: Розеттский камень Баэза–Стэя — таблица-переводчик: объект/морфизм/композиция переводятся между областями (множества · программы-и-типы · процессы · доказательства); одна таблица даёт «связную картину»
+котёл: научпоп
+находка: Приём «связной картины» из великих введений: ОДНА таблица-словарь показывает, что
+  категории пронизывают всё как единый язык, а не россыпь — ровно то, чего просил владелец. Для
+  зала берём 2–4 колонки. Тень финала-кольца: колонка «доказательства/логика» = КХЛ. ⚠ Полная
+  таблица Баэза–Стэя (вкл. физику/топологию/квантовую механику) — потолок; урезаем под зал.
+связи: chl, curry-howard-lambek, throughline-kolco-vvedeniya, motivation-hom-language
+уровень: зал берёт (урезанно)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SKELET-vvedenie.md §Что у кого крадём + https://arxiv.org/abs/0903.0340
+статус: черновик
+```
+```
+id: assoc-linal-vysshaya-algebra
+род: затравка
+суть: Линейная алгебра — единственная твёрдая опора зала и ДОМ большинства категорных примеров введения; высшая алгебра (группы/поля/представления) — второй пласт
+котёл: математика
+находка: Владелец 18.07: «линал (очень!)». Куда ни ткни во введении — категорный пример садится
+  в Vect: матрицы = категория (Mat); (AB)ᵀ=BᵀAᵀ = контравариантность; производная = функтор в Mat
+  (цепное правило); Клейсли свободного в.п. = матрицы; гомологии графа = функтор Граф→Vect;
+  представление колчана = функтор Q→Vect; представление группы G→Vect («тени группы матрицами»).
+  ⇒ линал — не одна из опор, а несущая ось зоопарка: строим примеры ТАМ, где зал держит твёрже
+  всего. Высшая алгебра (Галуа, поля, модули-с-напоминанием) — на пальцах/тизером.
+связи: mat-pervaya-kategoriya, transpose-contravariant, chain-rule-est-funktorialnost, free-vect-monad, gomologii-grafa-funktor-vect, assoc-graf-so-strelkami-kolchan, galua-verdikt
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SESSIYA.md §редирект 18.07 + ZOOPARK-i-zachem.md §B1,B3
+статус: черновик
+```
+```
+id: assoc-ordinaly-maclane
+род: затравка
+суть: Ординальные числа (Маклейн, гл.I) — владельцу понравились, «стоит рассказать» во введении
+котёл: математика
+находка: Прямая реакция владельца на Маклейна гл.I: ординалы понравились. Ординалы — знакомый залу
+  счёт, продолженный за бесконечность (0,1,2,…,ω,ω+1,…): красивая, быстро вводимая
+  «размножающаяся» конструкция в духе Арнольда (объект, который штампует много порядков-категорий).
+  Кандидат в зоопарк как ч.у.м./категория и как иллюстрация «объекты богаче чисел». Точный заход и
+  деталь — вычитать по Mac Lane CWM гл.I при письме.
+связи: chum-kategoriya, kategorifikaciya-arifmetiki
+уровень: требует приручения
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SESSIYA.md §2026-07-18 (рамка+карта); Mac Lane CWM гл.I
+проверено-на-приборе: 2026-07-18 — «понравилось у Маклейна: ординалы (стоит рассказать)»
+статус: черновик
+```
+```
+id: assoc-topologiya-razlichit-figury
+род: затравка
+суть: Топология «на пальцах» — область «различить фигуры инвариантом»; для научпопа разрешена картинками (владелец 18.07)
+котёл: научпоп
+находка: Владелец 18.07: гомологии/топология на пальцах — ОК: «не зная топологии, человеку
+  объясняют картинками задачу различить фигуры, и каждому пространству сопоставляется инвариант».
+  Меню области: дырки (эйлерова χ: сфера≠тор), узлы (3-раскраска; многочлен Джонса — узел≠зеркало),
+  петли (π₁: окружность=ℤ, восьмёрка некоммутативна), TQFT (Cob→Vect, штаны=умножение). Все —
+  тизеры-жесты, не доказываем; функтор Hₙ:Top→Ab называем, строим машину в L2.
+связи: eulerova-harakteristika-razlichit, raskraska-3-uzla-verdikt, kobordizmy-kameo, gomologii-grafa-funktor-vect, invariant-vynosit-verdikt
+уровень: зал берёт (на пальцах)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SESSIYA.md §2026-07-18 (рамка) + ZOOPARK-i-zachem.md §B2
+статус: черновик
+```
+```
+id: assoc-graf-so-strelkami-kolchan
+род: затравка
+суть: Графы-со-стрелками (колчаны) — родная программистам картинка; представление колчана = функтор Q→Vect; форма графа решает всё (Габриэль → ADE)
+котёл: математика
+находка: Владелец 18.07 держит «графы/колчаны» среди желанных областей. Колчан = ориентированный
+  граф; представление = векторное пространство на каждой вершине + матрица на каждой стрелке =
+  БУКВАЛЬНО функтор Q→Vect (Q как категория путей) — самый честный «граф → векторные пространства».
+  Тизер-восторг: теорема Габриэля (1972) — конечное число неразложимых представлений ⟺ форма графа =
+  диаграмма Дынкина ADE (Aₙ,Dₙ,E₆,E₇,E₈), тот же магический список, что у Платоновых тел. Содержание
+  (неразложимые, системы корней) — вне L1; берём только слоган «форма графа решает всё».
+  ⚠ Не путать с instrument-quiver — это инструмент q.uiver.app (редактор диаграмм), а не колчан.
+связи: gomologii-grafa-funktor-vect, assoc-linal-vysshaya-algebra, functor
+уровень: требует приручения
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/GIPOTEZY-L1.md §2 (колчаны) + ZOOPARK-i-zachem.md §B1 + https://en.wikipedia.org/wiki/Gabriel's_theorem
+статус: черновик
+```
+```
+id: gomologii-grafa-funktor-vect
+род: пример
+суть: ⭐ Гомологии графа H₀/H₁ = функтор Граф→Vect из ОДНОЙ матрицы инцидентности ∂ над 𝔽₂; топологии ноль, чистый линал (мечта-пример владельца)
+котёл: математика
+находка: ⭐ Мечта владельца оказалась реальной (durable, 18.07): «функтор из категории графов в
+  векторные пространства, дающий инвариант графа». H₁=ker∂ (независимые циклы), H₀=coker∂
+  (компоненты); dim H₀=#компонент, dim H₁=E−V+C (цикломатическое число). Всё из ОДНОЙ матрицы
+  инцидентности над {0,1} — школьный линал, топология не нужна. ⚠ Функториальность ТОНКАЯ (нужны
+  гомоморфизмы графов, отображение может быть нулевым) и НЕ ударная для L1: берём как пример
+  «объекту приписали алгебру», функтор называем/дразним, строим в L2.
+связи: assoc-linal-vysshaya-algebra, eulerova-harakteristika-razlichit, assoc-graf-so-strelkami-kolchan, functor, invariant-vynosit-verdikt
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/ZOOPARK-i-zachem.md §B1 + https://en.wikipedia.org/wiki/Circuit_rank
+статус: черновик
+```
+```
+id: raskraska-3-uzla-verdikt
+род: пример
+суть: ⭐ 3-раскраска узла: 3 мелка + локальное правило на перекрёстках — школьник СТРОГО доказывает, что трилистник завязан (тривиальный узел не раскрашивается)
+котёл: научпоп
+находка: ⭐ «Инвариант выносит вердикт» руками, без пререквизитов: трилистник 3-раскрашивается,
+  тривиальный узел — нет ⇒ они РАЗНЫЕ, узел действительно завязан. Реально делается на доске
+  (владелец 18.07: узлы/инварианты узлов — желанный тип). Категорная обёртка = Hom(π₁, S₃) (Фокс) —
+  тизер, но сам вау настоящий. Родственник: многочлен Джонса различает узел и его ЗЕРКАЛО (t↔1/t).
+связи: invariant-vynosit-verdikt, assoc-topologiya-razlichit-figury, eulerova-harakteristika-razlichit
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/ZOOPARK-i-zachem.md §B2 + https://en.wikipedia.org/wiki/Tricolorability
+статус: черновик
+```
+```
+id: eulerova-harakteristika-razlichit
+род: пример
+суть: Эйлерова характеристика χ различает фигуры (сфера≠тор): разный χ ДОКАЗЫВАЕТ, что фигуры разные; χ=dim H₀−dim H₁ — тень функтора гомологий
+котёл: математика
+находка: Простейший инвариант «различить фигуры»: χ считается школьником (V−E для графа; V−E+F
+  для поверхности), а разный χ строго доказывает несовпадение. ⚠ Честная логика: ОДИНАКОВЫЙ χ
+  ничего не доказывает — важная оговорка. Мост к категорификации: χ = dim H₀ − dim H₁ — «тень»
+  функтора гомологий (число, потерявшее пространства).
+связи: gomologii-grafa-funktor-vect, assoc-topologiya-razlichit-figury, raskraska-est-strelka, dekategorifikaciya-teryaet
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/ZOOPARK-i-zachem.md §B1,B2 + https://en.wikipedia.org/wiki/Euler_characteristic
+статус: черновик
+```
+```
+id: galua-verdikt
+род: пример
+суть: ⭐ Теория Галуа как вердикт: симметрии корней решают, разрешимо ли уравнение в радикалах (квинтика неразрешима, т.к. A₅ проста). НЕ путать с galiley-proizvedenie (Галилей)
+котёл: математика
+находка: ⭐ Самый «висцеральный» ответ на вопрос владельца «зачем структура объекта раскрывает
+  объект»: структура (группа Галуа) выносит вердикт, на который в лоб не ответить. Разрешимость в
+  радикалах ⟺ разрешимость группы Галуа; квинтика неразрешима, потому что A₅ проста. Q(√2,√3):
+  3 подполя ↔ 3 подгруппы — две зеркальные решётки (эквивалентность категорий — потолок).
+  Владелец 18.07: Галуа можно (эквивалентность категорий?). Для L1 — слоган+картинка на пальцах.
+связи: invariant-vynosit-verdikt, assoc-linal-vysshaya-algebra, dvojstvennost-princip
+уровень: зал берёт (слоган+картинка, на пальцах)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/ZOOPARK-i-zachem.md §B3 + https://en.wikipedia.org/wiki/Fundamental_theorem_of_Galois_theory
+статус: черновик
+```
+```
+id: ekvivalentnost-primery-vp-boole
+род: пример
+суть: Эквивалентность категорий = «две разные вещи оказались одной»: конечномерные в.п. ≃ матрицы (выбор базиса = выбор эквивалентности); конечные булевы алгебры ≃ конечные множества^op (детская двойственность Стоуна)
+котёл: математика
+находка: Сюжет «симметрии в разных местах / одна вещь под двумя именами». В.п.≃матрицы — родная
+  опора зала: выбор базиса И ЕСТЬ выбор эквивалентности (объясняет, почему координаты «условны»).
+  FinBool≃FinSet^op — детская Стоун-двойственность (^op = переверни стрелки), честна именно в
+  конечном случае. ⚠ Честно: это ЭКВИВАЛЕНТНОСТЬ, не изоморфизм категорий — хороший повод
+  объяснить разницу на в.п.≃матрицы.
+связи: dvojstvennost-princip, mat-pervaya-kategoriya, assoc-linal-vysshaya-algebra, throughline-kolco-vvedeniya
+уровень: зал берёт
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/SKELET-vvedenie.md §Движение IV (бит 10)
+статус: черновик
+```
+```
+id: raskraska-est-strelka
+род: пример
+суть: Правильная раскраска графа в k цветов = гомоморфизм графов G→K_k; хроматический многочлен P(G,k)=|Hom(G,K_k)| — «раскраска это стрелка», НЕ функтор в Vect
+котёл: математика
+находка: Приятный пример «морфизмы возникают, где не ждёшь»: соседи обязаны попасть в разные цвета
+  = в разные вершины полного графа K_k ⇒ раскраска — это стрелка. ⚠ Само-поправка аналитика
+  (durable): раньше положил раскраску в одну корзину с гомологиями — ОШИБКА, это НЕ
+  функтор-инвариант в Vect, а множество Hom(G,K_k), а хром. многочлен — просто ЧИСЛО. Ценность для
+  L1 низкая/опциональная: реплика «даже раскраска карты — тайно морфизм». Подъём в Vect
+  (категорификация) — потолок.
+связи: gomologii-grafa-funktor-vect, eulerova-harakteristika-razlichit, functor
+уровень: зал берёт (реплика)
+источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/GIPOTEZY-L1.md §2 (раскраски — поправка) + https://en.wikipedia.org/wiki/Graph_homomorphism
+статус: черновик
+```
 
 ---
 *Картотека. Формат — `STANDART-uzla.md`; что строим — `../SPEKA.md`; источники — `../istochniki/`; арка — `../../_studio/zhurnal/2026-07-16_teorkat-landshaft/`.*
