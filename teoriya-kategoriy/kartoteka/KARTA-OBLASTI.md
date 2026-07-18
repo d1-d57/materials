@@ -11,7 +11,7 @@
 ## Индекс по роду
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora`
-- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie`
+- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
 - **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
 - **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
@@ -2833,6 +2833,22 @@ id: lccc-est-slajsy-ccc
 связи: riehl-lccc-donor, ccc-opredelenie, zavisimoe-proizvedenie, verdict-rifma-lccc
 уровень: требует приручения (левая сторона — зал берёт; эквивалентность — беглым упоминанием, техника на Л7)
 источник: Riehl §4.5 Def 4.5.2 печ.с.157 + Prop 4.5.6 печ.с.158; Awodey Def 9.19 печ.с.235; Barr-Wells Thm 13.4.3 печ.с.361
+статус: seed
+```
+```
+id: lccc-opredelenie
+род: понятие
+суть: локально декартово замкнутая категория (LCCC) — категория, каждый слайс C/X которой декартово замкнут; «локально» = «над каждым объектом»
+котёл: математика
+находка: центральный объект Л5 (лекция буквально «Локально декартово замкнутые категории»), которого не было
+  ПОНЯТИЕМ — стоял только утверждением-эквивалентностью (lccc-est-slajsy-ccc), из-за чего гейт G-A (`check_kurs.py`,
+  якорь LCCC→Л5) краснел. Определение элементарно, без функторов/сопряжений: «каждый слайс (Л4) декартово замкнут
+  (Л3)» — оба блока уже собраны, ключ темпа 3/5. «Локально» = «над каждым объектом», как «локально» в топологии/анализе.
+  Экспонента в слайсе факторизуется через зависимое произведение Πf (в Set — руками; общий случай объявить-и-отложить
+  на Л7). Riehl Def 4.5.2 даёт ровно это («each slice is cartesian closed»), без функторов.
+связи: lccc-est-slajsy-ccc, slajs-kategoriya, ccc-opredelenie, zavisimoe-proizvedenie, riehl-lccc-donor
+уровень: требует приручения (левая сторона «каждый слайс CCC» — зал берёт; общий Πf — беглым упоминанием)
+источник: Riehl §4.5 Def 4.5.2 печ.с.157; Awodey Def 9.19 + Prop 9.20 печ.с.235
 статус: seed
 ```
 ```
