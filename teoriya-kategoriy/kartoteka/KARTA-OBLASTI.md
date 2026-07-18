@@ -11,11 +11,11 @@
 ## Индекс по роду
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora`
-- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `verdict-rifma-lccc` `omega-bez-yonedy` `nno-initial-rig`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7`
+- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -1535,7 +1535,7 @@ id: riehl-lccc-donor
 ```
 ```
 id: verdict-rifma-lccc
-род: утверждение
+род: находка
 суть: ВЕРДИКТ по «Рифме»: подтверждена в несущей (логической) части, с обязательной поправкой к смете
 котёл: математика
 находка: Riehl §4.5 читан целиком. ✅ ПОДТВЕРЖДЕНО дословно: LCCC ОПРЕДЕЛЯЕТСЯ через «каждый слайс
@@ -2012,6 +2012,394 @@ id: scena-podstanovka-tjanet-sloj
 статус: черновик
 ```
 
+## Карточки — Л4: пределы и копределы (заход `kod_l4-l5-vlivanie.md`, влито 18.07)
+
+*Card-set пары Л4–Л5, реконсилированный тремя вердиктами (`VERDIKT-l4-l5-kontent §14`, `VERDIKT-shov-L4-L5 §7`, `VERDIKT-l4-l5-programma §Д.2`) — механический перенос, текст дословно из источника, статус `seed` как в вердикте.*
+
+```
+id: uravnitel-opredelenie
+род: понятие
+суть: уравнитель eq(f,g) двух параллельных стрелок f,g:A⇉B — универсальный подобъект {x∈A: f(x)=g(x)}; «универсальное решение уравнения f=g»
+котёл: математика
+находка: НОВОЕ понятие Л4, которого в курсе НЕТ (греп KARTA: уравнителя нет ни одной карточкой). Несущее для
+  выхода «решать уравнение = находить универсальное решение»: Ловер подаёт его дословно (раздел
+  «Solving equations and picturing maps», S27 печ.с.292, «universal solution… equalizer»). Русский термин КАНОН — «уравнитель (или ядро разности)»
+  (MacLane §3.4 печ.с.85, «не эквалайзер»). Опора зала: уравнение зал решает всю жизнь; универсальность —
+  новое. Рифма Л2→Л4: терминал (беднейший) и произведение (лучший с двумя проекциями) зал уже видел, уравнитель —
+  «лучший, где два пути совпадают».
+связи: predel-opredelenie, sobstvennoe-est-uravnitel, yadro-est-uravnitel, vyhod-l4-reshat-est-predel
+уровень: зал берёт
+источник: MacLane §3.4 печ.с.85 (рус. термин); Awodey Def 3.13 печ.с.62; Riehl Def 3.1.13 печ.с.86; Lawvere S27 печ.с.292 (universal solution)
+статус: seed
+```
+```
+id: predel-opredelenie
+род: понятие
+суть: конечный предел = универсальный конус над диаграммой; строится из терминала, произведений и уравнителей — «универсальное решение системы условий»
+котёл: математика
+находка: НОВОЕ понятие Л4. Даёт лекции ЦЕНТРАЛЬНЫЙ объект вместо «слайс+pullback» (диагноз прибора «не понял,
+  какой центральный объект»). Русский КАНОН — «предел» (MacLane §3.4 печ.с.83, «универсальная стрелка из Δ в F»).
+  Не путать с пределом последовательности (омоним, убийца выхода — см. vyhod-l4-reshat-est-predel): предел ТК —
+  универсальный конус, не lim. Pullback и уравнитель — частные пределы; произведение (Л2) — тоже предел ⇒ зал
+  уже умеет один предел, Л4 достраивает машину.
+связи: uravnitel-opredelenie, predel-iz-proizvedenij-i-uravnitelej, pullback-podstanovka, proizvedenie-opredelenie
+уровень: зал берёт (частные пределы) / требует приручения (общий конус)
+источник: MacLane §3.4 печ.с.83 (рус. термин, конус); Awodey Def 5.16 печ.с.102; Riehl §3.1 печ.с.83; Spivak §4.5 печ.с.186
+статус: seed
+```
+```
+id: predel-iz-proizvedenij-i-uravnitelej
+род: утверждение
+суть: pullback = уравнитель произведения (A×_X B = eq(A×B ⇉ X)); все конечные пределы = терминал + произведения + уравнители
+котёл: математика
+находка: ⭐ БОЛЬШАЯ ТЕОРЕМА Л4 (уровень zakon-stepenej-karrirovanie Л3, которую прибор хвалил «серьёзная теорема,
+  один раз доказал — много раз используешь»). Ровно то, что прибор искал и не нашёл: не «pullback=произв. в
+  слайсе» (это он назвал мотивацией), а теорема-содержание. Показывает: три конструкции курса — терминал (Л2),
+  произведение (Л2), уравнитель (Л4) — ПОРОЖДАЮТ всю машину пределов. Гипотеза аналитика (c) подтверждена
+  ДОСЛОВНО тремя источниками: Awodey Prop 5.21 «iff» (эквивалентность!); MacLane §5.2 Теорема 1–2 + Следствие 1;
+  Riehl Thm 3.5.11 + 3.5.17. Доказательство короткое, зал берёт (уравнитель произведения — руками в Set).
+связи: uravnitel-opredelenie, predel-opredelenie, proizvedenie-opredelenie, edinstvennost-terminalnogo
+уровень: зал берёт
+источник: Awodey Prop 5.21 печ.с.104 (⟺); MacLane §5.2 Теор.1-2+Следств.1 печ.с.133–134; Riehl Thm 3.5.11 печ.с.112, Thm 3.5.17 печ.с.115
+статус: seed
+```
+```
+id: yadro-est-uravnitel
+род: утверждение
+суть: ker φ = eq(φ, 0) — ядро линейного отображения, гомоморфизма групп, модуля есть ОДНА конструкция (уравнитель); в любой абелевой категории уравнители суть ядра
+котёл: математика
+находка: сшивает линейную алгебру и группы ОДНОЙ конструкцией — ровно идея курса дословно (прибор): «с линейной
+  алгеброй сталкиваемся → вспоминаем; с группами → вспоминаем». MacLane §8.1 печ.с.223 дословно: «В любой
+  AB-категории все уравнители являются ядрами… в R-Mod, Ab обычно имеют дело с ядрами». ⚠ ПОПРАВКА к гипотезе
+  аналитика «ядро=pullback»: сшивка идёт через УРАВНИТЕЛЬ, а pullback-форма (ядро вдоль точки 0) — прибор просил
+  «не вдоль точки», ⇒ это законный ВХОД, не несущее. Несущее — собственное подпространство (вдоль оператора).
+связи: uravnitel-opredelenie, sobstvennoe-est-uravnitel, pullback-podstanovka
+уровень: зал берёт
+источник: MacLane §8.1 печ.с.222–223 (дословно); Awodey печ.с.65 (абелевы), печ.с.80 (группы); Riehl Ex 3.1.14 печ.с.86
+статус: seed
+```
+```
+id: sobstvennoe-est-uravnitel
+род: утверждение
+суть: собственное подпространство V_λ = {v: Av=λv} = eq(A, λ·id) = ker(A−λI) — ОТДЕЛЬНОЕ V_λ как уравнитель уравнения Av=λv (не всё разложение ⊕V_λ, то есть не Σ)
+котёл: математика
+находка: кандидат-усиление Л4 на опоре зала (собственные векторы зал считает всю жизнь). 🔴 РАЗЖАЛОВАН ВЕРИФИКАТОРОМ
+  из ⭐⭐-флагмана — и вот почему, честно: объект (собственные подпространства/спектр) ПЕРЕСЕКАЕТСЯ с карточкой
+  mot-sloi-spektr (Л4), которую ПРИБОР 17.07 ПРОВАЛИЛ («не понимаю смысла… не могу придать смысл», KARTA:1943) и
+  VERDIKT-shov ПОСТАНОВИЛ снять. НО линза ДРУГАЯ: mot-sloi-spektr подавала всё разложение V=⊕_λ V_λ как СЕМЕЙСТВО
+  над базой-спектром (операция Σ, «зачем расслаивать» — прибор не понял); здесь — отдельное V_λ как УРАВНИТЕЛЬ
+  уравнения Av=λv (операция предел, мотивация «решать уравнение»). Разные операции, разные мотивации. ⚠ НО eq-линза
+  прибором НЕ проверена (провалена была Σ-линза) ⇒ несёт ТОЛЬКО если прибор купит; иначе несущее — yadro-est-
+  uravnitel + predel-iz-proizvedenij-i-uravnitelej. ⚠ Математика железная (в Vect уравнитель=ядро разности:
+  MacLane §8.1, Riehl Prop 4.6.8), но подача «собственное КАК уравнитель» НЕ встречена ни в одном из 5 источников —
+  синтез захода. Убийца: «переименование ker(A−λI)» — крыть рифмой (окружность/ядро/неподвижная точка — одна машина).
+связи: uravnitel-opredelenie, yadro-est-uravnitel, predel-iz-proizvedenij-i-uravnitelej, mot-sloi-spektr
+уровень: вопрос прибору (снимает ли eq-линза блокер mot-sloi-spektr — эмпирически открыто)
+источник: синтез захода на MacLane §8.1 печ.с.222–223 + Awodey печ.с.65 + Riehl Prop 4.6.8 печ.с.168 (уравнитель=ядро разности); eigenspace-как-уравнитель в источниках НЕ подан; связь с проваленной mot-sloi-spektr — KARTA:1926–1957
+статус: seed
+```
+```
+id: uravnitel-okruzhnost
+род: пример
+суть: единичная окружность {(x,y): x²+y²=1} есть уравнитель eq(x²+y², 1) двух отображений ℝ²⇉ℝ — «уравнение фигуры = уравнитель»
+котёл: математика
+находка: САМЫЙ наглядный вход в уравнитель, зал держит со школы (уравнение окружности). Awodey Example 3.14
+  печ.с.62 дословно: eq(f,g) для f(x,y)=x²+y², g(x,y)=1 — единичная окружность S↪ℝ². Показывает «решать уравнение =
+  вычислять уравнитель» на картинке ДО линейной алгебры. Рифма: любая «фигура, заданная уравнением» — уравнитель;
+  ложится на визуальный контракт курса (сцена).
+связи: uravnitel-opredelenie, vyhod-l4-reshat-est-predel, nepodvizhnye-tochki-uravnitel
+уровень: зал берёт
+источник: Awodey Example 3.14 печ.с.62
+статус: seed
+```
+```
+id: nepodvizhnye-tochki-uravnitel
+род: пример
+суть: множество неподвижных точек {x: f(x)=x} = eq(f, id) — уравнитель отображения и тождества
+котёл: математика
+находка: НОВЫЙ пример уравнителя, зал держит интуицию (неподвижная точка = где ничего не сдвинулось). Riehl
+  Example 3.2.14 печ.с.96 дословно: для идемпотента e — «fixed points… equalizer A^e ↣ A ⇉(id,e) A». Сторона
+  «геометрия» выхода Л4. Мост в приложения (теоремы о неподвижной точке зал слышал).
+связи: uravnitel-opredelenie, uravnitel-okruzhnost, vyhod-l4-reshat-est-predel
+уровень: зал берёт
+источник: Riehl Example 3.2.14 печ.с.96
+статус: seed
+```
+```
+id: pullback-join-dannye
+род: пример
+суть: расслоённое произведение в Set = «пары с общим значением» = JOIN таблиц по общему ключу; X×_Z Y = {(x,y): f(x)=g(y)}
+котёл: математика
+находка: pullback на языке, который зал-программисты держат ЛУЧШЕ лектора (базы данных, join) — но это МАТЕМАТИКА,
+  не код (ловушка №1 не срабатывает: соединение таблиц — теоретико-множественная операция). Spivak §2.5 печ.с.41 +
+  наглядный пример «эксперименты с совпадающим давлением» печ.с.48. Вдоль ДВУХ произвольных отображений
+  (интересно, не точка). ⚠ Не путать с пересечением (Л2): JOIN — пары с общим значением, новый объект.
+связи: pullback-podstanovka, uravnitel-opredelenie
+уровень: зал берёт
+источник: Spivak §2.5.1 печ.с.41, эксперимент печ.с.48; Awodey печ.с.91 («pullback = generalization of intersection and inverse image»)
+статус: seed
+```
+```
+id: pullback-ogranichenie-rassloenia
+род: пример
+суть: ограничение расслоения f*E вдоль отображения f (лента Мёбиуса, накрытие) = расслоённое произведение; прообраз открытого f⁻¹(U)
+котёл: математика
+находка: pullback как ГЕОМЕТРИЯ — сторона «геометрия» выхода Л4, наглядно (расслоение зал видел: сфера, Мёбиус).
+  MacLane §3.4 печ.с.86 дословно: «g — отображение расслоения с базой a, f — непрерывное в базу, проекция
+  коуниверсального квадрата — индуцированное отображение расслоения». Riehl Example 3.1.18 печ.с.87: pullback
+  накрытия ℝ→S¹ вдоль точки = ℤ⊂ℝ (содержательное отображение exp). Вдоль f (интересно, не точка).
+связи: pullback-podstanovka, pullback-join-dannye
+уровень: зал берёт (картинка) / требует приручения (общее расслоение)
+источник: MacLane §3.4 печ.с.85–86 (расслоённое произведение = декартов квадрат, расслоение); Riehl Example 3.1.18 печ.с.87
+статус: seed
+```
+```
+id: vyhod-l4-reshat-est-predel
+род: находка
+суть: ВЫХОД Л4 — «решать уравнение = находить УНИВЕРСАЛЬНОЕ РЕШЕНИЕ»: одна машина под шестью именами (собственный вектор, ядро, окружность, неподвижная точка, JOIN, расслоение). «Предел» — техническое имя ПОСЛЕ пунчлайна
+котёл: математика
+находка: фалсифицируемый выход, которого у Л4 не было (прибор: «у лекции нет ВЫХОДА»). Подтверждён ТРЕМЯ
+  источниками, один элементарный: Ловер S27 печ.с.292 (раздел «Solving equations», «universal solution» уравнения =
+  equalizer — ДОСЛОВНО, наш жанр, верификатор сверил); Awodey печ.с.62 (уравнитель = обобщение ядра, «множества
+  нулей вещественной функции», аксиомы выделения); Riehl Preface печ.с.xiii («Limit constructions build new objects
+  by imposing equations»). 🔴 ПУНЧЛАЙН — «универсальное решение», НЕ «предел» (поправка верификатора): «предел» для
+  зала-программистов с матанализом — ложный друг (услышат lim). Ловер даёт пунчлайн без омонима («universal
+  solution»); «предел» вводить ПОСЛЕ одной оговоркой «не путать с пределом последовательности». Так содержание У3
+  (произв+уравнитель+pullback=одна машина) сохранено, а пунчлайн не на слове-омониме. Стороны (≥4): ЛА · логика ·
+  геометрия · группы (+ данные/JOIN для зала). Ограничение: «уравнение вида f=g в категории с пределами» (не дифф/нелин.).
+связи: uravnitel-opredelenie, predel-iz-proizvedenij-i-uravnitelej, sobstvennoe-est-uravnitel, atlas-predely-po-kategoriyam
+уровень: зал берёт
+источник: Lawvere S27 печ.с.292; Awodey печ.с.62; Riehl Preface печ.с.xiii
+статус: seed
+```
+```
+id: atlas-predely-po-kategoriyam
+род: находка
+суть: атлас «уравнитель/pullback/предел по 6 категориям» — ресурс всех лекций: уравнитель несёт опору зала (Vect/Grp), pullback несёт Set/логику/геометрию, в порядках/решётках оба вырождаются в meet
+котёл: математика
+находка: слой А (курс-широкое). Развилка адреса Л4: pullback ОДИН не несёт опору зала (в Vect worked example не
+  даёт ни один из 5 источников; в порядках вырождается в meet=произведение=Л2 рецикл) — центр Л4 = ПРЕДЕЛ, а не
+  pullback. Строка охвата: 6 категорий, 5 источников глазами; содержательный уравнитель дали 2 (Vect, Grp/Ab),
+  содержательный pullback вдоль интересного — 3 (Set/JOIN, логика/подстановка, Top/расслоение), в 2 (порядки,
+  решётки) оба вырождаются — отрицательный результат, несущий развилку. Переиспользуемо: подстановка=pullback
+  (нить logika, Л5/Л9), сечения (Л5), ∀=Π (Л5→Л9).
+связи: vyhod-l4-reshat-est-predel, predel-iz-proizvedenij-i-uravnitelej, uravnitel-opredelenie
+уровень: (ресурс для конструирования, не для зала одной карточкой)
+источник: Riehl §3+§4.5, Awodey гл.3/5/9, MacLane §3.4/§5.2/§8.1, Lawvere S5-6/S27, Spivak §2.5/§4.5 — все глазами
+статус: seed
+```
+```
+id: slajs-kategoriya
+род: понятие
+суть: категория над объектом C/X — объекты суть стрелки в X = семейства над базой X; при X=1 слайс = сама C
+котёл: математика
+находка: центральный объект Л4, которого у неё НЕ БЫЛО (диагноз владельца «не понял, какой центральный
+  объект» — ровно про отсутствие этой карточки; у текущей Л4 есть мотивация и сцена, но нет ПОНЯТИЯ). Объект
+  слайса A→X читается как «семейство A_x над точками базы X»; терминал = id_X (бесплатно), C/1≅C. Дёшев и ранний
+  у ВСЕХ, кто даёт, ПЯТЬ источников: Smith печ.с.62 (Часть I, до произв. с.97), Awodey §1.6 печ.с.16, Asperti-Longo
+  §1.3.4 печ.с.5, Barr-Wells §2.6.10-11 печ.с.38 (дословно «objects of C/A as objects of C indexed by A»), Spivak
+  §4.5.3 печ.с.186 (Set/B = B-индексированные множества). ⇒ «слайс рано» снято извне ПЯТЬЮ источниками.
+связи: pullback-podstanovka, most-sloi-iz-proizvedenija, mot-sloi-reshenija-sistemy, slajs-primer-semejstva
+уровень: зал берёт
+источник: Riehl §4.5 Lemma 4.5.3 (C/1≅C) печ.с.157; Smith 3-е изд. печ.с.62; Awodey §1.6 печ.с.16; Asperti-Longo §1.3.4 печ.с.5; Barr-Wells §2.6.10-11 печ.с.38; Spivak §4.5.3 печ.с.186. Подача «семейство над базой» — синтез захода
+статус: seed
+```
+```
+id: pullback-podstanovka
+род: понятие
+суть: расслоённое произведение = ПОДСТАНОВКА: Δ_f тянет семейство назад вдоль f:Y→X, слой над y = слой над f(y)
+котёл: математика
+находка: второе недостающее понятие Л4 (в текущем составе есть мотивация и сцена подстановки, но нет самого
+  ПОНЯТИЯ pullback — потому Л4 и 0/0/0). Категорно: произведение в слайсе C/X = pullback в C (Riehl Lemma 4.5.4).
+  На языке зала (мотивация прошла прибор, mot-sloi-reshenija-sistemy ✅): подставить b=Cy в Ax=b = расслоённое
+  произведение вдоль C. Riehl Ex.4.5.7 дословно: Δ_f «reindexes the family by substituting f(y)». ТЗ-канон:
+  «расслоённое произведение (декартов квадрат, pullback)». Хук ТЗ «pullback = подстановка» без слова «зависимый тип».
+связи: slajs-kategoriya, scena-podstanovka-tjanet-sloj, proizvedenie-v-slajse-est-pullback, mot-sloi-reshenija-sistemy
+уровень: зал берёт
+источник: Riehl §4.5 Ex.4.5.7 (Δ_f «substituting f(y)») печ.с.160, Lemma 4.5.4 печ.с.158; `../istochniki/pdf/riehl-category-theory-in-context.pdf`
+статус: seed
+```
+```
+id: slajs-primer-semejstva
+род: пример
+суть: Set/X = X-индексированные семейства множеств (A_x)_{x∈X}; слайс — не абстракция, а «семейство над базой», которое зал уже рисует
+котёл: математика
+находка: рабочий ПРИМЕР слайса для Л4 — гринит её на примере БЕЗ кражи зависимо-произведенческого материала Л5
+  (это ловушка III). Riehl Ex.4.5.7 открывается ровно этим: «elements of Set/X are X-indexed families of sets»;
+  Barr-Wells §2.6.11 печ.с.38: «objects of C/A as objects of C indexed by A»; Spivak Remark 4.5.3.24 печ.с.186:
+  Set/B = B-индексированные множества дословно. Конкретный кадр на опоре зала: над каждой точкой базы — своё
+  множество/пространство (для Ax=b: над каждым b — слой A⁻¹(b)). ⚠ ЭТО ПРО СЛАЙС, не про сечение: сечение
+  (зависимая функция, отображение В семейство) — материал Л5, здесь НЕ вводится (граница шва II).
+связи: slajs-kategoriya, mot-sloi-reshenija-sistemy, most-sloi-iz-proizvedenija
+уровень: зал берёт
+источник: Riehl §4.5 Ex.4.5.7 печ.с.160; Barr-Wells §2.6.11 печ.с.38; Spivak Remark 4.5.3.24 печ.с.186
+статус: seed
+```
+```
+id: proizvedenie-v-slajse-est-pullback
+род: утверждение
+суть: в слайсе C/X: терминал = id_X, а ПРОИЗВЕДЕНИЕ двух объектов = их расслоённое произведение (pullback) в C
+котёл: математика
+находка: настоящая МАТЕМАТИЧЕСКАЯ теорема Л4 (закрывает 0-утверждений). Riehl Lemma 4.5.4 (печ.с.158): доказуема,
+  не вердикт о проекте. Смысл для зала: pullback — не экзотика, а «произведение относительно базы»; зал умеет
+  произведение (Л2), слой лишь отпустили меняться. Рифма Л2→Л4. Проверяется руками в Set: слой над (a,b) = пара из
+  слоёв над a,b с общей проекцией.
+связи: pullback-podstanovka, slajs-kategoriya, riehl-lccc-donor
+уровень: зал берёт
+источник: Riehl §4.5 Lemma 4.5.4 (терминал=id_X, произв.=pullback) печ.с.158; `../istochniki/pdf/riehl-category-theory-in-context.pdf`
+статус: seed
+```
+```
+id: kouravnitel-opredelenie
+род: понятие
+суть: коуравнитель coeq(f,g) двух параллельных стрелок f,g:A⇉B — универсальный ФАКТОР b→Q со свойством qf=qg; «склеить B по тому, что f,g должны отождествить». Дуал уравнителя (переверни стрелки)
+котёл: математика
+находка: НОВОЕ понятие Л4 — недостающая копредельная половина (греп KARTA: коуравнителя нет). Дуал uravnitel-opredelenie
+  ровно ходом Ловера «переверни все стрелки» (S24 печ.265-266 дословно; callback двойственности Л2 scena-perevorot). Несёт то,
+  чего уравнитель не несёт: ФАКТОР. В Set = проекция на фактор по наименьшему отношению эквивалентности со всеми (fx,gx)
+  (MacLane §3.3 стр.79; Riehl Prop 3.6.1 печ.116). Русский термин КАНОН — «коуравнитель» (TERMINY, рус.Маклейн §5.2/§6.6).
+  Отвечает на жалобу прибора «уравнитель бедный, разность=0 скучна»: богатство — в копредельной половине (zn-kouravnitel-teoriya-chisel).
+связи: uravnitel-opredelenie, kopredel-opredelenie, koyadro-est-kouravnitel, pushout-sklejka-opredelenie, zn-kouravnitel-teoriya-chisel
+уровень: зал берёт
+источник: MacLane §3.3 стр.78-79 (рус. термин, Set/Ab); Awodey Def 3.18 печ.66; Riehl Def 3.1.23 печ.89 («forks»)
+статус: seed
+```
+```
+id: pushout-sklejka-opredelenie
+род: понятие
+суть: расслоенная сумма (pushout) B⊔_A C двух стрелок f:A→B, g:A→C с общим НАЧАЛОМ — универсальный коммутативный квадрат ПОД ними; «склейка B и C вдоль общей части A». Дуал pullback
+котёл: математика
+находка: НОВОЕ понятие Л4, дуал pullback-podstanovka (переверни стрелки). Несёт СКЛЕЙКУ — наглядную геометрию, которой
+  прибор просил («не понял, что за категории в геометрии»): тор/бутылка Клейна из склеенного квадрата, сфера из дисков
+  (sklejka-tor-pushout). В Set = дизъюнктное объединение с отождествлением fx~gx (MacLane §3.3 печ.80). Русский КАНОН —
+  «расслоенная сумма (кодекартов квадрат)» (глоссарий рус.Маклейн стр.336, параллель к «расслоённое произведение»); слово-
+  интуиция «склейка». ⚠ pushout в литературе привязан СЛАБЕЕ коуравнителя (§2.5) — держать НАГЛЯДНО (картинка), не аппаратно.
+  ⛔ MacLane-термин «универсальный квадрат» залу не давать (перевёрнутая конвенция, сноска пер. печ.80).
+связи: pullback-podstanovka, kopredel-opredelenie, kouravnitel-opredelenie, sklejka-tor-pushout
+уровень: зал берёт (картинка склейки) / требует приручения (общий pushout)
+источник: MacLane §3.3 печ.80-81 (расслоенная сумма/кодекартов квадрат/амальгама); Riehl Def 3.1.23 печ.89; HoTT §6.6 печ.195 (тор)
+статус: seed
+```
+```
+id: kopredel-opredelenie
+род: понятие
+суть: конечный копредел = универсальный конус ПОД диаграммой (прямой/индуктивный предел); строится из начального объекта, копроизведений и коуравнителей — «универсальный ФАКТОР/склейка системы». Дуал предела
+котёл: математика
+находка: НОВОЕ понятие — вторая большая ось Л4 рядом с predel-opredelenie. Даёт лекции симметрию «решать | склеивать».
+  Двойственность явная (MacLane §3.4 стр.83 «предел двойствен копределу»). Частные копределы: начальный (Л2), копроизведение
+  (Л2), коуравнитель (Л4), pushout (Л4) — ⇒ зал уже умеет один копредел (копроизведение=сумма с Л2), Л4 достраивает машину.
+  Русский КАНОН — «копредел» (TERMINY, рус.Маклейн гл.5/§3.3). Не путать с обратным пределом.
+связи: predel-opredelenie, kouravnitel-opredelenie, pushout-sklejka-opredelenie, kopredel-iz-koproizvedenij-i-kouravnitelej
+уровень: зал берёт (частные копределы) / требует приручения (общий конус)
+источник: MacLane §3.3 стр.81-82 (рус. термин, конус); Awodey §5.6 печ.108; Riehl Def 3.1.6 печ.84
+статус: seed
+```
+```
+id: kopredel-iz-koproizvedenij-i-kouravnitelej
+род: утверждение
+суть: все конечные копределы = начальный объект + конечные копроизведения + коуравнители (равносильно — pushouts и начальный). ДУАЛ большой теоремы Т1/У3 — и он БЕСПЛАТЕН (зеркало, не передоказываешь)
+котёл: математика
+находка: ⭐ ВТОРАЯ большая теорема Л4 (Т1′/У3′), дуал predel-iz-proizvedenij-i-uravnitelej. Ключевое для темпа: доказывать
+  не надо — «переверни каждую стрелку в Т1, и теорема отзеркалится». Учебники ровно так и делают: Awodey даёт её БЕЗ
+  доказательства дуализацией, не отдельным доказательством (Prop 5.21 доказан полностью, Thm 5.23 — нет). Даёт Л4 вторую бьющую теорему той же строкой,
+  без бюджета. Практический смысл: «алфавит склейки любого объекта». Прибор хвалил критерий (kriterij-horoshaya-kategoriya).
+связи: predel-iz-proizvedenij-i-uravnitelej, kopredel-opredelenie, kouravnitel-opredelenie, kriterij-horoshaya-kategoriya
+уровень: зал берёт
+источник: ⭐ Awodey Theorem 5.23 печ.105 (⟺ дословно, «resp. pushouts and an initial object»); MacLane §9.1 стр.245 («факт, двойственный к теореме 1 §5.2») + §8.3 стр.230-231; Riehl Thm 3.5.11 печ.112 + Thm 3.5.17 печ.115
+статус: seed
+```
+```
+id: koyadro-est-kouravnitel
+род: утверждение
+суть: coker φ = coeq(φ,0) — коядро линейного отображения (V/im), гомоморфизма (B/im), фактор-группа G/N, фактор-пространство V/W есть ОДНА конструкция (коуравнитель); в Ab коуравнитель f,g = коядро разности f−g. Дуал yadro-est-uravnitel
+котёл: математика
+находка: сшивает факторы линала, групп, ТЧ ОДНОЙ конструкцией — зеркало yadro-est-uravnitel. MacLane §3.3 стр.79 дословно:
+  «в Ab коуравнитель f,g:A→B — проекция B→B/(f−g)A на факторгруппу по образу f−g». Фактор-группа G/N как коуравнитель — воркед
+  MacLane стр.176, Awodey печ.80-81. Коядро=фактор по образу — Awodey Ex.4.5.5 печ.88. ⚠ явная зеркальная фраза «коуравнители
+  суть коядра» в источниках дословно НЕ стоит (только §8.3 «эпиморфизм=коядро» + двойственность) — подаю через Ab-формулу стр.79
+  (она явная). Открывает вход в zn-kouravnitel-teoriya-chisel ($\mathbb{Z}/n$).
+связи: kouravnitel-opredelenie, yadro-est-uravnitel, zn-kouravnitel-teoriya-chisel, kopredel-opredelenie
+уровень: зал берёт
+источник: MacLane §3.3 стр.78-79 (Ab коуравнитель=коядро разности, дословно) + §8.1 печ.223 (дуал); Awodey печ.83, Ex.4.5.5 печ.88; Riehl Epilogue Def E.5.1 печ.257
+статус: seed
+```
+```
+id: zn-kouravnitel-teoriya-chisel
+род: пример
+суть: ℤ/n = coker(·n: ℤ→ℤ) = coeq(ℤ ⇉ ℤ) вдоль (·n, 0) — кольцо/группа вычетов по модулю n как КОПРЕДЕЛ (фактор), арифметика на часах. Недостающий существенно-другой контекст: теория чисел
+котёл: математика
+находка: ⭐⭐ КОНТЕКСТ ТЕОРИИ ЧИСЕЛ, которого у пределов НЕТ (прибор: «тащим ТЕОРИЮ ЧИСЕЛ, хотим одно и то же в разных
+  местах»). Механизм (§3.3): для ·n:ℤ→ℤ ЯДРО=0 (решать нечего, инъективно), КОЯДРО=ℤ/n (богато). ⇒ решать в ТЧ вырождается
+  (НОД=произведение=Л2, ♻️), СКЛЕИВАТЬ богато (ℤ/n=фактор, 🆕). Это ТОЧНЫЙ ответ на «уравнитель бедный, разность=0 скучна».
+  ⚠ ФЛАГ ЧЕСТНОСТИ: явной цитаты «ℤ/n = копредел» с числом n НЕТ ни в одном из 6 источников — это СИНТЕЗ на железной Ab-формуле
+  коуравнителя=коядра разности (MacLane §3.3 стр.79) + $\mathbb{Z}_n\cong\mathbb{Z}/n\mathbb{Z}$ как конечно-представленный фактор (Awodey печ.87) +
+  presentation-как-коуравнитель (Riehl печ.198; HoTT печ.212 ⟨a|a²⟩=ℤ/2 при F(1)≃ℤ). Математика железная, подача — захода.
+  «Кольцо» обходим (§ЭКСКУРС): часы/остатки = школа; кросс-линк — тот же ℤ→ℤ/n стоит на Л6 (det-natural, естественность).
+связи: koyadro-est-kouravnitel, kouravnitel-opredelenie, atlas-kopredely-po-kategoriyam, vyhod-l4-reshat-i-skleivat
+уровень: зал берёт (часы/остатки)
+источник: синтез на MacLane §3.3 стр.79 (коуравнитель Ab = коядро разности) + Awodey печ.87 ($\mathbb{Z}_n$) + Riehl печ.198 (presentation=coequalizer); ℤ/n-с-числом как копредел в корпусе дословно НЕ подан
+статус: seed
+```
+```
+id: sklejka-tor-pushout
+род: пример
+суть: тор и бутылка Клейна — из квадрата склейкой сторон (pushout/коуравнитель); сфера — из двух дисков по экватору; wedge S¹∨S¹ = pushout S¹←∗→S¹. Геометрия склейки, наглядно
+котёл: математика
+находка: ⭐ ГЕОМЕТРИЯ склейки — сторона, которой прибор не понял у пределов («не понял, что за категории в геометрии,
+  окружность»). Здесь наглядно: РАМКА/квадрат → отождествить противоположные стороны → тор (HoTT §6.6 печ.195 дословно,
+  клеточный комплекс; Клейн назван там же). Сфера = pushout двух D² вдоль S¹ (Awodey Ex 5.28 печ.108; Spivak печ.191). Riehl
+  печ.81 называет тор+Мёбиус+Клейн вместе как склейки; Ex 3.1.24 печ.89 — тор через attaching aba⁻¹b⁻¹. Дуал pullback-
+  ogranichenie-rassloenia (то расслоение вниз, это склейка вверх). Держать КАРТИНКОЙ (§2.5: pushout аппаратно слабее).
+  🔬 Глубже (охват, форвард-линк Л9/HoTT): π₁ склейки = амальгама (van Kampen, HoTT §8.7 печ.296/299) — выше зала.
+связи: pushout-sklejka-opredelenie, pullback-ogranichenie-rassloenia, atlas-kopredely-po-kategoriyam
+уровень: зал берёт (картинка) / глубже — выше зала (van Kampen, охват)
+источник: HoTT §6.6 печ.195 (тор из квадрата, Клейн); Riehl Ex 3.1.24 печ.89 + печ.81; Awodey Ex 5.28 печ.108 (сфера); Spivak печ.191
+статус: seed
+```
+```
+id: kriterij-horoshaya-kategoriya
+род: утверждение
+суть: Т1+Т1′ дают проверочный список: чтобы узнать, умеет ли категория решать все системы / строить все факторы — проверь три кирпича (пределов) и дуально три (копределов). Категории делятся на богатые и бедные; в порядке/решётке всё вырождается в meet/join = Л2
+котёл: математика
+находка: ПРАКТИЧЕСКИЙ РЕЦЕПТ-ВЫХОД, который прибор просил дословно («какие уравнения научиться решать, чтобы решать любые»;
+  «критерий отбора хороших категорий от плохих — забавно», PROGON §КУСОК7). Одна теорема → инструкция across категорий.
+  Разбор вырождения: в ч.у.м. между двумя объектами ≤1 стрелка ⇒ уравнитель/коуравнитель тривиальны, pullback/pushout =
+  meet/join = универсальность Л2 (там всё уже было). ⇒ «богатство» пределов-копределов живёт там, где стрелок МНОГО.
+связи: predel-iz-proizvedenij-i-uravnitelej, kopredel-iz-koproizvedenij-i-kouravnitelej, vyhod-l4-reshat-i-skleivat
+уровень: зал берёт
+источник: следствие Awodey Prop 5.21 печ.104 + Theorem 5.23 печ.105; вырождение в порядке — MacLane §5.2 печ.135, Awodey Ex 3.17 печ.64
+статус: seed
+```
+```
+id: vyhod-l4-reshat-i-skleivat
+род: находка
+суть: ВЫХОД Л4 — «универсальная конструкция на отображении делает ОДНО из двух: высекает подобъект-решение (предел) или строит фактор-склейку (копредел). Решать и склеивать — две половины одной машины, и по ним проверяется категория». Практический рецепт как пунчлайн
+котёл: математика
+находка: фалсифицируемый выход, достраивающий vyhod-l4-reshat-est-predel копредельной половиной (диагноз прибора:
+  заход l4-l5-kontent заужен на пределы, «тонко»). Прибор просил ПРАКТИЧЕСКУЮ плоскость и «ресёрч ещё что нашёл» — ответ:
+  нашёл зеркало (копределы) + теорию чисел ($\mathbb{Z}/n$) + геометрию склейки (тор) + бесплатную вторую теорему + критерий.
+  Стороны cross-context (§3): решать — линал/логика/геометрия/данные; склеивать — ТЧ($\mathbb{Z}/n$)/геометрия(тор)/группы(G/N)/Set.
+  Ограничение честно: pushout аппаратно слабее (§2.5), CRT вне корпуса (§3.3).
+связи: vyhod-l4-reshat-est-predel, kopredel-iz-koproizvedenij-i-kouravnitelej, kriterij-horoshaya-kategoriya, atlas-kopredely-po-kategoriyam
+уровень: зал берёт
+источник: синтез захода на Т1/Т1′/Т2 (§4.2); ход двойственности — Ловер S24 печ.265-266
+статус: seed
+```
+```
+id: atlas-kopredely-po-kategoriyam
+род: находка
+суть: атлас «коуравнитель/pushout/копредел по 6 контекстам» — зеркало atlas-predely-po-kategoriyam: ТЧ несёт ℤ/n (коядро), геометрия несёт склейку (тор), группы — G/N/амальгаму, Set — фактор по эквивалентности; в порядке/решётке вырождается в join
+котёл: математика
+находка: слой А копредельной половины. Ключ: копределы ДОПОЛНЯЮТ пределы по контекстам — где предельная сторона вырождается
+  (ТЧ: ядро тривиально), копредельная богата (ℤ/n). Строка охвата: 6 контекстов, 6 источников глазами; твёрдое покрытие —
+  коуравнитель=фактор (Set/Grp/Vect/ТЧ), pushout=склейка геометрия (тор/сфера дословно); синтез (математика железная) —
+  ℤ/n-с-числом, V/W; честный отрицательный — CRT вне корпуса, связная сумма не в 6 источниках. Переиспользуемо (ресурс всех лекций).
+связи: atlas-predely-po-kategoriyam, kouravnitel-opredelenie, pushout-sklejka-opredelenie, zn-kouravnitel-teoriya-chisel, sklejka-tor-pushout
+уровень: (ресурс для конструирования, не для зала одной карточкой)
+источник: MacLane §3.3, Awodey гл.3/4/5, Riehl гл.3, HoTT §6.6/§8.7, Spivak §2.6/§4.5, Lawvere S23-24 — все глазами
+статус: seed
+```
+
 ---
 ```
 id: mot-kategoriya-radi-funktora
@@ -2424,6 +2812,79 @@ id: zavisimaya-dokazatelstvo-vseh
 связи: pf-est-pi-tip, zachem-zavisimaya-funkciya, curry-howard-lambek, chl, zavisimoe-proizvedenie, cep-univalentnost
 уровень: зал берёт (∀ — родное) / требует приручения (как мост)
 источник: `pf-est-pi-tip` (KARTA) → HoTT §1.4 печ. с.32 «read Π as „for all"», Table 1 печ. с.11; `../TZ-zakazchika.md §Ограничения` (исключение КХЛ)
+статус: seed
+```
+
+## Карточки — Л5: LCCC, арифметика и сечения (заход `kod_l4-l5-vlivanie.md`, влито 18.07)
+
+*Из `VERDIKT-shov-L4-L5 §7` — механический перенос, текст дословно из источника, статус `seed`.*
+
+```
+id: lccc-est-slajsy-ccc
+род: утверждение
+суть: LCCC ⟺ каждый слайс C/X декартово замкнут ⟺ у каждой подстановки f* есть оба сопряжённых Σ_f⊣f*⊣Π_f
+котёл: математика
+находка: НАСТОЯЩЕЕ утверждение Л5, которого у неё не было (единственное «утверждение» verdict-rifma-lccc — находка о
+  проекте, §6). Математическая эквивалентность, доказуемая: Riehl Def 4.5.2 (печ.с.157, «каждый слайс CCC», без
+  функторов) ⟺ Prop 4.5.6 (печ.с.158, тройка сопряжений, «alternate characterization», доказана в обе стороны);
+  Awodey Def 9.19 печ.с.235; Barr-Wells Thm 13.4.3 печ.с.361. ⭐ Ключ темпа 3/5: ЛЕВАЯ сторона («каждый слайс CCC»)
+  достижима инструментами Л1-4 и читается «локально» поверх понятой CCC; ПРАВАЯ (сопряжения) — Л7-расплата. Один
+  предмет, два входа (dva-vhoda-v-ccc, третий случай). НЕ поддался ловушке 1: определение функторов не содержит.
+связи: riehl-lccc-donor, ccc-opredelenie, zavisimoe-proizvedenie, verdict-rifma-lccc
+уровень: требует приручения (левая сторона — зал берёт; эквивалентность — беглым упоминанием, техника на Л7)
+источник: Riehl §4.5 Def 4.5.2 печ.с.157 + Prop 4.5.6 печ.с.158; Awodey Def 9.19 печ.с.235; Barr-Wells Thm 13.4.3 печ.с.361
+статус: seed
+```
+```
+id: arifmetika-zavisimogo-proizvedeniya
+род: утверждение
+суть: |∏_x A_x| = ∏_x |A_x| — последняя запись словаря категорификации: произведение РАЗНЫХ множителей (экспонента — равных)
+котёл: математика
+находка: закрывает throughline-арифметику куска и даёт Л5 вторую настоящую теорему. Словарь (kategorifikaciya-
+  arifmetiki): +=⊔, ×=×, ^=экспонента равных множителей b^n=∏ⁿb. Недостающая запись — произведение НЕРАВНЫХ
+  множителей a₁·…·aₙ, тень ровно ∏_x A_x. Пропорция: зависимое произведение относится к экспоненте как общее
+  произведение к степени (рифма с zakon-stepenej-karrirovanie). Источник печати: Lawvere «число сечений = произведение
+  размеров стопок» (S5-6, печ.с.75); HoTT §1.4 (постоянное семейство ⇒ обычная функция ⇒ экспонента как частный
+  случай; Spivak Π_a Δ_a(C)≅C^A печ.с.210 то же). Даёт Л5 арифметический хук, параллельный экспоненте Л3, БЕЗ переноса.
+связи: kategorifikaciya-arifmetiki, zakon-stepenej-karrirovanie, zavisimoe-proizvedenie, sechenie-neset-vybor, zachem-zavisimaya-funkciya
+уровень: зал берёт
+источник: Lawvere-Schanuel S5-6 печ.с.75; HoTT §1.4 печ.с.25; Spivak печ.с.210. Склейка «последняя запись словаря» — синтез захода
+статус: seed
+```
+```
+id: sechenie-neset-vybor
+род: утверждение
+суть: у конечного семейства сечение существует ⟺ ни один слой не пуст; число сечений = произведение размеров слоёв
+котёл: математика
+находка: теорема Л5 (при зависимых функциях, а не переносить их на Л4) — и вход в базовую вещь (аксиому выбора),
+  которая по §ЭКСКУРС есть ДОВОД ЗА. Lawvere S5-6 (глазами субагентом): «число сечений = произведение размеров
+  стопок» (печ.с.75, «выбор в каждой стопке независим»); «сечение ⟺ ни одна стопка не пуста» (⚠ Lawvere
+  формулирует ⟺ ЯВНО для КОНЕЧНЫХ множеств, печ.с.82). ⚠ ПОПРАВКА к lawvere-stacking-fibering «= Skolem»: Lawvere
+  слов «аксиома выбора» НЕ пишет (использует «choice problem»); граница-с-AC — его тихая оговорка «finite sets».
+  Riehl печ.с.164: свидетельствующую функцию зовёт «Skolem function», утверждение — «type theoretic axiom of choice,
+  though note that it is a theorem, not an axiom» — т.е. «= Skolem» законное СОКРАЩЕНИЕ, не дословная формула.
+связи: zavisimoe-proizvedenie, lawvere-stacking-fibering, arifmetika-zavisimogo-proizvedeniya, pf-est-pi-tip
+уровень: зал берёт (конечный случай руками; бесконечный/AC — беглым упоминанием, §ЭКСКУРС)
+источник: Lawvere-Schanuel S5-6 печ.с.75, 82 (глазами); Riehl §4.5 печ.с.164 (Skolem function / «theorem not axiom»); `../istochniki/pdf/`
+статус: seed
+```
+```
+id: varying-sloj-verdikt
+род: находка
+суть: долг mot-sloi-spektr закрыт: статический спектр = семейство над ДИСКРЕТНОЙ базой (целит в Σ, не в Δ_f/Π_f); варьирующийся слой куску несёт сфера, не спектр
+котёл: математика
+находка: §2.3-долг + находка владельца, вердикт. (1) Статическое V=⊕_λ V_λ — НАСТОЯЩЕЕ семейство (функтор из
+  дискретной Spec(T) в Vect, реальный экземпляр схемы Set/X≃Set^X), НЕ метафора. НО база дискретна ⇒ вырожденное
+  расслоение: без монодромии, без склейки, подстановка тривиальна; целит в Σ (прямая сумма = полное пространство), а
+  куску нужны Δ_f (подстановка) и Π_f (произведение). Потому не сходится, и прибор «сам не понимаю смысла». (2) Ни
+  Riehl, ни Lawvere спектр со слайсами не вяжут (греп обоих субагентом — только посторонние вхождения «spectrum»).
+  (3) Находка владельца (семейство операторов A_t, у которых МЕНЯЕТСЯ спектр, над СВЯЗНОЙ базой) — настоящий
+  варьирующийся-слой-над-связной-базой объект (спектральный поток), но вне корпуса и выше зала/лектора (mot-sloi-spektr
+  блокер: лектор не держит). ⇒ mot-sloi-spektr снять с мотивации; работу «варьирующийся слой» несёт zavisimaya-
+  vektornoe-pole (сфера, ✅ прибор «отличный объект»), геометрия, зал держит, остаётся на Л5.
+связи: mot-sloi-spektr, zavisimaya-vektornoe-pole, pullback-podstanovka
+уровень: вне курса (мета — вердикт для конструирования Л4-Л5)
+источник: Riehl §4.5 + Lawvere S5-6 (негативная сверка глазами субагентом); спектральный поток — стандартный факт, теоркат-подача под этот зал в корпусе не встречена
 статус: seed
 ```
 
