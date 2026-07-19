@@ -13,9 +13,9 @@
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
 - **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona`
-- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng`
+- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -3562,3 +3562,299 @@ id: math3ma-obshchij-gen
 
 ---
 *Картотека. Формат — `STANDART-uzla.md`; что строим — `../SPEKA.md`; источники — `../istochniki/`; арка — `../../_studio/zhurnal/2026-07-16_teorkat-landshaft/`.*
+
+## Карточки — жемчужины корпусного поиска примеров (заход `kod_poisk-primerov`, 2026-07-19)
+
+> Верхушка каталога `../../_studio/zhurnal/2026-07-18_teorkat-l1/KATALOG-primerov-korpus.md` (387 строк по 20 источникам). Сюда подняты только те примеры, от которых «офигеваешь» и которых НЕТ ни у Перроне, ни в прежних волнах картотеки. Отбор — мой; последнее слово за владельцем. Статус `seed`: на приборе не гонялись.
+
+```
+id: hovanov-vidit-uzel
+род: пример
+суть: многочлен Джонса ОБЯЗАН занулиться на тривиальном узле, а его категорификация — гомологии Хованова — тривиальный узел ДЕТЕКТИРУЕТ
+котёл: научпоп
+находка: ⭐⭐ Прямое попадание в мечту владельца («функтор-инвариант, который видит то, чего
+  не видит число») и одновременно — самое сильное «зачем» для категорификации во всём
+  корпусе. Числовой инвариант (многочлен) не различает; функториальный инвариант (комплекс,
+  чья градуированная эйлерова характеристика И ЕСТЬ многочлен Джонса) различает. То есть
+  богатый уровень буквально помнит больше, и это ТЕОРЕМА, а не метафора. Рядом у Riehl —
+  тезис, что функториальные инварианты вообще и вычислимее, и точнее числовых.
+связи: invariant-vynosit-verdikt, dekategorifikaciya-teryaet, kategorifikaciya-arifmetiki, raskraska-3-uzla-verdikt, gomologii-grafa-funktor-vect, functor
+уровень: зал берёт (на картинках, без определения гомологий)
+источник: ../istochniki/pdf/riehl-category-theory-in-context.pdf, pdf-стр.12 (предисловие)
+статус: seed
+```
+```
+id: uravnitel-teoriya-i-eksperiment
+род: пример
+суть: эквалайзер двух стрелок «вход → выход» = множество входов, на которых ТЕОРИЯ и ЭКСПЕРИМЕНТ дают одно и то же
+котёл: научпоп
+находка: ⭐⭐ Универсальная конструкция с нулевым пререком и мгновенным смыслом: «когда
+  теория сходится с экспериментом?» — вопрос, который зал понимает раньше, чем услышит слово
+  «эквалайзер». Ровно то, чего не хватало карточке `uravnitel-okruzhnost` (там эквалайзер
+  красив, но требует геометрии). Спутник из того же источника: эквалайзер = «авторы,
+  опубликовавшие ровно одну статью».
+связи: uravnitel-opredelenie, uravnitel-okruzhnost, universalnoe-svojstvo, predel-opredelenie
+уровень: зал берёт
+источник: ../istochniki/pdf/spivak-category-theory-for-scientists-2013.pdf, стр.49 (Example 2.5.3.2)
+статус: seed
+```
+```
+id: pullback-rubashki-bryuki
+род: пример
+суть: pullback в Set = пары «рубашка и брюки одного цвета»; та же интуиция — танцевальные пары одного роста
+котёл: научпоп
+находка: Самый дешёвый вход в pullback из всего корпуса: два множества, отображённых в
+  третье (цвет), и берём согласованные пары. Нулевой пререк, рисуется мелом. У Перроне
+  pullback подан через пересечение подмножеств и расслоения — строже, но без картинки, за
+  которую зал цепляется. Спутник у Spivak: pullback как «точка данных», где наш и чужой
+  эксперимент дали одинаковое давление.
+связи: pullback-podstanovka, universalnoe-svojstvo, uravnitel-teoriya-i-eksperiment
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.286–287
+статус: seed
+```
+```
+id: pryamye-rejsy-ne-kategoriya
+род: пример
+суть: аэропорты и ПРЯМЫЕ рейсы категории не образуют (есть Ван→Стамбул и Стамбул→Токио, прямого Ван→Токио нет); с пересадками и «остаться в аэропорту» — образуют
+котёл: научпоп
+находка: ⭐ Флагманский НЕ-пример с нулевым пререком — конкурент выпуклым функциям Перроне
+  и лучше него для зала: ломается не абстрактная композиция, а бытовая. И тут же чинится
+  ровно двумя ходами (разрешить пересадки = композиция; разрешить «остаться» = тождество),
+  так что аксиомы категории ВЫВОДЯТСЯ из починки, а не даются сверху. Ченг независимо
+  использует ту же метафору стыковки рейсов (Хитроу→Гатвик) — два источника сошлись.
+связи: kategoriya-opredelenie, chum-kategoriya, mat-pervaya-kategoriya
+уровень: зал берёт
+источник: ../istochniki/pdf/nesin-very-introductory-notes-ct.pdf, стр.4
+статус: seed
+```
+```
+id: botinki-i-noski
+род: пример
+суть: «теорема о ботинках и носках»: чтобы отменить «надел носки, потом ботинки», надо «снять ботинки, потом носки» — это и есть (g∘f)⁻¹ = f⁻¹∘g⁻¹
+котёл: научпоп
+находка: Идеальный бытовой носитель для «обратное к композиции переворачивает порядок» —
+  факт, который иначе выглядит формальной выкладкой. Нашлась в источнике, который по
+  сигнальному грепу оказался беднейшим в корпусе на бытовые примеры (Barr–Wells): одна
+  жемчужина на 556 страниц, но настоящая.
+связи: kategoriya-opredelenie
+уровень: зал берёт
+источник: ../istochniki/pdf/barr-wells-category-theory-computing-science.pdf, стр.63
+статус: seed
+```
+```
+id: nyuton-est-dejstvie-monoida
+род: пример
+суть: метод Ньютона поиска корня — это действие свободного моноида ℕ на ℝ (одна образующая = один шаг итерации)
+котёл: математика
+находка: ⭐ Топ-жанр владельца «скрытая структура в знакомом»: школьно-университетский
+  алгоритм оказывается категорным объектом без единой новой конструкции. Родня цепному
+  правилу Перроне (производная как функтор), но дешевле по входу: не нужен ни функтор, ни
+  дифференцирование — только «применить шаг n раз».
+связи: chain-rule-est-funktorialnost, monoid-odin-obekt, functor
+уровень: зал берёт
+источник: ../istochniki/pdf/spivak-category-theory-for-scientists-2013.pdf, стр.75 (Application 3.1.2.6)
+статус: seed
+```
+```
+id: i-i-minus-i-nerazlichimy
+род: пример
+суть: i определяется как корень из −1 — но −i тоже; по РОЛИ их различить нельзя, мы произвольно выбираем один и не можем сказать, какой выбрали
+котёл: научпоп
+находка: ⭐⭐ Лучший в корпусе вход в «единственность ДО изоморфизма» и в цену
+  универсального свойства: когда свойство не выделяет объект однозначно, категория честно
+  «не может их различить» — и это не дефект, а содержание. Ченг сама называет ощущение
+  «немного квантовым». Прямо стыкуется с `cheng-rol-vs-harakter` (роль против состава) и
+  снимает вопрос «а почему единственность только до изо».
+связи: cheng-rol-vs-harakter, universalnoe-svojstvo, terminalnyj-obekt, troyka-obekt-cherez-svyazi
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.223–224 (§16.1)
+статус: seed
+```
+```
+id: est-preobr-est-zamena-bazisa
+род: пример
+суть: два функтора Vect^f→Mat отличаются лишь выбором базисов; естественное преобразование между ними — ЭТО матрица замены базиса, а условие естественности — формула F(f)=M_W⁻¹G(f)M_V из первого курса линала
+котёл: математика
+находка: ⭐ Закрывает главную дыру: у Перроне есть FVect ≃ Mat, но нет ответа «а что такое
+  естественное преобразование РУКАМИ». Здесь оно берётся руками и оказывается вещью, которую
+  зал уже считал: матрицей перехода. Линал — единственная твёрдая опора зала
+  (`assoc-linal-vysshaya-algebra`), так что это самый дешёвый мост к естественности.
+связи: nat-transf, naturality-square, assoc-linal-vysshaya-algebra, mat-pervaya-kategoriya, dual-not-natural-proof
+уровень: зал берёт
+источник: ../istochniki/pdf/nesin-very-introductory-notes-ct.pdf, стр.13–14 (Example 4.3)
+статус: seed
+```
+```
+id: kvantory-kak-sopryazhennye
+род: пример
+суть: ∃x ⊣ p⁻¹ ⊣ ∀x — кванторы существования и всеобщности суть левый и правый сопряжённые к взятию прообраза вдоль проекции
+котёл: математика
+находка: ⭐ Самое сильное «логика — это тоже категории» из найденного: два значка, которые
+  зал знает со школы, оказываются двумя сторонами одного сопряжения. У Перроне сопряжения
+  живут на связях Галуа (пол/потолок, замыкание, выпуклая оболочка) — кванторов там нет.
+  Ловер, Маклейн–Мурдейк — первоисточник; у Несина дано как упражнение на полстраницы.
+связи: adjunction, floor-ceiling, motivation-floor-ceiling, mot-gde-zhivet-vasha-logika
+уровень: требует приручения (нужен прообраз вдоль проекции)
+источник: ../istochniki/pdf/nesin-very-introductory-notes-ct.pdf, стр.28 (Exercise 7.6)
+статус: seed
+```
+```
+id: polovina-yabloka
+род: пример
+суть: «половина яблока понятнее отрицательного яблока»: половинки НЕ равны, а изоморфны, и Z/2 их переставляет ⇒ деление = фактор по СВОБОДНОМУ действию группы (6/2=3 как орбиты)
+котёл: научпоп
+находка: ⭐ Достраивает `chto-ne-kategorificiruetsya` со стороны, которой там не было:
+  вычитание не категорифицируется, а ДЕЛЕНИЕ категорифицируется — и притом красиво, через
+  действие группы. Заодно объясняет, почему «две равные части» на самом деле не равны:
+  если бы были равны, часть была бы одна.
+связи: chto-ne-kategorificiruetsya, kategorifikaciya-arifmetiki, dekategorifikaciya-teryaet
+уровень: зал берёт
+источник: ../istochniki/pdf/baez-dolan-finite-sets-to-feynman-diagrams.pdf, стр.13
+статус: seed
+```
+```
+id: smeshenie-cvetov-reshetka
+род: пример
+суть: смешение цветов задаёт частичный порядок, в котором join двух цветов = цвет их смеси; по теореме Биркгофа этот порядок и порядок делимости — ОДНО И ТО ЖЕ (включение множеств первичных цветов / простых)
+котёл: научпоп
+находка: ⭐⭐ Два бытовых порядка — краски и делимость — оказываются одной структурой, и это
+  не аналогия, а теорема (Биркгоф: всякая дистрибутивная решётка есть порядок включения
+  своих join-неразложимых). Ровно тот сюжет «узор всплывает в двух несвязанных местах», за
+  которым владелец и пришёл. Вход нулевой: смешать синий с жёлтым умеет каждый.
+связи: chum-kategoriya, predel-opredelenie, kopredel-opredelenie, cheng-analogii-i-otnosheniya
+уровень: зал берёт
+источник: ../istochniki/web/cti-04-order.md §Color-mixing partial order + §Birkhoff's representation theorem
+статус: seed
+```
+```
+id: karta-est-funktor
+род: пример
+суть: географическая карта — это функтор: города-объекты, дороги-стрелки, МАРШРУТ = композиция; «карта не территория» = функтор не обязан перечислить все дороги, но перечисленные обязаны существовать
+котёл: научпоп
+находка: ⭐ Самый дешёвый вход в функтор во всём корпусе: сохранение композиции получает
+  бытовой смысл («каждый маршрут, проложенный по карте, существует и в реальности»), а
+  «неполнота» карты перестаёт быть дефектом и становится определением. Родня — оборот речи
+  «если школа как корпорация, то учитель как начальник» оттуда же: функтор в обыденном языке.
+связи: functor, kategoriya-opredelenie
+уровень: зал берёт
+источник: ../istochniki/web/cti-10-functors.md §Maps are functors + §Functors in everyday language
+статус: seed
+```
+```
+id: lineinaya-so-sdvigom-ne-funktor
+род: пример
+суть: школьная f(x)=ax сохраняет сложение и потому есть функтор моноида (ℕ,+) в себя — а f(x)=ax+b тоже «линейная» и тоже прямая, но сложение НЕ сохраняет и функтором не является
+котёл: математика
+находка: ⭐ НЕ-пример нулевой стоимости на самом знакомом объекте школьной программы:
+  две функции, обе рисуются прямой, обе называются «линейными» — а функториальна только
+  одна. Пара к флагману Перроне («выпуклые функции не образуют категорию»), но дешевле:
+  не нужен даже матан. Родня в корпусе: f(n)=n+1 сохраняет порядок, но не сложение (Cheng).
+связи: functor, chain-rule-est-funktorialnost, karta-est-funktor
+уровень: зал берёт
+источник: ../istochniki/web/cti-10-functors.md §Linear functions
+статус: seed
+```
+```
+id: interesnye-otkazy-cheng
+род: находка
+суть: §7.8 «Interesting failures» у Ченг — сплошной полигон НЕ-примеров на бытовом материале: где рефлексивность/симметрия/транзитивность ломаются
+котёл: научпоп
+находка: ⭐⭐ Не один пример, а ГОТОВАЯ КОЛЛЕКЦИЯ в жанре, который владелец назвал самым
+  ценным, с нулевым пререком. Сильнейшие: «ВОСТОЧНЕЕ» ломается на шаре (там всё восточнее
+  всего); «почти равно ±ε» не транзитивно, как ε ни мельчи; ОКРУГЛЕНИЕ (1.49→1, 1.5→2) —
+  псевдо-эквивалентность; парадокс сорита (сумма пренебрежимых укусов даёт сытость); дружба
+  не рефлексивна, не симметрична и не транзитивна — тремя разными способами. Метод Ченг:
+  сперва отказ, потом починка — то есть понятие ВЫПАДАЕТ из разбора отказов.
+связи: cheng-analogii-i-otnosheniya, chum-kategoriya, kategoriya-opredelenie, pryamye-rejsy-ne-kategoriya
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.98–110 (§7.8)
+статус: seed
+```
+```
+id: nekommutiruyushchaya-otec-gorod
+род: пример
+суть: диаграмма «человек → его отец → город, где он живёт» НЕ коммутирует — и это содержательное, проверяемое утверждение о мире, а не про формулы
+котёл: научпоп
+находка: ⭐ Показывает, что коммутативность — не украшение диаграммы, а ФАКТ, который может
+  быть ложным. Спивак специально подчёркивает: некоммутативность не значит «никто не живёт
+  в городе отца», она значит «не всякий». В паре с коммутирующим треугольником ДНК→РНК→белок
+  (там же, стр.30) даёт минимальную пару «коммутирует / не коммутирует» на понятном материале.
+связи: kategoriya-opredelenie, karta-est-funktor
+уровень: зал берёт
+источник: ../istochniki/pdf/spivak-category-theory-for-scientists-2013.pdf, стр.30–31 (Example 2.3.3.2)
+статус: seed
+```
+```
+id: spyashchij-mladenec-kompoziciya
+род: пример
+суть: спящего младенца несут по городу: время → место в Буффало → температура; ребёнок чувствует ТОЛЬКО композицию (жарко-прохладно-жарко) и не знает двух карт, из которых она сложена
+котёл: научпоп
+находка: ⭐ Лучший найденный носитель мысли «композиция — это ОДНА стрелка, а не склейка
+  двух»: промежуточный объект физически недоступен наблюдателю. Ловер тут же добавляет
+  тонкость, которая нравится владельцу: точки «температурной линии» — это сами физические
+  температуры, а не числа шкалы (младенцу жарко до всякого Цельсия).
+связи: kategoriya-opredelenie, galiley-proizvedenie, karta-est-funktor
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.40 (Session 2)
+статус: seed
+```
+```
+id: tri-stupeni-zabyvaniya
+род: находка
+суть: забывающие функторы делятся на три ступени — забыть СВОЙСТВА (AbGrp→Grp), забыть СТРУКТУРУ (Grp→Set), забыть STUFF (Set²→Set); ступень читается по «верен / полон / существенно сюръективен»
+котёл: математика
+находка: ⭐ Даёт лестницу там, где обычно валят всё в одну кучу «забывающих». Смысловая
+  разница проверяется формально: полный+верный = забыл только свойства; верный = забыл
+  структуру; ни то ни другое = забыл материал. У Перроне забывающие есть, а шкалы нет.
+  Полезно и как ответ на вопрос «что вообще делает функтор» — он забывает, и есть три
+  разных способа забыть.
+связи: functor, free-forgetful-vect, adjunction
+уровень: требует приручения
+источник: ../istochniki/pdf/baez-category-theory-course.pdf, стр.24
+статус: seed
+```
+```
+id: kub-hofshtadtera-teni
+род: сцена
+суть: объект с обложки «Гёделя, Эшера, Баха» отбрасывает три тени — буквы G, E, B; тени не определяют объект, и разные объекты дают те же тени
+котёл: научпоп
+находка: ⭐ Готовая сцена для «проекции ещё не задают произведение»: зал видит глазами, что
+  знать все проекции — не то же самое, что знать объект, и что универсальное свойство
+  требует ЕЩЁ и единственности сравнивающей стрелки. Прямо рифмуется с Галилеем Ловера
+  (тень + уровень ВОССТАНАВЛИВАЮТ полёт птицы) — и работает как его отрицание: там
+  восстанавливают, тут нет.
+связи: galiley-proizvedenie, proizvedenie-opredelenie, universalnoe-svojstvo, scena-dve-teni
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.254–255
+статус: seed
+```
+```
+id: komanda-i-slabejshij
+род: пример
+суть: «команда сильна настолько, насколько слаб её слабейший участник» — верно ли это для МАТЕРИАЛОВ? Формально: существует ли морфизм предпорядков «входит в состав» → «прочнее»
+котёл: научпоп
+находка: ⭐ Показывает, ЧТО категорный язык добавляет к житейской поговорке: он превращает
+  её в проверяемый вопрос («есть ли монотонное отображение между двумя порядками на одном
+  множестве материалов»). Ровно тот аргумент «зачем», которого владелец не мог найти:
+  структура не украшает утверждение, а делает его фальсифицируемым.
+связи: chum-kategoriya, functor, invariant-vynosit-verdikt
+уровень: зал берёт
+источник: ../istochniki/pdf/spivak-category-theory-for-scientists-2013.pdf, стр.99 (Application 3.4.4.3)
+статус: seed
+```
+```
+id: neobratimye-processy-cheng
+род: пример
+суть: обратимость на бытовых процессах: стёртый карандаш и оттаявшая вода обратимы, а замороженное молоко при оттаивании РАССЛАИВАЕТСЯ и разбитое яйцо не собрать
+котёл: научпоп
+находка: Дешёвый вход в изоморфизм через «что можно отменить»: у Ченг подряд идут удачные
+  и неудачные попытки обращения, включая полуобратимости (перец как «обратное» соли,
+  помилование, развод). Математический хвост той же линии: возведение в квадрат обратимо
+  только с одной стороны; умножение на 0 стягивает всю прямую в точку. Пара к Перроне
+  (R²→R и R→R², где f∘g=id, а g∘f≠id) — но без линала.
+связи: mot-obratimost-i-universum, botinki-i-noski, kategoriya-opredelenie
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.183–185
+статус: seed
+```
