@@ -10,12 +10,12 @@
 
 ## Индекс по роду
 
-- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora`
+- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
 - **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka`
-- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona`
+- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -3404,6 +3404,159 @@ id: raskraska-est-strelka
 связи: gomologii-grafa-funktor-vect, eulerova-harakteristika-razlichit, functor
 уровень: зал берёт (реплика)
 источник: ../../_studio/zhurnal/2026-07-18_teorkat-l1/GIPOTEZY-L1.md §2 (раскраски — поправка) + https://en.wikipedia.org/wiki/Graph_homomorphism
+статус: черновик
+```
+
+### Волна obogatit-vvedenie (2026-07-19) — вычитаны лекционные введения
+
+> Заход `kod_obogatit-vvedenie`: скачаны+вычитаны Baez–Stay (Розетта), Leinster, Mazur, Cheng (Cambridge notes + MfA23), math3ma. Дайджесты — `../istochniki/VYCHITANO.md`. Статус — `черновик` (на приборе не гонялись). 🔴 Где источник спорит с кольцом — отмечено в `находка` и в SKELET §Обогащение.
+
+```
+id: leinster-vzglyad-sverhu
+род: находка
+суть: Leinster ОТКРЫВАЕТ «Basic Category Theory» видом с высоты + «чем НОК похож на прямую сумму?» — дословно подтверждён наш крючок движения II
+котёл: научпоп
+находка: Печ. с.1 дословно: «bird's eye view… How is the lowest common multiple of two numbers
+  like the direct sum of two vector spaces? What do discrete topological spaces, free groups, and
+  fields of fractions have in common?» ⇒ вход движения II (НОД/НОК = произв/копроизв) у мастера
+  ОТКРЫВАЕТ книгу за 3 строки. 🔴 Честно: спина Leinster'а — УНИВЕРСАЛЬНОЕ СВОЙСТВО, а НЕ «объекты
+  как числа»/категорификация. Наш вход через категорификацию (движение I) — осознанный выбор
+  (Baez–Dolan/Ловер), UP-first Leinster'а — сильная альтернатива, не то же самое.
+связи: kak-otkryvayut-vvedeniya, throughline-kolco-vvedeniya, leinster-universalnoe-bez-zhargona, nod-universalnoe, vopros-chetyre-teoremy
+уровень: зал берёт
+источник: ../istochniki/pdf/leinster-basic-category-theory.pdf печ. с.1 (Introduction) — дайджест VYCHITANO §leinster
+статус: черновик
+```
+```
+id: leinster-universalnoe-bez-zhargona
+род: пример
+суть: Leinster вводит универсальное свойство БЕЗ ЖАРГОНА через 1 (∃! X→1) и ℤ (∃! ℤ→R), доказывает «единствен до изоморфизма» на 6 строк (Lemma 0.3)
+котёл: математика
+находка: Готовый L1-уровень «единственность с точностью до изоморфизма»: 1 = множество из точки
+  («∀X ∃! X→1»), ℤ = кольцо («∀R ∃! ℤ→R»), Lemma 0.3 — оба «начальны» ⇒ изоморфны, доказательство
+  короткое и чистое (не про кольца — про УС). «Universal — потому что говорит, как объект относится
+  ко ВСЕЙ вселенной, где живёт» (печ. с.2). Прямой донор бита «изоморфизм/терминал» без аппарата.
+связи: leinster-vzglyad-sverhu, terminalnyj-obekt, edinstvennost-terminalnogo, pochemu-do-izo, universalnoe-svojstvo
+уровень: зал берёт
+источник: ../istochniki/pdf/leinster-basic-category-theory.pdf печ. с.1–4 (Examples 0.1–0.3, Lemma 0.3) — дайджест VYCHITANO §leinster
+статус: черновик
+```
+```
+id: rosetta-tablica-baez-stay
+род: находка
+суть: Первоисточник Розетты (Baez–Stay, 0903.0340) теперь на диске; его столбцы Logic+Computation = Карри–Ховард ⇒ наш бит 9 (связная картина) и бит 12 (финал-КХЛ) — ОДИН объект, кольцо смыкается таблицей
+котёл: научпоп
+находка: ⭐⭐ Таблица object/morphism/⊗/internal-hom × Physics·Topology·Logic·Computation (Table 1
+  печ. с.3, Table 4 с.65). Столбцы Logic+Computation: proposition=data type, proof=program,
+  ∧=произведение, ⇒=функц.тип — БУКВАЛЬНО КХЛ ⇒ Розетта (бит 9) и финал-кольцо (бит 12) СОВПАДАЮТ.
+  ⚠ Под зал: берём Logic+Computation (+кобордизм-«штаны» на пальцах), ВЫКИДЫВАЕМ Physics/квант;
+  читаем картезиански (×/⇒), а не моноидально (⊗/⊸) — авторы сами называют cartesian-closed вариант
+  (с.3). Уточняет rosetta-baez-svyaznaya-kartina (была по памяти/вебу — теперь первоисточник на диске).
+связи: rosetta-baez-svyaznaya-kartina, chl, curry-howard-lambek, throughline-kolco-vvedeniya, kobordizmy-kameo, motivation-hom-language
+уровень: зал берёт (Logic+Comp) / потолок (Physics — выкинуть)
+источник: ../istochniki/pdf/baez-stay-rosetta-stone.pdf печ. с.3 (Table 1), с.65 (Table 4) — дайджест VYCHITANO §baez-stay
+статус: черновик
+```
+```
+id: mazur-obekt-set-otnoshenij
+род: мотивация
+суть: Mazur: объект = СЕТЬ ОТНОШЕНИЙ со всеми объектами своего рода; «X=Y?» обычно неуместно — уместно «есть ли изоморфизм X→Y?». Рамка бита «стрелки важнее точек»
+котёл: научпоп
+находка: Лучшая доступная формулировка «объект = его связи» (самоназванный лейтмотив, с.19; финал
+  с.24) + «равенство vs изоморфизм» (с.11: «X=Y?» quixotic, уместен конкретный изоморфизм). Открывает
+  бытовым: 1729 Рамануджана (один объект — три представления), «5 mod 691», золотые слитки как
+  антипример «число 5» ⇒ презентация ≠ объект → изоморфизм. 🔴 Как ЦЕЛОЕ не для зала: с.19–20 уходит
+  в схемы/Гротендика (потолок). Берём формулировки и метафоры, не структуру и не темп.
+связи: pochemu-do-izo, motivation-hom-language, troyka-obekt-cherez-svyazi, mot-obratimost-i-universum, mazur-spotlight-scena
+уровень: зал берёт (формулировки) / вне зала (целиком — Йонеда/схемы)
+источник: ../istochniki/pdf/mazur-when-is-one-thing-equal.pdf с.1, 4–5, 11, 19, 24 — дайджест VYCHITANO §mazur-when-is-one
+статус: черновик
+```
+```
+id: cheng-rol-vs-harakter
+род: находка
+суть: Cheng (MfA23 S3) «role vs character» — теоркат характеризует вещь по РОЛИ в контексте, не по внутреннему устройству. Доступнейший бытовой вход в универсальное свойство = слоган Йонеды
+котёл: научпоп
+находка: ⭐ Бытовой вход в УС: «role vs character» через кино/кухню (baseball cap, teaspoon, pound
+  cake) → Extremes → Uniqueness → Products (S3). Ровно «характеризуем стрелками, не элементами».
+  Сходится с Mazur («сеть отношений») и Leinster (universal property) — три доступные формулировки
+  одного (см. troyka-obekt-cherez-svyazi). Сильнее нашего «стрелки важнее точек» как БЫТОВОЙ заход.
+связи: troyka-obekt-cherez-svyazi, mazur-obekt-set-otnoshenij, universalnoe-svojstvo, pochemu-do-izo, cheng-analogii-i-otnosheniya
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-mfa23-session3.pdf S3 §1 «Role vs character» — дайджест VYCHITANO §cheng-mfa23
+статус: черновик
+```
+```
+id: cheng-analogii-i-otnosheniya
+род: находка
+суть: Cheng (MfA23 S1): «pure mathematics is a theory of analogies» — 2 apples→2 things, операции a+b/a×b/a∘b через numbers/functions/relations/matrices; порядок relations→category; «category generalizes equivalence relation»
+котёл: научпоп
+находка: ⭐ Доступнейшая опора движений I–II: «математика = теория аналогий» одной таблицей — одна
+  операция, много воплощений (числа/функции/отношения/матрицы) = «объекты как числа» + «одно понятие
+  много лиц». Порядок relations → category (S1 §3→§4) и «category generalizes equivalence relation»
+  (S2 recap) — дословно подтверждают наш бит 5 «отношения → отбрасываем симметрию → категория» (было
+  по памяти о Cheng). Мотивация БЫТОВАЯ (Ловер — сократически; Cheng — аналогией).
+связи: kategorifikaciya-arifmetiki, kategoriya-opredelenie, chum-kategoriya, throughline-kolco-vvedeniya, cheng-rol-vs-harakter
+уровень: зал берёт
+источник: ../istochniki/pdf/cheng-mfa23-session1.pdf S1 §2 (аналогии) + S2 recap — дайджест VYCHITANO §cheng-mfa23
+статус: черновик
+```
+```
+id: troyka-obekt-cherez-svyazi
+род: находка
+суть: ⭐ ТРИ независимые ДОСТУПНЫЕ формулировки одного (слоган Йонеды): Mazur «объект = сеть отношений» = Cheng «role vs character» = Leinster «universal property». Несущая ткань движения II
+котёл: научпоп
+находка: ⭐⭐ Ключевая находка захода: бит 5 («стрелки важнее точек») держится не на одном слогане, а
+  на ТРОЙНОЙ конвергенции трёх мастеров, каждый — доступным языком: Mazur (сеть отношений,
+  равенство→изоморфизм), Cheng (роль, не характер — через кухню), Leinster (universal property — как
+  объект относится ко всей вселенной). Это слоган Йонеды, разложенный на три входа ⇒ бит 5 можно
+  вводить тройным заходом, а не одним «отношения→категория». Внешне подпирает наш `motivation-hom-language`.
+связи: mazur-obekt-set-otnoshenij, cheng-rol-vs-harakter, leinster-universalnoe-bez-zhargona, pochemu-do-izo, motivation-hom-language, yoneda, universalnoe-svojstvo
+уровень: зал берёт
+источник: сведение захода obogatit-vvedenie — дайджесты VYCHITANO §mazur-when-is-one, §cheng-mfa23, §leinster
+статус: черновик
+```
+```
+id: cheng-nizkij-pol-vysokij-potolok
+род: находка
+суть: Cheng (MfA23 S1) «low floor / high ceiling», congressive math — внешняя формулировка мастером нашего принципа «вход НИЗКО, строгость/потолок ВЫСОКО»
+котёл: научпоп
+находка: Внешнее подтверждение ZVONOK-18.07 §Развязка («не понижать строгость, понижать вход»):
+  Cheng прямо строит доступный вход к строгому теоркату для не-математиков («low floor/high
+  ceiling», ingressive/congressive). ⇒ наш принцип — не самооправдание, а признанная педагогика
+  мастера жанра. Метод: бытовая аналогия как низкий пол, настоящая структура как высокий потолок.
+связи: throughline-kolco-vvedeniya, glava-ne-lekciya, cheng-analogii-i-otnosheniya
+уровень: (принцип курса)
+источник: ../istochniki/pdf/cheng-mfa23-session1.pdf S1 §1 (ingressive/congressive; low floor/high ceiling) — дайджест VYCHITANO §cheng-mfa23
+статус: черновик
+```
+```
+id: mazur-spotlight-scena
+род: сцена
+суть: Прожектор гаснет на объекте и включается на функторе/стрелках вокруг него — сцена под бит «стрелки важнее точек» (Mazur, с.21)
+котёл: научпоп
+находка: Готовый визуальный образ (у Mazur словами, с.21): луч прожектора скользит с ТОЧКИ на
+  СТРЕЛКИ вокруг неё — зал видит глазами «объект определяется тем, как в него/из него отображают».
+  Сцена под движение II (Йонеда-слоган): точка тускнеет, входящие/исходящие стрелки загораются.
+  Родственная метафора «свет/тень/темнота» (с.14) — что определение выпячивает/держит в тени/прячет.
+связи: mazur-obekt-set-otnoshenij, troyka-obekt-cherez-svyazi, pochemu-do-izo
+уровень: зал берёт (сцена)
+источник: ../istochniki/pdf/mazur-when-is-one-thing-equal.pdf с.14, 21 — дайджест VYCHITANO §mazur-when-is-one
+статус: черновик
+```
+```
+id: math3ma-obshchij-gen
+род: находка
+суть: math3ma «What is CT Anyway»: категория — не страна на карте, а «взгляд с высоты» на весь ландшафт; не сиблинг на семейном фото, а «общий ген»; мосты между областями через общую структуру
+котёл: научпоп
+находка: Лучший короткий слоган связной картины: «bird's-eye-view of the entire landscape» (карта
+  «Mathematistan»), «not another sibling… but a common gene that unites them», «bridges between
+  realms» — каждая область имеет objects, которые relate (functions/homomorphisms/continuous),
+  sensibly (composition, associativity). Доступная опора тезиса «категории — ЯЗЫК связей»; переклик
+  с Leinster «bird's eye» и Розеттой. Годится самым первым слоганом-крючком введения.
+связи: kak-otkryvayut-vvedeniya, rosetta-tablica-baez-stay, leinster-vzglyad-sverhu, motivation-hom-language
+уровень: зал берёт
+источник: ../istochniki/web/math3ma-what-is-ct-anyway.md — дайджест VYCHITANO §Веб-источники
 статус: черновик
 ```
 
