@@ -12,10 +12,10 @@
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng`
-- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya`
+- **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni` `skomkannaya-karta`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti`
 
@@ -3855,5 +3855,208 @@ id: neobratimye-processy-cheng
 связи: mot-obratimost-i-universum, botinki-i-noski, kategoriya-opredelenie
 уровень: зал берёт
 источник: ../istochniki/pdf/cheng-the joy of abstraction - an exploration of math, category .pdf, pdf-стр.183–185
+статус: seed
+```
+
+## Карточки — добор вширь: логика, Ловер сплошь, докачка (заход `kod_dobrat-vshir`, 2026-07-19)
+
+> Верхушка +197 новых строк мастер-каталога. Сюда подняты только те, от которых «офигеваешь» и которых не было ни в одной прежней волне. Отбор мой, последнее слово за владельцем. Статус `seed`: на приборе не гонялись.
+> ⚠ Три карточки (`himicheskie-seti-funktor`, `yazyk-est-funktor`, `fibonacci-nepreryvnyj-funktor`) — **конкретные ПРИЛОЖЕНИЯ**, а не иллюстрации понятия. Это прямой ответ на претензию владельца к прежнему каталогу.
+
+```
+id: stulya-na-koncerte
+род: пример
+суть: хватит ли стульев на концерт — не считают ни людей, ни стулья, а просят всех сесть
+котёл: научпоп
+находка: ⭐⭐ Лучший в корпусе носитель тезиса «изоморфизм ПРИМИТИВНЕЕ числа, число —
+  вторичная абстракция над ним». Ловер вводит его до всякой теории, одной фразой, с нулевым
+  пререком, и дальше на нём стоит вся категорификация арифметики. Прямо под наш ход
+  «вот что вы делали всю жизнь»: сравнение попарным соответствием — то, чем люди пользовались
+  до изобретения счёта (там же стр.52).
+связи: pochemu-do-izo, dekategorifikaciya-teryaet, kategorifikaciya-arifmetiki, polovina-yabloka
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.109–110
+статус: seed
+```
+```
+id: kitajskij-restoran-cena
+род: пример
+суть: в ресторане блюдо всегда подают на тарелке заданной формы, поэтому цена факторизуется через ФОРМУ ТАРЕЛКИ, и счёт считают по стопкам грязных тарелок
+котёл: научпоп
+находка: ⭐⭐ Факторизация через промежуточный объект, показанная целиком в быту и с
+  практическим выигрышем: кассир не пишет ни слова и ни числа, а повара, официанты и
+  посетители могут говорить на разных языках. Ловер доказывает корректность тем, что «обед»
+  (съеденное блюдо ↔ использованная тарелка) — биекция. Годится и как вход в «определяется
+  через», и как готовая сцена.
+связи: komanda-i-slabejshij, kategoriya-opredelenie, uravnitel-teoriya-i-eksperiment
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.89–93
+статус: seed
+```
+```
+id: sfera-shar-okruzhnost-v-set
+род: пример
+суть: сфера, шар и окружность ИЗОМОРФНЫ, если смотреть на них как на голые множества точек
+котёл: математика
+находка: ⭐⭐ Самый дешёвый способ показать, что вся содержательная разница между объектами
+  живёт не в точках, а в том, КАКИЕ ОТОБРАЖЕНИЯ РАЗРЕШЕНЫ. Ловер бьёт этим сразу после
+  теорем Брауэра: только что мы отличали шар от сферы наличием ретракции — и тут же
+  выясняется, что как множества они одно и то же. Сильнее, чем абстрактная формулировка
+  «Hom(R,R²) в Set/Top/Vect — разные категории» у Перроне, потому что на знакомых фигурах.
+связи: pochemu-do-izo, kategoriya-opredelenie, botinki-i-noski
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.148
+статус: seed
+```
+```
+id: implikaciya-est-eksponenta
+род: находка
+суть: универсальное свойство экспоненты ВЫПАДАЕТ из модус поненса, а «самозванцы» показывают, зачем нужна наибольшесть
+котёл: математика
+находка: ⭐⭐ Готовый вход в экспоненту, которого нет ни у Awodey (через ev), ни у Ловера.
+  Ход такой: берём модус поненс A ∧ (A⇒B) → B и объявляем его ОПРЕДЕЛЕНИЕМ объекта A⇒B —
+  но формуле удовлетворяют и «объекты-самозванцы» (A⇒B∧C, A⇒B∧C∧D). Настоящий A⇒B —
+  САМЫЙ ВЕРХНИЙ из них. То есть универсальное свойство не постулируется, а вынуждается
+  попыткой определить объект наивно. Тем же ходом рядом выпадает закон тождества
+  Аристотеля: A⇒A и есть ⊤. Прямой заказ владельца «прочесть логику» — вот его ядро.
+связи: eksponenta-opredelenie, universalnoe-svojstvo, heyting-vyrozhdennyj-ccc, dva-vhoda-v-ccc, chl
+уровень: зал берёт
+источник: ../istochniki/web/cti-05-logic.md, §The implies operation + §The law of identity
+статус: seed
+```
+```
+id: princip-vzryva-daet-terminalnyj
+род: пример
+суть: из принципа взрыва («из лжи следует что угодно») выводится, что Ложь — наименьший объект, а Истина — наибольший, то есть начальный и терминальный
+котёл: математика
+находка: ⭐ Два самых абстрактных понятия курса (терминальный и начальный объект) получают
+  единственную мотивацию, которая ничего не требует от зала заранее: логика, которую он и так
+  знает. ⊥ — то, из чего следует всё; ⊤ — то, что следует из всего и само не влечёт ничего.
+  Двойственность видна глазами на диаграмме Хассе, а не выводится символьно.
+связи: terminalnyj-obekt, nachalnyj-obekt, mot-gde-zhivet-vasha-logika, iskl-tretie-lomaetsya
+уровень: зал берёт
+источник: ../istochniki/web/cti-05-logic.md, §The negation operation (в разделе про порядки)
+статус: seed
+```
+```
+id: himicheskie-seti-funktor
+род: пример
+суть: сеть Петри со скоростями = синтаксис, система дифференциальных уравнений = семантика, между ними моноидальный функтор
+котёл: математика
+находка: ⭐⭐ ПРИЛОЖЕНИЕ, а не иллюстрация — и это ровно тот жанр, отсутствие которого
+  владелец поставил в вину прежнему каталогу. Выигрыш назван прямо: уравнения БОЛЬШОЙ
+  реакционной сети собираются из уравнений кусков склейкой (композиция коспанов = pushout),
+  и работает это благодаря функториальности и моноидальности. Тот же аппарат Баэза
+  накрывает электрические цепи, марковские процессы и signal-flow графы теории управления.
+связи: functor, predel-opredelenie, kategoriya-opredelenie
+уровень: требует приручения (сюжет — зал берёт, аппарат — нет)
+источник: ../istochniki/pdf/bradley-what-is-applied-ct.pdf, стр.30–34 (§3.1)
+статус: seed
+```
+```
+id: yazyk-est-funktor
+род: пример
+суть: модель языка DisCoCat — моноидальный функтор «грамматика (прегруппа) → значения слов (векторные пространства)»
+котёл: математика
+находка: ⭐⭐ ПРИЛОЖЕНИЕ с честно названной ДЫРОЙ, которую закрывает именно теоркат:
+  компьютер порознь умеет и размечать части речи, и представлять значения слов векторами,
+  а вот значение ПРЕДЛОЖЕНИЯ статистикой не возьмёшь — одно и то же предложение почти
+  никогда не встречается в корпусе дважды. Функтор говорит, как склеить смысл из кусков.
+  Показано на «yellow banana» (прилагательное имеет тип nnˡ) и «bananas are fruit»
+  (свёртка n·nʳsnˡ·n → s). Там же автор шутя называет теоремой цитату Фёрта «слово узнаётся
+  по компании, в которой оно ходит» — и это буквально слоган Йонеды.
+связи: functor, mazur-obekt-set-otnoshenij, troyka-obekt-cherez-svyazi, cheng-rol-vs-harakter
+уровень: требует приручения
+источник: ../istochniki/pdf/bradley-what-is-applied-ct.pdf, стр.35–41 (§3.2)
+статус: seed
+```
+```
+id: fibonacci-nepreryvnyj-funktor
+род: пример
+суть: gcd(F_n, F_m) = F_gcd(n,m) — то есть Фибоначчи есть функтор, сохраняющий пределы, на ЧУМе делимости
+котёл: математика
+находка: ⭐⭐ Образцовая «скрытая функториальность в знакомом»: тождество про НОД чисел
+  Фибоначчи выглядит олимпиадным курьёзом, а означает ровно НЕПРЕРЫВНОСТЬ функтора.
+  Всё держится на школьном: ℕ по делимости — категория, НОД — предел (произведение) в ней,
+  сохранение НОД — сохранение пределов. Ложится прямо на нить {arifmetika} и на уже
+  имеющееся «НОД как универсальное свойство».
+связи: functor, predel-opredelenie, chum-kategoriya, chain-rule-est-funktorialnost
+уровень: зал берёт
+источник: ../istochniki/web/math3ma-fibonacci-sequence.md, §The Fibonacci Sequence as a Functor
+статус: seed
+```
+```
+id: dinamika-est-funktor-vremeni
+род: пример
+суть: динамическая система — это функтор из времени: дискретная из моноида (ℕ,+), непрерывная из (ℝ,+)
+котёл: математика
+находка: ⭐ Одно определение накрывает и «машину с кнопкой», и физическую эволюцию:
+  «через t единиц времени состояние x перейдёт в α_t(x)». Ценно ещё и тем, КАК найдено:
+  у Ловера это реплика студента Данило («а если заменить натуральные на действительные?»),
+  то есть готовый сократический ход, а не готовое определение сверху.
+связи: functor, monoid-odin-obekt, nyuton-est-dejstvie-monoida, kategoriya-opredelenie
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.181–182
+статус: seed
+```
+```
+id: suhoj-list-s-pizy
+род: находка
+суть: Галилей знал, что сухой лист с Пизанской башни из-за ветра иногда «падает вверх» — это не опровергает теорию тяготения, а очерчивает границы идеализации
+котёл: научпоп
+находка: ⭐ Готовый ответ на возражение, которое зал задаёт любой абстракции: «а в жизни-то
+  не так». Ловер отвечает не отговоркой, а честной формулировкой: идеализация «одна главная
+  сила» работает вплоть до навигации, и лист её не опровергает, а показывает, где она
+  кончается. Переносится на саму теорию категорий один в один и годится как приём подачи,
+  а не только как физический сюжет.
+связи: kategorifikaciya-arifmetiki, spyashchij-mladenec-kompoziciya
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.321–322
+статус: seed
+```
+```
+id: diagonal-kantora-daet-godelya
+род: утверждение
+суть: диагональная теорема Кантора в любой категории с произведениями даёт неподвижную точку, а из неё — Гёделя, Рассела и Тарского
+котёл: математика
+находка: ⭐⭐ Ловер формулирует диагональ Кантора КАТЕГОРНО (если объект T так богат, что
+  одной картой T×T→Y параметризует все стрелки T→Y, то у каждого эндоморфизма Y есть
+  неподвижная точка) и тут же вынимает из неё неполноту: занумеровав свойства, получаем
+  «свойство №13», про которое нельзя доказать ни что число 5 им обладает, ни что нет.
+  То есть знаменитые парадоксы оказываются одной теоремой про произведения. Сверено по
+  странице дословно — числа 13 и 5 авторские.
+связи: proizvedenie-opredelenie, kategoriya-opredelenie, iskl-tretie-lomaetsya, mot-gde-zhivet-vasha-logika
+уровень: требует приручения
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.316–321
+статус: seed
+```
+```
+id: klany-volka-i-medvedya
+род: пример
+суть: браки внутри клана запрещены, клан ребёнка материнский — и сортировка по полу вместе с сортировкой по клану дают одно отображение в ПРОИЗВЕДЕНИЕ
+котёл: научпоп
+находка: ⭐ Произведение как «две независимые характеристики сразу», показанное на
+  этнографическом материале с нулевым пререком. Ценно тем, что произведение здесь не
+  геометрическое (в отличие от цилиндра и Галилея), а «признаковое» — то есть накрывает
+  ровно тот случай, где зал обычно и встречает произведение на практике.
+связи: proizvedenie-opredelenie, universalnoe-svojstvo, chum-kategoriya
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.176
+статус: seed
+```
+```
+id: skomkannaya-karta
+род: сцена
+суть: скомкать карту города и уронить внутрь того же города — найдётся точка карты ровно над изображаемым ею местом
+котёл: научпоп
+находка: ⭐ Теорема Брауэра о неподвижной точке в трёх нарастающих воплощениях подряд:
+  две машины на шоссе (одномерный случай), скомканная карта (двумерный), «глаз бури» в
+  чашке чая или шаровом сосуде (трёхмерный). Для сцены важно, что каждое следующее
+  воплощение — та же теорема, и зал видит рост размерности глазами. Рядом Ловер даёт
+  и НЕ-пример: план комнаты КРУПНЕЕ настоящей ломает рассуждение Банаха, а Брауэр всё равно
+  работает.
+связи: kategoriya-opredelenie, sfera-shar-okruzhnost-v-set
+уровень: зал берёт
+источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.133–135, 143–144
 статус: seed
 ```
