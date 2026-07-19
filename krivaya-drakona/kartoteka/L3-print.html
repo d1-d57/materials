@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Листок 3 — печать</title>
+<!-- ИСТОЧНИК. Картинок в листке нет, поэтому шаблон и сборка не нужны —
+     правится этот файл напрямую. Печать: python3 -m weasyprint L3-print.html L3-print.pdf -->
+<style>
+  @page{ size:A4; margin:12mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;font:11pt/1.36 Georgia,"Times New Roman",serif}
+  /* Нумерация продолжает листки 1 и 2 (задачи 1–16): дети держат все листы сразу,
+     сквозной счёт снимает путаницу «какая это задача». Л3 стартует с 17. */
+  .sheet{max-width:186mm;margin:0 auto;counter-reset:z 16}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:9mm}
+  .head .t{font-weight:700;font-size:12.5pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  ol{margin:0;padding:0;list-style:none}
+  li{counter-increment:z;position:relative;padding-left:28px;margin:0 0 7mm;
+    break-inside:avoid;page-break-inside:avoid}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  .mono{font-family:"Courier New",monospace;letter-spacing:.06em;font-weight:700;white-space:nowrap}
+  @media screen{ body{background:#eceae6;padding:18px 0}
+    .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:12mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Кривая дракона</span>
+    <span class="m">6 класс &middot; занятие 3</span>
+  </div>
+
+  <ol>
+    <li>Разверни свою полоску до прямых углов и иди по сгибам слева направо: каждый сгиб &mdash; долина (полоска согнута к тебе) или гора (от тебя). Обозначь долину и гору разными буквами. Напиши слова для кривых дракона ранга&nbsp;<span class="mono">3</span> и ранга&nbsp;<span class="mono">4</span>. Проверь, что те же самые слова получаются, если идти по ломаной от отмеченного конца и записывать повороты: налево или направо.</li>
+
+    <li>Черепаха проползла по ломаной дракона и прочла слово из букв <span class="mono">L</span> и <span class="mono">R</span>. Какое слово она прочтёт, если проползёт по той же ломаной в обратную сторону? Чем это слово отличается от исходного?</li>
+
+    <li>Докажи, что слово ломаной дракона следующего ранга устроено так: сначала идёт слово некоторой ломаной предыдущего ранга, потом одна буква, потом снова это же слово предыдущего ранга &mdash; записанное задом наперёд и с заменой <span class="mono">L</span> на <span class="mono">R</span>, а <span class="mono">R</span> на <span class="mono">L</span>.</li>
+
+    <li>Выпиши буквы слова дракона, стоящие на чётных местах, и отдельно &mdash; буквы, стоящие на нечётных. Что получается в каждом случае? Докажи.</li>
+
+    <li>Может ли в слове дракона встретиться четыре одинаковые буквы подряд? А три подряд?</li>
+
+    <li>Известно, что в слове, записывающем ломаную дракона ранга&nbsp;<span class="mono">8</span>, на <span class="mono">1</span>-м, <span class="mono">2</span>-м, <span class="mono">4</span>-м, <span class="mono">8</span>-м, <span class="mono">16</span>-м, <span class="mono">32</span>-м, <span class="mono">64</span>-м и <span class="mono">128</span>-м местах стоят соответственно буквы <span class="mono">L, L, R, R, R, L, R, L</span>. Какая буква стоит на <span class="mono">179</span>-м месте? А на <span class="mono">180</span>-м?</li>
+  </ol>
+</div>
+</body>
+</html>

@@ -25,6 +25,9 @@ krivaya-drakona/kartoteka/L1-fig2.svg
 krivaya-drakona/kartoteka/L2-fig-*.svg
 # ← build_L2_print.py (из L2-print-tmpl.html). В git шаблон, чтобы они не разъехались
 krivaya-drakona/kartoteka/L2-print.html
+# ← gen_l3_figs.py. Генератор ПОКА НЕ ИСПОЛЬЗУЕТСЯ: картинку из листка Л3 убрали
+# (решение владельца 18.07). Файл оставлен на случай, если картинка вернётся.
+krivaya-drakona/kartoteka/L3-fig-word-strip.svg
 # ← weasyprint (из соответствующего HTML)
 krivaya-drakona/kartoteka/*-print.pdf
 
