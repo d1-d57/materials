@@ -111,7 +111,119 @@
 
 **HEAD до работы:** `98b8d00fbc164452a07fffab24cf2de6572fe411` (ветка `teorkat-istochniki`)
 **`git stash list` до работы:** пусто.
-**Полный `git status --short` до работы** (109 строк) сохранён дословно в `/private/tmp/claude-501/-Users-ivanyakovlev/bde63ef5-129b-4ecd-bf38-e01bb1dbba80/scratchpad/status_before.txt` и приведён в ОТЧЁТе целиком.
+**Полный `git status --short` до работы** (109 строк; scratchpad-копия эфемерна и не переживёт сессию, поэтому дублирую здесь дословно):
+
+```
+ M _generator/DVIZHKI.md
+ M _generator/README.md
+ M _generator/build_doc.py
+ M _generator/doc-demo/view.html
+ M _studio/CLAUDE.md
+ M _studio/docs/kak-delat/RESERCH-ZADACH.md
+ M _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md
+ M _studio/docs/sostoyanie/SVODKI.md
+ M _studio/docs/spravka/BAZY-ZADACH.md
+ M _studio/docs/spravka/SPEKA-TEMPLATE.md
+ M _studio/konvejer/09-illustracii/DOK.md
+ M _studio/zhurnal/2026-07-11_informacia-i-kody/PLAN.md
+ M _studio/zhurnal/2026-07-11_informacia-i-kody/SESSIYA.md
+ M _studio/zhurnal/2026-07-16_krivaya-drakona/NAVIGATOR.md
+ M _studio/zhurnal/2026-07-16_krivaya-drakona/PLAN.md
+ M _studio/zhurnal/2026-07-16_krivaya-drakona/SESSIYA.md
+ M _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/PROGON-teksty-lekcij.md
+ M _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/SESSIYA.md
+ M _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/SKELET-kursa-9-lekcij.md
+ M _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/UROKI-FABRIKE.md
+ M _studio/zhurnal/2026-07-18_teorkat-l1/PLAN.md
+ M _studio/zhurnal/2026-07-18_teorkat-l1/SESSIYA.md
+ M _studio/zhurnal/2026-07-18_teorkat-l1/UROKI-FABRIKE.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/FIB-struktura.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/MANIFEST-duha-kursa.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/PLAN.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/UROKI-FABRIKE.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/kod_fib-kategorno.md
+ M _studio/zhurnal/2026-07-20_teorkat-motivacia/kod_vidy-obzor.md
+ m carshering/carsharing_archive
+ M catalan/1-START-HERE/dnevnik-i-plan.md
+ M catalan/CLAUDE.md
+ M catalan/COWORK.md
+ M catalan/NAVIGATION.md
+ M catalan/biblioteka/istochniki/MANIFEST.md
+ M catalan/biblioteka/istochniki/VYCHITANO.md
+ M catalan/kurs/kurs-lekcii.html
+ M catalan/spravochnik/TERMINY-russkie.md
+ M catalan/zhurnal/SVODKI.md
+ M informacia-i-kody/START-HERE.md
+ M informacia-i-kody/istochniki/MANIFEST.md
+ M informacia-i-kody/istochniki/VYCHITANO.md
+ M informacia-i-kody/kartoteka/L1-listok-shifry.html
+ M informacia-i-kody/kartoteka/L1-listok-shifry.md
+ M "kurs leto 2026/CLAUDE.md"
+?? .claude/settings.json
+?? _studio/zhurnal/2026-07-12_l2-skolko-informacii/
+?? _studio/zhurnal/2026-07-13_l3-kodirovanie/
+?? _studio/zhurnal/2026-07-16_teorkat-landshaft/NAVIGATOR.md
+?? _studio/zhurnal/2026-07-16_teorkat-landshaft/PLAN.md
+?? _studio/zhurnal/2026-07-16_teorkat-landshaft/SESSIYA.md
+?? _studio/zhurnal/2026-07-16_teorkat-landshaft/TZ.md
+?? _studio/zhurnal/2026-07-16_teorkat-programma/
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/PERECHOT-kataloga.md
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/SVERKA-kalibrovki-ne-otkryvat-do-otveta.md
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/VIDY/
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/fable_generacia-sjuzhetov.md
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/kod_perechot-kataloga.md
+?? _studio/zhurnal/2026-07-20_teorkat-motivacia/kod_razobrat-git.md
+?? catalan/2-idei/obzor-kursa-PLAN.md
+?? catalan/biblioteka/LANDSHAFT-kursov.md
+?? catalan/biblioteka/POKRYTIE.md
+?? catalan/biblioteka/istochniki/digest-18212-notes02-07.md
+?? "catalan/biblioteka/istochniki/knigi/Haglund \342\200\224 The q,t-Catalan Numbers and Diagonal Harmonics.pdf"
+?? "catalan/biblioteka/istochniki/knigi/Sagan \342\200\224 Combinatorics, The Art of Counting (AMS prepub draft).pdf"
+?? "catalan/biblioteka/istochniki/knigi/Stanley \342\200\224 Enumerative Combinatorics vol.1 (2nd ed, 2011 draft).pdf"
+?? "catalan/biblioteka/istochniki/knigi/Stanley \342\200\224 Topics in Algebraic Combinatorics (2013, free).pdf"
+?? catalan/kurs/L6-cikl-lemma-konspekt.md
+?? catalan/kurs/L6-konspekt/
+?? catalan/kurs/L6-narayana-cikllemma-konspekt.md
+?? catalan/kurs/L7-konspekt/
+?? catalan/kurs/fig-arcsine.svg
+?? catalan/kurs/fig-branching.svg
+?? catalan/kurs/fig-bricklayer.svg
+?? catalan/kurs/fig-chung-feller.svg
+?? catalan/kurs/fig-cikl-lemma.svg
+?? catalan/kurs/fig-narayana.svg
+?? catalan/kurs/lekciya-1.html
+?? catalan/kurs/obzor/
+?? catalan/kurs/perestanovki-otchet-skelet.md
+?? catalan/kurs/perestanovki-otchet.html
+?? catalan/snapshots/2026-07-13_pered-konsolidaciey-vyhoda.tar.gz
+?? catalan/snapshots/L1-dorabotka_pre-edit_2026-07-12_1942.tar.gz
+?? catalan/zhurnal/2026-07-12_l1-dorabotka/
+?? catalan/zhurnal/2026-07-13_dika-v-vysshey-matematike/
+?? catalan/zhurnal/2026-07-16_obzor-kursa/
+?? handoff-request.md
+?? informacia-i-kody/istochniki/pdf/knop-vzveshivaniya-shmk05.pdf
+?? informacia-i-kody/kartoteka/02-l2-skolko-informacii.md
+?? informacia-i-kody/kartoteka/03-l3-kodirovanie.md
+?? informacia-i-kody/kartoteka/L1-groby-dobor-resheniya.html
+?? informacia-i-kody/kartoteka/L1-groby-dobor.html
+?? informacia-i-kody/kartoteka/L1-print.html
+?? informacia-i-kody/kartoteka/L2-listok-skolko-informacii.html
+?? informacia-i-kody/kartoteka/L2-print.html
+?? informacia-i-kody/kartoteka/L3-listok-kodirovanie.html
+?? informacia-i-kody/kartoteka/L3-print.html
+?? informacia-i-kody/kartoteka/L3-print.pdf
+?? informacia-i-kody/kartoteka/L4-print.html
+?? informacia-i-kody/kartoteka/L4-print.pdf
+?? informacia-i-kody/kartoteka/L4-pul-na-otbor.html
+?? krivaya-drakona/L4/
+?? krivaya-drakona/kartoteka/L4-baza.md
+?? krivaya-drakona/kartoteka/L4-listok.md
+?? teoriya-kategoriy/KHL-korotko.md
+?? teoriya-kategoriy/ZVONOK-2026-07-18.md
+?? teoriya-kategoriy/khl-obyasnenie/
+?? teoriya-kategoriy/monady-obyasnenie/
+```
 
 Шаги (строго по заходу):
 1. §3-А: проверить живые git-процессы → снять мёртвый лок `.git/index.lock` → проверить `git status`.
