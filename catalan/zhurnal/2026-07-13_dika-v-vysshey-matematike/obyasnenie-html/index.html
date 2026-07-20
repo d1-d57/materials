@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Индекс подфактора Джонса — с нуля</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<style>
+:root{
+  --bg:#efe9dc;
+  --paper:#faf6ec;
+  --ink:#211c15;
+  --muted:#6d6353;
+  --accent:#8c2f2f;
+  --accent-soft:rgba(140,47,47,.07);
+  --line:rgba(33,28,21,.14);
+  --grid:rgba(33,28,21,.045);
+  --serif:'Spectral', Georgia, 'Times New Roman', serif;
+  --disp:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:clamp(17px,.6vw + 15.6px,19px);
+  line-height:1.72;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:30px 30px;
+}
+
+.wrap{
+  max-width:44rem;
+  margin:clamp(0px,4vw,52px) auto;
+  background:var(--paper);
+  padding:clamp(26px,4.4vw,68px) clamp(22px,4.8vw,74px);
+  border:1px solid var(--line);
+  border-radius:3px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04), 0 24px 60px -30px rgba(33,28,21,.28);
+}
+
+h1{
+  font-family:var(--disp);
+  font-weight:700;
+  font-size:clamp(2rem,6.4vw,3.15rem);
+  line-height:1.04;
+  letter-spacing:-.015em;
+  margin:.1em 0 .7em;
+  color:var(--ink);
+}
+h2{
+  font-family:var(--disp);
+  font-weight:700;
+  font-size:.92rem;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--accent);
+  margin:2.9em 0 1.1em;
+  padding-bottom:.55em;
+  border-bottom:1px solid var(--line);
+}
+h3{
+  font-family:var(--disp);
+  font-weight:600;
+  font-size:1.32rem;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  margin:2.1em 0 .55em;
+}
+
+p{margin:.85em 0}
+strong{font-weight:600}
+
+.lead{
+  font-size:1.1em;
+  color:var(--muted);
+  font-style:italic;
+  line-height:1.6;
+  border-left:3px solid var(--accent);
+  padding-left:1.15em;
+  margin:.4em 0 1.4em;
+}
+
+a{color:var(--accent);text-underline-offset:2px;text-decoration-thickness:1px}
+
+ul{margin:.7em 0;padding-left:1.3em}
+li{margin:.4em 0}
+li::marker{color:var(--accent)}
+
+.callout{
+  margin:1.5em 0;
+  padding:1em 1.25em;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:0 4px 4px 0;
+}
+.callout p{margin:0}
+
+code{
+  font-family:ui-monospace,'Space Mono',Menlo,monospace;
+  font-size:.9em;
+  background:rgba(33,28,21,.05);
+  padding:.05em .35em;
+  border-radius:3px;
+}
+
+.mathblock{
+  margin:1.25em 0;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.katex-display{margin:.4em 0}
+.katex{font-size:1.08em}
+
+.rule{
+  border:0;
+  height:1px;
+  margin:2.6em auto;
+  width:70%;
+  background:linear-gradient(90deg,transparent,var(--line) 22%,var(--line) 78%,transparent);
+}
+
+.fig{margin:1.9em 0;text-align:center}
+.fig svg{width:min(100%,540px);height:auto}
+.fig .wall{stroke:var(--ink);stroke-width:2}
+.fig .guide{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 5;opacity:.32}
+.fig .path{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.fig .vtx circle{fill:var(--accent)}
+.fig .lab{font-family:var(--disp);font-weight:600;font-size:15px;fill:var(--muted)}
+figcaption{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:.92em;
+  color:var(--muted);
+  margin-top:.7em;
+}
+
+.colophon{
+  margin-top:3.2em;
+  padding-top:1.1em;
+  border-top:1px solid var(--line);
+  font-family:var(--disp);
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* один срежиссированный вход */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wrap>*{animation:rise .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:.34s}
+.wrap>*:nth-child(1){animation-delay:.02s}
+.wrap>*:nth-child(2){animation-delay:.08s}
+.wrap>*:nth-child(3){animation-delay:.14s}
+.wrap>*:nth-child(4){animation-delay:.2s}
+.wrap>*:nth-child(5){animation-delay:.26s}
+.wrap>*:nth-child(6){animation-delay:.3s}
+@media (prefers-reduced-motion:reduce){
+  .wrap>*{animation:none}
+}
+
+@media (max-width:640px){
+  .katex{font-size:1em}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1>Индекс подфактора Джонса</h1>
+<p class="lead">Кандидат на сюжет «абстрактная математика → техника путей Дика». Объясняю от нуля, не предполагая ничего, кроме линейной алгебры. Цель — чтобы стало ясно, в чём задача. У неё два лица: абстрактное («какие числа бывают индексом подфактора») и комбинаторное («при каких $\delta$ форма на путях Дика положительна»); второе — это и есть работа руками.</p>
+<h2>Часть I. Нецелая «размерность» и что такое индекс</h2>
+<h3>1. Алгебра, проекция, след</h3>
+<p><strong>Алгебра</strong> $A$ — комплексное векторное пространство с ассоциативным умножением и единицей $1$. С сопряжением $*$ (как транспонирование-сопряжение матриц, $(ab)^*=b^*a^*$) это $*$-алгебра. Главный пример — матрицы $M_k(\mathbb{C})$.</p>
+<p><strong>Проекция</strong> — элемент $p$ с $p=p^*=p^2$. Геометрически это оператор проектирования на подпространство; «подпространства» алгебры — это её проекции.</p>
+<p><strong>След</strong> — линейная функция $\operatorname{tr}\colon A\to\mathbb{C}$ со свойствами $\operatorname{tr}(ab)=\operatorname{tr}(ba)$, $\operatorname{tr}(1)=1$, положительностью $\operatorname{tr}(a^*a)\ge 0$ и точностью ($\operatorname{tr}(a^*a)=0$ только при $a=0$). В $M_k(\mathbb{C})$ это нормированный след $\operatorname{tr}=\tfrac1k\operatorname{Tr}$. Тогда для проекции $p$ на $j$-мерное подпространство $\operatorname{tr}(p)=j/k$.</p>
+<p>Запомним главное: <strong>размер подпространства — это число $\operatorname{tr}(p)$.</strong> В $M_k$ он пробегает дискретный набор $\{0,\tfrac1k,\tfrac2k,\dots,1\}$.</p>
+<h3>2. Непрерывная размерность и факторы</h3>
+<p>В 1930-е Мюррей и фон Нейман нашли неожиданное. Бывают бесконечномерные $*$-алгебры (замкнутые в операторной топологии — <strong>алгебры фон Неймана</strong>) с таким же следом $\operatorname{tr}$, но у которых $\operatorname{tr}(p)$ пробегает <strong>весь</strong> отрезок $[0,1]$ непрерывно. Бывает проекция размера $0{.}7$, $\sqrt{2}/2$, любого. Это и есть <strong>непрерывная размерность</strong> (размерность Мюррея — фон Неймана): у «подпространства» нет числа базисных векторов, есть только непрерывный размер — значение следа.</p>
+<p><strong>Фактор</strong> — алгебра фон Неймана, чей центр состоит только из скаляров $\mathbb{C}\cdot 1$ (ничто нетривиальное не коммутирует со всем сразу); неразложимый «кирпич». Фактор с непрерывным $\operatorname{tr}(p)\in[0,1]$ называют фактором <strong>типа $\mathrm{II}_1$</strong>. Строгое построение — предел растущих матричных алгебр; здесь важна одна черта: размер непрерывен.</p>
+<h3>3. Подфактор и индекс</h3>
+<p><strong>Подфактор</strong> — фактор $N$, вложенный в фактор $M$ (с согласованным следом); пишут $N\subset M$.</p>
+<p>Центральное определение. Алгебру $M$ можно рассматривать как <strong>модуль над $N$</strong> (элементами $N$ можно умножать $M$ слева). У этого модуля есть та самая непрерывная размерность — число $\dim_N M$. Его называют <strong>индексом</strong> и обозначают $[M:N]$.</p>
+<p>Про обозначение — оно и сбивает. Скобка $[M:N]$ заимствована из теории полей, где $[K:F]$ — это размерность $K$ как пространства над $F$, всегда целое число. Здесь запись та же, но $[M:N]$ — непрерывная размерность, поэтому <strong>может быть нецелой</strong>. Для матриц над подматрицами она целая; для факторов типа $\mathrm{II}_1$ бывает, например, $2{.}618\dots$</p>
+<p>Суть в одной фразе: <strong>индекс $[M:N]$ — это «во сколько раз $M$ больше $N$», измеренное непрерывной размерностью (следом), а не счётом базиса.</strong></p>
+<h3>4. Абстрактная задача и теорема Джонса</h3>
+<p><strong>Задача (чистая алгебра, ноль комбинаторики).</strong> Описать множество всех значений, которые может принимать индекс $[M:N]$ по всем подфакторам типа $\mathrm{II}_1$.</p>
+<blockquote class="callout"><strong>Теорема (Джонс, 1983).</strong> $$[M:N]\in\{\,4\cos^2(\pi/n): n=3,4,5,\dots\,\}\cup[4,\infty).$$</blockquote>
+<p>Ниже 4 — дискретная лесенка $1,\ 2,\ 2{.}618\dots,\ 3,\ 3{.}247\dots$, накапливающаяся к 4. Выше 4 — сплошной луч. Постановка чисто алгебраическая; квантование ниже 4 — полная неожиданность. За эту работу Джонс получил Филдсовскую медаль, и из неё же вырос его полином узлов.</p>
+<p>Это была только абстрактная сторона. Дальше — как <strong>та же задача дословно превращается в задачу о путях Дика</strong>, и где начинается работа руками.</p>
+<hr class="rule">
+<h2>Часть II. Та же задача — позитивность на путях Дика</h2>
+<h3>5. Мост: башня проекций</h3>
+<p>Внутри пары $N\subset M$ Джонс строит бесконечную последовательность проекций $e_1,e_2,e_3,\dots$ — <strong>башню</strong> (растущую цепочку алгебр, где $k$-я порождена первыми $k$ проекциями) со свойствами:</p>
+<ul><li>$e_i=e_i^*=e_i^2$ — проекции;</li><li>$e_i e_{i+1} e_i=\tau e_i$ и $e_i e_{i-1} e_i=\tau e_i$, где $\tau=1/[M:N]$;</li><li>$e_i e_j=e_j e_i$ при $|i-j|\ge 2$ — далёкие не взаимодействуют.</li></ul>
+<p>Замена $U_i=\delta e_i$ с $\delta=1/\sqrt{\tau}$ (так что $\delta^2=[M:N]$) переводит эти соотношения в <strong>соотношения Темперли–Либа</strong> с параметром $\delta$. И ключевой факт:</p>
+<blockquote class="callout">Башня существует внутри честной алгебры со следом $\iff$ алгебра Темперли–Либа при этом $\delta$ несёт <strong>положительно определённую</strong> инвариантную форму (след неотрицателен на квадратах).</blockquote>
+<p>Отсюда:</p>
+<p><strong>Задача (комбинаторный эквивалент).</strong> При каких $\delta$ алгебра Темперли–Либа допускает положительно определённую форму? Найденные $\delta$ дают индексы $\delta^2$.</p>
+<h3>6. Что такое алгебра Темперли–Либа — и при чём пути Дика</h3>
+<p><strong>Диаграммное определение.</strong> $TL_n$ — пространство с базисом из планарных <strong>непересекающихся</strong> совершенных паросочетаний $n$ верхних и $n$ нижних точек (диаграмм). Умножение: поставить одну диаграмму на другую; каждая замкнувшаяся при склейке петля даёт множитель $\delta$. Число базисных диаграмм равно $C_n$ — числу Каталана.</p>
+<p><strong>Путь Дика</strong> — ломаная из $2n$ шагов $\nearrow$/$\searrow$, что стартует и финиширует на оси и не опускается под неё; их тоже $C_n$. Биекция: непересекающееся паросочетание $\leftrightarrow$ путь Дика $\leftrightarrow$ правильная скобочная запись. <strong>То есть базис $TL_n$ — это пути Дика.</strong></p>
+<p><strong>Через образующие (эквивалентно).</strong> $TL_n$ порождена $1,e_1,\dots,e_{n-1}$ с $e_i^2=\delta e_i$, $e_i e_{i+1} e_i=e_i$, далёкие коммутируют ($e_i$ — диаграмма «чашка сверху, крышка снизу» на местах $i,i+1$).</p>
+<h3>7. Форма, определитель Грама — и в чём именно задача</h3>
+<p><strong>Стандартный модуль $W_{n,k}$</strong> — «состояния связей»: диаграммы, у которых $k$ нитей идут насквозь (<strong>дефекты</strong>), остальные точки соединены чашками. Их базис — пути Дика/баллотировки, кончающиеся на высоте $k$; размерность — <strong>баллотное число</strong>:</p>
+<div class="mathblock">$$\dim W_{n,k}=\binom{n}{(n-k)/2}-\binom{n}{(n-k)/2-1}.$$</div>
+<p><strong>Инвариантная форма</strong> $\langle\cdot,\cdot\rangle$ на $W_{n,k}$: отрази одну диаграмму, склей со второй, посчитай замкнутые петли — получишь $\delta^{\#\text{петель}}$ (или $0$, если дефекты не сходятся).</p>
+<p><strong>Матрица Грама</strong> $G$ — матрица попарных значений $\langle\text{базис},\text{базис}\rangle$. Форма положительно определена $\iff G\succ 0 \iff$ все её главные миноры (в частности $\det G$) положительны.</p>
+<p><strong>Вот сама задача.</strong> Пара алгебр честна (позитивна) при данном $\delta$ $\iff$ все эти матрицы Грама на путях Дика положительно определены. То есть абстрактный вопрос «какие числа бывают индексом» дословно равен вопросу <strong>«при каких $\delta$ определители Грама на путях Дика не теряют положительность».</strong></p>
+<figure class="fig">
+<svg viewBox="0 0 600 196" role="img" aria-label="Два пути Дика длины 4 на клетчатой сетке над стенкой">
+<line class="guide" x1="40" y1="106" x2="216" y2="106"/>
+<line class="guide" x1="40" y1="62" x2="216" y2="62"/>
+<line class="guide" x1="384" y1="106" x2="560" y2="106"/>
+<line class="wall" x1="28" y1="150" x2="228" y2="150"/>
+<line class="wall" x1="372" y1="150" x2="572" y2="150"/>
+<polyline class="path" points="40,150 84,106 128,62 172,106 216,150"/>
+<polyline class="path" points="384,150 428,106 472,150 516,106 560,150"/>
+<g class="vtx"><circle cx="40" cy="150" r="3.6"/><circle cx="84" cy="106" r="3.6"/><circle cx="128" cy="62" r="3.6"/><circle cx="172" cy="106" r="3.6"/><circle cx="216" cy="150" r="3.6"/><circle cx="384" cy="150" r="3.6"/><circle cx="428" cy="106" r="3.6"/><circle cx="472" cy="150" r="3.6"/><circle cx="516" cy="106" r="3.6"/><circle cx="560" cy="150" r="3.6"/></g>
+<text class="lab" x="128" y="184" text-anchor="middle">A</text>
+<text class="lab" x="472" y="184" text-anchor="middle">B</text>
+</svg>
+<figcaption>Два пути Дика длины 4. Слева $A=\nearrow\nearrow\searrow\searrow$, справа $B=\nearrow\searrow\nearrow\searrow$; горизонталь — «стенка» $d\ge 0$.</figcaption>
+</figure>
+<p><strong>Посчитаем крошечный пример — так задача станет осязаемой.</strong> Возьмём $n=4$, $k=0$ (все нити замкнуты в чашки). Путей Дика длины 4 ровно два: $\nearrow\nearrow\searrow\searrow$ и $\nearrow\searrow\nearrow\searrow$ — два состояния связей $A=\{(1,2),(3,4)\}$ и $B=\{(1,4),(2,3)\}$. Считаем форму по правилу «отрази, склей, посчитай петли»:</p>
+<div class="mathblock">$$\langle A,A\rangle=\delta^2,\qquad \langle B,B\rangle=\delta^2,\qquad \langle A,B\rangle=\delta.$$</div>
+<div class="mathblock">$$G=\begin{pmatrix}\delta^2 &amp; \delta\\ \delta &amp; \delta^2\end{pmatrix},\qquad \det G=\delta^4-\delta^2=\delta^2(\delta^2-1).$$</div>
+<p>Положительность требует $\delta^2&gt;1$, то есть индекс $\delta^2&gt;1$; ровно на границе $\delta=1=2\cos(\pi/3)$ определитель обнуляется — первая ступень квантования. На уровнях $n=5,6,\dots$ граница подрастает: $\delta=2\cos(\pi/5),\ 2\cos(\pi/6),\dots$, а в пределе $\delta=2$ (индекс 4).</p>
+<h3>8. Работа на путях Дика: отражение и квантовые целые</h3>
+<p>Общий факт (Уэстбери; Ридаут–Сент-Обен): $\det G_{n,k}$ <strong>раскладывается в произведение «квантовых целых»</strong>:</p>
+<div class="mathblock">$$[m]=\frac{q^m-q^{-m}}{q-q^{-1}},\qquad \delta=q+q^{-1}=2\cos\theta,$$</div>
+<p>то есть $[m]=\sin(m\theta)/\sin\theta$ — многочлен Чебышёва от $\delta$. Два наблюдения превращают это в задачу о путях Дика:</p>
+<ul><li>$[m]$ — это <strong>взвешенный счёт по путям</strong> (баллотного/дикова типа), сворачивающийся в замкнутую тригонометрическую форму; а сами размерности $W_{n,k}$ считаются <strong>принципом отражения</strong> Андре (пути минус отражённые через стенку $d\ge 0$ — разность двух биномиальных коэффициентов).</li><li>$\det G=0 \iff$ какое-то $[m]=0 \iff \delta=2\cos(\pi j/m)$. Между этими нулями положительность рвётся — поэтому ниже $\delta=2$ разрешены только $\delta=2\cos(\pi/n)$, а это и есть квантование индекса $4\cos^2(\pi/n)$.</li></ul>
+<p><strong>Что именно мы делаем на путях Дика.</strong> Строим модули из путей Дика, выписываем форму, считаем определитель Грама (баллотные размерности — через отражение), раскладываем его в квантовые целые/Чебышёва и находим нули. Множество нулей $2\cos(\pi/n)$ — это и есть теорема Джонса. Абстрактная сторона выдыхается на «построй башню»; всё остальное — производящие функции, статистики путей, отражение, детерминант — техника путей Дика.</p>
+<hr class="rule">
+<h2>Итог: в чём задача (два лица одного вопроса)</h2>
+<ul><li><strong>Абстрактно.</strong> Какие вещественные числа бывают индексом $[M:N]$ подфактора — непрерывной размерностью одной алгебры над другой? Ответ Джонса: $\{4\cos^2(\pi/n)\}\cup[4,\infty)$.</li><li><strong>Комбинаторно (то же самое).</strong> При каких $\delta$ форма на путях Дика (диаграммах Темперли–Либа) положительно определена? Считается определителем Грама через баллотные пути и отражение; нули $2\cos(\pi/n)$ дают квантование.</li></ul>
+<p>Силуэт для доклада или статьи: короткий крючок — непрерывная размерность → нецелый индекс → неожиданная теорема Джонса — а дальше вся работа про пути Дика: диаграммы, форма, баллотные размерности, отражение, определитель Грама, квантовые целые.</p>
+<hr class="rule">
+<h2>Точки входа (первоисточники)</h2>
+<ul><li>V. F. R. Jones, «Index for subfactors», Invent. Math. 72 (1983) — сама теорема об индексе.</li><li>V. F. R. Jones, обзор «The Jones Polynomial» — башня, $\dim TL_n=C_n$, позитивность следа = квантование индекса.</li><li>D. Ridout, Y. Saint-Aubin, «Standard modules… Temperley–Lieb» (2014) — стандартные модули, баллотные размерности, определитель Грама.</li><li>V. S. Sunder, «The Temperley–Lieb algebra» — явная биекция «диаграмма ↔ путь Дика».</li><li>НМУ, «Лекция 4: Полином Джонса» — русскоязычный вход.</li></ul>
+<div class="colophon">Собрано генератором · источник: content.md · формулы: KaTeX</div>
+</main>
+
+<script>
+window.addEventListener('load', function(){
+  if (window.renderMathInElement){
+    renderMathInElement(document.body, {
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'$',right:'$',display:false}
+      ],
+      throwOnError:false
+    });
+  }
+});
+</script>
+</body>
+</html>

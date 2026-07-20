@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<style>
+:root{
+  --bg:#efe9dc;
+  --paper:#faf6ec;
+  --ink:#211c15;
+  --muted:#6d6353;
+  --accent:#8c2f2f;
+  --accent-soft:rgba(140,47,47,.07);
+  --line:rgba(33,28,21,.14);
+  --grid:rgba(33,28,21,.045);
+  --serif:'Spectral', Georgia, 'Times New Roman', serif;
+  --disp:'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:clamp(17px,.6vw + 15.6px,19px);
+  line-height:1.72;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:30px 30px;
+}
+
+.wrap{
+  max-width:44rem;
+  margin:clamp(0px,4vw,52px) auto;
+  background:var(--paper);
+  padding:clamp(26px,4.4vw,68px) clamp(22px,4.8vw,74px);
+  border:1px solid var(--line);
+  border-radius:3px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04), 0 24px 60px -30px rgba(33,28,21,.28);
+}
+
+h1{
+  font-family:var(--disp);
+  font-weight:700;
+  font-size:clamp(2rem,6.4vw,3.15rem);
+  line-height:1.04;
+  letter-spacing:-.015em;
+  margin:.1em 0 .7em;
+  color:var(--ink);
+}
+h2{
+  font-family:var(--disp);
+  font-weight:700;
+  font-size:.92rem;
+  text-transform:uppercase;
+  letter-spacing:.16em;
+  color:var(--accent);
+  margin:2.9em 0 1.1em;
+  padding-bottom:.55em;
+  border-bottom:1px solid var(--line);
+}
+h3{
+  font-family:var(--disp);
+  font-weight:600;
+  font-size:1.32rem;
+  letter-spacing:-.01em;
+  color:var(--ink);
+  margin:2.1em 0 .55em;
+}
+
+p{margin:.85em 0}
+strong{font-weight:600}
+
+.lead{
+  font-size:1.1em;
+  color:var(--muted);
+  font-style:italic;
+  line-height:1.6;
+  border-left:3px solid var(--accent);
+  padding-left:1.15em;
+  margin:.4em 0 1.4em;
+}
+
+a{color:var(--accent);text-underline-offset:2px;text-decoration-thickness:1px}
+
+ul{margin:.7em 0;padding-left:1.3em}
+li{margin:.4em 0}
+li::marker{color:var(--accent)}
+
+.callout{
+  margin:1.5em 0;
+  padding:1em 1.25em;
+  background:var(--accent-soft);
+  border-left:3px solid var(--accent);
+  border-radius:0 4px 4px 0;
+}
+.callout p{margin:0}
+
+code{
+  font-family:ui-monospace,'Space Mono',Menlo,monospace;
+  font-size:.9em;
+  background:rgba(33,28,21,.05);
+  padding:.05em .35em;
+  border-radius:3px;
+}
+
+.mathblock{
+  margin:1.25em 0;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.katex-display{margin:.4em 0}
+.katex{font-size:1.08em}
+
+.rule{
+  border:0;
+  height:1px;
+  margin:2.6em auto;
+  width:70%;
+  background:linear-gradient(90deg,transparent,var(--line) 22%,var(--line) 78%,transparent);
+}
+
+.fig{margin:1.9em 0;text-align:center}
+.fig svg{width:min(100%,540px);height:auto}
+.fig .wall{stroke:var(--ink);stroke-width:2}
+.fig .guide{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 5;opacity:.32}
+.fig .path{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.fig .vtx circle{fill:var(--accent)}
+.fig .lab{font-family:var(--disp);font-weight:600;font-size:15px;fill:var(--muted)}
+figcaption{
+  font-family:var(--serif);
+  font-style:italic;
+  font-size:.92em;
+  color:var(--muted);
+  margin-top:.7em;
+}
+
+.colophon{
+  margin-top:3.2em;
+  padding-top:1.1em;
+  border-top:1px solid var(--line);
+  font-family:var(--disp);
+  font-size:.72rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* один срежиссированный вход */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.wrap>*{animation:rise .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:.34s}
+.wrap>*:nth-child(1){animation-delay:.02s}
+.wrap>*:nth-child(2){animation-delay:.08s}
+.wrap>*:nth-child(3){animation-delay:.14s}
+.wrap>*:nth-child(4){animation-delay:.2s}
+.wrap>*:nth-child(5){animation-delay:.26s}
+.wrap>*:nth-child(6){animation-delay:.3s}
+@media (prefers-reduced-motion:reduce){
+  .wrap>*{animation:none}
+}
+
+@media (max-width:640px){
+  .katex{font-size:1em}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+{{BODY}}
+<div class="colophon">Собрано генератором · источник: content.md · формулы: KaTeX</div>
+</main>
+
+<script>
+window.addEventListener('load', function(){
+  if (window.renderMathInElement){
+    renderMathInElement(document.body, {
+      delimiters:[
+        {left:'$$',right:'$$',display:true},
+        {left:'$',right:'$',display:false}
+      ],
+      throwOnError:false
+    });
+  }
+});
+</script>
+</body>
+</html>

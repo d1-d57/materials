@@ -286,20 +286,21 @@
   Основание $\{0,n+1\}$ принадлежит ровно одному треугольнику триангуляции — назовём его <em>базисным</em>, с третьей вершиной $v\in\{1,\dots,n\}$. Эта вершина делит исходный многоугольник на два меньших: левый $\{0,1,\dots,v\}$ — $(v+1)$-угольник, и правый $\{v,\dots,n+1\}$ — $(n+2-v)$-угольник. Триангуляции левого и правого подмногоугольников независимы и однозначно восстанавливают вместе с базисным треугольником исходную триангуляцию. Значит, триангуляции с $v$-м базисным треугольником — это пары (триангуляция $(v{+}1)$-угольника, триангуляция $(n{+}2{-}v)$-угольника), то есть их $C_{v-1}\cdot C_{n-v}$. Суммируя по $v=1,\dots,n$ и полагая $k=v-1$, получаем требуемую свёртку. $\blacksquare$</div>
 
   <figure>
-    <svg viewBox="0 0 380 210" width="380" role="img" aria-label="Базисный треугольник делит многоугольник на левую и правую части">
+    <svg viewBox="0 0 380 210" width="380" role="img" aria-label="Базисный треугольник на основании делит многоугольник на честные левую и правую части">
       <polygon points="190,10 320,90 260,175 120,175 60,90" class="s-line"/>
+      <!-- base triangle tint: base edge {0,n+1} with apex v at a central vertex -->
+      <polygon points="120,175 260,175 190,10" fill="var(--warm-soft)" stroke="none"/>
       <!-- base edge highlighted -->
       <line x1="120" y1="175" x2="260" y2="175" class="s-accent" stroke-width="3.4"/>
-      <!-- apex vertex v and diagonals to it -->
-      <circle cx="320" cy="90" r="5" class="s-node-r"/>
-      <line x1="320" y1="90" x2="120" y2="175" class="s-dash"/>
-      <line x1="320" y1="90" x2="260" y2="175" class="s-dash" stroke-width="0"/>
-      <polygon points="120,175 260,175 320,90" fill="var(--warm-soft)" stroke="var(--warm)" stroke-width="1.6"/>
-      <text x="230" y="100" text-anchor="middle" class="s-txt-m" fill="var(--warm)">базисный</text>
-      <text x="98" y="100" text-anchor="middle" class="s-txt-m">левый: v+1-угольник</text>
-      <text x="320" y="55" text-anchor="middle" class="s-txt-m">правый: n+2−v</text>
+      <!-- both diagonals from apex v down to the two ends of the base -->
+      <line x1="190" y1="10" x2="120" y2="175" class="s-dash"/>
+      <line x1="190" y1="10" x2="260" y2="175" class="s-dash"/>
+      <circle cx="190" cy="10" r="5" class="s-node-r"/>
+      <text x="190" y="128" text-anchor="middle" class="s-txt-m" fill="var(--warm)">базисный</text>
+      <text x="92" y="118" text-anchor="middle" class="s-txt-m">левый: (v+1)-угольник</text>
+      <text x="292" y="118" text-anchor="middle" class="s-txt-m">правый: (n+2−v)-угольник</text>
       <text x="190" y="196" text-anchor="middle" class="s-txt-m">основание {0, n+1}</text>
-      <text x="322" y="108" text-anchor="middle" class="s-txt">v</text>
+      <text x="200" y="22" text-anchor="start" class="s-txt">v</text>
     </svg>
     <figcaption>Базисный треугольник на основании $\{0,n+1\}$ с апексом $v$ делит многоугольник на левый и правый — рекуррента Сегнера читается прямо с картинки.</figcaption>
   </figure>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>obzor</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  --bg:#f7f4ee; --panel:#fffdf8; --text:#201d18; --muted:#6c655a;
+  --rule:#ddd5c7; --accent:#7a1f1f; --insight-bg:#f2ecdd; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#7a1f1f;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.62;font-size:18px;-webkit-text-size-adjust:100%}
+a{color:var(--link)}
+.wrap{max-width:960px;margin:0 auto;padding:2rem 1.5rem 5rem}
+.doc-head{font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .1em}
+.gen-note{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 1.4rem}
+.runtime-note{font-family:var(--sans);font-size:.82rem;line-height:1.5;background:#fff8e6;
+  border:1px solid #e6d7a2;border-radius:6px;padding:.7rem .9rem;margin:0 0 1.6rem;color:#6a5a1e}
+.runtime-note code{background:#f0e6c8;padding:0 .25em;border-radius:3px}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── поток текста ── */
+.stream{max-width:840px;padding-right:200px;counter-reset:sec}
+@media(max-width:900px){.stream{padding-right:0}}
+.stream h2{font-family:var(--serif);font-size:1.28rem;margin:2rem 0 .6rem;counter-increment:sec}
+.stream h2::before{content:counter(sec)". ";color:var(--muted)}
+.stream h3{font-family:var(--serif);font-size:1.1rem;margin:1.5rem 0 .5rem}
+.stream p{margin:.7em 0}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.25em 0}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+.mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
+  font-family:var(--sans);font-size:.8rem;line-height:1.5;color:var(--muted);
+  border-left:2px solid var(--rule);padding-left:.75em}
+.mn b,.mn strong{color:var(--text)}
+@media(max-width:900px){.mn{float:none;width:auto;margin:1.2em 0;
+  border-left:3px solid var(--rule);padding:.4em 0 .4em .9em}}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+.insight{background:var(--insight-bg);border-left:4px solid var(--accent);
+  padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
+.insight .tag{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:.5em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── мета-строка потока ── */
+.stream-meta{font-family:var(--sans);font-size:.8rem;color:var(--muted);
+  margin:0 0 1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem}
+.stream-meta .status{font-weight:700;color:var(--text)}
+.stream-meta .debt{color:var(--flag-open);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>obzor</h1>
+  <p class="gen-note">Вид doc-движка · вкладки = потоки-«котёл» (стадия склада сюжетов). Источник истины — markdown; правь его и пересобирай (0 токенов).</p>
+</div>
+<div class="runtime-note">Математика набрана <b>KaTeX через CDN</b> — это <b>авторский рантайм-вид для вычитки</b> (Р7), единственная внешняя зависимость. Офлайн формулы деградируют в сырой <code>$…$</code>, страница не падает. Финальный дек несёт статический кэш формул, не рантайм.</div>
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">10 · q-аналоги</label>
+</nav>
+<section class="panel" id="panel-0"><div class="stream-meta"><span><span class="status">status: chernovik</span></span> <span>регистр: читаемый</span> <span><span class="debt">⚑ открытых долгов: 3</span></span> <span>источник: 10-q-analogi.md</span></div><div class="stream"><h1>q-аналоги: число было тенью многочлена</h1>
+<aside class="note"><strong>Пилот Ф2.</strong> Первый написанный сюжет обзора; на нём правится шаблон узла (<code>zhurnal/2026-07-16_obzor-kursa/SHABLON-syuzheta.md</code>). Выбран намеренно как самый трудный: сырьё тоньше всего, мост к каталановскому кластеру в источниках отсутствует и строится нами.</aside>
+<h2>Объект: перестановка, которую измерили</h2>
+<p>В сюжете 7 мы научились не только считать перестановки, но и <strong>мерить</strong> их. У перестановки $w \in S_n$ есть число инверсий $\operatorname{inv}(w)$ — пар, стоящих не по росту, — и главный индекс $\operatorname{maj}(w)$, сумма позиций спусков. Две несхожие мерки: одна смотрит на пары, другая на места.</p>
+<p>Соберём каждую в производящую функцию — по машине из сюжета 2, только суммируем не по $n$, а по всем перестановкам сразу:</p>
+<p>$$\sum_{w \in S_n} q^{\operatorname{inv}(w)} \qquad\text{и}\qquad \sum_{w \in S_n} q^{\operatorname{maj}(w)}.$$</p>
+<p><strong>Задача.</strong> Посчитать хоть одну из них. Ответ обязан при $q = 1$ давать $n!$ — каждая перестановка вносит единицу. Но что стоит при остальных степенях?</p>
+<h2>Инструмент: заменить число на многочлен</h2>
+<p>Ответ вынуждает конструкцию, которая дальше не отпустит.</p>
+<p class="level-line">Уровень: <span class="level">школьно</span></p>
+<p><strong>Определение.</strong> $q$-<strong>число</strong> ($q$-number) $$[n]_q = 1 + q + q^2 + \dots + q^{n-1} = \frac{1-q^n}{1-q}.$$ При $q \to 1$ оно превращается в $n$: слагаемых ровно $n$, каждое даёт единицу. Это и есть смысл приставки «$q$-»: <strong>версия объекта с параметром, обращающаяся в классический объект при $q \to 1$</strong>.</p>
+<p><strong>Определение.</strong> $q$-<strong>факториал</strong> ($q$-factorial): $[n]_q! = [1]_q [2]_q \cdots [n]_q$.</p>
+<p><strong>Определение.</strong> $q$-<strong>биномиальный коэффициент</strong>, он же <strong>гауссов бином</strong> ($q$-binomial, Gaussian binomial): $$\binom{n}{k}_q = \frac{[n]_q!}{[k]_q!\,[n-k]_q!}.$$</p>
+<p>Из определения совершенно не видно, что это вообще многочлен: справа стоит дробь. Это первая вещь, которую придётся доказывать.</p>
+<h2>Первый ответ — и первая неожиданность</h2>
+<p><strong>Теорема</strong> (доказана в источнике). Обе суммы выше равны одному и тому же: $$\sum_{w \in S_n} q^{\operatorname{inv}(w)} = \sum_{w \in S_n} q^{\operatorname{maj}(w)} = [n]_q!.$$</p>
+<p>Мы мерили перестановки двумя не связанными друг с другом способами — и получили один многочлен. Статистики с таким свойством называют <strong>махоновыми</strong> ($Mahonian$); $\operatorname{inv}$ и $\operatorname{maj}$ — две первые и главные.</p>
+<p class="mn">Здесь уже виден мотив всего сюжета. $n!$ — это $[n]_q!$ при $q=1$. Число не потеряло информацию — оно её <em>сложило</em>: все перестановки с разным числом инверсий слиплись в одну единицу. Многочлен помнит то, что число забыло.</p>
+<h2>Центральная теорема: у гауссова бинома есть смысл</h2>
+<p><strong>Теорема</strong> (доказана в источнике <strong>дважды</strong>). $\binom{n}{k}_q$ — многочлен от $q$ с целыми неотрицательными коэффициентами, симметричный (палиндромный), старшая степень $k(n-k)$. Причём $$\binom{n}{k}_q = \sum_{\lambda \subseteq k \times (n-k)} q^{|\lambda|},$$ где сумма берётся по всем диаграммам Юнга $\lambda$, вписанным в прямоугольник $k \times (n-k)$, а $|\lambda|$ — число клеток.</p>
+<p>Иначе говоря: гауссов бином — <strong>ранговая производящая функция</strong> решётки $L(k, n-k)$ диаграмм внутри прямоугольника. Обычный бином $\binom{n}{k}$ считал подмножества; $q$-бином считает те же подмножества, но помнит, <em>насколько</em> каждое сдвинуто.</p>
+<figure class="ill-ph"><div class="ill-badge">🖼 ИЛЛЮСТРАЦИЯ · 1 сцен</div><figcaption>Диаграмма Юнга внутри прямоугольника $k \times (n-k)$; её граница — ломаная из $k$ шагов вверх и $n-k$ вправо. Рядом — соответствующая 0/1-строка. Одна картинка, два языка.</figcaption></figure>
+<p><strong>Биекция.</strong> Диаграмма внутри прямоугольника $\leftrightarrow$ путь по её границе $\leftrightarrow$ 0/1-строка (перестановка мультимножества $\{1^k, 2^{n-k}\}$). Граница диаграммы читается как слово — тот же приём, что в сюжете 8.</p>
+<h2>Жемчужина: q-биномы — это не трюк</h2>
+<p>Из двух доказательств теоремы одно идёт индукцией через $q$-аналог тождества Паскаля. Второе — вот оно.</p>
+<div class="insight"><span class="tag">Почему $q$-аналоги естественны</span> Возьмём <strong>конечное поле</strong> $\mathbb{F}_q$ из $q$ элементов ($q$ — степень простого) и посчитаем <strong>грассманиан</strong> $\mathrm{Gr}(k, n; \mathbb{F}_q)$ — множество $k$-мерных подпространств в $\mathbb{F}_q^n$. Его размер считается двумя путями: через порядок $\mathrm{GL}_n(\mathbb{F}_q)$ — и получается ровно $\binom{n}{k}_q$; а через приведённый ступенчатый вид матриц — и получается $\sum q^{|\lambda|}$ по диаграммам в прямоугольнике. Два счёта одного множества дают тождество. Совпадение многочленов в бесконечном числе точек (все степени простых) означает тождественное равенство. <strong>$q$-бином не выдуман — он считает реальный геометрический объект.</strong> А $q$ — не формальная буква, а число элементов поля.</div>
+<p>Это и есть ответ на вопрос, почему приставка «$q$-» вообще заслуживает отдельного сюжета. Замена $n \to [n]_q$ выглядит как формальная игра ровно до того момента, пока не выясняется, что классическая комбинаторика — это предел $q \to 1$ линейной алгебры над конечным полем. Множество — это векторное пространство над «полем из одного элемента», подмножество — подпространство.</p>
+<p><strong>Статус:</strong> фундаментальная теорема; доказательство через $\mathbb{F}_q$ — жемчужина сюжета. Метод независимо всплывает в трёх несвязанных источниках (Ohio State, Aigner, Постников) — см. <code>biblioteka/LANDSHAFT-kursov.md</code>.</p>
+<h2>Неожиданная связь: унимодальность и открытый вопрос</h2>
+<p><strong>Теорема</strong> (Сильвестр, 1978; доказана в источнике). Коэффициенты $\binom{n}{k}_q$ <strong>унимодальны</strong>: растут, потом убывают, без провалов посередине.</p>
+<p>Комбинаторное утверждение — а доказательство линейно-алгебраическое: строятся операторы подъёма и спуска на решётке $L(k, n-k)$, и унимодальность выводится из положительной определённости матрицы. Внутри чисто дискретного сюжета вдруг работает непрерывный по духу аргумент.</p>
+<p><strong>И здесь честная тень.</strong> Естественный комбинаторный путь к унимодальности — симметричное разложение на цепи (SCD), тот самый приём, которым в сюжете 6 доказывалась теорема Шпернера. Для $L(m,n)$ <strong>существование SCD — открытая гипотеза</strong>: проверена для конкретных $m, n$, в общем виде не доказана никем. Поэтому операторное доказательство здесь не роскошь, а необходимость: биективного пути пока нет.</p>
+<p><strong>Статус:</strong> открытый вопрос, зафиксированный прямо в учебных заметках 2025 года.</p>
+<h2>Мост к Каталану — наша конструкция</h2>
+<aside class="note"><strong>Внимание: этого нет в источниках.</strong> В конспекте про $q$-аналоги нет ни $q$-Каталана, ни каталановских объектов вообще; $q$-аналоги там строятся вокруг $[n]_q$ и гауссовых биномов. Мост ниже собран нами по образцу центральной теоремы. Читатель должен отличать цитату от нашей сборки.</aside>
+<p>Схема теоремы выше была: <strong>взять семейство объектов, вписать их в область, считать по числу клеток</strong>. Прямоугольник дал $q$-бином. Но путь Дика из сюжета 1 — это тоже граница диаграммы Юнга, только вписанной не в прямоугольник, а <strong>под лестницу</strong> $(n-1, n-2, \dots, 1)$. Та же схема, другая область. Значит, напрашивается $$C_n(q) = \sum_{\lambda \subseteq \delta_{n-1}} q^{|\lambda|} = \sum_{D \,\in\, \mathrm{Dyck}_n} q^{\operatorname{area}(D)}.$$</p>
+<p>Это $q$-число Каталана Карлица. При $q = 1$ оно даёт $C_n$ — каждый путь вносит единицу.</p>
+<p><strong>А теперь то, ради чего сюжет стоит последним.</strong> Есть и другой очевидный кандидат в $q$-Каталана: взять замкнутую формулу $C_n = \frac{1}{n+1}\binom{2n}{n}$ и заменить в ней всё на $q$-версии: $$\frac{1}{[n+1]_q}\binom{2n}{n}_q.$$ Это тоже многочлен с неотрицательными коэффициентами, и при $q = 1$ он тоже даёт $C_n$. <strong>Но это другой многочлен.</strong></p>
+<p>| $n$ | $\sum q^{\operatorname{area}}$ (Карлиц) | $\frac{1}{[n+1]_q}\binom{2n}{n}_q$ | |---|---|---| | 2 | $1 + q$ | $1 + q^2$ | | 3 | $1 + 2q + q^2 + q^3$ | $1 + q^2 + q^3 + q^4 + q^6$ | | 4 | $1 + 3q + 3q^2 + 3q^3 + 2q^4 + q^5 + q^6$ | $1 + q^2 + q^3 + 2q^4 + q^5 + 2q^6 + q^7 + 2q^8 + q^9 + q^{10} + q^{12}$ |</p>
+<p>Оба честно тени числа $C_n$. Но тени <strong>разные</strong> — потому что светили разными статистиками.</p>
+<div class="insight"><span class="tag">Пуанта обзора</span> Здесь сходится всё, что обзор говорил с первой страницы. Число $C_n$ считало пути Дика, скобки, деревья и триангуляции — и мы радовались, что у всех одна мощность. Теперь видно, чем за это заплачено: приравняв их, мы <strong>выбросили</strong> то, чем они отличаются. Многочлен возвращает выброшенное — но только то, что решила запомнить выбранная статистика. <strong>Число — тень; но у объекта столько теней, сколько на него источников света.</strong></div>
+<p class="flag open">⚑ Флаг: равенство $\sum_{\lambda \subseteq \delta_{n-1}} q^{|\lambda|} = \sum_{D} q^{\operatorname{area}(D)}$ (диаграммы под лестницей ↔ пути Дика по площади) — стандартное, но в наших источниках не выписано; на <code>chistovik</code> дать либо ссылку, либо явную биекцию границы.</p>
+<p class="flag open">⚑ Флаг: числовая таблица выше проверена программно (sympy, $n \le 5$): оба столбца при $q=1$ дают $C_n$, многочлены различны начиная с $n=2$. Ссылку на источник для многочлена Карлица подобрать при доборе (Haglund, гл. 1 — в библиотеке).</p>
+<p class="flag open">⚑ Флаг: часто пишут, что $\frac{1}{[n+1]_q}\binom{2n}{n}_q = \sum_D q^{\operatorname{maj}(D)}$ по путям Дика. Правдоподобно и согласуется с махоновым мотивом сюжета, но <strong>нами не проверено и в источниках не найдено</strong> — до проверки в текст не выносить.</p>
+<h2>Горизонт</h2>
+<p>Дальше стоит $q,t$-Каталан: две статистики сразу, $\operatorname{area}$ и $\operatorname{dinv}$, и симметрия по перестановке $q \leftrightarrow t$, доказанная только через теорию представлений. Это уже аспирантский этаж — Haglund, «The $q,t$-Catalan Numbers and the Space of Diagonal Harmonics» (в библиотеке). Обзор доводит читателя до этой двери и останавливается.</p>
+<h2>Связи</h2>
+<ul><li><strong>Назад:</strong> сюжет 7 (статистики $\operatorname{inv}$, $\operatorname{maj}$ — без них сюжета нет) · сюжет 8 (диаграммы Юнга, границы как слова) · сюжет 6 (решётка $L(k,n-k)$ — ЧУМ; SCD оттуда) · сюжет 2 (производящая функция как машина) · сюжет 1 (пути Дика; картотека <code>{dyck}</code>, <code>{hub}</code>).</li><li><strong>Вперёд:</strong> горизонт, не сюжет.</li></ul>
+<h2>Что здесь чем является</h2>
+<ul><li><strong>Упражнения:</strong> $[n]_q \to n$ при $q \to 1$; палиндромность $\binom{n}{k}_q$; проверка таблицы для $n = 2$ руками.</li><li><strong>Фундаментальные теоремы:</strong> махоновость $\operatorname{inv}$ и $\operatorname{maj}$; комбинаторная интерпретация гауссова бинома; унимодальность (Сильвестр).</li><li><strong>Жемчужина:</strong> грассманиан над $\mathbb{F}_q$ — $q$-бином считает подпространства, и вся классическая комбинаторика оказывается пределом $q \to 1$.</li><li><strong>Открытый вопрос:</strong> SCD для $L(m,n)$.</li><li><strong>Наша конструкция:</strong> мост «прямоугольник → лестница» и сравнение двух $q$-Каталанов.</li></ul>
+<p class="foot">Черновик пилота Ф2. Три открытых мат-долга оставлены сознательно — линтер предупреждает, но на <code>chernovik</code> не валит. Стилевые гейты (<code>russian-editor</code>, термины по <code>spravochnik/TERMINY-russkie.md</code>) — после одобрения содержания и шаблона.</p></div></section>
+</div>
+</div>
+</body>
+</html>

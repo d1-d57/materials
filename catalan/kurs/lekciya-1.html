@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лекция 1: как один тупик приводит к деревьям, формуле и числам Каталана</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<style>
+  :root{
+    --text:#211f1b; --muted:#726c60; --accent:#2f6e8e; --accent-soft:#e8f0f4;
+    --bg:#fbfaf6; --rule:#e7e2d6; --warm:#c9743a; --warm-soft:#f6ece2; --shade:#dfeaf0;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+    font-size:21px;line-height:1.7;font-optical-sizing:auto}
+
+  /* ── Макет: один столбец (как курс в мобильном режиме) ── */
+  .layout{max-width:820px;margin:0 auto;padding:52px 30px 130px}
+  main{min-width:0}
+  article{max-width:820px;counter-reset:sec 0}
+
+  /* ── Шапка ── */
+  h1{font-size:2.5rem;line-height:1.12;font-weight:600;letter-spacing:-.015em;margin:.05em 0 .3em}
+  .subtitle{color:var(--muted);font-size:1.25rem;font-style:italic;line-height:1.45;margin:0 0 1.1em}
+  .meta{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.8rem;letter-spacing:.03em;
+    text-transform:uppercase;color:var(--muted);border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);padding:.7em 0;margin:0 0 2.2em}
+
+  /* ── Оглавление: статичный блок сверху (одна колонка) ── */
+  .toc{font-family:"Source Sans 3",system-ui,sans-serif;font-size:.83rem;
+    line-height:1.4;border-bottom:1px solid var(--rule);padding:0 0 1.1em;margin:0 0 2.4em}
+  .toc>summary{list-style:none;cursor:pointer;font-weight:600;font-size:.74rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--muted);
+    margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+  .toc>summary::-webkit-details-marker{display:none}
+  .toc ol{list-style:none;margin:0;padding:0;counter-reset:toc -1;columns:2;column-gap:26px}
+  .toc li{counter-increment:toc;margin:.16em 0;break-inside:avoid}
+  .toc a{display:block;color:var(--muted);text-decoration:none;border:0;
+    padding:.18em .3em .18em 1.7em;border-radius:3px;position:relative}
+  .toc a::before{content:"§" counter(toc);position:absolute;left:0;
+    color:#b7ae9c;font-variant-numeric:tabular-nums}
+  .toc a:hover{color:var(--accent);background:var(--accent-soft)}
+
+  /* ── Заголовки разделов (авто-нумерация §1…) ── */
+  h2{font-family:"Source Sans 3",system-ui,sans-serif;font-size:1.62rem;font-weight:600;
+    letter-spacing:-.01em;line-height:1.2;margin:2.6em 0 .6em;counter-increment:sec}
+  h2::before{content:"§" counter(sec) ". ";color:var(--accent);font-weight:600}
+  h3{font-family:"Source Sans 3",system-ui,sans-serif;font-size:1.12rem;font-weight:600;
+    color:var(--text);letter-spacing:-.005em;margin:1.8em 0 .5em}
+  .lead{font-size:1.18rem;line-height:1.6}
+  p{margin:0 0 1.05em}
+  strong,b{font-weight:600}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid #bcd2dd}
+  a:hover{border-bottom-color:var(--accent)}
+  code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.87em;
+    background:#f1ede3;border-radius:3px;padding:.1em .35em}
+
+  /* ── Нумерованные определения / теоремы / доказательства / примеры (канон курса) ── */
+  .stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule)}
+  .stmt .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.98rem;
+    letter-spacing:.01em;display:block;margin-bottom:.15em}
+  .defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+  .defn .lbl{color:var(--accent)}
+  .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+  .thm .lbl{color:var(--warm)}
+  .proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;
+    padding-left:1.05em;margin:1em 0}
+  .proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+  .example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+  .example .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.9rem;
+    letter-spacing:.02em;color:var(--muted);display:block;margin-bottom:.25em;
+    text-transform:uppercase}
+
+  /* ── Асайды (⚑ флаги и близкие пометки) — не плавающие, одна колонка ── */
+  .mn{margin:.7em 0 1.3em;font-family:"Source Sans 3",system-ui,sans-serif;font-size:.83rem;
+    line-height:1.5;color:var(--muted);border-left:2px solid var(--rule);padding:.3em 0 .3em .9em}
+  .mn b{color:var(--text)}
+
+  /* ── §0: терминология ── */
+  .terms-box{border:1px solid var(--rule);border-radius:6px;background:#f8f6f0;
+    padding:1.05em 1.35em;margin:1.4em 0}
+  .terms-box dl{margin:0;display:grid;grid-template-columns:max-content 1fr;column-gap:1em;row-gap:.6em}
+  .terms-box dt{font-weight:600;white-space:nowrap}
+  .terms-box dd{margin:0;color:var(--text)}
+
+  /* ── Врезка / оговорка (важные развилки, исторические варианты) ── */
+  .caveat{background:#f6ece2;border:1px solid #e3c7a8;border-radius:5px;
+    padding:.85em 1.15em;margin:1.6em 0;font-size:1rem;line-height:1.55}
+  .caveat .lbl{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.78rem;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--warm);display:block;margin-bottom:.35em}
+
+  /* ── СОГЛАШЕНИЯ — врезка-конвенция у самого верха (не менять индексы) ── */
+  .conventions{background:var(--accent-soft);border:2px solid var(--accent);border-radius:7px;
+    padding:1.1em 1.4em;margin:1.6em 0 2em;font-size:1rem;line-height:1.6}
+  .conventions .lbl{font-family:"Source Sans 3",sans-serif;font-weight:700;font-size:.82rem;
+    letter-spacing:.07em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.4em}
+
+  /* ── Прозрение / синтез ── */
+  .insight{background:var(--accent-soft);border-left:3px solid var(--accent);
+    border-radius:2px;padding:.85em 1.2em;margin:1.7em 0;font-size:1rem;line-height:1.55}
+  .insight .tag{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:.2em}
+
+  /* ── Таблица ── */
+  table.data{width:100%;border-collapse:collapse;margin:1.3em 0;font-size:.92rem}
+  table.data th{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.72rem;
+    letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:left;
+    padding:.5em .7em;border-bottom:2px solid var(--rule)}
+  table.data td{padding:.6em .7em;border-bottom:1px solid var(--rule);vertical-align:top}
+
+  /* ── Источники ── */
+  ol.src{padding-left:1.4em;margin:.4em 0 1.2em}
+  ol.src li{margin:.35em 0}
+  .src-group{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.78rem;
+    letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:1.3em 0 .3em}
+
+  /* ── Иллюстрации ── */
+  figure{margin:2.1em 0;text-align:center}
+  figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+  figcaption{color:var(--muted);font-size:.92rem;line-height:1.45;font-style:italic;
+    margin:.75em auto 0;max-width:40em;text-wrap:balance}
+
+  figure.ph{border:1.7px dashed var(--accent);background:
+      repeating-linear-gradient(135deg,transparent 0 11px,rgba(47,110,142,.04) 11px 22px),
+      #f7f4ee;border-radius:7px;padding:1.15em 1.25em 1em;text-align:left}
+  figure.ph .ph-tag{font-family:"Source Sans 3",sans-serif;font-weight:600;font-size:.68rem;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--accent);display:flex;
+    align-items:center;gap:.5em;margin-bottom:.5em}
+  figure.ph .ph-tag::before{content:"✎";font-size:1.05em}
+  figure.ph .ph-what{font-family:"Source Serif 4",serif;font-size:1rem;line-height:1.5;
+    color:var(--text);font-style:normal;min-height:2.4em}
+  figure.ph figcaption{font-style:italic;color:var(--muted);text-align:left;margin:.7em 0 0;max-width:none}
+
+  .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+  .katex{font-size:1.05em}
+  hr.sep{border:0;height:1px;background:var(--rule);margin:2.6em 0}
+  .foot{color:var(--muted);font-size:.92rem;font-style:italic;border-top:1px solid var(--rule);
+    margin-top:3em;padding-top:1.2em}
+
+  /* SVG helpers — тот же канон, что в kurs-lekcii.html (не менять) */
+  .s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+  .s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+  .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-fillw{fill:var(--warm)}
+  .s-fillsh{fill:var(--shade)}
+  .s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+  .s-node-r{fill:var(--text)}
+  .s-node-a{fill:var(--accent)}
+  .s-txt{font-family:"Source Sans 3",sans-serif;font-size:13px;fill:var(--text)}
+  .s-txt-w{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:#fff;font-weight:600}
+  .s-txt-m{font-family:"Source Sans 3",sans-serif;font-size:12px;fill:var(--muted)}
+  .s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+  @media (max-width:640px){
+    body{font-size:19px}
+    h1{font-size:1.8rem}.subtitle{font-size:1.08rem}
+    .layout{padding:34px 18px 90px}
+    .toc ol{columns:1}
+    .katex{font-size:1em}
+    .terms-box dl{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+<main>
+<article>
+
+<h1>Лекция 1: как один тупик приводит к деревьям, формуле и числам Каталана</h1>
+<p class="subtitle">Один тупик на дороге и вопрос о вероятности — путь к деревьям, к точной формуле и к числам Каталана.</p>
+<div class="meta">Лекция 1 · §1–§5 · перестановки, деревья, формула, числа Каталана</div>
+
+<details class="toc" open>
+  <summary>Содержание</summary>
+  <ol>
+    <li><a href="#s1">Вопрос: тупик и вероятность</a></li>
+    <li><a href="#s2">Считаем: разрез по большой машине</a></li>
+    <li><a href="#s3">Дерево: полное бинарное</a></li>
+    <li><a href="#s4">Формула</a></li>
+    <li><a href="#s5">Галерея каталановских объектов</a></li>
+  </ol>
+</details>
+
+<p class="lead">Представьте однополосную дорогу с одним боковым тупиком-карманом, куда ненадолго можно загонять машины. Сегодня один вопрос — у какой доли случайных очередей получится выехать по возрастанию, пользуясь только этим тупиком, — приведёт нас к деревьям. А деревья, в свою очередь, отдадут точную <strong>формулу</strong> для числа таких очередей — чисел Каталана $C_n$. По дороге то же самое число найдётся ещё в нескольких, на вид совсем разных, задачах: как разрезать многоугольник на треугольники и как правильно расставить скобки.</p>
+
+<div class="conventions" id="soglasheniya"><span class="lbl">Соглашения</span>
+Параметр всюду один — $n$. Числа Каталана: $C_0=C_1=1,\ C_2=2,\ C_3=5,\ C_4=14,\dots$; свёрточная рекуррента $C_n=\sum_{k=0}^{n-1}C_k\,C_{n-1-k}$; замкнутая формула $C_n=\frac{1}{n+1}\binom{2n}{n}$ (выводим в §4). Одно и то же $C_n$ считает (параметр $n$ у всех совпадает): 231-избегающие (стек-сортируемые) перестановки длины $n$; полные бинарные деревья (ПБД) с $n$ внутренними вершинами (и $n+1$ листом); триангуляции выпуклого $(n{+}2)$-угольника ($n$ треугольников); пути Дика полудлины $n$. Малые случаи ($n=1,2,3$): $1,\ 2,\ 5$. Треугольник — это $n=1$; $(n{+}2)$-угольник, не $(n{+}3)$; пустые объекты — $n=0$ ($C_0=1$).
+</div>
+
+<h2 id="s1">Часто ли очередь можно расставить одним тупиком?</h2>
+
+<div class="stmt defn" id="def-1-1"><span class="lbl">Определение 1.1 (стек-сортируемая перестановка).</span>
+Вообразим однополосную дорогу с боковым тупиком-карманом. Слева — очередь машин в порядке $\pi$, справа — выезд. На каждом шаге можно либо <em>загнать</em> первую машину очереди в тупик, либо <em>забрать</em> из тупика ту, что заехала последней, и вывезти направо (тупик отдаёт в обратном порядке — как стопка тарелок; проехать прямо = загнать и тут же забрать). Перестановка $\pi$ <strong>стек-сортируема</strong>, если <em>каким-то</em> расписанием этих ходов машины удаётся вывести направо по возрастанию $1,2,\dots,n$. Важно существование расписания, не стратегия. (Тупик — это <strong>стек</strong>: загнать = push, забрать = pop.)</div>
+
+<p class="lead"><strong>Ведущий вопрос.</strong> Из всех $n!$ порядков очереди — сколько можно отсортировать одним тупиком? И какова вероятность, что случайно поставленная очередь окажется сортируемой? Ответ на оба вопроса и приведёт нас к деревьям, формуле и числам Каталана.</p>
+
+<figure>
+<svg viewBox="0 0 600 215" width="600" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Пошаговая трасса стек-сортировки перестановки 4123: операция, остаток входа, стек, выход">
+  <text x="300" y="14" text-anchor="middle" class="s-txt">стек-сортировка π = 4123 (Опр. 1.1): читаем слева направо</text>
+  <text x="20" y="30" class="s-txt-m">шаг</text>
+  <text x="60" y="30" class="s-txt-m">операция</text>
+  <text x="255" y="30" class="s-txt-m">вход (ост.)</text>
+  <text x="340" y="30" class="s-txt-m">стек (низ→верх)</text>
+  <text x="435" y="30" class="s-txt-m">выход</text>
+  <line x1="10" y1="40" x2="590" y2="40" class="s-thin"/>
+  <line x1="45" y1="16" x2="45" y2="204" class="s-thin"/>
+  <line x1="240" y1="16" x2="240" y2="204" class="s-thin"/>
+  <line x1="325" y1="16" x2="325" y2="204" class="s-thin"/>
+  <line x1="420" y1="16" x2="420" y2="204" class="s-thin"/>
+  <text x="20" y="66" class="s-txt-m">1</text>
+  <text x="60" y="66" class="s-txt">push 4</text>
+  <text x="255" y="66" class="s-txt">1 2 3</text>
+  <text x="340" y="66" class="s-txt">4</text>
+  <text x="435" y="66" class="s-txt-m">–</text>
+  <text x="20" y="98" class="s-txt-m">2</text>
+  <text x="60" y="98" class="s-txt">push 1</text>
+  <text x="255" y="98" class="s-txt">2 3</text>
+  <text x="340" y="98" class="s-txt">4 1</text>
+  <text x="435" y="98" class="s-txt-m">–</text>
+  <text x="20" y="130" class="s-txt-m">3</text>
+  <text x="60" y="130" class="s-txt">pop 1; push 2</text>
+  <text x="255" y="130" class="s-txt">3</text>
+  <text x="340" y="130" class="s-txt">4 2</text>
+  <text x="435" y="130" class="s-txt">1</text>
+  <text x="20" y="162" class="s-txt-m">4</text>
+  <text x="60" y="162" class="s-txt">pop 2; push 3</text>
+  <text x="255" y="162" class="s-txt">–</text>
+  <text x="340" y="162" class="s-txt">4 3</text>
+  <text x="435" y="162" class="s-txt">1 2</text>
+  <text x="20" y="194" class="s-txt-m">5</text>
+  <text x="60" y="194" class="s-txt">конец: pop 3, pop 4</text>
+  <text x="255" y="194" class="s-txt-m">–</text>
+  <text x="340" y="194" class="s-txt-m">–</text>
+  <text x="435" y="194" class="s-txt" fill="var(--accent)" font-weight="600">1 2 3 4</text>
+</svg>
+<figcaption>Рис. 1. Пошаговая трасса стек-сортировки: вход, стек и выход на каждом шаге для π = 4123 (Определение 1.1, Пример 1.2) — на выходе тождественная перестановка.</figcaption>
+</figure>
+
+<div class="stmt example" id="ex-1-2"><span class="lbl">Пример 1.2.</span>
+Очередь $4123$ сортируется: загнать 4, загнать 1, забрать 1 → «1», загнать 2, забрать 2 → «2», загнать 3, забрать 3 → «3», забрать 4 → «4»; выехало $1234$. А очередь $231$ не отсортировать никак: чтобы 1 вышла первой, машины 2 и 3 надо спрятать в тупик, но 2 заехала раньше 3, поэтому 3 лежит сверху и выедет раньше 2 — выйдет $132$. (Почему «никак» — см. <a href="#thm-2-4">Теорема 2.4</a>.)</div>
+
+<h2 id="s2">Ответ начинается со счёта: разрез по самой большой машине</h2>
+
+<div class="stmt thm" id="utv-2-1"><span class="lbl">Утверждение 2.1 (разрез по самой большой машине — ядро).</span>
+Пусть $\pi=L\,n\,R$, где $n$ — максимум (самая большая машина), $L,R$ — куски очереди до и после неё. Тогда $\pi$ стек-сортируема $\iff$ (i) $L,R$ стек-сортируемы и (ii) каждый элемент $L$ меньше каждого элемента $R$. При этом $L$ — перестановка $\{1,\dots,k\}$, $R$ — $\{k{+}1,\dots,n{-}1\}$, $k=|L|$.</div>
+
+<div class="proof"><span class="lbl">Идея (из картинки).</span>
+$n$ самая большая, а на выезде порядок возрастающий → $n$ выезжает последней → должна попасть в тупик и стоять на дне до конца (иначе то, что ляжет сверху, не выедет). Значит когда $n$ заезжает, тупик пуст: весь $L$ уже выведен как $1,\dots,k$ (сам сортируем, из малых значений), затем выезжает $R$ как $k{+}1,\dots,n{-}1$ (тоже сортируем), потом $n$. Одна машина $n$ режет очередь на два независимых куска; обратная сборка очевидна.</div>
+
+<figure>
+<svg viewBox="0 0 620 250" width="620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Диаграмма перестановки π=1327465 как L·n·R: блок L ниже-слева, максимум в пике, блок R выше-справа">
+  <text x="180" y="16" text-anchor="middle" class="s-txt">π = L·n·R, пример: L = {1,3,2} (позиции 1–3), n = 7 (пик), R = {4,6,5} (позиции 5–7)</text>
+  <rect x="90" y="144" width="78" height="78" class="s-fillsh"/>
+  <rect x="194" y="66" width="78" height="78" class="s-fillsh"/>
+  <rect x="90" y="40" width="182" height="182" class="s-thin" fill="none"/>
+  <line x1="116" y1="40" x2="116" y2="222" class="s-thin"/>
+  <line x1="142" y1="40" x2="142" y2="222" class="s-thin"/>
+  <line x1="168" y1="40" x2="168" y2="222" class="s-thin"/>
+  <line x1="194" y1="40" x2="194" y2="222" class="s-thin"/>
+  <line x1="220" y1="40" x2="220" y2="222" class="s-thin"/>
+  <line x1="246" y1="40" x2="246" y2="222" class="s-thin"/>
+  <line x1="90" y1="66" x2="272" y2="66" class="s-thin"/>
+  <line x1="90" y1="92" x2="272" y2="92" class="s-thin"/>
+  <line x1="90" y1="118" x2="272" y2="118" class="s-thin"/>
+  <line x1="90" y1="144" x2="272" y2="144" class="s-thin"/>
+  <line x1="90" y1="170" x2="272" y2="170" class="s-thin"/>
+  <line x1="90" y1="196" x2="272" y2="196" class="s-thin"/>
+  <text x="98" y="156" class="s-txt-m" fill="var(--accent)">L</text>
+  <text x="202" y="78" class="s-txt-m" fill="var(--accent)">R</text>
+  <text x="103" y="234" text-anchor="middle" class="s-txt-m">1</text>
+  <text x="129" y="234" text-anchor="middle" class="s-txt-m">2</text>
+  <text x="155" y="234" text-anchor="middle" class="s-txt-m">3</text>
+  <text x="181" y="234" text-anchor="middle" class="s-txt-m">4</text>
+  <text x="207" y="234" text-anchor="middle" class="s-txt-m">5</text>
+  <text x="233" y="234" text-anchor="middle" class="s-txt-m">6</text>
+  <text x="259" y="234" text-anchor="middle" class="s-txt-m">7</text>
+  <text x="180" y="248" text-anchor="middle" class="s-txt-m">позиция</text>
+  <text x="80" y="213" text-anchor="end" class="s-txt-m">1</text>
+  <text x="80" y="187" text-anchor="end" class="s-txt-m">2</text>
+  <text x="80" y="161" text-anchor="end" class="s-txt-m">3</text>
+  <text x="80" y="135" text-anchor="end" class="s-txt-m">4</text>
+  <text x="80" y="109" text-anchor="end" class="s-txt-m">5</text>
+  <text x="80" y="83" text-anchor="end" class="s-txt-m">6</text>
+  <text x="80" y="57" text-anchor="end" class="s-txt-m">7</text>
+  <circle cx="103" cy="209" r="4.5" class="s-ar-a"/>
+  <circle cx="129" cy="157" r="4.5" class="s-ar-a"/>
+  <circle cx="155" cy="183" r="4.5" class="s-ar-a"/>
+  <circle cx="181" cy="53" r="6" fill="var(--warm)"/>
+  <circle cx="207" cy="131" r="4.5" class="s-ar-a"/>
+  <circle cx="233" cy="79" r="4.5" class="s-ar-a"/>
+  <circle cx="259" cy="105" r="4.5" class="s-ar-a"/>
+  <text x="181" y="40" text-anchor="middle" class="s-txt-m" fill="var(--warm)">максимум (пик)</text>
+  <circle cx="129" cy="79" r="5" fill="none" stroke="var(--warm)" stroke-width="1.6" stroke-dasharray="3 2"/>
+  <text x="122" y="73" text-anchor="end" class="s-txt-m" fill="var(--warm)">a</text>
+  <circle cx="233" cy="183" r="5" fill="none" stroke="var(--warm)" stroke-width="1.6" stroke-dasharray="3 2"/>
+  <text x="240" y="190" class="s-txt-m" fill="var(--warm)">b</text>
+  <path d="M129 79 L181 53 L233 183" fill="none" stroke="var(--warm)" stroke-width="1.4" stroke-dasharray="3 2"/>
+  <text x="330" y="88" class="s-txt-m" fill="var(--warm)">если бы a∈L, b∈R и a больше b —</text>
+  <text x="330" y="105" class="s-txt-m" fill="var(--warm)">тройка (a,n,b) образует паттерн 231</text>
+  <text x="330" y="128" class="s-txt-m">(Утв. 2.1: тогда всё L меньше всего R)</text>
+</svg>
+<figcaption>Рис. 2. Диаграмма перестановки π = L·n·R: максимум — пик, блок L — ниже-слева, блок R — выше-справа; запретная пара a∈L, b∈R с a больше b подсвечена как паттерн 231 (Утверждение 2.1).</figcaption>
+</figure>
+
+<div class="stmt thm" id="thm-2-2"><span class="lbl">Теорема 2.2 (рекуррента → числа Каталана).</span>
+Число $c_n$ стек-сортируемых очередей длины $n$ удовлетворяет $c_0=1$ и $c_n=\sum_{k=0}^{n-1} c_k\,c_{n-1-k}$ (суммируем по позиции самой большой машины, <a href="#utv-2-1">Утверждение 2.1</a>). Это рекуррента Сегнера — она задаёт <strong>числа Каталана</strong>, $c_n=C_n$ (те же числа, что в <a href="#soglasheniya">Соглашениях</a>).</div>
+
+<p>Рекуррента считает числа одно за другим: $C_0=1$, $C_1=C_0C_0=1$, $C_2=C_0C_1+C_1C_0=2$, $C_3=C_0C_2+C_1C_1+C_2C_0=5$, и так далее. Но это не <em>формула</em> — чтобы узнать $C_{100}$, придётся честно пройти все сто шагов. Замкнутую формулу — выражение $C_n$ сразу через $n$, без рекурсии, — мы выведем в <a href="#s4">§4</a>, и для этого сперва переоденем очередь в дерево. А пока у препятствия к сортировке появится имя.</p>
+
+<div class="stmt defn" id="def-2-3"><span class="lbl">Определение 2.3 (паттерн 231, коротко).</span>
+Три позиции $i&lt;j&lt;k$ в очереди $\pi$ образуют паттерн <strong>231</strong>, если по величине они идут в порядке «средняя, самая большая, самая маленькая»: значения на этих позициях удовлетворяют $\pi(k)&lt;\pi(i)&lt;\pi(j)$. Если такая тройка где-то внутри очереди найдётся (необязательно подряд) — очередь <em>содержит</em> 231; если нигде — <em>избегает</em>.</div>
+
+<div class="stmt thm" id="thm-2-4"><span class="lbl">Теорема 2.4 (Кнут: у препятствия есть имя).</span>
+Очередь стек-сортируема $\iff$ избегает 231; таких ровно $C_n$.</div>
+
+<div class="proof"><span class="lbl">Идея.</span>
+Нарушение условия (ii) из <a href="#utv-2-1">Утверждения 2.1</a> — пара $a\in L$, $b\in R$ с $a>b$ — вместе с максимумом $n$ между ними даёт тройку $(a,n,b)$ на возрастающих позициях, а это и есть паттерн 231. Значит «$L,R$ сортируемы и всё $L$ меньше всего $R$» на каждом шаге рекурсии — это в точности «избегает 231».</div>
+
+<p class="mn"><b>Историческая деталь.</b> Сам Кнут описывал это же явление через паттерн 312 — зеркальную форму того же условия; мы для простоты держимся конвенции 231.</p>
+
+<h2 id="s3">Разрез сам рисует дерево — полное бинарное</h2>
+
+<p>Разрез $\pi=L\,n\,R$ из §2 — это не просто формула для рекурренты: если применять его снова и снова, к $L$ и к $R$ по отдельности, он сам рисует дерево. Но не любое дерево, а особое — в нём даже «пустое место» надо явно рисовать. Дадим этому дереву имя.</p>
+
+<div class="stmt defn" id="def-3-1"><span class="lbl">Определение 3.1 (полное бинарное дерево, ПБД).</span>
+<em>Полное бинарное дерево</em> (ПБД) — корневое дерево, в котором каждая внутренняя (не листовая) вершина имеет ровно двух потомков — <em>левого</em> и <em>правого</em> (упорядоченных: зеркальные деревья различаются, дерево с единственным листом слева устроено иначе, чем с единственным листом справа). Вырожденный случай — дерево из одного листа и без единой внутренней вершины — тоже ПБД. Дерево <strong>с $n$ внутренними вершинами</strong> — то, где внутренних вершин ровно $n$; листьев в нём при этом ровно $n+1$ (докажем в <a href="#utv-3-3">Утверждении 3.3</a>).</div>
+
+<div class="stmt thm" id="utv-3-2"><span class="lbl">Утверждение 3.2 (перестановка → ПБД: конкретная процедура).</span>
+По блоку (куску очереди) $w$ строим дерево $T(w)$ рекурсивно: если $w$ пуст — $T(w)$ это один лист; иначе пусть $m$ — максимум $w$, так что $w=L\,m\,R$ (<a href="#utv-2-1">Утв. 2.1</a>) — тогда $T(w)$ это внутренняя вершина $m$ с левым поддеревом $T(L)$ и правым $T(R)$. Так очередь длины $n$ становится ПБД с $n$ внутренними вершинами (по одной на каждый элемент очереди) и $n+1$ листом (по одному на каждый «зазор» между соседними машинами, считая края). Обход дерева in-order (сначала левое поддерево, потом вершина, потом правое) читает внутренние вершины по порядку и восстанавливает $\pi$.</div>
+
+<figure>
+<svg viewBox="0 0 620 345" width="620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Полное бинарное дерево для очереди 1423: внутренние вершины 4, 1, 3, 2 и пять листьев в пустых слотах">
+  <text x="310" y="16" text-anchor="middle" class="s-txt">π = 1, 4, 2, 3 (n=4): максимум блока — внутренняя вершина, пустой блок — лист (Утв. 3.2)</text>
+
+  <line x1="310" y1="50" x2="170" y2="140" class="s-line"/>
+  <line x1="310" y1="50" x2="450" y2="140" class="s-line"/>
+  <line x1="170" y1="140" x2="140" y2="220" class="s-line"/>
+  <line x1="170" y1="140" x2="200" y2="220" class="s-line"/>
+  <line x1="450" y1="140" x2="410" y2="230" class="s-line"/>
+  <line x1="450" y1="140" x2="500" y2="220" class="s-line"/>
+  <line x1="410" y1="230" x2="385" y2="310" class="s-line"/>
+  <line x1="410" y1="230" x2="435" y2="310" class="s-line"/>
+
+  <circle cx="310" cy="50" r="12" fill="var(--warm)"/>
+  <text x="310" y="55" text-anchor="middle" class="s-txt-w">4</text>
+
+  <circle cx="170" cy="140" r="11" fill="var(--warm)"/>
+  <text x="170" y="145" text-anchor="middle" class="s-txt-w">1</text>
+
+  <circle cx="450" cy="140" r="11" fill="var(--warm)"/>
+  <text x="450" y="145" text-anchor="middle" class="s-txt-w">3</text>
+
+  <circle cx="410" cy="230" r="11" fill="var(--warm)"/>
+  <text x="410" y="235" text-anchor="middle" class="s-txt-w">2</text>
+
+  <circle cx="140" cy="220" r="6" class="s-node"/>
+  <circle cx="200" cy="220" r="6" class="s-node"/>
+  <circle cx="500" cy="220" r="6" class="s-node"/>
+  <circle cx="385" cy="310" r="6" class="s-node"/>
+  <circle cx="435" cy="310" r="6" class="s-node"/>
+
+  <text x="215" y="86" text-anchor="middle" class="s-txt-m" fill="var(--accent)">L</text>
+  <text x="405" y="86" text-anchor="middle" class="s-txt-m" fill="var(--accent)">R</text>
+
+  <text x="310" y="330" text-anchor="middle" class="s-txt" fill="var(--accent)" font-weight="600">in-order по внутренним вершинам: 1, 4, 2, 3 = π</text>
+</svg>
+<figcaption>Рис. 3. Полное бинарное дерево (ПБД) для очереди π = 1423 (n = 4, Утверждение 3.2): каждый максимум блока становится внутренней вершиной (тёплая заливка — тот же разрез, что на Рис. 2), каждый пустой блок — листом (белые точки). Всего 4 внутренние вершины и 5 = 4+1 листьев (Утверждение 3.3). Обход in-order по внутренним вершинам восстанавливает π.</figcaption>
+</figure>
+
+<div class="stmt thm" id="utv-3-3"><span class="lbl">Утверждение 3.3 (свойства ПБД: сколько листьев).</span>
+Пусть $T$ — ПБД с $n$ внутренними вершинами. Тогда число листьев $T$ равно ровно $n+1$; в частности, при $n\ge1$ листьев не меньше двух.</div>
+
+<div class="proof"><span class="lbl">Доказательство (индукция по $n$).</span>
+База $n=0$: дерево — один лист, листьев $1=0+1$. Переход: ПБД с $n$ внутренними вершинами — это корень плюс левое поддерево ($n_1$ внутр. вершин) плюс правое ($n_2$ внутр. вершин), $n=n_1+n_2+1$. По предположению индукции в поддеревьях $n_1+1$ и $n_2+1$ листьев, итого $n_1+n_2+2=n+1$. При $n\ge1$ хотя бы одно слагаемое $n_1,n_2$ конечно неотрицательно, а листьев уже $n+1\ge2$. $\blacksquare$</div>
+
+<h2 id="s4">Формула: вырастим дерево на одну вершину</h2>
+
+<p>Рекуррента §2 считает числа одно за другим — а формулы всё ещё нет. Но раз очередь стала деревом (§3), у дерева есть операция, которую легко угадать руками: <strong>вырастить дерево на одну вершину</strong>, вклеив лист. Посчитаем пары «дерево + отмеченное место» двумя разными способами — совпадение даст короткое соотношение между $C_n$ и $C_{n+1}$, а из него — и саму формулу.</p>
+
+<div class="stmt defn" id="def-4-1"><span class="lbl">Определение 4.1 (рёбра-слоты ПБД; отмеченный лист).</span>
+Пусть $T$ — ПБД с $n$ внутренними вершинами. У него $2n$ настоящих рёбер (каждая внутренняя вершина соединена с двумя детьми). Добавим ещё одно, <em>фантомное</em>, ребро — прямо над корнем, ни к чему не привязанное (прямой аналог основания многоугольника, которое тоже всегда есть и никогда не бывает диагональю). Вместе получаем $2n+1$ <em>рёбер-слотов</em>; у каждого слота есть <em>сторона</em> $s\in\{\text{лево},\text{право}\}$. Рассмотрим два множества:
+$$\hat L=\{(T,e,s)\},\qquad |\hat L|=(2n+1)\cdot2\cdot C_n=(4n+2)\,C_n,$$
+$$\hat R=\{(T',\ell)\},\qquad |\hat R|=(n+2)\,C_{n+1},$$
+где в $\hat L$ пара $T$ пробегает все ПБД с $n$ внутренними вершинами, $e$ — слот, $s$ — сторона; а в $\hat R$ пара $T'$ пробегает все ПБД с $n+1$ внутренней вершиной (то есть с $n+2$ листьями, <a href="#utv-3-3">Утв. 3.3</a>), $\ell$ — отмеченный лист $T'$.</div>
+
+<div class="stmt thm" id="thm-4-2"><span class="lbl">Теорема 4.2 (вставить/вырезать лист).</span>
+$$(4n+2)\,C_n=(n+2)\,C_{n+1}.$$</div>
+
+<div class="proof"><span class="lbl">Доказательство (биекция $\hat L\leftrightarrow\hat R$).</span>
+<strong>Вставка</strong> ($\hat L\to\hat R$): дана тройка $(T,e,s)$. Разрезаем слот $e$: новая внутренняя вершина $w$ становится на его место — если $e$ фантомное, $w$ становится новым корнем; если $e$ — обычное ребро (родитель–ребёнок), $w$ занимает место ребёнка. Одним ребёнком $w$ становится новый лист $\ell$, другим — всё, что раньше было по ту сторону слота $e$; сторона $s$ говорит, слева или справа от $w$ оказался $\ell$. Получаем ПБД $T'$ с $n{+}1$ внутренней вершиной и отмеченный лист $\ell$.
+<br><strong>Вырезание</strong> ($\hat R\to\hat L$, обратная операция): дана пара $(T',\ell)$. У листа $\ell$ есть родитель $w$ — внутренняя вершина с двумя детьми, один из них $\ell$, другой — какое-то поддерево $S$. Убираем $w$ и $\ell$, а $S$ подвешиваем на место $w$: получаем слот $e$ (если у $w$ был родитель — обычное ребро; если $w$ сам был корнем — фантомное), сторона $s$ запоминает, был ли $\ell$ левым или правым ребёнком $w$.
+<br>Вырезание в точности отменяет вставку и наоборот — это биекция $\hat L\leftrightarrow\hat R$, откуда $|\hat L|=|\hat R|$, то есть $(4n+2)C_n=(n+2)C_{n+1}$. $\blacksquare$</div>
+
+<figure>
+<svg viewBox="0 0 460 210" width="460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Вклеить лист: новая вершина w встаёт на место разреза, старое поддерево и новый лист становятся её детьми">
+  <g transform="translate(20,10)">
+    <line x1="55" y1="20" x2="25" y2="60" class="s-thin"/>
+    <line x1="55" y1="20" x2="85" y2="60" class="s-thin"/>
+    <circle cx="55" cy="16" r="9" class="s-node-r"/>
+    <circle cx="25" cy="65" r="8" class="s-node"/>
+    <circle cx="85" cy="65" r="8" class="s-node"/>
+    <text x="25" y="95" text-anchor="middle" class="s-txt-m">v</text>
+    <text x="55" y="130" text-anchor="middle" class="s-txt-m">до: слот-ребро (родитель, v)</text>
+  </g>
+  <text x="220" y="95" text-anchor="middle" class="s-txt">→</text>
+  <g transform="translate(280,10)">
+    <line x1="55" y1="20" x2="25" y2="60" class="s-thin"/>
+    <line x1="55" y1="20" x2="85" y2="60" class="s-thin"/>
+    <line x1="25" y1="70" x2="10" y2="105" class="s-accent"/>
+    <line x1="25" y1="70" x2="40" y2="105" class="s-accent"/>
+    <circle cx="55" cy="16" r="9" class="s-node-r"/>
+    <circle cx="25" cy="65" r="9" fill="#fff" stroke="var(--warm)" stroke-width="2.2"/>
+    <text x="25" y="69" text-anchor="middle" class="s-txt" fill="var(--warm)">w</text>
+    <circle cx="85" cy="65" r="8" class="s-node"/>
+    <circle cx="10" cy="110" r="7" class="s-node"/>
+    <circle cx="40" cy="110" r="8" fill="var(--warm-soft)" stroke="var(--warm)" stroke-width="1.8"/>
+    <text x="40" y="114" text-anchor="middle" class="s-txt" fill="var(--warm)">ℓ</text>
+    <text x="10" y="132" text-anchor="middle" class="s-txt-m">v</text>
+    <text x="55" y="160" text-anchor="middle" class="s-txt-m">после: w на месте v, дети w — v и новый лист ℓ</text>
+  </g>
+</svg>
+<figcaption>Рис. 4. «Вклеить лист»: слот-ребро (родитель, v) разрезается, новая вершина w занимает место v, а её двумя детьми становятся старое поддерево v и новый лист ℓ (сторона — слева или справа) — биекция Теоремы 4.2.</figcaption>
+</figure>
+
+<div class="stmt thm" id="thm-4-3"><span class="lbl">Теорема 4.3 (замкнутая формула).</span>
+$$C_n=\frac{1}{n+1}\binom{2n}{n}.$$</div>
+
+<div class="proof"><span class="lbl">Доказательство.</span>
+Из <a href="#thm-4-2">Теоремы 4.2</a>: $C_{n+1}=\dfrac{4n+2}{n+2}\,C_n$ при $C_0=1$. Раскручиваем произведением (телескопом) от $k=0$ до $n-1$:
+$$C_n=\prod_{k=0}^{n-1}\frac{4k+2}{k+2}=\frac{2\cdot6\cdot10\cdots(4n-2)}{2\cdot3\cdot4\cdots(n+1)}=\frac{(2n)!/n!}{(n+1)!}=\frac{1}{n+1}\binom{2n}{n}.\ \blacksquare$$</div>
+
+<p>Проверим на малых $n$ сразу тремя способами — они обязаны совпасть. Рекуррента §2 даёт $C_1=1$, $C_2=2$, $C_3=5$, $C_4=14$. Соотношение <a href="#thm-4-2">Теоремы 4.2</a> даёт то же самое иначе: $C_1=C_0\cdot\tfrac{2}{2}=1$, $C_2=C_1\cdot\tfrac{6}{3}=2$, $C_3=C_2\cdot\tfrac{10}{4}=5$, $C_4=C_3\cdot\tfrac{14}{5}=14$. И формула <a href="#thm-4-3">Теоремы 4.3</a> — тоже: $C_4=\tfrac15\binom84=\tfrac{70}{5}=14$. Три независимых счёта — один ответ: $1,2,5,14$.</p>
+
+<div class="stmt thm" id="thm-4-4"><span class="lbl">Теорема 4.4 (ответ на ведущий вопрос).</span>
+Сортируемых очередей длины $n$ ровно $C_n$, всего очередей $n!$, поэтому вероятность, что случайная очередь сортируема одним тупиком, равна
+<div>$$P_n=\frac{C_n}{n!}.$$</div>
+Уже при малых $n$ вероятность мала: для $n=3,4,5,6$ это $\tfrac56,\ \tfrac{7}{12},\ \tfrac{7}{20},\ \tfrac{11}{60}$, а при $n=10$ — около $0{,}0046$. По формуле Стирлинга $C_n\sim 4^n/(\sqrt\pi\,n^{3/2})$, откуда $P_n\sim (4e/n)^n\to 0$ — быстрее любой геометрической прогрессии: почти никакую длинную очередь одним тупиком не расставить.</div>
+
+<h2 id="s5">Галерея каталановских объектов</h2>
+
+<p>Число $C_n$ мы сегодня уже посчитали дважды — очередями (<a href="#s1">§1</a>–<a href="#s2">§2</a>) и деревьями (<a href="#s3">§3</a>), а формулу для него вывели в <a href="#s4">§4</a>. У того же числа есть ещё несколько костюмов — и для каждого перехода найдётся явная процедура, а не просто ссылка «то же $n$ в той же рекурренте».</p>
+
+<div class="stmt defn" id="def-5-1"><span class="lbl">Определение 5.1 (триангуляция $(n{+}2)$-угольника).</span>
+Возьмём выпуклый $(n{+}2)$-угольник — многоугольник с $n{+}2$ вершинами. <strong>Триангуляция</strong> — это разбиение его на треугольники непересекающимися диагоналями: диагонали проводятся только между вершинами и могут встречаться друг с другом лишь в вершинах, не пересекаясь внутри многоугольника. В любой триангуляции ровно $n$ треугольников. Число триангуляций $(n{+}2)$-угольника равно $C_n$ (<a href="#soglasheniya">Соглашения</a>).</div>
+
+<p>Малые случаи знакомы по <a href="#soglasheniya">Соглашениям</a>: при $n=1$ — треугольник, разбивать нечего, способ ровно один; при $n=2$ — четырёхугольник, у него 2 триангуляции; при $n=3$ — пятиугольник, у него уже 5 триангуляций.</p>
+
+<div class="stmt thm" id="utv-5-2"><span class="lbl">Утверждение 5.2 (биекция ПБД ↔ триангуляция — конкретная процедура).</span>
+Зафиксируем одно ребро $(n{+}2)$-угольника как <em>основание</em>. Строим дерево $T(P)$ по многоугольнику $P$ рекурсивно: у вырожденного «многоугольника» из одного ребра (без вершин между его концами) $T$ — лист; иначе ровно один треугольник триангуляции содержит основание — назовём его <em>базисным</em>; его третья вершина $v$ делит остаток на левую и правую части (одна или обе могут быть вырожденными) — тогда $T(P)$ это внутренняя вершина $v$ с левым поддеревом $T(\text{левая часть})$ и правым $T(\text{правая часть})$.</div>
+
+<div class="proof"><span class="lbl">Доказательство (конструкция).</span>
+Основание ↔ то место дерева, что «над» корнем; сам базисный треугольник ↔ корень $v$; две меньшие части ↔ два поддерева. Обратно: по ПБД с корнем $v$ и поддеревьями $L,R$ восстанавливаем базисный треугольник $\{0,v,n{+}1\}$ и рекурсивно достраиваем $L\to$ левую часть, $R\to$ правую. Обе процедуры взаимно обратны по построению — это совершенно та же операция «разрез по максимуму», что для очереди в <a href="#utv-3-2">Утв. 3.2</a>, только вместо очереди режем многоугольник. $\blacksquare$</div>
+
+<figure>
+<svg viewBox="0 0 560 270" width="560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Триангуляция пятиугольника: треугольник у фиксированного ребра — корень разреза, слева и справа два меньших треугольника — левое и правое поддерево">
+  <text x="280" y="16" text-anchor="middle" class="s-txt">триангуляция пятиугольника (n=3): треугольник у ребра — «корень», слева и справа — два меньших многоугольника</text>
+
+  <polygon points="97,208 203,208 150,45" fill="var(--warm-soft)"/>
+  <polygon points="150,45 64,107 97,208" fill="var(--accent-soft)"/>
+  <polygon points="203,208 236,107 150,45" fill="var(--shade)"/>
+
+  <line x1="97" y1="208" x2="64" y2="107" class="s-line"/>
+  <line x1="64" y1="107" x2="150" y2="45" class="s-line"/>
+  <line x1="150" y1="45" x2="236" y2="107" class="s-line"/>
+  <line x1="236" y1="107" x2="203" y2="208" class="s-line"/>
+  <line x1="97" y1="208" x2="203" y2="208" stroke="var(--warm)" stroke-width="3.6" stroke-linecap="round"/>
+
+  <line x1="97" y1="208" x2="150" y2="45" class="s-accent"/>
+  <line x1="203" y1="208" x2="150" y2="45" class="s-accent"/>
+
+  <circle cx="97" cy="208" r="4.5" class="s-node"/>
+  <circle cx="203" cy="208" r="4.5" class="s-node"/>
+  <circle cx="236" cy="107" r="4.5" class="s-node"/>
+  <circle cx="64" cy="107" r="4.5" class="s-node"/>
+  <circle cx="150" cy="45" r="7" fill="var(--warm)"/>
+
+  <text x="85" y="228" text-anchor="end" class="s-txt-m">1</text>
+  <text x="215" y="228" text-anchor="start" class="s-txt-m">2</text>
+  <text x="255" y="101" text-anchor="start" class="s-txt-m">3</text>
+  <text x="150" y="24" text-anchor="middle" class="s-txt-m">4</text>
+  <text x="45" y="101" text-anchor="end" class="s-txt-m">5</text>
+
+  <text x="150" y="242" text-anchor="middle" class="s-txt-m">фиксированное ребро (1,2)</text>
+
+  <text x="104" y="123" text-anchor="middle" class="s-txt-m" fill="var(--accent)">L</text>
+  <text x="196" y="123" text-anchor="middle" class="s-txt-m" fill="var(--accent)">R</text>
+
+  <text x="300" y="108" text-anchor="start" class="s-txt-m">треугольник (1,2,4) у ребра ↔</text>
+  <text x="300" y="126" text-anchor="start" class="s-txt-m">корень дерева;</text>
+  <text x="300" y="148" text-anchor="start" class="s-txt-m">(4,5,1) и (2,3,4) ↔ два</text>
+  <text x="300" y="166" text-anchor="start" class="s-txt-m">поддерева, L и R —</text>
+  <text x="300" y="188" text-anchor="start" class="s-txt-m">та же рекурсия, что в §2–§3</text>
+</svg>
+<figcaption>Рис. 5. Триангуляция пятиугольника (n = 3, одна из $C_3=5$): фиксируем ребро (1,2); треугольник на нём — базисный (третья вершина — 4), два оставшихся треугольника — левое и правое поддерево. Та же рекурсия, что в Утверждении 2.1 и Утверждении 3.2, — только вместо очереди режем многоугольник (Утверждение 5.2).</figcaption>
+</figure>
+
+<p>Тот же объект рождается ещё и из куда более старой задачи. В 1751 году Леонард Эйлер в переписке с Христианом Гольдбахом и Иоганном Сегнером задал вопрос: сколькими способами выпуклый многоугольник можно разбить непересекающимися диагоналями на треугольники? Сегнер нашёл для этого числа рекурренту — и она оказалась в точности той же свёрткой, что мы вывели в §2 для очередей.</p>
+
+<figure class="ph">
+<div class="ph-tag">портрет для вставки</div>
+<div class="ph-what">Леонард Эйлер (1707–1783) — здесь будет портрет.</div>
+<figcaption>Эйлер поставил задачу о триангуляциях многоугольника в переписке 1751 года; рекурренту для ответа нашёл Иоганн Сегнер.</figcaption>
+</figure>
+
+<div class="stmt defn" id="def-5-3"><span class="lbl">Определение 5.3 (путь Дика полудлины $n$).</span>
+Путь на клетчатой плоскости из $2n$ шагов, каждый — на единицу <em>вверх</em> или на единицу <em>вниз</em>, который стартует и заканчивается на высоте 0 и никогда не опускается ниже нуля. Шагов вверх и шагов вниз поровну — по $n$ (отсюда «полудлина $n$», <a href="#soglasheniya">Соглашения</a>). Путей Дика полудлины $n$ ровно $C_n$.</div>
+
+<div class="stmt thm" id="utv-5-4"><span class="lbl">Утверждение 5.4 (перестановка ↔ путь Дика — та же трасса).</span>
+У сортируемой очереди расписание ходов из <a href="#def-1-1">Опр. 1.1</a> можно провести жадно: перед тем как загнать входящую машину, сначала вывезти из тупика всех, кто меньше её, — и это расписание сортирует очередь тогда и только тогда, когда её вообще можно отсортировать. Запишем push как шаг вверх, pop — как шаг вниз: получаем слово длины $2n$, никогда не опускающееся ниже нуля, — путь Дика. Это в точности трасса <a href="#s1">Рис. 1</a>, только нарисованная не таблицей, а ломаной.</div>
+
+<figure>
+<svg viewBox="0 0 560 215" width="560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Та же стек-трасса π=4123: снизу растёт путь Дика, push — шаг вверх, pop — шаг вниз">
+  <text x="280" y="16" text-anchor="middle" class="s-txt">π = 4123: те же push/pop, что и на Рис. 1 — снизу растёт путь Дика</text>
+  <text x="70" y="100" text-anchor="middle" class="s-txt-m">push 4</text>
+  <text x="130" y="100" text-anchor="middle" class="s-txt-m">push 1</text>
+  <text x="190" y="100" text-anchor="middle" class="s-txt-m">pop 1</text>
+  <text x="250" y="100" text-anchor="middle" class="s-txt-m">push 2</text>
+  <text x="310" y="100" text-anchor="middle" class="s-txt-m">pop 2</text>
+  <text x="370" y="100" text-anchor="middle" class="s-txt-m">push 3</text>
+  <text x="430" y="100" text-anchor="middle" class="s-txt-m">pop 3</text>
+  <text x="490" y="100" text-anchor="middle" class="s-txt-m">pop 4</text>
+  <line x1="40" y1="190" x2="520" y2="190" class="s-thin"/>
+  <path d="M40 190 L100 165 L160 140 L220 165 L280 140 L340 165 L400 140 L460 165 L520 190" class="s-accent"/>
+  <text x="70" y="169" text-anchor="middle" class="s-txt">(</text>
+  <text x="130" y="144" text-anchor="middle" class="s-txt">(</text>
+  <text x="190" y="144" text-anchor="middle" class="s-txt">)</text>
+  <text x="250" y="144" text-anchor="middle" class="s-txt">(</text>
+  <text x="310" y="144" text-anchor="middle" class="s-txt">)</text>
+  <text x="370" y="144" text-anchor="middle" class="s-txt">(</text>
+  <text x="430" y="144" text-anchor="middle" class="s-txt">)</text>
+  <text x="490" y="169" text-anchor="middle" class="s-txt">)</text>
+  <text x="280" y="206" text-anchor="middle" class="s-txt-m">путь Дика длины 8: ( ( ) ( ) ( ) ) — никогда не уходит ниже нуля</text>
+</svg>
+<figcaption>Рис. 6. Та же стек-трасса, что и на Рис. 1 (π = 4123): снизу растёт путь Дика — push даёт шаг вверх «(», pop даёт шаг вниз «)» (Утверждение 5.4).</figcaption>
+</figure>
+
+<div class="stmt defn" id="def-5-5"><span class="lbl">Определение 5.5 (правильная скобочная последовательность).</span>
+Тот же путь Дика, записанный по-другому: шаг вверх — открывающая скобка «(», шаг вниз — закрывающая «)». Условие «не опускаться ниже нуля» превращается в привычное школьное правило: в каждом начальном отрезке открывающих скобок не меньше, чем закрывающих, а к концу они уравновешены. Правильных скобочных последовательностей из $n$ пар — тоже ровно $C_n$.</div>
+
+<div class="insight"><span class="tag">Синтез</span>
+Сортируемая очередь $\equiv$ ПБД $\equiv$ путь Дика $\equiv$ скобки $\equiv$ триангуляция — пять костюмов одного и того же разреза $L\,n\,R$, и для каждого перехода есть явная процедура, а не просто общая рекуррента.</div>
+
+<figure>
+<svg viewBox="0 0 720 230" width="720" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Квартет для n=3, перестановка 213: перестановка, дерево, путь Дика и триангуляция в соответствии по цвету">
+  <text x="360" y="16" text-anchor="middle" class="s-txt">n = 3, π = 213 — один объект, четыре костюма (цвет = значение: 3 тёплый / пик, 2 акцент, 1 тёмный)</text>
+  <g transform="translate(30,30)">
+    <rect x="0" y="0" width="60" height="60" class="s-thin" fill="none"/>
+    <line x1="20" y1="0" x2="20" y2="60" class="s-thin"/>
+    <line x1="40" y1="0" x2="40" y2="60" class="s-thin"/>
+    <line x1="0" y1="20" x2="60" y2="20" class="s-thin"/>
+    <line x1="0" y1="40" x2="60" y2="40" class="s-thin"/>
+    <circle cx="10" cy="30" r="5" class="s-node-a"/>
+    <circle cx="30" cy="50" r="5" class="s-node-r"/>
+    <circle cx="50" cy="10" r="6" fill="var(--warm)"/>
+    <text x="30" y="90" text-anchor="middle" class="s-txt-m">перестановка 213</text>
+  </g>
+  <text x="130" y="105" text-anchor="middle" class="s-txt-m">≡</text>
+  <g transform="translate(180,20)">
+    <line x1="30" y1="10" x2="12" y2="45" class="s-line"/>
+    <line x1="12" y1="45" x2="38" y2="78" class="s-line"/>
+    <circle cx="30" cy="10" r="8" fill="var(--warm)"/>
+    <text x="30" y="14" text-anchor="middle" class="s-txt-w">3</text>
+    <circle cx="12" cy="45" r="7" class="s-node-a"/>
+    <text x="12" y="49" text-anchor="middle" class="s-txt-w">2</text>
+    <circle cx="38" cy="78" r="7" class="s-node-r"/>
+    <text x="38" y="82" text-anchor="middle" class="s-txt-w">1</text>
+    <text x="25" y="100" text-anchor="middle" class="s-txt-m">дерево</text>
+  </g>
+  <text x="290" y="105" text-anchor="middle" class="s-txt-m">≡</text>
+  <g transform="translate(320,40)">
+    <line x1="0" y1="70" x2="108" y2="70" class="s-thin"/>
+    <line x1="0" y1="70" x2="18" y2="52" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="18" y1="52" x2="36" y2="34" stroke="var(--text)" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="36" y1="34" x2="54" y2="52" stroke="var(--text)" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="54" y1="52" x2="72" y2="70" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="72" y1="70" x2="90" y2="52" stroke="var(--warm)" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="90" y1="52" x2="108" y2="70" stroke="var(--warm)" stroke-width="2.4" stroke-linecap="round"/>
+    <text x="54" y="94" text-anchor="middle" class="s-txt-m">путь Дика (())()</text>
+  </g>
+  <text x="465" y="105" text-anchor="middle" class="s-txt-m">≡</text>
+  <g transform="translate(490,15)">
+    <polygon points="20,120 0,60 60,10 120,60 100,120" class="s-line"/>
+    <polygon points="20,120 100,120 120,60" fill="var(--warm-soft)" stroke="none"/>
+    <polygon points="0,60 60,10 120,60" fill="var(--accent-soft)" stroke="none"/>
+    <line x1="20" y1="120" x2="120" y2="60" stroke="var(--warm)" stroke-width="2.2"/>
+    <line x1="0" y1="60" x2="120" y2="60" stroke="var(--accent)" stroke-width="2.2"/>
+    <circle cx="120" cy="60" r="5" fill="var(--warm)"/>
+    <text x="-6" y="55" text-anchor="middle" class="s-txt-m">1</text>
+    <text x="60" y="6" text-anchor="middle" class="s-txt-m">2</text>
+    <text x="131" y="60" text-anchor="start" class="s-txt-m">3</text>
+    <text x="105" y="136" text-anchor="middle" class="s-txt-m">4</text>
+    <text x="14" y="136" text-anchor="middle" class="s-txt-m">0</text>
+    <text x="60" y="156" text-anchor="middle" class="s-txt-m">триангуляция: фан из вершины 3</text>
+  </g>
+</svg>
+<figcaption>Рис. 7. Квартет на n = 3 (π = 213): перестановка · дерево · путь Дика · триангуляция — одна рекурсивная декомпозиция, соответствие по цвету (Синтез).</figcaption>
+</figure>
+
+<p>Пути Дика возникают ещё в одной знаменитой задаче — о подсчёте голосов при подведении итогов (задача баллотировки). Это тема следующей лекции.</p>
+
+<div class="foot">Математическое содержание — по строгим скелетам <code>perestanovki-otchet-skelet.md</code> (§1–3, §5) и <code>mir1-skelet.md</code> §1.5–1.7 (§4, вывод формулы), отчётам <code>perestanovki-otchet.html</code> и <code>kurs-lekcii.html</code>.</div>
+
+</article>
+</main>
+</div>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+</body>
+</html>
