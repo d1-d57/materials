@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Занятие 3 · Кодирование — с решениями (по статье Клепцына)</title>
+<style>
+  :root{
+    --bg:#f6f2e9; --paper:#fffdf9; --ink:#211d17; --muted:#797263; --line:#e6dfce;
+    --p:#2f7d6f; --s:#3a5ba0; --g:#7a5a2e; --accent:#7a5a2e;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.6 Georgia,"Iowan Old Style","Times New Roman",serif;}
+  .sans{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:44px 22px 90px}
+  header{margin-bottom:22px}
+  .kicker{font:600 12.5px/1 -apple-system,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  h1{font-size:33px;line-height:1.12;margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:16px;margin:0;max-width:66ch}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  button.toggle{margin-left:auto;font:600 13px/1 -apple-system,sans-serif;color:#fff;background:var(--accent);border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
+  button.toggle:hover{filter:brightness(1.08)}
+  h2.sec{font-size:15px;font-family:-apple-system,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  h2.sec small{display:block;text-transform:none;letter-spacing:0;font-weight:400;font-size:13.5px;color:var(--muted);margin-top:4px;font-family:Georgia,serif}
+  .card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:18px 22px;margin:15px 0;box-shadow:0 1px 2px rgba(60,40,10,.04)}
+  .card.p{border-left-color:var(--p)} .card.s{border-left-color:var(--s)} .card.g{border-left-color:var(--g)}
+  .phead{display:flex;align-items:baseline;gap:11px;margin-bottom:9px}
+  .badge{flex:none;font:700 13px/1 -apple-system,sans-serif;color:#fff;border-radius:6px;padding:5px 8px;min-width:30px;text-align:center}
+  .p .badge{background:var(--p)} .s .badge{background:var(--s)} .g .badge{background:var(--g)}
+  .ptitle{font-size:19px;font-weight:600;line-height:1.2;margin:0;display:inline}
+  .role{font:600 11px/1 -apple-system,sans-serif;color:#fff;border-radius:5px;padding:3px 7px;margin-left:8px;vertical-align:1px;white-space:nowrap}
+  .role.board{background:#c07a1e} .role.self{background:#5a7a3a} .role.think{background:#7a5a9a} .role.play{background:#2f7d6f}
+  .gem{color:#c9a227}
+  .meta{margin:2px 0 0;font:13px/1.5 -apple-system,sans-serif;color:var(--muted)}
+  .cond{margin:6px 0 0}
+  .cond b.q{color:var(--ink)}
+  .mono{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#f2ece0;border-radius:5px;padding:1px 6px;letter-spacing:.03em}
+  details.sol{margin-top:13px;border-top:1px dashed var(--line);padding-top:11px}
+  details.sol>summary{font:600 14px/1 -apple-system,sans-serif;color:var(--accent);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px}
+  details.sol>summary::-webkit-details-marker{display:none}
+  details.sol>summary::before{content:"▸";font-size:12px;transition:transform .15s}
+  details.sol[open]>summary::before{transform:rotate(90deg)}
+  .sol .body{margin-top:9px;font-size:15.5px;color:#2b271f}
+  .sol .idea{margin:0 0 8px}
+  .sol .teach{margin:8px 0 0;font:13.5px/1.5 -apple-system,sans-serif;color:var(--g);background:#f7f1e5;border-radius:7px;padding:7px 11px}
+  .answer{background:#eef5f0;border:1px solid #cfe4d8;border-radius:8px;padding:8px 12px;font-size:15px}
+  .answer b{color:var(--p)}
+  .cards{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 2px}
+  .miniqcard{flex:1 1 165px;border:1px solid var(--line);border-radius:9px;background:#fbf7ee;padding:10px 12px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:13.5px;line-height:1.55}
+  .miniqcard .cn{font-family:-apple-system,sans-serif;font-weight:700;color:var(--accent);font-size:12px;letter-spacing:.04em;display:block;margin-bottom:4px}
+  .miniqcard .red{color:#a23b2e;font-weight:700;text-decoration:underline}
+  .note{margin-top:30px;padding:14px 18px;background:#fbf7ee;border:1px solid var(--line);border-radius:10px;font:14px/1.55 -apple-system,sans-serif;color:#4b463c}
+  .note b{color:var(--accent)}
+  .credit{margin-top:16px;color:var(--muted);font-size:12.5px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Информация и коды · Занятие 3 · версия с решениями</div>
+    <h1>Кодирование</h1>
+    <p class="sub">Занятие идёт по статье В. Клепцына «Магические карточки»: карточный фокус → шифр числа. Листок повторяет разбор у доски — большинство задач мы разбираем вместе и играем вырезанными карточками. <span class="gem">◆</span> — ключевые задачи у доски. Детская печатная версия с карточками — <code>L3-print.html</code>.</p>
+    <div class="toolbar sans">
+      <div class="legend">
+        <span><i class="dot" style="background:var(--p)"></i>карточки и фокус</span>
+        <span><i class="dot" style="background:var(--s)"></i>код числа</span>
+        <span><i class="dot" style="background:var(--g)"></i>дополнительные</span>
+      </div>
+      <button class="toggle" id="tg">Показать все решения</button>
+    </div>
+    <p class="sub" style="margin-top:10px;font-size:13.5px">Роли: <span class="role board" style="vertical-align:0">у доски</span> <span class="role play" style="vertical-align:0">играем</span> <span class="role self" style="vertical-align:0">сам</span> <span class="role think" style="vertical-align:0">подумать</span></p>
+  </header>
+
+  <h2 class="sec">Часть 1 · Карточки и фокус<small>откуда берутся карточки и что за фокус</small></h2>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">1</span><div><span class="ptitle">Откуда карточки</span><span class="role board">у доски</span>
+    <p class="meta">игра в угадайку · Клепцын, «Магические карточки»</p></div></div>
+    <p class="cond">Вася загадал число от <span class="mono">0</span> до <span class="mono">15</span>, а Петя отгадывает его за четыре вопроса «да/нет». Первый вопрос: «твоё число больше 7?» Если Вася ответил «да», Петя спрашивает «больше 11?», если «нет» — «больше 3?». И так дальше, каждым вопросом деля оставшиеся числа пополам.<br>
+    Выпишите четыре списка: числа, при которых Вася ответит <b class="q">«да» на первый</b> вопрос; на второй; на третий; на четвёртый.</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">«Да» на первый вопрос — числа больше 7. «Да» на второй — верхняя половина каждого куска, и так далее. Получаются четыре карточки фокуса (самое маленькое число подчёркнуто):</p>
+      <div class="cards">
+        <div class="miniqcard"><span class="cn">карточка ①</span><span class="red">8</span> 9 10 11 12 13 14 15</div>
+        <div class="miniqcard"><span class="cn">карточка ②</span><span class="red">4</span> 5 6 7 12 13 14 15</div>
+        <div class="miniqcard"><span class="cn">карточка ③</span><span class="red">2</span> 3 6 7 10 11 14 15</div>
+        <div class="miniqcard"><span class="cn">карточка ④</span><span class="red">1</span> 3 5 7 9 11 13 15</div>
+      </div>
+      <div class="answer" style="margin-top:8px"><b>Ответ.</b> четыре списка — это четыре карточки (первые числа 8, 4, 2, 1).</div>
+    </div></details>
+  </div>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">2</span><div><span class="ptitle">Фокус</span><span class="role self">сам</span>
+    <p class="meta">четыре одинаковых вопроса · Клепцын</p></div></div>
+    <p class="cond">Теперь Петя делает фокус: отдаёт Васе те самые четыре карточки и про каждую спрашивает одно и то же — «твоё число написано на этой карточке?». Выслушав четыре ответа, Петя сразу называет загаданное число. Как ему это удаётся?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Ответ про карточку ① — это ответ на «больше 7?», про ② — «в какой половинке дальше?» и так далее: карточки для того и составлены. Четыре ответа «да/нет» — те же четыре деления пополам, что в задаче 1, и число находится однозначно.</p>
+      <div class="answer"><b>Ответ.</b> каждая карточка = один вопрос «пополам»; четыре ответа определяют число.</div>
+    </div></details>
+  </div>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">3</span><div><span class="ptitle">Проверь фокус руками</span><span class="role play">играем</span>
+    <p class="meta">складываем обведённые числа · как факт (почему — в задаче 9)</p></div></div>
+    <p class="cond">Обведите на каждой карточке самое маленькое число (это <span class="mono">8, 4, 2</span> и <span class="mono">1</span>). Загадайте число от 0 до 15; переверните лицом вверх карточки, на которых оно написано, остальные лицом вниз, и сложите обведённые числа, лежащих лицом вверх. Проверьте, что получилось загаданное число. Повторите несколько раз.</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Всякий раз выходит загаданное число: 6 → карточки ②③ → 4 + 2 = 6; 11 → ①③④ → 8 + 2 + 1 = 11; 13 → ①②④ → 8 + 4 + 1 = 13.</p>
+      <p class="teach">Пед-заметка: здесь фокус проверяем как факт, «почему» не спрашиваем — объясним в задаче 9, после того как разберёмся с кодом.</p>
+      <div class="answer"><b>Ответ.</b> да, всегда получается загаданное число.</div>
+    </div></details>
+  </div>
+
+  <h2 class="sec">Часть 2 · Шифр числа<small>сначала играем карточками, потом понимаем, почему фокус работает</small></h2>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">4</span><div><span class="ptitle">Переворачиваем карточки</span><span class="role self">сам</span>
+    <p class="meta">складываем обведённые числа</p></div></div>
+    <p class="cond"><b class="q">а)</b> Какая сумма получится, если лицом вверх лежат карточки ① и ④? <b class="q">б)</b> А если лицом вверх ②, ③ и ④?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">а) 8 + 1 = 9. б) 4 + 2 + 1 = 7.</p>
+      <div class="answer"><b>Ответ.</b> а) 9; б) 7.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">5</span><div><span class="ptitle">Меньше всех и больше всех</span><span class="role self">сам</span>
+    <p class="meta">складываем обведённые числа</p></div></div>
+    <p class="cond"><b class="q">а)</b> Какое самое маленькое число можно так получить? <b class="q">б)</b> Какое самое большое?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">а) все карточки лицом вниз: 0. б) все четыре лицом вверх: 8 + 4 + 2 + 1 = 15.</p>
+      <div class="answer"><b>Ответ.</b> а) 0; б) 15.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">6</span><div><span class="ptitle">Выложи число</span><span class="role self">сам</span>
+    <p class="meta">обратная сторона: число → карточки</p></div></div>
+    <p class="cond">Какие карточки перевернуть лицом вверх, чтобы обведённые числа дали в сумме: <b class="q">а)</b> 7? <b class="q">б)</b> 10? <b class="q">в)</b> 13?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">а) 7 = 4 + 2 + 1 → ②③④. б) 10 = 8 + 2 → ①③. в) 13 = 8 + 4 + 1 → ①②④.</p>
+      <div class="answer"><b>Ответ.</b> а) ②③④; б) ①③; в) ①②④.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">7</span><div><span class="ptitle">Правило «прибавить 1»</span><span class="role board">у доски</span> <span class="gem">◆</span>
+    <p class="meta">алгоритм на карточках</p></div></div>
+    <p class="cond">Как перевернуть карточки, чтобы выложенное число увеличилось ровно на <span class="mono">1</span>?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Идём справа налево: пока карточка лежит лицом вверх — переворачиваем её лицом вниз и идём дальше; первую же карточку лицом вниз переворачиваем лицом вверх и останавливаемся.</p>
+      <div class="answer"><b>Ответ.</b> справа налево: «вверх → вниз», пока не перевернёшь первую «вниз → вверх».</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">8</span><div><span class="ptitle">Шифр Васи</span><span class="role board">у доски</span>
+    <p class="meta">даём имя тому, что уже делали</p></div></div>
+    <p class="cond">Вася придумал, как шифровать числа. Чтобы зашифровать число, Вася переворачивает карточки так, чтобы сумма обведённых чисел стала равна этому числу. Шифр состоит из четырёх цифр: <span class="mono">1</span> — если карточка лицом вверх, <span class="mono">0</span> — если вниз. Например, 13 = 8 + 4 + 1 шифруется как <span class="mono">1101</span>: лицом вниз лежит только третья карточка. <b class="q">а)</b> Как Вася зашифрует 6, 11 и 14? <b class="q">б)</b> Какие числа может зашифровать Вася?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea"><b>а)</b> 6 = 4 + 2 → <span class="mono">0110</span>; 11 = 8 + 2 + 1 → <span class="mono">1011</span>; 14 = 8 + 4 + 2 → <span class="mono">1110</span>. <b>б)</b> Любое число от 0 до 15: берём самую большую карточку, что помещается, вычитаем, и так дальше (жадно) — на каждое число найдётся свой шифр.</p>
+      <p class="teach">Пед-заметка: «шифр» вводим как имя тому, что дети уже делали руками (задачи 3–6) — новых примеров-дриллов не даём; определение окупается задачей 9. Слово «двоичная запись» на листке не пишем (можно назвать устно).</p>
+      <div class="answer"><b>Ответ.</b> а) 0110, 1011, 1110. б) любое число от 0 до 15.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">9</span><div><span class="ptitle">Почему фокус работает</span><span class="role board">у доски</span> <span class="gem">◆</span>
+    <p class="meta">код ↔ карточки · разгадка</p></div></div>
+    <p class="cond"><b class="q">а)</b> Для каждого из четырёх мест шифра выпишите все числа, у которых там стоит <span class="mono">1</span>; проверьте, что получаются те же числа, что на карточках ①②③④. <b class="q">б)</b> Объясните, почему работает фокус из задачи 3.</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea"><b>а)</b> Числа с 1 на первом месте шифра — те, у кого лицом вверх карточка 8, то есть карточка ①. И так далее: получаются ровно карточки ①②③④. Значит карточка — это «числа, у которых на данном месте шифра стоит единица». <b>б)</b> Поэтому число <span class="mono">n</span> написано на карточке ровно тогда, когда в его шифре на этом месте стоит 1. Обведённое число карточки — её «вес» (8, 4, 2, 1). Сумма весов «да»-карточек — это разложение <span class="mono">n</span> на карточки, то есть само <span class="mono">n</span>.</p>
+      <div class="answer"><b>Ответ.</b> «да»-карточки = единицы шифра числа; сумма их весов = само число.</div>
+    </div></details>
+  </div>
+
+  <h2 class="sec">Часть 3 · Дополнительные<small>та же идея в других обличьях — часть для сильных / на потом</small></h2>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">10</span><div><span class="ptitle">Семь кошельков</span><span class="role self">сам</span> <span class="gem">◆</span>
+    <p class="meta">код степенями двойки · problems.ru #30278</p></div></div>
+    <p class="cond">Разложите <span class="mono">127</span> рублей по семи кошелькам так, чтобы, не открывая кошельков, можно было выдать любую сумму от <span class="mono">1</span> до <span class="mono">127</span> рублей (кошельки отдаём целиком).</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Кладём <span class="mono">1, 2, 4, 8, 16, 32, 64</span> рубля. Любая сумма — это выбор кошельков, то есть её код (например, 100 = 64 + 32 + 4). Ровно как карточки, только семь.</p>
+      <div class="answer"><b>Ответ.</b> 1, 2, 4, 8, 16, 32, 64.</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">11</span><div><span class="ptitle">Фокус с 36 картами</span><span class="role self">сам</span>
+    <p class="meta">код с основанием 6 · Кноп «Взвешивания и алгоритмы» (ШМК-5), 1.10</p></div></div>
+    <p class="cond">Фокусник кладёт перед зрителем <span class="mono">36</span> карт и просит запомнить одну. Он раскладывает все карты в <span class="mono">6</span> стопок и спрашивает, в какой стопке задуманная карта. Затем собирает стопки по порядку и снова раскладывает карты в 6 стопок (сдавая по одной по кругу), и снова спрашивает, в какой стопке карта. После этого сразу достаёт её. В чём секрет?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Два ответа дают карте пару чисел — стопку в первый и во второй раз. При такой пересдаче первая стопка становится «строкой», вторая — «столбцом» таблицы 6×6. Пар всего <span class="mono">6·6 = 36</span> — по одной на карту. Это двузначный код с основанием 6.</p>
+      <div class="answer"><b>Ответ.</b> два ответа — «строка» и «столбец» в таблице 6×6.</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">12</span><div><span class="ptitle">Семь мешков, один фальшивый</span><span class="role self">сам</span>
+    <p class="meta">разминка к №13 · Кноп (ШМК-5), 4.3</p></div></div>
+    <p class="cond">На столе <span class="mono">7</span> пронумерованных мешков, по <span class="mono">10</span> монет в каждом. В одном мешке монеты фальшивые (<span class="mono">9</span> г вместо <span class="mono">10</span>), в остальных настоящие. Как одним взвешиванием на весах со стрелкой узнать номер фальшивого мешка?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Взять из мешка №1 одну монету, из №2 — две, …, из №7 — семь. Будь все настоящими — 280 г. Сколько граммов не хватает — таков номер фальшивого мешка.</p>
+      <div class="answer"><b>Ответ.</b> взять 1, 2, …, 7 монет; недостача в граммах = номер.</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">13</span><div><span class="ptitle">Семь мешков, несколько фальшивых</span><span class="role think">подумать</span> <span class="gem">◆</span>
+    <p class="meta">двоичное чтение · Кноп (ШМК-5), 4.4</p></div></div>
+    <p class="cond">Те же <span class="mono">7</span> мешков, но фальшивых теперь может быть сколько угодно (в каждом либо все монеты фальшивые по <span class="mono">9</span> г, либо все настоящие по <span class="mono">10</span>). Как за <b>одно</b> взвешивание найти сразу все фальшивые мешки?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Одной монеты из мешка мало — недостачи «склеятся». Берём <span class="mono">1, 2, 4, 8, 16, 32, 64</span> монеты. Шифр недостачи (её запись нулями и единицами) и есть номера фальшивых мешков: напр., недостача <span class="mono">5</span> = «101» → мешки №1 и №3. Это те же карточки, только «мешками».</p>
+      <div class="answer"><b>Ответ.</b> взять 1, 2, 4, …, 64 монеты; код недостачи = номера фальшивых мешков.</div>
+    </div></details>
+  </div>
+
+  <div class="note sans">
+    <b>По статье Клепцына.</b> Первая половина — играем карточками у доски (задачи 1–3), почти ничего не сдаём. Часть 2 — понимаем код (у доски задачи 7, 9). Часть 3 — та же идея в кошельках, картах, мешках. Печатная версия для детей с вырезными карточками — <code>L3-print.html</code> (карточки на стр. 2, оборот пустой).
+  </div>
+
+  <p class="credit">Информация и коды · занятие 3 · «Кодирование» · версия с решениями</p>
+</div>
+
+<script>
+  (function(){
+    var btn=document.getElementById('tg');
+    var det=Array.prototype.slice.call(document.querySelectorAll('details.sol'));
+    function sync(){var anyClosed=det.some(function(d){return !d.open});btn.textContent=anyClosed?'Показать все решения':'Скрыть все решения';}
+    btn.addEventListener('click',function(){var anyClosed=det.some(function(d){return !d.open});det.forEach(function(d){d.open=anyClosed;});sync();});
+    det.forEach(function(d){d.addEventListener('toggle',sync);});
+    sync();
+  })();
+</script>
+</body>
+</html>

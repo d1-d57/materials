@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Занятие 2 · Сколько информации (с решениями)</title>
+<style>
+  :root{
+    --bg:#f6f2e9; --paper:#fffdf9; --ink:#211d17; --muted:#797263; --line:#e6dfce;
+    --p:#2f7d6f; --s:#3a5ba0; --g:#7a5a2e; --accent:#7a5a2e;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.6 Georgia,"Iowan Old Style","Times New Roman",serif;}
+  .sans{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:44px 22px 90px}
+  header{margin-bottom:22px}
+  .kicker{font:600 12.5px/1 -apple-system,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  h1{font-size:33px;line-height:1.12;margin:0 0 8px;font-weight:600;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:16px;margin:0;max-width:64ch}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px}
+  .legend span{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+  button.toggle{margin-left:auto;font:600 13px/1 -apple-system,sans-serif;color:#fff;background:var(--accent);border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
+  button.toggle:hover{filter:brightness(1.08)}
+
+  h2.sec{font-size:15px;font-family:-apple-system,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin:34px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+
+  .scenario{background:#fbf7ee;border:1px solid var(--line);border-radius:11px;padding:6px 20px 14px;margin:6px 0 8px}
+  .beat{padding:12px 0;border-bottom:1px dashed var(--line)}
+  .beat:last-child{border-bottom:0}
+  .beat .bh{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+  .beat .bn{flex:none;font:700 13px/1 -apple-system,sans-serif;color:#fff;background:var(--accent);border-radius:6px;padding:5px 8px;min-width:26px;text-align:center}
+  .beat .bt{font-size:18px;font-weight:600}
+  .beat .tm{margin-left:auto;font:12px/1 -apple-system,sans-serif;color:var(--muted);white-space:nowrap}
+  .beat p{margin:4px 0 0;font-size:15.5px}
+  .beat .say{color:var(--p);font-style:italic}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:11px;padding:18px 22px;margin:15px 0;box-shadow:0 1px 2px rgba(60,40,10,.04)}
+  .card.p{border-left-color:var(--p)} .card.s{border-left-color:var(--s)} .card.g{border-left-color:var(--g)}
+  .phead{display:flex;align-items:baseline;gap:11px;margin-bottom:9px}
+  .badge{flex:none;font:700 13px/1 -apple-system,sans-serif;color:#fff;border-radius:6px;padding:5px 8px;min-width:30px;text-align:center}
+  .p .badge{background:var(--p)} .s .badge{background:var(--s)} .g .badge{background:var(--g)}
+  .ptitle{font-size:19px;font-weight:600;line-height:1.2;margin:0;display:inline}
+  .role{font:600 11px/1 -apple-system,sans-serif;color:#fff;border-radius:5px;padding:3px 7px;margin-left:8px;vertical-align:1px;white-space:nowrap}
+  .role.vm{background:#c07a1e} .role.self{background:#5a7a3a} .role.think{background:#7a5a9a} .role.grob{background:#a23b2e}
+  .gem{color:#c9a227}
+  .meta{margin:2px 0 0;font:13px/1.5 -apple-system,sans-serif;color:var(--muted)}
+  .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid #d8cdb2}
+  .cond{margin:6px 0 0}
+  .mono{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:#f2ece0;border-radius:5px;padding:1px 6px;letter-spacing:.03em}
+  details.sol{margin-top:13px;border-top:1px dashed var(--line);padding-top:11px}
+  details.sol>summary{font:600 14px/1 -apple-system,sans-serif;color:var(--accent);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px}
+  details.sol>summary::-webkit-details-marker{display:none}
+  details.sol>summary::before{content:"▸";font-size:12px;transition:transform .15s}
+  details.sol[open]>summary::before{transform:rotate(90deg)}
+  .sol .body{margin-top:9px;font-size:15.5px;color:#2b271f}
+  .sol .idea{margin:0 0 8px}
+  .answer{background:#eef5f0;border:1px solid #cfe4d8;border-radius:8px;padding:8px 12px;font-size:15px}
+  .answer b{color:var(--p)}
+
+  .foot{margin-top:34px;padding:16px 20px;background:#fbf7ee;border:1px solid var(--line);border-radius:10px;font-size:14px;color:#4b463c}
+  .foot h3{margin:0 0 6px;font-size:14.5px;font-family:-apple-system,sans-serif}
+  .foot .hold{color:var(--g);font-weight:600}
+  .credit{margin-top:16px;color:var(--muted);font-size:12.5px;text-align:center}
+  @media print{
+    body{background:#fff} .wrap{max-width:none;padding:0}
+    button.toggle{display:none}
+    .card{box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+    .scenario{box-shadow:none} .beat{break-inside:avoid;page-break-inside:avoid}
+    h2.sec{break-after:avoid;page-break-after:avoid}
+    details.sol{border-top:1px solid #ccc} details.sol>summary{color:#000}
+    details.sol[open]>summary::before{content:"▾"}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Информация и коды · Занятие 2 · версия для преподавателя</div>
+    <h1>Сколько информации</h1>
+    <p class="sub">~20 минут рассказа + листок. Один вопрос на всё занятие: сколько мы узнаём за один вопрос «да/нет» или одно взвешивание — и <b>как доказать, что быстрее нельзя</b> (идея разрешающего дерева и аргумент противника). Взвешивания — основная жила. Двоичная запись и карточки — только тизер, полностью на занятии 3. Детская печатная версия — <code>L2-print.html</code>.</p>
+    <div class="toolbar sans">
+      <div class="legend">
+        <span><i class="dot" style="background:var(--p)"></i>угадывание · информация</span>
+        <span><i class="dot" style="background:var(--s)"></i>взвешивания</span>
+        <span><i class="dot" style="background:var(--g)"></i>гробы</span>
+      </div>
+      <button class="toggle" id="tg">Показать все решения</button>
+    </div>
+    <p class="sub" style="margin-top:10px;font-size:13.5px">Роли: <span class="role vm" style="vertical-align:0">разбор вместе</span> <span class="role self" style="vertical-align:0">сам</span> <span class="role think" style="vertical-align:0">подумать</span> <span class="role grob" style="vertical-align:0">гроб</span></p>
+  </header>
+
+  <h2 class="sec">Сценарий рассказа · ≈20 минут</h2>
+  <div class="scenario sans">
+    <div class="beat">
+      <div class="bh"><span class="bn">1</span><span class="bt">Хук — игра в угадывание</span><span class="tm">≈5 мин</span></div>
+      <p><span class="say">«Я загадал число от 1 до 16. Отгадайте вопросами „да/нет“. Какие вопросы?»</span> Собрать разные стратегии зала: «это 7?», «чётное?», «больше 8?». Считать вопросы каждой. Нащупать деление пополам — 4 вопроса. → задача 1.</p>
+    </div>
+    <div class="beat">
+      <div class="bh"><span class="bn">2</span><span class="bt">Почему не за 3? Таблица цепочек ответов</span><span class="tm">≈6–7 мин</span></div>
+      <p><span class="say">«А за 3 вопроса можно?»</span> → нет. Выписать столбиком все тройки ответов: <span class="mono">ддд, ддн, днд, …, ннн</span> — их всего <b>8</b> (это концы дерева развилок, <span class="mono">2·2·2</span>). А чисел 16 → каким-то двум числам достанется одна цепочка ответов, и различить их нельзя. За k вопросов различаем не больше <span class="mono">2ᵏ</span>. <b>Как ни хитри с вопросами, за три угадать нельзя</b> — это и есть нижняя оценка. Усилитель — задача 3 (словарик): 7200 слов, а 12 вопросов различают лишь 4096.</p>
+    </div>
+    <div class="beat">
+      <div class="bh"><span class="bn">3</span><span class="bt">Аргумент противника</span><span class="tm">≈4–5 мин</span></div>
+      <p>Тот же вывод «злым» взглядом: <span class="say">«Я и не загадывал число — держу список всех подходящих и на каждый ваш вопрос отвечаю так, чтобы в списке осталось больше половины».</span> Из 16 после 3 вопросов в списке останется хотя бы 2 числа → угадать нельзя. Отвечающий-хитрец непобедим, пока вариантов больше, чем <span class="mono">2ᵏ</span>.</p>
+    </div>
+    <div class="beat">
+      <div class="bh"><span class="bn">4</span><span class="bt">Богаче «да/нет» → весы</span><span class="tm">≈3–4 мин</span></div>
+      <p>Если ответ бывает трёх видов — <span class="say">«да / нет / не знаю»</span> — дерево ветвится не на два, а на три. Взвешивание на чашечных весах тоже даёт <b>три</b> исхода: <span class="mono">&lt;</span>, <span class="mono">=</span>, <span class="mono">&gt;</span>. Значит дерево ветвится на 3 → за k взвешиваний различаем не больше <span class="mono">3ᵏ</span>. Переходим к листку-взвешиваниям (задачи 4–9).</p>
+    </div>
+    <div class="beat">
+      <div class="bh"><span class="bn">5</span><span class="bt">Гробы + финал-тизер</span><span class="tm">≈2 мин</span></div>
+      <p>Сильным — гробы 11–13 (условие простое, решение трудное). На прощание: <span class="say">«А можно ли задать все вопросы заранее, одной карточкой?»</span> — да, и это ровно двоичная запись; подробно на занятии 3.</p>
+    </div>
+  </div>
+
+  <h2 class="sec">Задачи</h2>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">1</span><div><span class="ptitle">Угадать число 1–16</span><span class="role vm">разбор вместе</span> <span class="gem">◆</span>
+    <p class="meta">ядро · разрешающее дерево · кл. 7–9 (доступна 6) · <a href="https://problems.ru/view_problem_details_new.php?id=31362">#31362</a></p></div></div>
+    <p class="cond">Некто загадал число от <span class="mono">1</span> до <span class="mono">16</span>. Можно задавать вопросы, на которые он отвечает «да» или «нет». Можно ли наверняка угадать число за: <b>а)</b> 4 вопроса; <b>б)</b> 3 вопроса?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea"><b>а)</b> Да. Деление пополам: «больше 8?», затем делим пополам оставшийся кусок — после 4 делений из 16 вариантов остаётся один. <b>б)</b> Нет — и это главное рассуждение урока. Ответы — это цепочка из трёх «да/нет», а всего таких цепочек <span class="mono">2·2·2 = 8</span>. Чисел же 16, значит какие-то два числа дадут одинаковую цепочку ответов, и различить их невозможно.</p>
+      <div class="answer"><b>Ответ.</b> За 4 — да, за 3 — нет.</div>
+    </div></details>
+  </div>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">2</span><div><span class="ptitle">Угадать число 1–1000 за 10 вопросов</span><span class="role self">сам</span>
+    <p class="meta">угадывание · кл. 5–7 · <a href="https://problems.ru/view_problem_details_new.php?id=102997">#102997</a></p></div></div>
+    <p class="cond">Миша загадал число от <span class="mono">1</span> до <span class="mono">1000</span>. Вася задаёт вопросы, на которые Миша честно отвечает «да» или «нет». Может ли Вася наверняка угадать число за 10 вопросов?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Деление пополам: «число ≤ середины?» — каждый ответ уменьшает промежуток вдвое: 1000 → 500 → 250 → 125 → 63 → 32 → 16 → 8 → 4 → 2 → 1. Десяти вопросов хватает, ведь <span class="mono">2¹⁰ = 1024 ≥ 1000</span> (а за 9 нельзя: <span class="mono">2⁹ = 512 &lt; 1000</span>).</p>
+      <div class="answer"><b>Ответ.</b> Да, за 10 вопросов.</div>
+    </div></details>
+  </div>
+
+  <div class="card p">
+    <div class="phead"><span class="badge">3</span><div><span class="ptitle">Словарик</span><span class="role self">сам</span>
+    <p class="meta">счёт информации · кл. 6–7 · Кноп, зан. 1, задача 1.5</p></div></div>
+    <p class="cond">В орфографическом словарике <span class="mono">120</span> страниц, на каждой по <span class="mono">60</span> слов. Кто-то загадал одно слово. Разрешено задавать вопросы «да/нет». Хватит ли 13 вопросов, чтобы наверняка узнать слово? А можно ли меньше?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">13 хватит: 7 вопросов на номер страницы (<span class="mono">2⁷ = 128 ≥ 120</span>) и 6 на номер слова на ней (<span class="mono">2⁶ = 64 ≥ 60</span>). Меньше нельзя: всего слов <span class="mono">120·60 = 7200</span>, а 12 вопросов различают не больше <span class="mono">2¹² = 4096 &lt; 7200</span> — какие-то два слова склеятся.</p>
+      <div class="answer"><b>Ответ.</b> 13 хватит, меньше — нельзя.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">4</span><div><span class="ptitle">Четыре монеты, одна фальшивая</span><span class="role self">сам</span>
+    <p class="meta">взвешивания · кл. 6–8 · <a href="https://problems.ru/view_problem_details_new.php?id=60921">#60921</a></p></div></div>
+    <p class="cond">Из четырёх монет одна фальшивая — она отличается по весу от настоящих, но неизвестно, легче она или тяжелее. Как за два взвешивания на чашечных весах без гирь найти фальшивую?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Сравнить монеты 1 и 2, затем 1 и 4. Если первое взвешивание — равновесие, обе эти монеты настоящие, фальшивая среди 3 и 4, и её выдаёт второе. Если перевес, фальшивая среди 1 и 2; второе взвешивание (1 против заведомо настоящей 4) показывает, она ли монета 1. Два исхода × два — фальшивая определяется однозначно.</p>
+      <div class="answer"><b>Ответ.</b> За два взвешивания.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">5</span><div><span class="ptitle">Гири 1, 3, 9, 27, 81</span><span class="role self">сам</span>
+    <p class="meta">взвешивания · троичное · кл. 6–8 · <a href="https://problems.ru/view_problem_details_new.php?id=60894">#60894</a></p></div></div>
+    <p class="cond">Есть весы с двумя чашами и гири <span class="mono">1</span>, <span class="mono">3</span>, <span class="mono">9</span>, <span class="mono">27</span> и <span class="mono">81</span> г; гири можно класть на обе чаши. Как уравновесить груз в <span class="mono">61</span> г?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Гирю можно ставить к грузу (тогда она «вычитается»). Подбираем: <span class="mono">81 + 9 + 1 = 61 + 27 + 3</span>. Значит на чашу с грузом добавляем гири 27 и 3, а на другую — 81, 9 и 1. Каждую гирю мы кладём слева, справа или не берём — три варианта; это троичная запись.</p>
+      <div class="answer"><b>Ответ.</b> 81 + 9 + 1 = 61 + 27 + 3.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">6</span><div><span class="ptitle">Потерянная гирька</span><span class="role think">подумать</span>
+    <p class="meta">взвешивания · твист · кл. 6–7 · Кноп, зан. 3, задача 3.4</p></div></div>
+    <p class="cond">Было девять гирь массами <span class="mono">1</span>, <span class="mono">2</span>, <span class="mono">3</span>, …, <span class="mono">9</span> г, причём чем гиря тяжелее, тем она крупнее. Одна гиря потерялась. Как за два взвешивания на чашечных весах без гирь узнать, какая именно?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">По размеру мы всегда можем разложить оставшиеся 8 гирь по возрастанию. Два взвешивания дают вместе 3·3 = 9 исходов — ровно по числу вариантов «какая гиря пропала». Нужно подобрать два взвешивания «несколько гирь против нескольких» так, чтобы перекос чаш зависел от пропавшей гири и делил 9 случаев на группы (тонкость в том, что при разной пропаже одна и та же по размеру гиря «весит» по-разному). Подробное построение — Кноп, зан. 3.</p>
+      <div class="answer"><b>Ответ.</b> Да, двух взвешиваний хватает.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">7</span><div><span class="ptitle">Монеты 1, 2, 3, 4 грамма</span><span class="role think">подумать</span>
+    <p class="meta">взвешивания · кл. 6–7 · Кноп (задача <a href="https://problems.ru/view_problem_details_new.php?id=66063">#66063</a>)</p></div></div>
+    <p class="cond">Четыре одинаковые на вид монеты весят <span class="mono">1</span>, <span class="mono">2</span>, <span class="mono">3</span> и <span class="mono">4</span> грамма. Можно ли за четыре взвешивания на чашечных весах без гирь узнать, какая из них сколько весит?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Можно. Помогает то, что веса заранее известны и <span class="mono">1 + 4 = 2 + 3</span>: если положить по две монеты на чаши и получить равновесие, то на чашах — пары {1,4} и {2,3}; неравенство тоже сужает варианты. Комбинируя такие взвешивания (пары против пар и по одной монете), за четыре взвешивания веса определяются однозначно.</p>
+      <div class="answer"><b>Ответ.</b> Да.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">8</span><div><span class="ptitle">Три гирьки аптекаря</span><span class="role think">подумать</span> <span class="gem">◆</span>
+    <p class="meta">взвешивания · представимость · кл. 6–7 · Шаповалов · <a href="https://problems.ru/view_problem_details_new.php?id=65978">#65978</a></p></div></div>
+    <p class="cond">У аптекаря есть три гирьки. Одному покупателю он отвесил <span class="mono">100</span> г, другому <span class="mono">101</span> г, третьему <span class="mono">102</span> г, каждый раз ставя гирьки на одну чашу весов, а товар — на другую. Могло ли оказаться, что каждая гирька легче <span class="mono">90</span> г?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Три веса 100, 101, 102 — это попарные суммы трёх гирек. Подходят гирьки <span class="mono">49,5</span>, <span class="mono">50,5</span> и <span class="mono">51,5</span> г: <span class="mono">49,5+50,5 = 100</span>, <span class="mono">49,5+51,5 = 101</span>, <span class="mono">50,5+51,5 = 102</span>. Все три легче 90 г.</p>
+      <div class="answer"><b>Ответ.</b> Могло (49,5 + 50,5 + 51,5).</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">9</span><div><span class="ptitle">Пять монет, две фальшивые</span><span class="role think">подумать</span> <span class="gem">◆</span>
+    <p class="meta">взвешивания · твист · кл. 5–6 · <a href="https://problems.ru/view_problem_details_new.php?id=64498">#64498</a></p></div></div>
+    <p class="cond">Из пяти монет две фальшивые: одна легче настоящей, а другая ровно настолько же тяжелее (так что две фальшивые вместе весят как две настоящие). Как за три взвешивания на чашечных весах без гирь найти обе фальшивые монеты?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Одну монету отложим, остальные четыре — по две на чаши. Если равновесие, то либо на одной чаше сразу обе фальшивые (лёгкая и тяжёлая гасят друг друга), либо фальшивые — отложенная и одна из чаш; это разбирается двумя оставшимися взвешиваниями (сравниваем монеты внутри чаши). Если перевес, лёгкая фальшивая — в лёгкой паре, тяжёлая — в тяжёлой, и по одному взвешиванию на каждую пару находим обе.</p>
+      <div class="answer"><b>Ответ.</b> За три взвешивания находятся обе.</div>
+    </div></details>
+  </div>
+
+  <div class="card s">
+    <div class="phead"><span class="badge">10</span><div><span class="ptitle">Три лампочки</span><span class="role think">подумать</span> <span class="gem">◆</span>
+    <p class="meta">информации больше, чем «да/нет» · кл. 6–9 · <a href="https://problems.ru/view_problem_details_new.php?id=60900">#60900</a></p></div></div>
+    <p class="cond">В подвале три лампочки, а их выключатели — снаружи, и лампочек от выключателей не видно. Как, спустившись в подвал только один раз, узнать, какой выключатель к какой лампочке?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">У лампочки есть третье состояние — <em>нагрета</em>. Первый выключатель включаем надолго и выключаем, второй включаем, третий не трогаем. Спускаемся: <b>горит</b> — второй; <b>погасла, но тёплая</b> — первый; <b>холодная</b> — третий. Один осмотр различил три случая — больше, чем «да/нет». (За два спуска так можно опознать 9 лампочек.)</p>
+      <div class="answer"><b>Ответ.</b> Различаем по нагреву, за один спуск.</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">11</span><div><span class="ptitle">Шесть яблок</span><span class="role grob">гроб</span> <span class="gem">◆</span>
+    <p class="meta">доказательство · кл. 6–8 · Шаповалов · <a href="https://problems.ru/view_problem_details_new.php?id=66526">#66526</a></p></div></div>
+    <p class="cond">На столе лежат <span class="mono">6</span> яблок (веса могут быть разными). Таня разложила их по <span class="mono">3</span> на две чаши весов — равновесие. Саша разложил те же яблоки иначе: <span class="mono">2</span> на одну чашу и <span class="mono">4</span> на другую — снова равновесие. Докажите, что можно положить одно яблоко против двух так, что весы останутся в равновесии.</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Обозначим три яблока с одной чаши Тани зелёными, три с другой — красными; по Тане зелёные весят столько же, сколько красные. Посмотрим, как эти шесть яблок легли на чаши Саши (2 и 4). Перебор случаев — сколько зелёных попало на меньшую чашу Саши — вместе с двумя равенствами (Тани и Саши) каждый раз приводит к тому, что какое-то одно яблоко по весу равно двум другим. Его и кладём против этих двух.</p>
+      <div class="answer"><b>Ответ.</b> Такое яблоко всегда найдётся (доказательство перебором, какие яблоки попали к Саше на какую чашу).</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">12</span><div><span class="ptitle">Взвешивания за плату</span><span class="role grob">гроб</span> <span class="gem">◆</span>
+    <p class="meta">оптимально + докажи · рекуррента · кл. 7–8 · Кноп, зан. 3, задача 3.10</p></div></div>
+    <p class="cond">У Саши <span class="mono">169</span> монет, одна из них — фальшивая, она легче настоящей. У Кости есть весы, но за каждое взвешивание он берёт плату: <span class="mono">1</span> рубль, если какая-то чаша перевесила, и <span class="mono">2</span> рубля, если весы в равновесии. Какую наименьшую сумму Саша должен приготовить, чтобы наверняка определить фальшивую монету?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">Пусть <span class="mono">Tₙ</span> — наибольшее число монет, среди которых за <span class="mono">n</span> рублей заведомо найдём фальшивую. На каждую чашу кладём не больше <span class="mono">Tₙ₋₁</span> монет (перевес стоит 1 ₽, останется n−1 рубль), а вне чаш — не больше <span class="mono">Tₙ₋₂</span> (равновесие стоит 2 ₽). Значит <span class="mono">Tₙ ≤ 2·Tₙ₋₁ + Tₙ₋₂</span>; с <span class="mono">T₀=1, T₁=2</span> получаем 5, 12, 29, 70, 169. Итак, <span class="mono">T₆ = 169</span> — шести рублей хватает, а пяти (T₅ = 70) мало.</p>
+      <div class="answer"><b>Ответ.</b> 6 рублей.</div>
+    </div></details>
+  </div>
+
+  <div class="card g">
+    <div class="phead"><span class="badge">13</span><div><span class="ptitle">Комиссия и сейф</span><span class="role grob">гроб</span> <span class="gem">◆</span>
+    <p class="meta">сколько нужно + почему не меньше · кл. 7–9 · классика</p></div></div>
+    <p class="cond">Комиссия из <span class="mono">9</span> человек хранит секретные материалы в сейфе. Сколько нужно замков на сейфе и ключей к ним и как раздать ключи, чтобы сейф открывался тогда и только тогда, когда собрались не меньше <span class="mono">6</span> человек?</p>
+    <details class="sol"><summary>Идея и ответ</summary><div class="body">
+      <p class="idea">На каждую пятёрку людей повесим свой замок, ключ от которого дадим всем, <em>кроме</em> этих пятерых (то есть остальным четверым). Любые 5 человек не откроют сейф: у «их» замка ни у кого из них ключа нет. Любые 6 откроют: для каждого замка среди шестерых найдётся тот, кто не входит в «запретную» пятёрку этого замка, — у него есть ключ. Замков столько, сколько пятёрок из девяти: <span class="mono">C(9,5) = 126</span>; на каждый замок 4 ключа, всего 504, у каждого человека <span class="mono">C(8,5) = 56</span> ключей. Меньше 126 замков нельзя — каждой пятёрке нужен свой замок, который она не открывает.</p>
+      <div class="answer"><b>Ответ.</b> 126 замков, у каждого члена комиссии 56 ключей.</div>
+    </div></details>
+  </div>
+
+  <div class="foot sans">
+    <h3>Заметки преподавателю</h3>
+    <p>Центр урока — <b>нижние оценки</b>: как доказать, что быстрее нельзя. Сначала счёт цепочек ответов (задача 1б, дерево <span class="mono">2ᵏ</span>), затем тот же вывод через аргумент противника, затем то же с тремя исходами для взвешиваний (<span class="mono">3ᵏ</span>). Гробы 11–13 — условие простое, решение на уровень старше; давать сильным. Полный пул и резерв (ещё десяток задач Кнопа на будущие листки, двоичное и коды → занятие 3) — в картотеке <code>02-l2-skolko-informacii.md</code>.</p>
+    <p class="hold">Двоичная запись и магические карточки — тизер в конце, целиком на занятии 3.</p>
+  </div>
+  <p class="credit">Информация и коды · Занятие 2 · «Сколько информации» · версия для преподавателя</p>
+</div>
+<script>
+  const tg=document.getElementById('tg');let open=false;
+  tg.addEventListener('click',()=>{open=!open;
+    document.querySelectorAll('details.sol').forEach(d=>d.open=open);
+    tg.textContent=open?'Скрыть все решения':'Показать все решения';});
+</script>
+</body>
+</html>

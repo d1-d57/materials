@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Кодирование — листок 3</title>
+<style>
+  @page{ size:A4; margin:11mm 15mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;counter-reset:z;
+    font:10.3pt/1.34 Georgia,"Times New Roman",serif;}
+  .page{min-height:275mm;display:flex;flex-direction:column}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:7px}
+  .head .t{font-weight:700;font-size:12pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  ol{margin:0;padding:0;list-style:none}
+  li{counter-increment:z;position:relative;padding-left:25px;margin:0 0 6.5px}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  .mono{font-family:"Courier New",monospace;font-weight:700;letter-spacing:.02em}
+
+  /* зона вырезных карточек — внизу листа, пустые */
+  .cutzone{flex:1 1 auto;min-height:50mm;border-top:1.5px dashed #555;
+    display:flex;margin-top:9mm}
+  .cutcard{flex:1;border-left:1.5px dashed #999;position:relative}
+  .cutcard:first-child{border-left:none}
+  .cutcard .lbl{position:absolute;top:3mm;left:0;right:0;text-align:center;
+    font-family:-apple-system,sans-serif;font-size:10pt;color:#aaa}
+</style>
+</head>
+<body>
+<div class="page">
+  <div>
+    <div class="head">
+      <span class="t">Кодирование</span>
+      <span class="m">6 класс · занятие 3 · 13.07.2026</span>
+    </div>
+    <ol>
+      <li>Вася загадал число от <span class="mono">0</span> до <span class="mono">15</span>, а Петя отгадывает его за четыре вопроса «да/нет». Первый вопрос: «твоё число больше 7?» Если Вася ответил «да», Петя спрашивает «больше 11?», если «нет» — «больше 3?». И так дальше, каждым вопросом деля оставшиеся числа пополам. Выпишите четыре списка: числа, при которых Вася ответит «да» на первый вопрос; на второй; на третий; на четвёртый.</li>
+
+      <li>Теперь Петя делает фокус: отдаёт Васе четыре карточки и про каждую спрашивает одно и то же — «твоё число написано на этой карточке?». По ответам он сразу называет загаданное число. Как ему это удаётся?</li>
+
+      <li>Обведите на каждой карточке самое маленькое число (это <span class="mono">8</span>, <span class="mono">4</span>, <span class="mono">2</span> и <span class="mono">1</span>). Загадайте число от 0 до 15; переверните лицом вверх карточки, на которых оно написано, остальные лицом вниз, и сложите обведённые числа, лежащих лицом вверх. Проверьте, что получилось загаданное число. Повторите несколько раз.</li>
+
+      <li><b>а)</b> Какая сумма получится, если лицом вверх лежат карточки ① и ④? <b>б)</b> А если лицом вверх ②, ③ и ④?</li>
+
+      <li><b>а)</b> Какое самое маленькое число можно так получить? <b>б)</b> Какое самое большое?</li>
+
+      <li>Какие карточки перевернуть лицом вверх, чтобы обведённые числа дали в сумме: <b>а)</b> 7? <b>б)</b> 10? <b>в)</b> 13?</li>
+
+      <li>Как перевернуть карточки, чтобы выложенное число увеличилось ровно на <span class="mono">1</span>?</li>
+
+      <li>Вася придумал, как шифровать числа. Чтобы зашифровать число, Вася переворачивает карточки так, чтобы сумма обведённых чисел стала равна этому числу. Шифр состоит из четырёх цифр: <span class="mono">1</span> — если карточка лицом вверх, <span class="mono">0</span> — если вниз. Например, 13 = 8 + 4 + 1 шифруется как <span class="mono">1101</span>: лицом вниз лежит только третья карточка. <b>а)</b> Как Вася зашифрует 6, 11 и 14? <b>б)</b> Какие числа может зашифровать Вася?</li>
+
+      <li><b>а)</b> Для каждого из четырёх мест шифра выпишите все числа, у которых там стоит <span class="mono">1</span>; проверьте, что получаются те же числа, что на карточках ①②③④. <b>б)</b> Объясните, почему работает фокус из задачи 3.</li>
+
+      <li>Разложите <span class="mono">127</span> рублей по семи кошелькам так, чтобы, не открывая кошельков, можно было выдать любую сумму от <span class="mono">1</span> до <span class="mono">127</span> рублей (кошельки отдаём целиком).</li>
+
+      <li>Фокусник кладёт перед зрителем <span class="mono">36</span> карт и просит запомнить одну. Он раскладывает все карты в <span class="mono">6</span> стопок и спрашивает, в какой стопке задуманная карта. Затем собирает стопки по порядку и снова раскладывает в 6 стопок, и снова спрашивает, в какой стопке карта. После этого сразу достаёт её. В чём секрет?</li>
+
+      <li>На столе <span class="mono">7</span> пронумерованных мешков, по <span class="mono">10</span> монет в каждом. В одном мешке монеты фальшивые (<span class="mono">9</span> г вместо <span class="mono">10</span>), в остальных настоящие. Как одним взвешиванием на весах со стрелкой узнать номер фальшивого мешка?</li>
+
+      <li>Те же <span class="mono">7</span> мешков, но фальшивых теперь может быть сколько угодно (в каждом либо все монеты фальшивые, либо все настоящие). Как за одно взвешивание найти сразу все фальшивые мешки?</li>
+    </ol>
+  </div>
+
+  <div class="cutzone">
+    <div class="cutcard"><span class="lbl">①</span></div>
+    <div class="cutcard"><span class="lbl">②</span></div>
+    <div class="cutcard"><span class="lbl">③</span></div>
+    <div class="cutcard"><span class="lbl">④</span></div>
+  </div>
+</div>
+</body>
+</html>

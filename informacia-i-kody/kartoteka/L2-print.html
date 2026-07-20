@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Листок 2 — печать</title>
+<style>
+  @page{ size:A4; margin:12mm 16mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;
+    font:10.5pt/1.38 Georgia,"Times New Roman",serif;}
+  .sheet{max-width:180mm;margin:0 auto;padding:3mm 6mm}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:5px;margin-bottom:6px}
+  .head .t{font-weight:700;font-size:12pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  .lead{font-size:9.5pt;color:#222;margin:0 0 8px}
+  ol{margin:0;padding:0;list-style:none;counter-reset:z}
+  li{counter-increment:z;position:relative;padding-left:30px;margin:0 0 7px;
+    break-inside:avoid;page-break-inside:avoid}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  li.star::before{content:counter(z)".∗"}
+  .mono{font-family:"Courier New",monospace;letter-spacing:.02em;font-weight:700}
+  .sub{margin:14px 0 5px;font-weight:700;font-size:10.5pt;border-top:1px solid #999;padding-top:7px}
+  .note{margin-top:12px;font-size:9pt;color:#333;border-top:1px solid #bbb;padding-top:5px}
+  @media screen{ body{background:#eceae6;padding:18px 0}
+    .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:14mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Сколько информации</span>
+    <span class="m">6 класс · занятие 2 · 13.07.2026</span>
+  </div>
+  <p class="lead">Один вопрос на всё занятие: сколько мы узнаём за один вопрос «да/нет» или одно взвешивание — и почему быстрее узнать нельзя. Значок ∗ — трудные задачи.</p>
+
+  <ol>
+    <li>Некто загадал число от <span class="mono">1</span> до <span class="mono">16</span>. Можно задавать вопросы, на которые он отвечает «да» или «нет». Можно ли наверняка угадать число за: <b>а)</b> 4 вопроса; <b>б)</b> 3 вопроса?</li>
+
+    <li>Миша загадал число от <span class="mono">1</span> до <span class="mono">1000</span>. Вася задаёт вопросы, на которые Миша честно отвечает «да» или «нет». Может ли Вася наверняка угадать число за 10 вопросов?</li>
+
+    <li>В орфографическом словарике <span class="mono">120</span> страниц, на каждой по <span class="mono">60</span> слов. Кто-то загадал одно слово из словарика. Разрешено задавать вопросы, на которые отвечают «да» или «нет». Хватит ли 13 вопросов, чтобы наверняка узнать слово? А можно ли обойтись меньшим числом?</li>
+
+    <li>Из четырёх монет одна фальшивая — она отличается по весу от настоящих, но неизвестно, легче она или тяжелее. Как за два взвешивания на чашечных весах без гирь найти фальшивую монету?</li>
+
+    <li>Есть весы с двумя чашами и гири <span class="mono">1</span>, <span class="mono">3</span>, <span class="mono">9</span>, <span class="mono">27</span> и <span class="mono">81</span> г; гири можно класть на обе чаши. Как уравновесить груз в <span class="mono">61</span> г?</li>
+
+    <li>Было девять гирь массами <span class="mono">1</span>, <span class="mono">2</span>, <span class="mono">3</span>, …, <span class="mono">9</span> г, причём чем гиря тяжелее, тем она крупнее. Одна гиря потерялась. Как за два взвешивания на чашечных весах без гирь узнать, какая именно?</li>
+
+    <li>Четыре одинаковые на вид монеты весят <span class="mono">1</span>, <span class="mono">2</span>, <span class="mono">3</span> и <span class="mono">4</span> грамма. Можно ли за четыре взвешивания на чашечных весах без гирь узнать, какая из них сколько весит?</li>
+
+    <li>У аптекаря есть три гирьки. Одному покупателю он отвесил <span class="mono">100</span> г, другому <span class="mono">101</span> г, третьему <span class="mono">102</span> г, каждый раз ставя гирьки на одну чашу весов, а товар — на другую. Могло ли оказаться, что каждая гирька легче <span class="mono">90</span> г?</li>
+
+    <li>Из пяти монет две фальшивые: одна легче настоящей, а другая ровно настолько же тяжелее (так что две фальшивые вместе весят как две настоящие). Как за три взвешивания на чашечных весах без гирь найти обе фальшивые монеты?</li>
+
+    <li>В подвале три лампочки, а их выключатели — снаружи, и лампочек от выключателей не видно. Как, спустившись в подвал только один раз, узнать, какой выключатель к какой лампочке?</li>
+
+    <li class="star">На столе лежат <span class="mono">6</span> яблок (веса могут быть разными). Таня разложила их по <span class="mono">3</span> на две чаши весов — весы в равновесии. Саша разложил те же яблоки иначе: <span class="mono">2</span> на одну чашу и <span class="mono">4</span> на другую — весы снова в равновесии. Докажите, что можно положить одно яблоко на одну чашу, а два — на другую так, что весы останутся в равновесии.</li>
+
+    <li class="star">У Саши <span class="mono">169</span> монет, одна из них — фальшивая, она легче настоящей. У Кости есть весы, но за каждое взвешивание он берёт плату: <span class="mono">1</span> рубль, если какая-то чаша перевесила, и <span class="mono">2</span> рубля, если весы остались в равновесии. Какую наименьшую сумму Саша должен приготовить, чтобы наверняка определить фальшивую монету?</li>
+
+    <li class="star">Комиссия из <span class="mono">9</span> человек хранит секретные материалы в сейфе. Сколько нужно замков на сейфе и ключей к ним и как раздать ключи членам комиссии, чтобы сейф открывался тогда и только тогда, когда собрались не меньше <span class="mono">6</span> человек?</li>
+  </ol>
+
+  <p class="note">Информация и коды · занятие 2 · «Сколько информации»</p>
+</div>
+</body>
+</html>

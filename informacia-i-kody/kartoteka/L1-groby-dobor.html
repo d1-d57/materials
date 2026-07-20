@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ребусы потяжелее — печать</title>
+<style>
+  @page{ size:A4; margin:14mm 16mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;font:11pt/1.4 Georgia,"Times New Roman",serif;}
+  .sheet{max-width:180mm;margin:0 auto;padding:12mm 6mm}
+  .head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #000;padding-bottom:5px;margin-bottom:14px}
+  .head .t{font-weight:700;font-size:12pt}
+  .head .m{font-size:9.5pt}
+  ol{margin:0;padding:0;list-style:none;counter-reset:z 12}
+  li{counter-increment:z;position:relative;padding-left:24px;margin:0 0 12px;break-inside:avoid;page-break-inside:avoid}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  .rebus{font-family:"Courier New",monospace;letter-spacing:.06em;font-weight:700;font-size:1.05em}
+  @media screen{ body{background:#eceae6;padding:18px 0} .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:16mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Числовые ребусы — потяжелее</span>
+    <span class="m">6 класс · 2-я пара · 12.07.2026</span>
+  </div>
+  <p style="margin:0 0 12px;font-size:10pt">Во всех ребусах одинаковым буквам соответствуют одинаковые цифры, разным — разные; старшая цифра числа не ноль.</p>
+  <ol>
+    <li>Восстановите цифры: <span class="rebus">АБВГ × 9 = ГВБА</span> (умножение на 9 «переворачивает» число).</li>
+    <li>Восстановите цифры: <span class="rebus">АБВГД × 4 = ДГВБА</span> (умножение на 4 «переворачивает» число).</li>
+    <li>Восстановите цифры в сложении: <span class="rebus">SEND + MORE = MONEY</span> (латинские буквы).</li>
+    <li>Восстановите цифры и найдите <b>все</b> решения: <span class="rebus">КОШКА + КОШКА + КОШКА = СОБАКА</span>.</li>
+    <li>Комиссия из 9 человек хранит материалы в сейфе. Сколько замков и ключей нужно и как их раздать между членами комиссии, чтобы сейф открывался тогда и только тогда, когда соберутся не меньше 6 человек?</li>
+  </ol>
+</div>
+</body>
+</html>

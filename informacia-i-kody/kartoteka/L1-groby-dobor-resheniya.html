@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Числовые ребусы потяжелее — с решениями</title>
+<style>
+  :root{ --bg:#f6f2e9; --paper:#fffdf9; --ink:#211d17; --muted:#797263; --line:#e6dfce; --g:#9c3b3b; --accent:#7a5a2e; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Georgia,"Iowan Old Style","Times New Roman",serif;}
+  .sans{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+  .wrap{max-width:820px;margin:0 auto;padding:44px 22px 90px}
+  .kicker{font:600 12.5px/1 -apple-system,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+  h1{font-size:31px;line-height:1.14;margin:0 0 8px;font-weight:600}
+  .sub{color:var(--muted);font-size:16px;margin:0 0 6px;max-width:64ch}
+  .toolbar{display:flex;gap:16px;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  button.toggle{margin-left:auto;font:600 13px/1 -apple-system,sans-serif;color:#fff;background:var(--accent);border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
+  .card{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--g);border-radius:11px;padding:18px 22px;margin:15px 0;box-shadow:0 1px 2px rgba(60,40,10,.04)}
+  .phead{display:flex;align-items:baseline;gap:11px;margin-bottom:9px}
+  .badge{flex:none;font:700 13px/1 -apple-system,sans-serif;color:#fff;background:var(--g);border-radius:6px;padding:5px 8px;min-width:30px;text-align:center}
+  .ptitle{font-size:19px;font-weight:600;line-height:1.2;margin:0;display:inline}
+  .meta{margin:2px 0 0;font:13px/1.5 -apple-system,sans-serif;color:var(--muted)}
+  .meta a{color:var(--accent);text-decoration:none;border-bottom:1px solid #d8cdb2}
+  .cond{margin:6px 0 0}
+  .rebus{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:1.12em;letter-spacing:.09em;font-weight:600}
+  details.sol{margin-top:13px;border-top:1px dashed var(--line);padding-top:11px}
+  details.sol>summary{font:600 14px/1 -apple-system,sans-serif;color:var(--accent);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px}
+  details.sol>summary::-webkit-details-marker{display:none}
+  details.sol>summary::before{content:"▸";font-size:12px;transition:transform .15s}
+  details.sol[open]>summary::before{transform:rotate(90deg)}
+  .sol .body{margin-top:9px;font-size:15.5px;color:#2b271f}
+  .sol .idea{margin:0 0 8px}
+  .diff{margin:0 0 8px;font-size:14px;color:var(--g)}
+  .answer{background:#eef5f0;border:1px solid #cfe4d8;border-radius:8px;padding:8px 12px;font-size:15px}
+  .answer b{color:#2f6f6a}
+  @media print{ body{background:#fff} .wrap{max-width:none;padding:0} button.toggle{display:none} .card{box-shadow:none;break-inside:avoid} details.sol[open]>summary::before{content:"▾"} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Информация и коды · Занятие 1 · числовые ребусы потяжелее (7–8 класс)</div>
+  <h1>Ребусы 13–17 — с решениями</h1>
+  <p class="sub">Числовые ребусы (буквы = цифры: одинаковым — одинаковые, разным — разные), но потруднее — под сильных 7–8-классников. Плюс комбинаторная «ключи от сейфа». Решения проверены вручную; классические ребусы — из общего фонда.</p>
+  <div class="toolbar sans"><button class="toggle" id="tg">Показать все решения</button></div>
+
+  <div class="card">
+    <div class="phead"><span class="badge">13</span><div><span class="ptitle">Умножение-переворот на 9</span>
+    <p class="meta">классический числовой ребус · ~7 класс</p></div></div>
+    <p class="cond">Восстановите цифры: <span class="rebus">АБВГ × 9 = ГВБА</span> (умножение на 9 «переворачивает» четырёхзначное число). Одинаковым буквам — одинаковые цифры, разным — разные.</p>
+    <details class="sol"><summary>Идея, оценка, ответ</summary><div class="body">
+      <p class="diff"><b>Сложность:</b> средне-высокая. Разминочный из тяжёлых — ловится логикой разрядов.</p>
+      <p class="idea"><b>Идея.</b> Четырёхзначное после ×9 осталось четырёхзначным ⇒ АБВГ ≤ 1111 ⇒ А = 1. Тогда ГВБА оканчивается на 1, значит Г·9 оканчивается на 1 ⇒ Г = 9. Старшая цифра произведения — Г = 9, а АБВГ·9 ≈ 9000 ⇒ АБВГ чуть больше 1000 ⇒ Б = 0. Остаётся подобрать В: выходит 8.</p>
+      <div class="answer"><b>Ответ.</b> 1089 × 9 = 9801 (единственное решение).</div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <div class="phead"><span class="badge">14</span><div><span class="ptitle">Умножение-переворот на 4</span>
+    <p class="meta">классический числовой ребус · 7–8 класс</p></div></div>
+    <p class="cond">Восстановите цифры: <span class="rebus">АБВГД × 4 = ДГВБА</span> (умножение на 4 «переворачивает» пятизначное число). Разным буквам — разные цифры.</p>
+    <details class="sol"><summary>Идея, оценка, ответ</summary><div class="body">
+      <p class="diff"><b>Сложность:</b> высокая — больше разрядов и жёстче связи, чистый математический перебор.</p>
+      <p class="idea"><b>Идея.</b> Пятизначное ×4 осталось пятизначным ⇒ А маленькая и чётная (произведение чётно, начинается с Д) ⇒ А = 2. Последняя цифра произведения — А = 2, то есть Д·4 оканчивается на 2 ⇒ Д = 3 или 8; старшая Д = А·4(+перенос) ⇒ Д = 8. Дальше по разрядам восстанавливаются Б, В, Г.</p>
+      <div class="answer"><b>Ответ.</b> 21978 × 4 = 87912 (единственное решение).</div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <div class="phead"><span class="badge">15</span><div><span class="ptitle">SEND + MORE = MONEY</span>
+    <p class="meta">знаменитый ребус Дьюдени · 7–8 класс</p></div></div>
+    <p class="cond">Восстановите цифры в сложении (латинские буквы): <span class="rebus">SEND + MORE = MONEY</span>. Одинаковым буквам — одинаковые цифры, разным — разные, старшие цифры не нули.</p>
+    <details class="sol"><summary>Идея, оценка, ответ</summary><div class="body">
+      <p class="diff"><b>Сложность:</b> высокая — эталонный «взрослый» ребус, чистый разбор случаев по разрядам.</p>
+      <p class="idea"><b>Идея.</b> Сумма двух четырёхзначных &lt; 20000 ⇒ M = 1. Тогда в старшем разряде S + M(+перенос) даёт 1O… ⇒ S = 8 или 9, а O = 0. Дальше последовательно по разрядам с переносами добивают N, E, R, D, Y.</p>
+      <div class="answer"><b>Ответ.</b> 9567 + 1085 = 10652 (единственное решение).</div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <div class="phead"><span class="badge">16</span><div><span class="ptitle">КОШКА + КОШКА + КОШКА = СОБАКА</span>
+    <p class="meta">классический числовой ребус · найдите ВСЕ решения · 7–8 класс</p></div></div>
+    <p class="cond">Восстановите цифры: <span class="rebus">КОШКА + КОШКА + КОШКА = СОБАКА</span>, то есть КОШКА × 3 = СОБАКА. Одинаковым буквам — одинаковые цифры, разным — разные. Найдите все решения.</p>
+    <details class="sol"><summary>Идея, оценка, ответ</summary><div class="body">
+      <p class="diff"><b>Сложность:</b> высокая — «найти ВСЕ» добавляет разбор случаев поверх обычного ребуса.</p>
+      <p class="idea"><b>Идея.</b> Сумма шестизначная ⇒ КОШКА·3 ≥ 100000 ⇒ КОШКА ≥ 33334. Из последнего разряда 3·А оканчивается на А ⇒ А ∈ {0, 5}. Дальше по разрядам с переносами; получается два набора.</p>
+      <div class="answer"><b>Ответ.</b> Два решения, например 56350 × 3 = 169050 (второе — аналогично, с А = 5).</div>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <div class="phead"><span class="badge">17</span><div><span class="ptitle">Ключи от сейфа</span>
+    <p class="meta">problems.ru <a href="https://problems.ru/view_problem_details_new.php?id=60384">#60384</a> · комбинаторика · кл. 8–9</p></div></div>
+    <p class="cond">Комиссия из 9 человек, материалы в сейфе. Сколько замков и ключей нужно и как их раздать, чтобы сейф открывался тогда и только тогда, когда соберутся не меньше 6 человек?</p>
+    <details class="sol"><summary>Идея, оценка, ответ</summary><div class="body">
+      <p class="diff"><b>Сложность:</b> высокая — надо придумать конструкцию (та, что тебе понравилась).</p>
+      <p class="idea"><b>Идея.</b> Любую пятёрку пускать нельзя ⇒ на каждую пятёрку заведём свой замок, ключ от которого дадим остальным четверым. Тогда любая шестёрка для каждого замка содержит человека «не из пятёрки» → откроет всё; а любой пятёрке ровно её замок недоступен.</p>
+      <div class="answer"><b>Ответ.</b> Замков C(9,5) = <b>126</b>; ключ каждого — у 4 человек; у каждого члена C(8,5) = <b>56</b> ключей (всего 504).</div>
+    </div></details>
+  </div>
+</div>
+<script>
+  (function(){
+    var btn=document.getElementById('tg');
+    var all=Array.prototype.slice.call(document.querySelectorAll('details.sol'));
+    function sync(){var anyClosed=all.some(function(d){return !d.open});btn.textContent=anyClosed?'Показать все решения':'Скрыть все решения';}
+    btn.addEventListener('click',function(){var anyClosed=all.some(function(d){return !d.open});all.forEach(function(d){d.open=anyClosed});sync();});
+    all.forEach(function(d){d.addEventListener('toggle',sync)}); sync();
+  })();
+</script>
+</body>
+</html>
