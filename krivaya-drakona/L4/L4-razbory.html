@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Кривая дракона · Л4 — разборы слова</title>
+<!--
+  Л4, 19.07.2026. Вкладка на задачу листка Л3 (слово). Самодостаточно: ни сети, ни сборки.
+  Управление: 1..9 — вкладка (десятая — мышью) · ПРОБЕЛ — следующий шаг · Z — сначала ·
+  углы/ранг — в строке снизу.
+
+  ⚠ НУМЕРАЦИЯ СКВОЗНАЯ ПО КУРСУ: листок Л1 = 1–12, мини-Л2 = 13–16, Л3 = 17–22, занятие 4 = 23–29.
+     Здесь разбираются 17–22 (слово) и 24–27 (мастерская и финал). Условия задач — не тут, а в
+     `L4/L4-usloviya.html`: внутри рисунка по канону только метка, проза туда не лезет.
+
+  ⚠ ДОЛИНА = L. В листке дети назначают буквы сами (и обратное назначение — НЕ ошибка), но показ
+     обязан зафиксировать одно, иначе анимация не собирается. Оговорено в подписи вкладки 17.
+
+  ═══ КАНОН (SLOVAR-primitivov.md + STANDART-oformlenia.md §6) ═══
+    · ВНУТРИ РИСУНКА — ТОЛЬКО МЕТКА. Проза — одна строка подписи ПОД рисунком (`#cap`).
+      Буквы L и R внутри рисунка — метки, не проза: они и есть предмет разговора.
+    · СМЫСЛ НЕСЁТ ГРАФИКА: `.s-node-r` = «объект, о котором речь» · `.s-accent` = «что изменилось»
+      · `.s-dash` = ось/построение · `.s-ar-m` = направление.
+    · Цвет — только классом. `role="img"` + `aria-label`.
+    · Скругление — ВИД, НЕ ПРЕДМЕТ; оба вида переключателем (решение владельца 17.07).
+
+  ═══ ВСЁ, ЧТО ПОКАЗАНО, ПРОВЕРЕНО МАШИНОЙ (эталон razbor/gen_ill.py + ключ L3-mini-listok.md) ═══
+    · слово ранга 3 = LLRLLRR (7), ранга 4 = LLRLLRRLLLRRLRR (15);
+    · sₙ₊₁ = sₙ · x · s̄ₙ  (вкладка 19) — проверено до ранга 10;
+    · чётные места = слово предыдущего ранга, нечётные = чередование L R L R (вкладка 20) — до ранга 12;
+    · максимум одинаковых подряд = 3, впервые у ранга 4 (вкладка 21) — ранги ≤ 10;
+    · вкладка 22: по данным листка 179 (якоря L,L,R,R,R,L,R,L) 179→R, 180→R;
+      у НАШЕГО дракона на всех степенях двойки стоит L и вышло бы 179→R, 180→L. Это разные драконы:
+      в задаче 22 он сложен ПО-РАЗНОМУ. Разведено на последнем шаге вкладки.
+
+  ═══ ТРИ ГЕЙТА ПОСЛЕ КАЖДОЙ ПРАВКИ ═══
+    node L4/check_page.js L4/L4-razbory.html   — файл живой: скрипт исполняется целиком, все
+        вкладки открываются, пробел жмётся. Ловит синтаксис, коллизии имён, падения при mount.
+    node L4/check_fit.js  L4/L4-razbory.html   — посадка: ничего не уехало за сцену, метки не
+        слиплись. Гоняет ВСЕ шаги и ВСЕ ранги из `ranks` каждой вкладки.
+    node L4/render_svg.js L4/L4-razbory.html 19 3 > /tmp/t.svg && convert /tmp/t.svg /tmp/t.png
+        — снимок кадра. ⚠ ТЕКСТ В СНИМКЕ НЕ ВЕРЕН: растризатор не рисует <text> и выдаёт
+        гигантские пятна вместо букв. Снимок годен для ГЕОМЕТРИИ, не для типографики.
+  Кегль, гарнитуру и реальный вид проверять только глазами в браузере.
+-->
+<style>
+  :root{ --paper:#e6e5e1; --card:#fff; --ink:#333; --brick:#bf5b4f; --steel:#8195ad;
+         --rule:#c3cedd; --p2:#7b9bd1; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
+       font:15px/1.4 "Glacial Indifference","Helvetica Neue",Arial,sans-serif}
+  #wrap{height:100%;max-width:1500px;margin:0 auto;padding:10px 18px 12px;
+        display:flex;flex-direction:column;gap:8px}
+  nav{display:flex;gap:5px;flex:0 0 auto;align-items:baseline}
+  nav .ttl{font:400 17px/1 Forum,Georgia,serif;margin-right:10px;color:var(--steel)}
+  nav button{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:5px;
+             padding:6px 11px;font:inherit;font-size:13px;cursor:pointer}
+  nav button.on{background:var(--steel);color:#fff;border-color:var(--steel)}
+  .stage{flex:1 1 auto;min-height:0;background:var(--card);border:1px solid var(--rule);
+         border-radius:6px;padding:6px}
+  svg#stage{width:100%;height:100%;display:block}
+  .under{flex:0 0 auto;display:flex;gap:12px;align-items:center;min-height:34px}
+  #cap{font-size:15px;color:var(--ink);flex:1 1 auto}     /* подпись под рисунком — единственная проза */
+  #cap b{color:var(--brick);font-weight:600}
+  .ctl{display:flex;gap:6px;align-items:center}
+  .seg{display:flex;border:1px solid var(--rule);border-radius:5px;overflow:hidden;background:var(--card)}
+  .seg button{border:0;background:transparent;color:var(--ink);padding:5px 10px;font:inherit;
+              font-size:13px;cursor:pointer}
+  .seg button.on{background:var(--steel);color:#fff}
+  .seg button:disabled{color:#c8c8c8;cursor:default}
+  .seg .lbl{padding:5px 8px;font-size:12px;color:var(--steel);border-right:1px solid var(--rule)}
+  .kbd{font:11px/1 ui-monospace,Menlo,monospace;background:var(--paper);border:1px solid var(--rule);
+       border-radius:3px;padding:2px 5px;color:var(--steel)}
+
+  .s-line{fill:none;stroke:var(--ink);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-accent{fill:none;stroke:var(--brick);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-alt{fill:none;stroke:var(--p2);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+  .s-ghost{fill:none;stroke:var(--rule);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+  .s-thin{fill:none;stroke:var(--steel);stroke-width:1.4}
+  .s-dash{fill:none;stroke:var(--steel);stroke-width:1.4;stroke-dasharray:5 4}
+  .s-ar-m{fill:var(--steel);stroke:none}
+  .s-node-r{fill:var(--brick);stroke:none}
+  .s-ring{fill:none;stroke:var(--brick);stroke-width:2.2}
+  .s-box{fill:none;stroke:var(--rule);stroke-width:1}
+  /* БУКВА — метка. Один кегль на весь файл: слово везде читается одинаково. */
+  .s-let{font:700 21px/1 ui-monospace,Menlo,monospace;fill:var(--ink);stroke:none}
+  .s-let-a{font:700 21px/1 ui-monospace,Menlo,monospace;fill:var(--brick);stroke:none}
+  .s-let-b{font:700 21px/1 ui-monospace,Menlo,monospace;fill:var(--p2);stroke:none}
+  .s-let-g{font:700 21px/1 ui-monospace,Menlo,monospace;fill:var(--rule);stroke:none}
+  .s-fill{fill:var(--brick);fill-opacity:.22;stroke:var(--card);stroke-width:1.6}
+  .s-num{font:400 13px/1 ui-monospace,Menlo,monospace;fill:var(--steel);stroke:none}
+</style>
+
+<div id="wrap">
+  <nav id="nav"><span class="ttl">Кривая дракона · слово</span></nav>
+  <div class="stage"><svg id="stage" viewBox="0 0 1400 620" preserveAspectRatio="xMidYMid meet"
+       role="img" aria-label="разбор задачи"></svg></div>
+  <div class="under">
+    <span id="cap"></span>
+    <span class="ctl" id="ctl"></span>
+    <span class="ctl" id="mode"></span>
+    <span class="kbd">пробел</span>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ═════════ геометрия (эталон razbor/gen_ill.py) ═════════ */
+function flip(s){ let r=''; for(let i=s.length-1;i>=0;i--) r+=(s[i]==='L'?'R':'L'); return r; }
+function word(n, choices){ const ch=choices||Array(n).fill('L'); let s='';
+  for(let i=0;i<n;i++) s = s + ch[i] + flip(s); return s; }
+function v2(k){ let r=0; while(k%2===0){ k/=2; r++; } return r; }
+function polyAngles(w, ang, seg){
+  const L=seg||1; let x=L,y=0,dx=L,dy=0; const out=[[0,0],[L,0]];
+  for(let i=0;i<w.length;i++){
+    const s=(w[i]==='L')?1:-1, a=(ang[i+1]||0)*Math.PI/180*s;
+    const co=Math.cos(a), si=Math.sin(a);
+    const nx=dx*co-dy*si, ny=dx*si+dy*co;
+    dx=nx; dy=ny; x+=dx; y+=dy; out.push([x,y]);
+  }
+  return out;
+}
+function poly(w, a, seg){ const o={}; for(let p=1;p<=w.length;p++) o[p]=(a===undefined?90:a);
+  return polyAngles(w,o,seg); }
+/** буква на месте m у дракона, заданного якорями на степенях двойки (a[k] = буква места 2ᵏ).
+    m = 2ᵏ(2l+1): l чётно — буква та же, что на 2ᵏ; l нечётно — противоположная.
+    Для НАШЕГО дракона все якоря = L. Проверено на всех 255 местах ранга 8. */
+function letterAt(m, anchors){ const k=v2(m), l=(m/Math.pow(2,k)-1)/2, a=anchors[k];
+  return (l%2===0) ? a : (a==='L'?'R':'L'); }
+
+/** поворот набора точек вокруг центра на deg (вкладки 24 и 27) */
+function rotAbout(P, c, deg){
+  const a=deg*Math.PI/180, co=Math.cos(a), si=Math.sin(a);
+  return P.map(([x,y])=>{ const dx=x-c[0], dy=y-c[1];
+    return [c[0]+dx*co-dy*si, c[1]+dx*si+dy*co]; });
+}
+/** слово тердракона: T(1) = RL, T(n+1) = T(n)·R·T(n)·L·T(n). Длина 3ⁿ − 1 (проверено до ранга 4) */
+function terword(n){ let w='RL'; for(let k=1;k<n;k++) w = w+'R'+w+'L'+w; return w; }
+
+/* ═════════ рисование ═════════ */
+const NS='http://www.w3.org/2000/svg';
+const stage=document.getElementById('stage'), cap=document.getElementById('cap'),
+      ctl=document.getElementById('ctl'), modeBox=document.getElementById('mode');
+const VB=[1400,620];
+/* Вид углов; предмет от него не зависит. ПО УМОЛЧАНИЮ ПРЯМЫЕ — решение владельца 17.07. */
+let ROUND=false;
+function el(n,a,par){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]);
+  (par||stage).appendChild(e); return e; }
+function clear(){ stage.textContent=''; }
+function dot(p,cls,r){ el('circle',{cx:p[0],cy:p[1],r:r||5.5,class:cls||'s-node-r'}); }
+function ring(p,r){ el('circle',{cx:p[0],cy:p[1],r:r||16,class:'s-ring'}); }
+function box(b){ el('rect',{x:b.x+2,y:b.y+2,width:b.w-4,height:b.h-4,rx:4,class:'s-box'}); }
+function txt(p,s,cls){ const e=el('text',{x:p[0],y:p[1],class:cls||'s-let','text-anchor':'middle'});
+  e.textContent=s; return e; }
+
+/** ПРИМИТИВ #12: угол → дуга. Скругление — вид, предмет считается по ломаной. */
+function roundPath(P){
+  const f=0.5; let d='';
+  if(P.length<3) return 'M '+P.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L ');
+  d+='M '+P[0][0].toFixed(2)+' '+P[0][1].toFixed(2);
+  for(let i=1;i<P.length-1;i++){
+    const u=P[i-1], v=P[i], w=P[i+1];
+    const a=[v[0]-u[0], v[1]-u[1]], b=[w[0]-v[0], w[1]-v[1]];
+    const la=Math.hypot(a[0],a[1]), lb=Math.hypot(b[0],b[1]);
+    const cross=a[0]*b[1]-a[1]*b[0];
+    if(Math.abs(cross)<1e-9||la<1e-9||lb<1e-9) continue;
+    const c=Math.min(la*f, lb*f), sw=cross>0?1:0;
+    const p1=[v[0]-a[0]/la*c, v[1]-a[1]/la*c], p2=[v[0]+b[0]/lb*c, v[1]+b[1]/lb*c];
+    d+=' L '+p1[0].toFixed(2)+' '+p1[1].toFixed(2);
+    d+=' A '+c.toFixed(2)+' '+c.toFixed(2)+' 0 0 '+sw+' '+p2[0].toFixed(2)+' '+p2[1].toFixed(2);
+  }
+  const L=P[P.length-1];
+  d+=' L '+L[0].toFixed(2)+' '+L[1].toFixed(2);
+  return d;
+}
+function sharpD(P){ return 'M '+P.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L '); }
+function curve(P, cls, w, forceSharp){
+  const d = (ROUND && !forceSharp) ? roundPath(P) : sharpD(P);
+  return el('path',{d, class:cls||'s-line', ...(w?{'stroke-width':w}:{})});
+}
+function fit(P, b, common){
+  const pad=b.pad===undefined?26:b.pad;
+  let x0,x1,y0,y1;
+  if(common){ ({x0,x1,y0,y1}=common); }
+  else { const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+    x0=Math.min(...xs); x1=Math.max(...xs); y0=Math.min(...ys); y1=Math.max(...ys); }
+  const s=Math.min((b.w-2*pad)/Math.max(x1-x0,1e-6),(b.h-2*pad)/Math.max(y1-y0,1e-6));
+  const ox=b.x+pad+((b.w-2*pad)-s*(x1-x0))/2, oy=b.y+pad+((b.h-2*pad)-s*(y1-y0))/2;
+  const g=p=>[ox+(p[0]-x0)*s, b.y+b.h-(oy-b.y)-(p[1]-y0)*s];
+  g.s=s; return g;
+}
+const ease=t=> t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+function anim(from,to,ms,step){ return new Promise(res=>{ const t0=performance.now();
+  (function fr(now){ const t=Math.min(1,(now-t0)/ms); step(from+(to-from)*ease(t));
+    if(t<1) requestAnimationFrame(fr); else res(); })(t0); }); }
+function pause(ms){ return new Promise(r=>setTimeout(r,ms)); }
+const PACK=168;
+function allAng(v){ const o={}; for(let p=1;p<=63;p++) o[p]=v; return o; }
+
+/** СТРОКА СЛОВА — общий примитив вкладок 18–22. Возвращает экранные точки букв:
+    по ним вкладки тянут связки к ломаной и ставят кольца. */
+function wordRow(w, cx, y, o){
+  o=o||{};
+  const step = o.step || Math.min(38, (VB[0]-180)/Math.max(w.length,1));
+  const x0 = cx-(w.length-1)*step/2, pts=[];
+  for(let i=0;i<w.length;i++){
+    const p=[x0+i*step, y]; pts.push(p);
+    txt([p[0], p[1]+7], w[i], o.cls?o.cls(i):'s-let');
+    if(o.num) txt([p[0], p[1]+26], String(i+1), 's-num');
+  }
+  return pts;
+}
+/** переключатель ранга — общий для вкладок, где ранг имеет смысл менять */
+function rankCtl(t, list){
+  ctl.textContent='';
+  const d=document.createElement('div'); d.className='seg';
+  const l=document.createElement('span'); l.className='lbl'; l.textContent='ранг'; d.appendChild(l);
+  for(const v of list){
+    const b=document.createElement('button'); b.textContent=v;
+    if(t.n===v) b.classList.add('on');
+    if(t.busy) b.disabled=true;
+    b.addEventListener('click',()=>{ t.n=v; t.mount(); });
+    d.appendChild(b);
+  }
+  ctl.appendChild(d);
+}
+
+/* ═════════ 17 — слово уже написано на полоске (ВХОД) ═════════
+   Полоска не превращается в ломаную «вдруг»: разогнутая полоска и ломаная — это одна и та же
+   линия при угле 0° и 90°. Буквы стоят на сгибах и НИКУДА НЕ ЕДУТ — этим и показано, что сгиб №k
+   и поворот №k одно и то же место. */
+const T17={ num:17, title:'Слово на полоске',
+  aria:'разогнутая полоска с отметками сгибов сгибается в ломаную дракона; буквы остаются на своих местах',
+  n:3, ranks:[3,4], i:0, busy:false, a:0, k:0,
+  mount(){ this.i=0; this.a=0; this.k=0; this.draw();
+    cap.innerHTML='полоска разогнута. Сгиб <b>вверх</b> — долина, <b>вниз</b> — гора'; },
+  geom(){ const w=word(this.n), P=polyAngles(w, allAng(this.a));
+    const g=fit(P.concat(poly(w)),{x:0,y:0,w:VB[0],h:VB[1],pad:96});
+    return {w, S:P.map(g)}; },
+  /** внешняя нормаль в вершине k: по ней садятся и засечка, и буква */
+  nrm(S,k,w){ const u=S[k-1], v=S[k];
+    const dx=v[0]-u[0], dy=v[1]-u[1], l=Math.hypot(dx,dy)||1;
+    const s=(w[k-1]==='L')?-1:1;               // долина (L) — вверх: экранный y растёт вниз
+    return [-dy/l*s, dx/l*s]; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const {w,S}=this.geom();
+    curve(S,'s-line',null,this.a<45);          // пока не согнуто — всегда острые: это прямая полоска
+    dot(S[0]);
+    for(let k=1;k<=w.length;k++){
+      const [nx,ny]=this.nrm(S,k,w);
+      if(this.a<50) el('line',{x1:S[k][0],y1:S[k][1],
+        x2:S[k][0]+nx*17, y2:S[k][1]+ny*17, class:'s-thin'});
+      if(this.i>=1){
+        const on = this.k===k;
+        txt([S[k][0]+nx*36, S[k][1]+ny*36+7], w[k-1], on?'s-let-a':'s-let');
+        if(on) ring(S[k], 15);
+      }
+    }
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.i=1; this.draw();
+      cap.innerHTML='записываем: долина — <b>L</b>, гора — <b>R</b>. Кто назвал наоборот — тоже прав'; return; }
+    if(this.i===1){ this.busy=true; cap.innerHTML='сгибаем до прямых углов…';
+      await anim(0,90,2600,a=>{ this.a=a; this.draw(); });
+      await pause(400); this.i=2; this.busy=false; this.draw();
+      cap.innerHTML='ломаная ранга <b>'+this.n+'</b>. Буквы не двигались — сгибы и есть повороты'; return; }
+    if(this.i===2){ this.k++;
+      if(this.k>word(this.n).length){ this.mount(); return; }
+      this.draw();
+      cap.innerHTML='сгиб <b>'+this.k+'</b> и поворот <b>'+this.k+'</b> — одно и то же место'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 18 — что прочтёт черепаха назад ═════════
+   ⚠⚠ ЗДЕСЬ НЕТ ОШИБКИ, ХОТЯ ВЫГЛЯДИТ КАК ОШИБКА. Два ряда выходят почти одинаковыми — и это
+   ОТВЕТ задачи, а не сбой: у дракона s̄ отличается от s ровно ОДНОЙ буквой, средней (проверено
+   для рангов 3–8, см. самопроверку). Владелец 19.07 прочитал первую версию как «нарисовал одно
+   слово дважды», и был прав в главном: картинка показывала результат, а не превращение.
+   Поэтому теперь ИНВЕРСИЯ ИДЁТ ПРОЦЕССОМ: каждая буква второго ряда прилетает со СВОЕГО
+   зеркального места и по дороге меняется L↔R — связка видна для той буквы, что летит сейчас.
+   Совпадение остаётся развязкой, а не первым впечатлением. */
+const T18={ num:18, title:'Черепаха назад',
+  aria:'точка ползёт по ломаной от одного конца, потом от другого; буквы второго слова прилетают с зеркальных мест первого, меняясь местами и знаком',
+  n:4, ranks:[3,4], i:0, busy:false, m:0, back:false, cmp:false,
+  R1:470, R2:560,
+  mount(){ this.i=0; this.m=0; this.back=false; this.cmp=false; this.draw();
+    cap.innerHTML='черепаха поползёт от <b>отмеченного</b> конца'; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const w=word(this.n), sb=flip(w), P=poly(w), len=w.length;
+    const g=fit(P,{x:0,y:0,w:VB[0],h:400,pad:48});
+    const S=P.map(g);
+    curve(S,'s-line');
+    dot(S[this.back?S.length-1:0]);
+    if(!this.back && this.m>0){                       // прямой ход — красным
+      if(this.m>0) curve(S.slice(0,this.m+1),'s-accent');
+      dot(S[this.m],null,7);
+    }
+    if(this.back && this.m>0){                        // обратный ход — голубым, с дальнего конца
+      curve(S.slice(S.length-1-this.m),'s-alt');
+      dot(S[S.length-1-this.m],null,7);
+    }
+    const A=wordRow(w, VB[0]/2, this.R1,
+      {cls: i=> (this.back||this.i>=3||i<this.m) ? 's-let-a' : 's-let-g'});
+    if(this.back || this.i>=3){
+      const B=wordRow(sb, VB[0]/2, this.R2,
+        {cls: i=> (this.i>=3 || i<this.m) ? 's-let-b' : 's-let-g'});
+      /* связка ТОЛЬКО для летящей сейчас буквы: пятнадцать линий разом — каша.
+         Показывает главное: буква j второго ряда родом с места (len−1−j) первого. */
+      if(this.back && this.i<3 && this.m>0 && this.m<=len){
+        const j=this.m-1, src=A[len-1-j], dst=B[j];
+        el('path',{d:'M '+src[0]+' '+(src[1]+12)+' Q '+((src[0]+dst[0])/2)+' '+
+          ((this.R1+this.R2)/2+34)+' '+dst[0]+' '+(dst[1]-14), class:'s-dash'});
+        ring(src,15); ring(dst,15);
+      }
+      if(this.cmp){ const mid=(len-1)/2; ring(A[mid],17); ring(B[mid],17); }
+    }
+  },
+  async space(){
+    if(this.busy) return;
+    const len=word(this.n).length;
+    if(this.i===0){ this.busy=true; cap.innerHTML='ползёт и записывает повороты…';
+      await anim(0,len,2200,v=>{ this.m=Math.round(v); this.draw(); });
+      this.i=1; this.busy=false; this.draw();
+      cap.innerHTML='это слово дракона — то самое, что читали с полоски'; return; }
+    if(this.i===1){ this.busy=true; this.back=true; this.m=0; this.draw();
+      cap.innerHTML='та же ломаная с <b>другого</b> конца: порядок обратный, и каждый поворот наоборот…';
+      await pause(500);
+      await anim(0,len,3000,v=>{ this.m=Math.round(v); this.draw(); });
+      this.i=3; this.busy=false; this.draw();
+      cap.innerHTML='каждая буква пришла с <b>зеркального</b> места и сменила знак — это s̄'; return; }
+    if(this.i===3 && !this.cmp){ this.cmp=true; this.draw();
+      cap.innerHTML='и вот развязка: после всех переворотов слово почти то же — различие <b>ровно одно</b>, средняя буква'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 19 — теорема 1, записанная буквами ═════════
+   Слово и ломаная красятся ОДНОВРЕМЕННО и одними классами: тогда видно, что это не две разные
+   картинки, а одно утверждение на двух языках. Мост к задаче 4 листка Л1 (раскраска половинок). */
+const T19={ num:19, title:'Слово в слове',
+  aria:'слово ранга четыре и его ломаная красятся на три части, затем красные и голубые повороты связываются попарно',
+  n:4, ranks:[3,4], i:0, p:-1,
+  mount(){ this.i=0; this.p=-1; this.draw();
+    cap.innerHTML='слово ранга <b>'+this.n+'</b> и его ломаная. Что в нём спрятано?'; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const w=word(this.n), len=w.length, half=(len-1)/2, P=poly(w), mid=Math.pow(2,this.n-1);
+    const g=fit(P,{x:0,y:0,w:VB[0],h:420,pad:56});
+    const S=P.map(g);
+    if(this.i>=1){ curve(S.slice(0,mid+1),'s-accent'); curve(S.slice(mid), this.i>=3?'s-alt':'s-line'); }
+    else curve(S,'s-line');
+    dot(S[0]);
+    if(this.i>=2) ring(S[mid],17);
+    const pts=wordRow(w, VB[0]/2, 510, {num:true, cls:i=>{
+      if(this.i>=1 && i<half) return 's-let-a';
+      if(this.i>=3 && i>half) return 's-let-b';
+      return 's-let'; }});
+    if(this.i>=2) ring(pts[half],17);
+    /* ПАРЫ (владелец 19.07: «хотелось бы видеть, как красные и голубые повороты объединяются»).
+       Буква i первой половины отвечает букве len−1−i второй, и они всегда противоположны —
+       потому что вторая половина есть первая, пройденная назад. Связка идёт СРАЗУ в двух местах:
+       дугой под словом и пунктиром между самими вершинами ломаной. */
+    /* ⚠ ПАРЫ ПОКАЗЫВАЮТСЯ ПО ОДНОЙ. Первая версия копила их на экране, и к седьмой паре семь
+       хорд наискось через ломаную читались как помехи, а не как соответствие (видно на снимке
+       геометрии). Одна пара за шаг — каждый кадр чистый, а связь всё равно видна семь раз. */
+    if(this.i>=4 && this.p>=0 && this.p<half){
+      const i=this.p, j=len-1-i, a=pts[i], b=pts[j];
+      el('path',{d:'M '+a[0]+' '+(a[1]+13)+' Q '+((a[0]+b[0])/2)+' '+(a[1]+92)+' '+b[0]+' '+(b[1]+13),
+        class:'s-ring'});
+      el('line',{x1:S[i+1][0],y1:S[i+1][1],x2:S[len-i][0],y2:S[len-i][1],class:'s-dash'});
+      ring(a,15); ring(b,15); ring(S[i+1],13); ring(S[len-i],13);
+    }
+  },
+  space(){
+    const w=word(this.n), half=(w.length-1)/2;
+    if(this.i===0){ this.i=1; this.draw();
+      cap.innerHTML='первая половина — это целиком <b>слово ранга '+(this.n-1)+'</b>'; return; }
+    if(this.i===1){ this.i=2; this.draw();
+      cap.innerHTML='посередине — <b>одна буква</b>: сгиб самого первого складывания'; return; }
+    if(this.i===2){ this.i=3; this.draw();
+      cap.innerHTML='вторая половина — то же слово <b>задом наперёд</b>, L↔R. Это и есть s·x·s̄'; return; }
+    if(this.i===3){ this.i=4; this.p=-1; this.draw();
+      cap.innerHTML='а теперь пары: каждому красному повороту отвечает голубой — с зеркального места'; return; }
+    if(this.i===4){ this.p++;
+      if(this.p>=half){ this.i=5; this.p=-1; this.draw();
+        cap.innerHTML='это задача <b>4</b> листка Л1 — раскрашенная половинка — записанная буквами'; return; }
+      this.draw();
+      const j=w.length-1-this.p;
+      cap.innerHTML='пара <b>'+(this.p+1)+'</b> и <b>'+(j+1)+'</b>: буквы <b>'+w[this.p]+'</b> и <b>'
+        +w[j]+'</b> — противоположны, как и все остальные пары'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 20 — чётные и нечётные места ═════════
+   Буквы разъезжаются в два ряда физически, а не появляются готовыми списками: разъезд и есть
+   доказательство — новое складывание вставляет буквы МЕЖДУ старыми. */
+/* ⚠⚠ ПЕРЕДЕЛАНО 19.07 ПО ЗАМЕЧАНИЮ ВЛАДЕЛЬЦА: «вообще ничего не понятно — почему буквы на
+   местах через одну дают кривую ранга на 1 меньше? нужна картинка». Первая версия РАЗВОДИЛА
+   готовые буквы по двум рядам и объявляла результат — то есть показывала следствие вместо
+   причины. Теперь идём в обратную сторону, конструктивно: берём слово меньшего ранга, РАЗДВИГАЕМ
+   его буквы и ВСТАВЛЯЕМ между ними новые. Тогда «через одну» не факт, который надо принять, а
+   след самого построения. И тут же — картинка: чётные ВЕРШИНЫ ломаной, соединённые между собой,
+   дают ломаную меньшего ранга (это задача 16 листка Л2). */
+const T20={ num:20, title:'Через одну',
+  aria:'слово меньшего ранга раздвигается, между его буквами встают новые чередующиеся; затем то же на ломаной — чётные вершины дают кривую меньшего ранга',
+  n:4, ranks:[4,5], i:0, busy:false, d:0, ins:0,
+  mount(){ this.i=0; this.d=0; this.ins=0; this.draw();
+    cap.innerHTML='слово ранга <b>'+(this.n-1)+'</b>. Сложим полоску ещё раз — что станет со словом?'; },
+  /* x буквы: старые (из слова ранга n−1) стоят на чётных местах, новые — на нечётных.
+     d = 0 старые стоят вплотную, d = 1 раздвинуты на шаг вдвое больший. */
+  geom(){ const w=word(this.n), old=word(this.n-1);
+    const step=Math.min(36,(VB[0]-200)/w.length);
+    return {w, old, step, x0: VB[0]/2-(w.length-1)*step/2}; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const {w, old, step, x0} = this.geom();
+    const Y=170;
+    // старые буквы: место 2i+2 в новом слове ⇔ i-я буква старого. При d=0 стоят подряд.
+    for(let i=0;i<old.length;i++){
+      const xNew = x0+(2*i+1)*step, xOld0 = x0+i*step+step;
+      const x = xOld0 + (xNew-xOld0)*this.d;
+      txt([x, Y+7], old[i], 's-let-a');
+      if(this.i>=3) txt([x, Y+32], String(2*i+2), 's-num');
+    }
+    // новые буквы въезжают в промежутки: их 2^(n-1), чередуются L R L R
+    if(this.ins>0) for(let j=0;j<Math.min(this.ins, (w.length+1)/2);j++){
+      const x=x0+2*j*step;
+      txt([x, Y+7], w[2*j], 's-let-b');
+      if(this.i>=3) txt([x, Y+32], String(2*j+1), 's-num');
+    }
+    // ГЕОМЕТРИЯ: та же вещь на ломаной — чётные вершины дают ломаную меньшего ранга
+    if(this.i>=4){
+      const P=poly(w), g=fit(P,{x:0,y:250,w:VB[0],h:VB[1]-250,pad:44}), S=P.map(g);
+      curve(S,'s-line');                                        // исходная — тушью, как на вкладке 8
+      const ev=[]; for(let k=0;k<S.length;k+=2) ev.push(S[k]);   // вершины 0,2,4,… — чётные
+      curve(ev,'s-accent');                                     // добытая — цветом: «что изменилось»
+      for(const p of ev) dot(p,null,4.5);
+    }
+  },
+  async space(){
+    if(this.busy) return;
+    const half=(word(this.n).length+1)/2;
+    if(this.i===0){ this.busy=true; this.i=1;
+      cap.innerHTML='раздвигаем старые буквы — между ними освобождается место…';
+      await anim(0,1,1600,v=>{ this.d=v; this.draw(); });
+      this.busy=false; this.draw();
+      cap.innerHTML='последнее складывание кладёт <b>новый сгиб между каждыми двумя старыми</b>'; return; }
+    if(this.i===1){ this.busy=true; this.i=2;
+      cap.innerHTML='новые сгибы въезжают в промежутки…';
+      await anim(0,half,1800,v=>{ this.ins=Math.round(v); this.draw(); });
+      this.busy=false; this.draw();
+      cap.innerHTML='и все новые чередуются: <b>L R L R</b> — соседние промежутки смотрят в разные стороны'; return; }
+    if(this.i===2){ this.i=3; this.draw();
+      cap.innerHTML='получилось слово ранга <b>'+this.n+'</b>. Старые буквы стоят на <b>чётных</b> местах, новые — на нечётных'; return; }
+    if(this.i===3){ this.i=4; this.draw();
+      cap.innerHTML='то же на ломаной: соедини <b>чётные вершины</b> — выйдет ломаная ранга '+(this.n-1)+'. Это задача <b>16</b> листка Л2'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 21 — четыре подряд ═════════
+   ⚠⚠ ПЕРЕДЕЛАНО 19.07 ПО ЗАМЕЧАНИЮ ВЛАДЕЛЬЦА: «не понятно — должна быть индуктивная конструкция,
+   где видно, что если нет 4 букв в слове ранга n, то и в слове ранга n+1». Первая версия возила
+   по слову окно из четырёх букв: это ПРОВЕРКА одного слова, а не доказательство — на ранге 20
+   такую проверку не проведёшь. Теперь показан переход: слово ранга n+1 склеено из s, одной буквы
+   и s̄. Внутри кусков ничего нового появиться не может (это то же слово и оно же с заменой), значит
+   новое бывает только НА ШВЕ — а шов всегда один и тот же.
+   ПРОВЕРЕНО (см. самопроверку): при n ≥ 3 слово кончается на RR, а s̄ начинается с LL, средняя
+   буква L. Значит шов = RR·L·LL: ровно три подряд, четырёх не выходит никогда. */
+const T21={ num:21, title:'Четыре подряд',
+  aria:'слово следующего ранга склеено из трёх кусков; новое сочетание букв может появиться только на шве, и шов всегда один и тот же',
+  n:4, ranks:[4,5,6], i:0,
+  mount(){ this.i=0; this.draw();
+    cap.innerHTML='в слове ранга <b>'+(this.n-1)+'</b> четырёх одинаковых подряд нет — это видно. А в следующем?'; },
+  runs(w){ let m=1,c=1,at=0; for(let i=1;i<w.length;i++){ c=w[i]===w[i-1]?c+1:1; if(c>m){m=c;at=i-c+1;} }
+    return {m,at}; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const s=word(this.n-1), w=word(this.n), L=s.length, step=Math.min(34,(VB[0]-320)/w.length);
+    const GAP=step*1.4, Y=(this.i===0)?300:200;
+    // ряд: три куска с зазорами — s (красный) · средняя буква · s̄ (голубой)
+    const total=L*step + GAP + step + GAP + L*step, x0=VB[0]/2-total/2;
+    if(this.i===0){
+      const cx=i=>VB[0]/2+(i-(L-1)/2)*step;
+      for(let i=0;i<L;i++) txt([cx(i), Y+7], s[i], 's-let-a');
+      const r=this.runs(s);
+      for(let i=0;i<r.m;i++) ring([cx(r.at+i), Y],15);
+      return;
+    }
+    const xs=i=>x0+i*step, xm=x0+L*step+GAP, xb=i=>xm+step+GAP+i*step;
+    const sb=flip(s);
+    for(let i=0;i<L;i++) txt([xs(i), Y+7], s[i], 's-let-a');
+    txt([xm, Y+7], w[L], 's-let');
+    for(let i=0;i<L;i++) txt([xb(i), Y+7], sb[i], 's-let-b');
+    if(this.i>=2){                       // внутри кусков — ничего нового
+      el('rect',{x:xs(0)-step/2-4, y:Y-30, width:L*step+8, height:56, rx:6, class:'s-dash'});
+      el('rect',{x:xb(0)-step/2-4, y:Y-30, width:L*step+8, height:56, rx:6, class:'s-dash'});
+    }
+    if(this.i>=3){                       // ШОВ крупно и отдельно: две последние s, средняя, две первые s̄
+      const seam=[s[L-2],s[L-1],w[L],sb[0],sb[1]], SY=430, SS=76;
+      const sx=i=>VB[0]/2+(i-2)*SS;
+      el('rect',{x:sx(0)-SS/2-6, y:SY-34, width:SS*5+12, height:64, rx:7, class:'s-ring'});
+      for(let i=0;i<5;i++) txt([sx(i), SY+7], seam[i], i===2?'s-let':(i<2?'s-let-a':'s-let-b'));
+      const r=this.runs(seam.join(''));
+      for(let i=0;i<r.m;i++) ring([sx(r.at+i), SY],26);
+      el('line',{x1:xm,y1:Y+26,x2:VB[0]/2,y2:SY-40,class:'s-dash'});
+    }
+  },
+  space(){
+    const s=word(this.n-1), sb=flip(s), L=s.length, w=word(this.n);
+    if(this.i===0){ this.i=1; this.draw();
+      cap.innerHTML='слово ранга <b>'+this.n+'</b> склеено из трёх кусков: <b>s</b>, одна буква, <b>s̄</b>'; return; }
+    if(this.i===1){ this.i=2; this.draw();
+      cap.innerHTML='внутри левого куска четырёх нет — это то же слово. Внутри правого тоже: он из него заменой каждой буквы'; return; }
+    if(this.i===2){ this.i=3; this.draw();
+      const seam=[s[L-2],s[L-1],w[L],sb[0],sb[1]].join('');
+      cap.innerHTML='значит новое бывает только <b>на шве</b> — а там всегда <b>'+seam
+        +'</b>: три подряд и ни разу четыре'; return; }
+    if(this.i===3){ this.i=4; this.draw();
+      cap.innerHTML='из ранга '+(this.n-1)+' получился ранг '+this.n+' — и тем же рассуждением любой следующий'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 22 — буква на 179-м месте ═════════
+   ⚠ ДРАКОН ЗДЕСЬ НЕ НАШ. Условие листка 179 задаёт якоря L,L,R,R,R,L,R,L — так складывают
+   ПО-РАЗНОМУ. У нашего на всех степенях двойки стоит L. Разведено на последнем шаге. */
+/* ⚠⚠ ПЕРЕДЕЛАНО 19.07 ПО ЗАМЕЧАНИЮ ВЛАДЕЛЬЦА: «22 вообще не понятно». Первая версия сразу
+   выкладывала формулу m = 2ᵏ(2l+1) и восемь якорей — то есть требовала принять готовый приём.
+   Теперь ход идёт ЛЕСТНИЦЕЙ и целиком на том, что уже доказано вкладкой 20:
+      место НЕЧЁТНОЕ  → буквы на нечётных местах чередуются, буква находится сразу;
+      место ЧЁТНОЕ    → там стоит буква слова МЕНЬШЕГО ранга, номер делится пополам — спускаемся.
+   Спуск кончается за считанные шаги: 180 → 90 → 45 → нечётное. Никакой новой техники, только
+   вкладка 20, применённая несколько раз.
+   ⚠ Лестница верна для НАШЕГО дракона. В условии задачи 22 дракон сложен ПО-РАЗНОМУ: у него
+   нечётные места тоже чередуются, а вот «на чётных стоит слово меньшего ранга» уже НЕТ, поэтому
+   спускаться нельзя и работают только якоря. Разведено последним шагом. */
+const T22={ num:22, title:'179-е место',
+  aria:'лестница спуска: нечётное место читается по чередованию, чётное сводится к месту вдвое меньше',
+  ANCH:['L','L','R','R','R','L','R','L'],          // места 1,2,4,8,16,32,64,128 — данные листка 179
+  i:0,
+  mount(){ this.i=0; this.draw();
+    cap.innerHTML='найдём буквы на местах <b>179</b> и <b>180</b>, не выписывая слово целиком'; },
+  /** j-е по счёту нечётное место — это место 2j−1; буквы там чередуются, начиная с L */
+  odd(m){ const j=(m+1)/2; return { j, letter: (j%2===1)?'L':'R' }; },
+  /** спуск: пока место чётное — делим пополам (вкладка 20) */
+  ladder(m){ const out=[m]; while(m%2===0){ m/=2; out.push(m); } return out; },
+  /** полоска нечётных мест: место, буква, номер по счёту */
+  strip(Y, mark){
+    for(let j=1;j<=9;j++){
+      const x=170+(j-1)*118, m=2*j-1, on=(mark===m);
+      txt([x,Y], (j%2===1)?'L':'R', on?'s-let-a':'s-let');
+      txt([x,Y+26], String(m), 's-num');
+      if(on) ring([x,Y-7],20);
+    }
+    txt([170+9*118, Y], '…', 's-let-g');
+  },
+  draw(){ clear(); ctl.textContent='';
+    if(this.i===0){                                 // первый кадр не должен быть пустым: вот вопрос
+      txt([VB[0]/2-140, 300], '179', 's-let'); txt([VB[0]/2+140, 300], '180', 's-let');
+      txt([VB[0]/2-140, 330], 'место', 's-num');    txt([VB[0]/2+140, 330], 'место', 's-num');
+      ring([VB[0]/2-140, 293],26); ring([VB[0]/2+140, 293],26);
+      return;
+    }
+    this.strip(150, this.i===1||this.i===2 ? 179 : -1);
+    const rows=[{m:179, y:300}];
+    if(this.i>=3) rows.push({m:180, y:420});
+    for(const r of rows){
+      const L=this.ladder(r.m), y=r.y;
+      const shown = (r.m===180) ? Math.min(L.length, this.i-2) : L.length;
+      for(let k=0;k<shown;k++){
+        const x=300+k*190;
+        txt([x,y], String(L[k]), (k===shown-1)?'s-let-a':'s-let');
+        txt([x,y+26], (L[k]%2===0)?'чётное':'нечётное', 's-num');
+        if(k>0){ el('line',{x1:x-190+44,y1:y-7,x2:x-44,y2:y-7,class:'s-dash'});
+          el('path',{d:'M '+(x-44)+','+(y-7)+' l-11,-4 0,8 z',class:'s-ar-m'}); }
+      }
+      const last=L[shown-1];
+      if(last%2===1 && (r.m===179 ? this.i>=2 : this.i>=5)){
+        const x=300+(shown-1)*190, o=this.odd(last);
+        el('line',{x1:x+44,y1:y-7,x2:x+150,y2:y-7,class:'s-thin'});
+        txt([x+196,y], o.letter, 's-let-a');
+        txt([x+196,y+26], o.j+'-е нечётное', 's-num');
+        ring([x+196,y-7],20);
+      }
+    }
+    if(this.i>=6){                                  // контраст: дракон из условия задачи — другой
+      const A=this.ANCH, Y=560;
+      for(let k=0;k<8;k++){ const x=250+k*130;
+        txt([x,Y], A[k], 's-let-b'); txt([x,Y+24], String(Math.pow(2,k)), 's-num'); }
+    }
+  },
+  space(){
+    if(this.i===0){ this.i=1; this.draw();
+      cap.innerHTML='<b>179</b> нечётно. А на нечётных местах буквы <b>чередуются</b> — это вкладка 20'; return; }
+    if(this.i===1){ this.i=2; this.draw();
+      const o=this.odd(179);
+      cap.innerHTML='179 = 2·90 − 1, то есть <b>'+o.j+'-е</b> нечётное место. Девяносто чётно ⇒ <b>'+o.letter+'</b>'; return; }
+    if(this.i===2){ this.i=3; this.draw();
+      cap.innerHTML='<b>180</b> чётно. На чётном месте стоит буква слова <b>меньшего ранга</b> — номер делим пополам'; return; }
+    if(this.i===3){ this.i=4; this.draw();
+      cap.innerHTML='90 тоже чётно — спускаемся ещё раз'; return; }
+    if(this.i===4){ this.i=5; this.draw();
+      const o=this.odd(45);
+      cap.innerHTML='45 нечётно: это <b>'+o.j+'-е</b> нечётное место, а 23 нечётно ⇒ <b>'+o.letter+'</b>'; return; }
+    if(this.i===5){ this.i=6; this.draw();
+      cap.innerHTML='⚠ в условии задачи 22 дракон сложен <b>по-разному</b>: у него на степенях двойки разные буквы, '
+        +'спускаться нельзя, и ответ там <b>'+letterAt(179,this.ANCH)+letterAt(180,this.ANCH)+'</b>'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 24 — четыре дракона из одной точки ═════════
+   Копии добавляются по одной и каждая ПРИЕЗЖАЕТ поворотом, а не возникает готовой: тогда видно,
+   что это один и тот же дракон, а не четыре разных. Рамка считается сразу по всем четырём —
+   иначе камера прыгает при добавлении.
+   ПРОВЕРЕНО: у четырёх копий рангов 4, 5, 6 нет ни одного общего ребра (64/128/256 рёбер, все
+   различны) — то есть они действительно сцепляются без нахлёстов. */
+const T24={ num:24, title:'Четыре дракона',
+  aria:'четыре одинаковых дракона выезжают из одной точки, каждый повёрнут на прямой угол, и сцепляются без дыр',
+  n:4, ranks:[3,4,5], i:0, busy:false, rot:0,
+  mount(){ this.i=0; this.rot=0; this.draw();
+    cap.innerHTML='один дракон ранга <b>'+this.n+'</b> — его уже умеем складывать'; },
+  frame(){ const P=poly(word(this.n)), all=[];
+    for(let r=0;r<4;r++) all.push(...rotAbout(P,[0,0],r*90));
+    return all; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const P=poly(word(this.n));
+    const g=fit(this.frame(),{x:0,y:0,w:VB[0],h:VB[1],pad:52});
+    const shown=Math.min(this.i,3);
+    for(let r=0;r<=shown;r++){
+      const moving=(r===shown && this.busy);
+      const deg = moving ? this.rot : r*90;
+      curve(rotAbout(P,[0,0],deg).map(g), (r===shown && this.i<4) ? 's-accent' : 's-line');
+    }
+    dot(g([0,0]));
+    if(this.i>=4) ring(g([0,0]),24);
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i<3){ this.busy=true; this.i++;
+      cap.innerHTML='берём копию и поворачиваем вокруг общей точки…';
+      await anim(0, this.i*90, 1500, r=>{ this.rot=r; this.draw(); });
+      this.busy=false; this.draw();
+      cap.innerHTML='драконов <b>'+(this.i+1)+'</b> — дыр пока нет, нахлёстов тоже'; return; }
+    if(this.i===3){ this.i=4; this.draw();
+      cap.innerHTML='четырёх хватило. Это теорема <b>Кнута</b> в руках: ни одного общего отрезка и ни одной дыры'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 25 — тердракон ═════════
+   ⚠ ГЛАВНАЯ ОШИБКА МАСТЕРСКОЙ — УГОЛ, и её нельзя проговорить, её надо показать. У дракона
+   поворот и угол между звеньями оба прямые, и дети переносят привычку. У тердракона поворот
+   120°, а угол между звеньями 60°. ПРОВЕРЕНО: только при 120° конец растёт ровно в √3 за ранг;
+   при 60° рост выходит √7 ≈ 2,646 — складывается другая кривая. Поэтому на третьем шаге оба
+   варианта стоят рядом. */
+const T25={ num:25, title:'Тердракон',
+  aria:'полоска, сложенная втрое, разгибается до ста двадцати градусов; рядом — что выходит при неверном угле',
+  n:3, ranks:[2,3,4], i:0, busy:false, a:0,
+  mount(){ this.i=0; this.a=0; this.draw();
+    cap.innerHTML='полоску сложили не пополам, а <b>втрое</b> — и ещё раз, и ещё'; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const w=terword(this.n);
+    if(this.i<2){
+      const P=polyAngles(w, allAng(this.a));
+      const g=fit(P.concat(poly(w,120)),{x:0,y:0,w:VB[0],h:VB[1],pad:80});
+      curve(P.map(g),'s-line',null,this.a<45); dot(g(P[0]));
+      return;
+    }
+    [120,60].forEach((deg,j)=>{                       // слева верный угол, справа — обычная ошибка
+      const P=poly(w,deg), b={x:j*VB[0]/2, y:0, w:VB[0]/2, h:VB[1], pad:64};
+      const g=fit(P,b);
+      curve(P.map(g), j?'s-alt':'s-line'); dot(g(P[0]));
+    });
+    el('line',{x1:VB[0]/2,y1:30,x2:VB[0]/2,y2:VB[1]-30,class:'s-thin'});
+  },
+  async space(){
+    if(this.busy) return;
+    if(this.i===0){ this.busy=true; this.i=1; cap.innerHTML='разгибаем все складки одинаково…';
+      await anim(0,120,2400,a=>{ this.a=a; this.draw(); });
+      this.busy=false; this.draw();
+      cap.innerHTML='<b>тердракон</b>. Поворот 120°, а угол между соседними звеньями — 60°'; return; }
+    if(this.i===1){ this.i=2; this.draw();
+      cap.innerHTML='слева верный угол, справа разогнули на 60° — <b>другая кривая</b>, и это самая частая ошибка'; return; }
+    if(this.i===2){ this.i=3; this.draw();
+      cap.innerHTML='звеньев <b>3ⁿ</b>, и слово растёт втрое: T(n+1) = T(n)·R·T(n)·L·T(n)'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ 26 — площадь ровно ½ ═════════
+   Ранг растёт, квадраты мельчают — а закрашенная площадь не меняется НИ РАЗУ. В этом весь смысл:
+   площадь не «стремится» к ½, она равна ½ на каждом шаге, и потому берётся арифметикой без
+   всяких пределов. ПРОВЕРЕНО счётом для рангов 0–8: ровно 0,5 везде.
+   Концы закреплены на расстоянии 1, поэтому звено ранга n равно (1/√2)ⁿ, а рамка одна на все
+   ранги — иначе казалось бы, что фигура растёт. */
+const T26={ num:26, title:'Площадь',
+  aria:'на каждом звене ломаной построен квадрат; ранг растёт, квадраты мельчают, суммарная закрашенная площадь не меняется',
+  n:1, ranks:[1,2,3,4,5,6], i:0,
+  mount(){ this.i=0; this.draw(); this.say(); },
+  say(){ cap.innerHTML='ранг <b>'+this.n+'</b>: квадратов '+Math.pow(2,this.n)
+    +', и вместе они закрывают ровно <b>половину</b>'; },
+  link(k){ return Math.pow(2,-k/2); },              // звено при AB = 1
+  frame(){ const all=[];
+    for(const k of this.ranks){ const s=this.link(k);
+      for(const p of poly(word(k),90,s)){ all.push([p[0]-s/2,p[1]-s/2],[p[0]+s/2,p[1]+s/2]); } }
+    return all; },                                   // запас в звено — квадраты торчат за ломаную
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const w=word(this.n), P=poly(w,90,this.link(this.n));
+    const g=fit(this.frame(),{x:0,y:0,w:VB[0],h:VB[1],pad:24});   // фигура почти квадратная, сцена широкая — поля минимальные
+    for(let k=0;k+1<P.length;k++){                   // квадрат на звене как на диагонали
+      const A=P[k], B=P[k+1];
+      const c=[(A[0]+B[0])/2,(A[1]+B[1])/2], v=[(B[0]-A[0])/2,(B[1]-A[1])/2];
+      const u=[-v[1],v[0]];
+      const q=[A,[c[0]+u[0],c[1]+u[1]],B,[c[0]-u[0],c[1]-u[1]]].map(g);
+      el('path',{d:sharpD(q)+' Z', class:'s-fill'});
+    }
+    curve(P.map(g),'s-line',2.2);
+    dot(g(P[0]),null,5); dot(g(P[P.length-1]),null,5);
+    el('line',{x1:g(P[0])[0],y1:g(P[0])[1],x2:g(P[P.length-1])[0],y2:g(P[P.length-1])[1],class:'s-dash'});
+  },
+  space(){
+    const k=this.ranks.indexOf(this.n);
+    this.n = this.ranks[(k+1)%this.ranks.length];
+    this.draw(); this.say();
+  }
+};
+
+/* ═════════ 27 — из ранга n собрать ранг n+1 ═════════
+   ПРОВЕРЕНО: две копии, выпущенные из общей точки и повёрнутые друг относительно друга на 90°,
+   при обходе «одна назад, другая вперёд» дают ЗАКОННОГО дракона ранга n+1 (ранги 2–5, проверка
+   перебором всех слов). Значит четыре дракона вокруг точки — это две штуки следующего ранга.
+   Это и есть шаг n → n+1: строгого перехода к бесконечности здесь нет и не надо, честен шаг. */
+const T27={ num:27, title:'Ранг выше',
+  aria:'четыре дракона вокруг общей точки попарно сливаются в двух драконов следующего ранга',
+  n:3, ranks:[2,3,4], i:0,
+  mount(){ this.i=0; this.draw();
+    cap.innerHTML='четыре дракона ранга <b>'+this.n+'</b> вокруг общей точки'; },
+  copies(){ const P=poly(word(this.n)), o=[];
+    for(let r=0;r<4;r++) o.push(rotAbout(P,[0,0],r*90));
+    return o; },
+  draw(){ clear(); rankCtl(this, this.ranks);
+    const C=this.copies(), all=[].concat(...C);
+    const g=fit(all,{x:0,y:0,w:VB[0],h:VB[1],pad:52});
+    if(this.i===0){ for(const Q of C) curve(Q.map(g),'s-line'); }
+    else {                                           // пары (0,1) и (2,3) — уже один путь каждая
+      const pair=(a,b)=> C[a].slice().reverse().concat(C[b].slice(1));
+      curve(pair(0,1).map(g), 's-accent');
+      curve(pair(2,3).map(g), this.i>=2 ? 's-alt' : 's-line');
+    }
+    dot(g([0,0]));
+    if(this.i>=1) ring(g([0,0]),24);
+  },
+  space(){
+    if(this.i===0){ this.i=1; this.draw();
+      cap.innerHTML='две из них склеились через общую точку — и вышел один дракон ранга <b>'+(this.n+1)+'</b>'; return; }
+    if(this.i===1){ this.i=2; this.draw();
+      cap.innerHTML='и вторая пара тоже. Было четыре ранга '+this.n+' — стало <b>два</b> ранга '+(this.n+1); return; }
+    if(this.i===2){ this.i=3; this.draw();
+      cap.innerHTML='повторяй сколько хочешь: ранг растёт, а плоскость закрыта по-прежнему. Вот что такое дракон сколь угодно большого ранга'; return; }
+    this.mount();
+  }
+};
+
+/* ═════════ сборка ═════════ */
+const TABS=[T17,T18,T19,T20,T21,T22,T24,T25,T26,T27];
+let cur=null;
+const nav=document.getElementById('nav');
+TABS.forEach((t,i)=>{ const b=document.createElement('button'); b.textContent=t.num+' · '+t.title;
+  b.addEventListener('click',()=>show(i)); nav.appendChild(b); });
+function renderMode(){
+  modeBox.textContent='';
+  const d=document.createElement('div'); d.className='seg';
+  const l=document.createElement('span'); l.className='lbl'; l.textContent='углы'; d.appendChild(l);
+  for(const o of [{v:true,t:'круглые'},{v:false,t:'прямые'}]){
+    const b=document.createElement('button'); b.textContent=o.t;
+    if(ROUND===o.v) b.classList.add('on');
+    b.addEventListener('click',()=>{ ROUND=o.v; renderMode(); if(cur&&cur.draw) cur.draw(); });
+    d.appendChild(b);
+  }
+  modeBox.appendChild(d);
+}
+function show(i){
+  cur=TABS[i];
+  [...nav.querySelectorAll('button')].forEach((b,j)=>b.classList.toggle('on', j===i));
+  stage.setAttribute('aria-label', cur.aria);
+  clear(); ctl.textContent=''; cap.textContent='';
+  cur.mount(); renderMode();
+}
+addEventListener('keydown',e=>{
+  const n=parseInt(e.key,10);
+  if(n>=1 && n<=TABS.length && !e.metaKey && !e.ctrlKey){ show(n-1); return; }
+  if(e.code==='Space'){ e.preventDefault(); if(cur&&cur.space) cur.space(); return; }
+  if((e.key==='z'||e.key==='Z'||e.key==='я'||e.key==='Я') && cur&&cur.mount){ cur.mount(); renderMode(); }
+});
+show(0);
+
+/* ─── самопроверка: расходиться с ключом L3-mini-listok.md нельзя ─── */
+(function selfCheck(){
+  const w3=word(3), w4=word(4);
+  const ok3 = w3==='LLRLLRR', ok4 = w4==='LLRLLRRLLLRRLRR';
+  // теорема 1 буквами: sₙ₊₁ = sₙ · x · s̄ₙ
+  let okRec=true;
+  for(let n=1;n<=9;n++){ const s=word(n), t=word(n+1);
+    if(t !== s + t[s.length] + flip(s)) okRec=false; }
+  // чётные места = слово предыдущего ранга; нечётные = чередование
+  let okEven=true, okOdd=true;
+  for(let n=2;n<=11;n++){ const s=word(n); let e='',o='';
+    for(let i=0;i<s.length;i++) ((i+1)%2===0 ? e+=s[i] : o+=s[i]);
+    if(e!==word(n-1)) okEven=false;
+    for(let i=1;i<o.length;i++) if(o[i]===o[i-1]) okOdd=false; }
+  // максимум подряд = 3 (ранги 4..10), у ранга 3 — двойка
+  let okRun=true;
+  for(let n=4;n<=10;n++){ const s=word(n); let m=1,c=1;
+    for(let i=1;i<s.length;i++){ c = s[i]===s[i-1] ? c+1 : 1; if(c>m) m=c; }
+    if(m!==3) okRun=false; }
+  // задача 22: якоря листка → 179 R, 180 R;  наш дракон → 179 R, 180 L
+  const AL=T22.ANCH, AO=['L','L','L','L','L','L','L','L'];
+  const okL = letterAt(179,AL)==='R' && letterAt(180,AL)==='R';
+  const okO = letterAt(179,AO)==='R' && letterAt(180,AO)==='L';
+  // и то же прямым счётом: собрать все 255 букв правилом и прочитать 179-ю и 180-ю
+  let okDirect=true;
+  { let s=''; for(let m=1;m<=255;m++) s+=letterAt(m,AL);
+    if(s.length!==255 || s[178]!=='R' || s[179]!=='R') okDirect=false; }
+  // вкладка 18: s̄ отличается от s РОВНО одной буквой, средней (иначе вкладка врёт развязкой)
+  let okMid=true;
+  for(let n=2;n<=9;n++){ const s=word(n), b=flip(s); let d=0, at=-1;
+    for(let i=0;i<s.length;i++) if(s[i]!==b[i]){ d++; at=i; }
+    if(d!==1 || at!==(s.length-1)/2) okMid=false; }
+  // вкладка 19: буквы пары i и len−1−i всегда противоположны
+  let okPair=true;
+  for(let n=2;n<=9;n++){ const s=word(n), L=s.length;
+    for(let i=0;i<(L-1)/2;i++) if(s[i]===s[L-1-i]) okPair=false; }
+  // вкладка 21: шов s·x·s̄ при n ≥ 3 всегда RRLLL — три подряд и никогда четыре
+  let okSeam=true;
+  for(let n=3;n<=10;n++){ const s=word(n), b=flip(s), w=word(n+1), L=s.length;
+    if([s[L-2],s[L-1],w[L],b[0],b[1]].join('')!=='RRLLL') okSeam=false; }
+  // вкладка 22: лестница спуска по НАШЕМУ дракону даёт 179→R, 180→L
+  const climb=m=>{ while(m%2===0) m/=2; const j=(m+1)/2; return (j%2===1)?'L':'R'; };
+  const okLad = climb(179)==='R' && climb(180)==='L'
+             && climb(179)===letterAt(179,AO) && climb(180)===letterAt(180,AO);
+  const ok = ok3&&ok4&&okRec&&okEven&&okOdd&&okRun&&okL&&okO&&okDirect&&okMid&&okPair&&okSeam&&okLad;
+  console.log('[Л4] ранг3 '+w3+' · ранг4 '+w4+' · рекуррента '+(okRec?'да':'НЕТ')+
+              ' · чёт/нечёт '+(okEven&&okOdd?'да':'НЕТ')+' · максимум подряд 3 '+(okRun?'да':'НЕТ')+
+              '\n     вкл.18 отличие ровно в середине '+(okMid?'да':'НЕТ')+
+              ' · вкл.19 пары противоположны '+(okPair?'да':'НЕТ')+
+              ' · вкл.21 шов RRLLL '+(okSeam?'да':'НЕТ')+
+              ' · вкл.22 лестница '+climb(179)+climb(180)+' '+(okLad?'да':'НЕТ')+
+              '\n     задача 22: листок '+letterAt(179,AL)+letterAt(180,AL)+
+              ' / наш '+letterAt(179,AO)+letterAt(180,AO)+
+              ' → '+(ok?'СХОДИТСЯ с ключом':'РАСХОДИТСЯ'));
+  if(!ok) document.title='⚠ модель разошлась с ключом';
+})();
+</script>

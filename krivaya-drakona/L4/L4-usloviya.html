@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Кривая дракона · занятие 4 — условия</title>
+<!--
+  Л4, 19.07.2026. УСЛОВИЯ НА ПРОЕКТОР — вместо раздатки: в группе 12 человек, печатать нечего.
+  Управление: ПРОБЕЛ / → — дальше · ← — назад · 0 — список всех · 1..9 — сразу к задаче.
+
+  ⚠ ПОЧЕМУ ОТДЕЛЬНЫЙ ФАЙЛ, А НЕ ВКЛАДКА В L4-razbory.html. Там канон: «внутри рисунка — только
+     метка, проза — одна строка подписи под рисунком». Условие задачи это проза, и в тот файл она
+     не лезет. Показ показывает, условия читаются — два разных дела, два файла.
+
+  ⚠ ФОРМУЛИРОВКИ ПО ПРАВИЛУ КУРСА (решение владельца 19.07, действует с Л3): готовых слов не
+     выписываем, подсказок «что делать» нет, перекрёстных ссылок между задачами нет, условие
+     оригинальное. Связи и предупреждения (угол тердракона!) проговаривает преподаватель.
+
+  ⚠ НУМЕРАЦИЯ СКВОЗНАЯ: листок Л1 = 1–12, мини-Л2 = 13–16, Л3 = 17–22, здесь = 23–29.
+
+  Ответы и что вести у доски — kartoteka/L4-listok.md. Показ картинками — L4/L4-razbory.html.
+-->
+<style>
+  :root{ --paper:#e6e5e1; --card:#fff; --ink:#333; --brick:#bf5b4f; --steel:#8195ad; --rule:#c3cedd; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;background:var(--paper);color:var(--ink);overflow:hidden;
+       font:16px/1.5 "Glacial Indifference","Helvetica Neue",Arial,sans-serif}
+  #wrap{height:100%;max-width:1500px;margin:0 auto;padding:14px 26px 16px;
+        display:flex;flex-direction:column;gap:10px}
+  nav{display:flex;gap:5px;flex:0 0 auto;align-items:baseline;flex-wrap:wrap}
+  nav .ttl{font:400 18px/1 Forum,Georgia,serif;margin-right:10px;color:var(--steel)}
+  nav button{border:1px solid var(--rule);background:var(--card);color:var(--ink);border-radius:5px;
+             padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+  nav button.on{background:var(--steel);color:#fff;border-color:var(--steel)}
+  .stage{flex:1 1 auto;min-height:0;background:var(--card);border:1px solid var(--rule);
+         border-radius:8px;padding:6vh 7vw;display:flex;flex-direction:column;justify-content:center}
+  /* Кегль от ширины экрана: на проекторе читается с задней парты, на ноутбуке не разваливается. */
+  .num{font:400 clamp(28px,3.6vw,58px)/1 Forum,Georgia,serif;color:var(--brick);margin-bottom:.5em}
+  .body{font-size:clamp(20px,2.35vw,40px);line-height:1.42;max-width:22em}
+  .hand{margin-top:1.1em;font-size:clamp(14px,1.15vw,19px);color:var(--steel);letter-spacing:.04em;
+        text-transform:uppercase}
+  /* список всех условий разом — чтобы окинуть глазом и выбрать, что давать */
+  .all{display:grid;grid-template-columns:1fr 1fr;gap:14px 32px;font-size:clamp(13px,1.12vw,17px);
+       line-height:1.4;align-content:start;overflow:auto}
+  .all .n{color:var(--brick);font-weight:600;margin-right:.4em}
+  .under{flex:0 0 auto;display:flex;gap:14px;align-items:center;min-height:30px;color:var(--steel);
+         font-size:13px}
+  .kbd{font:11px/1 ui-monospace,Menlo,monospace;background:var(--paper);border:1px solid var(--rule);
+       border-radius:3px;padding:2px 6px;color:var(--steel)}
+</style>
+
+<div id="wrap">
+  <nav id="nav"><span class="ttl">Кривая дракона · занятие 4</span></nav>
+  <div class="stage" id="stage"></div>
+  <div class="under">
+    <span id="pos"></span>
+    <span class="kbd">пробел</span><span class="kbd">← →</span><span class="kbd">0 — все</span>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* Условия дословно как в kartoteka/L4-listok.md. Правка идёт ТУДА и сюда одновременно —
+   расходиться этим двум местам нельзя: там ответы, здесь то, что видят дети. */
+const Z=[
+ { n:23, hand:true, t:'Возьми слово какого-нибудь дракона, которое ты выписывал раньше. Не складывая полоску пополам, делай складки подряд от одного края — по одной складке на каждую букву, в ту сторону, которую буква велит. Разогни всё до прямых углов.<br><br>Тот ли это дракон? Дракона какого ранга ты теперь сумеешь сложить?' },
+ { n:24, hand:true, t:'Сложи несколько одинаковых драконов и попробуй уложить их вокруг одной точки так, чтобы они не налезали друг на друга и не оставляли дыр.<br><br>Сколько драконов для этого понадобится?' },
+ { n:25, hand:true, t:'Складывай длинную полоску не пополам, а втрое: левую треть к себе, правую от себя. Потом ещё раз так же. И ещё. Разогни все складки одинаково.<br><br>Сколько звеньев получится после n складываний? Запиши двумя буквами слова первых двух рангов. Найди правило, по которому из слова одного ранга получается слово следующего.' },
+ { n:26, t:'Концы ломаной закреплены, расстояние между ними равно 1. На каждом звене ломаной ранга n построй квадрат, для которого это звено — диагональ.<br><br>Чему равна суммарная площадь всех этих квадратов? Зависит ли она от n?' },
+ { n:27, t:'Плоскость замощена одинаковыми драконами. Покажи, как из этого замощения получить замощение драконами следующего ранга. А потом ещё следующего.<br><br>Что отсюда следует про дракона сколь угодно большого ранга?' },
+ { n:28, hand:true, t:'Раньше ты складывал полоску всё время в одну сторону. Теперь складывай как попало — каждый раз в любую сторону.<br><br>Сколько разных ломаных ранга n может так получиться? Возьми свою, самую кривую, и посмотри: пересекает ли она себя? Остаются ли для неё верными утверждения, которые ты доказал для дракона, сложенного всегда в одну сторону?' },
+ { n:29, t:'Придумай свой вопрос, гипотезу или теорему про драконов.' },
+];
+const stage=document.getElementById('stage'), nav=document.getElementById('nav'),
+      pos=document.getElementById('pos');
+let cur=0;                                  // 0 — список всех, 1..N — задача
+Z.forEach((z,i)=>{ const b=document.createElement('button'); b.textContent=z.n;
+  b.addEventListener('click',()=>show(i+1)); nav.appendChild(b); });
+{ const b=document.createElement('button'); b.textContent='все';
+  b.addEventListener('click',()=>show(0)); nav.appendChild(b); }
+function strip(h){ return h.replace(/<br>/g,' ').replace(/<[^>]+>/g,''); }
+function show(k){
+  cur=(k+Z.length+1)%(Z.length+1);
+  [...nav.querySelectorAll('button')].forEach((b,j)=>
+    b.classList.toggle('on', j===cur-1 || (cur===0 && j===Z.length)));
+  if(cur===0){
+    stage.innerHTML='<div class="all">'+Z.map(z=>
+      '<div><span class="n">'+z.n+'.</span>'+strip(z.t)+'</div>').join('')+'</div>';
+    pos.textContent='все условия — 23–'+Z[Z.length-1].n;
+    return;
+  }
+  const z=Z[cur-1];
+  stage.innerHTML='<div class="num">'+z.n+'</div><div class="body">'+z.t+'</div>'
+    +(z.hand?'<div class="hand">руками</div>':'');
+  pos.textContent='задача '+z.n+' · '+(cur)+' из '+Z.length;
+}
+addEventListener('keydown',e=>{
+  if(e.code==='Space'||e.key==='ArrowRight'){ e.preventDefault(); show(cur+1); return; }
+  if(e.key==='ArrowLeft'){ e.preventDefault(); show(cur-1); return; }
+  if(e.key==='0'){ show(0); return; }
+  const d=parseInt(e.key,10);
+  if(d>=1 && d<=Z.length && !e.metaKey && !e.ctrlKey) show(d);
+});
+show(0);
+</script>
