@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Теория игр</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  .lead b{color:var(--ink);}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:28px 0 28px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .check{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:170px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);}
+  .res.no{color:var(--rubric);}
+  details{margin-top:12px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--accent);}
+  details[open] summary::before{content:"▾ ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр</p>
+    <h1>Задачи</h1>
+  </header>
+  <p class="lead">Во всех задачах двое ходят по очереди. Нужно определить, <b>кто выигрывает при правильной игре</b> — то есть если оба играют наилучшим образом, — и объяснить почему.</p>
+  <ol>
+    <li>
+      <div class="cnd">На доске написано число 30. За ход разрешается вычесть из написанного числа любой его делитель, меньший самого числа, и написать результат вместо прежнего числа. Проигрывает тот, кто не может сделать ход.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Выпишите подряд числа 1, 2, 3, 4, 5, … и для каждого пометьте, выигрышное оно или проигрышное для того, чей ход. Начните с самых маленьких. Что общего у проигрышных?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Из числа 1 ходить нельзя, поэтому 1 — проигрышное положение. Дальше видно: проигрышны в точности нечётные числа. Из нечётного числа все делители нечётны, поэтому после вычитания получается чётное число — соперник получает чётное. А из чётного числа всегда можно вычесть 1 и оставить сопернику нечётное. Значит, тот, кому досталось чётное число, вычитает единицу и всё время передаёт сопернику нечётные, пока тот не получит 1 и не сможет ходить. Число 30 чётно, поэтому выигрывает первый.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Плитка шоколада 6 × 8 разделена бороздками на 48 квадратиков. За ход разрешается взять любой кусок и разломить его по прямой бороздке на два куска. Проигрывает тот, кто не может сделать ход.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Здесь бесполезно искать стратегию: попробуйте понять, сколько всего ходов будет сделано в партии. Как меняется число кусков на столе после одного излома?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Каждый излом увеличивает число кусков ровно на один. В начале кусок один, в конце их 48, поэтому изломов всегда ровно 47 — сколько бы и как бы ни ломали. Число ходов нечётно, значит последний ход достаётся первому: он и выигрывает. Здесь исход не зависит от игры вовсе.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Двое по очереди кладут одинаковые круглые монеты на круглый стол так, чтобы монеты не накладывались друг на друга и не свешивались. Класть монеты можно на любое свободное место. Проигрывает тот, кто не может положить очередную монету.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">У круглого стола есть центр, и он ровно один. Как первый игрок может добиться того, чтобы после каждого его хода картина на столе была симметричной?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Первый кладёт монету точно в центр стола. Дальше на каждый ход соперника он отвечает симметрично: кладёт монету в положение, симметричное только что положенной относительно центра. Если соперник смог положить монету, то симметричное ей место тоже свободно — иначе мешающая монета была бы симметрична какой-то уже лежащей, чего быть не может, ведь после каждого хода первого картина симметрична (а центр занят с самого начала). Значит, у первого всегда есть ответ, и первым не сможет пойти соперник.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Полоска из 20 клеток. Двое по очереди кладут на неё доминошки: каждая закрывает две соседние свободные клетки. Класть доминошку можно куда угодно, лишь бы обе клетки были свободны. Проигрывает тот, кто не может сделать ход.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Здесь тоже помогает симметрия, но начать нужно с правильного первого хода. Куда положить первую доминошку, чтобы полоска распалась на две одинаковые части?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Первый кладёт доминошку ровно на середину — на клетки 10 и 11. Слева и справа остаются две одинаковые части по 9 клеток. Дальше он отвечает зеркально: на каждый ход соперника кладёт доминошку симметрично относительно середины полоски. Такое место всегда свободно, потому что после каждого хода первого картина симметрична. Значит, ход всегда найдётся у первого, и проигрывает соперник.</div></details>
+    </li>
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check');
+    var inp=box.querySelector('input');
+    var res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='Верно ✓';res.className='res ok';}
+    else{res.textContent='Не сходится — подумайте ещё';res.className='res no';}
+  }
+</script>
+</body>
+</html>

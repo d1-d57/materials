@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:14px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:28px 0 28px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  details{margin-top:13px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--accent);}
+  details[open] summary::before{content:"▾ ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Двойной счёт</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <ol>
+    <li>
+      <div class="cnd">На контрольной каждый из 20 школьников решил ровно 3 задачи, а каждую задачу решили ровно 5 школьников. Сколько было задач?</div>
+      <details><summary>Указание</summary><div class="body">Сосчитайте пары «школьник — решённая им задача» двумя способами: со стороны школьников и со стороны задач.</div></details>
+      <details><summary>Решение</summary><div class="body">Со стороны школьников пар «школьник — решённая им задача» ровно 20 · 3 = 60. Со стороны задач каждую решили 5 человек, поэтому пар 5 · (число задач). Значит, 5 · (число задач) = 60, и задач 12. <b>Ответ: 12 задач.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">Несколько семиклассников и шестиклассников обменялись рукопожатиями: каждый семиклассник пожал руку шести шестиклассникам, а каждый шестиклассник — семи семиклассникам. Кого среди них больше?</div>
+      <details><summary>Указание</summary><div class="body">Сосчитайте число рукопожатий двумя способами — со стороны семиклассников и со стороны шестиклассников.</div></details>
+      <details><summary>Решение</summary><div class="body">Каждое рукопожатие соединяет одного семиклассника и одного шестиклассника. Со стороны семиклассников рукопожатий 6 · (число семиклассников), со стороны шестиклассников — 7 · (число шестиклассников). Значит, 6 · (семиклассников) = 7 · (шестиклассников), то есть семиклассников в 7/6 раза больше. <b>Ответ: семиклассников больше.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">Пятеро студентов вместе снимают квартиру. Они устроили вечеринку, на которую пришли ещё 25 друзей, причём каждый приходивший пожимал руки всем уже собравшимся. Сколько получилось рукопожатий?</div>
+      <details><summary>Указание</summary><div class="body">Сколько было бы рукопожатий, если бы все 30 человек пожали руки друг другу? Какие пары руки так и не пожали?</div></details>
+      <details><summary>Решение</summary><div class="body">Всего собралось 30 человек. Если бы каждый пожал руку каждому, рукопожатий было бы 30 · 29 : 2 = 435. Но пятеро хозяев были дома с самого начала и друг другу рук не жали (здоровались только с приходящими) — это 5 · 4 : 2 = 10 несостоявшихся пар. Значит, рукопожатий 435 − 10 = 425. <b>Ответ: 425.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">На концерте пели четыре девочки — Катя, Лена, Маша и Нина. Каждую песню исполняли ровно три из них. Катя спела 8 песен — больше каждой из остальных, а Лена 5 — меньше каждой из остальных. Сколько всего песен было спето?</div>
+      <details><summary>Указание</summary><div class="body">Сосчитайте все «выходы на сцену» двумя способами: по песням и по девочкам. Что известно о числе песен у Маши и Нины?</div></details>
+      <details><summary>Решение</summary><div class="body">Каждую песню поют три девочки, поэтому всего «выходов на сцену» 3 · (число песен). С другой стороны, это сумма по девочкам: 8 + 5 + (Маша) + (Нина). У Маши и Нины число песен больше 5 и меньше 8, то есть 6 или 7. Сумма 8 + 5 + Маша + Нина делится на 3 только при Маша = Нина = 7; тогда выходов 27, а песен 27 : 3 = 9. <b>Ответ: 9 песен.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">В конференции участвовали 19 учёных. После неё каждый отправил 2 или 4 письма другим участникам. Могло ли случиться, что каждый получил ровно 3 письма?</div>
+      <details><summary>Указание</summary><div class="body">Сравните по чётности общее число отправленных и общее число полученных писем.</div></details>
+      <details><summary>Решение</summary><div class="body">Каждый отправил 2 или 4 письма, поэтому общее число отправленных писем — сумма чётных чисел, то есть чётно. А общее число полученных писем равно 19 · 3 = 57 — нечётно. Но отправлено и получено одно и то же количество писем (у каждого письма есть и отправитель, и получатель). Чётное число не равно нечётному. <b>Ответ: не могло.</b></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>

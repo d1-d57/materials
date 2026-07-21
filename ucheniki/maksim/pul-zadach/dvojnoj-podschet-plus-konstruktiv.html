@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Двойной подсчёт + конструктив</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:60px 30px 90px;}
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:11px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:38px;line-height:1.04;}
+  .lead{font-size:15.5px;color:var(--ink-soft);margin-top:14px;line-height:1.5;}
+  .lead b{color:var(--ink);}
+  ol{list-style:none;counter-reset:p;margin-top:14px;}
+  li{counter-increment:p;position:relative;padding:24px 0 24px 56px;border-bottom:1px solid var(--rule);}
+  li:last-of-type{border-bottom:none;}
+  li::before{content:counter(p);position:absolute;left:0;top:23px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:34px;line-height:1;color:var(--rubric);}
+  details{margin-top:11px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ идея";}
+  details[open] summary::before{content:"▾ идея";}
+  summary span{display:none;}
+  .idea{font-size:16px;line-height:1.52;color:var(--ink-soft);padding:7px 0 2px;border-left:2px solid var(--rule);padding-left:14px;margin-top:7px;}
+  .idea b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Двойной подсчёт + конструктив · целевая жила</p>
+    <h1>Счёт даёт условие — конструкция реализует</h1>
+    <p class="lead">Тип, который мы ищем: подсчёт двумя способами даёт необходимое условие или оценку (чётность, делимость, граница), а затем строится сам объект, показывающий, что условие и достаточно. Архетип — <b>граф степени 3</b>: счёт → n чётно, конструкция → для чётных строим.</p>
+  </header>
+
+  <ol>
+    <li>В турнире n игроков каждый сыграл с каждым по разу, ничьих не было. При каких n все игроки могут набрать поровну побед?
+      <details><summary><span>.</span></summary><div class="idea">Всего побед столько же, сколько партий: n(n−1)/2. Если поровну, каждому достаётся (n−1)/2 — целое только при нечётном n <b>(счёт даёт условие)</b>. Для нечётного n строим: посадим игроков по кругу и пусть каждый побеждает (n−1)/2 ближайших по часовой стрелке — тогда у всех ровно по (n−1)/2 побед. Ответ: n нечётно.</div></details>
+    </li>
+    <li>n команд (n чётно) проводят круговой турнир: каждая играет с каждой ровно раз. Игры идут турами, и в одном туре каждая команда играет не больше одной игры. За какое наименьшее число туров можно провести весь турнир?
+      <details><summary><span>.</span></summary><div class="idea">Всего игр n(n−1)/2, а в одном туре их не больше n/2 (каждая команда занята максимум в одной). Значит туров не меньше n−1 <b>(счёт даёт оценку)</b>. Ровно n−1 тур строится «каруселью»: одна команда стоит на месте, остальные сдвигаются по кругу; каждый тур — это n/2 игр без пересечений. Ответ: n−1.</div></details>
+    </li>
+    <li>При каких n существует граф на n вершинах, в котором каждая вершина имеет ровно k рёбер (обобщение случая k = 3)?
+      <details><summary><span>.</span></summary><div class="idea">Сумма степеней равна nk и равна удвоенному числу рёбер, поэтому nk чётно <b>(счёт даёт условие)</b>. При нечётном k это значит, что n чётно. Для всех подходящих n (и n ≥ k + 1) граф строится явно: вершины по кругу, каждую соединяем с k ближайшими (для нечётного k — ещё с противоположной). Счёт отсекает невозможное, конструкция закрывает остальное.</div></details>
+    </li>
+  </ol>
+
+</div>
+</body>
+</html>

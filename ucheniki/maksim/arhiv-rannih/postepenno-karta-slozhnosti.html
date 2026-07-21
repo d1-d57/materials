@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01. Постепенно, с первого шага — карта сложности</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;
+    --paper-2:#efe7d4;
+    --panel:#fbf7ec;
+    --ink:#2a2520;
+    --ink-soft:#5d5446;
+    --ink-faint:#8a7f6c;
+    --rule:#d8cdb4;
+    --rubric:#9e2b25;       /* manuscript red */
+    --rubric-soft:#c6584f;
+    --easy:#4f7a3a;
+    --easy-bg:#e8efdb;
+    --med:#b07414;
+    --med-bg:#f3e7cc;
+    --hard:#9e2b25;
+    --hard-bg:#f1ddd7;
+    --shadow:0 1px 0 rgba(42,37,32,.04),0 10px 30px -18px rgba(42,37,32,.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, #f8f2e3 0%, rgba(248,242,227,0) 60%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"PT Serif",Georgia,serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* faint paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:0 24px 100px;}
+
+  /* ---------- Masthead ---------- */
+  header.mast{
+    padding:64px 0 30px;border-bottom:2px solid var(--ink);margin-bottom:8px;
+    animation:rise .7s ease both;
+  }
+  .kicker{
+    font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;
+    font-size:12px;color:var(--rubric);font-weight:700;margin:0 0 14px;
+  }
+  h1{
+    font-family:"Old Standard TT",serif;font-weight:700;
+    font-size:clamp(34px,6vw,58px);line-height:1.04;margin:0;letter-spacing:-.01em;
+  }
+  h1 .no{color:var(--rubric);font-style:italic;margin-right:.12em;}
+  .sub{
+    font-family:"PT Serif",serif;font-style:italic;color:var(--ink-soft);
+    font-size:clamp(17px,2.4vw,21px);margin:16px 0 0;max-width:62ch;
+  }
+  .meta-line{
+    font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);
+    margin-top:18px;display:flex;gap:18px;flex-wrap:wrap;
+  }
+  .meta-line b{color:var(--ink-soft);font-weight:700;}
+
+  /* ---------- Intro note ---------- */
+  .note{
+    background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--rubric);
+    border-radius:3px;padding:18px 22px;margin:28px 0 10px;box-shadow:var(--shadow);
+    animation:rise .7s .05s ease both;
+  }
+  .note p{margin:0 0 10px;}
+  .note p:last-child{margin-bottom:0;}
+  .note strong{color:var(--ink);}
+
+  /* ---------- Legend ---------- */
+  .legend{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px 26px;
+    margin:22px 0 6px;padding:18px 22px;border:1px dashed var(--rule);border-radius:3px;
+    font-family:"PT Sans",sans-serif;font-size:13.5px;color:var(--ink-soft);
+    animation:rise .7s .1s ease both;
+  }
+  .legend h4{
+    font-family:"Old Standard TT",serif;font-size:15px;color:var(--ink);margin:0 0 6px;
+    text-transform:uppercase;letter-spacing:.08em;font-weight:700;
+  }
+  .legend .row{display:flex;align-items:center;gap:8px;margin:3px 0;}
+  .mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+    border-radius:50%;font-size:12px;font-weight:700;border:1px solid var(--rule);background:#fff;}
+  .mk.circle{color:var(--ink-soft);}
+  .mk.star{color:var(--rubric);border-color:var(--rubric-soft);}
+  .mk.none{color:var(--ink-faint);font-style:italic;border-style:dashed;}
+
+  /* dots meter */
+  .dots{display:inline-flex;gap:3px;align-items:center;}
+  .dots i{width:9px;height:9px;border-radius:50%;background:var(--rule);display:inline-block;}
+  .d-easy i.on{background:var(--easy);}
+  .d-med  i.on{background:var(--med);}
+  .d-hard i.on{background:var(--hard);}
+
+  /* ---------- Section ---------- */
+  section.block{margin-top:46px;animation:rise .6s ease both;}
+  .block-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+  .block-tag{
+    font-family:"Old Standard TT",serif;font-style:italic;font-size:46px;color:var(--rubric);
+    line-height:.8;opacity:.85;
+  }
+  .block-head h2{
+    font-family:"Old Standard TT",serif;font-weight:700;font-size:25px;margin:0;letter-spacing:.01em;
+  }
+  .block-quote{
+    font-style:italic;color:var(--ink-soft);font-size:15.5px;margin:2px 0 20px 60px;
+    border-left:2px solid var(--rule);padding-left:14px;max-width:64ch;
+  }
+  @media(max-width:560px){.block-quote{margin-left:0;}}
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--panel);border:1px solid var(--rule);border-radius:4px;
+    padding:20px 22px;margin:14px 0;box-shadow:var(--shadow);
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    animation:rise .5s ease both;animation-delay:calc(var(--i,0)*45ms);
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(42,37,32,.04),0 18px 40px -20px rgba(42,37,32,.55);border-color:#cdbf9f;}
+  .card-head{display:flex;gap:18px;align-items:flex-start;}
+  .num{
+    font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;color:var(--rubric);
+    line-height:.9;min-width:1.6ch;text-align:center;flex:none;
+  }
+  .num small{display:block;font-size:13px;color:var(--ink-faint);font-weight:400;font-style:italic;margin-top:2px;}
+  .head-text{flex:1;min-width:0;}
+  .head-text h3{
+    font-family:"PT Serif",serif;font-weight:700;font-size:19px;margin:2px 0 0;line-height:1.25;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;}
+  .chip{
+    font-family:"PT Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:.02em;
+    padding:3px 9px;border-radius:20px;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .chip.method{background:#fff;color:var(--ink);border-color:#d8cdb4;}
+  .chip.method::before{content:"▸ ";color:var(--rubric);}
+  .chip.role-open{background:var(--easy-bg);color:var(--easy);border-color:#cfe0b6;}
+  .chip.role-mid{background:#f0ece0;color:var(--ink-soft);}
+  .chip.role-peak{background:var(--med-bg);color:var(--med);border-color:#e6d3a6;}
+  .chip.role-home{background:#eae4f0;color:#6b4a86;border-color:#d8cae6;}
+  .chip.role-stretch{background:var(--hard-bg);color:var(--hard);border-color:#e6c4bc;}
+  .chip.time{font-weight:400;font-style:italic;color:var(--ink-faint);background:transparent;border:none;padding-left:0;}
+  .chip.time::before{content:"⏱ ";font-style:normal;}
+
+  .diff{flex:none;text-align:right;min-width:96px;}
+  .diff .dots{margin-bottom:5px;}
+  .diff-label{font-family:"PT Sans",sans-serif;font-size:12px;font-weight:700;display:block;}
+  .diff.d-easy .diff-label{color:var(--easy);}
+  .diff.d-med  .diff-label{color:var(--med);}
+  .diff.d-hard .diff-label{color:var(--hard);}
+  @media(max-width:560px){
+    .card-head{flex-wrap:wrap;}
+    .diff{order:3;width:100%;text-align:left;display:flex;align-items:center;gap:10px;margin-top:6px;}
+    .diff .dots{margin-bottom:0;}
+  }
+
+  .why{margin:14px 0 0;font-size:15.5px;color:var(--ink-soft);}
+  .why b{color:var(--rubric);font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-right:4px;}
+
+  /* sub-rows for multi-part problems */
+  .parts{margin:14px 0 0;border-top:1px dotted var(--rule);}
+  .part{display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dotted var(--rule);}
+  .part:last-child{border-bottom:none;}
+  .part .pl{font-family:"PT Sans",sans-serif;font-weight:700;color:var(--rubric);min-width:2.4em;font-size:14px;}
+  .part .pt{flex:1;font-size:14.5px;color:var(--ink-soft);}
+  .part .pd{flex:none;display:flex;align-items:center;gap:8px;}
+  .part .pd .dlab{font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;}
+  .part.lvl-easy .dlab{color:var(--easy);}
+  .part.lvl-med .dlab{color:var(--med);}
+  .part.lvl-hard .dlab{color:var(--hard);}
+
+  /* collapsible solution */
+  details{margin-top:14px;border-top:1px solid var(--rule);padding-top:6px;}
+  summary{
+    font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;color:var(--rubric);
+    cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px;padding:5px 0;
+    user-select:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;
+    width:18px;height:18px;border:1px solid var(--rubric-soft);border-radius:50%;font-size:14px;line-height:1;transition:transform .2s;}
+  details[open] summary::before{content:"–";transform:rotate(180deg);}
+  .sol{font-size:15px;color:var(--ink);padding:6px 2px 4px;animation:fade .25s ease;}
+  .sol p{margin:0 0 9px;}
+  .sol p:last-child{margin-bottom:0;}
+  .sol code{font-family:"PT Sans",monospace;background:var(--paper-2);padding:1px 5px;border-radius:3px;font-size:14px;}
+  .sol .key{color:var(--rubric);font-weight:700;}
+
+  /* ---------- Summary section ---------- */
+  .summary-sec{margin-top:64px;border-top:2px solid var(--ink);padding-top:34px;}
+  .summary-sec h2{font-family:"Old Standard TT",serif;font-size:28px;margin:0 0 4px;}
+  .order-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:24px;}
+  @media(max-width:680px){.order-grid{grid-template-columns:1fr;}}
+  .order-box{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:20px 22px;box-shadow:var(--shadow);}
+  .order-box.peak{border-left:3px solid var(--med);}
+  .order-box.home{border-left:3px solid #6b4a86;}
+  .order-box h3{font-family:"Old Standard TT",serif;font-size:18px;margin:0 0 12px;letter-spacing:.03em;text-transform:uppercase;}
+  ol.flow{margin:0;padding-left:0;list-style:none;counter-reset:step;}
+  ol.flow li{counter-increment:step;padding:7px 0 7px 38px;position:relative;border-bottom:1px dotted var(--rule);font-size:15.5px;}
+  ol.flow li:last-child{border-bottom:none;}
+  ol.flow li::before{content:counter(step);position:absolute;left:0;top:6px;width:24px;height:24px;
+    background:var(--rubric);color:#fff;border-radius:50%;font-family:"PT Sans",sans-serif;font-weight:700;
+    font-size:12px;display:flex;align-items:center;justify-content:center;}
+  ol.flow li b{font-family:"PT Sans",sans-serif;color:var(--rubric);font-weight:700;}
+  ol.flow li .t{color:var(--ink-soft);font-size:14px;}
+  ul.plain{margin:0;padding-left:0;list-style:none;}
+  ul.plain li{padding:8px 0;border-bottom:1px dotted var(--rule);font-size:15.5px;}
+  ul.plain li:last-child{border-bottom:none;}
+  ul.plain li b{font-family:"PT Sans",sans-serif;color:#6b4a86;font-weight:700;}
+
+  .ladder{margin-top:26px;background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:20px 22px;box-shadow:var(--shadow);}
+  .ladder h3{font-family:"Old Standard TT",serif;font-size:18px;margin:0 0 14px;letter-spacing:.03em;text-transform:uppercase;}
+  .lrow{display:flex;align-items:center;gap:14px;padding:7px 0;border-bottom:1px dotted var(--rule);}
+  .lrow:last-child{border-bottom:none;}
+  .lrow .ln{font-family:"Old Standard TT",serif;font-weight:700;color:var(--rubric);min-width:2.6em;font-size:17px;}
+  .lrow .lt{flex:1;font-size:15px;}
+  .lrow .ld{flex:none;}
+
+  .revised{margin-top:30px;background:var(--hard-bg);border:1px solid #e6c4bc;border-radius:4px;padding:20px 24px;box-shadow:var(--shadow);}
+  .revised h3{font-family:"Old Standard TT",serif;font-size:18px;margin:0 0 12px;color:var(--hard);letter-spacing:.03em;text-transform:uppercase;}
+  .revised ul{margin:0;padding-left:20px;}
+  .revised li{margin:0 0 11px;font-size:15.5px;}
+  .revised li:last-child{margin-bottom:0;}
+  .revised li strong{color:var(--ink);}
+
+  footer{margin-top:46px;text-align:center;font-family:"PT Sans",sans-serif;font-size:12.5px;color:var(--ink-faint);font-style:italic;}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  @media print{
+    body::before{display:none;}
+    .card,.note,.order-box,.ladder,.revised{box-shadow:none;}
+    details{}
+    details summary{display:none;}
+    details > .sol{display:block !important;}
+    *{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Школа № 179 · КЛ · карта листка для подбора порядка</p>
+    <h1><span class="no">01.</span>Постепенно,<br>с первого шага</h1>
+    <p class="sub">Оценка сложности каждой задачи, метод, время на «подумать самому» и предлагаемый — но не обязательный — порядок. Чтобы выстроить свой ход аргументированно.</p>
+    <div class="meta-line">
+      <span><b>Формат:</b> час, взрослый ученик, темп быстрый</span>
+      <span><b>Сложность:</b> перерешано и сверено по числам</span>
+      <span><b>Тема листка:</b> пошаговое конструирование</span>
+    </div>
+  </header>
+
+  <div class="note">
+    <p><strong>Главная мысль листка</strong> — не доказательство ради доказательства, а <em>построить объект по шагам</em>: укажи, как достроить, как уравнять, как разрезать. Индукция тут под капотом как гарантия, но ученик живёт в конструкции, которую делает руками. Для входа со взрослым — идеально.</p>
+    <p>Точки = сложность (<span style="color:var(--easy);font-weight:700">зелёный лёгкая</span> → <span style="color:var(--med);font-weight:700">охра средняя</span> → <span style="color:var(--hard);font-weight:700">красный сложная</span>). Время — это сколько думать <em>без подсказок</em>. Блок «Идея» свёрнут: можно сначала порешать самому, потом сверить мою оценку. Порядок в конце — предложение.</p>
+  </div>
+
+  <div class="legend">
+    <div>
+      <h4>Метки листка</h4>
+      <div class="row"><span class="mk circle">◦</span> базовая, разбирается</div>
+      <div class="row"><span class="mk none">—</span> без кружка — обычно труднее</div>
+      <div class="row"><span class="mk star">⋆</span> звезда — сложная / на вырост</div>
+    </div>
+    <div>
+      <h4>Сложность</h4>
+      <div class="row"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span> лёгкая, идея видна</div>
+      <div class="row"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span> средняя, одна идея</div>
+      <div class="row"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span> сложная, дом / челлендж</div>
+    </div>
+    <div>
+      <h4>Роль на занятии</h4>
+      <div class="row"><span class="chip role-open">опенер</span> быстрый выигрыш</div>
+      <div class="row"><span class="chip role-mid">середина</span> рабочий ход</div>
+      <div class="row"><span class="chip role-peak">пик</span> челлендж урока</div>
+      <div class="row"><span class="chip role-home">дом</span> / <span class="chip role-stretch">стретч</span></div>
+    </div>
+  </div>
+
+  <!-- ============ BLOCK A ============ -->
+  <section class="block">
+    <div class="block-head"><span class="block-tag">A</span><h2>Один шаг на предыдущий</h2></div>
+    <p class="block-quote">«Начав с первого этажа, можно построить 100-этажный небоскрёб. То же с серийными примерами: их получают последовательно, достраивая по мере необходимости.»</p>
+
+    <article class="card" style="--i:0">
+      <div class="card-head">
+        <div class="num">1<small>а–г</small></div>
+        <div class="head-text">
+          <h3>Прямоугольник → квадраты: ровно на <em>k</em>-м шаге</h3>
+          <div class="chips">
+            <span class="chip">◦ все пункты</span>
+            <span class="chip method">вычитательный Евклид → Фибоначчи</span>
+            <span class="chip role-open">а–в опенер</span>
+            <span class="chip role-home">г домой</span>
+          </div>
+        </div>
+        <div class="diff d-easy">
+          <div class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+          <span class="diff-label">а–в лёгкие</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Отрезание квадратов — это в точности алгоритм Евклида. Условие «все квадраты разные» заставляет все частные быть единицами → отношение сторон = соседние числа Фибоначчи. Пункты а–в открываются руками (находишь 3×2, 5×3, 8×5), а г — это уже общий аргумент.</p>
+      <div class="parts">
+        <div class="part lvl-easy"><span class="pl">а)</span><span class="pt">2 шага → прямоугольник <code>3×2</code>. Режутся 2×2 и 1×1, остаток 1×1.</span><span class="pd"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="dlab">≈5 мин</span></span></div>
+        <div class="part lvl-easy"><span class="pl">б,в)</span><span class="pt">3 и 4 шага → <code>5×3</code> и <code>8×5</code>. Просто продолжаешь узор.</span><span class="pd"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="dlab">≈3 мин</span></span></div>
+        <div class="part lvl-hard"><span class="pl">г)</span><span class="pt">179 шагов + доказать различность для общего <em>k</em>. <code>F₁₈₁ × F₁₈₀</code>.</span><span class="pd"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="dlab">дом, ≈15+ мин</span></span></div>
+      </div>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p>Прямоугольник <code>p×q</code>, <code>p&gt;q</code>: отрезаем <code>q×q</code>, остаётся <code>(p−q)×q</code> — это шаг вычитательного Евклида. Если хоть раз отрежем два одинаковых квадрата подряд (частное ≥ 2), различность нарушится. Значит <span class="key">все неполные частные = 1</span>, кроме последнего — а это ровно разложение <code>p/q</code> в цепную дробь <code>[1;1,…,1]</code>, то есть <span class="key">p/q = F_{k+2}/F_{k+1}</span>.</p>
+          <p>Проверка: <code>F_{k+2}×F_{k+1}</code> даёт ровно <em>k</em> шагов, отрезаются квадраты сторон <code>F_{k+1},…,F₂=1</code> (все различны), остаток <code>F₁×F₁ = 1×1</code> — не в счёт. Для 179 шагов: <span class="key">F₁₈₁ × F₁₈₀</span>. Различность = соседние числа Фибоначчи строго растут.</p>
+        </div>
+      </details>
+    </article>
+  </section>
+
+  <!-- ============ BLOCK B ============ -->
+  <section class="block">
+    <div class="block-head"><span class="block-tag">B</span><h2>Несколько этажей сразу</h2></div>
+    <p class="block-quote">«Иногда приходится начинать с построения нескольких этажей сразу.»</p>
+
+    <article class="card" style="--i:0">
+      <div class="card-head">
+        <div class="num">2</div>
+        <div class="head-text">
+          <h3>Новости: все узнают всё за 2n − 4 разговора</h3>
+          <div class="chips">
+            <span class="chip">— без кружка</span>
+            <span class="chip method">собрать в ядро из 4 → раздать</span>
+            <span class="chip role-peak">челлендж</span>
+            <span class="chip role-home">или дом</span>
+            <span class="chip time">10–15 мин с подсказками</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">Средняя⁺</span>
+        </div>
+      </div>
+      <p class="why"><b>Поправка</b> Сначала я завысил её до сложной — снимаю. Оптимальность не спрашивают, только «можно», а это достижимо. Но это <strong>верх средних</strong>: приём (собрать всё в ядро из 4) тяжелее соседей 3–6. Стоит 2-й осознанно — тема «несколько этажей сразу» её и готовит. Для взрослого просто заложи время или возьми как челлендж: рано и без разогрева темп сядет.</p>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p>Выделяем 4 человек — «ядро», остальные <code>n−4</code> — «листья». Три фазы: <span class="key">(1) сбор</span> — каждый лист одним звонком сдаёт новость кому-то из ядра (<code>n−4</code> зв.); теперь все новости лежат в четвёрке. <span class="key">(2) обмен внутри ядра</span> — 4 звонка <code>a-b, c-d, a-c, b-d</code>, после которых все четверо знают всё. <span class="key">(3) раздача</span> — каждый лист одним звонком забирает всё из своего узла (<code>n−4</code> зв.).</p>
+          <p>Итого <code>(n−4) + 4 + (n−4) = 2n−4</code>. (Минимальность не спрашивают — только «можно».)</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="card" style="--i:1">
+      <div class="card-head">
+        <div class="num">3</div>
+        <div class="head-text">
+          <h3>50 различных чисел, сумма кратна каждому</h3>
+          <div class="chips">
+            <span class="chip">◦</span>
+            <span class="chip method">база 1,2,3 + добавляй сумму</span>
+            <span class="chip role-open">ранняя</span>
+            <span class="chip time">≈5 мин</span>
+          </div>
+        </div>
+        <div class="diff d-easy">
+          <div class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+          <span class="diff-label">Лёгкая–средняя</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Здесь «несколько этажей сразу» = стартовая тройка 1,2,3 (сумма 6 делится на все). Дальше один приём: дописываем текущую сумму — она делится на всё прежнее и удваивает сумму. Маленькое «ага» про удвоение.</p>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p>База <code>{1,2,3}</code>, сумма 6. Если набор устроен (каждый делит сумму <code>S</code>), допишем <code>S</code>: новая сумма <code>2S</code>, старые делят <code>S∣2S</code>, новый <code>S∣2S</code>, и <code>S</code> больше всех — различны.</p>
+          <p>Получаем <span class="key">1, 2, 3, 6, 12, 24, …</span> = <code>1,2,3</code> и <code>3·2^k</code>. От 3 элементов до 50 — 47 шагов.</p>
+        </div>
+      </details>
+    </article>
+  </section>
+
+  <!-- ============ BLOCK C ============ -->
+  <section class="block">
+    <div class="block-head"><span class="block-tag">C</span><h2>Использовать несколько предыдущих · подсерии</h2></div>
+    <p class="block-quote">«Можно для следующего шага использовать не один, а несколько предыдущих, быть может, все. Серия может распадаться на подсерии — начала у них разные.»</p>
+
+    <article class="card" style="--i:0">
+      <div class="card-head">
+        <div class="num">4</div>
+        <div class="head-text">
+          <h3>Строка из 100: остаток 1 при делении на любое прежнее</h3>
+          <div class="chips">
+            <span class="chip">◦</span>
+            <span class="chip method">Сильвестр: ×всех прежних + 1</span>
+            <span class="chip role-mid">середина</span>
+            <span class="chip time">≈7 мин</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">Средняя</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> «Остаток 1» = «на единицу больше кратного всем». Что кратно всем сразу? Их произведение. Это последовательность Сильвестра — прямая иллюстрация «использовать все предыдущие».</p>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p>Берём <code>a₁=2</code>, далее <span class="key">a_{n+1} = a₁·a₂·…·a_n + 1</span>. Тогда <code>a_j − 1</code> = произведение всех прежних → делится на каждое <code>a_i</code> (<code>i&lt;j</code>), остаток ровно 1.</p>
+          <p>Числа: <span class="key">2, 3, 7, 43, 1807, …</span> Растут быстро, но условие требует лишь существования.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="card" style="--i:1">
+      <div class="card-head">
+        <div class="num">5</div>
+        <div class="head-text">
+          <h3>Квадрат на любое число квадратов &gt; 5</h3>
+          <div class="chips">
+            <span class="chip">◦</span>
+            <span class="chip method">шаг +3, базы 6, 7, 8</span>
+            <span class="chip role-mid">середина</span>
+            <span class="chip time">≈7 мин</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">Средняя</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Чистая «подсерия»: один квадрат режется на 4 → число растёт на 3. Нужны три старта 6, 7, 8 (по остаткам mod 3) — и накрыты все числа от 6.</p>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p><span class="key">Шаг +3:</span> любой квадрат в разбиении режем на 4 (число частей <code>k → k+3</code>).</p>
+          <p>Базы: <code>6 = 9−4+1</code> (сетка 3×3, центр-блок 2×2 склеен), <code>7 = 4+3</code> (4 равных, один на 4), <code>8 = 16−9+1</code> (сетка 4×4, блок 3×3 склеен). Остатки 0,1,2 mod 3 покрыты → все <code>n ≥ 6</code>.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="card" style="--i:2">
+      <div class="card-head">
+        <div class="num">6</div>
+        <div class="head-text">
+          <h3>Монеты 5 и 26 ₽: любая сумма от 100</h3>
+          <div class="chips">
+            <span class="chip">◦</span>
+            <span class="chip method">26·k берёт остатки mod 5, затем +5</span>
+            <span class="chip role-open">сильный опенер</span>
+            <span class="chip time">≈5 мин</span>
+          </div>
+        </div>
+        <div class="diff d-easy">
+          <div class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+          <span class="diff-label">Лёгкая</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Самая осязаемая (деньги). Числа 0, 26, 52, 78, 104 дают все 5 остатков по модулю 5 → пять стартов 100–104, дальше +5 навсегда. Заодно скрытое число Фробениуса 5·26−5−26 = 99.</p>
+      <details>
+        <summary>Идея и ответ</summary>
+        <div class="sol">
+          <p>Базы: <code>100=5·20</code>, <code>101=26+75</code>, <code>102=52+50</code>, <code>103=78+25</code>, <code>104=26·4</code>. Они покрывают все остатки mod 5. Любое <code>n ≥ 100</code> = одна из этих баз + <code>5·(сколько-то)</code>.</p>
+          <p>Граница «100» не случайна: <span class="key">наибольшее непредставимое = 99</span> (число Фробениуса пары 5, 26).</p>
+        </div>
+      </details>
+    </article>
+  </section>
+
+  <!-- ============ BLOCK D ============ -->
+  <section class="block">
+    <div class="block-head"><span class="block-tag">D</span><h2>Шагать только по числам избранного вида</h2></div>
+    <p class="block-quote">«Можно шагать не по всем числам, а только по числам избранного вида.» — здесь это степени двойки и особые количества.</p>
+
+    <article class="card" style="--i:0">
+      <div class="card-head">
+        <div class="num">7<small>а,б</small></div>
+        <div class="head-text">
+          <h3>Квадрат без клетки → «уголки» (L-тримино)</h3>
+          <div class="chips">
+            <span class="chip">◦ оба</span>
+            <span class="chip method">центральное тримино + рекурсия 2ⁿ</span>
+            <span class="chip role-open">а в классе</span>
+            <span class="chip role-peak">б — пик</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">пара: возрастает</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Классика «дефектной доски». 7а руками открывает приём, 7б — тот же приём рекурсивно. Именно поэтому 7б — <strong>не 20-минутная пытка</strong> (как я зря сказал раньше), а естественный пик сразу после 7а: ставишь её как «а тут так же?».</p>
+      <div class="parts">
+        <div class="part lvl-easy"><span class="pl">а)</span><span class="pt">4×4 без клетки = 5 уголков. Рисуется и видится.</span><span class="pd"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span><span class="dlab">≈5 мин</span></span></div>
+        <div class="part lvl-med"><span class="pl">б)</span><span class="pt">64×64: та же рекурсия. Главная мысль — резать на четыре и сводить к меньшему.</span><span class="pd"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span><span class="dlab">≈10 мин</span></span></div>
+      </div>
+      <details>
+        <summary>Идея</summary>
+        <div class="sol">
+          <p>Делим квадрат <code>2ⁿ×2ⁿ</code> на четыре четверти. Вырезанная клетка — в одной из них. В <span class="key">центре</span> кладём один уголок, накрывающий по клетке трёх «целых» четвертей. Теперь у каждой четверти ровно одна клетка занята → каждая стала задачей того же вида вдвое меньше. Рекурсия. Для 4×4 — один шаг, 5 уголков.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="card" style="--i:1">
+      <div class="card-head">
+        <div class="num">8</div>
+        <div class="head-text">
+          <h3>1024 стакана: уравнять воду переливаниями</h3>
+          <div class="chips">
+            <span class="chip">◦</span>
+            <span class="chip method">однородные половины → кросс-пары</span>
+            <span class="chip role-mid">середина</span>
+            <span class="chip role-peak">кандидат в пик</span>
+            <span class="chip time">≈7–10 мин</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">Средняя</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> <code>1024 = 2¹⁰</code>. Тонкость, на которой спотыкаются: наивное «спарить и усреднить» ломает прежние пары. Правильный финал — сначала сделать обе половины <em>однородными</em>, и только потом крест-накрест.</p>
+      <details>
+        <summary>Идея</summary>
+        <div class="sol">
+          <p>Индукция по <code>2ⁿ</code>. Половиним на две части по <code>2ⁿ⁻¹</code>. По индукции делаем <span class="key">каждую половину целиком однородной</span> (все = A и все = B, по сохранению воды это средние половин). Теперь спариваем <em>один стакан из первой с одним из второй</em> — раз все равны, каждая пара даёт одно и то же <code>(A+B)/2</code>. После <code>2ⁿ⁻¹</code> таких переливаний все равны. Ключ — однородность перед скрещиванием.</p>
+        </div>
+      </details>
+    </article>
+
+    <article class="card" style="--i:2">
+      <div class="card-head">
+        <div class="num">9<small>а,б⋆</small></div>
+        <div class="head-text">
+          <h3>100 баллонов: уравнять давление</h3>
+          <div class="chips">
+            <span class="chip">а: — / б: ⋆</span>
+            <span class="chip method">кросс-усреднение · инвариант знаменателя</span>
+            <span class="chip role-home">дом</span>
+            <span class="chip role-stretch">стретч</span>
+          </div>
+        </div>
+        <div class="diff d-hard">
+          <div class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <span class="diff-label">Сложная</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Старшая пара листка. 9а — как стаканы, но группами по 2–5, и трюк «сохранять однородность» тоньше. 9б — уже инвариант: ответ <strong>отрицательный</strong>, и это красиво.</p>
+      <div class="parts">
+        <div class="part lvl-hard"><span class="pl">а)</span><span class="pt">Группы 2–5: можно. Слоями делаем однородные блоки 5 → 25 → 100 (кросс-усреднение).</span><span class="pd"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span><span class="dlab">дом</span></span></div>
+        <div class="part lvl-hard"><span class="pl">б⋆)</span><span class="pt">Группы только 2–4: <strong>не обязательно</strong>. Инвариант ловит факт.</span><span class="pd"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span><span class="dlab">стретч</span></span></div>
+      </div>
+      <details>
+        <summary>Идеи и ответ 9б</summary>
+        <div class="sol">
+          <p><span class="key">9а.</span> Усредняя группу, делаем её однородной. Чтобы слить <em>пять</em> однородных блоков по 5 в один однородный блок 25, берём по одному баллону из каждого блока (группа 5) и так все 5 «позиций» — каждая даёт одно среднее. Слои: 100 → 20 блоков по 5 → 4 блока по 25 → весь 100 (последний слой группами по 4). Все размеры групп — 4 и 5, разрешено.</p>
+          <p><span class="key">9б — нет.</span> При группах 2,3,4 знаменатели давлений остаются произведениями только двоек и троек. А общее среднее = <code>S/100</code>, и <code>100 = 2²·5²</code>: если <code>S</code> не делится на 25, в знаменателе сидит пятёрка — недостижимо. Контрпример: 99 баллонов по 0 и один с 1.</p>
+        </div>
+      </details>
+    </article>
+  </section>
+
+  <!-- ============ BLOCK E ============ -->
+  <section class="block">
+    <div class="block-head"><span class="block-tag">E</span><h2>⋆ Размерность: гиперкубы</h2></div>
+    <p class="block-quote">Одномерный куб — отрезок, двумерный — квадрат, далее вверх. Рисовать, считать, мечтать про 4D.</p>
+
+    <article class="card" style="--i:0">
+      <div class="card-head">
+        <div class="num">10<small>⋆</small></div>
+        <div class="head-text">
+          <h3>n-мерный куб: рисунки и подсчёты</h3>
+          <div class="chips">
+            <span class="chip star">⋆</span>
+            <span class="chip method">n-куб = два (n−1)-куба → удвоение</span>
+            <span class="chip role-home">дом, «на вырост»</span>
+          </div>
+        </div>
+        <div class="diff d-med">
+          <div class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+          <span class="diff-label">счёт 3 · рисунок 4</span>
+        </div>
+      </div>
+      <p class="why"><b>Суть</b> Опять «удвоение»: куб размерности <em>n</em> = две копии <em>(n−1)</em>-куба плюс рёбра между ними. Отсюда все формулы. Подсчёт — средний, визуализация 4D — самое трудное и самое вкусное. Идеальное домашнее «на вырост».</p>
+      <details>
+        <summary>Ответы (вершины / рёбра / гиперграни)</summary>
+        <div class="sol">
+          <p>Вершины: <span class="key">2ⁿ</span> (на каждом шаге удваиваются). Рёбра: <span class="key">n·2ⁿ⁻¹</span> (рёбра двух копий плюс соединяющие). Гиперграни (грани размерности n−1): <span class="key">2n</span> (две «торцевые» копии + по одной из каждой гиперграни прежнего куба).</p>
+          <p>Сверка: 3-куб — 8 вершин, 12 рёбер, 6 граней; 4-куб — 16, 32, 8.</p>
+        </div>
+      </details>
+    </article>
+  </section>
+
+  <!-- ============ SUMMARY ============ -->
+  <section class="summary-sec">
+    <h2>Сводка</h2>
+    <p class="sub" style="margin-top:6px">Лестница по возрастанию сложности и мой предлагаемый ход. Это опорная точка — порядок ты выстроишь свой, под то, как пойдёт ученик.</p>
+
+    <div class="ladder">
+      <h3>Лестница сложности</h3>
+      <div class="lrow"><span class="ln">6</span><span class="lt">Монеты 5 и 26 — деньги, остатки mod 5</span><span class="ld"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">1<span style="font-size:13px">а–в</span></span><span class="lt">Прямоугольник → квадраты (находишь руками)</span><span class="ld"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">3</span><span class="lt">50 чисел — база 1,2,3 + удвоение суммы</span><span class="ld"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">7а</span><span class="lt">4×4 без клетки → уголки (тактильно)</span><span class="ld"><span class="dots d-easy"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">4</span><span class="lt">Строка из 100 — Сильвестр</span><span class="ld"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">5</span><span class="lt">Квадрат на n&gt;5 квадратов — шаг +3</span><span class="ld"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">8</span><span class="lt">1024 стакана — однородные половины</span><span class="ld"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">7б</span><span class="lt">64×64 — рекурсия (пик урока)</span><span class="ld"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">2</span><span class="lt">Новости 2n−4 — ядро из 4 (верх средних)</span><span class="ld"><span class="dots d-med"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">1г</span><span class="lt">179 шагов + различность (дом)</span><span class="ld"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">10⋆</span><span class="lt">Гиперкубы — счёт + визуализация (дом)</span><span class="ld"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">9а</span><span class="lt">100 баллонов — кросс-усреднение (дом)</span><span class="ld"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></span></div>
+      <div class="lrow"><span class="ln">9б⋆</span><span class="lt">Группы 2–4 — инвариант (стретч)</span><span class="ld"><span class="dots d-hard"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span></span></div>
+    </div>
+
+    <div class="order-grid">
+      <div class="order-box peak">
+        <h3>Предлагаемый ход в классе</h3>
+        <ol class="flow">
+          <li><b>6</b> · монеты <span class="t">— быстрый выигрыш, деньги</span></li>
+          <li><b>3</b> · 50 чисел <span class="t">— «использовать прежнее» начинается</span></li>
+          <li><b>1а–в</b> · прямоугольники <span class="t">— режем, ловим узор Фибоначчи</span></li>
+          <li><b>7а</b> · 4×4 <span class="t">— тактильный уголок</span></li>
+          <li><b>4</b> · Сильвестр <span class="t">— «все предыдущие»</span></li>
+          <li><b>5</b> · квадраты <span class="t">— шаг +3, подсерии</span></li>
+          <li><b>пик</b> · 7б / 8 / 2 <span class="t">— один челлендж на выбор, см. варианты ниже</span></li>
+        </ol>
+        <p style="font-family:'PT Sans',sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;font-style:italic">≈6 разобрано + пик за ~45 мин. Два оставшихся кандидата — в буфер, если идёт быстро. Открыть можно и с 1а (как на листке) — выбор твой.</p>
+      </div>
+      <div class="order-box home">
+        <h3>На дом и стретч</h3>
+        <ul class="plain">
+          <li><b>1г</b> — 179 шагов и доказать различность. Долгая, многопунктовая, на подумать.</li>
+          <li><b>10⋆</b> — гиперкубы: посчитать вершины/рёбра <em>n</em>-куба, помечтать про 4D.</li>
+          <li><b>9а</b> — баллоны: тот же дух, что стаканы, но тоньше.</li>
+          <li><b>9б⋆</b> — стретч для инварианта, если зайдёт.</li>
+        </ul>
+        <p style="font-family:'PT Sans',sans-serif;font-size:13px;color:var(--ink-faint);margin:16px 0 0;font-style:italic">На дом 2–4 задачи — самое тяжёлое уносим из класса. В классе быстрый темп и один пик.</p>
+      </div>
+    </div>
+
+    <div class="order-box peak" style="margin-top:22px">
+      <h3>Челлендж урока — три кандидата</h3>
+      <ul class="plain">
+        <li><b>7б · 64×64</b> — чистая, растёт прямо из 7а. Безопасный выбор; минус — «тот же трюк второй раз», нового мало.</li>
+        <li><b>8 · стаканы</b> — самостоятельная, с настоящим «ага» (сначала однородные половины, потом крест-накрест). Самая «вкусная» как отдельная задача.</li>
+        <li><b>2 · новости</b> — самая трудная из средних, много разговора и идей. Минус — может съесть время; рано не ставить.</li>
+      </ul>
+      <p style="font-family:'PT Sans',sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;font-style:italic">7б — безопасно и красиво в связке с 7а. 8 — лучший отдельный вызов. 2 — если хочешь настоящий бой и не жалко времени.</p>
+    </div>
+
+    <div class="revised">
+      <h3>Что я пересмотрел после перерешивания</h3>
+      <ul>
+        <li><strong>Ты прав: костяк — от простого к сложному.</strong> В прошлый раз я это зря смазал. Блоки A–E идут и тематически, и по нарастанию: лёгкие 1(а–в), 3, 6 в начале, средние 4, 5, 7, 8 в середине, чистый «хард» — 9, 10, 1г — в конце. Гнать против этого не нужно.</li>
+        <li><strong>Одну оценку я завысил — задачу 2.</strong> Ставил «сложная», теперь «верх средних»: оптимальность не спрашивают, а конструкция достижима. Но приём (ядро из 4) реально тяжелее соседей 3–6 — это единственная заметная локальная инверсия. Не промах листка: тема «несколько этажей сразу» её и готовит. Для взрослого заложи время.</li>
+        <li><strong>7б — не 20-минутный гринд.</strong> Беру назад. Это рекурсия в одну мысль сразу после 7а — лёгкий естественный пик, а не пытка.</li>
+        <li><strong>Челлендж — не обязательно 7б.</strong> Три кандидата с разным характером (бокс выше). 7б безопасен в связке с 7а, 8 — лучший отдельный вызов, 2 — для настоящего боя. Выбор за тобой — это твой ход.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Перерешано и сверено по числам · сложность — мой взгляд, порядок за тобой</footer>
+
+</div>
+</body>
+</html>

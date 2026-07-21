@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:14px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:30px 0 30px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  details{margin-top:14px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--accent);}
+  details[open] summary::before{content:"▾ ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Двойной счёт</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <ol>
+    <li>
+      <div class="cnd">В классе 27 человек. Каждый мальчик дружит ровно с четырьмя девочками из класса, а каждая девочка дружит ровно с пятью мальчиками. Сколько в классе мальчиков и сколько девочек?</div>
+      <details><summary>Указание</summary><div class="body">Сосчитайте общее число дружеских пар «мальчик — девочка» двумя способами: со стороны мальчиков и со стороны девочек.</div></details>
+      <details><summary>Решение</summary><div class="body">Пусть мальчиков <b>m</b>, девочек <b>d</b>. Каждый мальчик дружит с четырьмя девочками, поэтому число дружеских пар равно <b>4m</b>. Каждая девочка дружит с пятью мальчиками, поэтому это же число равно <b>5d</b>. Значит, 4m = 5d. Вместе с m + d = 27 получаем m = 15, d = 12. <b>Ответ: 15 мальчиков и 12 девочек.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">Футбольный мяч сшит из двенадцати пятиугольников и двадцати шестиугольников. Сколько на мяче швов, если каждый шов — общая сторона двух соседних кусков?</div>
+      <details><summary>Указание</summary><div class="body">Сосчитайте все стороны всех кусков. Сколько кусков примыкает к каждому шву?</div></details>
+      <details><summary>Решение</summary><div class="body">У двенадцати пятиугольников 12 · 5 = 60 сторон, у двадцати шестиугольников 20 · 6 = 120 сторон, всего 180 сторон кусков. Каждый шов — общая сторона двух соседних кусков, поэтому при таком подсчёте каждый шов учтён дважды. Швов 180 : 2 = 90. <b>Ответ: 90 швов.</b></div></details>
+    </li>
+    <li>
+      <div class="cnd">В таблице умножения 9 × 9 на пересечении i-й строки и j-го столбца стоит произведение i · j. Найдите сумму всех чисел этой таблицы.</div>
+      <details><summary>Указание</summary><div class="body">Сложите числа по строкам и вынесите за скобку общий множитель.</div></details>
+      <details><summary>Решение</summary><div class="body">В i-й строке стоят числа i · 1, i · 2, …, i · 9; их сумма равна i · (1 + 2 + … + 9) = 45 i. Сумма по всем строкам равна 45 · (1 + 2 + … + 9) = 45 · 45. <b>Ответ: 2025 (= 45²).</b></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:14px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:28px 0 28px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .check{margin-top:15px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:150px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);}
+  .res.no{color:var(--rubric);}
+  details{margin-top:12px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--accent);}
+  details[open] summary::before{content:"▾ ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Графы · двойной счёт</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <ol>
+    <li>
+      <div class="cnd">Города с номерами от 1 до 9. Между городами с номерами i и j есть авиарейс тогда и только тогда, когда i + j делится на 3. Можно ли добраться с пересадками из города 1 в город 6?</div>
+      <div class="check"><label>Проверить ответ (да / нет):</label><input type="text" data-answers="нет,нельзя,no" placeholder="да или нет"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Нарисуйте граф: города — точки, рейсы — рёбра. Разбейте города по остатку от деления на 3 — какие с какими соединены?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Нельзя.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Города соединены, когда сумма их номеров делится на 3, то есть либо оба номера делятся на 3, либо один даёт остаток 1, а другой — остаток 2. Города с остатком 0 — это 3, 6, 9; они соединены только между собой. Города с остатком 1 (это 1, 4, 7) соединены только с городами с остатком 2 (это 2, 5, 8), и наоборот. Значит, граф распадается на два не связанных между собой куска: {3, 6, 9} и {1, 2, 4, 5, 7, 8}. Город 1 — в одном куске, город 6 — в другом, поэтому долететь нельзя.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Петя соединял компьютеры кабелями. Всего он проложил 20 кабелей; у каждого кабеля два конца-разъёма. Часть разъёмов он воткнул в компьютеры: к семи компьютерам подключено по 4 разъёма, к двум — по 3 разъёма, а остальные разъёмы остались висеть в воздухе. Сколько разъёмов висит в воздухе?</div>
+      <div class="check"><label>Проверить ответ:</label><input type="text" data-answers="6,шесть" placeholder="число"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Посчитайте все концы кабелей двумя способами: сколько их всего и сколько из них воткнуто в компьютеры.</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>6 разъёмов.</b></div></details>
+      <details><summary>Решение</summary><div class="body">У каждого из 20 кабелей два конца, поэтому всего концов 2 · 20 = 40. В компьютеры воткнуто 7 · 4 + 2 · 3 = 28 + 6 = 34 конца. Значит, висит в воздухе 40 − 34 = 6 концов.</div></details>
+    </li>
+    <li>
+      <div class="cnd">В классе каждый ученик дружит с нечётным числом одноклассников. Докажите, что учеников в классе чётное число. Постарайтесь найти короткое рассуждение, использующее двойной подсчёт.</div>
+      <details><summary>Указание</summary><div class="body">Что здесь удобно посчитать двумя способами? Посмотрите на общее число дружеских пар.</div></details>
+      <details><summary>Решение</summary><div class="body">Посчитаем число дружеских пар двумя способами. Сложим у всех учеников число их друзей: каждая дружеская пара при этом учтётся дважды (у обоих участников), поэтому такая сумма чётна. Но эта же сумма — сложение стольких нечётных чисел, сколько в классе учеников. А сумма нечётных чисел чётна лишь тогда, когда слагаемых чётное число. Значит, учеников чётное число.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На турнире каждый шахматист сыграл с каждым другим ровно одну партию. Всего было сыграно 66 партий. Сколько шахматистов участвовало в турнире?</div>
+      <div class="check"><label>Проверить ответ:</label><input type="text" data-answers="12,двенадцать" placeholder="число"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Сколько партий сыграл каждый из n шахматистов? Посчитайте общее число партий и приравняйте к 66.</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>12 шахматистов.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Каждый из n шахматистов сыграл с каждым из остальных, то есть n − 1 партию. Сложив это по всем игрокам, получим n(n − 1); но так каждая партия посчитана дважды — за обоих её участников. Значит, партий n(n − 1) : 2 = 66, откуда n(n − 1) = 132 = 12 · 11, то есть n = 12.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Докажите, что в любой компании найдутся двое, у которых одинаковое число знакомых среди присутствующих.</div>
+      <details><summary>Указание</summary><div class="body">Предположите, что у всех разное число знакомых. Если в компании n человек, то числа знакомых — это 0, 1, …, n − 1. Попробуйте нарисовать такой граф и покажите, что он невозможен.</div></details>
+      <details><summary>Решение</summary><div class="body">Пусть в компании n человек, и предположим, что у всех число знакомых разное. У каждого оно от 0 до n − 1, а таких значений ровно n, поэтому встречаются все значения 0, 1, …, n − 1 по разу. Но тогда есть человек, знакомый со всеми остальными (n − 1 знакомых), и человек, не знакомый ни с кем (0 знакомых). Это невозможно: тот, кто знаком со всеми, знаком и с тем, у кого 0 знакомых. Противоречие — значит, у каких-то двоих число знакомых совпадает.</div></details>
+    </li>
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check');
+    var inp=box.querySelector('input');
+    var res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='Верно ✓';res.className='res ok';}
+    else{res.textContent='Не сходится — подумайте ещё';res.className='res no';}
+  }
+</script>
+</body>
+</html>

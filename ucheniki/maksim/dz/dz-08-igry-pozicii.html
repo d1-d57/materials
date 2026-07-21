@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  .lead b{color:var(--ink);}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:28px 0 28px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .fig{margin:20px 0 4px;padding:14px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+  .graph{display:block;width:100%;height:auto;}
+  .check{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:170px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);}
+  .res.no{color:var(--rubric);}
+  details{margin-top:12px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"\25B8 ";color:var(--accent);}
+  details[open] summary::before{content:"\25BE ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <p class="lead">Во всех задачах двое ходят по очереди. Нужно определить, <b>кто выигрывает при правильной игре</b> — то есть если оба играют наилучшим образом. И, конечно, объяснить почему.</p>
+  <ol>
+    <li>
+      <div class="cnd">На столе 25 спичек. Игроки по очереди берут одну, две или четыре спички — ровно три спички брать нельзя. Кто не может сделать ход, проигрывает.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Приём «дополнять ход соперника до пяти» здесь не работает: если соперник взял две спички, дополнить до пяти нечем. Выпишите подряд 0, 1, 2, 3, … и разметьте, какие количества проигрышные.</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Проигрышны в точности количества, кратные трём. Ноль спичек — проигрышное положение. Из количества, кратного трём, любой ход оставляет некратное: вычитая 1, 2 или 4, остаток по модулю 3 становится 2, 1 или 2. Наоборот, из некратного всегда можно уйти в кратное: при остатке 1 взять одну спичку, при остатке 2 — две. Значит, тот, кому досталось некратное трём число, каждым ходом возвращает сопернику кратное, пока у того не останется ноль. Число 25 не делится на 3, поэтому выигрывает первый: он берёт одну спичку и оставляет 24.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На картинке 16 вершин, соединённых стрелками. В вершине Ж стоит фишка. Игроки по очереди передвигают её вдоль стрелки — за ход по одной стрелке и только в направлении стрелки. Кто не может сделать ход, проигрывает.</div>
+      <div class="fig"><svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg" class="graph" role="img" aria-label="Ориентированный граф из 16 вершин, фишка стоит в вершине Ж">
+<line x1="88.3" y1="184.5" x2="181.7" y2="105.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="181.7,105.5 177.1,114.8 171.7,108.4" fill="#5d5446"/>
+<line x1="94.0" y1="200.0" x2="176.0" y2="200.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="176.0,200.0 166.5,204.2 166.5,195.8" fill="#5d5446"/>
+<line x1="88.3" y1="215.5" x2="181.7" y2="294.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="181.7,294.5 171.7,291.6 177.1,285.2" fill="#5d5446"/>
+<line x1="224.0" y1="90.0" x2="306.0" y2="90.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="306.0,90.0 296.5,94.2 296.5,85.8" fill="#5d5446"/>
+<line x1="218.3" y1="105.5" x2="311.7" y2="184.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="311.7,184.5 301.7,181.6 307.1,175.2" fill="#5d5446"/>
+<line x1="222.1" y1="99.4" x2="437.9" y2="190.6" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="437.9,190.6 427.5,190.8 430.8,183.1" fill="#5d5446"/>
+<line x1="224.0" y1="200.0" x2="306.0" y2="200.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="306.0,200.0 296.5,204.2 296.5,195.8" fill="#5d5446"/>
+<line x1="218.3" y1="215.5" x2="311.7" y2="294.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="311.7,294.5 301.7,291.6 307.1,285.2" fill="#5d5446"/>
+<line x1="224.0" y1="310.0" x2="306.0" y2="310.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="306.0,310.0 296.5,314.2 296.5,305.8" fill="#5d5446"/>
+<path d="M221.1,321.4 Q330.0,380.0 438.9,321.4" fill="none" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="438.9,321.4 432.5,329.6 428.5,322.2" fill="#5d5446"/>
+<line x1="354.0" y1="90.0" x2="436.0" y2="90.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="436.0,90.0 426.5,94.2 426.5,85.8" fill="#5d5446"/>
+<line x1="348.3" y1="105.5" x2="441.7" y2="184.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="441.7,184.5 431.7,181.6 437.1,175.2" fill="#5d5446"/>
+<line x1="354.0" y1="200.0" x2="436.0" y2="200.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="436.0,200.0 426.5,204.2 426.5,195.8" fill="#5d5446"/>
+<line x1="352.1" y1="190.6" x2="567.9" y2="99.4" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="567.9,99.4 560.8,106.9 557.5,99.2" fill="#5d5446"/>
+<line x1="354.0" y1="310.0" x2="436.0" y2="310.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="436.0,310.0 426.5,314.2 426.5,305.8" fill="#5d5446"/>
+<line x1="352.1" y1="300.6" x2="567.9" y2="209.4" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="567.9,209.4 560.8,216.9 557.5,209.2" fill="#5d5446"/>
+<line x1="484.0" y1="90.0" x2="566.0" y2="90.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="566.0,90.0 556.5,94.2 556.5,85.8" fill="#5d5446"/>
+<path d="M481.5,79.3 Q590.0,25.0 698.5,79.3" fill="none" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="698.5,79.3 688.2,78.8 691.9,71.3" fill="#5d5446"/>
+<line x1="478.3" y1="184.5" x2="571.7" y2="105.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="571.7,105.5 567.1,114.8 561.7,108.4" fill="#5d5446"/>
+<line x1="484.0" y1="200.0" x2="566.0" y2="200.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="566.0,200.0 556.5,204.2 556.5,195.8" fill="#5d5446"/>
+<line x1="478.3" y1="294.5" x2="571.7" y2="215.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="571.7,215.5 567.1,224.8 561.7,218.4" fill="#5d5446"/>
+<line x1="484.0" y1="310.0" x2="566.0" y2="310.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="566.0,310.0 556.5,314.2 556.5,305.8" fill="#5d5446"/>
+<line x1="614.0" y1="90.0" x2="696.0" y2="90.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="696.0,90.0 686.5,94.2 686.5,85.8" fill="#5d5446"/>
+<line x1="608.3" y1="105.5" x2="701.7" y2="184.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="701.7,184.5 691.7,181.6 697.1,175.2" fill="#5d5446"/>
+<line x1="614.0" y1="200.0" x2="696.0" y2="200.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="696.0,200.0 686.5,204.2 686.5,195.8" fill="#5d5446"/>
+<line x1="608.3" y1="294.5" x2="701.7" y2="215.5" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="701.7,215.5 697.1,224.8 691.7,218.4" fill="#5d5446"/>
+<line x1="614.0" y1="310.0" x2="696.0" y2="310.0" stroke="#5d5446" stroke-width="1.7"/>
+<polygon points="696.0,310.0 686.5,314.2 686.5,305.8" fill="#5d5446"/>
+<circle cx="70" cy="200" r="21" fill="#e8ddc2" stroke="#9e2b25" stroke-width="2.4"/>
+<text x="70" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Ж</text>
+<circle cx="200" cy="90" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="200" y="97" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">М</text>
+<circle cx="200" cy="200" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="200" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Б</text>
+<circle cx="200" cy="310" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="200" y="317" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Т</text>
+<circle cx="330" cy="90" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="330" y="97" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Р</text>
+<circle cx="330" cy="200" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="330" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">А</text>
+<circle cx="330" cy="310" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="330" y="317" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">К</text>
+<circle cx="460" cy="90" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="460" y="97" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">В</text>
+<circle cx="460" cy="200" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="460" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Д</text>
+<circle cx="460" cy="310" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="460" y="317" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Я</text>
+<circle cx="590" cy="90" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="590" y="97" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">С</text>
+<circle cx="590" cy="200" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="590" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Н</text>
+<circle cx="590" cy="310" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="590" y="317" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Э</text>
+<circle cx="720" cy="90" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="720" y="97" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Г</text>
+<circle cx="720" cy="200" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="720" y="207" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">Л</text>
+<circle cx="720" cy="310" r="21" fill="#fbf7ec" stroke="#8a7f6c" stroke-width="1.4"/>
+<text x="720" y="317" text-anchor="middle" font-family="PT Serif, Georgia, serif" font-size="19" fill="#2a2520">У</text>
+<text x="70" y="250" text-anchor="middle" font-family="PT Sans, sans-serif" font-size="12" letter-spacing="1.2" fill="#9e2b25">ФИШКА</text>
+</svg></div>
+      <div class="sub"><b>а)</b> Кто выигрывает при правильной игре?</div>
+      <div class="sub"><b>б)</b> Отметьте все проигрышные вершины — те, в которых проигрывает тот, чей сейчас ход. Сколько их получилось?</div>
+      <div class="check"><label>Ответ (а):</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <div class="check"><label>Ответ (б):</label><input type="text" data-answers="6,шесть" placeholder="число вершин"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Начните с вершин, из которых не выходит ни одной стрелки, и двигайтесь назад. Это ровно то, что мы делали с числом 30, — только теперь позиции не выстроены в линию.</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) Первый. (б) Шесть: Б, Д, Я, Г, Л, У.</b> Единственный выигрышный первый ход — в Б.</div></details>
+      <details><summary>Решение</summary><div class="body">Из вершин Г, Л и У стрелок не выходит — значит, это проигрышные вершины. Дальше правило прежнее: вершина выигрышная, если из неё есть стрелка в проигрышную, и проигрышная, если все стрелки ведут в выигрышные.<br><br>Идём справа налево. С, Н и Э выигрышные — у каждой есть стрелка в Л. В выигрышная — есть стрелка в Г. <b>Я проигрышная</b>: обе её стрелки, в Н и в Э, ведут в выигрышные. <b>Д проигрышная</b>: С и Н тоже обе выигрышные. Дальше К выигрышная (стрелка в Я), А и Р выигрышные (у обеих стрелка в Д). <b>Б проигрышная</b>: её стрелки идут в А и К, а они выигрышные. М выигрышная (стрелка в Д), Т выигрышная (стрелка в Я).<br><br>Наконец, из Ж выходят стрелки в М, Б и Т. Среди них Б проигрышная, поэтому Ж выигрышная: первый ходит в Б и выигрывает. Ходы в М или Т отдают победу сопернику.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Плитка шоколада 6 × 8 разделена бороздками на 48 квадратиков. За ход разрешается взять любой кусок и разломить его по прямой бороздке на два куска. Проигрывает тот, кто не может сделать ход.</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Как меняется число кусков на столе после одного излома?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Каждый излом увеличивает число кусков ровно на один. В начале кусок один, в конце их 48, поэтому изломов всегда ровно 47 — сколько бы и как бы ни ломали. Число ходов нечётно, значит последний ход достаётся первому: он и выигрывает. Стратегии здесь нет вовсе — исход не зависит от того, как играли.</div></details>
+    </li>
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/\u0451/g,'\u0435').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check');
+    var inp=box.querySelector('input');
+    var res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='\u0412\u0435\u0440\u043d\u043e \u2713';res.className='res ok';}
+    else{res.textContent='\u041d\u0435 \u0441\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u2014 \u043f\u043e\u0434\u0443\u043c\u0430\u0439\u0442\u0435 \u0435\u0449\u0451';res.className='res no';}
+  }
+</script>
+</body>
+</html>

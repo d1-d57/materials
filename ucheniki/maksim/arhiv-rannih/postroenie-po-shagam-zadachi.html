@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Построение по шагам — задачи</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=PT+Sans:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--paper-2:#efe7d4;--panel:#fbf7ec;
+    --ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+    --rule:#d8cdb4;--rubric:#9e2b25;--rubric-soft:#c6584f;--med:#b07414;
+    --shadow:0 1px 0 rgba(42,37,32,.04),0 10px 30px -18px rgba(42,37,32,.45);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 24px 90px;}
+
+  header.mast{padding:64px 0 22px;border-bottom:2px solid var(--ink);animation:rise .6s ease both;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:clamp(32px,5.5vw,50px);line-height:1.05;margin:0;letter-spacing:-.01em;}
+  .sub{font-family:"PT Sans",sans-serif;font-size:13.5px;color:var(--ink-faint);margin:14px 0 0;}
+
+  .task{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:22px 26px;margin:18px 0;box-shadow:var(--shadow);animation:rise .5s ease both;animation-delay:calc(var(--i,0)*50ms);}
+  .task.star{border-left:3px solid var(--med);}
+  .task-head{display:flex;gap:16px;align-items:baseline;}
+  .tnum{font-family:"Old Standard TT",serif;font-weight:700;font-style:italic;font-size:40px;color:var(--rubric);line-height:.8;min-width:1.2ch;}
+  .task-head h2{font-family:"Old Standard TT",serif;font-weight:700;font-size:24px;margin:0;line-height:1.12;}
+  .star-m{color:var(--med);font-style:normal;margin-right:.3em;}
+  .cond{font-size:17.5px;line-height:1.58;margin:14px 0 2px;}
+  .spoilers{margin-top:14px;border-top:1px solid var(--rule);padding-top:6px;}
+  details{padding:3px 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;padding:6px 0;user-select:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-size:14px;line-height:1;border:1px solid currentColor;transition:transform .2s;}
+  details[open] summary::before{content:"–";transform:rotate(180deg);}
+  details.hint summary{color:var(--ink-soft);}
+  details.hint summary::before{border-color:var(--ink-faint);}
+  details.ans summary{color:var(--rubric);}
+  details.ans summary::before{border-color:var(--rubric-soft);}
+  .sp{font-size:15.5px;color:var(--ink);padding:4px 2px 8px 26px;animation:fade .25s ease;}
+  .sp p{margin:0 0 8px;}
+  .sp p:last-child{margin-bottom:0;}
+  .sp code{font-family:"PT Sans",monospace;background:var(--paper-2);padding:1px 5px;border-radius:3px;font-size:14px;}
+  .sp .key{color:var(--rubric);font-weight:700;}
+
+  @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  @media print{body::before{display:none;}.task{box-shadow:none;}details summary{display:none;}details>.sp{display:block !important;}*{animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Домашнее задание</p>
+    <h1>Построение по шагам</h1>
+    <p class="sub">Подсказки и решения — под спойлерами. ★ — где нужен неочевидный ход.</p>
+  </header>
+
+  <article class="task" style="--i:0">
+    <div class="task-head"><div class="tnum">1</div><h2>Пятьдесят чисел</h2></div>
+    <p class="cond">Найдутся ли 50 различных натуральных чисел, сумма которых кратна каждому из них?</p>
+    <div class="spoilers">
+      <details class="hint"><summary>Подсказка</summary><div class="sp"><p>Небольшой подходящий набор найти нетрудно; дальше его можно наращивать по одному числу.</p></div></details>
+      <details class="ans"><summary>Решение</summary><div class="sp">
+        <p>Из двух чисел нельзя: при <code>a &lt; b</code> понадобилось бы и <code>a∣b</code>, и <code>b∣a</code>. Начало — <code>{1, 2, 3}</code>, сумма 6. Каждый раз дописываем текущую сумму <code>S</code>: новая сумма <code>2S</code> кратна и прежним числам, и самому <code>S</code>. Так растёт <span class="key">1, 2, 3, 6, 12, 24, …</span> — до 50 чисел.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <article class="task" style="--i:1">
+    <div class="task-head"><div class="tnum">2</div><h2>Строка с остатком 1</h2></div>
+    <p class="cond">Постройте строку из 100 натуральных чисел, в которой каждое при делении на любое из предыдущих даёт в остатке 1.</p>
+    <div class="spoilers">
+      <details class="hint"><summary>Подсказка</summary><div class="sp"><p>Остаток 1 при делении на все предыдущие — значит, число на единицу больше их общего кратного.</p></div></details>
+      <details class="ans"><summary>Решение</summary><div class="sp">
+        <p><code>a₁ = 2</code>, дальше <span class="key">aₙ₊₁ = a₁·a₂·…·aₙ + 1</span>. Тогда <code>aⱼ − 1</code> — произведение всех предыдущих, поэтому делится на каждое. Числа: <code>2, 3, 7, 43, 1807, …</code></p>
+      </div></details>
+    </div>
+  </article>
+
+  <article class="task" style="--i:2">
+    <div class="task-head"><div class="tnum">3</div><h2>1024 стакана</h2></div>
+    <p class="cond">На столе 1024 стакана с водой. Разрешается взять стакан и перелить часть воды в стакан, где её меньше, так, чтобы в этих двух стало поровну. Как добиться, чтобы во всех стаканах воды стало поровну?</p>
+    <div class="spoilers">
+      <details class="hint"><summary>Подсказка</summary><div class="sp"><p><code>1024 = 2¹⁰</code>: задачу можно свести к вдвое меньшей.</p></div></details>
+      <details class="hint"><summary>Подсказка посильнее</summary><div class="sp"><p>Усреднённые пары не складываются в большее. Половину стоит выровнять целиком, прежде чем смешивать её со второй.</p></div></details>
+      <details class="ans"><summary>Решение</summary><div class="sp">
+        <p>Делим на две половины по 512. Каждую выравниваем целиком — по сохранению воды все стаканы половины станут равны её среднему (<code>A</code> и <code>B</code>). Затем усредняем пары «стакан из первой половины + стакан из второй»: каждая даёт <span class="key">(A + B)/2</span>. После 512 переливаний везде поровну.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <article class="task star" style="--i:3">
+    <div class="task-head"><div class="tnum">4</div><h2><span class="star-m">★</span>n-мерный куб</h2></div>
+    <p class="cond">Одномерный куб — отрезок, двумерный — квадрат, трёхмерный — обычный куб. Сколько у n-мерного куба вершин, рёбер и гиперграней (грань — стенка на единицу меньшей размерности)?</p>
+    <div class="spoilers">
+      <details class="hint"><summary>Подсказка</summary><div class="sp"><p>n-мерный куб — две копии (n−1)-мерного, соединённые рёбрами между соответственными вершинами.</p></div></details>
+      <details class="ans"><summary>Ответ</summary><div class="sp">
+        <p>Вершины <span class="key">2ⁿ</span>, рёбра <span class="key">n·2ⁿ⁻¹</span>, гиперграни <span class="key">2n</span>. Проверка: трёхмерный — 8, 12, 6; четырёхмерный — 16, 32, 8.</p>
+      </div></details>
+    </div>
+  </article>
+
+  <article class="task star" style="--i:4">
+    <div class="task-head"><div class="tnum">5</div><h2><span class="star-m">★</span>Новости по телефону</h2></div>
+    <p class="cond">В компании из n человек (n ≥ 4) у каждого своя новость. За один разговор двое сообщают друг другу всё, что знают к этому моменту. Докажите, что за 2n − 4 разговора все могут узнать все новости.</p>
+    <div class="spoilers">
+      <details class="hint"><summary>Подсказка</summary><div class="sp"><p>Новости можно сначала стянуть к небольшой группе, а потом раздать остальным — весь вопрос в том, насколько маленькой может быть эта группа.</p></div></details>
+      <details class="ans"><summary>Решение</summary><div class="sp">
+        <p>Ядро — 4 человека. Сбор: каждый из остальных <code>n−4</code> одним звонком отдаёт новость в ядро — <code>n−4</code> разговора. Обмен в ядре: 4 разговора (<code>a–b</code>, <code>c–d</code>, <code>a–c</code>, <code>b–d</code>) — теперь все четверо знают всё. Раздача: каждый из <code>n−4</code> одним звонком забирает всё — ещё <code>n−4</code>. Итого <span class="key">(n−4) + 4 + (n−4) = 2n − 4</span>.</p>
+      </div></details>
+    </div>
+  </article>
+
+</div>
+</body>
+</html>

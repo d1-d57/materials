@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктив — пул задач</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:60px 30px 90px;}
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:11px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:15.5px;color:var(--ink-soft);margin-top:14px;line-height:1.5;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.13em;font-size:13px;color:var(--rubric);font-weight:700;margin:40px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+  ol{list-style:none;counter-reset:p;}
+  li{counter-increment:p;position:relative;padding:22px 0 22px 56px;border-bottom:1px solid var(--rule);}
+  li:last-of-type{border-bottom:none;}
+  li::before{content:counter(p);position:absolute;left:0;top:21px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:34px;line-height:1;color:var(--rubric);}
+  details{margin-top:11px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ идея";}
+  details[open] summary::before{content:"▾ идея";}
+  summary span{display:none;}
+  .idea{font-size:16px;line-height:1.5;color:var(--ink-soft);padding:7px 0 2px;border-left:2px solid var(--rule);padding-left:14px;margin-top:7px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Конструктив · пошаговое построение</p>
+    <h1>Пул задач</h1>
+    <p class="lead">Построить объект: «можно ли», ответ «да» — нужно описать шаг и повторить его сколько нужно. Живая, неявная индукция. Внизу — где двойной подсчёт даёт оценку или условие, а конструкция его реализует.</p>
+  </header>
+
+  <h2>Пошаговое построение (живая индукция)</h2>
+  <ol>
+    <li>Докажите, что при любом n ≥ 6 квадрат можно разрезать на n квадратов (не обязательно равных).
+      <details><summary><span>.</span></summary><div class="idea">Базы: разрезы на 6, 7 и 8 квадратов нарисовать руками. Шаг: любой квадратик разрезаем на 4 — число квадратов растёт на 3. Из 6, 7, 8 шагом «+3» добираем все n ≥ 6. Это и есть «опиши шаг и повтори сколько нужно».</div></details>
+    </li>
+    <li>В турнире каждый сыграл с каждым по разу, ничьих не было. Докажите, что всех участников можно выстроить в ряд так, чтобы каждый победил того, кто стоит сразу за ним.
+      <details><summary><span>.</span></summary><div class="idea">Добавляем игроков по одному. Нового вставляем в уже построенный ряд: если он победил стоящего первым — в начало; иначе идём по ряду и находим место, где предыдущий победил новичка, а новичок победил следующего, — туда. Шаг для одного игрока повторяем для всех.</div></details>
+    </li>
+    <li>В турнире каждый сыграл с каждым, ничьих не было. Докажите, что найдётся участник, который каждого из остальных либо победил сам, либо победил того, кто его победил.
+      <details><summary><span>.</span></summary><div class="idea">Возьмём игрока A с наибольшим числом побед. Если кто-то B победил A, то B победил и кого-то из побеждённых A (иначе у B побед было бы больше, чем у A). Значит, A достаёт до каждого не более чем за два шага — он «король».</div></details>
+    </li>
+  </ol>
+
+  <h2>Построение + двойной подсчёт (оценка ↔ пример)</h2>
+  <ol>
+    <li>При каких n можно нарисовать граф на n вершинах, в котором из каждой вершины выходит ровно 3 ребра (каждый знаком ровно с тремя)?
+      <details><summary><span>.</span></summary><div class="idea">Сумма степеней равна 3n и равна удвоенному числу рёбер, поэтому 3n чётно — значит, n чётно (двойной подсчёт даёт условие). Для любого чётного n ≥ 4 граф строится: посадим вершины по кругу и соединим каждую с двумя соседями и с противоположной. Ответ: все чётные n ≥ 4.</div></details>
+    </li>
+    <li>Какое наибольшее число клеток доски 8 × 8 можно отметить так, чтобы никакие две отмеченные клетки не были соседними по стороне?
+      <details><summary><span>.</span></summary><div class="idea">Оценка: разобьём доску на 32 доминошки 1 × 2; в каждой две клетки соседние, поэтому отмечена не больше одной — значит, всего не больше 32. Пример: отметим все 32 клетки одного цвета шахматной раскраски, среди них соседних нет. Ответ: 32.</div></details>
+    </li>
+    <li>Какое наибольшее число ладей можно поставить на доску 8 × 8 так, чтобы никакие две не били друг друга?
+      <details><summary><span>.</span></summary><div class="idea">Оценка: в каждой из 8 строк стоит не больше одной ладьи, значит их не больше 8. Пример: восемь ладей по главной диагонали друг друга не бьют. Ответ: 8.</div></details>
+    </li>
+  </ol>
+
+</div>
+</body>
+</html>

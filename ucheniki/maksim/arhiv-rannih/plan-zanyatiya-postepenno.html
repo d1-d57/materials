@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>План занятия — 01. Постепенно, с первого шага</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--paper-2:#efe7d4;--panel:#fbf7ec;
+    --ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+    --rule:#d8cdb4;--rubric:#9e2b25;--rubric-soft:#c6584f;
+    --easy:#4f7a3a;--med:#b07414;
+    --shadow:0 1px 0 rgba(42,37,32,.04),0 10px 30px -18px rgba(42,37,32,.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 24px 100px;}
+
+  header.mast{padding:64px 0 28px;border-bottom:2px solid var(--ink);animation:rise .7s ease both;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin:0 0 14px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:clamp(32px,5.5vw,54px);line-height:1.05;margin:0;letter-spacing:-.01em;}
+  h1 .no{color:var(--rubric);font-style:italic;margin-right:.12em;}
+  .sub{font-family:"PT Serif",serif;font-style:italic;color:var(--ink-soft);font-size:clamp(17px,2.4vw,20px);margin:16px 0 0;max-width:62ch;}
+  .meta-line{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin-top:18px;display:flex;gap:18px;flex-wrap:wrap;}
+  .meta-line b{color:var(--ink-soft);font-weight:700;}
+
+  .note{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--rubric);border-radius:3px;padding:20px 24px;margin:26px 0 8px;box-shadow:var(--shadow);animation:rise .7s .05s ease both;}
+  .note h4{font-family:"Old Standard TT",serif;font-size:17px;margin:0 0 10px;letter-spacing:.02em;}
+  .note h4:not(:first-child){margin-top:18px;}
+  .note p{margin:0 0 10px;}
+  .note p:last-child{margin-bottom:0;}
+  .cycle{margin:6px 0 0;padding-left:0;list-style:none;counter-reset:c;}
+  .cycle li{counter-increment:c;position:relative;padding:6px 0 6px 34px;font-size:15.5px;color:var(--ink-soft);border-bottom:1px dotted var(--rule);}
+  .cycle li:last-child{border-bottom:none;}
+  .cycle li::before{content:counter(c);position:absolute;left:0;top:6px;width:22px;height:22px;background:var(--rubric);color:#fff;border-radius:50%;font-family:"PT Sans",sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .cycle li b{color:var(--ink);}
+  .ladder-mini{margin:8px 0 0;padding-left:0;list-style:none;}
+  .ladder-mini li{position:relative;padding:7px 0 7px 80px;font-size:15px;color:var(--ink-soft);border-bottom:1px dotted var(--rule);min-height:34px;}
+  .ladder-mini li:last-child{border-bottom:none;}
+  .ladder-mini li .lz{position:absolute;left:0;top:6px;font-family:"PT Sans",sans-serif;font-weight:700;font-size:12px;color:var(--rubric);letter-spacing:.02em;}
+  .ladder-mini li b{color:var(--ink);}
+
+  .step{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:22px 24px;margin:18px 0;box-shadow:var(--shadow);animation:rise .5s ease both;animation-delay:calc(var(--i,0)*55ms);}
+  .step.peak{border-left:3px solid var(--med);}
+  .step-head{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;}
+  .order{font-family:"Old Standard TT",serif;font-weight:700;font-size:38px;color:var(--rubric);line-height:.9;min-width:1.3ch;}
+  .step-title{flex:1;min-width:0;}
+  .step-title .tag{font-family:"PT Sans",sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);}
+  .step-title h2{font-family:"PT Serif",serif;font-weight:700;font-size:21px;margin:3px 0 0;line-height:1.2;}
+  .pills{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto;}
+  .pill{font-family:"PT Sans",sans-serif;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid var(--rule);background:#fff;color:var(--ink-soft);white-space:nowrap;}
+  .pill.time{font-weight:400;font-style:italic;color:var(--ink-faint);border:none;background:transparent;padding-left:0;}
+  .pill.time::before{content:"⏱ ";font-style:normal;}
+  .pill.peak{background:#f3e7cc;color:var(--med);border-color:#e6d3a6;}
+
+  .condition{position:relative;background:#fffdf6;border:1px solid var(--rule);border-left:3px solid var(--rubric);border-radius:3px;padding:20px 22px 18px;margin:18px 0 4px;font-size:16.5px;line-height:1.58;}
+  .condition::before{content:"УСЛОВИЕ · можно копировать";position:absolute;top:-10px;left:16px;background:var(--rubric);color:#fff;font-family:"PT Sans",sans-serif;font-size:10px;letter-spacing:.12em;font-weight:700;padding:3px 9px;border-radius:3px;}
+  .condition.warm::before{content:"РАЗОГРЕВ · 7а";background:var(--med);}
+  .condition.main::before{content:"ОСНОВНОЕ · 7б";}
+  .condition p{margin:0 0 8px;}
+  .condition p:last-child{margin-bottom:0;}
+  .condition .pno{font-family:"Old Standard TT",serif;font-weight:700;color:var(--rubric);font-size:18px;margin-right:4px;}
+  .condition .sub-q{display:block;margin:6px 0 0 16px;}
+  .condition .sub-q b{color:var(--rubric);font-family:"PT Sans",sans-serif;font-weight:700;font-size:14px;}
+
+  .howto{margin:16px 0 0;}
+  .howto .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--rubric);font-weight:700;margin-bottom:6px;}
+  .howto > p{margin:0 0 8px;font-size:15.5px;color:var(--ink-soft);}
+  ul.mini{margin:6px 0 0;padding-left:0;list-style:none;}
+  ul.mini li{position:relative;padding:5px 0 5px 16px;font-size:15px;color:var(--ink-soft);}
+  ul.mini li::before{content:"–";position:absolute;left:0;color:var(--rubric-soft);font-weight:700;}
+  ul.mini li b{font-family:"PT Sans",sans-serif;font-size:12.5px;letter-spacing:.02em;color:var(--ink);font-weight:700;}
+
+  details{margin-top:14px;border-top:1px solid var(--rule);padding-top:6px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;color:var(--rubric);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:7px;padding:5px 0;user-select:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"+";display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:1px solid var(--rubric-soft);border-radius:50%;font-size:14px;line-height:1;transition:transform .2s;}
+  details[open] summary::before{content:"–";transform:rotate(180deg);}
+  .sol{font-size:15px;color:var(--ink);padding:6px 2px 4px;animation:fade .25s ease;}
+  .sol p{margin:0 0 9px;}
+  .sol p:last-child{margin-bottom:0;}
+  .sol code{font-family:"PT Sans",monospace;background:var(--paper-2);padding:1px 5px;border-radius:3px;font-size:14px;}
+  .sol .key{color:var(--rubric);font-weight:700;}
+
+  .home{margin-top:40px;background:#f3eef6;border:1px solid #d8cae6;border-left:3px solid #6b4a86;border-radius:4px;padding:22px 24px;box-shadow:var(--shadow);}
+  .home h3{font-family:"Old Standard TT",serif;font-size:19px;margin:0 0 4px;letter-spacing:.02em;}
+  .home p.lead{font-style:italic;color:var(--ink-soft);margin:0 0 12px;font-size:15.5px;}
+  .home ul{margin:0;padding-left:0;list-style:none;}
+  .home li{padding:8px 0;border-bottom:1px dotted #d8cae6;font-size:15.5px;}
+  .home li:last-child{border-bottom:none;}
+  .home li b{font-family:"PT Sans",sans-serif;color:#6b4a86;font-weight:700;}
+
+  .div{display:flex;align-items:center;gap:16px;margin:48px 0 6px;}
+  .div h2{font-family:"Old Standard TT",serif;font-size:26px;margin:0;white-space:nowrap;}
+  .div::after{content:"";flex:1;height:2px;background:var(--ink);opacity:.85;}
+
+  .copyblock{background:var(--panel);border:1px dashed var(--rubric-soft);border-radius:4px;padding:24px 26px;margin-top:14px;box-shadow:var(--shadow);}
+  .copyblock p.hint{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);font-style:italic;margin:0 0 16px;}
+  .copyblock ol{margin:0;padding-left:0;list-style:none;counter-reset:cb;}
+  .copyblock li{counter-increment:cb;position:relative;padding:0 0 16px 40px;font-size:15.5px;line-height:1.6;}
+  .copyblock li:last-child{padding-bottom:0;}
+  .copyblock li::before{content:counter(cb);position:absolute;left:0;top:0;width:26px;height:26px;background:var(--ink);color:var(--paper);border-radius:50%;font-family:"PT Sans",sans-serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .copyblock li .ref{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--rubric);font-weight:700;display:block;margin-bottom:3px;}
+
+  footer{margin-top:46px;text-align:center;font-family:"PT Sans",sans-serif;font-size:12.5px;color:var(--ink-faint);font-style:italic;}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  @media(max-width:560px){.pills{margin-left:0;width:100%;}}
+  @media print{body::before{display:none;}.step,.note,.home,.copyblock{box-shadow:none;}details summary{display:none;}details>.sol{display:block !important;}*{animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">План часового занятия · взрослый ученик</p>
+    <h1><span class="no">01.</span>Постепенно, с первого шага</h1>
+    <p class="sub">Что делаем, в каком порядке и как вести. Порядок — по нарастанию идеи, а не по листку. Условия отдельными плашками, готовы к копированию; все вместе — в конце.</p>
+    <div class="meta-line">
+      <span><b>Ход:</b> 1 → 5 → 6 → 3 → 4 → 7 → 8</span>
+      <span><b>Время:</b> ≈45 мин + буфер</span>
+      <span><b>Пик:</b> 8 (или 2)</span>
+    </div>
+  </header>
+
+  <div class="note">
+    <h4>Рамка занятия</h4>
+    <p>Много коротких задач, быстрый темп, <strong>один пик</strong>. На лёгкую — 3–5 минут «подумать», на пик — до 10. Сегодня тема — не доказательство ради доказательства, а <em>построить объект по шагам</em>: достроить, уравнять, разрезать. Так и подавай: «строим руками».</p>
+
+    <h4>Почему такой порядок</h4>
+    <p>Не по «красоте идеи», а по нарастанию трудности самой конструкции:</p>
+    <ul class="ladder-mini">
+      <li><span class="lz">1</span>шаг опирается на <b>один</b> предыдущий, и всё руками — самый лёгкий вход.</li>
+      <li><span class="lz">5 · 6</span>шаг простой (режем / +5), но <b>база собирается из нескольких случаев</b> (три старта, потом пять).</li>
+      <li><span class="lz">3 · 4</span>следующее опирается уже на <b>все предыдущие</b> — через сумму, потом через произведение. Идея глубже.</li>
+      <li><span class="lz">7</span><b>рекурсия</b>: шаг сводит задачу к её уменьшенной копии.</li>
+      <li><span class="lz">8</span>рекурсия, где подвох <b>в самом шаге</b> — пик.</li>
+    </ul>
+    <p style="margin-top:12px;font-size:14.5px;color:var(--ink-faint);font-style:italic">Относительно листка переставлена середина: 5, 6 (хитрая только база) — раньше 3, 4 (шаг тянет за собой всё предыдущее). Хочешь как на листке — поменяй эти две пары местами, разница тонкая.</p>
+
+    <h4>Как вести каждую задачу</h4>
+    <ul class="cycle">
+      <li>Читаешь условие (или кидаешь плашку). 20 сек проверяешь, что понял: «то есть нам надо…?»</li>
+      <li><b>Он думает молча. Ты держишь паузу.</b> Не комментируешь, не подсказываешь — это и есть работа.</li>
+      <li>Он говорит. Реагируешь: верно → «дальше?»; почти → «тут точно?»; тупик → <b>один</b> наводящий вопрос, не ответ.</li>
+      <li>В конце 20 секунд называешь приём — «видишь, мы свели к меньшему». Это шов, который связывает задачи в сюжет.</li>
+    </ul>
+  </div>
+
+  <!-- STEP 1 — задача 1 -->
+  <article class="step" style="--i:0">
+    <div class="step-head">
+      <div class="order">1</div>
+      <div class="step-title"><span class="tag">Задача 1 (а–в) · вход</span><h2>Прямоугольник → квадраты</h2></div>
+      <div class="pills"><span class="pill">шаг на один предыдущий</span><span class="pill time">≈7 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">1.</span>От прямоугольника с неравными сторонами отрезают квадрат со стороной, равной меньшей стороне прямоугольника; если оставшаяся часть не квадрат, процесс повторяют. Докажите, что можно выбрать такой начальный прямоугольник, для которого ровно на втором шаге получится квадрат, причём все отрезанные квадраты будут разного размера (оставшаяся часть не в счёт). Докажите, что квадрат может получиться и ровно на:</p>
+      <span class="sub-q"><b>б)</b> третьем шаге;</span>
+      <span class="sub-q"><b>в)</b> четвёртом шаге.</span>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Самая лёгкая, тактильная — дай бумагу или рисуй. Спрашивают про 2-й, 3-й, 4-й шаг, а не про сотый: «подумал чуть-чуть — дальше узор». Пункт г (179 шагов) на дом.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «отрежь квадрат — что осталось? отрежь ещё»; затем «когда квадраты получаются разными?»</li>
+        <li><b>Приём (назвать):</b> это алгоритм Евклида; «все разные» заставляет брать соседние числа Фибоначчи (3×2, 5×3, 8×5).</li>
+        <li><b>Следить:</b> в а) пусть сам найдёт 3×2; узор для б, в подхватит — не подсказывай ответ.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p>Отрезание квадратов = вычитательный Евклид. Два одинаковых квадрата подряд = частное ≥ 2, что ломает различность → <span class="key">все частные = 1</span> → отношение сторон = соседние Фибоначчи.</p>
+      <p><code>3×2</code> → 2 шага (режутся 2 и 1), <code>5×3</code> → 3 шага, <code>8×5</code> → 4 шага. Остаток <code>1×1</code> не в счёт.</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 2 — задача 5 -->
+  <article class="step" style="--i:1">
+    <div class="step-head">
+      <div class="order">2</div>
+      <div class="step-title"><span class="tag">Задача 5 · база из трёх</span><h2>Квадрат на любое число квадратов &gt; 5</h2></div>
+      <div class="pills"><span class="pill">шаг +3, старты 6,7,8</span><span class="pill time">≈6 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">5.</span>Докажите, что квадрат можно разрезать на любое число квадратов, большее 5.</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>После 1 остаёмся в геометрии. Шаг простой и наглядный, новое — что стартов несколько.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «как из готового разбиения сделать на 3 квадрата больше?»; затем «какие старты нужны — 6, 7, 8?»</li>
+        <li><b>Приём (назвать):</b> режем один квадрат на 4 (число растёт на 3); три старта по остаткам mod 3 накрывают всё от 6.</li>
+        <li><b>Следить:</b> сначала идея «+3», потом базы — не наоборот.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p><span class="key">Шаг +3:</span> любой квадрат режем на 4 (<code>k → k+3</code>). Базы: <code>6 = 9−4+1</code>, <code>7 = 4+3</code>, <code>8 = 16−9+1</code>. Остатки 0,1,2 mod 3 покрыты → все <code>n ≥ 6</code>.</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 3 — задача 6 -->
+  <article class="step" style="--i:2">
+    <div class="step-head">
+      <div class="order">3</div>
+      <div class="step-title"><span class="tag">Задача 6 · база из пяти</span><h2>Монеты 5 и 26 рублей</h2></div>
+      <div class="pills"><span class="pill">шаг +5, пять стартов</span><span class="pill time">≈6 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">6.</span>Докажите, что если после очередной реформы в обращение введут монеты в 5 и 26 рублей, то, пользуясь только ими, можно будет уплатить без сдачи любую сумму в целое число рублей, начиная со 100.</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Та же идея, что в 5, но база тяжелее: не три случая, а пять, и они не на поверхности — их надо добыть через остатки.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «какие остатки при делении на 5 дают 26, 52, 78, 104?»</li>
+        <li><b>Приём (назвать):</b> пять стартов 100–104 по остаткам mod 5, дальше прибавляем по 5.</li>
+        <li><b>Следить:</b> если подбирает хаотично — верни к «а что по остаткам пятёрки».</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p>Базы: <code>100=5·20</code>, <code>101=26+75</code>, <code>102=52+50</code>, <code>103=78+25</code>, <code>104=26·4</code> — покрывают все остатки mod 5. Любое <code>n≥100</code> = одна из баз + <code>5·(сколько-то)</code>.</p>
+      <p>Граница «100» не случайна: <span class="key">наибольшее непредставимое = 99</span> (число Фробениуса пары 5, 26).</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 4 — задача 3 -->
+  <article class="step" style="--i:3">
+    <div class="step-head">
+      <div class="order">4</div>
+      <div class="step-title"><span class="tag">Задача 3 · опора на все (сумма)</span><h2>50 чисел, сумма кратна каждому</h2></div>
+      <div class="pills"><span class="pill">дописываем сумму</span><span class="pill time">≈6–7 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">3.</span>Найдутся ли 50 различных натуральных чисел, сумма которых кратна каждому из них?</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Тут шаг уже идейный (про делимость) и опирается на сумму всех предыдущих. Над базой реально думают — дай время, не торопи.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «начни с маленького набора — двух чисел? а получится?»; затем «а если дописать саму сумму?»</li>
+        <li><b>Приём (назвать):</b> дописываем текущую сумму — она делится на всё прежнее и удваивает сумму.</li>
+        <li><b>Следить:</b> важный момент — двух чисел не бывает (тогда a∣b и b∣a сразу). Минимум — тройка {1,2,3}. Если застрял именно здесь — это нормально, подтолкни к тройке.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p>Двух чисел нет: при <code>a&lt;b</code> сумма кратна обоим даёт <code>a∣b</code> и <code>b∣a</code> — невозможно. База — <code>{1,2,3}</code>, сумма 6. Дальше дописываем сумму <code>S</code>: новая сумма <code>2S</code>, старые делят <code>S∣2S</code>, новый <code>S∣2S</code>, и <code>S</code> больше всех — различны.</p>
+      <p>Получаем <span class="key">1, 2, 3, 6, 12, 24, …</span> От 3 элементов до 50 — 47 шагов.</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 5 — задача 4 -->
+  <article class="step" style="--i:4">
+    <div class="step-head">
+      <div class="order">5</div>
+      <div class="step-title"><span class="tag">Задача 4 · опора на все (произведение)</span><h2>Строка из 100: остаток 1</h2></div>
+      <div class="pills"><span class="pill">произведение всех + 1</span><span class="pill time">≈6–7 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">4.</span>Как построить строку из 100 натуральных чисел, где каждое число при делении на любое из предыдущих даёт в остатке 1?</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Самый резкий шаг в линейной серии: опираемся на произведение всех предыдущих. Идёт после 3 — там опора была на сумму, тут на произведение.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «остаток 1 — это на сколько больше кратного? а что кратно сразу всем?»</li>
+        <li><b>Приём (назвать):</b> следующее = произведение всех прежних + 1.</li>
+        <li><b>Следить:</b> затык обычно на «всем сразу» — наведи на произведение.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p>Берём <code>a₁=2</code>, далее <span class="key">a_{n+1} = a₁·a₂·…·a_n + 1</span>. Тогда <code>a_j − 1</code> = произведение всех прежних → делится на каждое <code>a_i</code>, остаток ровно 1. Числа: <code>2, 3, 7, 43, 1807, …</code> (последовательность Сильвестра).</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 6 — задачи 7а→7б (рекурсия, пара) -->
+  <article class="step" style="--i:5">
+    <div class="step-head">
+      <div class="order">6</div>
+      <div class="step-title"><span class="tag">Задачи 7а → 7б · переход к рекурсии</span><h2>Уголки: сначала 4×4, сразу за ним 64×64</h2></div>
+      <div class="pills"><span class="pill">рекурсия по четвертям</span><span class="pill time">≈3 + 8 мин</span></div>
+    </div>
+    <div class="condition warm">
+      <p><span class="pno">7а.</span>Из клетчатого квадрата 4×4 вырезали одну клетку (неизвестно, какую). Докажите, что полученную фигуру можно разрезать на «уголки» из трёх клеток. («Уголок» — это квадрат 2×2 без одной клетки.)</p>
+    </div>
+    <div class="condition main">
+      <p><span class="pno">7б.</span>Докажите тот же факт про квадрат 64×64.</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Идут <strong>парой, не разнося</strong>. 7а — двухминутный разогрев руками: он находит фокус. 7б выкатываешь сразу — «а это в принципе так же?» — и тот же фокус прокатывается рекурсивно. Это первый раз, когда шаг сводит задачу к её уменьшенной копии.</p>
+      <ul class="mini">
+        <li><b>7а, подсказка:</b> «раздели на четыре 2×2; вырезанная клетка в одной — что сделать с тремя остальными?»</li>
+        <li><b>Приём (назвать после 7а):</b> центральный уголок задевает по клетке трёх четвертей — и каждая стала задачей того же вида поменьше.</li>
+        <li><b>7б, подсказка:</b> «у тебя сработало для 4×4 — что мешает повторить тот же ход для 32×32, потом 16×16…?»</li>
+        <li><b>Приём (назвать после 7б):</b> та же рекурсия до 2×2 — вот что значит «шагать» в чистом виде.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p><span class="key">7а:</span> делим на четыре 2×2, вырезанная клетка в одной четверти; в центре кладём уголок, накрывающий по клетке трёх «целых» четвертей → каждая четверть стала уголком. Итого 5 уголков.</p>
+      <p><span class="key">7б:</span> то же, но <code>64 = 2⁶</code>. Делим <code>2ⁿ×2ⁿ</code> на четыре четверти, центральный уголок сводит к четырём задачам <code>2ⁿ⁻¹×2ⁿ⁻¹</code> того же вида. Рекурсия до <code>2×2</code>.</p>
+    </div></details>
+  </article>
+
+  <!-- STEP 7 — задача 8 — PEAK -->
+  <article class="step peak" style="--i:6">
+    <div class="step-head">
+      <div class="order">7</div>
+      <div class="step-title"><span class="tag">Задача 8 · пик урока</span><h2>1024 стакана: уравнять воду</h2></div>
+      <div class="pills"><span class="pill peak">пик</span><span class="pill time">до 10 мин</span></div>
+    </div>
+    <div class="condition">
+      <p><span class="pno">8.</span>На столе стоят 1024 стакана с водой. Разрешается взять один из стаканов и перелить из него часть воды в стакан, где воды меньше, так, чтобы воды стало поровну. Укажите, как такими операциями добиться, чтобы во всех стаканах стало поровну воды.</p>
+    </div>
+    <div class="howto">
+      <div class="lab">Как вести</div>
+      <p>Рекурсия та же, что в 7, но теперь <strong>подвох в самом шаге</strong>: наивно спарить и усреднить — не работает, ломает прежние пары. Вот это и есть кульминация. Даёшь до 10 минут.</p>
+      <ul class="mini">
+        <li><b>Подсказка:</b> «спарь два — усредни. А теперь попробуй слить две такие пары — что сломалось?»</li>
+        <li><b>Приём (назвать):</b> сначала делаем обе половины <em>однородными</em> (все = A и все = B), и только потом крест-накрест — тогда каждая пара даёт одно и то же.</li>
+        <li><b>Замена:</b> хочешь не повтор рекурсии, а отдельный вызов с разговором — поставь сюда задачу 2 (новости за 2n−4): база там — обмен в ядре из 4, идея абстрактнее. Условие — в архиве плашек.</li>
+      </ul>
+    </div>
+    <details><summary>Решение</summary><div class="sol">
+      <p>Индукция по <code>2ⁿ</code>. Делим на две половины по <code>2ⁿ⁻¹</code>, делаем <span class="key">каждую половину целиком однородной</span> (по сохранению воды все = A и все = B). Теперь пары «один из первой + один из второй»: раз все равны, каждая пара даёт <code>(A+B)/2</code>. После <code>2ⁿ⁻¹</code> переливаний все равны. Ключ — однородность перед скрещиванием.</p>
+    </div></details>
+  </article>
+
+  <!-- HOME -->
+  <div class="home">
+    <h3>На дом</h3>
+    <p class="lead">Самое тяжёлое уносим из класса — пусть думает не спеша.</p>
+    <ul>
+      <li><b>1г</b> — тот же сюжет с прямоугольником, но ровно на 179-м шаге, и доказать различность для общего случая. Ответ — <code>F₁₈₁ × F₁₈₀</code>.</li>
+      <li><b>9</b> — 100 баллонов, уравнять давление группами по 2–5 (а); и звёздный пункт б — можно ли только группами 2–4. Тот же дух, что стаканы, но тоньше.</li>
+      <li><b>10⋆</b> — гиперкубы «на вырост»: нарисовать 4-мерный куб, посчитать вершины (<code>2ⁿ</code>), рёбра (<code>n·2ⁿ⁻¹</code>), гиперграни (<code>2n</code>).</li>
+    </ul>
+  </div>
+
+  <!-- COPY-ALL -->
+  <div class="div"><h2>Условия одним блоком</h2></div>
+  <div class="copyblock">
+    <p class="hint">Для быстрого копирования или скриншота — в порядке занятия. Отдельными картинками для доски/Miro — в архиве рядом с этим файлом.</p>
+    <ol>
+      <li><span class="ref">Задача 1 (а–в) · вход</span>От прямоугольника с неравными сторонами отрезают квадрат со стороной, равной меньшей стороне прямоугольника; если оставшаяся часть не квадрат, процесс повторяют. Докажите, что можно выбрать такой начальный прямоугольник, для которого ровно на втором шаге получится квадрат, причём все отрезанные квадраты будут разного размера (оставшаяся часть не в счёт). Докажите, что квадрат может получиться и ровно на: б) третьем шаге; в) четвёртом шаге.</li>
+      <li><span class="ref">Задача 5</span>Докажите, что квадрат можно разрезать на любое число квадратов, большее 5.</li>
+      <li><span class="ref">Задача 6</span>Докажите, что если после очередной реформы в обращение введут монеты в 5 и 26 рублей, то, пользуясь только ими, можно будет уплатить без сдачи любую сумму в целое число рублей, начиная со 100.</li>
+      <li><span class="ref">Задача 3</span>Найдутся ли 50 различных натуральных чисел, сумма которых кратна каждому из них?</li>
+      <li><span class="ref">Задача 4</span>Как построить строку из 100 натуральных чисел, где каждое число при делении на любое из предыдущих даёт в остатке 1?</li>
+      <li><span class="ref">Задача 7а</span>Из клетчатого квадрата 4×4 вырезали одну клетку (неизвестно, какую). Докажите, что полученную фигуру можно разрезать на «уголки» из трёх клеток. («Уголок» — это квадрат 2×2 без одной клетки.)</li>
+      <li><span class="ref">Задача 7б</span>Докажите тот же факт про квадрат 64×64.</li>
+      <li><span class="ref">Задача 8 · пик</span>На столе стоят 1024 стакана с водой. Разрешается взять один из стаканов и перелить из него часть воды в стакан, где воды меньше, так, чтобы воды стало поровну. Укажите, как такими операциями добиться, чтобы во всех стаканах стало поровну воды.</li>
+    </ol>
+  </div>
+
+  <footer>План часового занятия · порядок — по нарастанию идеи · условия слово-в-слово с листка</footer>
+
+</div>
+</body>
+</html>

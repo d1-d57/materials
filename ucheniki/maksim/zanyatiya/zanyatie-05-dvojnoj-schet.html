@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Двойной счёт — занятие №5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:60px 30px 90px;counter-reset:p;}
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:11px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:15.5px;color:var(--ink-soft);margin-top:14px;line-height:1.5;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.13em;font-size:13px;color:var(--rubric);font-weight:700;margin:38px 0 2px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+  ol{list-style:none;}
+  li{counter-increment:p;position:relative;padding:22px 0 22px 56px;border-bottom:1px solid var(--rule);}
+  li:last-of-type{border-bottom:none;}
+  li::before{content:counter(p);position:absolute;left:0;top:21px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:34px;line-height:1;color:var(--rubric);}
+  details{margin-top:11px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ идея";}
+  details[open] summary::before{content:"▾ идея";}
+  summary span{display:none;}
+  .idea{font-size:16px;line-height:1.52;color:var(--ink-soft);padding:7px 0 2px;border-left:2px solid var(--rule);padding-left:14px;margin-top:7px;}
+  .idea b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Занятие №5 · двойной счёт</p>
+    <h1>Подборка</h1>
+    <p class="lead">От простого к растяжке. Сначала обычный двойной счёт с разных сторон, дальше — где он встречается с чётностью и инвариантами. Идея к каждой под спойлером.</p>
+  </header>
+
+  <h2>Обычный двойной счёт</h2>
+  <ol>
+    <li>На острове 7 озёр; из каждого вытекает 3 реки, а в каждое впадает 2 реки. Реки впадают только в другое озеро или в океан. Сколько рек впадает в океан?
+      <details><summary><span>.</span></summary><div class="idea">Вытекает 7 · 3 = 21 река, в озёра впадает 7 · 2 = 14. Остальные текут в океан: 21 − 14 = 7.</div></details>
+    </li>
+    <li>На контрольной каждый из 20 школьников решил ровно 3 задачи, а каждую задачу решили ровно 5 школьников. Сколько было задач?
+      <details><summary><span>.</span></summary><div class="idea">Сосчитаем пары «школьник — решённая им задача» двумя способами: 20 · 3 = 60 со стороны школьников и 5 · (число задач) со стороны задач. Значит задач 60 : 5 = 12.</div></details>
+    </li>
+    <li>Несколько семиклассников и шестиклассников обменялись рукопожатиями: каждый семиклассник пожал руку шести шестиклассникам, а каждый шестиклассник — семи семиклассникам. Кого среди них больше?
+      <details><summary><span>.</span></summary><div class="idea">Число рукопожатий с двух сторон: 6 · (семиклассников) = 7 · (шестиклассников). Значит семиклассников в 7/6 раза больше — их больше.</div></details>
+    </li>
+    <li>Сколько диагоналей у выпуклого 17-угольника?
+      <details><summary><span>.</span></summary><div class="idea">Из каждой вершины выходит 14 диагоналей, вершин 17 — получается 17 · 14 = 238 «половинок». Но каждая диагональ так посчитана дважды, поэтому их 238 : 2 = 119.</div></details>
+    </li>
+    <li>Пятеро студентов вместе снимают квартиру. Они устроили вечеринку, на которую пришли ещё 25 друзей, причём каждый приходивший пожимал руки всем уже собравшимся. Сколько получилось рукопожатий?
+      <details><summary><span>.</span></summary><div class="idea">Если бы все 30 пожали руки всем, было бы 30 · 29 : 2 = 435 рукопожатий. Но пятеро хозяев уже были на месте и друг другу рук не жали — это 5 · 4 : 2 = 10 несостоявшихся пар. Итого 435 − 10 = 425.</div></details>
+    </li>
+    <li>На концерте пели четыре девочки — Катя, Лена, Маша и Нина. Каждую песню исполняли ровно три из них. Катя спела 8 песен — больше всех, а Лена 5 — меньше всех. Сколько всего песен было спето?
+      <details><summary><span>.</span></summary><div class="idea">Каждая песня даёт 3 «исполнения»: 3 · (число песен) = 8 + 5 + Маша + Нина, причём у Маши и Нины от 6 до 7 каждая. Целое число песен выходит только при Маша = Нина = 7 — тогда песен 9.</div></details>
+    </li>
+    <li>Десять учёных переписывались. Каждый отправил ровно пять писем, все — разным людям. Докажите, что какие-то двое отправили письма друг другу.
+      <details><summary><span>.</span></summary><div class="idea">Всего отправлено 10 · 5 = 50 писем, а различных пар учёных всего 45. Значит, какие-то два письма пришлись на одну пару — то есть кто-то написал друг другу.</div></details>
+    </li>
+  </ol>
+
+  <h2>Двойной счёт + чётность и инварианты</h2>
+  <ol>
+    <li>Можно ли на рёбрах куба расставить числа от 1 до 12 (по одному на каждом ребре) так, чтобы сумма чисел на трёх рёбрах, выходящих из каждой вершины, была одной и той же для всех восьми вершин?
+      <details><summary><span>.</span></summary><div class="idea">Сложим суммы по всем 8 вершинам. Каждое ребро выходит из двух вершин, поэтому войдёт дважды: 2 · (1 + … + 12) = 156. Если бы все суммы равнялись S, то 8S = 156, S = 19,5 — не целое. Нельзя.</div></details>
+    </li>
+    <li>В конференции участвовали 19 учёных. После неё каждый отправил 2 или 4 письма другим участникам. Могло ли случиться, что каждый получил ровно 3 письма?
+      <details><summary><span>.</span></summary><div class="idea">Всего отправлено чётное число писем (каждый шлёт 2 или 4). Всего получено 19 · 3 = 57 — нечётно. Но отправлено и получено — одно и то же число писем. Нельзя.</div></details>
+    </li>
+    <li>В классе 15 школьников, и у каждого ровно семь друзей среди одноклассников. Докажите, что дружба не у всех взаимна — найдётся пара, где один считает другого другом, а тот его другом не считает.
+      <details><summary><span>.</span></summary><div class="idea">Если бы дружба была всегда взаимной, её можно было бы представить рукопожатиями. По лемме о рукопожатиях число людей с нечётным числом друзей было бы чётным. Но тогда все 15 имели бы по 7 друзей (нечётно), а 15 — нечётное число. Противоречие: значит, у кого-то дружба не взаимна.</div></details>
+    </li>
+  </ol>
+
+</div>
+</body>
+</html>

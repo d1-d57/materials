@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Двойной счёт — пул задач</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:740px;margin:0 auto;padding:60px 30px 90px;}
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:11px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:15.5px;color:var(--ink-soft);margin-top:14px;line-height:1.5;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.13em;font-size:13px;color:var(--rubric);font-weight:700;margin:40px 0 4px;padding-bottom:8px;border-bottom:1px solid var(--rule);}
+  ol{list-style:none;counter-reset:p;}
+  li{counter-increment:p;position:relative;padding:22px 0 22px 56px;border-bottom:1px solid var(--rule);}
+  li:last-of-type{border-bottom:none;}
+  li::before{content:counter(p);position:absolute;left:0;top:21px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:34px;line-height:1;color:var(--rubric);}
+  details{margin-top:11px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ идея";}
+  details[open] summary::before{content:"▾ идея";}
+  summary span{display:none;}
+  .idea{font-size:16px;line-height:1.5;color:var(--ink-soft);padding:7px 0 2px;border-left:2px solid var(--rule);padding-left:14px;margin-top:7px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Двойной счёт · под занятия №5–6</p>
+    <h1>Пул задач</h1>
+    <p class="lead">Базовые, но похитрее: где «что считать» возникает неожиданно, а двойной подсчёт — способ увидеть инвариант, оценку или (не)возможность. Идея к каждой — под спойлером.</p>
+  </header>
+
+  <h2>Двойной счёт + конструктив (можно ли расставить)</h2>
+  <ol>
+    <li>Можно ли в прямоугольной таблице 5 × 10 так расставить числа, чтобы сумма чисел каждой строки равнялась 30, а сумма чисел каждого столбца — 10?
+      <details><summary><span>.</span></summary><div class="idea">По строкам всего 5 · 30 = 150, по столбцам 10 · 10 = 100. Это одна и та же сумма всех чисел, а 150 ≠ 100 — значит, нельзя.</div></details>
+    </li>
+    <li>Кирилл хочет покрасить в чёрный некоторые клетки белой таблицы 8 × 8 так, чтобы в каждой строке белых клеток было больше, чем чёрных, а в каждом столбце — белых меньше, чем чёрных. Получится ли у него?
+      <details><summary><span>.</span></summary><div class="idea">Если в каждой строке белых больше, то всего белых больше половины (больше 32). Если в каждом столбце белых меньше — всего белых меньше 32. Противоречие — не получится.</div></details>
+    </li>
+    <li>На острове 7 озёр; из каждого вытекает 3 реки, а в каждое впадает 2 реки. Реки впадают только в другое озеро или в океан. Сколько рек впадает в океан?
+      <details><summary><span>.</span></summary><div class="idea">Всего вытекает 7 · 3 = 21 река, в озёра впадает 7 · 2 = 14. Остальные текут в океан: 21 − 14 = 7.</div></details>
+    </li>
+    <li>Игорь закрасил в квадрате 6 × 6 несколько клеток. Оказалось, что во всех квадратиках 2 × 2 одинаковое число закрашенных клеток и во всех полосках 1 × 3 — тоже одинаковое. Докажите, что закрашены все клетки.
+      <details><summary><span>.</span></summary><div class="idea">Подсчёт закрашенных в перекрывающихся 2 × 2 и 1 × 3 заставляет плотность закраски быть одной и той же по всей доске; вместе с условием это означает, что закрашены все клетки.</div></details>
+    </li>
+  </ol>
+
+  <h2>Двойной счёт → инвариант / невозможность</h2>
+  <ol>
+    <li>Можно ли по кругу расставить семь целых неотрицательных чисел так, чтобы суммы семи троек подряд идущих чисел были равны 1, 2, 3, 4, 5, 6 и 7?
+      <details><summary><span>.</span></summary><div class="idea">Троек подряд ровно семь, и каждое число входит ровно в три из них. Сумма всех семи троек равна 3 · (сумма всех чисел), то есть кратна 3. Но 1 + 2 + … + 7 = 28 на 3 не делится — нельзя.</div></details>
+    </li>
+    <li>Можно ли на рёбрах куба расставить числа от 1 до 12 (по одному на каждом ребре) так, чтобы сумма чисел на трёх рёбрах, выходящих из каждой вершины, была одной и той же для всех восьми вершин?
+      <details><summary><span>.</span></summary><div class="idea">Сложим суммы по всем 8 вершинам. Каждое ребро выходит из двух вершин, поэтому войдёт дважды: получаем 2 · (1 + … + 12) = 156. Если бы все суммы равнялись S, то 8S = 156, S = 19,5 — не целое. Нельзя.</div></details>
+    </li>
+    <li>В конференции участвовали 19 учёных. После неё каждый отправил 2 или 4 письма другим участникам. Могло ли случиться, что каждый получил ровно 3 письма?
+      <details><summary><span>.</span></summary><div class="idea">Всего отправлено чётное число писем (каждый шлёт 2 или 4). Всего получено 19 · 3 = 57 — нечётно. Но отправлено и получено — одно и то же число писем. Нельзя.</div></details>
+    </li>
+    <li>Рита, Люба и Варя решали задачи. За каждую задачу решившая её первой получала 4 конфеты, второй — 2, последней — 1 (одновременных решений не было). Каждая из них решила все задачи и получила по 20 конфет. Докажите, что они ошибаются.
+      <details><summary><span>.</span></summary><div class="idea">За каждую задачу раздаётся 4 + 2 + 1 = 7 конфет, поэтому всего роздано число, кратное 7. Но трём девочкам по 20 — это 60, а 60 на 7 не делится.</div></details>
+    </li>
+  </ol>
+
+  <h2>Простые графы (лемма о рукопожатиях)</h2>
+  <ol>
+    <li>Может ли в компании из девяти человек каждый дружить ровно с тремя другими из этой компании?
+      <details><summary><span>.</span></summary><div class="idea">Сложим у всех число друзей: 9 · 3 = 27. Эта сумма равна удвоенному числу пар друзей (каждая дружба учтена у двоих), значит чётна. А 27 нечётно — нельзя.</div></details>
+    </li>
+    <li>Десять учёных переписывались. Каждый отправил ровно пять писем, все — разным людям. Докажите, что какие-то двое отправили письма друг другу.
+      <details><summary><span>.</span></summary><div class="idea">Всего отправлено 10 · 5 = 50 писем, а различных пар учёных всего 45. Значит, какие-то два письма пришлись на одну пару — то есть кто-то написал друг другу.</div></details>
+    </li>
+    <li>Несколько семиклассников и шестиклассников обменялись рукопожатиями: каждый семиклассник пожал руку шести шестиклассникам, а каждый шестиклассник — семи семиклассникам. Кого среди них больше?
+      <details><summary><span>.</span></summary><div class="idea">Число рукопожатий, посчитанное с двух сторон: 6 · (семиклассников) = 7 · (шестиклассников). Значит семиклассников в 7/6 раза больше — их больше.</div></details>
+    </li>
+  </ol>
+
+  <h2>Оценки (счёт даёт границу, плюс пример)</h2>
+  <ol>
+    <li>Какое наибольшее число ладей можно поставить на доску 8 × 8 так, чтобы никакие две не били друг друга?
+      <details><summary><span>.</span></summary><div class="idea">В каждой из 8 строк стоит не больше одной ладьи, поэтому их не больше 8 (оценка). Восемь ладей по диагонали друг друга не бьют (пример). Ответ: 8.</div></details>
+    </li>
+    <li>На концерте пели четыре девочки — Катя, Лена, Маша и Нина. Каждую песню исполняли ровно три из них. Катя спела 8 песен — больше всех, а Лена 5 — меньше всех. Сколько всего песен было спето?
+      <details><summary><span>.</span></summary><div class="idea">Каждая песня даёт 3 «исполнения»: 3 · (число песен) = 8 + 5 + Маша + Нина, причём у Маши и Нины от 6 до 7 каждая. Целое число песен выходит только при Маша = Нина = 7 — тогда песен 9.</div></details>
+    </li>
+  </ol>
+
+  <h2>Смежное: рыцари и лжецы (табличная логика)</h2>
+  <ol>
+    <li>На каждой клетке доски 4 × 4 стоит рыцарь или лжец (рыцари всегда говорят правду, лжецы всегда лгут); есть и те, и другие. Каждый сказал: «Среди моих соседей по стороне поровну рыцарей и лжецов». Сколько на доске лжецов?
+      <details><summary><span>.</span></summary><div class="idea">У клетки с нечётным числом соседей «поровну» быть не может — значит, краевые клетки (по 3 соседа) лгут. Дальнейший разбор по углам и центру даёт 12 лжецов.</div></details>
+    </li>
+  </ol>
+
+</div>
+</body>
+</html>

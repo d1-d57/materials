@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  .lead b{color:var(--ink);}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:28px 0 28px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .check{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:170px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);}
+  .res.no{color:var(--rubric);}
+  details{margin-top:12px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--accent);}
+  details[open] summary::before{content:"▾ ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <p class="lead">Во всех задачах двое ходят по очереди. Нужно определить, <b>кто выигрывает при правильной игре</b> — то есть если оба играют наилучшим образом. И, конечно, объяснить почему.</p>
+  <ol>
+    <li>
+      <div class="cnd">Первый игрок называет целое число, затем второй называет своё целое число.</div>
+      <div class="sub"><b>а)</b> Если сумма названных чисел чётна — выигрывает первый, если нечётна — второй. Кто выиграет?</div>
+      <div class="sub"><b>б)</b> Тот же вопрос, если вместо суммы берут произведение названных чисел.</div>
+      <div class="check"><label>Ответ (а):</label><input type="text" data-answers="второй,второй игрок,2" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <div class="check"><label>Ответ (б):</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Тот, кто ходит вторым, уже видит число соперника. В пункте (а) подумайте, кто на самом деле управляет чётностью суммы. В (б) — какое число выгодно назвать первому, чтобы произведение наверняка стало чётным?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) второй; (б) первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body"><b>(а)</b> Второй называет число, уже зная число первого, и может сделать сумму любой по чётности: чтобы получить нечётную, он берёт число другой чётности, чем у первого. Значит, второй всегда добьётся нечётной суммы — и выигрывает. <b>(б)</b> Первый называет любое чётное число — тогда произведение чётно при любом ответе второго. Значит, первый сразу обеспечивает себе победу.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Дан выпуклый n-угольник. Игроки по очереди проводят в нём диагонали так, чтобы они не пересекались с уже проведёнными во внутренних точках (общий конец иметь можно). Кто не может сделать ход, проигрывает. Кто выиграет?</div>
+      <details><summary>Указание</summary><div class="body">Игра заканчивается, когда многоугольник разбит на треугольники. Сколько диагоналей в любом таком разбиении? Зависит ли это число от того, как играли?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый — при чётном n; второй — при нечётном n.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Когда провести больше нельзя, многоугольник разбит на треугольники — это триангуляция. В любой триангуляции выпуклого n-угольника ровно <b>n − 3</b> диагонали, и это число не зависит от того, как играли. Значит, в игре всегда делается ровно n − 3 хода. Последний ход — а с ним и победу — делает первый, если n − 3 нечётно, то есть при чётном n; при нечётном n последний ход за вторым.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На столе лежат спички. Игроки по очереди берут от одной до четырёх спичек. Кто не может сделать ход (спичек не осталось), проигрывает.</div>
+      <div class="sub"><b>а)</b> Спичек 25. Кто выиграет?</div>
+      <div class="sub"><b>б)</b> Тот же вопрос, если спичек изначально 24.</div>
+      <div class="check"><label>Ответ (а):</label><input type="text" data-answers="второй,второй игрок,2" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <div class="check"><label>Ответ (б):</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Найдите «проигрышные» количества спичек — те, при которых проигрывает тот, чей ход. Как игрок может каждым своим ходом снова оставлять сопернику такое количество?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) второй; (б) первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Назовём положение проигрышным, если проигрывает тот, чей ход. Проигрышны количества, кратные 5: из них любой ход (взять 1–4) оставляет сопернику некратное 5, а тот в ответ добирает до кратного 5 (берёт 5 минус то, что взял соперник). <b>(а)</b> 25 кратно 5 — значит, проигрывает тот, кто ходит первым: выигрывает второй. <b>(б)</b> 24 не кратно 5: первый берёт 4, оставляет 20, а дальше держит кратные 5 — выигрывает первый.</div></details>
+    </li>
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/ё/g,'е').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check');
+    var inp=box.querySelector('input');
+    var res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='Верно ✓';res.className='res ok';}
+    else{res.textContent='Не сходится — подумайте ещё';res.className='res no';}
+  }
+</script>
+</body>
+</html>

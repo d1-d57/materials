@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Журнал прогресса — занятие</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=PT+Sans:ital,wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--paper-2:#efe7d4;--panel:#fbf7ec;
+    --ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+    --rule:#d8cdb4;--rubric:#9e2b25;--rubric-soft:#c6584f;--med:#b07414;--ok:#4f7a3a;
+    --shadow:0 1px 0 rgba(42,37,32,.04),0 10px 30px -18px rgba(42,37,32,.45);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.66;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 24px 90px;}
+
+  header.mast{padding:64px 0 24px;border-bottom:2px solid var(--ink);animation:rise .7s ease both;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin:0 0 14px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:clamp(30px,5vw,46px);line-height:1.06;margin:0;letter-spacing:-.01em;}
+  .facts{font-family:"PT Sans",sans-serif;font-size:13.5px;color:var(--ink-faint);margin-top:16px;display:flex;gap:20px;flex-wrap:wrap;}
+  .facts b{color:var(--ink-soft);font-weight:700;}
+
+  section.blk{margin-top:30px;animation:rise .6s ease both;}
+  .blk h2{font-family:"Old Standard TT",serif;font-weight:700;font-size:19px;margin:0 0 10px;letter-spacing:.01em;display:flex;align-items:baseline;gap:10px;}
+  .blk h2::before{content:"";width:18px;height:2px;background:var(--rubric);display:inline-block;}
+  .blk p{margin:0 0 11px;}
+  .blk p:last-child{margin-bottom:0;}
+  .blk strong{color:var(--ink);}
+  .blk em{color:var(--ink-soft);}
+
+  .covered{list-style:none;margin:4px 0 0;padding:0;}
+  .covered li{position:relative;padding:12px 0 12px 22px;border-bottom:1px dotted var(--rule);}
+  .covered li:last-child{border-bottom:none;}
+  .covered li::before{content:"";position:absolute;left:0;top:20px;width:8px;height:8px;border-radius:50%;background:var(--rubric);}
+  .covered li b{font-family:"PT Serif",serif;font-weight:700;}
+  .covered li .tail{display:block;color:var(--ink-soft);font-size:15px;margin-top:2px;}
+
+  .callout{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--med);border-radius:3px;padding:16px 20px;margin:12px 0 0;box-shadow:var(--shadow);}
+  .callout .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--med);font-weight:700;margin-bottom:6px;}
+  .callout p{margin:0;font-size:15.5px;color:var(--ink-soft);}
+  .callout p b{color:var(--ink);}
+
+  .hw{background:#f3eef6;border:1px solid #d8cae6;border-left:3px solid #6b4a86;border-radius:4px;padding:18px 22px;margin-top:14px;box-shadow:var(--shadow);}
+  .hw .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6b4a86;font-weight:700;margin-bottom:6px;}
+  .hw p{margin:0;font-size:15.5px;color:var(--ink-soft);}
+  .hw p b{color:#5a3d77;}
+
+  footer{margin-top:44px;text-align:center;font-family:"PT Sans",sans-serif;font-size:12.5px;color:var(--ink-faint);font-style:italic;}
+  @keyframes rise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+  @media print{body::before{display:none;}.callout,.hw{box-shadow:none;}*{animation:none !important;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Журнал занятий · прогресс</p>
+    <h1>Пошаговое построение: первое погружение</h1>
+    <div class="facts">
+      <span><b>Ученик:</b> Максим</span>
+      <span><b>Дата:</b> 5 июня 2026</span>
+      <span><b>Длительность:</b> ≈ 60 мин</span>
+      <span><b>Разобрано:</b> 2 задачи + отступление</span>
+    </div>
+  </header>
+
+  <section class="blk">
+    <h2>Что разобрали</h2>
+    <ul class="covered">
+      <li>
+        <b>Прямоугольник → квадраты (полностью, до общего случая).</b>
+        <span class="tail">От идеи 1×2 и 2×3 — к произвольному шагу, дальше к общему случаю и числам Фибоначчи. По дороге вывели квадратное уравнение и формулу золотого сечения, разобрали отношение сторон и предельный случай.</span>
+      </li>
+      <li>
+        <b>Квадрат без клетки → уголки (4×4, затем общий случай).</b>
+        <span class="tail">Сначала угловая клетка на 4×4, потом произвольная клетка, потом сам придумал индукцию и получил общий случай 64×64 и <code>2ⁿ×2ⁿ</code>.</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="blk">
+    <h2>Как шло</h2>
+    <p><strong>Прямоугольник дался тяжело</strong>, особенно начало: на переход от 1×2 к 2×3 ушло около 25 минут. Дальше переходы пошли легче, но всё равно не мгновенно. Весь разбор этой задачи занял <strong>40–45 минут</strong> вместе с отступлением на золотое сечение.</p>
+    <p><strong>Уголки, наоборот, пошли на удивление быстро.</strong> Здесь учился хорошо: сам выстроил индукцию. Любопытный момент — сначала возникла гипотеза, что общий случай это «стороны делятся на 4», и только потом уточнил до степени двойки.</p>
+  </section>
+
+  <section class="blk">
+    <h2>Наблюдение</h2>
+    <div class="callout">
+      <div class="lab">На что обратить внимание</div>
+      <p><b>Геометрия даётся тяжелее, чем комбинаторика.</b> Прямоугольники откровенно поставили в тупик — там, где нужен первый творческий шаг руками. А комбинаторную индукцию (уголки) схватил быстро и обобщил сам. Стоит давать больше геометрических конструкций — но дозированно, и с опорой на разбор, пока не окрепнет.</p>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2>Темп и объём</h2>
+    <p>Полноценный разбор <strong>двух таких задач плюс отступление</strong> на квадратное уравнение и золотое сечение — это правильный объём на час. Беру за эталон: не гнаться за количеством, а доводить две задачи до общего случая и позволять себе содержательные отступления.</p>
+    <div class="hw">
+      <div class="lab">Задано на дом</div>
+      <p><b>Пять задач на ту же идею</b> (50 чисел; цепочка с остатком 1; 1024 стакана; гиперкубы; ★ новости за 2n−4) — с подсказками и ответами под спойлерами, на час–полтора. Намеренно без повторной геометрии-резки: сегодня её было много.</p>
+    </div>
+  </section>
+
+  <footer>Запись о занятии · для внутреннего журнала</footer>
+
+</div>
+</body>
+</html>
