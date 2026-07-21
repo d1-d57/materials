@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Листок 4 — печать</title>
+<!-- ШАБЛОН. Сборка: python3 kartoteka/gen_l4_figs.py && python3 kartoteka/build_L4_print.py
+     → L4-print.html, затем python3 -m weasyprint L4-print.html L4-print.pdf
+
+     ⚠ ЗДЕСЬ ИСТОЧНИК УСЛОВИЙ. `L4-print.html` — порождаемое, править его бессмысленно.
+     Те же условия дословно лежат в `L4-listok.md` (плюс ответы) и в `../L4/L4-usloviya.html`
+     (на проектор). Разъезжаться нельзя: гейт `python3 kartoteka/check_l4_sync.py`.
+
+     ⚠ ОПРЕДЕЛЕНИЕ КРИВОЙ — В ШАПКЕ, А НЕ ВНУТРИ ЗАДАЧИ (решение владельца 19.07: «лучше
+     определить кривую дракона вне задачи и нарисовать картинки для разных рангов»). Причина
+     не косметическая: слово «дракон» в курсе было неоднозначным — доказывали для ВСЕХ способов
+     складывания, а «всегда в одну сторону» отдельно не вводили.
+
+     ⚠ Формулировки по правилу курса: готовых слов не выписываем, подсказок «что делать» нет,
+     условие оригинальное. Единственная разрешённая ссылка — 26 на 23. Угол тердракона (120°)
+     в условии НЕ пишем: его называет преподаватель у доски.
+-->
+<style>
+  @page{ size:A4; margin:12mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;font:11pt/1.36 Georgia,"Times New Roman",serif}
+  /* Нумерация продолжает листки 1–3 (задачи 1–22): дети держат все листы сразу,
+     сквозной счёт снимает путаницу «какая это задача». Л4 стартует с 23. */
+  .sheet{max-width:186mm;margin:0 auto;counter-reset:z 22}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:4px;margin-bottom:6mm}
+  .head .t{font-weight:700;font-size:12.5pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  .def{margin:0 0 3mm}
+  /* ⚠ SVG вклеен со ЯВНЫМИ мм: во WeasyPrint inline-SVG схлопывается при width:auto */
+  .fig{text-align:center;margin:0 0 8mm}
+  ol{margin:0;padding:0;list-style:none}
+  li{counter-increment:z;position:relative;padding-left:28px;margin:0 0 7mm;
+    break-inside:avoid;page-break-inside:avoid}
+  li::before{content:counter(z)"."; position:absolute;left:0;top:0;font-weight:700}
+  .mono{font-family:"Courier New",monospace;letter-spacing:.06em;font-weight:700;white-space:nowrap}
+  @media screen{ body{background:#eceae6;padding:18px 0}
+    .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:12mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Кривая дракона</span>
+    <span class="m">6 класс &middot; занятие 4</span>
+  </div>
+
+  <p class="def">Сложи полоску бумаги пополам, потом ещё пополам, и ещё &mdash; всё время загибая
+  в одну и ту же сторону. После <span class="mono">n</span> складываний разогни все сгибы до прямых
+  углов. Получившуюся ломаную называют <b>кривой дракона ранга n</b>. Вот первые пять:</p>
+
+  <div class="fig">{{FIG_RANKS}}</div>
+
+  <ol>
+    <li>Сделай несколько одинаковых кривых дракона и попробуй уложить их вокруг одной общей точки так, чтобы они не налезали друг на друга и не оставляли дыр. Сколько кривых для этого понадобится?</li>
+
+    <li>Складывай длинную полоску не пополам, а втрое: левую треть к себе, правую от себя. Потом ещё раз так же. И ещё. Разогни все складки одинаково. Сколько звеньев получится после <span class="mono">n</span> складываний? Запиши двумя буквами слова первых двух рангов. Найди правило, по которому из слова одного ранга получается слово следующего.</li>
+
+    <li>Концы кривой дракона закреплены, расстояние между ними равно&nbsp;<span class="mono">1</span>. На каждом звене кривой ранга&nbsp;<span class="mono">n</span> построй квадрат, для которого это звено &mdash; диагональ. Чему равна суммарная площадь всех этих квадратов?</li>
+
+    <li>Ты уложил вокруг общей точки несколько кривых, как в задаче&nbsp;<span class="mono">23</span>. Покажи, как из этой укладки получить такую же, но из кривых следующего ранга. А потом ещё следующего. Что отсюда следует про дракона сколь угодно большого ранга?</li>
+  </ol>
+</div>
+</body>
+</html>
