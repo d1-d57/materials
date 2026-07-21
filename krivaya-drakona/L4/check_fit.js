@@ -45,6 +45,22 @@ global.addEventListener=()=>{}; global.matchMedia=()=>({matches:false});
 global.setTimeout=(f)=>{ f(); return 0; };
 console.log=()=>{};                                        // самопроверку страницы глушим
 
+/* ⚠ ГЕЙТ КЛАССОВ. Класс, который используется в скрипте, но не объявлен в <style>, ничего не
+   ломает: элемент просто рисуется как попало (у path это чёрная заливка вместо обводки). Оба
+   прежних гейта такое пропускали — поймано на слиянии, где вместе с чужим файлом уехали
+   объявления `.s-fill` и `.s-area`, и область дракона стала чёрным пятном. */
+{
+  const css=html.split('<style>')[1].split('</style>')[0];
+  const decl=new Set([...css.matchAll(/\.(s-[a-z0-9-]+)\{/g)].map(m=>m[1]));
+  const used=new Set([...js.matchAll(/'(s-[a-z0-9-]+)'/g)].map(m=>m[1]));
+  const miss=[...used].filter(c=>!decl.has(c));
+  if(miss.length){
+    console.log('ГЕЙТ КЛАССОВ ПРОВАЛЕН: используются, но не объявлены — '+miss.join(', '));
+    process.exit(1);
+  }
+  process.stdout.write(`  ✓ классы: объявлено ${decl.size}, использовано ${used.size}, потерянных нет\n`);
+}
+
 eval(js+'\n;global.__TABS=TABS; global.__show=show;');
 const log=(...a)=>process.stdout.write(a.join(' ')+'\n');
 const TABS=global.__TABS, show=global.__show;
@@ -106,10 +122,20 @@ for(const t of TABS){
     for(let s=0;s<step;s++) if(t.space) await t.space();
     const nodes=walk(byId['stage'],[]).filter(n=>n.tagName!=='div');
     // 1 — посадка
-    for(const n of nodes) for(const p of pts(n)){
-      if(!isFinite(p[0])||!isFinite(p[1])) { bad.push(`вкл.${t.num} шаг ${step}: <${n.tagName}> координата NaN`); continue; }
-      if(p[0]<MARGIN||p[0]>VBW-MARGIN||p[1]<MARGIN||p[1]>VBH-MARGIN)
-        bad.push(`вкл.${t.num} шаг ${step}: <${n.tagName}> уехал за сцену (${p[0].toFixed(0)},${p[1].toFixed(0)})`);
+    /* ⚠ ФОН МОЖЕТ ВЫХОДИТЬ ЗА КАДР, СОДЕРЖИМОЕ — НЕТ. Рамки боксов (`s-box`) чертятся вплотную
+       к краю сцены, а клетчатая бумага (`s-grid`) нарочно продолжается за неё и обрезается
+       браузером — так задумано на вкладках «Линейка», «Все ранга 4», «Касания». Первая версия
+       требовала поля от всего подряд и валилась на файле, который давно показан на проекторе.
+       Смысл гейта — «содержимое молча не обрезалось», а не «ничего не касается края». */
+    const BG = n => n.attrs.class==='s-grid' || n.attrs.class==='s-box' || n.tagName==='rect';
+    for(const n of nodes){
+      if(BG(n)) continue;
+      const m = MARGIN;
+      for(const p of pts(n)){
+        if(!isFinite(p[0])||!isFinite(p[1])) { bad.push(`вкл.${t.num} шаг ${step}: <${n.tagName}> координата NaN`); continue; }
+        if(p[0]<m||p[0]>VBW-m||p[1]<m||p[1]>VBH-m)
+          bad.push(`вкл.${t.num} шаг ${step}: <${n.tagName}> уехал за сцену (${p[0].toFixed(0)},${p[1].toFixed(0)})`);
+      }
     }
     // 2 — метки друг на друге
     const T=nodes.filter(n=>n.tagName==='text')

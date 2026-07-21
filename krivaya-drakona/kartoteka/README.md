@@ -13,6 +13,7 @@
 | Л1 | `L1-print.html` — **сам источник**, SVG вклеен руками; состав и ответы — `L1-listok-poloska.md`; фигура — `gen_l1_figs.py` | `L1-fig2.svg`, `L1-print.pdf` |
 | Л2 (мини-листок, задачи 13–16) | `L2-print-tmpl.html` — **шаблон**; состав и ответы — `L2-mini-listok.md`; фигуры — `gen_l2_figs.py`; сшивка — `build_L2_print.py` | `L2-fig-*.svg`, `L2-print.html`, `L2-print.pdf` |
 | Л3 (мини-листок «Слово», задачи 17–22) | `L3-print.html` — **сам источник**: картинок в листке нет, поэтому шаблон и сборка не нужны; состав и ответы — `L3-mini-listok.md`; разбор для владельца — вкладка «Слово — преподавателю» (`../razbor/tekst/5-slovo-prepodavatelyu.md`) | `L3-print.pdf` |
+| **Л4** (занятие 4, задачи 23–26) | `L4-print-tmpl.html` — **шаблон** (в шапке определение кривой + картинки рангов 1–5); фигура — `gen_l4_figs.py`; сшивка — `build_L4_print.py`; состав и ответы — `L4-listok.md`; те же условия на проектор — `../L4/L4-usloviya.html` | `L4-fig-ranks.svg`, `L4-print.html`, `L4-print.pdf` |
 
 ```bash
 python3 gen_l1_figs.py                                  # Л1: фигура (вклеить в L1-print.html руками)
@@ -32,3 +33,8 @@ pdftoppm -png -r 110 L3-print.pdf preview               # гейт: посмот
 - сам листок 179 (готовая градация с живой группы) — `../istochniki/listok-179-sobesedovanie.tex`.
 
 Образец заполненной картотеки того же жанра — `../../informacia-i-kody/kartoteka/`.
+
+
+**Л4 — три места с одними условиями, и они обязаны сходиться:** `L4-print-tmpl.html` (источник печати) · `L4-listok.md` (то же плюс ответы) · `../L4/L4-usloviya.html` (то же на проектор). Гейт после любой правки: `python3 kartoteka/check_l4_sync.py`.
+
+**Показ — один файл на весь курс: `../L4/L4-razbory.html`** (22 вкладки: задачи листка Л1 3–10 · теорема 2 из Л2 · слово 17–22 · задачи занятия 4 23–26 · «красивое» — рост, замощение, граница). `../L2/L2-razbory.html` влит в него 19.07 и больше не ведётся. Гейты: `node L4/check_page.js L4/L4-razbory.html` (файл жив) и `node L4/check_fit.js L4/L4-razbory.html` (классы, посадка, слипание меток, пустые кадры).
