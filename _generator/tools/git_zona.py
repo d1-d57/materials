@@ -48,7 +48,13 @@ import sys
 import time
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
+# GIT_ZONA_REPO — ТОЛЬКО для фикстур: направляет инструмент на одноразовый репо
+# в /tmp. Без этого поведение коммита проверить нечем: в боевом `materials/`
+# песочница не может `unlink` в `.git/objects`, тестовый коммит падает с rc=128 —
+# и это выглядит как содержательный отрицательный результат (цена: четыре ложных
+# прогона за сессию 21.07, из-за них верную форму коммита искали вслепую).
+# В одноразовом репо git работает полностью — проверено.
+REPO = Path(os.environ.get("GIT_ZONA_REPO") or Path(__file__).resolve().parents[2])
 PLAN = REPO / "_studio" / ".commit-plan"
 LOCK = REPO / ".git" / "index.lock"
 LOCK_WAIT_SEC = 90
@@ -311,17 +317,52 @@ def cmd_commit(args):
             print(f"⛔ Остановился перед: {c['msg']}")
             failed.append(c["msg"])
             break
-        r = git("add", "--", *c["paths"], check=False)
-        if r.returncode != 0:
-            print(f"❌ add упал: {c['msg']}\n{r.stderr.strip()}")
-            failed.append(c["msg"])
-            continue
-        if not git("diff", "--cached", "--name-only").stdout.strip():
+        if not git("status", "--porcelain", "--", *c["paths"]).stdout.strip():
             print(f"⏭  нечего коммитить: {c['msg']}")
             continue
-        r = git("commit", "-m", c["msg"], check=False)
+        # 🔴 ДВА ХОДА, и оба обязательны — по одному на каждую беду 21.07.
+        # Не «упрощать»: убрав любой из них, воспроизведёшь оплаченную поломку.
+        #
+        #  · `add -- <пути>` — потому что pathspec в commit знает ТОЛЬКО
+        #    ОТСЛЕЖИВАЕМЫЕ пути. Для нового файла `git commit -- <путь>` падает с
+        #    «did not match any file(s) known to git». Цена: убрали `add`, считая
+        #    pathspec самодостаточным, — завалились все 10 коммитов плана, новых
+        #    путей в нём было около трёх четвертей.
+        #
+        #  · `-- <пути>` в самом commit — потому что `git commit -m` без путей
+        #    забирает индекс ЦЕЛИКОМ, вместе с чужим. Цена: коммит из 89 файлов
+        #    вместо трёх; план из 10 осмысленных коммитов схлопнулся в один свальный.
+        #    ⚠ Грязнит индекс НЕ авто-коммит (его в репо нет — единственный хук
+        #    .githooks/pre-commit ничего не стейджит), а живые писатели рядом:
+        #    владелец, Cowork, Claude Code. Окно гонки тут ни при чём — чужое
+        #    просто лежит в общем индексе, и pathspec его отсекает.
+        #
+        # ОБЕ половины держит фикстура (мутационно проверена, не на слово):
+        #   sh _generator/tools/fixtures/git_zona/PROGNAT.sh
+        # В pre-commit она поднимается при любой правке этого файла.
+        r = git("add", "--", *c["paths"], check=False)
         if r.returncode != 0:
-            print(f"❌ commit упал: {c['msg']}\n{r.stdout.strip()}\n{r.stderr.strip()}")
+            print(f"❌ add упал (rc={r.returncode}): {c['msg']}\n   "
+                  + (r.stderr.strip().splitlines() or ["(stderr пуст)"])[0])
+            failed.append(c["msg"])
+            continue
+        r = git("commit", "-m", c["msg"], "--", *c["paths"], check=False)
+        if r.returncode != 0:
+            # Показываем ПРИЧИНУ, а не первую попавшуюся строку.
+            # Цена: 21.07 коммит уронил pre-commit-хук, а печаталась первая
+            # строка его stdout — бодрое «→ гоню фикстуру». Настоящая ошибка
+            # (красная фикстура) осталась невидимой, и владелец получил rc=1
+            # без причины. Поэтому: сперва строки, похожие на ошибку, и только
+            # если таких нет — хвост вывода целиком.
+            out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+            marks = ("❌", "error", "fatal", "КРАСН", "rror:")
+            hits = [l for l in out if any(m in l for m in marks)]
+            shown = hits[:5] if hits else out[-5:] or ["(вывод пуст)"]
+            print(f"❌ commit упал (rc={r.returncode}): {c['msg']}")
+            for l in shown:
+                print(f"   {l}")
+            if not hits and len(out) > 5:
+                print(f"   (показан хвост; всего строк вывода: {len(out)})")
             failed.append(c["msg"])
             continue
         print(f"✅ {git('log', '-1', '--format=%h').stdout.strip()}  {c['msg']}")
