@@ -396,6 +396,86 @@ def cmd_commit(args):
     return 0
 
 
+# ─────────────────────────────── worktree ───────────────────────────────
+#
+# ЗАЧЕМ. У репозитория ОДНА рабочая папка на все ветки. Поэтому канонное
+# «параллельным заходам — РАЗНЫЕ ветки» в ней НЕ спасение, а самая опасная из
+# возможностей: пока заход A работает на своей ветке, `git checkout` захода B
+# подменяет файлы под ногами A — правки либо блокируют переключение, либо
+# уезжают в чужую ветку. Проверено 21.07: `worktree list` даёт один вход,
+# в reflog переключения между ветками заходов есть.
+#
+# Worktree даёт каждому заходу СВОЮ рабочую папку, СВОЙ индекс и СВОЙ HEAD при
+# общем хранилище объектов. Отсюда: чужое в твой коммит не попадает физически
+# (индексы разные), checkout соседа тебя не задевает (папки разные).
+# ⚠ Что worktree НЕ чинит: ссылки и упаковка объектов остаются общими, поэтому
+# короткие блокировки при одновременном коммите сохраняются — их держит ретрай
+# с отступом (`wait_for_lock`). Два механизма дополняют друг друга.
+
+WT_HOME = REPO.parent / f"{REPO.name}-wt"
+
+
+def cmd_worktree(args):
+    if args.action == "list":
+        print(git("worktree", "list").stdout.rstrip())
+        return 0
+
+    if args.action == "add":
+        if not args.name:
+            sys.exit("❌ Нужно имя: `git_zona.py worktree add <имя> [--branch <ветка>]`")
+        path = WT_HOME / args.name
+        if path.exists():
+            print(f"⚠ Уже есть: {path}\n   Работай в ней или сними: "
+                  f"`git_zona.py worktree drop {args.name}`")
+            return 1
+        branch = args.branch or f"zahod/{args.name}"
+        exists = git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}",
+                     check=False).returncode == 0
+        WT_HOME.mkdir(parents=True, exist_ok=True)
+        cmd = (["worktree", "add", str(path), branch] if exists
+               else ["worktree", "add", "-b", branch, str(path)])
+        r = git(*cmd, check=False)
+        if r.returncode != 0:
+            print(f"❌ Не завелась (rc={r.returncode}):\n{r.stderr.strip()}")
+            return 1
+        print(f"✅ Рабочая папка захода готова.\n"
+              f"   Папка:  {path}\n"
+              f"   Ветка:  {branch} ({'существующая' if exists else 'новая'})\n\n"
+              f"В заход впиши ПЕРВЫМ ходом (вместо `git checkout`):\n"
+              f"   cd {path}\n"
+              f"Ветку НЕ переключать: она у этой папки своя и уже стоит.\n"
+              f"Закончив — коммит своей зоны там же, потом:\n"
+              f"   python3 {REPO}/_generator/tools/git_zona.py worktree drop {args.name}")
+        return 0
+
+    if args.action == "drop":
+        if not args.name:
+            sys.exit("❌ Нужно имя: `git_zona.py worktree drop <имя>`")
+        path = WT_HOME / args.name
+        if not path.exists():
+            print(f"⚠ Нет такой папки: {path}")
+            return 1
+        # 🔴 Незакоммиченное — НЕ удаляем. Автоочистка worktree с незакоммиченной
+        # работой — известный способ потерять её безвозвратно (тот же дефект
+        # заведён у claude-code как issue #55724). Лучше оставить папку висеть.
+        st = subprocess.run(["git", "--no-optional-locks", "-C", str(path),
+                             "status", "--porcelain", "--untracked-files=all"],
+                            capture_output=True, text=True).stdout.strip()
+        if st and not args.force:
+            n = len(st.splitlines())
+            print(f"⛔ В папке {n} путей вне git — НЕ удаляю, работа дороже порядка.\n"
+                  f"   Посмотреть: python3 {Path(__file__)} check   (запусти из {path})\n"
+                  f"   Точно мусор — повтори с --force.")
+            return 1
+        r = git("worktree", "remove", *(["--force"] if args.force else []),
+                str(path), check=False)
+        if r.returncode != 0:
+            print(f"❌ Не снялась:\n{r.stderr.strip()}")
+            return 1
+        print(f"✅ Снята: {path}\n   Ветка осталась — её работа никуда не делась.")
+        return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="Вся работа с git в materials/ — через этот файл.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -414,6 +494,13 @@ def main():
     k = sub.add_parser("commit", help="исполнить _studio/.commit-plan")
     k.add_argument("--zone", help="отказаться, если план выходит за этот префикс")
     k.set_defaults(func=cmd_commit)
+
+    w = sub.add_parser("worktree", help="отдельная рабочая папка на заход (параллельные заходы)")
+    w.add_argument("action", choices=["add", "drop", "list"])
+    w.add_argument("name", nargs="?", help="имя захода")
+    w.add_argument("--branch", help="ветка (по умолчанию zahod/<имя>)")
+    w.add_argument("--force", action="store_true", help="снять даже с незакоммиченным")
+    w.set_defaults(func=cmd_worktree)
 
     args = ap.parse_args()
     sys.exit(args.func(args))
