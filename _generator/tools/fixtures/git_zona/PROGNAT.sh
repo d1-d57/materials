@@ -42,7 +42,11 @@ TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
 # Проверка, что строка жива: запусти фикстуру с
 #   GIT_DIR=$PWD/.git GIT_INDEX_FILE=$PWD/.git/index sh …/PROGNAT.sh
 # — она обязана остаться ЗЕЛЁНОЙ и не тронуть текущий репозиторий.
-for v in $(env | sed -n 's/^\(GIT_[A-Za-z_]*\)=.*/\1/p'); do unset "$v"; done
+# Форма — КАНОНИЧЕСКАЯ, из документации git (githooks: «if your hook needs to
+# invoke Git commands in a foreign repository … it should clear these environment
+# variables»). Список даёт сам git, поэтому он не разъедется с версией — самодельный
+# перебор по маске `GIT_*` пропустил бы переменные без этого префикса.
+unset $(git rev-parse --local-env-vars)
 
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
@@ -50,6 +54,12 @@ trap 'rm -rf "$T"' EXIT
 mkdir -p "$T/_studio"
 cd "$T"
 git init -q .
+# Личность нужна В КОНФИГЕ одноразового репо, а не инлайном через -c: коммит
+# делает git_zona.py отдельным процессом, и -c до него не долетает (пробовал —
+# фикстура краснеет на «Please tell me who you are»).
+# Единственное, что не даёт этим строкам переписать БОЕВОЙ конфиг, — вычистка
+# окружения выше. Цена, когда её не было: коммит владельца уехал с автором
+# `fixture <fixture@test>`, и заметили это не сразу.
 git config user.email fixture@test
 git config user.name fixture
 # hooksPath не наследуется — одноразовый репо не должен тащить боевые гейты
