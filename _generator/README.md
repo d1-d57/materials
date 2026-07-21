@@ -1,5 +1,10 @@
 # `_generator` — illustration-aware сборщик слайд-колод
 
+> ⚙️ **БРАТЬ ЭТОТ ГЕНЕРАТОР, НЕ ПИСАТЬ СВОЙ.** Любой HTML-артефакт (документ-вид, слайды, лекция, лонгрид) собирается только отсюда; писать новый парсер `md→HTML` запрещено (дорого и уже было — переделка `catalan/…/obyasnenie-html/`).
+> - **Документ-вид** (поток текста для авторской вычитки, формулы KaTeX) → `python3 _generator/build_doc.py <src>` → `<src>/view.html`. Демо — `_generator/doc-demo/` (`matematika.md` ‖ `naupop.md`).
+> - **Слайд-колода** (канон html-slides-studio) → `python3 _generator/build_deck.py <lecture>/src` → `src/dist/index.html`.
+> - Правишь только источник (`content/*.md`, `illustrations/*.svg`, `tokens.css`); HTML — выход, руками не трогаешь. Только stdlib, без pip/сети.
+
 Собирает **папку-источник** (`<lecture>/src/`) в один самодостаточный `index.html`
 канона `html-slides-studio`. Обобщение `kurs leto 2026/istochnik/_generator/build.py`
 на формат слайд-колод: каждая иллюстрация — отдельный файл, палитра и шрифты — в одном

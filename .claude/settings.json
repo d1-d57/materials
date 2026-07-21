@@ -1,0 +1,25 @@
+{
+  "_комментарий": "ВРЕМЕННАЯ ЛОВУШКА (заведена 2026-07-17). Вопрос: работают ли хуки Claude Code в Cowork? В живой Cowork-сессии PostToolUse и UserPromptSubmit НЕ стреляли ни разу при валидном контроле. Осталась гипотеза «нет live-reload, нужен старт сессии» — её и ловит этот файл. Поведения не меняет: только дописывает строку в лог. КАК ЧИТАТЬ: появился .claude/hook-test.log → хуки живы, открывается сильный класс (Stop с exit 2 не даёт сессии завершиться молча) → переписать файл на боевые хуки. Лог пуст после нескольких сессий → хуков в Cowork нет, файл удалить. Строка лога сама говорит, ГДЕ исполнилась (cwd/proj). Бонус: если стрельнёт в Claude Code, но не в Cowork — это тоже ответ. НЕ КОММИТИТЬ до вердикта: это тест, а не канон.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"SessionStart | cwd=$(pwd) | proj=${CLAUDE_PROJECT_DIR:-НЕТ} | $(date -Iseconds)\" >> \"${CLAUDE_PROJECT_DIR:-/Users/ivanyakovlev/Documents/GitHub/materials}/.claude/hook-test.log\" 2>/dev/null; true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"UserPromptSubmit | cwd=$(pwd) | proj=${CLAUDE_PROJECT_DIR:-НЕТ} | $(date -Iseconds)\" >> \"${CLAUDE_PROJECT_DIR:-/Users/ivanyakovlev/Documents/GitHub/materials}/.claude/hook-test.log\" 2>/dev/null; true"
+          }
+        ]
+      }
+    ]
+  }
+}
