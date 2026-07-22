@@ -138,4 +138,86 @@ then echo "  ✅ детект песочницы срабатывает на fus
 else echo "  ❌ ДЕТЕКТ ПЕСОЧНИЦЫ НЕ РАБОТАЕТ — запрет записи мёртв"; FAIL=1
 fi
 
+# ── ЛОВУШКА 4: clean не должен трогать СВЕЖИЙ лок ──
+# Свежий лок = рядом идёт живой коммит; снести его — испортить чужой индекс.
+# Мёртвый (старше 5 мин) — наоборот, обязан уйти, иначе репозиторий стоит.
+# ⚠ Возраст файла ставим PYTHON'ом, а не `touch -d '10 minutes ago'`.
+# `-d` с человеческим временем — GNU-изм: на macOS BSD-touch его не понимает,
+# fallback создавал файл с ТЕКУЩИМ временем, лок считался свежим, и фикстура
+# краснела у владельца, оставаясь зелёной в Linux-песочнице.
+# ЦЕНА: коммит владельца остановлен хуком на здоровом коде (23.07).
+# Правило шире одного места: фикстуры и хуки исполняются НА macOS ВЛАДЕЛЬЦА —
+# никаких GNU-измов (`touch -d`, `date -d`, `sed -i`, `xargs -r`, `stat -c`).
+python3 -c "import os,sys,time; p=sys.argv[1]; open(p,'w').close(); os.utime(p,(time.time()-600,)*2)" "$T/.git/dead.lock"
+touch "$T/.git/fresh.lock"
+mkdir -p "$T/.git/objects/ab" && touch "$T/.git/objects/ab/tmp_obj_FIX"
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" clean > /dev/null 2>&1 || true
+[ ! -f "$T/.git/dead.lock" ] && echo "  ✅ clean снял МЁРТВЫЙ лок" \
+                            || { echo "  ❌ мёртвый лок остался — репозиторий будет стоять"; FAIL=1; }
+[ -f "$T/.git/fresh.lock" ] && echo "  ✅ clean НЕ тронул свежий лок (там живой коммит)" \
+                           || { echo "  ❌ СНЯТ СВЕЖИЙ ЛОК — можно испортить чужой индекс"; FAIL=1; }
+[ ! -f "$T/.git/objects/ab/tmp_obj_FIX" ] && echo "  ✅ clean убрал мусорный объект" \
+                           || { echo "  ❌ мусор не убран"; FAIL=1; }
+rm -f "$T/.git/fresh.lock"
+
+# ── ЛОВУШКА 5: untrack снимает с индекса, но НЕ трогает диск ──
+mkdir -p "$T/lib/istochniki"
+echo "книга" > "$T/lib/istochniki/kniga.pdf"
+git add "lib/istochniki/kniga.pdf" && git commit -qm "книга в индексе"
+printf '**/istochniki/**/*.pdf\n' > "$T/.gitignore"
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" untrack --yes > /dev/null 2>&1 || true
+V=$(git ls-files | grep -c 'kniga.pdf' || true)
+[ "$V" = "0" ] && echo "  ✅ untrack снял игнорируемое с индекса" \
+              || { echo "  ❌ untrack не сработал — файл остался в индексе"; FAIL=1; }
+[ -f "$T/lib/istochniki/kniga.pdf" ] && echo "  ✅ untrack НЕ удалил файл с диска" \
+              || { echo "  ❌ ФАЙЛ УДАЛЁН С ДИСКА — untrack обязан только разотслеживать"; FAIL=1; }
+
+# ── ЛОВУШКА 7: GNU-измы в коде, который исполняется у ВЛАДЕЛЬЦА ──
+# Фикстуры и хуки гоняются на macOS (BSD), а пишутся в Linux-песочнице (GNU).
+# ЦЕНА (23.07): `touch -d` в этой самой фикстуре остановил здоровый коммит
+# владельца — у Cowork было зелено. Гейт, зелёный у автора и красный у
+# владельца, хуже отсутствующего.
+# Проверка python'ом, а не grep: надо пропускать КОММЕНТАРИИ, иначе гейт
+# краснеет на собственном списке запрещённых конструкций (поймано сразу).
+if python3 - "$TOOLS" <<'PY'
+import re, sys, pathlib
+tools = pathlib.Path(sys.argv[1])
+# склеиваем из частей, иначе паттерн ловит собственную же строку
+bad_re = re.compile("|".join(a + b for a, b in [
+    ("touch", " -d"), ("date", " -d"), ("sed", " -i "),
+    ("xargs", " -r"), ("stat", " -c"), ("grep", " -P")]))
+files = list(tools.glob("fixtures/*/PROGNAT.sh")) + list((tools / ".." / "..").glob(".githooks/*"))
+hits = []
+for f in files:
+    try:
+        for n, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            if line.lstrip().startswith("#"):
+                continue          # комментарий — это документация, не код
+            if bad_re.search(line):
+                hits.append(f"{f.name}:{n}")
+    except OSError:
+        pass
+print(" ".join(hits))
+sys.exit(1 if hits else 0)
+PY
+then echo "  ✅ GNU-измов в фикстурах и хуках нет (портируемо на macOS)"
+else echo "  ❌ GNU-ИЗМ (см. выше) — сломается на macOS владельца"; FAIL=1
+fi
+
+# ── ЛОВУШКА 6: канон не отстал от инструмента ──
+# Добавили подкоманду и не вписали в дом дисциплины — владелец о ней не узнает,
+# а Cowork выдаст вместо неё shell-строчку, которая сломается (§0 канона).
+DOC="$TOOLS/../../_studio/docs/kak-delat/GIT-disciplina.md"
+if [ -f "$DOC" ]; then
+    MISS=""
+    for c in $(python3 "$TOOLS/git_zona.py" --help 2>/dev/null \
+               | sed -n 's/^ *{\(.*\)}$/\1/p' | tr ',' ' '); do
+        grep -q "git_zona.py $c" "$DOC" || MISS="$MISS $c"
+    done
+    [ -z "$MISS" ] && echo "  ✅ все подкоманды описаны в GIT-disciplina.md" \
+                   || { echo "  ❌ В КАНОНЕ НЕТ ПОДКОМАНД:$MISS — владелец о них не узнает"; FAIL=1; }
+else
+    echo "  ⚠ GIT-disciplina.md не найден рядом — проверку канона пропускаю"
+fi
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }

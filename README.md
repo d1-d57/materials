@@ -43,19 +43,24 @@
 | **материалы к индивидуальному занятию** (ДЗ, подборка на доску, журнал ученика) | `ucheniki/START-HERE.md` → `ucheniki/METOD.md` | метод общий, журнал у каждого свой; сперва согласовать набор задач, потом собирать файл |
 | **ЛЮБАЯ работа с git** (коммит, «что-то не коммитится», «кто-то работает параллельно») | `python3 _generator/tools/git_zona.py doctor` | **руками git не трогаем.** Всё через этот файл: `doctor` → `plan` → `commit`. Непонятный вывод — целиком в чат Claude |
 
-## §2а. Git — четыре команды, больше знать нечего
+## §2а. Git — шесть команд, больше знать нечего
 
 > Полная дисциплина (Cowork, исполнитель, worktree, причины) — `_studio/docs/kak-delat/GIT-disciplina.md`. Здесь — выжимка для владельца.
+> 🔴 **Cowork НЕ выдаёт владельцу shell** (`rm`, `find`, `xargs`, glob, `&&`) — только вызовы `git_zona.py`: они пишутся в bash/Linux, а исполняются в zsh/macOS и потому ломаются систематически (`GIT-disciplina §0`).
 
 Владелец команды не собирает и в git руками не ходит. Всё, что нужно:
 
 ```
 cd /Users/ivanyakovlev/Documents/GitHub/materials
-python3 _generator/tools/git_zona.py doctor    # что с репо прямо сейчас
-python3 _generator/tools/git_zona.py plan      # собрать черновик коммитов
-python3 _generator/tools/git_zona.py commit    # закоммитить по плану
-python3 _generator/tools/git_zona.py check     # что осталось вне git
+python3 _generator/tools/git_zona.py doctor          # что с репо прямо сейчас
+python3 _generator/tools/git_zona.py plan            # собрать черновик коммитов
+python3 _generator/tools/git_zona.py commit --push   # закоммитить и вывезти на GitHub
+python3 _generator/tools/git_zona.py check           # что осталось вне git
+python3 _generator/tools/git_zona.py clean           # снять мёртвые локи и мусор
+python3 _generator/tools/git_zona.py untrack --yes   # убрать из git то, что в .gitignore
 ```
+
+**Не помнишь, какая нужна — `doctor`.** Он называет состояние и следующий шаг.
 
 **Порядок, когда «Claude просит закоммитить»:** `doctor` → если вне git есть лишнее, `plan` → Claude (или ты) правит сообщения `==` в `_studio/.commit-plan` → `commit`. Скрипт сам дожидается чужого коммита, сам проверяет по живым файлам, что всё доехало, и краснеет, если нет.
 

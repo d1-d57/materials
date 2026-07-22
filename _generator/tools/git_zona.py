@@ -281,6 +281,78 @@ def cmd_doctor(args):
 
 # ─────────────────────────────── check ───────────────────────────────
 
+def find_locks():
+    """(локи, мусорные объекты) — то, что мешает записи или копится в .git."""
+    g = REPO / ".git"
+    return (sorted(g.glob("*.lock")) + sorted(g.glob("objects/*.lock")),
+            sorted(g.glob("objects/*/tmp_obj_*")))
+
+
+DEAD_LOCK_SEC = 300
+
+
+def sweep_dead_locks(quiet=False):
+    """Снять МЁРТВЫЕ локи (старше 5 мин). Свежие не трогать — там живой коммит.
+
+    Почему это делает инструмент, а не человек командой из чата: команда
+    `rm -f .git/*.lock` в zsh ПАДАЕТ целиком, если ни один файл не совпал
+    (`no matches found`), и владелец остаётся и без уборки, и без диагноза.
+    Цена 22.07: мёртвый `maintenance.lock` и 103 мусорных объекта пережили
+    две выданные команды уборки — обе не выполнились.
+    """
+    locks, _ = find_locks()
+    now, killed, alive = time.time(), [], []
+    for p in locks:
+        try:
+            if now - p.stat().st_mtime < DEAD_LOCK_SEC:
+                alive.append(p)
+                continue
+            p.unlink()
+            killed.append(p)
+        except OSError:
+            alive.append(p)
+    if killed and not quiet:
+        print(f"🧹 Снято мёртвых локов: {len(killed)} "
+              f"({', '.join(p.name for p in killed)}).")
+    return killed, alive
+
+
+def cmd_clean(args):
+    if in_sandbox():
+        return refuse_write("Уборка .git", suggest="clean")
+    locks, junk = find_locks()
+    if not locks and not junk:
+        print("✅ В .git чисто: ни локов, ни мусорных объектов.")
+        return 0
+
+    killed, alive = sweep_dead_locks()
+    if alive:
+        print(f"⏳ Оставил {len(alive)} свежих лок(ов) — младше 5 мин, рядом может\n"
+              "   идти живой коммит. Снимать их опасно: испортишь индекс.\n"
+              "   Подожди и повтори `clean`.")
+        for p in alive:
+            print(f"   {p.relative_to(REPO)}")
+
+    removed = 0
+    for p in junk:
+        try:
+            p.unlink()
+            removed += 1
+        except OSError:
+            pass
+    if removed:
+        print(f"🧹 Убрано мусорных объектов (`tmp_obj_*`): {removed}.")
+
+    locks2, junk2 = find_locks()
+    if not locks2 and not junk2:
+        print("✅ Готово: .git чист.")
+        return 0
+    if alive and not junk2:
+        return 0
+    print(f"⚠ Осталось: локов {len(locks2)}, мусора {len(junk2)}.")
+    return 1
+
+
 def cmd_check(args):
     rows = dirty(args.zone)
     where = f"зона {args.zone}" if args.zone else "всё дерево"
@@ -389,6 +461,48 @@ def parse_plan():
 
 # ─────────────────────────────── commit ───────────────────────────────
 
+def cmd_untrack(args):
+    """Снять с индекса то, что стало игнорируемым. Файлы на диске НЕ трогает.
+
+    Заменяет shell-конструкцию `git ls-files -z … | xargs -0 git rm --cached`,
+    которую владельцу приходилось вставлять руками. Та форма ломалась о zsh,
+    о пути с пробелами и о разницу BSD/GNU xargs — здесь этого нет.
+    """
+    if in_sandbox():
+        return refuse_write("untrack", suggest="untrack")
+    out = git("ls-files", "-z", "-i", "-c", "--exclude-standard").stdout
+    paths = [p for p in out.split("\0") if p]
+    if not paths:
+        print("✅ В индексе нет ничего, что попадало бы под .gitignore.")
+        return 0
+
+    by_top = {}
+    for p in paths:
+        by_top.setdefault(p.split("/")[0], []).append(p)
+    print(f"Под .gitignore, но всё ещё в индексе: {len(paths)} путей.")
+    for top in sorted(by_top):
+        print(f"   {len(by_top[top]):>4}  {top}")
+    print("\nФайлы останутся на диске — из git уходит только ссылка на них.")
+    if not args.yes:
+        print("→ Выполнить: тот же untrack с --yes")
+        return 0
+
+    if not wait_for_lock():
+        return 2
+    for i in range(0, len(paths), 200):          # пачками: длина командной строки
+        r = git("rm", "--cached", "--quiet", "--", *paths[i:i + 200], check=False)
+        if r.returncode != 0:
+            print(f"❌ git rm упал (rc={r.returncode}):\n   "
+                  + (r.stderr.strip().splitlines() or ["(пусто)"])[0])
+            return 1
+    left = [p for p in git("ls-files", "-z", "-i", "-c",
+                           "--exclude-standard").stdout.split("\0") if p]
+    print(f"✅ Снято с индекса: {len(paths) - len(left)}. "
+          f"Осталось под правилом: {len(left)}.")
+    print("→ Теперь закоммитить: plan → commit (удаления попадут в коммит).")
+    return 0
+
+
 def cmd_commit(args):
     # 🔴 ПЕРВЫМ ходом, до любой работы: писать из песочницы нельзя (см. refuse_write).
     # Раньше запрет жил только словами в каноне — и был нарушён: три отказа за
@@ -420,6 +534,9 @@ def cmd_commit(args):
         print("→ Дерево изменилось после сборки плана. Пересобрать: `git_zona.py plan`.")
         return 1
 
+    # Мёртвый лок снимаем САМИ — это самая частая причина «не коммитится»,
+    # и раньше она требовала отдельной команды владельцу, которая падала в zsh.
+    sweep_dead_locks()
     if not wait_for_lock():
         return 2
 
@@ -508,13 +625,25 @@ def cmd_commit(args):
         print(f"   ⚠ План исполнен, но файл плана не удалился ({e.strerror}).\n"
               f"     Это НЕ влияет на коммит. Удалить вручную: rm {PLAN}")
     up = git("rev-parse", "--abbrev-ref", "@{upstream}", check=False)
-    if up.returncode == 0:
-        ahead = git("rev-list", "--count", "@{upstream}..HEAD").stdout.strip()
-        if ahead != "0":
-            print(f"\n⚠ {ahead} коммит(ов) есть только на этой машине. "
-                  "`git push` вывезет их с диска.")
-    else:
-        print(f"\n⚠ Ветка не отслеживает origin — всё это есть только на этой машине.")
+    if up.returncode != 0:
+        print("\n⚠ Ветка не отслеживает origin — всё это есть только на этой машине.")
+        return 0
+    ahead = git("rev-list", "--count", "@{upstream}..HEAD").stdout.strip()
+    if ahead == "0":
+        return 0
+    if not args.push:
+        print(f"\n⚠ {ahead} коммит(ов) есть только на этой машине. "
+              "Вывезти: тот же commit с --push (или `git push`).")
+        return 0
+    # push отдельным шагом забывался, и работа оставалась на одном диске.
+    print(f"\n→ push: вывожу {ahead} коммит(ов) на origin…")
+    r = git("push", check=False)
+    if r.returncode != 0:
+        first = ((r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+                 or ["(вывод пуст)"])[0]
+        print(f"❌ push упал (rc={r.returncode}):\n   {first}")
+        return 1
+    print("✅ push прошёл — работа больше не только на этой машине.")
     return 0
 
 
@@ -622,7 +751,15 @@ def main():
 
     k = sub.add_parser("commit", help="исполнить _studio/.commit-plan")
     k.add_argument("--zone", help="отказаться, если план выходит за этот префикс")
+    k.add_argument("--push", action="store_true", help="сразу вывезти на origin")
     k.set_defaults(func=cmd_commit)
+
+    cl = sub.add_parser("clean", help="снять мёртвые локи и мусор из .git")
+    cl.set_defaults(func=cmd_clean)
+
+    u = sub.add_parser("untrack", help="снять с индекса то, что стало игнорируемым")
+    u.add_argument("--yes", action="store_true", help="выполнить (без него — только показать)")
+    u.set_defaults(func=cmd_untrack)
 
     w = sub.add_parser("worktree", help="отдельная рабочая папка на заход (параллельные заходы)")
     w.add_argument("action", choices=["add", "drop", "list"])
