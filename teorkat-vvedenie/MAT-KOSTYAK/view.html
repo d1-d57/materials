@@ -287,7 +287,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note"><strong>Зависимости:</strong> категория</aside>
 <aside class="note"><strong>Оправдание:</strong> нужно для CCC — все универсальные свойства формулируются как «существует единственная стрелка, при которой диаграмма коммутативна»; без этого слова каждое из них пришлось бы выписывать системой равенств</aside>
 <aside class="note"><strong>Не говорим:</strong> о диаграммах как функторах из категории-схемы (это язык пределов, он вне зоны); о том, что коммутативность достаточно проверять на порождающих квадратах</aside>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>mot-kommutativnaya-diagramma</code></aside>
 <h3>П5. Универсальное свойство</h3>
 <div class="stmt defn" id="s0-d-5"><span class="lbl">Определение 5 (универсальное свойство).</span> Универсальное свойство — не отдельный объект, а форма определения. Объект $U$, снабжённый морфизмами-структурой, задан универсальным свойством, если для любого объекта $X$ с такой же структурой существует <strong>ровно один</strong> морфизм, связывающий $X$ с $U$, при котором соответствующая диаграмма коммутативна. Слова «ровно один» — существо определения: существование даёт конструкцию, единственность даёт единственность самого $U$.</div>
 <aside class="note"><strong>Зона:</strong> определяем</aside>
@@ -325,7 +325,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note"><strong>Зависимости:</strong> произведение, двойственное утверждение</aside>
 <aside class="note"><strong>Оправдание:</strong> требуется сюжетом «арифметика объектов»: без копроизведения нет ни дистрибутивности, ни закона степеней с суммой в показателе, ни начального объекта как пустой суммы. На колонку «или» словаря финала не ссылаемся: дизъюнкция требует типов-сумм, которых в просто типизированном исчислении нет, и в словаре утверждения 25 её нет тоже. Для самого определения CCC копроизведение не нужно — входит дёшево, обращением стрелок в уже оплаченном определении</aside>
 <aside class="note"><strong>Не говорим:</strong> что копроизведение множеств — дизъюнктное объединение, «а значит это просто объединение»: разница существенна и обсуждается ровно в одном примере; о копроизведении групп (свободное произведение) и о том, почему в векторных пространствах произведение и копроизведение совпадают</aside>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке как понятие (есть находка <code>koproizvedenie-diz-obedinenie</code>)</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>koproizvedenie-bez-kolonki-ili</code> (плюс находка <code>koproizvedenie-diz-obedinenie</code>)</aside>
 <h3>П10. Экспонента</h3>
 <div class="stmt defn" id="s0-d-10"><span class="lbl">Определение 10 (экспонента).</span> Экспонента объектов $A$, $B$ — объект $B^A$ вместе с морфизмом вычисления $\mathrm{ev}\colon B^A\times A\to B$ такой, что для любого объекта $X$ и любого морфизма $f\colon X\times A\to B$ существует ровно один морфизм $\lambda f\colon X\to B^A$, при котором $\mathrm{ev}\circ(\lambda f\times 1_A)=f$. Здесь $\lambda f\times 1_A$ — произведение морфизмов из определения 8.</div>
 <aside class="note"><strong>Зона:</strong> определяем</aside>
@@ -353,7 +353,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note"><strong>Зависимости:</strong> терминальный объект</aside>
 <aside class="note"><strong>Оправдание:</strong> требуется сюжетом «элемент — частный случай стрелки», который снимает вопрос «а где же элементы», и без точек не формулируются ни теорема о неподвижной точке (утверждение 17), ни перевод «доказательство = стрелка» в словаре финала. Для определения CCC точки <strong>не требуются</strong></aside>
 <aside class="note"><strong>Не говорим:</strong> о том, что точек может не хватать (категории без точек, необходимость обобщённых элементов $X\to A$); о разнице между точками и элементами в топосах; слово «глобальный» произносим один раз и дальше говорим «точка»</aside>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>mit-perspektiva-yonedy-rano</code></aside>
 <h3>A3. Носители языка — категории, на которых всё проверяется</h3>
 <p><strong>Зачем эта группа.</strong> Всё предыдущее сформулировано про произвольную категорию, то есть проверить его пока не на чем; здесь появляются категории, на которых видно, что именно сказано: предпорядок, моноид, пути в графе, алгебра Гейтинга. Стоит группа на A1, а алгебра Гейтинга — ещё и на определении декартовой замкнутости из A2, потому и записана последней. Дальше эти носители работают в разделе B′: на предпорядке проверяется замкнутость, на алгебре Гейтинга строится самый дешёвый в курсе выход в логику.</p>
 <h3>П14. Предупорядоченное множество как категория</h3>
@@ -427,7 +427,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note"><strong>Зависимости:</strong> функтор, естественный изоморфизм</aside>
 <aside class="note"><strong>Оправдание:</strong> требуется сюжетом — и рамкой курса: эквивалентности названы среди того, что идёт вперёд. Без эквивалентности не произнести финал: соответствие Карри–Ховарда–Ламбека — утверждение об эквивалентности, а не о равенстве или изоморфизме, и подменять эти слова нельзя</aside>
 <aside class="note"><strong>Не говорим:</strong> о критерии «полон, строг, существенно сюръективен» дальше формулировки (доказательство требует выбора и в зону не помещается); о разнице между эквивалентностью и изоморфизмом категорий иначе как одной фразой; о скелете категории</aside>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке как понятие (есть пример <code>ekvivalentnost-primery-vp-boole</code>)</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>mot-ekvivalentnost-dlya-finala</code> (плюс пример <code>ekvivalentnost-primery-vp-boole</code>)</aside>
 <h3>A5. Мостики — слово звучит, определения нет</h3>
 <p><strong>Зачем эта группа.</strong> Курс обязан назвать то, куда ведёт, иначе финал повисает без адреса, — но заплатить за эти слова определением не может: каждое тянет за собой отдельный язык. Стоит группа на всём предыдущем: соответствие Карри–Ховарда–Ламбека формулируется через декартову замкнутость из A2 и через эквивалентность из A4. Дальше она уходит наружу — в утверждение 25 и во второй курс, которому это утверждение служит взлётной полосой.</p>
 <p>Здесь стоят понятия, которые в лекции <strong>называются без определения</strong>, как честная отсылка вперёд. Определение в этом разделе приведено для автора костяка — чтобы он знал, что именно не будет сказано, — и не является планом произнести его.</p>
@@ -484,7 +484,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note"><strong>Зависимости:</strong> функтор, естественное преобразование</aside>
 <aside class="note"><strong>Оправдание:</strong> входит, ТОЛЬКО ЕСЛИ входит лемма Йонеды: её формулировка говорит про $\mathrm{Nat}(\mathcal{C}(A,-),F)$, и без категории функторов эта запись не имеет смысла. Условие то же — внешний приз для Йонеды. <strong>И вторая половина условия</strong> — названное исключение в рамке: цепочкой финала это не требуется (см. преамбулу группы).</aside>
 <aside class="note"><strong>Не говорим:</strong> о том, что $[\mathcal{C},\mathbf{Set}]$ — топос; о пределах в категориях функторов; о двумерной структуре $\mathbf{Cat}$</aside>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке как понятие</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>kategoriya-funktorov-cena-razmerov</code></aside>
 <h3>П31. Сопряжённые функторы</h3>
 <p><strong>Действие экспоненты на морфизмах — здесь, а не в базовом составе.</strong> Для $g\colon B\to B'$ полагаем $g^A:=\lambda(g\circ\mathrm{ev})\colon B^A\to B'^{A}$. Раньше эта врезка стояла при определении 10, но её единственный заказчик — утверждение 29, то есть сам условный блок: базовый состав нигде не пользуется действием по основанию (утверждение 9 работает с $h\times 1_A$, утверждение 12 явно объявляет естественность по основанию ненужной). Предоплачивать в базовом составе технику, нужную только условному блоку, — та самая дверь в обход рамки, которую закрывает оговорка выше.</p>
 <div class="stmt defn" id="s0-d-31"><span class="lbl">Определение 31 (сопряжённые функторы).</span> Функторы $F\colon\mathcal{C}\to\mathcal{D}$ и $G\colon\mathcal{D}\to\mathcal{C}$ сопряжены ($F\dashv G$), если есть биекция $\mathcal{D}(FX,\,Y)\cong\mathcal{C}(X,\,GY)$, естественная по $X$ и по $Y$.</div>
@@ -595,7 +595,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>nol-odin-granica-vyrozhdennosti</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход: определение 6 в обе стороны)</aside>
 <h3>У32. Универсальное свойство как терминальность</h3>
 <div class="stmt thm" id="s0-t-32"><span class="lbl">Утверждение 32 (универсальное свойство как терминальность).</span> По объектам $A,B$ категории $\mathcal{C}$ построим категорию $\mathcal{C}_{A,B}$: объекты — тройки $(X,f,g)$, где $f\colon X\to A$ и $g\colon X\to B$; морфизм $(X,f,g)\to(X',f',g')$ — это морфизм $u\colon X\to X'$ категории $\mathcal{C}$, для которого $f'\circ u=f$ и $g'\circ u=g$; композиция и тождества берутся из $\mathcal{C}$. Тогда $(P,\pi_1,\pi_2)$ есть произведение $A$ и $B$ в точности тогда, когда это терминальный объект $\mathcal{C}_{A,B}$. Так же для экспоненты: объекты категории $\mathcal{C}^{A}_{B}$ — пары $(X,\;f\colon X\times A\to B)$, морфизм $(X,f)\to(X',f')$ — это $u\colon X\to X'$ с $f'\circ(u\times 1_A)=f$; тогда $(E,\mathrm{ev})$ есть экспонента $B^A$ в точности тогда, когда это терминальный объект $\mathcal{C}^{A}_{B}$.</div>
@@ -605,7 +605,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>us-kak-terminalnost</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход; это и есть недостающее звено, из-за которого У4 и У6 выглядели независимыми)</aside>
 <h3>У4. Единственность произведения</h3>
 <div class="stmt thm" id="s0-t-4"><span class="lbl">Утверждение 4 (единственность произведения).</span> Если $(P,\pi_1,\pi_2)$ и $(P',\pi_1',\pi_2')$ — произведения одной пары $A,B$, то существует ровно один изоморфизм $u\colon P\to P'$ с $\pi_i'\circ u=\pi_i$.</div>
@@ -643,7 +643,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке (примыкает к <code>kategorifikaciya-arifmetiki</code>)</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>associativnost-ne-iz-edinstvennosti</code> (конкретизирует <code>kategorifikaciya-arifmetiki</code>)</aside>
 <aside class="note"><strong>Следует из:</strong> У4 (две трети) — коммутативность и единица: $(B\times A,\pi_2,\pi_1)$ и $(A,1_A,{!})$ сами суть произведения нужных пар, дальше единственность. Ассоциативность из У4 не выводится: обе скобки — тернарные произведения, а тернарного произведения в словаре нет</aside>
 <h3>У38. Коммутативность, ассоциативность, единица копроизведения</h3>
 <div class="stmt thm" id="s0-t-38"><span class="lbl">Утверждение 38 (коммутативность, ассоциативность, единица копроизведения).</span> В категории с конечными копроизведениями $A+B\cong B+A$, $(A+B)+C\cong A+(B+C)$ и $A+0\cong A$; все три изоморфизма канонические, то есть перестановочные с вложениями.</div>
@@ -692,7 +692,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>tochki-eksponenty-eto-morfizmy</code></aside>
 <aside class="note"><strong>Следует из:</strong> У9 + У7 — подстановка $X=1$ и единица произведения</aside>
 <h3>У17. Теорема о неподвижной точке</h3>
 <div class="stmt thm" id="s0-t-17"><span class="lbl">Утверждение 17 (теорема о неподвижной точке).</span> Пусть в декартово замкнутой категории есть морфизм $\varphi\colon A\to Y^A$, слабо сюръективный на точках: для всякого $f\colon A\to Y$ найдётся точка $a\colon 1\to A$, для которой $\mathrm{ev}\circ\langle\varphi\circ a\circ !,\,1_A\rangle=f$. Тогда всякий морфизм $t\colon Y\to Y$ имеет неподвижную точку, то есть точку $y\colon 1\to Y$ с $t\circ y=y$.</div>
@@ -728,7 +728,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">нетривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке (половина доказательства <code>vect-ne-ccc</code>)</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>instrument-prochitat-hom</code> (плюс половина доказательства <code>vect-ne-ccc</code>)</aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход: приём «прочитать Hom и опознать универсальное свойство» вводится здесь)</aside>
 <h3>У41. Вырожденная декартово замкнутая категория</h3>
 <div class="stmt thm" id="s0-t-41"><span class="lbl">Утверждение 41 (вырожденная декартово замкнутая категория).</span> Если в декартово замкнутой категории с начальным объектом $0\cong 1$, то все объекты изоморфны.</div>
@@ -778,7 +778,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>ccc-uravneniyami-beta-eta</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход; переписывание определения 12 без кванторов, но переписывание содержательное — им держится утверждение 25)</aside>
 <h3>B3. Функторы</h3>
 <p><strong>Зачем эта группа.</strong> Она отвечает на один вопрос: что именно функтор переносит из категории в категорию, — и ответ «всё, что выражается коммутативной диаграммой» избавляет от повторной проверки в каждом следующем случае. Стоит группа на A4 и на B0. Отдельная её обязанность — утверждение 20: слово «естественно», которым раздел B2 пользовался свободно, получает смысл только после того, как Hom признан функтором, и по-хорошему эта проверка должна была стоять выше (раздел E, пункт 9).</p>
@@ -799,7 +799,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>functor</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход по букве; по существу — определение 18, применённое вдоль путей определения 4)</aside>
 <h3>У19. Функтор сохраняет изоморфизмы</h3>
 <div class="stmt thm" id="s0-t-19"><span class="lbl">Утверждение 19 (функтор сохраняет изоморфизмы).</span> Если $f\colon A\to B$ — изоморфизм, то $Ff$ — изоморфизм, и $(Ff)^{-1}=F(f^{-1})$.</div>
@@ -830,7 +830,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>est-izo-obratnye-avtomaticheski</code></aside>
 <aside class="note"><strong>Следует из:</strong> У33 (частично) — однозначность обратной компоненты; сам квадрат — двухстрочная выкладка</aside>
 <h3>У47. Естественная биекция Hom-множеств задаёт изоморфизм объектов</h3>
 <div class="stmt thm" id="s0-t-47"><span class="lbl">Утверждение 47 (естественная биекция Hom-множеств задаёт изоморфизм объектов).</span> Если для объектов $A,B$ категории $\mathcal{C}$ дана биекция $\Phi_X\colon\mathcal{C}(A,X)\to\mathcal{C}(B,X)$, естественная по $X$, то $A\cong B$, причём изоморфизм канонический — это $\Phi_A(1_A)$. Двойственно для $\mathcal{C}(X,A)\cong\mathcal{C}(X,B)$.</div>
@@ -841,7 +841,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">нетривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке (слабая форма <code>yoneda</code>)</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>slabaya-yoneda-bezuslovna</code> (слабая форма <code>yoneda</code>)</aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход; из У26 он получается подстановкой, но У26 условно, а это утверждение — нет)</aside>
 <h3>B5. Эквивалентность и финал</h3>
 <p><strong>Зачем эта группа.</strong> Финал курса — утверждение об эквивалентности категорий, а не о равенстве и не об изоморфизме, и подменять эти слова нельзя; всё остальное в группе есть то, без чего последнее утверждение не произносится честно. Стоит она на A4 и на B3. Особо стоит утверждение 50: замена категории на эквивалентную ей — ровно то, что финал и делает, и без него при такой замене терялась бы сама декартова замкнутость.</p>
@@ -863,7 +863,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">школьно</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>sohranenie-protiv-otrazheniya</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход)</aside>
 <h3>У44. Эквивалентность категорий — отношение эквивалентности</h3>
 <div class="stmt thm" id="s0-t-44"><span class="lbl">Утверждение 44 (эквивалентность категорий — отношение эквивалентности).</span> Всякая категория эквивалентна самой себе; если $\mathcal{C}\simeq\mathcal{D}$, то $\mathcal{D}\simeq\mathcal{C}$; если $\mathcal{C}\simeq\mathcal{D}$ и $\mathcal{D}\simeq\mathcal{E}$, то $\mathcal{C}\simeq\mathcal{E}$.</div>
@@ -873,7 +873,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>cena-lakuny-kompozicii-preobrazovanij</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход)</aside>
 <h3>У50. Эквивалентность переносит произведения и замкнутость</h3>
 <div class="stmt thm" id="s0-t-50"><span class="lbl">Утверждение 50 (эквивалентность переносит произведения и замкнутость).</span> Если категории эквивалентны и в одной есть терминальный объект, бинарные произведения или экспоненты, то они есть и в другой. В частности, категория, эквивалентная декартово замкнутой, декартово замкнута.</div>
@@ -883,7 +883,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">безусловно</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>ekvivalentnost-perenosit-zamknutost</code></aside>
 <aside class="note"><strong>Следует из:</strong> У8 + У9 + У24 — переносятся не объекты, а Hom-множества, и опознаются критериями утверждений 8 и 9</aside>
 <h3>У25. Карри–Ховард–Ламбек</h3>
 <div class="stmt thm" id="s0-t-25"><span class="lbl">Утверждение 25 (Карри–Ховард–Ламбек).</span> Между просто типизированными $\lambda$-исчислениями и декартово замкнутыми категориями есть перевод в обе стороны, и оба перевода возвращают исходное с точностью до эквивалентности.</div>
@@ -928,7 +928,7 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 <aside class="note">тривиально</aside>
 <aside class="note">условно — вместе с условным блоком (единственный заказчик — утверждение 29)</aside>
 <p class="level-line">Уровень: <span class="level">требует-приручения</span></p>
-<aside class="note"><strong>Узел картотеки:</strong> нет в картотеке</aside>
+<aside class="note"><strong>Узел картотеки:</strong> <code>eksponenta-po-osnovaniyu-tolko-uslovnomu</code></aside>
 <aside class="note"><strong>Следует из:</strong> — (независимый ход)</aside>
 <h3>У29. Каррирование — сопряжение</h3>
 <div class="stmt thm" id="s0-t-29"><span class="lbl">Утверждение 29 (каррирование — сопряжение).</span> В декартово замкнутой категории $-\times A\dashv(-)^A$: биекция $\mathcal{C}(X\times A,\,B)\cong\mathcal{C}(X,\,B^A)$ естественна по $X$ и по $B$.</div>
