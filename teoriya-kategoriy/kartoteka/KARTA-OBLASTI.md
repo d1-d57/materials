@@ -10,14 +10,14 @@
 
 ## Индекс по роду
 
-- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij`
+- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij` `mot-kommutativnaya-diagramma` `mot-ekvivalentnost-dlya-finala`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost`
 - **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni` `skomkannaya-karta`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
-- **инструмент/донор:** `instrument-quiver` `donor-cti`
+- **инструмент/донор:** `instrument-quiver` `donor-cti` `instrument-prochitat-hom`
 
 - **затравка:** `effektivnyj-topos-obraz` `assoc-linal-vysshaya-algebra` `assoc-ordinaly-maclane` `assoc-topologiya-razlichit-figury` `assoc-graf-so-strelkami-kolchan`
 
@@ -4058,5 +4058,229 @@ id: skomkannaya-karta
 связи: kategoriya-opredelenie, sfera-shar-okruzhnost-v-set
 уровень: зал берёт
 источник: ../istochniki/pdf/lawvere-schanuel-conceptual-mathematics-2ed.pdf, pdf-стр.133–135, 143–144
+статус: seed
+```
+
+## Карточки — долг маткостяка (заход `kod_razbor-kartoteki.md`, влито 23.07)
+
+> Шестнадцать узлов по разделу B файла `../../_studio/zhurnal/2026-07-21_mat-kostyak/RAZBOR-kartoteka.md`: блоки `MAT-KOSTYAK.md`, у которых находка была сформулирована, а карточки не было. Источник у всех один — `../../teorkat-vvedenie/MAT-KOSTYAK.md`, блок назван в поле `источник`. Статус `seed` у всех: поднять до `черновика` может источник или прибор, но не аналитик.
+
+```
+id: us-kak-terminalnost
+род: утверждение
+суть: произведение и экспонента — это терминальный объект вспомогательной категории, собираемой
+  из словаря в две строки
+котёл: математика
+находка: Даёт третий, дешёвый вход в единственность. Вспомогательная категория (тройки (X,f,g);
+  пары (X, f: X×A→B)) строится БЕЗ категории конусов, и тогда У4/У6 — просто применения У1.
+  Закрывает развилку карточки `edinstvennost-proizvedeniya`: механизм показывается за две строки,
+  а не за пятнадцать минут через конусы.
+связи: edinstvennost-proizvedeniya, edinstvennost-terminalnogo, universalnoe-svojstvo, proizvedenie-opredelenie, eksponenta-opredelenie
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У32
+статус: seed
+```
+```
+id: nol-odin-granica-vyrozhdennosti
+род: утверждение
+суть: 0≅1 в произвольной категории безвредно, в декартово замкнутой — коллапс всех объектов
+котёл: математика
+находка: Граница вырожденности проходит ровно по экспоненте. Vect с нулевым объектом живёт и
+  здравствует, а в CCC из 0≅1 следует X≅1 для всех X (У41). У46 — единственное столкновение
+  начального с терминальным, не требующее вообще никакой структуры. Ружьё `vect-ne-ccc`
+  заряжено этой границей.
+связи: vect-ne-ccc, ccc-opredelenie, nachalnyj-obekt, terminalnyj-obekt
+уровень: зал берёт
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У46 (вклад У41 учтён здесь же)
+статус: seed
+```
+```
+id: associativnost-ne-iz-edinstvennosti
+род: находка
+суть: ассоциативность произведения НЕ следует из единственности — изоморфизм строится руками
+котёл: математика
+находка: Наивное «все законы арифметики падают из универсального свойства» ложно на трети
+  случаев: коммутативность и единица идут даром, а для (A×B)×C ≅ A×(B×C) тернарного произведения
+  в словаре нет, и изоморфизм приходится предъявлять. Конкретизирует `kategorifikaciya-arifmetiki`
+  в том самом месте, где аналогия рвётся.
+связи: kategorifikaciya-arifmetiki, proizvedenie-opredelenie, edinstvennost-proizvedeniya
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У7
+статус: seed
+```
+```
+id: tochki-eksponenty-eto-morfizmy
+род: утверждение
+суть: C(1, B^A) ≅ C(A, B) — точки объекта функций суть сами функции
+котёл: математика
+находка: «Функция становится данным» — не метафора, а изоморфизм. Колонка «терм» словаря
+  Карри–Ховарда–Ламбека перестаёт быть словом и становится утверждением, а сюжет «элемент —
+  частный случай стрелки» смыкается с экспонентой именно здесь.
+связи: karrirovanie, eksponenta-opredelenie, chl, terminalnyj-obekt
+уровень: зал берёт
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У40
+статус: seed
+```
+```
+id: instrument-prochitat-hom
+род: инструмент/донор
+суть: приём «прочитать Hom-множество и опознать в нём универсальное свойство»
+котёл: математика
+находка: Сквозной рабочий приём курса, нигде не названный по имени. Впервые нужен для A×0≅0,
+  дальше им сделаны шестой закон степеней, дистрибутивность и У48 — то есть он окупается
+  четырежды. Пока безымянен, каждое применение выглядит отдельным фокусом; названный — становится
+  одним ходом, который зал узнаёт.
+связи: hom-functor, universalnoe-svojstvo, vect-ne-ccc, distributivnost-ccc
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У11 (найдено верификатором захода)
+статус: seed
+```
+```
+id: ccc-uravneniyami-beta-eta
+род: утверждение
+суть: декартова замкнутость задаётся уравнениями, и два из них — это β и η λ-исчисления
+котёл: математика
+находка: Замкнутость — АЛГЕБРАИЧЕСКАЯ структура, а не только набор кванторов. Пока она в
+  кванторах, Карри–Ховард–Ламбек звучит как аналогия; в уравнениях он становится переводом
+  слово в слово. Третий вход в CCC сверх двух, записанных в `dva-vhoda-v-ccc`.
+связи: dva-vhoda-v-ccc, ccc-opredelenie, chl, karrirovanie
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У49
+статус: seed
+```
+```
+id: est-izo-obratnye-avtomaticheski
+род: утверждение
+суть: у естественного изоморфизма обратные компоненты естественны сами собой
+котёл: математика
+находка: Бесплатная теорема, которую легко принять за требование определения. Три источника
+  из восьми выносят её отдельной леммой — то есть глазами она не очевидна, — а наш словарь
+  проговаривает одной строкой. Место, где дешевле сказать «это доказывается», чем промолчать.
+связи: nat-transf, naturality-square, det-natural
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У36 (найдено верификатором захода)
+статус: seed
+```
+```
+id: slabaya-yoneda-bezuslovna
+род: утверждение
+суть: естественная биекция Hom-множеств даёт изоморфизм объектов — без Nat, малости и категории функторов
+котёл: математика
+находка: Ход «применить биекцию к тождественному» работает сам по себе. Им закрываются пятый
+  закон степеней и дистрибутивность, а условный блок про лемму Йонеды курсу для этого НЕ нужен:
+  слабая форма безусловна и стоит раньше. Прямо снимает соблазн предоплатить Йонеду.
+связи: yoneda, hom-functor, mit-perspektiva-yonedy-rano, distributivnost-ccc
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У47
+статус: seed
+```
+```
+id: sohranenie-protiv-otrazheniya
+род: утверждение
+суть: изоморфизмы сохраняет любой функтор, а отражает только строгий и полный
+котёл: математика
+находка: Асимметрия, объясняющая, зачем в критерии эквивалентности стоят оба слова: «сохраняет»
+  бесплатно, «отражает» — плата за строгость и полноту. Пара утверждений, которая делает
+  определение эквивалентности не списком условий, а следствием.
+связи: functor, ekvivalentnost-primery-vp-boole, cena-lakuny-kompozicii-preobrazovanij
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У37
+статус: seed
+```
+```
+id: cena-lakuny-kompozicii-preobrazovanij
+род: находка
+суть: одна намеренная лакуна словаря — нет композиции естественных преобразований — оплачивается дважды
+котёл: математика
+находка: Словарь сознательно не вводит композицию преобразований, и из-за этого БЕЗ доказательства
+  остаются сразу два места: критерий эквивалентности и транзитивность эквивалентности. Пример
+  того, как один отказ в словаре всплывает далеко от места отказа — и как это увидеть заранее.
+связи: nat-transf, sohranenie-protiv-otrazheniya, ekvivalentnost-perenosit-zamknutost
+уровень: вне курса
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У44 (найдено верификатором захода)
+статус: seed
+```
+```
+id: ekvivalentnost-perenosit-zamknutost
+род: утверждение
+суть: эквивалентность категорий переносит произведения и декартову замкнутость
+котёл: математика
+находка: Без этого финал не смыкается: Cl(Lang(C)) лишь ЭКВИВАЛЕНТНА C, и только перенос
+  структуры объясняет, почему замкнутость при такой замене не теряется. Переносятся при этом
+  не объекты, а Hom-множества — работают критерии «произведение через Hom» и «экспонента через Hom».
+связи: chl, ccc-opredelenie, ekvivalentnost-primery-vp-boole, hom-functor
+уровень: требует приручения
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У50
+статус: seed
+```
+```
+id: eksponenta-po-osnovaniyu-tolko-uslovnomu
+род: находка
+суть: функториальность экспоненты по основанию базовому составу курса не нужна нигде
+котёл: математика
+находка: Факт о КУРСЕ, не о математике. Единственный заказчик действия по основанию —
+  условный блок про сопряжения; внести его в базу значило бы предоплатить условный блок
+  в обход рамки. Образец того, как рамка курса режет технику, которая «вроде бы просится».
+связи: eksponenta-opredelenie, adjunction, dva-vhoda-v-ccc
+уровень: вне курса
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, У43
+статус: seed
+```
+```
+id: mot-kommutativnaya-diagramma
+род: мотивация
+суть: диаграмма нужна затем, что каждое универсальное свойство — это система равенств, которую иначе не удержать
+котёл: математика
+находка: Зачем понадобилось: universal property читается как «ровно одна стрелка, при которой
+  диаграмма коммутативна», то есть диаграмма — сокращение для системы равенств, а не картинка
+  для красоты. Без неё формулировки универсальных свойств разрастаются в списки уравнений, и
+  «единственность» перестаёт быть видимой. По ТЗ курса диаграмма по природе анимация — статикой
+  мотивация не передаётся.
+связи: universalnoe-svojstvo, edinstvennost-scena, kategoriya-opredelenie
+уровень: зал берёт
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, П4
+статус: seed
+```
+```
+id: koproizvedenie-bez-kolonki-ili
+род: находка
+суть: привычный мостик «копроизведение = логическое ИЛИ» в этом курсе не работает
+котёл: математика
+находка: Отрицательный результат, и он блокер. В просто типизированном λ-исчислении курса нет
+  типов-сумм, а в словаре Карри–Ховарда–Ламбека нет колонки «или» — значит копроизведение
+  придётся мотивировать арифметикой объектов, а не логикой. Узел `koproizvedenie-diz-obedinenie`
+  про другое (⊔ против ∪ в Set) и эту дыру не закрывает.
+связи: koproizvedenie-diz-obedinenie, chl, kategorifikaciya-arifmetiki, nachalnyj-obekt
+уровень: зал берёт
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, П9 (найдено верификатором захода)
+статус: seed
+```
+```
+id: mot-ekvivalentnost-dlya-finala
+род: мотивация
+суть: финал курса держится на слове «эквивалентность» — не «равенство» и не «изоморфизм»
+котёл: математика
+находка: Зачем понадобилось: Карри–Ховард–Ламбек — утверждение об ЭКВИВАЛЕНТНОСТИ категорий,
+  и подмена слова рушит финал (равенства там нет и быть не может, изоморфизм слишком силён).
+  То есть эквивалентность вводится не ради общности, а потому что без неё главную теорему
+  курса нельзя даже сформулировать. Пример `ekvivalentnost-primery-vp-boole` показывает, ЧТО
+  это такое, но не отвечает «зачем именно она».
+связи: ekvivalentnost-primery-vp-boole, chl, ekvivalentnost-perenosit-zamknutost, pochemu-do-izo
+уровень: зал берёт
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, П23
+статус: seed
+```
+```
+id: kategoriya-funktorov-cena-razmerov
+род: находка
+суть: вход в категорию функторов заперт двумя замками — Йонедой и размерами, и второй закрыт раньше
+котёл: математика
+находка: Причина условности не техническая, а конституционная: Nat(F,G) требует малости C, а
+  вопрос размеров закрыт определением категории («о классах не спрашиваем») и не переоткрывается.
+  Отсюда честная формула документа — «нельзя сформулировать, не переоткрыв закрытый вопрос».
+  Показывает, что цена ранних отказов приходит позже и в другом месте.
+связи: kategoriya-opredelenie, nat-transf, yoneda, mit-perspektiva-yonedy-rano
+уровень: вне курса
+источник: ../../teorkat-vvedenie/MAT-KOSTYAK.md, П30
 статус: seed
 ```
