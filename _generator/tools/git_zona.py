@@ -60,6 +60,62 @@ LOCK = REPO / ".git" / "index.lock"
 LOCK_WAIT_SEC = 90
 
 
+def in_sandbox():
+    """Мы в песочнице Cowork? Тогда ПИСАТЬ в .git нельзя (см. отказ ниже).
+
+    Детект по типу монтирования: репозиторий владельца лежит на обычной ФС,
+    а в песочницу он проброшен через FUSE. Признак дешёвый и, главное, НЕ
+    оставляет следов — проба «создать файл и удалить» в песочнице необратима
+    (удалить его нечем, мусор остаётся в дереве навсегда).
+    На macOS у владельца и у host-side Claude Code `/proc/mounts` нет вовсе ⇒
+    False ⇒ им писать разрешено, как и должно быть.
+    """
+    try:
+        with open("/proc/mounts", encoding="utf-8") as f:
+            mounts = [ln.split() for ln in f if len(ln.split()) > 2]
+    except OSError:
+        return False
+    best, fstype = "", ""
+    repo = str(REPO)
+    for parts in mounts:
+        mp, typ = parts[1], parts[2]
+        if (repo == mp or repo.startswith(mp.rstrip("/") + "/")) and len(mp) > len(best):
+            best, fstype = mp, typ
+    return fstype.startswith("fuse")
+
+
+def refuse_write(action, suggest="commit"):
+    """Единый отказ на любую ПИШУЩУЮ операцию из песочницы.
+
+    🔴 ПОЧЕМУ ЗАПРЕТ, А НЕ «ДРУГАЯ ФОРМА КОММИТА» (решено 2026-07-22, экспериментом).
+    В песочнице запрещён `unlink` во ВСЁМ монтировании. Git при любой записи
+    создаёт временные файлы и потом их удаляет — удалить не может, и они
+    остаются минами, которые блокируют репозиторий для ВСЕХ троих писателей.
+    Проверено на одноразовом репозитории внутри того же монтирования:
+      · `commit -- <pathspec>` → остаются `next-index-<PID>.lock`, `index.lock`,
+        `HEAD.lock`; следующий git падает «File exists» (PID переиспользуются);
+      · ОБЫЧНЫЙ `commit` без pathspec → мин меньше, но `HEAD.lock` и
+        `objects/**/tmp_obj_*` остаются ВСЁ РАВНО ⇒ «другая форма» не лечит;
+      · `GIT_INDEX_FILE` в /tmp НЕ помогает: git всё равно кладёт
+        `next-index-*.lock` внутрь `.git`.
+    Коммит при этом технически СОЗДАЁТСЯ — поэтому соблазн «ну прошло же»
+    силён, а цена приходит следующему, кто упрётся в чужой лок.
+    ⇒ Cowork в песочнице НЕ коммитер. Он готовит план и отдаёт одну команду.
+    """
+    print(f"⛔ {action} из песочницы Cowork — НЕЛЬЗЯ, и это не перестраховка.\n"
+          "   Здесь запрещено удаление файлов, а git при записи оставляет\n"
+          "   временные локи и мусорные объекты, снять которые отсюда нечем.\n"
+          "   Репозиторий встанет для всех: владельца, Cowork и Claude Code.\n"
+          "   (Полное «почему» и опыт — GIT-disciplina.md §2.)\n\n"
+          "   → Работу делает ВЛАДЕЛЕЦ в своём терминале:\n\n"
+          f"   cd <корень {REPO.name} на машине владельца>\n"
+          f"   python3 _generator/tools/git_zona.py {suggest}\n\n"
+          "   ⚠ COWORK: подставь в чат РЕАЛЬНЫЙ путь владельца, не этот плейсхолдер\n"
+          f"     и НИКОГДА не путь песочницы ({REPO}) — такой папки у него нет,\n"
+          "     будет `fatal: not a git repository` (инцидент 2026-07-11).")
+    return 3
+
+
 def git(*args, check=True):
     """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок."""
     r = subprocess.run(
@@ -146,7 +202,45 @@ def cmd_doctor(args):
         print("   Это и есть «что-то не коммитится». Покажи этот вывод Claude — "
               "выход зависит от того, что начинали.")
 
-    print(f"\nЛок .git/index.lock: {'🔴 ЗАНЯТ — рядом идёт коммит' if LOCK.exists() else '✅ свободен'}")
+    # 🔴 ВСЕ локи и мусор, а не только index.lock.
+    # Цена (22.07): висели `next-index-15.lock`, `next-index-22.lock` и
+    # `HEAD.lock`, а doctor смотрел ровно один файл и молчал — два цикла
+    # диагностики прошли вслепую. Диагност, не видящий самого частого
+    # состояния-блокера, отправляет читателя искать причину не там.
+    g = REPO / ".git"
+    locks = sorted(g.glob("*.lock")) + sorted(g.glob("objects/*.lock"))
+    junk = sorted(g.glob("objects/*/tmp_obj_*"))
+    def age_of(p):
+        try:
+            m = int((time.time() - p.stat().st_mtime) / 60)
+            return f"{m} мин назад" if m < 120 else f"{m // 60} ч назад"
+        except OSError:
+            return "?"
+
+    # ЛОКИ — блокеры: пока висят, запись не пройдёт ни у кого.
+    if locks:
+        print("\n🔴 ЛОКИ в .git — репозиторий НЕ примет запись, ни от кого:")
+        for p in locks:
+            print(f"   {p.relative_to(REPO)}   ({age_of(p)})")
+        print("   Свежий (секунды–минуты) — рядом РЕАЛЬНО идёт коммит: ЖДАТЬ, не трогать.\n"
+              "   Старый — мёртвая мина от упавшего процесса.")
+    else:
+        print("\nЛоки в .git: ✅ свободно")
+
+    # tmp_obj — НЕ блокер, просто мусор от прерванной записи. Тревогу не поднимаем.
+    if junk:
+        print(f"\nМусорные объекты (`tmp_obj_*`): {len(junk)} шт., "
+              f"старейшему {age_of(junk[0])} — на работу не влияют, но копятся.")
+
+    if locks or junk:
+        print("   Уборка — в терминале ВЛАДЕЛЬЦА и только когда живого git нет:")
+        print("     cd <корень репо> && rm -f .git/*.lock .git/objects/*.lock "
+              "&& find .git/objects -name 'tmp_obj_*' -delete")
+
+    if in_sandbox():
+        print("\n⚠ Ты в песочнице Cowork (репозиторий смонтирован через FUSE).\n"
+              "  Читать можно всё; ПИСАТЬ нельзя — `commit` и `worktree` откажутся.\n"
+              "  Это защита: здесь запрещено удаление, и любая запись оставляет мины.")
 
     # расхождение с origin: работа в git, но только на этой машине
     up = git("rev-parse", "--abbrev-ref", "@{upstream}", check=False)
@@ -220,6 +314,19 @@ def cmd_plan(args):
     успели сделать `reset` и пересобрать коммит уже. План, набранный руками,
     врёт молча; сгенерированный — врать не успевает.
     """
+    # 🔴 Не затирать работу человека молча. Если в черновике уже НЕТ
+    # плейсхолдеров — значит сообщения переписаны руками, и пересборка их
+    # уничтожит. Цена (22.07): владельцу велели `rm .commit-plan` перед `plan`,
+    # черновик вернулся с плейсхолдером, гейт справедливо покраснел — и этот
+    # шум был прочитан как «опять инструмент сломался», маскируя настоящий дефект.
+    if PLAN.exists() and not args.force:
+        txt = PLAN.read_text(encoding="utf-8")
+        if "<что и зачем" not in txt and txt.strip():
+            print(f"⛔ В {PLAN.relative_to(REPO)} уже вписаны сообщения — не затираю.\n"
+                  "   Исполнить его:      python3 _generator/tools/git_zona.py commit\n"
+                  "   Пересобрать заново: тот же plan с --force (сообщения пропадут)")
+            return 1
+
     rows = dirty(args.zone)
     if not rows:
         print("✅ Дерево чисто — планировать нечего.")
@@ -283,6 +390,12 @@ def parse_plan():
 # ─────────────────────────────── commit ───────────────────────────────
 
 def cmd_commit(args):
+    # 🔴 ПЕРВЫМ ходом, до любой работы: писать из песочницы нельзя (см. refuse_write).
+    # Раньше запрет жил только словами в каноне — и был нарушён: три отказа за
+    # сессию 22.07, репозиторий дважды вставал на полчаса для всех писателей.
+    # Правило, которое можно нарушить молча, будет нарушено (KONSTITUCIYA §11).
+    if in_sandbox():
+        return refuse_write("Коммит")
     commits = parse_plan()
 
     # Зона — МЕХАНИЗМ, а не просьба: чужое физически не уедет в твой коммит.
@@ -382,9 +495,18 @@ def cmd_commit(args):
             print(f"   … ещё {len(still) - 30}")
         print("\n→ Причину покажет `git_zona.py doctor`.")
         return 1
+    # 🔴 Успех печатается ДО уборки, и уборка не смеет убить процесс.
+    # Цена (22.07): `PLAN.unlink()` без защиты бросил PermissionError уже ПОСЛЕ
+    # успешного коммита `a512964` — человек увидел traceback под словом «✅» и
+    # дважды сверял `git log`, чтобы понять, прошло или нет. Это ровно урок
+    # «код возврата первым»: успех и сбой уборки выглядели одинаково.
     print(f"✅ Все пути плана в git. Коммитов сделано: {len(done)}.")
-    PLAN.unlink(missing_ok=True)
-    print("   План исполнен и удалён.")
+    try:
+        PLAN.unlink(missing_ok=True)
+        print("   План исполнен и удалён.")
+    except OSError as e:
+        print(f"   ⚠ План исполнен, но файл плана не удалился ({e.strerror}).\n"
+              f"     Это НЕ влияет на коммит. Удалить вручную: rm {PLAN}")
     up = git("rev-parse", "--abbrev-ref", "@{upstream}", check=False)
     if up.returncode == 0:
         ahead = git("rev-list", "--count", "@{upstream}..HEAD").stdout.strip()
@@ -419,6 +541,11 @@ def cmd_worktree(args):
     if args.action == "list":
         print(git("worktree", "list").stdout.rstrip())
         return 0
+    # add/drop пишут в .git (заводят/убирают служебные файлы) — тот же запрет.
+    if in_sandbox():
+        rest = f"worktree {args.action} {args.name or '<имя>'}"
+        rest += f" --branch {args.branch}" if args.branch else ""
+        return refuse_write(f"worktree {args.action}", suggest=rest)
 
     if args.action == "add":
         if not args.name:
@@ -489,6 +616,8 @@ def main():
 
     p = sub.add_parser("plan", help="черновик плана из текущего дерева")
     p.add_argument("--zone", help="планировать только этот префикс пути")
+    p.add_argument("--force", action="store_true",
+                   help="перезаписать черновик, даже если сообщения уже вписаны")
     p.set_defaults(func=cmd_plan)
 
     k = sub.add_parser("commit", help="исполнить _studio/.commit-plan")

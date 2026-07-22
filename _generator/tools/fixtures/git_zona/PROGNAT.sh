@@ -104,4 +104,38 @@ V=$(git show --stat --format= HEAD | grep -c 'baseline.txt' || true)
 [ "$V" = "1" ] && echo "  ✅ правленый отслеживаемый файл доехал" \
                || { echo "  ❌ правка отслеживаемого файла не доехала"; FAIL=1; }
 
+# ── ЛОВУШКА 3: запрет записи из песочницы ──
+# Проверяем ОБЕ стороны детекта, иначе он бесполезен:
+#  · на обычной ФС (наш /tmp-репо) commit обязан РАБОТАТЬ — иначе запрет
+#    сломает владельца и Claude Code, которым писать можно;
+#  · при подделанном /proc/mounts (fuse) commit обязан ОТКАЗАТЬ с rc=3.
+# Цена, ради которой это здесь (22.07): запрет жил только словами в каноне,
+# Cowork его нарушил, репозиторий дважды вставал на полчаса для всех писателей.
+V=$(git show --stat --format= HEAD | grep -c 'novyj-1.md' || true)
+[ "$V" = "1" ] && echo "  ✅ на обычной ФС commit работает (запрет не задел своих)" \
+               || { echo "  ❌ commit не сработал на обычной ФС — детект песочницы ложно-положительный"; FAIL=1; }
+
+# `if`, а НЕ `cmd; [ $? -eq 0 ]`: при `set -e` ненулевой код убил бы скрипт
+# до проверки, и мутация прошла бы незамеченной (поймано мутационным тестом).
+if python3 - "$TOOLS/git_zona.py" <<'PY'
+import sys, importlib.util, pathlib, types
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+# подделываем окружение: репозиторий якобы на fuse-монтировании
+fake = "/fake-mount\n"
+real_open = open
+def fake_open(p, *a, **k):
+    if str(p) == "/proc/mounts":
+        import io; return io.StringIO(f"dev {gz.REPO} fuse rw 0 0\n")
+    return real_open(p, *a, **k)
+gz.open = fake_open
+import builtins; builtins.open = fake_open
+ok = gz.in_sandbox()
+builtins.open = real_open
+sys.exit(0 if ok else 1)
+PY
+then echo "  ✅ детект песочницы срабатывает на fuse-монтировании"
+else echo "  ❌ ДЕТЕКТ ПЕСОЧНИЦЫ НЕ РАБОТАЕТ — запрет записи мёртв"; FAIL=1
+fi
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
