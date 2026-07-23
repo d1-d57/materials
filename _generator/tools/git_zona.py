@@ -53,6 +53,7 @@ origin и всё, что вне git. По нему диагноз ставитс
 import argparse
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 import time
@@ -182,6 +183,56 @@ def in_zone(path, zone):
     return path == z or path.startswith(z + "/")
 
 
+# ─────────────── карантин подозрительного untracked-мусора ───────────────
+# Инцидент 23.07: `bootstrap_arka.py --help` принял флаг за имя арки и создал
+# папку-сироту `_studio/zhurnal/--help/`. Она untracked, и каждый `plan` тянул
+# её в черновик коммита вперемешку с настоящим — кто-то вручную выцеплял мусор
+# из плана каждую коммит-сессию. Здесь мусор детектится и выносится отдельно.
+
+def is_suspect(code, path):
+    """Untracked-путь, у которого КАКОЙ-ЛИБО компонент имени начинается с `-`.
+
+    Почти наверняка мусор от проглоченного флага. Легитимной арки/файла с таким
+    именем не бывает ⇒ строгая эвристика «ведущий дефис в компоненте» даёт НОЛЬ
+    ложных срабатываний. Проверяем каждый компонент, а не только первый: под
+    `--untracked-files=all` папка `--help/` разворачивается в
+    `…/--help/NAVIGATOR.md` — дефис оказывается в середине пути. Только для
+    untracked (`??`): отслеживаемое и правленое — это работа, не мусор; парная
+    защита в bootstrap_* (validate_slug) не даёт такому родиться заново.
+    """
+    return code == "??" and any(
+        seg.startswith("-") for seg in path.split("/") if seg)
+
+
+def suspect_root(path):
+    """Обрезать путь по ПЕРВОМУ компоненту с ведущим `-` — это корень мусора.
+
+    Папку сносим целиком (и показываем одной строкой), а не пофайлово:
+    `_studio/zhurnal/--help/NAVIGATOR.md` → `_studio/zhurnal/--help`.
+    """
+    segs = path.split("/")
+    for i, seg in enumerate(segs):
+        if seg.startswith("-"):
+            return "/".join(segs[:i + 1])
+    return path
+
+
+def suspect_roots(rows):
+    """Отсортированные корни подозрительного мусора из dirty-строк (без дублей)."""
+    return sorted({suspect_root(p) for c, p in rows if is_suspect(c, p)})
+
+
+def print_suspect_block(suspect):
+    """Единый вид карантина — мусор называется ОТДЕЛЬНО от честного «вне git»."""
+    if not suspect:
+        return
+    print(f"\n⚠ Подозрительный мусор ({len(suspect)}; имя с ведущим `-`, "
+          "вероятно проглоченный флаг) — НЕ работа, не коммитить:")
+    for r in suspect:
+        print(f"   ⚠ {r}")
+    print("   Снять без shell:  python3 _generator/tools/git_zona.py purge")
+
+
 def log_incident(symptom, hint):
     """Класс 4 (kod_commit-ux §2b): НЕУСПЕШНЫЙ commit сам оставляет след.
 
@@ -306,10 +357,12 @@ def cmd_doctor(args):
         print("   ⚠ Всё, что в ней, есть ТОЛЬКО на этой машине.")
 
     rows = dirty()
-    print(f"\nВне git: {len(rows)} путей.")
-    if rows:
+    suspect = suspect_roots(rows)
+    clean = [(c, p) for c, p in rows if not is_suspect(c, p)]
+    print(f"\nВне git: {len(clean)} путей.")
+    if clean:
         by_top = {}
-        for code, p in rows:
+        for code, p in clean:
             by_top.setdefault(p.split("/")[0], []).append(code)
         for top in sorted(by_top):
             cs = by_top[top]
@@ -319,6 +372,7 @@ def cmd_doctor(args):
         print("\n→ `git_zona.py plan` соберёт черновик коммитов, дальше `commit`.")
     else:
         print("   ✅ всё доехало.")
+    print_suspect_block(suspect)
 
     print("\nПоследние коммиты:")
     for l in git("log", "-5", "--oneline").stdout.splitlines():
@@ -409,20 +463,26 @@ def cmd_check(args):
     if not rows:
         print(f"✅ {where}: работа доехала в git, вне git ничего нет.")
         return 0
-    new = [p for c, p in rows if c == "??"]
-    mod = [p for c, p in rows if c != "??"]
-    print(f"❌ {where}: вне git {len(rows)} путей "
-          f"(рождено и никогда не ставилось — {len(new)}, "
-          f"правлено и не закоммичено — {len(mod)}).\n")
-    if new:
-        print("Рождено и НИКОГДА не ставилось в git (умрёт от git clean и от смерти диска):")
-        for p in new:
-            print(f"  ?? {p}")
-    if mod:
-        print("\nПравлено и не закоммичено:")
-        for p in mod:
-            print(f"   M {p}")
-    print("\n→ Это НЕ «сделано». `git_zona.py plan`, затем `git_zona.py commit`.")
+    suspect = suspect_roots(rows)
+    clean = [(c, p) for c, p in rows if not is_suspect(c, p)]
+    new = [p for c, p in clean if c == "??"]
+    mod = [p for c, p in clean if c != "??"]
+    if clean:
+        print(f"❌ {where}: вне git {len(clean)} путей "
+              f"(рождено и никогда не ставилось — {len(new)}, "
+              f"правлено и не закоммичено — {len(mod)}).\n")
+        if new:
+            print("Рождено и НИКОГДА не ставилось в git (умрёт от git clean и от смерти диска):")
+            for p in new:
+                print(f"  ?? {p}")
+        if mod:
+            print("\nПравлено и не закоммичено:")
+            for p in mod:
+                print(f"   M {p}")
+        print("\n→ Это НЕ «сделано». `git_zona.py plan`, затем `git_zona.py commit`.")
+    else:
+        print(f"⚠ {where}: настоящей работы вне git нет — только подозрительный мусор (ниже).")
+    print_suspect_block(suspect)
     return 1
 
 
@@ -453,8 +513,17 @@ def cmd_plan(args):
     if not rows:
         print("✅ Дерево чисто — планировать нечего.")
         return 0
+    # 🔴 Карантин: подозрительный untracked-мусор (имя с ведущим `-`) в черновик
+    # НЕ входит — иначе его каждую коммит-сессию выцепляют из плана вручную
+    # (23.07 папка-сирота `--help` чуть не уехала в гейт-коммит `_studio`).
+    suspect = suspect_roots(rows)
+    clean = [(c, p) for c, p in rows if not is_suspect(c, p)]
+    if not clean:
+        print("✅ Настоящей работы вне git нет — планировать нечего.")
+        print_suspect_block(suspect)
+        return 0
     groups = {}
-    for _, path in rows:
+    for _, path in clean:
         groups.setdefault(path.split("/")[0], []).append(path)
 
     lines = ["# ЧЕРНОВИК плана — собран `git_zona.py plan`.",
@@ -468,8 +537,9 @@ def cmd_plan(args):
         lines.append("")
     PLAN.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Черновик записан: {PLAN.relative_to(REPO)}\n"
-          f"  групп: {len(groups)}, путей: {len(rows)}\n"
+          f"  групп: {len(groups)}, путей: {len(clean)}\n"
           "→ Переписать сообщения `==`, затем `git_zona.py commit`.")
+    print_suspect_block(suspect)
     return 0
 
 
@@ -920,6 +990,109 @@ def cmd_adopt(args):
     return 0
 
 
+def cmd_purge(args):
+    """Снять ПОДОЗРИТЕЛЬНЫЙ untracked-мусор (имя с ведущим `-`) без shell.
+
+    Почему подкомандой, а не `rm`: имя `--help` начинается с `-`, любой `rm`
+    примет его за флаг (нужен `rm -- --help`), а выдавать такое владельцу — ровно
+    ловушка §0 канона (shell-в-чат ломается о zsh). Форма — как `untrack`/`adopt`:
+    без `--yes` предпросмотр, с `--yes` снос; из песочницы отказ с готовой строкой
+    владельцу; неуспех сам пишется в INCIDENTY (§0б). Удаление — Python
+    (`shutil`/`pathlib`), не shell.
+
+    🔴 ИНВАРИАНТ БЕЗОПАСНОСТИ: трогает ТОЛЬКО untracked. Отслеживаемое (в индексе
+    или в HEAD) — это работа; удаление лоссово, ошибка здесь безвозвратна.
+    Поэтому каждый путь проверяется git'ом (под ним нет отслеживаемого?) и на
+    «внутри репо», а тронутое совпадает с названным РОВНО, ни файлом больше.
+
+    Цели: явные пути-аргументы ИЛИ карантин-список `plan` (мусор с ведущим `-`).
+    """
+    if args.paths:
+        targets = list(dict.fromkeys(args.paths))    # сохранить порядок, снять дубли
+    else:
+        targets = suspect_roots(dirty())
+    if not targets:
+        print("✅ Подозрительного мусора не найдено — снимать нечего.")
+        return 0
+
+    repo_root = REPO.resolve()
+    safe, refused_tracked, refused_outside, missing = [], [], [], []
+    for t in targets:
+        full = REPO / t
+        try:                                          # 1) внутри репо? (защита от `../…`)
+            full.resolve().relative_to(repo_root)
+        except ValueError:
+            refused_outside.append(t)
+            continue
+        if not full.exists() and not full.is_symlink():   # 2) существует?
+            missing.append(t)
+            continue
+        # 3) под путём есть хоть один ОТСЛЕЖИВАЕМЫЙ файл? тогда это работа — не трогаем
+        if git("ls-files", "--", t, check=False).stdout.strip():
+            refused_tracked.append(t)
+            continue
+        safe.append(t)
+
+    for t in refused_outside:
+        print(f"⛔ Вне репозитория — не трогаю: {t}")
+    if refused_tracked:
+        print("⛔ Пропущены — под ними есть ОТСЛЕЖИВАЕМЫЕ файлы (это работа, не мусор):")
+        for t in refused_tracked:
+            print(f"   {t}")
+        print("   purge снимает только untracked. Отслеживаемое убирают осознанно (git rm).")
+    if missing:
+        print("⚠ Нет на диске (уже снято?):")
+        for t in missing:
+            print(f"   {t}")
+
+    if not safe:
+        print("✅ Снимать нечего: untracked-мусора среди целей нет.")
+        return 1 if (refused_tracked or refused_outside) else 0
+
+    print(f"\nЦели (untracked-мусор, {len(safe)}):")
+    for t in safe:
+        print(f"   {t}")
+    if not args.yes:
+        print("\n→ Это ПРЕДПРОСМОТР, ничего не удалено. Снести: повтори с `--yes`.")
+        return 0
+
+    # ── запись: сначала sandbox-отказ (как commit/untrack/adopt) ──
+    if in_sandbox():
+        if args.paths:
+            # `--yes` ПЕРЕД `--`, пути ПОСЛЕ: после `--` всё считается путём,
+            # иначе `--yes`/дефисное имя перепутаются с флагом (см. help подкоманды).
+            sug = "purge --yes -- " + " ".join(shlex.quote(t) for t in args.paths)
+        else:
+            sug = "purge --yes"
+        log_incident("песочница: снос untracked-мусора запрещён",
+                     "purge исполняет владелец в своём терминале")
+        return refuse_write("purge", suggest=sug)
+
+    removed, failed = [], []
+    for t in safe:
+        full = REPO / t
+        try:
+            if full.is_dir() and not full.is_symlink():
+                shutil.rmtree(full)
+            else:
+                full.unlink()
+            removed.append(t)
+        except OSError as e:
+            failed.append((t, e))
+
+    print(f"\n🧹 Снято: {len(removed)}.")
+    for t in removed:
+        print(f"   {t}")
+    if failed:
+        print(f"❌ Не удалось снять: {len(failed)}")
+        for t, e in failed:
+            print(f"   {t}: {e.strerror}")
+        log_incident("purge не смог удалить часть мусора",
+                     "проверить права на файлы и повторить purge, либо снять вручную")
+        return 1
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="Вся работа с git в materials/ — через этот файл.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -965,6 +1138,15 @@ def main():
     a.add_argument("--zone", required=True, help="префикс зоны")
     a.add_argument("--yes", action="store_true", help="выполнить (без него — только предпросмотр)")
     a.set_defaults(func=cmd_adopt)
+
+    pu = sub.add_parser("purge",
+                        help="снять подозрительный untracked-мусор (имя с ведущим `-`); без --yes — предпросмотр")
+    pu.add_argument("paths", nargs="*",
+                    help="явные пути (только untracked); без них — карантин-список из plan. "
+                         "Путь с ведущим дефисом — после `--`, а флаг `--yes` ПЕРЕД ним: "
+                         "`purge --yes -- --help` (после `--` всё считается путём)")
+    pu.add_argument("--yes", action="store_true", help="выполнить снос (без него — только показать)")
+    pu.set_defaults(func=cmd_purge)
 
     # parse_known_args вместо parse_args: лишние аргументы — НЕ питоновый usage,
     # а человеческий диагноз. Цена (23.07): владелец скопировал команду с хвостом

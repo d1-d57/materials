@@ -17,6 +17,26 @@ SKELETON_DIR = REPO_ROOT / "_generator" / "skeleton"
 CATALAN_STANDART_UZLA = REPO_ROOT / "catalan" / "spravochnik" / "STANDART-uzla.md"
 
 
+def validate_slug(name, chto):
+    """Кривой вход обязан ГРОМКО падать, а не тихо создать папку не с тем именем.
+
+    Тот же класс, что закрыт в bootstrap_arka.py (инцидент 23.07 с `--help`).
+    Здесь `path` — путь целиком (слэши легитимны как разделители), поэтому
+    валидируется ИМЯ последнего компонента (`target.name`): ведущий `-`, пустое,
+    пробелы, ведущая точка — не слаг. Дублируется сознательно (общий модуль лёг бы
+    вне зоны захода — см. kod_bootstrap-guard).
+    """
+    if name.startswith("-"):
+        raise SystemExit(
+            f"❌ «{name}» похоже на флаг, а не {chto}. Имя — слаг вида "
+            "`2026-07-23_tema`, без ведущего дефиса.")
+    if (not name) or any(c.isspace() for c in name) or "/" in name \
+            or "\\" in name or name.startswith("."):
+        raise SystemExit(
+            f"❌ «{name}» не годится как {chto}: нужен слаг вида "
+            "`2026-07-23_tema` — без пробелов, слэшей и ведущей точки.")
+
+
 def navigator_md(name):
     return f"""# НАВИГАТОР лекции «{name}»
 
@@ -199,6 +219,7 @@ def main():
     args = parser.parse_args()
 
     target = Path(args.path).resolve()
+    validate_slug(target.name, "имя лекции")  # флаг/кривой слаг → SystemExit ДО mkdir
     if target.exists():
         print(f"ОШИБКА: папка уже существует — {target} (не затираю)", file=sys.stderr)
         return 1

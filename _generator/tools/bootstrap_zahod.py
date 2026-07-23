@@ -37,6 +37,26 @@ TEMPLATE = REPO_ROOT / "_studio" / "zhurnal" / "_TEMPLATE-zahod.md"
 GIT_ZONA = REPO_ROOT / "_generator" / "tools" / "git_zona.py"
 
 
+def validate_slug(name, chto):
+    """Кривой вход обязан ГРОМКО падать, а не тихо создать файл не с тем именем.
+
+    Тот же класс, что закрыт в bootstrap_arka.py (инцидент 23.07 с `--help`):
+    имя, которое станет путём на диске, не валидируется. Здесь `tema` → имя файла
+    `kod_<tema>.md`; ведущий `-`, слэш, пустое, ведущая точка — не слаг. argparse
+    отбивает опции-позиции сам, но НЕ пустое/со слэшем — их ловит эта проверка.
+    Дублируется сознательно (общий модуль лёг бы вне зоны — см. kod_bootstrap-guard).
+    """
+    if name.startswith("-"):
+        raise SystemExit(
+            f"❌ «{name}» похоже на флаг, а не {chto}. Имя — слаг вида "
+            "`2026-07-23_tema`, без ведущего дефиса.")
+    if (not name) or any(c.isspace() for c in name) or "/" in name \
+            or "\\" in name or name.startswith("."):
+        raise SystemExit(
+            f"❌ «{name}» не годится как {chto}: нужен слаг вида "
+            "`2026-07-23_tema` — без пробелов, слэшей и ведущей точки.")
+
+
 def _git(*args):
     return subprocess.run(["git", "--no-optional-locks", *args],
                           cwd=REPO_ROOT, capture_output=True, text=True)
@@ -79,6 +99,7 @@ def main(argv):
                    help="ПАРАЛЛЕЛЬНЫЙ заход: своя рабочая папка. Заводит её "
                         "`git_zona.py worktree add ИМЯ` и вписывает `cd` вместо checkout")
     a = p.parse_args(argv)
+    validate_slug(a.tema, "тема захода (→ имя файла kod_<тема>.md)")  # ДО любой записи
 
     if not TEMPLATE.is_file():
         print(f"ОШИБКА: шаблон не найден — {TEMPLATE}", file=sys.stderr)

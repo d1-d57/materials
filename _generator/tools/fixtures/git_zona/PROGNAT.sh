@@ -302,4 +302,125 @@ else
     echo "  ⚠ GIT-disciplina.md не найден рядом — проверку канона пропускаю"
 fi
 
+# ── ЛОВУШКА 12: plan КАРАНТИНИТ untracked-мусор с ведущим `-` ──
+# Инцидент 23.07: `bootstrap_arka.py --help` создал `_studio/zhurnal/--help/`,
+# и каждый plan тянул её в черновик — кто-то вручную выцеплял мусор из плана.
+# plan обязан НЕ класть такой путь в .commit-plan и вынести его отдельным блоком.
+# Убрал карантин (is_suspect всегда ложь) — мусор снова в плане, ловушка красная.
+mkdir -p "$T/karantin-zona"
+echo "настоящая работа" > "$T/karantin-zona/real.md"
+mkdir -- "$T/--help"; echo "мусор" > "$T/--help/NAVIGATOR.md"
+rm -f "$T/_studio/.commit-plan"
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" plan > /dev/null 2>&1 || true
+V=$(grep -c -- '--help' "$T/_studio/.commit-plan" 2>/dev/null || true)
+[ "$V" = "0" ] && echo "  ✅ карантин: мусор с ведущим '-' НЕ попал в черновик плана" \
+               || { echo "  ❌ МУСОР ПРОСОЧИЛСЯ В ПЛАН — карантин мёртв"; FAIL=1; }
+V=$(grep -c 'karantin-zona/real.md' "$T/_studio/.commit-plan" 2>/dev/null || true)
+[ "$V" = "1" ] && echo "  ✅ карантин: настоящая работа осталась в плане" \
+               || { echo "  ❌ карантин съел настоящую работу"; FAIL=1; }
+
+# ── ЛОВУШКА 13: purge снимает ТОЛЬКО untracked-мусор ──
+# Удаление лоссово: purge обязан снять названный untracked-мусор и НЕ тронуть
+# ни отслеживаемое (работа), ни НЕ-названную живую untracked-работу; из
+# песочницы — отказать (rc=3), как commit. Каждая половина проверена мутацией.
+echo "работа" > "$T/keep-tracked.md"
+git -C "$T" add keep-tracked.md && git -C "$T" commit -qm tracked >/dev/null 2>&1 || true
+echo "живое" > "$T/live-untracked.md"     # НЕ-названная (без дефиса) — карантин её не берёт
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" purge --yes > /dev/null 2>&1 || true
+[ ! -e "$T/--help" ] && echo "  ✅ purge снял названный untracked-мусор (--help/)" \
+                     || { echo "  ❌ purge НЕ снял мусор"; FAIL=1; }
+[ -f "$T/keep-tracked.md" ] && echo "  ✅ purge НЕ тронул ОТСЛЕЖИВАЕМЫЙ файл" \
+                     || { echo "  ❌ PURGE УДАЛИЛ ОТСЛЕЖИВАЕМОЕ — работа потеряна"; FAIL=1; }
+[ -f "$T/live-untracked.md" ] && echo "  ✅ purge НЕ тронул НЕ-названную untracked-работу" \
+                     || { echo "  ❌ PURGE СНЁС НЕ-НАЗВАННУЮ ЖИВУЮ РАБОТУ"; FAIL=1; }
+# явный путь к отслеживаемому — purge обязан ОТКАЗАТЬ (rc≠0) и файл сохранить
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" purge --yes keep-tracked.md >/dev/null 2>&1 && G=bad || G=ok
+{ [ "$G" = "ok" ] && [ -f "$T/keep-tracked.md" ]; } \
+    && echo "  ✅ purge отказал снять отслеживаемое по явному пути (файл цел)" \
+    || { echo "  ❌ PURGE СНЁС ОТСЛЕЖИВАЕМОЕ ПО ЯВНОМУ ПУТИ"; FAIL=1; }
+# из песочницы — отказ rc=3 (нужна живая цель, иначе выход раньше на «нечего снимать»)
+mkdir -- "$T/--sbx"; echo m > "$T/--sbx/f.md"
+if GIT_ZONA_REPO="$T" python3 - "$TOOLS/git_zona.py" >/dev/null 2>&1 <<'PY'
+import sys, importlib.util, argparse
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+gz.in_sandbox = lambda: True
+sys.exit(0 if gz.cmd_purge(argparse.Namespace(paths=["--sbx"], yes=True)) == 3 else 1)
+PY
+then echo "  ✅ purge из песочницы отказывает (rc=3)"
+else echo "  ❌ PURGE ПИШЕТ ИЗ ПЕСОЧНИЦЫ — sandbox-отказ обойдён"; FAIL=1
+fi
+[ -e "$T/--sbx" ] && echo "  ✅ purge из песочницы ничего не удалил" \
+                  || { echo "  ❌ purge из песочницы всё же удалил цель"; FAIL=1; }
+
+# ── ЛОВУШКА 14: bootstrap_* отвергают имя-флаг/кривой слаг, НИЧЕГО не создав ──
+# Инцидент 23.07: `bootstrap_arka.py --help` проглотил флаг как имя арки и создал
+# папку-сироту. validate_slug обязан упасть SystemExit'ом ДО любой записи на диск.
+# Модули держатся на ВРЕМЕННЫХ каталогах — гейт не смеет писать в боевой репо
+# (урок 1.7): даже при снятой валидации артефакт уйдёт в /tmp, не в materials/.
+# Убрал validate_slug — кривое имя рождает папку/файл, ловушка красная.
+if python3 - "$TOOLS" <<'PY'
+import sys, importlib.util, tempfile, pathlib, shutil
+tools = pathlib.Path(sys.argv[1])
+def load(n):
+    s = importlib.util.spec_from_file_location(n, tools / f"{n}.py")
+    m = importlib.util.module_from_spec(s); s.loader.exec_module(m); return m
+fails = []
+def born(call, art):
+    """call() кривого имени НЕ должен родить art. Способ падения не важен
+    (SystemExit/иное) — важно, что артефакт не создан."""
+    try: call()
+    except BaseException: pass
+    return art.exists()
+
+# arka: сырой argv[0] — худший корень. Валидный шаблон, чтобы единственным
+# стопом была валидация имени (иначе «шаблон не найден» дал бы ложь-зелёный).
+arka = load("bootstrap_arka")
+t = pathlib.Path(tempfile.mkdtemp())
+(t / "_TPL").mkdir(); (t / "_TPL" / "X.md").write_text("{{ИМЯ}}", encoding="utf-8")
+arka.TEMPLATE_DIR = t / "_TPL"; arka.ZHURNAL_DIR = t
+for bad in ["--help", "-x", "bad/slug"]:
+    if born(lambda b=bad: arka.main([b]), t / bad):
+        fails.append(f"arka пропустил кривое имя «{bad}»")
+if not born(lambda: arka.main(["2026-07-23_proba"]), t / "2026-07-23_proba"):
+    fails.append("arka отверг ВАЛИДНОЕ имя — валидация переужесточена")
+shutil.rmtree(t, ignore_errors=True)
+
+# zahod: tema → kod_<tema>.md. argparse отбивает '-x' сам, поэтому мутационно-
+# чувствительны пустое/со слэшем/с ведущей точкой — их ловит только validate_slug.
+zahod = load("bootstrap_zahod")
+t = pathlib.Path(tempfile.mkdtemp())
+tpl = t / "_TPL.md"
+tpl.write_text("{{ТЕМА}}{{МОДЕЛЬ}}{{ВЕТКА}}{{ЗОНА}}{{КОНТРАКТ_МЕСТО}}{{ПЕРВЫЙ_ХОД}}", encoding="utf-8")
+zahod.TEMPLATE = tpl
+ad = t / "arka"; ad.mkdir()
+for bad in ["", "a/b", ".hidden"]:
+    if born(lambda b=bad: zahod.main([str(ad), b, "--branch", "b", "--zone", "z/"]),
+            ad / f"kod_{bad}.md"):
+        fails.append(f"zahod пропустил кривую тему «{bad}»")
+shutil.rmtree(t, ignore_errors=True)
+
+# lekcia: main() читает sys.argv; имя = target.name. Путь с ведущим '-'/точкой
+# в последнем компоненте argparse пропускает (это не флаг), ловит validate_slug.
+lek = load("bootstrap_lekcia")
+t = pathlib.Path(tempfile.mkdtemp())
+for nm in ["-bad", ".hidden"]:
+    art = t / nm
+    sys.argv = ["prog", str(art)]
+    if born(lambda: lek.main(), art):
+        fails.append(f"lekcia пропустила кривое имя «{nm}»")
+good = t / "moya-lekcia"; sys.argv = ["prog", str(good)]
+try: lek.main()
+except BaseException: pass
+if not good.exists():
+    fails.append("lekcia отвергла ВАЛИДНОЕ имя — валидация переужесточена")
+shutil.rmtree(t, ignore_errors=True)
+
+for f in fails: print("   -", f)
+sys.exit(1 if fails else 0)
+PY
+then echo "  ✅ bootstrap_* отвергают имя-флаг/кривой слаг, ничего не создав (arka/zahod/lekcia)"
+else echo "  ❌ BOOTSTRAP ПРОГЛОТИЛ КРИВОЕ ИМЯ (см. выше) — validate_slug мёртв"; FAIL=1
+fi
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
