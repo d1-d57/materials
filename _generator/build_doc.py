@@ -280,6 +280,221 @@ def render_stream(body, sid="s0"):
     return "\n".join(out), toc
 
 
+# ───────────────────────── drill-down-формат (ОПТ-ИН: frontmatter `format: drill-down`) ─────────────────────────
+# Ступень-2 БРИФ-фазы mat-kostyak (заход kod_dvizhok-format): раздел `##` → <details open>,
+# утверждение `###` с полем `род` → свёрнутый <details> с «тихим слоем» тегов (род — тонкая
+# цветная метка слева на <summary>, вердикт нетривиально — амбер-точка; полный набор осей —
+# приглушённой строкой внутри), доказательство/идея — отдельный вложенный свёрнутый кат.
+# Документы БЕЗ флага идут старым render_stream и не меняются НИ БАЙТОМ: drill-стиль и
+# скрипт фильтра едут внутри html самого drill-потока, шаблон PAGE не тронут.
+# Сегменты без «рода» (понятия словаря) рендерятся старым конвейером без изменений.
+
+_DRILL_AXES = ("род", "вердикт", "уровень", "вход")            # голые значения → строка осей
+_DRILL_LINES = ("узел", "следует-из", "источник", "решение")   # тела с готовыми лейблами → своя строка
+_DRILL_PROOF_RE = re.compile(r"^\*(Доказательство|Логика|Идея)")
+
+# стиль тихого слоя: тонкие метки, не пилюли; цвета приглушены, замечаются только при поиске глазом
+DRILL_CSS = """<style>
+details.d-sec{margin:2.1em 0 .6em}
+details.d-sec>summary{list-style:none;cursor:pointer}
+details.d-sec>summary::-webkit-details-marker{display:none}
+details.d-sec>summary::before{content:"▸";font-family:var(--sans);font-size:1rem;color:var(--muted);
+  display:inline-block;width:1em;margin-left:-1em;vertical-align:.25em}
+details.d-sec[open]>summary::before{content:"▾"}
+details.d-sec>summary h2{display:inline;margin:0}
+details.d-st{margin:.5em 0 .5em .2em}
+details.d-st>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:1.02rem;
+  line-height:1.45;padding:.26em .55em .26em .8em;border-left:3px solid transparent;border-radius:0 3px 3px 0}
+details.d-st>summary::-webkit-details-marker{display:none}
+details.d-st>summary:hover{background:var(--accent-soft)}
+details.d-st[data-rod="внутреннее"]>summary{border-left-color:#4d8a66}
+details.d-st[data-rod="внешнее-пример"]>summary{border-left-color:#d4796b}
+details.d-st[data-rod="упражнение"]>summary{border-left-color:#8a6fb3}
+.d-num{color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.d-dot{display:inline-block;width:.42em;height:.42em;border-radius:50%;background:#c9962e;
+  margin-left:.45em;vertical-align:.08em;opacity:.8}
+.d-body{padding:.1em 0 .5em 1.5em}
+.stream .d-quiet{font-family:var(--sans);font-size:.8rem;line-height:1.55;color:var(--muted);margin:.6em 0}
+.stream .d-quiet p{margin:.12em 0}
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:.85rem;
+  font-style:italic;color:#8a8375}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+.d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em}
+.d-filter button{font-family:var(--sans);font-size:.8rem;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:12px;padding:.18em .8em;cursor:pointer}
+.d-filter button:hover{color:var(--accent);border-color:var(--accent)}
+.d-filter button.on{color:#fff;background:var(--accent);border-color:var(--accent)}
+.d-off{display:none}
+</style>"""
+
+# фильтр: чипы гасят непопадающие details.d-st по data-атрибутам (не парсингом текста).
+# Намеренно НИ ОДНОГО символа '<'/'>' (и стрелок '=>') — см. заход про check_view.
+DRILL_JS = """<script>
+(function () {
+  "use strict";
+  Array.prototype.forEach.call(document.querySelectorAll(".d-filter"), function (bar) {
+    if (bar.getAttribute("data-init")) { return; }
+    bar.setAttribute("data-init", "1");
+    var root = bar.closest("section") || document;
+    var items = root.querySelectorAll("details.d-st");
+    var chips = bar.querySelectorAll("button[data-f]");
+    function apply(f) {
+      Array.prototype.forEach.call(items, function (it) {
+        var show;
+        if (f === "все") { show = true; }
+        else if (f === "нетривиально") { show = it.getAttribute("data-verdikt") === "нетривиально"; }
+        else { show = it.getAttribute("data-rod") === f; }
+        it.classList.toggle("d-off", !show);
+      });
+    }
+    Array.prototype.forEach.call(chips, function (chip) {
+      chip.addEventListener("click", function () {
+        Array.prototype.forEach.call(chips, function (c) { c.classList.remove("on"); });
+        chip.classList.add("on");
+        apply(chip.getAttribute("data-f"));
+      });
+    });
+  });
+})();
+</script>"""
+
+DRILL_FILTER = ('<div class="d-filter">'
+                '<button data-f="все" class="on">все</button>'
+                '<button data-f="внутреннее">внутреннее</button>'
+                '<button data-f="внешнее-пример">внешнее</button>'
+                '<button data-f="упражнение">упражнение</button>'
+                '<button data-f="нетривиально">нетривиальные</button>'
+                '</div>')
+
+
+def _drill_field(block):
+    """Блок-цитата `> поле:<вид> …` → (вид, тело) либо None (не блок-поле)."""
+    lines = [ln.rstrip() for ln in block.split("\n") if ln.strip() != ""]
+    if not lines or not all(l.lstrip().startswith(">") for l in lines):
+        return None
+    inner = _join([re.sub(r"^\s*>\s?", "", l) for l in lines])
+    fm = re.match(r"^поле:(\S*)\s*(.*)$", inner, re.S)
+    if not fm:
+        return None
+    return fm.group(1).strip(), fm.group(2).strip()
+
+
+def _drill_stmt(head_text, blocks, sid):
+    """Группа `###` с полем `род` → свёрнутое утверждение drill-формата.
+    Внутри раскрытого: формулировка → тихий блок осей/ссылок → кат доказательства → остальное.
+    Отсутствующее поле (напр. `вердикт` у упражнения) — не ошибка: тег просто не печатается."""
+    m = re.match(r"^(.*?)\.\s+(.*)$", head_text.strip(), re.S)
+    num, name = (m.group(1), m.group(2)) if m else ("", head_text.strip())
+    fields, proof_blocks, content_blocks = {}, [], []
+    for b in blocks:
+        f = _drill_field(b)
+        if f and (f[0] in _DRILL_AXES or f[0] in _DRILL_LINES):
+            fields[f[0]] = f[1]
+        elif _DRILL_PROOF_RE.match(b.lstrip()):
+            proof_blocks.append(b)
+        else:
+            content_blocks.append(b)          # формулировка, следствие, чужие поля — стандартный рендер
+    # summary: номер · имя + метки тихого слоя (род — цветной бордюр по data-rod, нетривиально — точка)
+    dot = ('<span class="d-dot" title="нетривиально"></span>'
+           if fields.get("вердикт") == "нетривиально" else "")
+    label = ('<span class="d-num">%s</span> · %s' % (render_inline(num), render_inline(name))
+             if num else render_inline(name))
+    data = ""
+    if "род" in fields:
+        data += ' data-rod="%s"' % esc(fields["род"])
+    if "вердикт" in fields:
+        data += ' data-verdikt="%s"' % esc(fields["вердикт"])
+    # тело: формулировка (первый контент-блок) стандартным конвейером
+    first_html = render_stream(content_blocks[0], sid)[0] if content_blocks else ""
+    rest_html = render_stream("\n\n".join(content_blocks[1:]), sid)[0] if len(content_blocks) > 1 else ""
+    # тихий блок: полная строка осей + узел/следует-из/источник/решение своими строками
+    quiet_ps = []
+    axes = [(k, fields[k]) for k in _DRILL_AXES if k in fields]
+    if axes:
+        quiet_ps.append('<p class="d-axes">%s</p>'
+                        % " · ".join("%s: %s" % (k, render_inline(v)) for k, v in axes))
+    for k in _DRILL_LINES:
+        if k in fields:
+            quiet_ps.append("<p>%s</p>" % render_inline(fields[k]))
+    quiet = '<div class="d-quiet">%s</div>' % "".join(quiet_ps) if quiet_ps else ""
+    # кат доказательства: у упражнения (зачин *Идея…*) — «Идея»
+    cut = ""
+    if proof_blocks:
+        pm = _DRILL_PROOF_RE.match(proof_blocks[0].lstrip())
+        cut_label = "Идея" if pm.group(1) == "Идея" else "Доказательство"
+        cut = ('<details class="d-proof"><summary>%s</summary>%s</details>'
+               % (cut_label, render_stream("\n\n".join(proof_blocks), sid)[0]))
+    return ('<details class="d-st"%s><summary>%s%s</summary>'
+            '<div class="d-body">%s%s%s%s</div></details>'
+            % (data, label, dot, first_html, quiet, cut, rest_html))
+
+
+def render_stream_drill(body, sid="s0"):
+    """Поток в drill-down-формате. Контракт как у render_stream: (html, toc).
+    `##` → <details open> уровня-1 (summary = стандартный h2: якорь, toc, счётчик);
+    группы `###` с полем `род` → _drill_stmt; прочие сегменты (понятия словаря,
+    преамбулы) — нетронутый render_stream (в сегментах нет `##`, счётчики не конфликтуют)."""
+    prefix, sections, cur_sec, cur_grp = [], [], None, None
+    for block in re.split(r"\n\s*\n", body.strip("\n")):
+        if not block.strip():
+            continue
+        first = block.split("\n", 1)[0].lstrip()
+        hm = re.match(r"^(#{2,3})\s+(.*)$", first)
+        if hm and len(hm.group(1)) == 2:
+            cur_sec = {"head": hm.group(2).strip(), "pre": [], "groups": []}
+            cur_grp = None
+            sections.append(cur_sec)
+            tail = block.split("\n", 1)[1] if "\n" in block else ""
+            if tail.strip():
+                cur_sec["pre"].append(tail)
+            continue
+        if hm and len(hm.group(1)) == 3:
+            cur_grp = {"head": hm.group(2).strip(), "blocks": []}
+            if cur_sec is None:
+                cur_sec = {"head": None, "pre": [], "groups": []}
+                sections.append(cur_sec)
+            cur_sec["groups"].append(cur_grp)
+            tail = block.split("\n", 1)[1] if "\n" in block else ""
+            if tail.strip():
+                cur_grp["blocks"].append(tail)
+            continue
+        if cur_grp is not None:
+            cur_grp["blocks"].append(block)
+        elif cur_sec is not None:
+            cur_sec["pre"].append(block)
+        else:
+            prefix.append(block)
+    toc, h2n, out = [], 0, [DRILL_CSS]
+    if prefix:
+        out.append(render_stream("\n\n".join(prefix), sid)[0])
+    has_stmt = any(any(_drill_field(b) and _drill_field(b)[0] == "род" for b in g["blocks"])
+                   for s in sections for g in s["groups"])
+    if has_stmt:
+        out.append(DRILL_FILTER)
+    for s in sections:
+        parts = []
+        if s["pre"]:
+            parts.append(render_stream("\n\n".join(s["pre"]), sid)[0])
+        for g in s["groups"]:
+            if any(_drill_field(b) and _drill_field(b)[0] == "род" for b in g["blocks"]):
+                parts.append(_drill_stmt(g["head"], g["blocks"], sid))
+            else:                              # понятие словаря/прочее — текущее оформление целиком
+                parts.append(render_stream("\n\n".join(["### " + g["head"]] + g["blocks"]), sid)[0])
+        if s["head"] is None:
+            out.append("\n".join(parts))
+            continue
+        h2n += 1
+        hid = "%s-h-%d" % (sid, h2n)
+        toc.append((hid, _toc_title(s["head"])))
+        out.append('<details class="d-sec" open><summary><h2 id="%s">%s</h2></summary>\n%s</details>'
+                   % (hid, render_inline(s["head"]), "\n".join(parts)))
+    out.append(DRILL_JS)
+    return "\n".join(out), toc
+
+
 # ───────────────────────── загрузка потоков (каждый *.md = вкладка) ─────────────────────────
 def load_streams(src):
     streams = []
@@ -298,7 +513,9 @@ def load_streams(src):
     streams.sort(key=lambda s: (int(s["meta"].get("poryadok", "999") or "999"), s["name"]))
     # рендер ПОСЛЕ сортировки: индекс потока → префикс якорей (уникальность id между вкладками)
     for i, st in enumerate(streams):
-        st["html"], st["toc"] = render_stream(st["body"], "s%d" % i)
+        render = (render_stream_drill if st["meta"].get("format") == "drill-down"
+                  else render_stream)                      # ОПТ-ИН drill-down; без флага — как раньше
+        st["html"], st["toc"] = render(st["body"], "s%d" % i)
     return streams
 
 
