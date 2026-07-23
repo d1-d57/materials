@@ -383,6 +383,19 @@ def _drill_field(block):
     return fm.group(1).strip(), fm.group(2).strip()
 
 
+def _drill_cut_stop(block):
+    """Стоп-маркер границы ката (заход kod_dokat-pod-kat) — блок, который кат уже НЕ глотает:
+    курсивный зачин-вставка `*` + заглавная (`*Зачем названо отдельно.*`, `*Следствие (Кантор).*`),
+    флаг `⚑ …` / `Флаг закрыт: …`, блок-поле `> поле:…`. Заглавная — через isupper(), не
+    кириллическим классом в regex; заголовки/конец потока сюда блоками не приходят."""
+    s = block.lstrip()
+    if s.startswith("*") and len(s) > 1 and s[1].isupper():
+        return True
+    if s.startswith("⚑") or s.startswith("Флаг закрыт:"):
+        return True
+    return _drill_field(block) is not None
+
+
 def _drill_stmt(head_text, blocks, sid):
     """Группа `###` с полем `род` → свёрнутое утверждение drill-формата.
     Внутри раскрытого: формулировка → тихий блок осей/ссылок → кат доказательства → остальное.
@@ -390,13 +403,19 @@ def _drill_stmt(head_text, blocks, sid):
     m = re.match(r"^(.*?)\.\s+(.*)$", head_text.strip(), re.S)
     num, name = (m.group(1), m.group(2)) if m else ("", head_text.strip())
     fields, proof_blocks, content_blocks = {}, [], []
+    in_proof = False                          # кат открыт: глотать тело вывода до стоп-маркера
     for b in blocks:
         f = _drill_field(b)
         if f and (f[0] in _DRILL_AXES or f[0] in _DRILL_LINES):
             fields[f[0]] = f[1]
+            in_proof = False                  # поле — стоп-маркер: кат закрыт, маркер в кат не входит
         elif _DRILL_PROOF_RE.match(b.lstrip()):
             proof_blocks.append(b)
+            in_proof = True                   # зачин открывает кат
+        elif in_proof and not _drill_cut_stop(b):
+            proof_blocks.append(b)            # тело вывода: абзацы и $$-выкладки до стоп-маркера
         else:
+            in_proof = False
             content_blocks.append(b)          # формулировка, следствие, чужие поля — стандартный рендер
     # summary: номер · имя + метки тихого слоя (род — цветной бордюр по data-rod, нетривиально — точка)
     dot = ('<span class="d-dot" title="нетривиально"></span>'
