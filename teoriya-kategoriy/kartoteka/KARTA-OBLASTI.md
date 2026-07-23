@@ -12,10 +12,10 @@
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij` `mot-kommutativnaya-diagramma` `mot-ekvivalentnost-dlya-finala`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya` `nat-preobr-rukami` `centr-gruppy-ne-funktor` `izo-kategorij-tri-opredeleniya` `delenie-na-3-konvej-dojl` `net-retrakcii-d2-s1` `gruppovoj-obekt-grp-grp-ab`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost` `pervaya-teorema-izomorfizma` `ekvivalentnost-cherez-nat-izo`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya` `nat-preobr-rukami` `centr-gruppy-ne-funktor` `izo-kategorij-tri-opredeleniya` `delenie-na-3-konvej-dojl` `net-retrakcii-d2-s1` `gruppovoj-obekt-grp-grp-ab` `rank-nullity-kanon-izo` `orbita-stabilizator-kanon` `funktor-shlopyvaet-minimalno` `ciklicheskie-gruppy-bez-kanona` `veshch-x2plus1-izo-c` `affinnoe-vs-vektornoe-neestestvenno` `konechnaya-abeleva-haraktery` `umnozhenie-est-est-preobr` `centr-est-est-preobr-id` `mat-ekvivalentna-ne-izomorfna` `biekciya-ne-izo-v-rel` `boorng-izo-boo` `kategoriya-fejnmana` `kategoriya-algoritmov-sostoyanij` `obekty-i-diagrammy-kak-funktory`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni` `skomkannaya-karta`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov` `mo-bank-neestestvennost` `v-dual-ne-primer-neestestvennosti` `zoopark-ekvivalentnostej` `gomotopiya-est-est-preobr`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov` `mo-bank-neestestvennost` `v-dual-ne-primer-neestestvennosti` `zoopark-ekvivalentnostej` `gomotopiya-est-est-preobr` `uprazhneniya-ru-l1`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
 - **инструмент/донор:** `instrument-quiver` `donor-cti` `instrument-prochitat-hom`
 
@@ -4439,4 +4439,285 @@ id: gomotopiya-est-est-preobr
 уровень: требует приручения (топология в подложке; идея — зал берёт)
 источник: ../istochniki/vstrechi/2026-07-22-vasily/конспект.md §8 (20:28–24:27)
 статус: черновик
+```
+
+## Карточки — каноничные изоморфизмы и портфель неканоничности (заход `napolnit-bazu-l1`, 2026-07-23)
+
+> Добор §4. Ось нити {izomorfizm}: где изоморфизм КАНОНИЧЕН (задан формулой без выбора), а где только ПОТОЧЕЧНЫЙ (нужен произвольный выбор). Первые три — каноничная база («должна быть везде»), мои; провенанс — Википедия, т.к. Joy of Cats проверен грепом по 524 стр. и этих классических теорем в нём НЕТ. Остальные пять — сверенный по первоисточнику (браузер, 23.07, `../istochniki/web/mo-139388-unnatural-isomorphism.md`) добор из MathOverflow 139388 и связанных; дополняют банк `mo-bank-neestestvennost` доступными залу случаями по областям (группы, кольца, линал, теормн). Sym/Ord=У57, A≅T(A)⊕A/T(A)=У22 — в MAT-KOSTYAK, ссылаемся прозой. Статус `seed`: на приборе не гонялись.
+
+```
+id: pervaya-teorema-izomorfizma
+род: утверждение
+суть: G/ker f ≅ im f каноничным изоморфизмом g·ker f ↦ f(g); та же теорема для колец и в.п.
+котёл: математика
+находка: ⭐ Образец КАНОНИЧНОГО изоморфизма — ровно то, чего не хватало V≅V*. Стрелка
+  g·ker↦f(g) задана ФОРМУЛОЙ без единого выбора: ни базиса, ни представителей — определение
+  вынуждено. Абсолютная база, «должна быть везде»: группы, кольца, в.п., модули — одна теорема.
+  Прямой контраст к dual-not-natural-proof: там изоморфизм есть только С выбором, здесь — без.
+  Бытовой смысл «естественно» ДО формализации через ЕП: зал видел такой изоморфизм и не знал,
+  что «каноничность» — про отсутствие выбора в формуле.
+связи: motivation-EM, dual-not-natural-proof, pochemu-do-izo, abelianization, rank-nullity-kanon-izo, orbita-stabilizator-kanon
+уровень: требует приручения (фактор-группу напомнить — «быстро напомним»)
+источник: https://en.wikipedia.org/wiki/Isomorphism_theorems
+статус: seed
+```
+```
+id: rank-nullity-kanon-izo
+род: пример
+суть: dim V = dim ker T + dim im T — это dim(V/ker)=dim(im), т.е. первая теорема об изоморфизме на в.п.; V/ker T ≅ im T каноничен
+котёл: математика
+находка: ⭐ Теорема о ранге и дефекте, которую зал считал руками с первого курса, — частный
+  случай первой теоремы об изоморфизме, и изоморфизм V/ker(T)≅im(T) КАНОНИЧЕН (выбора нет).
+  Ранг и дефект — не два случайных числа, а две стороны одного фактора. Самый дешёвый мост к
+  «каноничности» на линале, единственной твёрдой опоре зала: отвечает «а бывает изоморфизм
+  БЕЗ выбора?» на материале, где зал уверен.
+связи: pervaya-teorema-izomorfizma, mat-pervaya-kategoriya, assoc-linal-vysshaya-algebra
+уровень: зал берёт (линал — опора; фактор V/ker — один слайд)
+источник: https://en.wikipedia.org/wiki/Rank%E2%80%93nullity_theorem
+статус: seed
+```
+```
+id: orbita-stabilizator-kanon
+род: пример
+суть: орбита Gx ≅ G/Stab(x) каноничным изоморфизмом g·Stab ↦ g·x; отсюда |Gx|=[G:Stab] — счёт без перечисления
+котёл: математика
+находка: ⭐ Орбита-стабилизатор — каноничный изоморфизм G-МНОЖЕСТВ (не просто множеств):
+  g·Stab↦g·x задан формулой, выбора нет. Достраивает polovina-yabloka (деление = фактор по
+  СВОБОДНОМУ действию, 6/2 как орбиты) общим случаем: свободное действие = тривиальный
+  стабилизатор, тогда |орбиты|=|G|. Родня первой теоремы об изоморфизме, снятая с гомоморфизмов
+  на действия. Счёт орбит |Gx|=[G:Stab] — комбинаторный выигрыш: посчитать, не перечисляя.
+связи: pervaya-teorema-izomorfizma, polovina-yabloka, delenie-na-3-konvej-dojl
+уровень: требует приручения (действие группы — назвать, разобрать на кубике/многоугольнике)
+источник: https://en.wikipedia.org/wiki/Orbit-stabilizer_theorem
+статус: seed
+```
+```
+id: funktor-shlopyvaet-minimalno
+род: пример
+суть: минимальный неестественный изоморфизм: на категории с одним объектом и двумя морфизмами Id ≅поточечно функтору, шлющему оба морфизма в id, но не естественно
+котёл: математика
+находка: ⭐ Самая дешёвая затравка темы «поточечно ≠ естественно» во всём банке (нужно ТОЛЬКО
+  определение функтора, ни групп, ни линала). Два функтора совпадают на объекте, но один хранит
+  оба морфизма, другой их склеивает — естественного изоморфизма нет. Показывает, что функтор
+  вправе схлопывать стрелки, и что «изоморфны на каждом объекте» слабее «изоморфны как функторы».
+  Заход в mo-bank-neestestvennost с нулевого пререка.
+связи: nat-transf, functor, mo-bank-neestestvennost, monoid-odin-obekt
+уровень: зал берёт (только определение функтора)
+источник: ../istochniki/web/mo-139388-unnatural-isomorphism.md — Jeremy Rickard, 50↑
+статус: seed
+```
+```
+id: ciklicheskie-gruppy-bez-kanona
+род: пример
+суть: любые две циклические группы порядка n изоморфны, но при n≥3 канонического изоморфизма нет — нет выделенной образующей
+котёл: математика
+находка: ⭐ Разминка на школьной теории групп перед функторными примерами: изоморфизм ЕСТЬ, но
+  требует выбора образующей, а канонической образующей у Cₙ (n≥3) нет. Рифмуется с
+  i-i-minus-i-nerazlichimy (i и −i по роли неразличимы) на группах. Ещё элементарнее (коммент
+  Оскара Каннингема): два множества мощности n изоморфны, но канонической биекции нет (n≥2) —
+  чистая «единственность до изоморфизма».
+связи: pochemu-do-izo, i-i-minus-i-nerazlichimy, veshch-x2plus1-izo-c, dual-not-natural-proof
+уровень: зал берёт (школьные циклические группы)
+источник: ../istochniki/web/mo-139388-unnatural-isomorphism.md §390929 — Greg Martin, 20↑
+статус: seed
+```
+```
+id: veshch-x2plus1-izo-c
+род: пример
+суть: ℝ[x]/(x²+1) ≅ ℂ, но канонического изоморфизма нет: x ↦ i или x ↦ −i, выбор произволен
+котёл: математика
+находка: ⭐ Считаемый руками неканоничный изоморфизм на кольцах: два законных изоморфизма
+  (x↦i и x↦−i) и никакого способа предпочесть один. Тот же выбор i/−i, что в
+  i-i-minus-i-nerazlichimy, но теперь как изоморфизм фактор-кольца. Автор замечает: это частный
+  случай «{±i} как ℤ/2-торсор» — есть двухэлементное множество выборов без выделенного элемента.
+связи: ciklicheskie-gruppy-bez-kanona, i-i-minus-i-nerazlichimy, pochemu-do-izo
+уровень: зал берёт (комплексные числа, фактор по x²+1 — один слайд)
+источник: ../istochniki/web/mo-139388-unnatural-isomorphism.md §390929 — Zach Teitler, 8↑
+статус: seed
+```
+```
+id: affinnoe-vs-vektornoe-neestestvenno
+род: пример
+суть: аффинное пространство ≅ векторному той же размерности, но неестественно: FG≅Id только поточечно (нет канонического начала координат), тогда как GF≅Id естественно
+котёл: математика
+находка: ⭐ Асимметрия, близкая программисту (точки vs векторы, CAD): забыть начало координат
+  (Vect→Aff) и вернуть его через формальные разности (Aff→Vect) — в одну сторону композиция
+  естественно ≅Id, в другую только неестественно, потому что выбор начала произволен. Живой
+  носитель «неестественность = вынужденный выбор» без дуалов; пара к
+  motivation-scalar-product-is-choice (там выбор — метрика, тут — точка отсчёта).
+связи: dual-not-natural-proof, nat-transf, mo-bank-neestestvennost, motivation-scalar-product-is-choice
+уровень: требует приручения («аффинное = векторное без начала координат» — минута)
+источник: ../istochniki/web/mo-139388-unnatural-isomorphism.md — Eric Wofsey, 15↑
+статус: seed
+```
+```
+id: konechnaya-abeleva-haraktery
+род: пример
+суть: конечная абелева группа ≅ своей группе характеров (двойственной по Понтрягину) через Фурье, но не канонически
+котёл: математика
+находка: ⭐ Прямая групповая параллель истории V≅V*: конечная абелева A и её двойственная Â
+  изоморфны (классов сопряжённости = неприводимых представлений), изоморфизм даёт Фурье, но
+  каноничного нет — как и у V≅V*. Тот же сюжет курса на конечных группах вместо векторных
+  пространств; двойное двойственное (A≅Â̂) уже каноничен, как V≅V** (double-dual).
+связи: dual-not-natural-proof, motivation-EM, mo-bank-neestestvennost, double-dual
+уровень: требует приручения (характеры/Фурье — назвать; сам факт «группа ≅ двойственной» — берёт)
+источник: ../istochniki/web/mo-139388-unnatural-isomorphism.md §102879 — Gjergji Zaimi, 30↑
+статус: seed
+```
+
+## Карточки — Joy of Cats + русская лекция 1: примеры под аппарат Л1 (заход `napolnit-bazu-l1`, 2026-07-23)
+
+> Добор §2.2 (Joy of Cats, Adámek–Herrlich–Strecker — Глава I §3–6 вычитана, дайджест в VYCHITANO) и §2.5 (русская лекция 1, автор НЕ назван — уточнить у владельца, дайджест в VYCHITANO). Только НЕ-дубли под аппарат Л1 {категория, функтор, ЕП, эквивалентность}; топология/дифгео не тащим. Статус `seed`: на приборе не гонялись.
+
+```
+id: umnozhenie-est-est-preobr
+род: пример
+суть: умножение в группе — естественное преобразование S⟹U (S(G)=G², U забывающий); f гомоморфизм ⟺ его квадрат естественности коммутирует
+котёл: математика
+находка: ⭐ Переворачивает привычное: «сохраняет операцию» — это и есть условие естественности.
+  Умножение m_G: G×G→G — компонента ЕП между функтором-квадратом и забывающим; равенство
+  f(xy)=f(x)f(y) буквально ЕСТЬ квадрат естественности. Даёт залу «гомоморфизм = квадрат
+  естественности» на группах, которые он держит. Обобщается: любая операция любой алгебры —
+  ЕП (то же для перехода автомата по символу).
+связи: nat-transf, naturality-square, functor
+уровень: зал берёт (нужно явно ввести функтор-квадрат S(G)=G²)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.83–84, §6 Example 6.2(2),(6)
+статус: seed
+```
+```
+id: centr-est-est-preobr-id
+род: пример
+суть: элемент центра моноида = естественное преобразование Id⟹Id; функтор-эндоморфизм группы естественно ≅ Id ⟺ он внутренний автоморфизм
+котёл: математика
+находка: ⭐ Убийственная пара к centr-gruppy-ne-funktor: конструкция G↦Z(G) не функтор, зато
+  КАЖДЫЙ элемент центра — natural self-transformation тождественного функтора (x даёт ЕП Id⟹Id
+  ⟺ x коммутирует со всеми). А сопряжение g(–)g⁻¹ — ровно естественный изоморфизм Id⟹F: «F ≅ Id
+  естественно ⟺ F внутренний автоморфизм». Естественность = «согласованное переименование
+  элементов их же элементом». Два соседних упражнения на одной странице.
+связи: centr-gruppy-ne-funktor, nat-transf, umnozhenie-est-est-preobr
+уровень: требует приручения (моноид/группа как категория с одним объектом)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.95, §6 Упр. 6B(b) и 6D(c)
+статус: seed
+```
+```
+id: ekvivalentnost-cherez-nat-izo
+род: утверждение
+суть: F: A→B — эквивалентность ⟺ существует G: B→A с id_A ≅ G∘F и F∘G ≅ id_B (изоморфизмы естественны)
+котёл: математика
+находка: ⭐ Точка синтеза лекции: определение эквивалентности, которым реально пользуются, —
+  через естественные изоморфизмы, а не через «строгий+полный+существенно сюръективный».
+  Связывает ЕП и эквивалентность в одной теореме; книга доказывает совпадение двух определений
+  (пара к sohranenie-protiv-otrazheniya, где второй критерий). «Обратимость до естественного
+  изоморфизма» — вот что мягче равенства и сильнее «просто изоморфны на объектах».
+связи: nat-transf, zoopark-ekvivalentnostej, sohranenie-protiv-otrazheniya, mat-ekvivalentna-ne-izomorfna
+уровень: зал берёт (после ЕП — прямое следствие)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.86, §6 Proposition 6.8
+статус: seed
+```
+```
+id: mat-ekvivalentna-ne-izomorfna
+род: пример
+суть: Mat эквивалентна категории конечномерных в.п., но НЕ изоморфна ей — в Mat разные объекты не бывают изоморфны
+котёл: математика
+находка: ⭐ Различие «эквивалентно ≠ изоморфно» на самой твёрдой территории зала. Готовое
+  доказательство, почему изоморфизма категорий нет: в Mat объекты — числа, разные числа не
+  изоморфны, а в Vect бесконечно много изоморфных пространств размерности n — значит биекции на
+  объектах быть не может, а эквивалентность есть. Даёт адрес и механизм тому, что
+  ekvivalentnost-primery-vp-boole утверждала без доказательства.
+связи: ekvivalentnost-primery-vp-boole, izo-kategorij-tri-opredeleniya, mat-pervaya-kategoriya, ekvivalentnost-cherez-nat-izo
+уровень: зал берёт (Mat и матрицы — опора)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.36, §3 Example 3.35(2)
+статус: seed
+```
+```
+id: biekciya-ne-izo-v-rel
+род: пример
+суть: в Rel (множества и отношения) биективный морфизм НЕ обязан быть изоморфизмом; для Set, Vec, Grp — обязан
+котёл: математика
+находка: ⭐ Изоморфизм в категории ≠ «биективная функция» — и это видно БЕЗ топологии. На
+  X={1,2} без отношений → Y={1,2} с отношением {(1,2)}: тождество — морфизм, обратное отношение
+  не сохраняет. В книге стандартный носитель этого факта — Top; Rel даёт то же чисто
+  комбинаторно, ближе программисту. Оборотная сторона sohranenie-protiv-otrazheniya: обратимость
+  морфизма зависит от того, В КАКОЙ категории спрашиваешь.
+связи: sohranenie-protiv-otrazheniya, kategoriya-opredelenie, izo-kategorij-tri-opredeleniya
+уровень: зал берёт (2-элементный контрпример строится за полминуты)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.28, §3 Example 3.13(2)
+статус: seed
+```
+```
+id: boorng-izo-boo
+род: пример
+суть: категория булевых алгебр Boo ИЗОМОРФНА (не только эквивалентна) категории булевых колец BooRng
+котёл: математика
+находка: Настоящий изоморфизм категорий (а не эквивалентность) двух по виду разных миров —
+  на булевой логике, родной программисту. Булево кольцо (x²=x, сложение = XOR) и булева алгебра —
+  один объект в двух записях; переход обратим на объектах И на морфизмах. Второй носитель
+  «изоморфизм категорий» рядом с izo-kategorij-tri-opredeleniya (три определения топ.пространства),
+  но без топологии — программисту дешевле.
+связи: izo-kategorij-tri-opredeleniya, chum-kategoriya
+уровень: требует приручения (булево кольцо: x²=x, XOR — один слайд)
+источник: ../istochniki/pdf/adamek-herrlich-strecker-joy-of-cats.pdf печ. стр.34, §3 Example 3.26(4)
+статус: seed
+```
+```
+id: kategoriya-fejnmana
+род: пример
+суть: категория диаграмм Фейнмана: объекты — наборы частиц в состоянии, морфизм X→Y — диаграмма перехода из состояния X в состояние Y
+котёл: математика
+находка: Необычный, но валидный пример «категории повсюду» — прямой заказ владельца из русской
+  лекции. Стоит рядом с кобордизмами (оба «экзотические» примеры из физики), показывает, что
+  композиция бывает не «применить функцию», а «состыковать процессы». ⚠ В источнике только
+  словесное описание, самой диаграммы автор не рисует — сцену для зала рисовать с нуля. Не для
+  работы, а как расширение горизонта «что бывает категорией».
+связи: kategoriya-opredelenie, kobordizmy-kameo, monoid-odin-obekt
+уровень: требует приручения (назвать, не разворачивать физику)
+источник: ../istochniki/pdf/ru-lekciya-1-kategorii-funktory.pdf стр.4
+статус: seed
+```
+```
+id: kategoriya-algoritmov-sostoyanij
+род: пример
+суть: категория состояний системы: объекты — состояния (наборы значений входа/выхода), морфизмы — процессы/алгоритмы, переводящие одно состояние в другое
+котёл: математика
+находка: ⭐ Идеальный для программистов 35+ пример из русской лекции: конечные автоматы и
+  «категория алгоритмов» (морфизм = алгоритм вход→выход) — категория, где стрелка это ВЫЧИСЛЕНИЕ.
+  Отличается от dinamika-est-funktor-vremeni: там одна траектория как функтор ИЗ моноида времени,
+  здесь — все состояния и переходы системы КАК САМА категория. Зал живёт в ней профессионально
+  и не знал слова.
+связи: kategoriya-opredelenie, dinamika-est-funktor-vremeni, mat-pervaya-kategoriya
+уровень: зал берёт (автоматы/алгоритмы — родная территория)
+источник: ../istochniki/pdf/ru-lekciya-1-kategorii-funktory.pdf стр.4–5
+статус: seed
+```
+```
+id: obekty-i-diagrammy-kak-funktory
+род: пример
+суть: функторы из «фигурных» категорий: [1]→A даёт объект, [2]→A — морфизм, [3]→A — пару морфизмов; коммутативная диаграмма = функтор из малой категории
+котёл: математика
+находка: ⭐ Изящный приём русской лекции: сами объекты и морфизмы A оказываются функторами (из
+  категорий-форм [1],[2],[3]), а любая коммутативная диаграмма — это функтор, так что «диаграмма
+  в A» и «функтор в A» — синонимы. Снимает у зала испуг перед функтором: он уже рисовал функторы,
+  называя их диаграммами. Прямо усиливает mot-kommutativnaya-diagramma (зачем диаграмма) её
+  функторным прочтением.
+связи: functor, mot-kommutativnaya-diagramma, kategoriya-opredelenie
+уровень: зал берёт
+источник: ../istochniki/pdf/ru-lekciya-1-kategorii-funktory.pdf стр.11
+статус: seed
+```
+```
+id: uprazhneniya-ru-l1
+род: находка
+суть: упражнения русской лекции 1, годные к разбору на нашей Л1 (аппарат категория/функтор/ЕП/эквивалентность), с пометкой уровня
+котёл: математика
+находка: Готовый банк упражнений «сильный шаг вперёд, а не проверка определения» (метод Василия).
+  ЗАЛ БЕРЁТ: X↦Xˢ функториально, ev: Xˢ×S→Id естественно (упр.7 — каррирование, родное
+  программисту); Mat_k = скелет Vect_k (упр.8 — на опоре, ложится на mat-ekvivalentna-ne-izomorfna);
+  композиция функторов = функтор (упр.1.1); композиция эквивалентностей = эквивалентность (упр.10).
+  ПРИРУЧЕНИЕ: два разных функтора Grp→Grp, тождественных на объектах (упр.5); стрелка h даёт ЕП
+  (упр.2.2). ⚠ Упр.4 (Z(G) не функтор через S₂→S₃→S₂) — дубль centr-gruppy-ne-funktor. ⛔ Упр.1–3,6
+  про универсальное свойство произведения — Л2, не берём.
+связи: nat-transf, ekvivalentnost-cherez-nat-izo, centr-gruppy-ne-funktor, functor
+уровень: зал берёт (отобранные упражнения)
+источник: ../istochniki/pdf/ru-lekciya-1-kategorii-funktory.pdf стр.13–14, раздел 7 + встроенные упр.
+статус: seed
 ```
