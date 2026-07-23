@@ -753,6 +753,37 @@ def cmd_worktree(args):
         return 0
 
 
+def cmd_adopt(args):
+    """Перенести зону с ДРУГОЙ ветки на ТЕКУЩУЮ рабочую ветку (`git checkout <ветка> -- <зона>`).
+
+    Случай: заход отработал в worktree на своей ветке, зона там закоммичена, а в
+    основной папке осталась УСТАРЕВШАЯ untracked-копия (тень). adopt заменяет тень
+    содержимым ветки и ставит его в индекс — дальше `commit --zone`. Ничего не теряет:
+    хорошая версия на ветке цела, тень и так вне git. Родился из урока 2026-07-23
+    (worktree-заход оставил двойную копию зоны — `RUKOVODSTVO §Заход`).
+    """
+    branch, zone = args.branch, args.zone
+    if git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}", check=False).returncode != 0:
+        sys.exit(f"❌ Ветки нет: {branch}")
+    diff = git("diff", "--stat", f"HEAD..{branch}", "--", zone, check=False)
+    print(f"═══ adopt: зону `{zone}` берём с ветки `{branch}` на текущую ═══\n")
+    print(diff.stdout.rstrip() or "(различий по зоне между ветками нет — брать нечего)")
+    if not args.yes:
+        print("\n→ Это ПРЕДПРОСМОТР. Выполнить: повтори с `--yes`\n"
+              "  (рабочая копия зоны заменится версией ветки и встанет в индекс; дальше `commit --zone`).")
+        return 0
+    if in_sandbox():
+        return refuse_write(f"adopt {branch} -- {zone}",
+                            suggest=f"adopt --branch {branch} --zone {zone} --yes")
+    r = git("checkout", branch, "--", zone, check=False)
+    if r.returncode != 0:
+        print(f"❌ Не вышло (rc={r.returncode}):\n{r.stderr.strip()}")
+        return 1
+    print(f"✅ Зона `{zone}` взята с `{branch}` и поставлена в индекс.\n"
+          f"   Дальше: python3 _generator/tools/git_zona.py commit --zone {zone}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description="Вся работа с git в materials/ — через этот файл.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -788,6 +819,12 @@ def main():
     w.add_argument("--branch", help="ветка (по умолчанию zahod/<имя>)")
     w.add_argument("--force", action="store_true", help="снять даже с незакоммиченным")
     w.set_defaults(func=cmd_worktree)
+
+    a = sub.add_parser("adopt", help="перенести зону с другой ветки на текущую (заменить устаревшую тень)")
+    a.add_argument("--branch", required=True, help="ветка-источник (где зона закоммичена)")
+    a.add_argument("--zone", required=True, help="префикс зоны")
+    a.add_argument("--yes", action="store_true", help="выполнить (без него — только предпросмотр)")
+    a.set_defaults(func=cmd_adopt)
 
     args = ap.parse_args()
     sys.exit(args.func(args))
