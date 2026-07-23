@@ -172,6 +172,75 @@ V=$(git ls-files | grep -c 'kniga.pdf' || true)
 [ -f "$T/lib/istochniki/kniga.pdf" ] && echo "  ✅ untrack НЕ удалил файл с диска" \
               || { echo "  ❌ ФАЙЛ УДАЛЁН С ДИСКА — untrack обязан только разотслеживать"; FAIL=1; }
 
+# ── ЛОВУШКА 9: однокомандная тропа `commit --zone -m` ──
+# Родилась из пяти живых срывов 23.07 (kod_commit-ux.md §2): «сохранить зону»
+# было многошаговым и рвалось на каждом стыке. Тропа обязана держать ТЕ ЖЕ
+# инварианты, что план-путь: add (новые доезжают), pathspec (чужое staged не
+# утаскивается), граница зоны (вне зоны не тронуто). Тропа, обходящая любую
+# половину, хуже её отсутствия — она делает обход инвариантов удобным.
+echo "чужая работа 2" > CHUZHOJ2.txt
+git add CHUZHOJ2.txt
+echo "вне зоны" > vne-zony.md
+mkdir -p moya-zona
+echo "новый тропный" > moya-zona/tropnyj.md
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit --zone moya-zona -m "тропа: фикстурный прогон" > /dev/null 2>&1 || true
+
+V=$(git show --stat --format= HEAD | grep -c 'tropnyj.md' || true)
+[ "$V" = "1" ] && echo "  ✅ тропа -m: новый файл зоны доехал одной командой" \
+               || { echo "  ❌ ТРОПА НЕ ДОВЕЗЛА новый файл зоны — add в тропе сломан"; FAIL=1; }
+
+V=$(git show --stat --format= HEAD | grep -c 'CHUZHOJ2' || true)
+[ "$V" = "0" ] && echo "  ✅ тропа -m: чужой застейдженный файл НЕ утащен" \
+               || { echo "  ❌ ТРОПА УТАЩИЛА ЧУЖОЕ — pathspec в тропе сломан"; FAIL=1; }
+
+V=$(git diff --cached --name-only | grep -c 'CHUZHOJ2' || true)
+[ "$V" = "1" ] && echo "  ✅ тропа -m: чужое осталось в индексе нетронутым" \
+               || { echo "  ❌ тропа тронула чужой индекс"; FAIL=1; }
+
+V=$(git show --stat --format= HEAD | grep -c 'vne-zony' || true)
+[ "$V" = "0" ] && echo "  ✅ тропа -m: файл вне зоны не закоммичен (граница держит)" \
+               || { echo "  ❌ ТРОПА ВЫШЛА ЗА ЗОНУ — граница --zone сломана"; FAIL=1; }
+
+[ -z "$(git status --porcelain --untracked-files=all -- moya-zona)" ] \
+               && echo "  ✅ тропа -m: зона чиста после одной команды" \
+               || { echo "  ❌ зона не чиста после тропы — «одна команда» не довела до конца"; FAIL=1; }
+
+# ── ЛОВУШКА 10: тропа -m не обходит sandbox-отказ ──
+# -m — та же пишущая операция; из песочницы обязана отказать (rc=3), как
+# план-путь. Обход = Cowork снова коммитер = мины в .git для всех (§2 канона).
+# GIT_ZONA_REPO обязателен и здесь: cmd_commit из песочницы логирует инцидент,
+# и без него след ушёл бы в БОЕВОЙ INCIDENTY.md.
+if GIT_ZONA_REPO="$T" python3 - "$TOOLS/git_zona.py" >/dev/null 2>&1 <<'PY'
+import sys, importlib.util, argparse
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+gz.in_sandbox = lambda: True                      # песочница «включена»
+ns = argparse.Namespace(zone="moya-zona", message="проба", push=False)
+sys.exit(0 if gz.cmd_commit(ns) == 3 else 1)
+PY
+then echo "  ✅ тропа -m из песочницы отказывает (rc=3)"
+else echo "  ❌ ТРОПА -m ПИШЕТ ИЗ ПЕСОЧНИЦЫ — sandbox-отказ обойдён"; FAIL=1
+fi
+
+# ── ЛОВУШКА 11: неуспешный commit САМ пишется в INCIDENTY ──
+# Класс 4 (kod_commit-ux §2b): память об инциденте — поведение инструмента,
+# а не дисциплина агента (та живёт ровно один чат и забывается молча).
+# Убрал автозапись — эта ловушка красная.
+rm -f "$T/_studio/zhurnal/_INFRA-git/INCIDENTY.md"
+echo "грязь для инцидента" > moya-zona/grjaz.md
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit > /dev/null 2>&1 || true   # плана нет, дерево грязное
+V=$(grep -c "commit без плана" "$T/_studio/zhurnal/_INFRA-git/INCIDENTY.md" 2>/dev/null || true)
+[ "$V" = "1" ] && echo "  ✅ неуспешный commit оставил след в INCIDENTY.md" \
+               || { echo "  ❌ СЛЕДА В INCIDENTY НЕТ — класс 4 мёртв, поломки снова забываются"; FAIL=1; }
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit > /dev/null 2>&1 || true   # тот же симптом повторно
+V=$(grep -c "commit без плана" "$T/_studio/zhurnal/_INFRA-git/INCIDENTY.md" 2>/dev/null || true)
+[ "$V" = "1" ] && echo "  ✅ повтор того же симптома не задвоился (дедуп за день)" \
+               || { echo "  ❌ дедуп INCIDENTY не работает — корзина зашумит, читать бросят"; FAIL=1; }
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit --zone moya-zona -m "" > /dev/null 2>&1 || true
+V=$(grep -c "пустое или плейсхолдер" "$T/_studio/zhurnal/_INFRA-git/INCIDENTY.md" 2>/dev/null || true)
+[ "$V" = "1" ] && echo "  ✅ другой класс симптома — отдельная строка (пустое -m)" \
+               || { echo "  ❌ пустое -m не залогировано в INCIDENTY"; FAIL=1; }
+
 # ── ЛОВУШКА 8: ❌ на НОРМАЛЬНОМ исходе ──
 # `commit` сам удаляет план после успеха; повторный запуск не должен пугать.
 # ЦЕНА (23.07): владелец прочитал «❌ Плана нет» как «коммит не сработал» —

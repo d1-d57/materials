@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """git_zona.py — вся работа с git в `materials/` идёт через этот файл.
 
-ДЛЯ ВЛАДЕЛЬЦА — четыре команды, больше знать ничего не надо:
+ДЛЯ ВЛАДЕЛЬЦА. Самый частый случай — «сохранить зону с сообщением» — ОДНА команда:
+
+    python3 <корень репо>/_generator/tools/git_zona.py commit --zone <зона> -m "<что и зачем>" --push
+
+Путь к файлу в ней — АБСОЛЮТНЫЙ, поэтому команда работает из ЛЮБОГО каталога:
+инструмент находит репозиторий от самого себя (`__file__`), не от cwd. «Запустил
+из ~ и питон не нашёл файла» (два срыва 23.07) закрывается только этой формой —
+при относительном пути инструмент даже не загружается и подсказать не может.
+
+Вокруг неё — четыре команды на остальные случаи:
 
     python3 _generator/tools/git_zona.py doctor    # что с репо прямо сейчас
     python3 _generator/tools/git_zona.py plan      # собрать черновик плана коммитов
@@ -43,6 +52,7 @@ origin и всё, что вне git. По нему диагноз ставитс
 
 import argparse
 import os
+import shlex
 import subprocess
 import sys
 import time
@@ -58,6 +68,7 @@ REPO = Path(os.environ.get("GIT_ZONA_REPO") or Path(__file__).resolve().parents[
 PLAN = REPO / "_studio" / ".commit-plan"
 LOCK = REPO / ".git" / "index.lock"
 LOCK_WAIT_SEC = 90
+INCIDENTY = REPO / "_studio" / "zhurnal" / "_INFRA-git" / "INCIDENTY.md"
 
 
 def in_sandbox():
@@ -169,6 +180,45 @@ def dirty(zone=None):
 def in_zone(path, zone):
     z = zone.rstrip("/")
     return path == z or path.startswith(z + "/")
+
+
+def log_incident(symptom, hint):
+    """Класс 4 (kod_commit-ux §2b): НЕУСПЕШНЫЙ commit сам оставляет след.
+
+    Инструмент — единственная дверь к коммитам всех троих писателей, поэтому
+    «единый дневник инцидентов даже без просьбы» держится его поведением, а не
+    дисциплиной агентов: правило «пиши отчёт о поломках» в чужом чате забывают,
+    и ничто не краснеет (KONSTITUCIYA §11). Разбор и уроки с ценой — ZHURNAL.md;
+    сюда падает сырьё: симптом + подсказка инструмента + статус.
+
+    Дедуп: тот же симптом на той же ветке в тот же день второй раз не пишется —
+    иначе корзина зашумит повторами одного и того же и читать её бросят.
+    Лог не смеет ни ронять инструмент, ни менять его код возврата: любая ошибка
+    записи молча глотается (это журнал, не гейт).
+    """
+    try:
+        branch = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip() or "?"
+        stamp = time.strftime("%Y-%m-%d %H:%M")
+        if INCIDENTY.exists():
+            rows = [l for l in INCIDENTY.read_text(encoding="utf-8").splitlines()
+                    if l.startswith("- ")]
+            if rows and f" · {branch} · {symptom} · " in rows[-1] \
+                    and rows[-1][2:12] == stamp[:10]:
+                return
+        else:
+            INCIDENTY.parent.mkdir(parents=True, exist_ok=True)
+            INCIDENTY.write_text(
+                "# INCIDENTY — сырые симптомы неуспешных коммитов (пишет сам git_zona.py)\n\n"
+                "> Входящая корзина, НЕ журнал уроков: при каждом неуспешном `commit`\n"
+                "> инструмент САМ дописывает сюда строку — в любом чате, без просьбы.\n"
+                "> Руками строки не заводятся. Разобранное переносится в `ZHURNAL.md`\n"
+                "> уроком с ЦЕНОЙ; здесь у строки статус меняется на `→ ZHURNAL`.\n"
+                "> Формат: `- дата время · ветка · симптом · → подсказка · статус`.\n\n",
+                encoding="utf-8")
+        with open(INCIDENTY, "a", encoding="utf-8") as f:
+            f.write(f"- {stamp} · {branch} · {symptom} · → {hint} · статус: открыт\n")
+    except OSError:
+        pass
 
 
 # ─────────────────────────────── doctor ───────────────────────────────
@@ -503,65 +553,22 @@ def cmd_untrack(args):
     return 0
 
 
-def cmd_commit(args):
-    # 🔴 ПЕРВЫМ ходом, до любой работы: писать из песочницы нельзя (см. refuse_write).
-    # Раньше запрет жил только словами в каноне — и был нарушён: три отказа за
-    # сессию 22.07, репозиторий дважды вставал на полчаса для всех писателей.
-    # Правило, которое можно нарушить молча, будет нарушено (KONSTITUCIYA §11).
-    if in_sandbox():
-        return refuse_write("Коммит")
+def execute_commits(commits, push=False, delete_plan=False):
+    """Общее ядро ОБОИХ путей коммита — планового (`commit`) и однокомандного
+    (`commit --zone -m`).
 
-    # 🔴 «Плана нет» — НЕ всегда беда. `commit` сам удаляет план после успеха,
-    # поэтому повторный запуск попадал на пугающее ❌ и читался как «коммит не
-    # сработал» — при том что он прошёл минуту назад.
-    # ЦЕНА (23.07): владелец решил, что коммит арки провалился; на деле он был
-    # сделан (`0b17189`). Сообщение обязано различать «плана не написали» и
-    # «план уже исполнен».
-    if not PLAN.exists():
-        last = git("log", "-1", "--format=%h %s").stdout.strip()
-        rows = dirty()
-        if not rows:
-            print("✅ Плана нет — и коммитить нечего: всё доехало в git.\n"
-                  f"   Последний коммит: {last}")
-            return 0
-        print(f"Плана нет, но в дереве {len(rows)} путей вне git.\n"
-              f"   Последний коммит: {last}\n"
-              "   Если это твоя работа — собери план: "
-              "`python3 _generator/tools/git_zona.py plan`\n"
-              "   Если это чужая зона (Claude Code, другая сессия) — так и надо.")
-        return 1
-
-    commits = parse_plan()
-
-    # Зона — МЕХАНИЗМ, а не просьба: чужое физически не уедет в твой коммит.
-    if args.zone:
-        outside = [p for c in commits for p in c["paths"] if not in_zone(p, args.zone)]
-        if outside:
-            print(f"⛔ План выходит за зону `{args.zone}` — не коммичу НИЧЕГО.\n"
-                  "   Это защита от инцидента 2026-07-11, когда авто-коммит одного\n"
-                  "   захода утащил файлы другого в свой коммит под своим именем.\n"
-                  "   Лишние пути:")
-            for p in outside[:20]:
-                print(f"     {p}")
-            if len(outside) > 20:
-                print(f"     … ещё {len(outside) - 20}")
-            return 1
-
-    missing = [p for c in commits for p in c["paths"] if not (REPO / p).exists()]
-    if missing:
-        print("❌ План называет пути, которых нет на диске — ничего не коммичу:")
-        for p in missing:
-            print(f"   {p}")
-        print("→ Дерево изменилось после сборки плана. Пересобрать: `git_zona.py plan`.")
-        return 1
-
+    Ядро одно НАРОЧНО: инварианты (форма `add` + pathspec, ожидание чужого
+    лока, сверка результата по живым файлам) живут в одном месте, и «сгладить
+    обёртку», молча ослабив ядро, невозможно — ядро у троп общее.
+    """
     # Мёртвый лок снимаем САМИ — это самая частая причина «не коммитится»,
     # и раньше она требовала отдельной команды владельцу, которая падала в zsh.
     sweep_dead_locks()
     if not wait_for_lock():
+        log_incident("чужой лок держится дольше 90 с",
+                     "подождать и повторить ту же команду; лок руками не удалять")
         return 2
 
-    print(f"План: {len(commits)} коммит(ов).\n")
     done, failed = [], []
     for c in commits:
         if not wait_for_lock():
@@ -632,19 +639,22 @@ def cmd_commit(args):
         if len(still) > 30:
             print(f"   … ещё {len(still) - 30}")
         print("\n→ Причину покажет `git_zona.py doctor`.")
+        log_incident("коммит прошёл не целиком: пути не доехали или коммиты упали",
+                     "смотреть вывод команды и `doctor`")
         return 1
     # 🔴 Успех печатается ДО уборки, и уборка не смеет убить процесс.
     # Цена (22.07): `PLAN.unlink()` без защиты бросил PermissionError уже ПОСЛЕ
     # успешного коммита `a512964` — человек увидел traceback под словом «✅» и
     # дважды сверял `git log`, чтобы понять, прошло или нет. Это ровно урок
     # «код возврата первым»: успех и сбой уборки выглядели одинаково.
-    print(f"✅ Все пути плана в git. Коммитов сделано: {len(done)}.")
-    try:
-        PLAN.unlink(missing_ok=True)
-        print("   План исполнен и удалён.")
-    except OSError as e:
-        print(f"   ⚠ План исполнен, но файл плана не удалился ({e.strerror}).\n"
-              f"     Это НЕ влияет на коммит. Удалить вручную: rm {PLAN}")
+    print(f"✅ Все пути в git. Коммитов сделано: {len(done)}.")
+    if delete_plan:
+        try:
+            PLAN.unlink(missing_ok=True)
+            print("   План исполнен и удалён.")
+        except OSError as e:
+            print(f"   ⚠ План исполнен, но файл плана не удалился ({e.strerror}).\n"
+                  f"     Это НЕ влияет на коммит. Удалить вручную: rm {PLAN}")
     up = git("rev-parse", "--abbrev-ref", "@{upstream}", check=False)
     if up.returncode != 0:
         print("\n⚠ Ветка не отслеживает origin — всё это есть только на этой машине.")
@@ -652,7 +662,7 @@ def cmd_commit(args):
     ahead = git("rev-list", "--count", "@{upstream}..HEAD").stdout.strip()
     if ahead == "0":
         return 0
-    if not args.push:
+    if not push:
         print(f"\n⚠ {ahead} коммит(ов) есть только на этой машине. "
               "Вывезти: тот же commit с --push (или `git push`).")
         return 0
@@ -663,9 +673,135 @@ def cmd_commit(args):
         first = ((r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
                  or ["(вывод пуст)"])[0]
         print(f"❌ push упал (rc={r.returncode}):\n   {first}")
+        log_incident("push упал", "коммиты целы; повторить `commit --push` или `git push`")
         return 1
     print("✅ push прошёл — работа больше не только на этой машине.")
     return 0
+
+
+def commit_zone_oneshot(args):
+    """Однокомандная тропа: «сохрани вот эту зону с вот этим сообщением».
+
+    Родилась из пяти живых срывов 2026-07-23 (kod_commit-ux.md §2): путь
+    `plan` → правка сообщения в `.commit-plan` → `commit` рвался на каждом
+    стыке, а 90% случаев — один связный кусок работы с одним сообщением.
+    Здесь упрощена ОБЁРТКА, не ядро: те же `add` + pathspec, лок, сверка —
+    через общий execute_commits().
+
+    `.commit-plan` тропа НЕ читает и НЕ трогает: молча исполнить залежавшийся
+    план — значит закоммитить устаревшее чужими словами; про оставшийся план
+    она предупреждает после успеха.
+    """
+    msg = (args.message or "").strip()
+    if not args.zone:
+        print("⛔ `-m` коммитит ЗОНУ одной командой — рядом с ним нужен `--zone <путь>`.\n"
+              "   Всё дерево одной командой не коммитится: в репозитории трое писателей,\n"
+              "   и без зоны чужая работа уехала бы в твой коммит (инцидент 2026-07-11).\n"
+              "   Пакет РАЗНЫХ коммитов — через план: `plan`, затем `commit`.")
+        log_incident("commit -m без --zone", "добавить --zone <путь зоны>")
+        return 1
+    if (not msg) or (msg.startswith("<") and msg.endswith(">")) \
+            or "<что и зачем" in msg or "<сообщение" in msg:
+        print("⛔ Сообщение коммита пустое или осталось плейсхолдером — впиши,\n"
+              "   ЧТО сделано и ЗАЧЕМ, в кавычках после -m. Образец:\n"
+              f"   commit --zone {args.zone} -m \"моя-зона: починен X, чтобы Y\" --push")
+        log_incident("commit -m: сообщение пустое или плейсхолдер",
+                     "вписать в -m живое «что и зачем»")
+        return 1
+    rows = dirty(args.zone)
+    if not rows:
+        last = git("log", "-1", "--format=%h %s").stdout.strip()
+        print(f"✅ Зона `{args.zone}` чиста — коммитить нечего.\n"
+              f"   Последний коммит: {last}")
+        return 0
+    print(f"Зона `{args.zone}`: вне git {len(rows)} путей — коммичу одним коммитом.")
+    rc = execute_commits([{"msg": msg, "paths": [p for _, p in rows]}], push=args.push)
+    if rc == 0 and PLAN.exists():
+        print("\n⚠ Лежит черновик _studio/.commit-plan — эта команда его НЕ исполняла.\n"
+              "   Устарел → пересобрать `plan --force`; актуален → исполнить `commit` без -m.")
+    return rc
+
+
+def cmd_commit(args):
+    # 🔴 ПЕРВЫМ ходом, до любой работы: писать из песочницы нельзя (см. refuse_write).
+    # Раньше запрет жил только словами в каноне — и был нарушён: три отказа за
+    # сессию 22.07, репозиторий дважды вставал на полчаса для всех писателей.
+    # Правило, которое можно нарушить молча, будет нарушено (KONSTITUCIYA §11).
+    # Пустой или плейсхолдерный -m ЗДЕСЬ законен: Cowork из песочницы готовит
+    # команду (получая отказ с готовой строкой для владельца), а жмёт владелец.
+    if in_sandbox():
+        if args.message is not None:
+            m = args.message.strip() or "<что и зачем>"
+            sug = f"commit --zone {args.zone or '<зона>'} -m {shlex.quote(m)} --push"
+        else:
+            sug = "commit --push"
+        log_incident("песочница: запись в .git запрещена",
+                     "команду исполняет владелец в своём терминале")
+        return refuse_write("Коммит", suggest=sug)
+
+    # Однокомандная тропа: сообщение прямо в команде, план не нужен.
+    if args.message is not None:
+        return commit_zone_oneshot(args)
+
+    # 🔴 «Плана нет» — НЕ всегда беда. `commit` сам удаляет план после успеха,
+    # поэтому повторный запуск попадал на пугающее ❌ и читался как «коммит не
+    # сработал» — при том что он прошёл минуту назад.
+    # ЦЕНА (23.07): владелец решил, что коммит арки провалился; на деле он был
+    # сделан (`0b17189`). Сообщение обязано различать «плана не написали» и
+    # «план уже исполнен».
+    if not PLAN.exists():
+        last = git("log", "-1", "--format=%h %s").stdout.strip()
+        rows = dirty()
+        if not rows:
+            print("✅ Плана нет — и коммитить нечего: всё доехало в git.\n"
+                  f"   Последний коммит: {last}")
+            return 0
+        print(f"Плана нет, но в дереве {len(rows)} путей вне git.\n"
+              f"   Последний коммит: {last}\n"
+              "   Если это твоя работа — одной командой:\n"
+              "     `commit --zone <зона> -m \"что и зачем\" --push`,\n"
+              "   либо по плану: `plan`, затем `commit`.\n"
+              "   Если это чужая зона (Claude Code, другая сессия) — так и надо.")
+        log_incident("commit без плана при грязном дереве",
+                     "одной командой commit --zone -m, либо plan → commit")
+        return 1
+
+    try:
+        commits = parse_plan()
+    except SystemExit:
+        # parse_plan сам печатает причину (нет путей / заглушки `==` / битый формат)
+        log_incident("план не готов или битый (см. вывод команды)",
+                     "поправить _studio/.commit-plan или пересобрать plan --force")
+        raise
+
+    # Зона — МЕХАНИЗМ, а не просьба: чужое физически не уедет в твой коммит.
+    if args.zone:
+        outside = [p for c in commits for p in c["paths"] if not in_zone(p, args.zone)]
+        if outside:
+            print(f"⛔ План выходит за зону `{args.zone}` — не коммичу НИЧЕГО.\n"
+                  "   Это защита от инцидента 2026-07-11, когда авто-коммит одного\n"
+                  "   захода утащил файлы другого в свой коммит под своим именем.\n"
+                  "   Лишние пути:")
+            for p in outside[:20]:
+                print(f"     {p}")
+            if len(outside) > 20:
+                print(f"     … ещё {len(outside) - 20}")
+            log_incident(f"план выходит за зону {args.zone}",
+                         "пересобрать план по зоне: plan --zone, или чужое не трогать")
+            return 1
+
+    missing = [p for c in commits for p in c["paths"] if not (REPO / p).exists()]
+    if missing:
+        print("❌ План называет пути, которых нет на диске — ничего не коммичу:")
+        for p in missing:
+            print(f"   {p}")
+        print("→ Дерево изменилось после сборки плана. Пересобрать: `git_zona.py plan`.")
+        log_incident("план называет пути, которых нет на диске",
+                     "пересобрать план из живого дерева: plan --force")
+        return 1
+
+    print(f"План: {len(commits)} коммит(ов).\n")
+    return execute_commits(commits, push=args.push, delete_plan=True)
 
 
 # ─────────────────────────────── worktree ───────────────────────────────
@@ -801,8 +937,12 @@ def main():
                    help="перезаписать черновик, даже если сообщения уже вписаны")
     p.set_defaults(func=cmd_plan)
 
-    k = sub.add_parser("commit", help="исполнить _studio/.commit-plan")
-    k.add_argument("--zone", help="отказаться, если план выходит за этот префикс")
+    k = sub.add_parser("commit",
+                       help="закоммитить: с --zone и -m — одной командой; без -m — по плану")
+    k.add_argument("--zone", help="коммитить только этот префикс пути (с -m); "
+                                  "без -m — отказаться, если план выходит за него")
+    k.add_argument("-m", "--message",
+                   help="однокомандная тропа: закоммитить зону с этим сообщением, без плана")
     k.add_argument("--push", action="store_true", help="сразу вывезти на origin")
     k.set_defaults(func=cmd_commit)
 
@@ -826,7 +966,22 @@ def main():
     a.add_argument("--yes", action="store_true", help="выполнить (без него — только предпросмотр)")
     a.set_defaults(func=cmd_adopt)
 
-    args = ap.parse_args()
+    # parse_known_args вместо parse_args: лишние аргументы — НЕ питоновый usage,
+    # а человеческий диагноз. Цена (23.07): владелец скопировал команду с хвостом
+    # `# предпросмотр`; его zsh без interactivecomments отдал `#` и слово дальше
+    # в argv, argparse упал с «unrecognized arguments» — обе adopt-команды подряд.
+    # «unrecognized arguments: #» не говорит человеку НИ что случилось, НИ что делать.
+    args, extra = ap.parse_known_args()
+    if extra:
+        got = " ".join(extra)
+        print(f"⛔ Не понял часть команды: {got}\n"
+              "   Частая причина — хвост-«комментарий» в строке: zsh владельца передаёт\n"
+              "   `# …` программе как аргументы. Убери из команды всё после последней\n"
+              "   кавычки (или закавычь сообщение целиком) и повтори.\n"
+              "   Ничего не сделано.")
+        log_incident("запуск с мусорными аргументами",
+                     f"лишнее в команде: {got[:60]} — убрать хвост и повторить")
+        sys.exit(2)
     sys.exit(args.func(args))
 
 
