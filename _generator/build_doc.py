@@ -322,6 +322,7 @@ details.d-proof>summary{list-style:none;cursor:pointer;font-family:var(--sans);f
 details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary+.proof>.lbl,details.d-proof>summary+p>em:first-child{display:none}
 .d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em}
 .d-filter button{font-family:var(--sans);font-size:.8rem;color:var(--muted);background:var(--panel);
   border:1px solid var(--rule);border-radius:12px;padding:.18em .8em;cursor:pointer}
