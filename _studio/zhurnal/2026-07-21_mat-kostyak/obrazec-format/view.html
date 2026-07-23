@@ -245,14 +245,17 @@ details.d-sec>summary::before{content:"▸";font-family:var(--sans);font-size:1r
   display:inline-block;width:1em;margin-left:-1em;vertical-align:.25em}
 details.d-sec[open]>summary::before{content:"▾"}
 details.d-sec>summary h2{display:inline;margin:0}
-details.d-st{margin:.5em 0 .5em .2em}
+details.d-st{margin:.06em 0 .06em .2em}
 details.d-st>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:1.02rem;
-  line-height:1.45;padding:.26em .55em .26em .8em;border-left:3px solid transparent;border-radius:0 3px 3px 0}
+  line-height:1.16;padding:.03em .55em .03em .8em;border-left:3px solid transparent;border-radius:0 3px 3px 0}
 details.d-st>summary::-webkit-details-marker{display:none}
 details.d-st>summary:hover{background:var(--accent-soft)}
+details.d-st[open]{margin:.4em 0 .55em .2em}
 details.d-st[data-rod="внутреннее"]>summary{border-left-color:#4d8a66}
 details.d-st[data-rod="внешнее-пример"]>summary{border-left-color:#d4796b}
 details.d-st[data-rod="упражнение"]>summary{border-left-color:#8a6fb3}
+details.d-st[data-zona="называем-мостиком"]>summary{border-left:3px dashed #9a938a}
+details.d-st[data-zona="условно"]>summary{border-left-color:#c9962e}
 .d-num{color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
 .d-dot{display:inline-block;width:.42em;height:.42em;border-radius:50%;background:#c9962e;
   margin-left:.45em;vertical-align:.08em;opacity:.8}
@@ -266,53 +269,152 @@ details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
 details.d-proof>summary+.proof>.lbl,details.d-proof>summary+p>em:first-child{display:none}
-.d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em}
+.d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em;align-items:center;
+  position:sticky;top:0;z-index:30;background:var(--bg);padding:.5em 0 .45em;
+  box-shadow:0 5px 7px -7px rgba(33,31,27,.4)}
 .d-filter button{font-family:var(--sans);font-size:.8rem;color:var(--muted);background:var(--panel);
   border:1px solid var(--rule);border-radius:12px;padding:.18em .8em;cursor:pointer}
 .d-filter button:hover{color:var(--accent);border-color:var(--accent)}
 .d-filter button.on{color:#fff;background:var(--accent);border-color:var(--accent)}
+.d-count{font-family:var(--sans);font-size:.78rem;color:var(--muted);margin-left:auto;
+  font-variant-numeric:tabular-nums}
 .d-off{display:none}
+.d-grp h3{margin:1.1em 0 .12em}
+details.d-why{margin:.05em 0 .3em}
+details.d-sec details.d-st,details.d-sec .d-grp h3,details.d-sec .stmt,
+details.d-sec>summary h2{scroll-margin-top:64px}
+.toc .d-toc2{list-style:none;margin:.05em 0 .2em;padding:0}
+.toc .d-toc2 li{counter-increment:none;margin:.02em 0}
+.toc .d-toc2 a{padding:.08em .3em .08em 1.9em;font-size:.78rem}
+.toc .d-toc2 a::before{content:none}
+.toc .d-toc2 a.d-cur{color:var(--accent);background:var(--accent-soft);font-weight:600}
 </style>
 <h1>Образец нового формата — 4 блока</h1>
 <p>Заготовка БРИФ-фазы: на ней проверяется вид (drill-down, тихие теги, фильтр), не содержание. Четыре блока: одно понятие словаря и три утверждения (одно тривиальное, одно нетривиальное, одно упражнение).</p>
-<div class="d-filter"><button data-f="все" class="on">все</button><button data-f="внутреннее">внутреннее</button><button data-f="внешнее-пример">внешнее</button><button data-f="упражнение">упражнение</button><button data-f="нетривиально">нетривиальные</button></div>
+<div class="d-filter"><button data-f="все" class="on">все</button><button data-f="внутреннее">внутреннее</button><button data-f="внешнее-пример">внешнее</button><button data-f="упражнение">упражнение</button><button data-f="нетривиально">нетривиальные</button><span class="d-count"></span><button data-a="close">Свернуть всё</button><button data-a="open">Развернуть всё</button></div>
 <details class="d-sec" open><summary><h2 id="s0-h-1">A. Словарь (образец)</h2></summary>
-<h3>П5. Универсальное свойство</h3>
-<div class="stmt defn" id="s0-d-5"><span class="lbl">Определение 5 (универсальное свойство).</span> Универсальное свойство — не отдельный объект, а форма определения. Объект $U$, снабжённый морфизмами-структурой, задан универсальным свойством, если для любого объекта $X$ с такой же структурой существует <strong>ровно один</strong> морфизм, связывающий $X$ с $U$, при котором соответствующая диаграмма коммутативна.</div>
-<aside class="note"><strong>Зона:</strong> определяем</aside>
-<aside class="note"><strong>Зависимости:</strong> категория, коммутативная диаграмма</aside>
-<aside class="note"><strong>Оправдание:</strong> терминальный объект, произведение и экспонента заданы именно так, и одно доказательство единственности работает на все три</aside>
-<aside class="note"><strong>Не говорим:</strong> общей формулировки «универсальный объект есть начальный объект в категории конусов» — платить за категорию конусов нечем</aside>
-<aside class="note"><strong>Узел картотеки:</strong> <code>universalnoe-svojstvo</code></aside></details>
+<details class="d-st" data-zona="определяем"><summary><span class="d-num">П5</span> · Универсальное свойство</summary><div class="d-body"><div class="stmt defn" id="s0-d-5"><span class="lbl">Определение 5 (универсальное свойство).</span> Универсальное свойство — не отдельный объект, а форма определения. Объект $U$, снабжённый морфизмами-структурой, задан универсальным свойством, если для любого объекта $X$ с такой же структурой существует <strong>ровно один</strong> морфизм, связывающий $X$ с $U$, при котором соответствующая диаграмма коммутативна.</div><div class="d-quiet"><p class="d-axes"><strong>Зона:</strong> определяем · <strong>Зависимости:</strong> категория, коммутативная диаграмма · <strong>Узел картотеки:</strong> <code>universalnoe-svojstvo</code></p></div><details class="d-proof"><summary>Оправдание</summary><p>терминальный объект, произведение и экспонента заданы именно так, и одно доказательство единственности работает на все три</p></details><details class="d-proof"><summary>Не говорим</summary><p>общей формулировки «универсальный объект есть начальный объект в категории конусов» — платить за категорию конусов нечем</p></details></div></details></details>
 <details class="d-sec" open><summary><h2 id="s0-h-2">B. Утверждения (образец)</h2></summary>
 <details class="d-st" data-rod="внутреннее" data-verdikt="тривиально"><summary><span class="d-num">У51</span> · Композиция вдоль пути определена однозначно</summary><div class="d-body"><div class="stmt thm" id="s0-t-51"><span class="lbl">Утверждение 51 (композиция вдоль пути определена однозначно).</span> Для цепочки морфизмов $A_0\xrightarrow{f_1}A_1\to\dots\xrightarrow{f_n}A_n$ все расстановки скобок дают один и тот же морфизм $A_0\to A_n$; поэтому запись $f_n\circ\dots\circ f_1$ без скобок законна.</div><div class="d-quiet"><p class="d-axes">род: внутреннее · вердикт: тривиально · уровень: школьно · вход: безусловно</p><p><strong>Узел картотеки:</strong> нет в картотеке</p><p><strong>Следует из:</strong> — (независимый ход: индукция по аксиоме ассоциативности определения 1)</p></div><details class="d-proof"><summary>Доказательство</summary><div class="proof"><span class="lbl">Доказательство.</span> Индукция по $n$. При $n\le 3$ это аксиома ассоциативности определения 1. Любая расстановка скобок разрезает цепочку в точке $i$; достаточно равенства соседних расстановок $C_i=C_{i+1}$, а оно получается одним применением ассоциативности. $\blacksquare$</div></details></div></details>
 <details class="d-st" data-rod="внутреннее" data-verdikt="нетривиально"><summary><span class="d-num">У17</span> · Теорема о неподвижной точке<span class="d-dot" title="нетривиально"></span></summary><div class="d-body"><div class="stmt thm" id="s0-t-17"><span class="lbl">Утверждение 17 (теорема о неподвижной точке).</span> Пусть в декартово замкнутой категории есть морфизм $\varphi\colon A\to Y^A$, слабо сюръективный на точках. Тогда всякий морфизм $t\colon Y\to Y$ имеет неподвижную точку.</div><div class="d-quiet"><p class="d-axes">род: внутреннее · вердикт: нетривиально · уровень: требует-приручения · вход: безусловно</p><p><strong>Узел картотеки:</strong> <code>diagonal-kantora-daet-godelya</code></p><p><strong>Следует из:</strong> — (независимый ход: диагональ)</p></div><details class="d-proof"><summary>Доказательство</summary><div class="proof"><span class="lbl">Доказательство.</span> Положим $g=t\circ\mathrm{ev}\circ\langle\varphi,1_A\rangle\colon A\to Y$. По предположению найдётся точка $a$ с $\mathrm{ev}\circ\langle\varphi\circ a\circ !,1_A\rangle=g$; подстановка $a$ в себя даёт $y=t\circ y$. $\blacksquare$</div></details><p><em>Следствие (Кантор).</em> В $\mathbf{Set}$ нет сюръекции $A\to 2^A$. За теоремой приходят Кантор и Гёдель.</p></div></details>
-<details class="d-st" data-rod="упражнение"><summary><span class="d-num">Ex 1.4.2</span> · Естественное преобразование между функторами групп</summary><div class="d-body"><p><strong>Упражнение (Riehl, Ex. 1.4.2).</strong> Что такое естественное преобразование между парой параллельных функторов между двумя группами, рассматриваемыми как категории с одним объектом? (Дословно совпадает с примером, разобранным на встрече у доски.)</p><div class="d-quiet"><p class="d-axes">род: упражнение · уровень: требует-приручения · вход: безусловно</p><p><strong>Источник:</strong> Riehl «Category Theory in Context», Ex. 1.4.2 (§1.4)</p><p><strong>Статус решения:</strong> идея (полное не пишем)</p></div><details class="d-proof"><summary>Идея</summary><p><em>Идея.</em> Элемент кодовой группы, сопрягающий образ одного функтора в образ другого; естественность превращается в условие сопряжённости. Полное решение не пишем.</p></details></div></details></details>
+<details class="d-st" id="s0-ex-1.4.2" data-rod="упражнение"><summary><span class="d-num">Ex 1.4.2</span> · Естественное преобразование между функторами групп</summary><div class="d-body"><p><strong>Упражнение (Riehl, Ex. 1.4.2).</strong> Что такое естественное преобразование между парой параллельных функторов между двумя группами, рассматриваемыми как категории с одним объектом? (Дословно совпадает с примером, разобранным на встрече у доски.)</p><div class="d-quiet"><p class="d-axes">род: упражнение · уровень: требует-приручения · вход: безусловно</p><p><strong>Источник:</strong> Riehl «Category Theory in Context», Ex. 1.4.2 (§1.4)</p><p><strong>Статус решения:</strong> идея (полное не пишем)</p></div><details class="d-proof"><summary>Идея</summary><p><em>Идея.</em> Элемент кодовой группы, сопрягающий образ одного функтора в образ другого; естественность превращается в условие сопряжённости. Полное решение не пишем.</p></details></div></details></details>
 <script>
 (function () {
   "use strict";
-  Array.prototype.forEach.call(document.querySelectorAll(".d-filter"), function (bar) {
+  function all(root, sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
+  all(document, ".d-filter").forEach(function (bar) {
     if (bar.getAttribute("data-init")) { return; }
     bar.setAttribute("data-init", "1");
     var root = bar.closest("section") || document;
-    var items = root.querySelectorAll("details.d-st");
-    var chips = bar.querySelectorAll("button[data-f]");
+    var items = all(root, "details.d-st");
+    var chips = all(bar, "button[data-f]");
+    var count = bar.querySelector(".d-count");
     function apply(f) {
-      Array.prototype.forEach.call(items, function (it) {
+      var everything = f === "все";
+      items.forEach(function (it) {
         var show;
-        if (f === "все") { show = true; }
+        if (everything) { show = true; }
         else if (f === "нетривиально") { show = it.getAttribute("data-verdikt") === "нетривиально"; }
         else { show = it.getAttribute("data-rod") === f; }
         it.classList.toggle("d-off", !show);
       });
+      all(root, ".d-grp").forEach(function (g) {
+        g.classList.toggle("d-off", !everything && !g.querySelector("details.d-st:not(.d-off)"));
+      });
+      all(root, "details.d-sec").forEach(function (s) {
+        s.classList.toggle("d-off", !everything && !s.querySelector("details.d-st:not(.d-off)"));
+      });
+      if (count) {
+        var n = 0;
+        items.forEach(function (it) { if (!it.classList.contains("d-off")) { n += 1; } });
+        count.textContent = "показано " + n + " из " + items.length;
+      }
     }
-    Array.prototype.forEach.call(chips, function (chip) {
+    chips.forEach(function (chip) {
       chip.addEventListener("click", function () {
-        Array.prototype.forEach.call(chips, function (c) { c.classList.remove("on"); });
+        chips.forEach(function (c) { c.classList.remove("on"); });
         chip.classList.add("on");
         apply(chip.getAttribute("data-f"));
       });
     });
+    all(bar, "button[data-a]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var op = btn.getAttribute("data-a") === "open";
+        all(root, "details.d-st,details.d-sec").forEach(function (d) { d.open = op; });
+      });
+    });
+    apply("все");
+  });
+  if (document.documentElement.getAttribute("data-d-nav")) { return; }
+  document.documentElement.setAttribute("data-d-nav", "1");
+  function reveal(id) {
+    var el = id ? document.getElementById(id) : null;
+    if (!el) { return null; }
+    var p = el;
+    while (p) {
+      if (p.tagName === "DETAILS") { p.open = true; }
+      p = p.parentElement;
+    }
+    return el;
+  }
+  document.addEventListener("click", function (ev) {
+    var a = ev.target;
+    while (a && !(a.tagName === "A" && a.getAttribute("href"))) { a = a.parentElement; }
+    if (!a) { return; }
+    var h = a.getAttribute("href");
+    if (h.charAt(0) === "#") { reveal(h.slice(1)); }
+  });
+  window.addEventListener("DOMContentLoaded", function () {
+    if (location.hash) {
+      var el = reveal(location.hash.slice(1));
+      if (el) { el.scrollIntoView(); }
+    }
+    window.setTimeout(function () {
+      var spy = [], byId = {};
+      all(document, ".toc a").forEach(function (a) {
+        var h = a.getAttribute("href") || "";
+        if (h.charAt(0) !== "#") { return; }
+        var target = document.getElementById(h.slice(1));
+        if (!target || target.tagName !== "H2") { return; }
+        var sec = target.closest("details.d-sec");
+        if (!sec) { return; }
+        var heads = all(sec, ".d-grp h3[id]");
+        if (!heads.length) { return; }
+        var ol = document.createElement("ol");
+        ol.className = "d-toc2";
+        heads.forEach(function (h3) {
+          var li = document.createElement("li");
+          var link = document.createElement("a");
+          link.setAttribute("href", "#" + h3.id);
+          link.textContent = h3.getAttribute("data-toc") || h3.textContent;
+          li.appendChild(link);
+          ol.appendChild(li);
+          spy.push({ id: h3.id, el: h3 });
+          byId[h3.id] = link;
+        });
+        a.parentElement.appendChild(ol);
+      });
+      if (!spy.length || !window.IntersectionObserver) { return; }
+      var visible = {}, cur = null;
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { visible[e.target.id] = 1; } else { delete visible[e.target.id]; }
+        });
+        var cand = [];
+        Object.keys(visible).forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) { cand.push({ id: id, top: el.getBoundingClientRect().top }); }
+        });
+        cand.sort(function (a, b) { return a.top - b.top; });
+        var best = cand.length ? byId[cand[0].id] : null;
+        if (best && best !== cur) {
+          if (cur) { cur.classList.remove("d-cur"); }
+          best.classList.add("d-cur");
+          cur = best;
+        }
+      }, { rootMargin: "-4% 0px -70% 0px", threshold: 0 });
+      spy.forEach(function (s) { obs.observe(s.el); });
+    }, 0);
   });
 })();
 </script></article></main></div></section>

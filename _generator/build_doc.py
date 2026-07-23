@@ -302,14 +302,17 @@ details.d-sec>summary::before{content:"▸";font-family:var(--sans);font-size:1r
   display:inline-block;width:1em;margin-left:-1em;vertical-align:.25em}
 details.d-sec[open]>summary::before{content:"▾"}
 details.d-sec>summary h2{display:inline;margin:0}
-details.d-st{margin:.5em 0 .5em .2em}
+details.d-st{margin:.06em 0 .06em .2em}
 details.d-st>summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:1.02rem;
-  line-height:1.45;padding:.26em .55em .26em .8em;border-left:3px solid transparent;border-radius:0 3px 3px 0}
+  line-height:1.16;padding:.03em .55em .03em .8em;border-left:3px solid transparent;border-radius:0 3px 3px 0}
 details.d-st>summary::-webkit-details-marker{display:none}
 details.d-st>summary:hover{background:var(--accent-soft)}
+details.d-st[open]{margin:.4em 0 .55em .2em}
 details.d-st[data-rod="внутреннее"]>summary{border-left-color:#4d8a66}
 details.d-st[data-rod="внешнее-пример"]>summary{border-left-color:#d4796b}
 details.d-st[data-rod="упражнение"]>summary{border-left-color:#8a6fb3}
+details.d-st[data-zona="называем-мостиком"]>summary{border-left:3px dashed #9a938a}
+details.d-st[data-zona="условно"]>summary{border-left-color:#c9962e}
 .d-num{color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
 .d-dot{display:inline-block;width:.42em;height:.42em;border-radius:50%;background:#c9962e;
   margin-left:.45em;vertical-align:.08em;opacity:.8}
@@ -323,41 +326,152 @@ details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
 details.d-proof>summary+.proof>.lbl,details.d-proof>summary+p>em:first-child{display:none}
-.d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em}
+.d-filter{display:flex;flex-wrap:wrap;gap:.4em;margin:1.5em 0 .2em;align-items:center;
+  position:sticky;top:0;z-index:30;background:var(--bg);padding:.5em 0 .45em;
+  box-shadow:0 5px 7px -7px rgba(33,31,27,.4)}
 .d-filter button{font-family:var(--sans);font-size:.8rem;color:var(--muted);background:var(--panel);
   border:1px solid var(--rule);border-radius:12px;padding:.18em .8em;cursor:pointer}
 .d-filter button:hover{color:var(--accent);border-color:var(--accent)}
 .d-filter button.on{color:#fff;background:var(--accent);border-color:var(--accent)}
+.d-count{font-family:var(--sans);font-size:.78rem;color:var(--muted);margin-left:auto;
+  font-variant-numeric:tabular-nums}
 .d-off{display:none}
+.d-grp h3{margin:1.1em 0 .12em}
+details.d-why{margin:.05em 0 .3em}
+details.d-sec details.d-st,details.d-sec .d-grp h3,details.d-sec .stmt,
+details.d-sec>summary h2{scroll-margin-top:64px}
+.toc .d-toc2{list-style:none;margin:.05em 0 .2em;padding:0}
+.toc .d-toc2 li{counter-increment:none;margin:.02em 0}
+.toc .d-toc2 a{padding:.08em .3em .08em 1.9em;font-size:.78rem}
+.toc .d-toc2 a::before{content:none}
+.toc .d-toc2 a.d-cur{color:var(--accent);background:var(--accent-soft);font-weight:600}
 </style>"""
 
 # фильтр: чипы гасят непопадающие details.d-st по data-атрибутам (не парсингом текста).
+# Р2/Р3 (заход kod_navigacija): счётчик «показано N из M», свернуть/развернуть всё,
+# фильтр прячет опустевшие группы (.d-grp) и разделы (.d-sec) — «все» возвращает всё.
+# Р4: второй уровень TOC (группы) строится через setTimeout(0) из DOMContentLoaded —
+# ПОСЛЕ того как scrollspy шаблона PAGE соберёт свои ссылки: движковый TOC разделов
+# моих ссылок не видит и не меняет поведения; подсветка групп — свой observer, класс d-cur.
+# Р6: клик по внутреннему якорю раскрывает цепочку details над целью (иначе не доскроллит).
 # Намеренно НИ ОДНОГО символа '<'/'>' (и стрелок '=>') — см. заход про check_view.
 DRILL_JS = """<script>
 (function () {
   "use strict";
-  Array.prototype.forEach.call(document.querySelectorAll(".d-filter"), function (bar) {
+  function all(root, sel) { return Array.prototype.slice.call(root.querySelectorAll(sel)); }
+  all(document, ".d-filter").forEach(function (bar) {
     if (bar.getAttribute("data-init")) { return; }
     bar.setAttribute("data-init", "1");
     var root = bar.closest("section") || document;
-    var items = root.querySelectorAll("details.d-st");
-    var chips = bar.querySelectorAll("button[data-f]");
+    var items = all(root, "details.d-st");
+    var chips = all(bar, "button[data-f]");
+    var count = bar.querySelector(".d-count");
     function apply(f) {
-      Array.prototype.forEach.call(items, function (it) {
+      var everything = f === "все";
+      items.forEach(function (it) {
         var show;
-        if (f === "все") { show = true; }
+        if (everything) { show = true; }
         else if (f === "нетривиально") { show = it.getAttribute("data-verdikt") === "нетривиально"; }
         else { show = it.getAttribute("data-rod") === f; }
         it.classList.toggle("d-off", !show);
       });
+      all(root, ".d-grp").forEach(function (g) {
+        g.classList.toggle("d-off", !everything && !g.querySelector("details.d-st:not(.d-off)"));
+      });
+      all(root, "details.d-sec").forEach(function (s) {
+        s.classList.toggle("d-off", !everything && !s.querySelector("details.d-st:not(.d-off)"));
+      });
+      if (count) {
+        var n = 0;
+        items.forEach(function (it) { if (!it.classList.contains("d-off")) { n += 1; } });
+        count.textContent = "показано " + n + " из " + items.length;
+      }
     }
-    Array.prototype.forEach.call(chips, function (chip) {
+    chips.forEach(function (chip) {
       chip.addEventListener("click", function () {
-        Array.prototype.forEach.call(chips, function (c) { c.classList.remove("on"); });
+        chips.forEach(function (c) { c.classList.remove("on"); });
         chip.classList.add("on");
         apply(chip.getAttribute("data-f"));
       });
     });
+    all(bar, "button[data-a]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var op = btn.getAttribute("data-a") === "open";
+        all(root, "details.d-st,details.d-sec").forEach(function (d) { d.open = op; });
+      });
+    });
+    apply("все");
+  });
+  if (document.documentElement.getAttribute("data-d-nav")) { return; }
+  document.documentElement.setAttribute("data-d-nav", "1");
+  function reveal(id) {
+    var el = id ? document.getElementById(id) : null;
+    if (!el) { return null; }
+    var p = el;
+    while (p) {
+      if (p.tagName === "DETAILS") { p.open = true; }
+      p = p.parentElement;
+    }
+    return el;
+  }
+  document.addEventListener("click", function (ev) {
+    var a = ev.target;
+    while (a && !(a.tagName === "A" && a.getAttribute("href"))) { a = a.parentElement; }
+    if (!a) { return; }
+    var h = a.getAttribute("href");
+    if (h.charAt(0) === "#") { reveal(h.slice(1)); }
+  });
+  window.addEventListener("DOMContentLoaded", function () {
+    if (location.hash) {
+      var el = reveal(location.hash.slice(1));
+      if (el) { el.scrollIntoView(); }
+    }
+    window.setTimeout(function () {
+      var spy = [], byId = {};
+      all(document, ".toc a").forEach(function (a) {
+        var h = a.getAttribute("href") || "";
+        if (h.charAt(0) !== "#") { return; }
+        var target = document.getElementById(h.slice(1));
+        if (!target || target.tagName !== "H2") { return; }
+        var sec = target.closest("details.d-sec");
+        if (!sec) { return; }
+        var heads = all(sec, ".d-grp h3[id]");
+        if (!heads.length) { return; }
+        var ol = document.createElement("ol");
+        ol.className = "d-toc2";
+        heads.forEach(function (h3) {
+          var li = document.createElement("li");
+          var link = document.createElement("a");
+          link.setAttribute("href", "#" + h3.id);
+          link.textContent = h3.getAttribute("data-toc") || h3.textContent;
+          li.appendChild(link);
+          ol.appendChild(li);
+          spy.push({ id: h3.id, el: h3 });
+          byId[h3.id] = link;
+        });
+        a.parentElement.appendChild(ol);
+      });
+      if (!spy.length || !window.IntersectionObserver) { return; }
+      var visible = {}, cur = null;
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { visible[e.target.id] = 1; } else { delete visible[e.target.id]; }
+        });
+        var cand = [];
+        Object.keys(visible).forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) { cand.push({ id: id, top: el.getBoundingClientRect().top }); }
+        });
+        cand.sort(function (a, b) { return a.top - b.top; });
+        var best = cand.length ? byId[cand[0].id] : null;
+        if (best && best !== cur) {
+          if (cur) { cur.classList.remove("d-cur"); }
+          best.classList.add("d-cur");
+          cur = best;
+        }
+      }, { rootMargin: "-4% 0px -70% 0px", threshold: 0 });
+      spy.forEach(function (s) { obs.observe(s.el); });
+    }, 0);
   });
 })();
 </script>"""
@@ -368,6 +482,9 @@ DRILL_FILTER = ('<div class="d-filter">'
                 '<button data-f="внешнее-пример">внешнее</button>'
                 '<button data-f="упражнение">упражнение</button>'
                 '<button data-f="нетривиально">нетривиальные</button>'
+                '<span class="d-count"></span>'
+                '<button data-a="close">Свернуть всё</button>'
+                '<button data-a="open">Развернуть всё</button>'
                 '</div>')
 
 
@@ -423,6 +540,8 @@ def _drill_stmt(head_text, blocks, sid):
     label = ('<span class="d-num">%s</span> · %s' % (render_inline(num), render_inline(name))
              if num else render_inline(name))
     data = ""
+    if num.startswith("Ex"):                  # Р6: у Ex-блока нет врезки с якорем — якорь на самом details
+        data += ' id="%s-ex-%s"' % (sid, esc(num[2:].strip()))
     if "род" in fields:
         data += ' data-rod="%s"' % esc(fields["род"])
     if "вердикт" in fields:
@@ -452,11 +571,131 @@ def _drill_stmt(head_text, blocks, sid):
             % (data, label, dot, first_html, quiet, cut, rest_html))
 
 
+_DRILL_PON_QUIET = ("зона", "зависимости", "узел")               # тихая строка П-блока (Р1)
+_DRILL_PON_CUTS = (("оправдание", "Оправдание"), ("не-говорим", "Не говорим"))
+_DRILL_LBL_RE = re.compile(r"^\*\*[^*]*\*\*\s*")                 # жирный лейбл в начале тела поля
+
+
+def _drill_pon(head_text, blocks, sid):
+    """Группа `###` с полем `зона` (понятие словаря) → свёрнутый d-st (Р1 kod_navigacija).
+    Внутри раскрытого: врезка-определение существующим конвейером (несёт якорь s-d-N) →
+    тихая строка зона · зависимости · узел → «Оправдание» и «Не говорим» свёрнутыми
+    мини-катами (лейбл из тела снят — его дублирует summary ката) → прочие блоки хвостом.
+    Тихая метка summary — по data-zona: определяем — ничего, называем-мостиком — серый
+    пунктир, условно — амбер (CSS)."""
+    m = re.match(r"^(.*?)\.\s+(.*)$", head_text.strip(), re.S)
+    num, name = (m.group(1), m.group(2)) if m else ("", head_text.strip())
+    known = set(_DRILL_PON_QUIET) | set(k for k, _ in _DRILL_PON_CUTS)
+    fields, content_blocks = {}, []
+    for b in blocks:
+        f = _drill_field(b)
+        if f and f[0] in known:
+            fields[f[0]] = f[1]
+        else:
+            content_blocks.append(b)
+    zona = _DRILL_LBL_RE.sub("", fields.get("зона", "")).strip()
+    label = ('<span class="d-num">%s</span> · %s' % (render_inline(num), render_inline(name))
+             if num else render_inline(name))
+    data = ' data-zona="%s"' % esc(zona) if zona else ""
+    first_html = render_stream(content_blocks[0], sid)[0] if content_blocks else ""
+    rest_html = render_stream("\n\n".join(content_blocks[1:]), sid)[0] if len(content_blocks) > 1 else ""
+    quiet_ps = [render_inline(fields[k]) for k in _DRILL_PON_QUIET if k in fields]
+    quiet = ('<div class="d-quiet"><p class="d-axes">%s</p></div>' % " · ".join(quiet_ps)
+             if quiet_ps else "")
+    cuts = ""
+    for key, cap in _DRILL_PON_CUTS:
+        if key in fields:
+            body = _DRILL_LBL_RE.sub("", fields[key]).strip()
+            cuts += ('<details class="d-proof"><summary>%s</summary><p>%s</p></details>'
+                     % (cap, render_inline(body)))
+    return ('<details class="d-st"%s><summary>%s</summary>'
+            '<div class="d-body">%s%s%s%s</div></details>'
+            % (data, label, first_html, quiet, cuts, rest_html))
+
+
+def _drill_grp(head_text, blocks, sid, gid):
+    """Заголовок группы (`###` без род/зона) → ОТКРЫВАЮЩАЯ обёртка `<div class="d-grp">`
+    (Р3/Р4/Р5): h3 с якорем и data-toc (чистый текст — второй уровень TOC строит JS,
+    не завися от KaTeX), преамбула «Зачем эта группа…» и прочие абзацы — свёрнутым
+    мини-катом «зачем группа». Div закрывает вызывающий цикл: внутрь попадают d-st
+    группы — фильтр прячет опустевшую группу целиком одним классом."""
+    why = ""
+    if blocks:
+        why = ('<details class="d-proof d-why"><summary>зачем группа</summary>%s</details>'
+               % render_stream("\n\n".join(blocks), sid)[0])
+    return ('<div class="d-grp"><h3 id="%s" data-toc="%s">%s</h3>%s'
+            % (gid, esc(_toc_title(head_text)), render_inline(head_text), why))
+
+
+def _drill_anchor_scan(body, sid):
+    """Множество живых якорей потока для Р6 — по сырому источнику, ДО рендера тел
+    (упоминание может стоять раньше цели). Зеркалит якоря _typed_block (d-N/t-N)
+    и Ex-якоря _drill_stmt; несуществующий номер в множество не попадает — не линкуется."""
+    anchors = {"d": {}, "t": {}, "ex": {}}
+    for n in re.findall(r"(?m)^\*\*Определение\s+(\d+)", body):
+        anchors["d"][n] = "%s-d-%s" % (sid, n)
+    for n in re.findall(r"(?m)^\*\*(?:Теорема|Лемма|Предложение|Утверждение)\s+(\d+)", body):
+        anchors["t"][n] = "%s-t-%s" % (sid, n)
+    for n in re.findall(r"(?m)^###\s+Ex\s+(\S+?)\.\s", body):
+        anchors["ex"][n] = "%s-ex-%s" % (sid, n)
+    return anchors
+
+
+# Р6: что защищаем от линковки — summary (в т.ч. h2 секций), код-спаны, лейблы врезок
+# (лейбл — место определения, не упоминание: самоссылку не рисуем), формулы $…$/$$…$$.
+_DRILL_LINK_STASH = re.compile(
+    r"<summary\b.*?</summary>|<code\b.*?</code>|<span class=\"lbl\">.*?</span>"
+    r"|\$\$.+?\$\$|\$[^$\n]+?\$", re.S)
+# упоминания: падежные формы по букве захода (только литеральные альтернации, без
+# кириллических классов-диапазонов); последовательность чисел — «8 и 9», «14, 15», «36–40»
+_DRILL_NUMSEQ = r"\d+(?:\s*[–—-]\s*\d+)?(?:(?:,\s*|\s+и\s+)\d+(?:\s*[–—-]\s*\d+)?)*"
+_DRILL_LINK_WORD = re.compile(
+    "(?:У|у)тверждени(?:ям|ем|е|ю|я|и)\\s+" + _DRILL_NUMSEQ
+    + "|(?:О|о)пределени(?:ям|ем|е|ю|я|и)\\s+" + _DRILL_NUMSEQ
+    + r"|Ex\s+\d+(?:\.\d+)*\.[ivxlcdm]+")
+
+
+def _drill_linkify(html, anchors):
+    """Р6: текстовые упоминания «утверждение 47» / «определения 36–40» / «Ex 1.4.ii»
+    → якорные ссылки на живые блоки. Каждое число последовательности линкуется отдельно
+    (у диапазона это первое и последнее — середина текстом); номер без якоря остаётся
+    текстом. Ссылка — только вокруг числа: тег снимается check_view без потери текста."""
+    if not (anchors["d"] or anchors["t"] or anchors["ex"]):
+        return html
+    stash = []
+
+    def keep(m):
+        stash.append(m.group(0))
+        return "\x00L%d\x00" % (len(stash) - 1)
+
+    html = _DRILL_LINK_STASH.sub(keep, html)
+
+    def link_mention(m):
+        s = m.group(0)
+        if s.startswith("Ex"):
+            key = re.sub(r"^Ex\s+", "", s)
+            aid = anchors["ex"].get(key)
+            return '<a href="#%s">%s</a>' % (aid, s) if aid else s
+        kind = "t" if s.startswith(("У", "у")) else "d"
+
+        def one(nm):
+            aid = anchors[kind].get(nm.group(0))
+            return '<a href="#%s">%s</a>' % (aid, nm.group(0)) if aid else nm.group(0)
+
+        return re.sub(r"\d+", one, s)
+
+    html = _DRILL_LINK_WORD.sub(link_mention, html)
+    return re.sub(r"\x00L(\d+)\x00", lambda m: stash[int(m.group(1))], html)
+
+
 def render_stream_drill(body, sid="s0"):
     """Поток в drill-down-формате. Контракт как у render_stream: (html, toc).
-    `##` → <details open> уровня-1 (summary = стандартный h2: якорь, toc, счётчик);
-    группы `###` с полем `род` → _drill_stmt; прочие сегменты (понятия словаря,
-    преамбулы) — нетронутый render_stream (в сегментах нет `##`, счётчики не конфликтуют)."""
+    `##` → <details> уровня-1 (summary = стандартный h2: якорь, toc, счётчик; open —
+    по Р7: до последней секции с drill-блоками включительно, служебный хвост closed);
+    группы `###` с полем `род` → _drill_stmt, с полем `зона` → _drill_pon (Р1),
+    прочие `###` — заголовки групп в обёртке .d-grp (Р3–Р5); сегменты без `###`
+    (преамбулы секций) — нетронутый render_stream. Тела — сквозь _drill_linkify (Р6),
+    кроме секции «Приложение…» (там команды — исключение названо заходом)."""
     prefix, sections, cur_sec, cur_grp = [], [], None, None
     for block in re.split(r"\n\s*\n", body.strip("\n")):
         if not block.strip():
@@ -487,30 +726,58 @@ def render_stream_drill(body, sid="s0"):
             cur_sec["pre"].append(block)
         else:
             prefix.append(block)
-    toc, h2n, out = [], 0, [DRILL_CSS]
+    def grp_kind(g):
+        for b in g["blocks"]:
+            f = _drill_field(b)
+            if f and f[0] == "род":
+                return "stmt"
+            if f and f[0] == "зона":
+                return "pon"
+        return "hdr"
+
+    kinds = [[grp_kind(g) for g in s["groups"]] for s in sections]
+    has_stmt = any(k == "stmt" for ks in kinds for k in ks)
+    # Р7 (без хардкода имён): открыты секции до ПОСЛЕДНЕЙ несущей drill-блоки (род/зона)
+    # включительно; служебный хвост (C, D, E, История, Приложение) — closed. Нет ни одной
+    # содержательной — все открыты (прежнее поведение).
+    content_idx = [i for i, s in enumerate(sections)
+                   if s["head"] is not None and any(k != "hdr" for k in kinds[i])]
+    last_content = max(content_idx) if content_idx else len(sections) - 1
+    anchors = _drill_anchor_scan(body, sid)
+    toc, h2n, gn, out = [], 0, 0, [DRILL_CSS]
     if prefix:
-        out.append(render_stream("\n\n".join(prefix), sid)[0])
-    has_stmt = any(any(_drill_field(b) and _drill_field(b)[0] == "род" for b in g["blocks"])
-                   for s in sections for g in s["groups"])
+        out.append(_drill_linkify(render_stream("\n\n".join(prefix), sid)[0], anchors))
     if has_stmt:
         out.append(DRILL_FILTER)
-    for s in sections:
-        parts = []
+    for si, s in enumerate(sections):
+        parts, grp_open = [], False
         if s["pre"]:
             parts.append(render_stream("\n\n".join(s["pre"]), sid)[0])
-        for g in s["groups"]:
-            if any(_drill_field(b) and _drill_field(b)[0] == "род" for b in g["blocks"]):
+        for g, kind in zip(s["groups"], kinds[si]):
+            if kind == "stmt":
                 parts.append(_drill_stmt(g["head"], g["blocks"], sid))
-            else:                              # понятие словаря/прочее — текущее оформление целиком
-                parts.append(render_stream("\n\n".join(["### " + g["head"]] + g["blocks"]), sid)[0])
+            elif kind == "pon":                # понятие словаря — свёрнутый d-st (Р1)
+                parts.append(_drill_pon(g["head"], g["blocks"], sid))
+            else:                              # заголовок группы — обёртка до следующей группы
+                if grp_open:
+                    parts.append("</div>")
+                gn += 1
+                parts.append(_drill_grp(g["head"], g["blocks"], sid, "%s-g-%d" % (sid, gn)))
+                grp_open = True
+        if grp_open:
+            parts.append("</div>")
+        chunk = "\n".join(parts)
         if s["head"] is None:
-            out.append("\n".join(parts))
+            out.append(_drill_linkify(chunk, anchors))
             continue
         h2n += 1
         hid = "%s-h-%d" % (sid, h2n)
         toc.append((hid, _toc_title(s["head"])))
-        out.append('<details class="d-sec" open><summary><h2 id="%s">%s</h2></summary>\n%s</details>'
-                   % (hid, render_inline(s["head"]), "\n".join(parts)))
+        sec_html = ('<details class="d-sec"%s><summary><h2 id="%s">%s</h2></summary>\n%s</details>'
+                    % (" open" if si <= last_content else "", hid, render_inline(s["head"]), chunk))
+        if not s["head"].lstrip().startswith("Приложение"):
+            sec_html = _drill_linkify(sec_html, anchors)
+        out.append(sec_html)
     out.append(DRILL_JS)
     return "\n".join(out), toc
 
