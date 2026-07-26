@@ -4,21 +4,25 @@
 >
 > **Правило регистрации.** Новый узел → строка в индексе ТЕМ ЖЕ ходом. Любой `id` из `связи` обязан резолвиться здесь.
 >
-> **Статус: волна 1 закрыта, волна докачки Downloads +4, волна «Ландшафт» +2 (2026-07-16/17), 91 узел.** Зоны A (категория→CCC) и B (функторы→NNO) размечены. **LCCC: вердикт по «Рифме» вынесен** (Riehl §4.5 прочитан целиком — `riehl-lccc-donor` черновик + `verdict-rifma-lccc`). **Ещё не размечено: топос как отдельная зона · Ω-детали · пучки · мост в HoTT** — долг волны 2 (Маклейн гл.4 — `maclane-topos-v-glave-sopryazhennyh`).
+> **Ветки сведены 2026-07-26** (заход `svedenie-i-gejty`): `arka/konsolidacia-l1` влита в `arka/mat-kostyak`, две независимые записи картотеки снова одна. Схлопнуто 4 смысловых дубля — на месте проигравшего стоит карточка `род: редирект`, id жив, старые ссылки не бьются. **Число узлов не вписывается руками** (`KONSTITUCIYA §10`), оно считается: `python3 _generator/tools/check_kartoteka.py teoriya-kategoriy/kartoteka/KARTA-OBLASTI.md --gates`.
+>
+> **Статус: волна 1 закрыта, волна докачки Downloads +4, волна «Ландшафт» +2 (2026-07-16/17)** *(число «91 узел» из этой строки снято 26.07 как протухшее — см. команду выше)*. Зоны A (категория→CCC) и B (функторы→NNO) размечены. **LCCC: вердикт по «Рифме» вынесен** (Riehl §4.5 прочитан целиком — `riehl-lccc-donor` черновик + `verdict-rifma-lccc`). **Ещё не размечено: топос как отдельная зона · Ω-детали · пучки · мост в HoTT** — долг волны 2 (Маклейн гл.4 — `maclane-topos-v-glave-sopryazhennyh`).
 >
 > **Уровень зала — фильтр всех карточек:** `../SPEKA.md §Калибровка`. Матрицы — отлично; векторные пространства — помнят; группа/кольцо — слайд; модули — не знают.
 
 ## Индекс по роду
 
-- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij` `mot-kommutativnaya-diagramma` `mot-ekvivalentnost-dlya-finala`
+- **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij` `mot-kommutativnaya-diagramma` `mot-ekvivalentnost-dlya-finala` `krasivaya-biekciya-vhod-l1` `antiburbakizm-zoopark` `invarianty-cherez-moschnosti`
 - **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost` `pervaya-teorema-izomorfizma` `ekvivalentnost-cherez-nat-izo`
-- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `tangly-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya` `nat-preobr-rukami` `centr-gruppy-ne-funktor` `izo-kategorij-tri-opredeleniya` `delenie-na-3-konvej-dojl` `net-retrakcii-d2-s1` `gruppovoj-obekt-grp-grp-ab` `rank-nullity-kanon-izo` `orbita-stabilizator-kanon` `funktor-shlopyvaet-minimalno` `ciklicheskie-gruppy-bez-kanona` `veshch-x2plus1-izo-c` `affinnoe-vs-vektornoe-neestestvenno` `konechnaya-abeleva-haraktery` `umnozhenie-est-est-preobr` `centr-est-est-preobr-id` `mat-ekvivalentna-ne-izomorfna` `biekciya-ne-izo-v-rel` `boorng-izo-boo` `kategoriya-fejnmana` `kategoriya-algoritmov-sostoyanij` `obekty-i-diagrammy-kak-funktory`
+- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost` `pervaya-teorema-izomorfizma` `ekvivalentnost-cherez-nat-izo` `ekvivalentnost-est-izomorfizm-etazhom-vyshe` `htop-ne-konkretiziruema` `podobie-matric-izo-v-funktorah` `raskraski-inekcii-ne-funktor` `set-nad-x-est-semejstvo` `retrakciya-v-set-est-aksioma-vybora`
+- **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `tangly-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya` `nat-preobr-rukami` `centr-gruppy-ne-funktor` `izo-kategorij-tri-opredeleniya` `delenie-na-3-konvej-dojl` `net-retrakcii-d2-s1` `gruppovoj-obekt-grp-grp-ab` `rank-nullity-kanon-izo` `orbita-stabilizator-kanon` `funktor-shlopyvaet-minimalno` `ciklicheskie-gruppy-bez-kanona` `veshch-x2plus1-izo-c` `affinnoe-vs-vektornoe-neestestvenno` `konechnaya-abeleva-haraktery` `umnozhenie-est-est-preobr` `centr-est-est-preobr-id` `mat-ekvivalentna-ne-izomorfna` `biekciya-ne-izo-v-rel` `boorng-izo-boo` `kategoriya-fejnmana` `kategoriya-algoritmov-sostoyanij` `obekty-i-diagrammy-kak-funktory` `atiyah-macdonald-funktor-bez-slova` `avtomat-kak-funktor-ep` `fmap-ne-vsegda-suschestvuet` `funktor-reshenij-uravnenij` `hatcher-brauer-v-rodnom-kontekste` `klein-affinnoe-proektivnoe-ek` `lenta-mebiusa-semejstvo-nad-okruzhnostyu` `puti-v-prostranstve-ne-kategoriya` `segal-gamma-ekvivalentnost` `vneshnyaya-aksioma-vybora` `rasscheplenie-vlozhenij-po-kategoriyam`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni` `skomkannaya-karta`
-- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov` `mo-bank-neestestvennost` `v-dual-ne-primer-neestestvennosti` `zoopark-ekvivalentnostej` `gomotopiya-est-est-preobr` `uprazhneniya-ru-l1`
+- **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov` `mo-bank-neestestvennost` `v-dual-ne-primer-neestestvennosti` `zoopark-ekvivalentnostej` `gomotopiya-est-est-preobr` `uprazhneniya-ru-l1` `2-kategoriya-imya-uzhe-postroennomu` `bank-uprazhnenij-ohvat` `dolg-razvernut-palais-i-sem-derevev` `ep-gomotopiya-klassificiruyuschee` `gelfand-manin-dlya-neznayuschego` `metod-slovar-surrogat` `shafarevich-ot-primera` `spivak-funktory-grafy-poryadki` `vajb-processnyj-chetvertyj-klass` `vakil-motivaciya-pered-yazykom` `gejt-otneseniya-l1` `chetyre-lupa-l1` `ep-etazh-bez-instrumenta` `primery-vsegda-vneshnee` `vhod-l1-podveshen` `dozirovka-i-ekskurs` `vtoraya-os-kalibrovki-lektor` `vspyshki-ryadom-s-liniyami` `anons-test` `tozhdestvo-protiv-velichiny` `menyat-korpus-a-ne-vyborku` `arka-kanonicheskih-izomorfizmov` `hom-funktor-zapakovyvaet-associativnost`
 - **мостик:** `nno-prodolzhenie` `riehl-lccc-donor` `pf-est-pi-tip` `cep-univalentnost` `put-ccc-topos` `most-sloi-iz-proizvedenija`
-- **инструмент/донор:** `instrument-quiver` `donor-cti` `instrument-prochitat-hom`
+- **инструмент/донор:** `instrument-quiver` `donor-cti` `instrument-prochitat-hom` `retrakt-priyom` `lambda-test-zapret`
 
+- **приём:** `konstrukcii-kategorij-posle-primera` `pervaya-chetvert-nachinaetsya-s-biekcij` `tri-klassifikacionnye-zadachi-karkas`
+- **редирект** (карточка схлопнута, id жив ради старых ссылок)**:** `retrakt-parnyj-vopros-k-kategorii` `klassifikaciya-est-forma-otveta` `primery-ne-blok-a-rassypany` `zakaz-metateorema-dlya-estestvennosti`
 - **затравка:** `effektivnyj-topos-obraz` `assoc-linal-vysshaya-algebra` `assoc-ordinaly-maclane` `assoc-topologiya-razlichit-figury` `assoc-graf-so-strelkami-kolchan`
 
 ## Нити
@@ -3085,8 +3089,22 @@ id: opora-kombinatorika-potolok
   ⚠ Но одна строка отсюда несущая и уходит в `nno-initial-rig`: FinSet{x} — «a kind of **categorified
   version of the rig of formal power series** N{x}». Это единственное место в корпусе, где многочлены
   и категорификация встречаются (см. `verdict-shkolnye-opory` §Многочлены).
-связи: opora-kombinatorika-l3, kategorifikaciya-arifmetiki, nno-initial-rig, verdict-shkolnye-opory
-уровень: вне курса (потолок; камео — на усмотрение аналитика)
+🔴 **ВЕРДИКТ «ВНЕ КУРСА» ОТМЕНЁН ВЛАДЕЛЬЦЕМ. Дата данных 2026-07-19/20, внесено 2026-07-26 заходом консолидации.**
+  Владелец, увидев материал вживую (`2026-07-20_teorkat-motivacia/SESSIYA.md:758`): *«Я только сейчас
+  понял, насколько это классный язык… Это просто бомбическая какая-то штука. Я готов просто про эту
+  первую лекцию рассказать и всё»* — и дневник фиксирует это как **калибровочную точку арки**:
+  «всё, что найдётся дальше, меряется об него». Отбраковка была пересмотрена явным ходом
+  (`SESSIYA.md:1163`): *«мы выкопали золото и выбросили»*.
+  **Почему старый вердикт был неправ — правило, которое из этого следует** (`SESSIYA.md:1164`):
+  «сложно для зала» НЕ есть основание для отбраковки. Высоким обязан быть ПРИЗ, низким — только ВХОД.
+  Три довода «против зала» выше (ряд Тейлора, биномиальные свёртки, функтор в определении) меряли
+  ВЫСОТУ приза, а не высоту входа, и потому отсекли эталонный сюжет.
+  Вход же у species низкий и уже собран: `2026-07-20_teorkat-motivacia/VIDY/01-estestvennost.md`
+  написан без слов «вид», «функтор» и «категория» в постановке.
+  ⇒ комбинаторные виды — материал Л1, а не потолок; они же несут гипотезу входа
+  (`krasivaya-biekciya-vhod-l1`) и вторую образцовую точку критерия поиска рядом с ТКТП.
+связи: opora-kombinatorika-l3, kategorifikaciya-arifmetiki, nno-initial-rig, verdict-shkolnye-opory, krasivaya-biekciya-vhod-l1
+уровень: зал берёт (вход низкий — по `VIDY/01-estestvennost.md`; приз высокий, и это довод ЗА)
 источник: `../istochniki/pdf/baez-dolan-finite-sets-to-feynman-diagrams.pdf` §4, pdf с.17–21 (сверено глазами 17.07); Riehl печ. с.100–101 (species, по разведке — глазами не читал)
 статус: черновик
 ```
@@ -4953,7 +4971,7 @@ id: funktor-reshenij-uravnenij
   Владелец: «наверное, один из важнейших примеров функторов вообще в математике».
   ⛔ СТОП там, где начинается представимость этого функтора (функтор точек, Spec) — это Йонеда, Л2.
   До стопа — целый слайд «функторы из алгебраической геометрии».
-связи: functor, funktor-most, klein-affinnoe-proektivnoe-ek
+связи: functor, retrakt-priyom, klein-affinnoe-proektivnoe-ek
 уровень: зал берёт (голая форма); полная форма (функтор точек, Мамфорд «Red Book») — контекст
 источник: диалог владельца 2026-07-26; для полной формы — Мамфорд «Red Book», Vakil «Rising Sea» гл.1
 статус: seed
@@ -4972,9 +4990,9 @@ id: ep-gomotopiya-klassificiruyuschee
   отображениями». У58 честно оговаривает, что в нашей зоне это аналогия, а не теорема, — здесь
   назван МОСТ, которым она становится теоремой. Произносится одной фразой, не разворачиваясь.
   Второе касание топологии рядом с Брауэром (анонс обещал топологию).
-связи: nat-transf, functor, У58
+связи: nat-transf, functor
 уровень: требует приручения (классифицирующее пространство — только назвать)
-источник: ../istochniki/pdf/ru-fetisov-lekciya-1-TEXT.txt, §6 «Категория категорий»
+источник: ../istochniki/pdf/ru-fetisov-lekciya-1-TEXT.txt, §6 «Категория категорий» · MAT-KOSTYAK У58
 статус: seed
 ```
 
@@ -4994,7 +5012,7 @@ id: vakil-motivaciya-pered-yazykom
   множеств и показывает, что человек из другой математической культуры определил бы его иначе —
   «а это очевидно одно и то же». Это центральный вопрос нашего курса, изложенный человеком,
   которому категории понадобились по работе.
-связи: motivaciya-yazyka, shafarevich-ot-primera, gelfand-manin-dlya-neznayuschego
+связи: antiburbakizm-zoopark, shafarevich-ot-primera, gelfand-manin-dlya-neznayuschego
 уровень: зал берёт
 источник: ../istochniki/pdf/vakil-rising-sea-2015.pdf, гл.1 §1.1 Motivation
 статус: seed
@@ -5043,7 +5061,7 @@ id: atiyah-macdonald-funktor-bez-slova
   иллюстрация DUH Т13; (2) доказательство, что фильтр по терминам теряет материал, — отсюда
   метод surrogate-словаря (см. `metod-slovar-surrogat`).
   ⛔ Сам сюжет (Spec) для Л1 за потолком — берём как приём и как аргумент о методе, не как пример залу.
-связи: metod-slovar-surrogat, funktor-reshenij-uravnenij, atiyah-macdonald-uprazhneniya
+связи: metod-slovar-surrogat, funktor-reshenij-uravnenij, atiyah-macdonald-funktor-bez-slova
 уровень: контекст (Spec за потолком Л1)
 источник: ../istochniki/pdf/atiyah-macdonald-commutative-algebra.pdf гл.1 упр.21
 статус: seed
@@ -5105,9 +5123,9 @@ id: puti-v-prostranstve-ne-kategoriya
   ⚠ Историческая мина: в архивной рамке заказчик требовал фундаментальный группоид в Л1 как
   единственное «обязательно», и это ломало три лекции (`KARTA-OBLASTI §Дыра №2`). Берём ПУТИ
   как контрпример к аксиомам, а не группоид как тему.
-связи: put-kak-morfizm, 2-kategoriya-imya-uzhe-postroennomu, П16
+связи: puti-v-prostranstve-ne-kategoriya, 2-kategoriya-imya-uzhe-postroennomu
 уровень: зал берёт (нарушение аксиом видно пальцем); группоид — контекст
-источник: классика; у Хатчера §1.1, у Маклейна §1.5 печ. с.31–32
+источник: классика; у Хатчера §1.1, у Маклейна §1.5 печ. с.31–32 · MAT-KOSTYAK П16
 статус: seed
 ```
 ```
@@ -5206,7 +5224,7 @@ id: krasivaya-biekciya-vhod-l1
   — заход `zahod-bijekciya-para-katalan.md` ставит ровно этот вопрос («критерий не „есть ли биекция“,
   а „как до неё додуматься“»), плюс `razbor-bijekcii/razbor.md` и второй заход про «мало крупных
   движений». Там уже есть числа, разбор и проверенные формулировки.
-связи: sym-ord-net-estestvennoj, dekategorifikaciya-teryaet, biekcii-moschnosti
+связи: mo-bank-neestestvennost, dekategorifikaciya-teryaet, krasivaya-biekciya-vhod-l1
 уровень: зал берёт (это его собственный опыт)
 источник: владелец, 2026-07-26; материал — lsh-2026-perechislitelnaya/otkrytaya-lekcia-paskal/
 статус: seed
@@ -5241,25 +5259,9 @@ id: dolg-razvernut-palais-i-sem-derevev
 
 ```
 id: retrakt-parnyj-vopros-k-kategorii
-род: инструмент
-суть: ретракция/сечение = изоморфизм, у которого оставили половину условий; спрашивается у каждой новой категории наравне с «что здесь изоморфизм»
-котёл: математика
-находка: ⭐⭐ Формулировка владельца 27.07, точнее прежней записи: «я понял эту симметрию — это
-  оставить половину условий изоморфизма; по сути это такой же язык, как язык изоморфизма».
-  То есть ретракт НЕ теорема, а вторая половина словаря ВОПРОСОВ к незнакомой категории:
-  «что такое изоморфизм здесь / что такое ретракция здесь / есть ли в этом разумный смысл».
-  Три хода: (1) функтор сохраняет ретракты — одна строка; (2) ⭐ ОБРАТНЫЙ: ретракта нет ⇒
-  функтора нет — способ доказывать НЕСУЩЕСТВОВАНИЕ конструкции, несёт несущую ось Л1;
-  (3) ретракт переживает применение любого функтора, потому и работает детектором.
-  ⚠ ПОТЕРЯ КОНСОЛИДАЦИИ, зафиксирована: в MAT-KOSTYAK слово «ретракт» встречалось ОДИН раз,
-  внутри чужого утверждения, как топологический пример; понятия в словаре не было, хотя Р16
-  записал его сквозной линией лекции, а Р26 отметил непопадание второго хода. Восстановлено.
-  Расщепляющийся идемпотент отклонён владельцем: «если нигде не возникает в интересной
-  математике, то и не нужно».
-связи: vneshnyaya-aksioma-vybora, sohranenie-protiv-otrazheniya, raskraski-inekcii-ne-funktor, centr-est-est-preobr-id, hatcher-brauer-v-rodnom-kontekste, rasscheplenie-vlozhenij-po-kategoriyam
-уровень: зал берёт (одна строка на определение, одна на теорему)
-источник: диалог владельца 2026-07-27; язык «расщепимый моно/эпиморфизм, сечение» — Фетисов, вводная лекция §5
-статус: seed
+род: редирект
+суть: слито в retrakt-priyom 2026-07-26 (заход svedenie-i-gejty); содержание там, старые ссылки не бьются
+связи: retrakt-priyom
 ```
 ```
 id: retrakciya-v-set-est-aksioma-vybora
@@ -5278,7 +5280,7 @@ id: retrakciya-v-set-est-aksioma-vybora
   эквивалентности У24, которое владелец решил давать. Владелец: «классное замечание, и оно
   действительно нам потом играет дальше».
   ⚠ Про статус AC для конечного и счётного случаев владелец проверит сам.
-связи: vneshnyaya-aksioma-vybora, retrakt-parnyj-vopros-k-kategorii, u24-dokazyvaem-vybor-oplachen
+связи: vneshnyaya-aksioma-vybora, retrakt-priyom, u24-dokazyvaem-vybor-oplachen
 уровень: зал берёт (сюръекция и инъекция — школа)
 источник: диалог владельца 2026-07-27; Riehl Ex 1.2.viii; BANK-UPRAZHNENIJ U013
 статус: seed
@@ -5348,7 +5350,7 @@ id: rasscheplenie-vlozhenij-po-kategoriyam
   выбранного мира, и это функториально видно. Рифма к vneshnyaya-aksioma-vybora («всякий
   эпиморфизм расщепим» — свойство мира, а не аксиома оснований).
   Владелец 27.07: «хороший внешний кандидат, надо обсуждать».
-связи: retrakt-parnyj-vopros-k-kategorii, vneshnyaya-aksioma-vybora, pervaya-teorema-izomorfizma, mot-obratimost-i-universum
+связи: retrakt-priyom, vneshnyaya-aksioma-vybora, pervaya-teorema-izomorfizma, mot-obratimost-i-universum
 уровень: требует приручения (полупрямое произведение — не произносить, показать на Z/4)
 источник: диалог владельца 2026-07-27; предложено аналитиком, владелец принял к обсуждению
 статус: seed
@@ -5372,9 +5374,25 @@ id: tri-klassifikacionnye-zadachi-karkas
   моей арки из трёх карточек недостаточно, и проверка это подтвердила. Самое сильное там:
   Nat(U,U)≅ℤ для забывающего Grp→Set (ровно то, что владелец вспомнил); Nat(Id,Id)=центр;
   ЕП между функторами предпорядков — не более одного; объекты FinVect до изоморфизма = ℕ.
-связи: nat-preobr-rukami, centr-est-est-preobr-id, mat-ekvivalentna-ne-izomorfna, mo-bank-neestestvennost, arka-kanonicheskih-izomorfizmov
-уровень: — (служебное, про каркас)
-источник: диалог владельца 2026-07-27; VAJB-kategorij.md §3; Р20
+  ⊕ СЛИТО из `klassifikaciya-est-forma-otveta` 2026-07-26 — та же находка второй стороной, и она
+  несёт ПОПРАВКУ владельца 27.07, снимающую прежнюю редакцию каркаса: «нужно не называть задачи,
+  а называть утверждения… для задачи это не то чтобы сильно много добавляет». ⚠ Отсюда имя карточки
+  («задачи») отстаёт от формулировки владельца; id не переименован намеренно — переименование рвёт
+  рёбра (`STANDART-uzla §Правила`). Разница операциональна: «расклассифицировать все ЕП между двумя
+  функторами» — упражнение, его место определяется тем, где стоит пример; «ретракта нет ⇒ функтора
+  нет» — инструмент, он получает имя и становится частью языка. От классификации остаётся ФИЛЬТР
+  ОТБОРА и ФОРМА ОТВЕТА (пусто · ровно один · вот полный список). Рабочее определение (`DUH §3`) —
+  описание множества функторов или преобразований на языке, где слова «функтор» уже нет.
+  Носители по этажам: ОБЪЕКТЫ — объекты FinVect до изоморфизма = натуральные числа, ответ школьный
+  и список полный, отсюда Mat есть скелет; в предпорядке изоморфные объекты равны и классификация
+  вырождена, и это содержательный факт. ФУНКТОРЫ — функтор между группами = гомоморфизм, между
+  предпорядками = монотонное отображение, BG→Set = G-множества, 2Cob→Vect = алгебры Фробениуса.
+  ЕП (богатейший слот) — Nat(U,U)≅ℤ для забывающего Grp→Set, Nat(Id,Id) = центр, ЕП между функторами
+  предпорядков не более одного, и пустой ответ: естественной биекции Sym↔Ord нет.
+  ⚠ Владелец в лекции этот принцип НЕ объявляет — примеры отбираются по нему молча.
+связи: nat-preobr-rukami, centr-est-est-preobr-id, mat-ekvivalentna-ne-izomorfna, mo-bank-neestestvennost, arka-kanonicheskih-izomorfizmov, ep-etazh-bez-instrumenta
+уровень: зал берёт (как форма ответа, без объявления принципа)
+источник: диалог владельца 2026-07-27; VAJB-kategorij.md §3; Р20 · _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:178, :530-537, :647 · ../../teorkat-vvedenie/DUH.md §3
 статус: seed
 ```
 ```
@@ -5394,7 +5412,11 @@ id: pervaya-chetvert-nachinaetsya-s-biekcij
   позже, в блоке ЕП), а через ПРООБРАЗ ПОДМНОЖЕСТВА — X↦2^X работает назад. Поправка владельца.
   ⚠ Не снято: «комбинаторные виды ко- или контравариантны? Это и то и то можно сформулировать
   одинаково. Не до конца понимаю, как правильно сказать, и это меня смущает».
-связи: krasivaya-biekciya-vhod-l1, contravariance, dual-not-natural-proof, kombinatornye-vidy
+  ⚖ НЕ ДУБЛЬ, а пара к `vhod-l1-podveshen` (проверено 2026-07-26, заход svedenie-i-gejty): здесь —
+  ПОРЯДОК подачи первой четверти (что за чем идёт, если четверть уже строится), там — СТАТУС
+  решения о входе (владелец подвесил его до полной консолидации). Порядок годен и после того, как
+  вход выберут; выбор входа этим порядком не задаётся.
+связи: krasivaya-biekciya-vhod-l1, contravariance, dual-not-natural-proof, kombinatornye-vidy, vhod-l1-podveshen
 уровень: — (служебное, про подачу)
 источник: диалог владельца 2026-07-27
 статус: seed
@@ -5423,44 +5445,392 @@ id: hom-funktor-zapakovyvaet-associativnost
 ```
 ```
 id: primery-ne-blok-a-rassypany
-род: приём
-суть: примеры категорий не собираются в галерею — каждый вводится ровно там, где становится нужен, и мотивирует следующее понятие
-котёл: подача
-находка: ⭐⭐ Владелец 27.07: «это не просто в одном месте галереи — это примеры, которые разбросаны
-  и подводят к разным понятиям. Если какой-то пример интересен только с точки зрения естественных
-  преобразований, а сам функтор там неинтересен, — мы полностью определяем эту категорию впервые
-  уже ПОСЛЕ того, как ЕП введены».
-  🎯 ОБРАЗЕЦ, названный им: конечный Стоун появляется только в финальном блоке, и в порядке
-  «сначала показываем, что это НЕ изоморфизм категорий, а потом говорим, что есть понятие
-  эквивалентности». Пример мотивирует определение, а не иллюстрирует его.
-  ⚠ СЛЕДСТВИЕ ДЛЯ АРХИТЕКТУРЫ: раздел-галерея может не выжить вовсе. Владелец: «может быть, эта
-  галерея вообще растащится: частично в A, частично в C, частично в D. Станет понятно, когда мы
-  поймём набор внутренних примеров и микросюжетов». Главный открытый вопрос архитектуры Л1, и
-  изнутри внутреннего материала он не решается — нужен разбор внешнего.
-связи: tri-klassifikacionnye-zadachi-karkas, vajb-processnyj-chetvertyj-klass, ekvivalentnost-primery-vp-boole
-уровень: — (служебное, про подачу)
-источник: диалог владельца 2026-07-27
-статус: seed
+род: редирект
+суть: слито в primery-vsegda-vneshnee 2026-07-26 (заход svedenie-i-gejty); содержание там, старые ссылки не бьются
+связи: primery-vsegda-vneshnee
 ```
 ```
 id: zakaz-metateorema-dlya-estestvennosti
-род: находка
-суть: блоку естественных преобразований нужен свой ретракт — одно утверждение-инструмент, срабатывающее в нескольких местах
+род: редирект
+суть: слито в ep-etazh-bez-instrumenta 2026-07-26 (заход svedenie-i-gejty); содержание там, старые ссылки не бьются
+связи: ep-etazh-bez-instrumenta
+```
+## Карточки — консолидация проекта (заход `konsolidacia-l1`, 2026-07-26)
+
+> Заведены сплошной вычиткой десяти теоркат-арок. Каждая закрывает позицию, которая осела в дневниках или в рамке, но дома в картотеке не имела. Реестр происхождения — `../../_studio/zhurnal/2026-07-25_lekcia-1/ISTOCHNIK-PRAVDY-teorkat.md`.
+
+```
+id: retrakt-priyom
+род: инструмент/донор
+суть: из rs=1 любой функтор даёт F(r)F(s)=1 — уравнение читается в обе стороны и обе дают теоремы несуществования
 котёл: математика
-находка: 🔴 ПРЯМОЙ ЗАКАЗ владельца 27.07, не выполненный: «вопрос, как записать в куске про
-  естественное преобразование какую-то мега-теорему, которая является метатеоремой и проявляется
-  в разных местах. Это очень хорошо, когда есть такие мета-утверждения — это реально математика
-  уже тогда начинается. Как с ретрактом. Было бы здорово найти».
-  У ретракта такое есть: «ретракта нет ⇒ функтора нет» — способ доказывать несуществование.
-  У естественности пока нет ничего сравнимого.
-  Кандидат — У47 (естественная биекция Hom даёт изоморфизм объектов), НО владелец поставил жёсткое
-  условие: «надо придумать примеры категорий, где напрямую ответить на вопрос об изоморфности
-  сложно, а через 47-е проще. Честно говоря, не могу представить себе такого. Если не получится —
-  это вообще не нужно». То есть У47 берётся только вместе с примером применения.
+находка: ⭐ ГЛАВНЫЙ ИНСТРУМЕНТ ЭТАЖА ОБЪЕКТОВ, и он был потерян: жил только в дневнике
+  (`2026-07-25_lekcia-1/SESSIYA.md`, 31 упоминание) и прозой в `DUH §3`, карточки не было, при том что
+  `raskraski-inekcii-ne-funktor` уже ссылалась на этот id как на существующий. Два прочтения одного
+  уравнения: знаем функтор ⇒ ретракции нет (диск на окружность, ℤ→0→ℤ); знаем ретракцию ⇒ функтора нет
+  (центр группы, C₂→1→C₂; раскраски-инъекции, k!→∅→k!). «Функтор сохраняет изоморфизмы» — ЧАСТНЫЙ
+  случай (изоморфизм = ретракт в обе стороны), поэтому приём вводится не новой темой, а ОСЛАБЛЕНИЕМ
+  условия у факта, который зал уже принял как очевидный, — и из ослабленного падают запреты.
+  Формулировка владельца 27.07, точнее прежней, ДОСЛОВНО: «я понял эту симметрию — это оставить
+  половину условий изоморфизма; по сути это такой же язык, как язык изоморфизма» ⇒ ретракт есть
+  ВТОРАЯ ПОЛОВИНА словаря вопросов к незнакомой категории, рядом с вопросом «что здесь изоморфизм». Почему работает именно он: ретрактность выживает при применении
+  любого функтора и потому годится в детекторы; изоморфизм тоже выживает, но слишком силён — интересные
+  объекты обычно не изоморфны. Достаточно слабое, чтобы встречаться часто, достаточно жёсткое, чтобы
+  запрещать. ⚠ Слоган «ретракт не переживает сжатия» владельцем ОТКЛОНЁН как мутный — подаём обычной
+  теоремой, слово «ретракт» произносится.
+  ⊕ СЛИТО из `retrakt-parnyj-vopros-k-kategorii` 2026-07-26 (та же находка, записанная второй
+  стороной): ретракт НЕ теорема, а вторая половина СЛОВАРЯ ВОПРОСОВ к незнакомой категории —
+  «что такое изоморфизм здесь / что такое ретракция здесь / есть ли в этом разумный смысл»;
+  спрашивается у каждой новой категории наравне с вопросом об изоморфизме. Три хода одним списком:
+  (1) функтор сохраняет ретракты — одна строка; (2) ⭐ ОБРАТНЫЙ: ретракта нет ⇒ функтора нет,
+  способ доказывать НЕСУЩЕСТВОВАНИЕ конструкции, несущая ось Л1; (3) ретрактность переживает
+  применение любого функтора — потому и работает детектором.
+  ⚠ ВТОРАЯ ПОТЕРЯ, зафиксирована той же стороной: в `MAT-KOSTYAK` слово «ретракт» встречалось ОДИН
+  раз, внутри чужого утверждения, как топологический пример; понятия в словаре не было, хотя Р16
+  записал его сквозной линией лекции, а Р26 отметил непопадание второго хода. Восстановлено.
+  Расщепляющийся идемпотент отклонён владельцем: «если нигде не возникает в интересной математике,
+  то и не нужно».
+связи: net-retrakcii-d2-s1, centr-gruppy-ne-funktor, raskraski-inekcii-ne-funktor, functor, ep-etazh-bez-instrumenta, vneshnyaya-aksioma-vybora, sohranenie-protiv-otrazheniya, centr-est-est-preobr-id, hatcher-brauer-v-rodnom-kontekste, rasscheplenie-vlozhenij-po-kategoriyam
+уровень: зал берёт (одна строка на определение, одна на теорему)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:133-140, :416, :522, :610 · ../../teorkat-vvedenie/DUH.md §3 · диалог владельца 2026-07-27; язык «расщепимый моно/эпиморфизм, сечение» — Фетисов, вводная лекция §5
+статус: seed
+```
+```
+id: gejt-otneseniya-l1
+род: находка
+суть: позиция относится к тому этажу, на языке которого формулируется её УСЛОВИЕ; а стоит там, где введено всё, что нужно её ДОКАЗАТЬ
+котёл: математика
+находка: ⭐ Правило, которого владелец требовал прямо: «должно быть чётко понятно, куда относятся
+  конструкции в категориях… там должны быть гейты настроены, по которым сразу понятно, что куда
+  относится». Заведено ради претензии «математический костяк расползается: нет чёткой линии, как из
+  одного объекта рождается другое». Диагноз: линия языка сама по себе прямая и единственная —
+  категория → функтор → ЕП → эквивалентность; расползлись четыре вещи, навешенные сбоку, и гейт
+  прикрепляет каждую. Проверен на трёх трудных случаях: конструкции категорий (условие на этаже 1,
+  нужность доказывается примером ⇒ стоят там, где пример — своего раздела нет, и это не изъян);
+  У47 «естественная биекция Hom даёт изоморфизм объектов» (условие про объекты, доказательство требует
+  естественности ⇒ стоит ПОСЛЕ ЕП — гейт объясняет ровно ту странность, что утверждение «про объекты»,
+  а место у него позднее); лемма Йонеды (условие про объекты, доказательство требует категории
+  функторов ⇒ этажом выше потолка ⇒ Л2 автоматически, без отдельного решения).
+  Операционная ценность: любой новый пример размещается без обсуждения — достаточно спросить, на каком
+  языке он формулируется и что нужно для доказательства. И обратная: там, где гейт НЕ срабатывает
+  однозначно, разбиение придётся делать мельче — несрабатывание есть измерительный прибор, а не сбой.
+связи: chetyre-lupa-l1, ep-etazh-bez-instrumenta, yoneda
+уровень: — (служебное, инструмент проектирования)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:665-672 · PUL-vnutrennij-l1.md §0.5
+статус: seed
+```
+```
+id: chetyre-lupa-l1
+род: находка
+суть: Л1 нарезана на четыре лупа, каждый — цикл «увидели ход дважды (внешнее) → назвали (внутреннее) → поработали (внешнее)»; структура фрактальна
+котёл: математика
+находка: ⭐ Архитектура первой лекции, принятая владельцем 27.07 и живущая пока только в
+  `PUL-vnutrennij-l1.md §10`. Луп A — «что вообще такое конструкция и от чего зависит, работает ли она»
+  (категория · функтор · Cᵒᵖ · группоид); B — «какие бывают категории и что в каждой считать одинаковым»
+  (изоморфизм · ретракт · классификация объектов); C — «когда конструкция задана без произвола»
+  (ЕП · квадрат естественности); D — «когда две категории — это одно и то же» (эквивалентность ·
+  скелет · второй этаж). Владелец: «это некоторый луп, который должен быть везде в разных масштабах:
+  и вся лекция такой луп, и каждый кусочек — луп». Разделов четыре и укрупнять дальше некуда —
+  «всегда лучше минимально; семь пунктов — очень много, все забудут; четыре — идеально»; мельчить
+  будем только если перестанет срабатывать `gejt-otneseniya-l1`.
+  ⚠ ДВА ОТКРЫТЫХ МЕСТА, оба названы владельцем, оба решаются на внешнем материале: (1) у лупа A НЕТ
+  своего тезиса манифеста — три лупа отвечают тезисам 9, 8 и 7, а первая четверть только готовит язык;
+  это диагноз, а не оформление. (2) луп B может не выжить как раздел: «может быть, эта галерея вообще
+  растащится: частично в A, частично в C, частично в D».
+связи: gejt-otneseniya-l1, ep-etazh-bez-instrumenta, retrakt-priyom
+уровень: — (служебное, архитектура лекции)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:491-493, :575, :688-695 · PUL-vnutrennij-l1.md §10
+статус: seed
+```
+```
+id: ep-etazh-bez-instrumenta
+род: находка
+суть: у каждого этажа языка есть своё утверждение-инструмент, и ровно у естественных преобразований его НЕТ — единственная пустая клетка
+котёл: математика
+находка: 🔴 Заказ владельца, пока не выполненный: «было бы здорово найти мега-теорему, которая является
+  метатеоремой и проявляется в разных местах. Как с ретрактом. Это реально математика уже тогда
+  начинается». Инвентарь по этажам: объекты и стрелки — «ретракта нет ⇒ функтора нет» ✅; функторы —
+  «Hom — функтор запаковывает ассоциативность» и «сохраняется всё диаграммное» ✅; ЕСТЕСТВЕННЫЕ
+  ПРЕОБРАЗОВАНИЯ — 🔴 пусто; эквивалентность — критерий «строг + полон + существенно сюръективен» ✅.
+  Рамка заказа задана владельцем отдельно и она операциональна: «нужно не называть задачи, а называть
+  утверждения; если есть утверждение, которое работает в разных контекстах, это ценно — чтобы для него
+  ввести словесный оборот». Задача имени не получает, инструмент получает.
+  Кандидаты, названные владельцем: У47 — и условие к нему ДОСЛОВНО, потому что оценка владельца
+  сильнее пересказа: «надо придумать примеры категорий, где напрямую ответить на вопрос об
+  изоморфности сложно, а через 47-е проще. Честно говоря, не могу представить себе такого. Если
+  не получится — это вообще не нужно»; теорема о
+  гомоморфизме как естественное преобразование («точно нужно продумать, но не прямо сейчас»);
+  расщепление вложений (Z/2 не ретракт Z/4, а подпространство — ретракт всегда), которое владелец отнёс
+  к той же линии: «это то же самое, что теорема о гомоморфизме».
+  ⊕ СЛИТО из `zakaz-metateorema-dlya-estestvennosti` 2026-07-26 (тот же заказ второй стороной) —
+  оттуда полная формулировка владельца 27.07: «вопрос, как записать в куске про естественное
+  преобразование какую-то мега-теорему, которая является метатеоремой и проявляется в разных местах.
+  Это очень хорошо, когда есть такие мета-утверждения — это реально математика уже тогда начинается.
+  Как с ретрактом. Было бы здорово найти». И решение о переносе кандидата, которого здесь не было:
   ⚠ У47 перевешено с блока естественности на КЛАССИФИКАЦИЮ ОБЪЕКТОВ — владелец: «она происходит
   раньше, чем естественная эквивалентность, и как раз подводит к естественным изоморфизмам».
-связи: slabaya-yoneda-bezuslovna, retrakt-parnyj-vopros-k-kategorii, tri-klassifikacionnye-zadachi-karkas, arka-kanonicheskih-izomorfizmov
+связи: retrakt-priyom, gejt-otneseniya-l1, pervaya-teorema-izomorfizma, rank-nullity-kanon-izo, orbita-stabilizator-kanon, slabaya-yoneda-bezuslovna, tri-klassifikacionnye-zadachi-karkas, arka-kanonicheskih-izomorfizmov
 уровень: — (открытый заказ)
-источник: диалог владельца 2026-07-27
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:592-595, :647, :650-655 · PUL-vnutrennij-l1.md §0, §12 долг 4
+статус: seed
+```
+```
+id: klassifikaciya-est-forma-otveta
+род: редирект
+суть: слито в tri-klassifikacionnye-zadachi-karkas 2026-07-26 (заход svedenie-i-gejty); содержание там, старые ссылки не бьются
+связи: tri-klassifikacionnye-zadachi-karkas
+```
+```
+id: antiburbakizm-zoopark
+род: мотивация
+суть: рамка курса — максимальный антибурбакизм: словарь БОЛЬШОЙ, но каждое слово оплачено нуждой; в зоопарке место есть даже самым странным зверям
+котёл: научпоп
+находка: 🔴 Руль Р-Ж, в раму НЕ внесён — живёт только в `RULI-v-ramu.md` и дневнике, и это делает его
+  первым кандидатом на потерю. Три дословные формулировки владельца 26.07, каждая правит рамку:
+  (1) «Первая глава книжки Мак-Лейна — это просто трэш… это такой бурбакизм в ужасном виде. Мы делаем
+  максимальный антибурбакизм»; (2) «у нас такой зоопарк теории категорий, и в этом зоопарке априори
+  место есть для всех, даже самых странных зверей»; (3) 🔴 ДРЕЙФ, правящий `SPEKA §Метод` («мало
+  языка»): «словарь не то что он должен быть маленьким — он должен быть БОЛЬШИМ, но он должен быть
+  мотивированным». Это не смягчение, а замена критерия: режется не количество слов, а слова без нужды.
+  Операционально совпадает с `DUH §7` Т13 «понятие приходит за нуждой»: определение — не входной билет,
+  а имя тому, что уже сделано руками; так же приходит и сама категория — её вынуждает сопротивление
+  материала. Отсюда же правило места: слово произносится последним (2-категория — имя собранному).
+  ⚠ Расхождение со `SPEKA §Метод` надо снять утверждённой формулировкой владельца, а не тихо.
+связи: 2-kategoriya-imya-uzhe-postroennomu, vakil-motivaciya-pered-yazykom, shafarevich-ot-primera, gelfand-manin-dlya-neznayuschego
+уровень: — (рамка курса)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:255-263 · RULI-v-ramu.md §Р-Ж
+статус: seed
+```
+```
+id: primery-vsegda-vneshnee
+род: находка
+суть: примеры — по определению внешнее; единственное исключение Set, она нужна самому словарю
+котёл: математика
+находка: Решение владельца 27.07, задающее границу внутреннего и внешнего материала Л1: «на то они
+  и примеры: примеры — это внешняя вещь в принципе». Граница проводится ПО ФОРМУЛИРОВКЕ, а не по теме:
+  внешнее формулируется без слова «категория», внутреннее — без привязки к конкретной категории.
+  Set остаётся во внутреннем, потому что на ней держится сам словарь (Hom-множества, Hom-функтор
+  действует в неё). Следствие, названное владельцем тем же ходом: галерея перестаёт быть разделом —
+  «это примеры, которые разбросаны и подводят к разным понятиям; если пример интересен только с точки
+  зрения естественных преобразований, а сам функтор там неинтересен, мы полностью определяем эту
+  категорию впервые уже ПОСЛЕ того, как ЕП введены». Правило размещения: пример вводится в тот момент,
+  когда становится нужен, и ни минутой раньше; образец — конечный Стоун появляется только в финале, и
+  в порядке «сначала показываем, что это НЕ изоморфизм категорий, потом называем эквивалентность».
+  Пример мотивирует определение, а не иллюстрирует его.
+  Жанр галереи: «про каждую категорию стараемся давать упражнения, которые требуют уже не теории
+  категорий, а просто математики» ⇒ серия задач, а не витрина.
+  ⊕ СЛИТО из `primery-ne-blok-a-rassypany` 2026-07-26 (та же граница второй стороной). Оттуда —
+  ДОСЛОВНАЯ формулировка владельца 27.07 с противопоставлением, которое здесь потерялось при
+  пересказе: «это не просто в одном месте галереи — это примеры, которые разбросаны и подводят
+  к разным понятиям. Если какой-то пример интересен только с точки зрения естественных
+  преобразований, а сам функтор там неинтересен, — мы полностью определяем эту категорию впервые
+  уже ПОСЛЕ того, как ЕП введены». И образец порядка его же словами: «сначала показываем, что это
+  НЕ изоморфизм категорий, а потом говорим, что есть понятие эквивалентности».
+  ⚠ СЛЕДСТВИЕ ДЛЯ АРХИТЕКТУРЫ, которого здесь не было: раздел-галерея может не выжить вовсе.
+  Владелец 27.07: «может быть, эта галерея вообще растащится: частично в A, частично в C, частично
+  в D. Станет понятно, когда мы поймём набор внутренних примеров и микросюжетов». Это главный
+  открытый вопрос архитектуры Л1, и изнутри внутреннего материала он не решается — нужен разбор
+  внешнего.
+связи: chetyre-lupa-l1, gejt-otneseniya-l1, ekvivalentnost-primery-vp-boole, set-kategoriya, tri-klassifikacionnye-zadachi-karkas, vajb-processnyj-chetvertyj-klass
+уровень: — (правило размещения материала)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:483-486, :570-573 · PUL-vnutrennij-l1.md §7 · диалог владельца 2026-07-27
+статус: seed
+```
+```
+id: vhod-l1-podveshen
+род: находка
+суть: вход в Л1 — единственный нерешённый узел архитектуры; владелец подвесил его сознательно, до полной консолидации проекта
+котёл: математика
+находка: 🔴 Решение владельца 27.07: «про первые 20 минут лекции — это вообще самый сложный вопрос.
+  Возможно, стоит вопрос подвесить и сначала собрать всю оставшуюся часть лекции, а потом вернуться
+  к началу». Причина названа им же и она прямо породила заход консолидации: ответ требует ВСЕЙ
+  накопленной информации, а «тут меня отдельно расстраивает, что какая-то информация теряется».
+  Выход лекции понятен (эквивалентность категорий), вход — нет.
+  КРИТЕРИЙ ВХОДА, выведенный владельцем и годный как фильтр: нужен «естественный, очень естественный
+  объект другой области, который реально является функтором — лучше всего функтором из множеств
+  в множества; и про него можно думать немножко по-другому, другие стрелки рассматривая». То есть
+  объект, у которого ИНТЕРЕСНО МЕНЯЕТСЯ ОТВЕТ при смене класса стрелок. Комбинаторное тождество этому
+  критерию НЕ отвечает: «тождество вообще сложно мотивировать; тождество — это естественная
+  эквивалентность, а хочется мотивировать определение функтора» — оно ведёт сразу на третий этаж,
+  перепрыгивая первый.
+  ⚠ Нерешённая трудность владельца, важная: «было бы идеально придумать отображение, которое не
+  является комбинаторным типом. Такого, наверное, вообще не существует. Наш пример с раскрасками —
+  это комбинаторный тип». Разбор: раскраски-инъекции функториальны на биекциях ⇒ это комбинаторный
+  вид, контрпримером к функториальности вообще служить может, к «комбинаторному виду» — нет. Значит
+  лупу A нужен другой контрпример: конструкция, ломающаяся уже на ПЕРЕИМЕНОВАНИИ, то есть зависящая
+  от выбора порядка или выделенного элемента.
+  ⚖ НЕ ДУБЛЬ, а пара к `pervaya-chetvert-nachinaetsya-s-biekcij` (проверено 2026-07-26): здесь —
+  СТАТУС решения (вход подвешен, критерий входа), там — ПОРЯДОК первой четверти (биекции → все
+  отображения → обращённая стрелка). Пересекаются предметом, отвечают на разные вопросы.
+связи: krasivaya-biekciya-vhod-l1, raskraski-inekcii-ne-funktor, chetyre-lupa-l1, lenta-mebiusa-semejstvo-nad-okruzhnostyu, pervaya-chetvert-nachinaetsya-s-biekcij
+уровень: — (открытый вопрос владельца)
+источник: _studio/zhurnal/2026-07-25_lekcia-1/SESSIYA.md:553-557, :677-684 · PUL-vnutrennij-l1.md §10, §12 долг 1
+статус: seed
+```
+```
+id: invarianty-cherez-moschnosti
+род: мотивация
+суть: переход к подмножествам есть функтор Set→Set, и производящая функция есть запись этого функтора; пересечение — готовый отрицательный пример
+котёл: математика
+находка: ⭐ Ход владельца, продиктованный целиком (`2026-07-20_teorkat-motivacia/SESSIYA.md:709`):
+  $2^n$ — операция на множествах; биекция $X\to Y$ даёт биекцию подмножеств ⇒ переход к подмножествам
+  ФУНКТОРИАЛЕН; функтор определяет инвариант; а в группоиде конечных множеств функторы записываются
+  производящими функциями. Опознание: это в точности комбинаторные виды Жуайаля (1981), вид
+  «подмножества» имеет ЭПФ $e^{2x}$.
+  🎯 Ценность для входа тройная: (1) вход школьный — считать подмножества зал умеет; (2) готовый
+  ОТРИЦАТЕЛЬНЫЙ пример в том же ходу, дословно владельцем: *«а при пересечении — это, кстати, вообще
+  неправда»* — пересечение не функториально; и рядом второй, `S\mapsto X\setminus S` не естественно
+  (`SESSIYA.md:905`); (3) проходит тест Арнольда, не произнося слова «функтор».
+  ⚠ Отличать от `dual-functor` (прообраз против образа): там меняется КЛАСС СТРЕЛОК, здесь —
+  строится ИНВАРИАНТ. Оба нужны, они про разное.
+связи: opora-kombinatorika-potolok, krasivaya-biekciya-vhod-l1, dual-functor, vhod-l1-podveshen
+уровень: зал берёт
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:709-724, :905
+статус: seed
+```
+```
+id: dozirovka-i-ekskurs
+род: находка
+суть: незнание залом базового понятия — не блокер, а ПРИЧИНА его дать; дозировка идёт лестницей из четырёх ступеней
+котёл: научпоп
+находка: 🔴 Переворот мерки, стоивший счёта 12:0 и потерянный при переписи рамы. Владелец дословно
+  (`2026-07-16_teorkat-programma-dizajn/SESSIYA.md:596`): *«вынести знание того, что такое кольцо, из
+  курса по теории категорий — это реально польза»*, и там же — что это «не слайд, а существенная
+  часть лекции». Отсюда закон проекта: аналитик приносит вопрос «резать или дать слайд» — прибор
+  отвечает «дать больше» либо «вопрос не тот»; счёт 12:0, ни одного исключения.
+  **Лестница дозировки, четыре ступени:** беглое упоминание → слайд 3–5 минут → слой напоминаний →
+  полноценный экскурс. Блокеры, снятые дозировкой на живом приборе: $V^*$ («слайд про $V^*$ — и
+  поедет»), ker/im («мы быстро напомним»).
+  🔴 **ДЕФЕКТ, НАЙДЕННЫЙ ВЕРИФИКАТОРОМ:** секция `SPEKA §ЭКСКУРС` вырезана при переписи рамы,
+  содержание не переехало никуда, и на неё до сих пор ссылаются карточки. Проверка:
+  `grep -c -i 'экскурс' teorkat-vvedenie/SPEKA.md` → 0.
+  Критерий адреса экскурса, тоже владельца: *«прилагательные про знакомый объект — можно; общая
+  теория — когда мы ею начинаем ПОЛЬЗОВАТЬСЯ, чтобы открыть новое»*. И отдельно: из ответа про
+  ДОЗУ адрес не извлекается — *«я не сказал, что экскурс — часть Л7. Это неправда»*.
+связи: vtoraya-os-kalibrovki-lektor, antiburbakizm-zoopark, verdict-shkolnye-opory
+уровень: — (правило подачи)
+источник: _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/SESSIYA.md:596-600, :983-987 · VOPROSY-PRIBORU.md:138-139
+статус: seed
+```
+```
+id: vtoraya-os-kalibrovki-lektor
+род: находка
+суть: опора считается опорой, если её держит зал И на неё может сослаться лектор; потолок курса проведён по зоне уверенности лектора, а не по логике предмета
+котёл: научпоп
+находка: 🔴 Вторая ось калибровки, которой в раме нет. Владелец
+  (`2026-07-16_teorkat-programma-dizajn/SESSIYA.md:969`): *«дело не в том, что зал знает… дело в том,
+  что я ничего перечисленного не знаю. Готов добирать»*. То есть `SPEKA §Зал` описывает только одну
+  из двух осей, и заход, читающий раму, второй не увидит.
+  🔴 **И настоящая причина потолка курса, записанная в раме иначе.** Владелец
+  (`2026-07-20_teorkat-motivacia/SESSIYA.md:1221`): *«я эту технику плохо понимаю… это просто плохо я
+  её понимаю»* — граница по зоне уверенности лектора, и это законное основание, его не надо
+  переобъяснять педагогически. В `SPEKA §Охват` та же граница объяснена как «по договорённости с
+  Василием». Договорённость — следствие, а не причина; пока записано только следствие, любой
+  следующий заход вправе предложить границу подвинуть.
+  Связанное: монады — цель, к которой курс ведёт И лектора тоже («я сам не знаю, что это, и весь наш
+  путь к тому, чтобы я наконец про это узнал»); лектор на неделю впереди зала — законная позиция
+  жанра, подтверждена внешне (Пирс писал вход в теоркат, пока сам учил предмет).
+связи: dozirovka-i-ekskurs, antiburbakizm-zoopark
+уровень: — (рамка курса)
+источник: _studio/zhurnal/2026-07-16_teorkat-programma-dizajn/SESSIYA.md:969-971 · 2026-07-20_teorkat-motivacia/SESSIYA.md:1221
+статус: seed
+```
+```
+id: vspyshki-ryadom-s-liniyami
+род: находка
+суть: кроме линий, у курса есть ВСПЫШКИ — яркий сюжет, который поражает и может больше не вернуться; возвращаться он не обязан
+котёл: научпоп
+находка: Структурный элемент, названный владельцем самим и не доехавший ни в один дом рамы
+  (`2026-07-20_teorkat-motivacia/SESSIYA.md:783`): *«есть такие нити в нашем курсе, а есть такие
+  вспышки — когда что-то яркое появляется и может даже потом навсегда уйти, но оно… поражает»*.
+  Отличие от линии операционально, а не поэтически: **линия обязана возвращаться, вспышка — нет.**
+  Практическое следствие: сильный сюжет можно взять, не платя за его переиспользование, и это снимает
+  ложное требование «каждый сюжет должен работать дважды». Кандидаты, названные владельцем:
+  кобордизмы и ТКТП, пути на поверхности.
+  Проверка отсутствия дома: `grep -ci 'вспышк'` по `DUH.md`, `KOTYOL.md`, `SPEKA.md` и картотеке — 0
+  во всех четырёх (на 2026-07-26, до этой карточки).
+связи: kobordizmy-kameo, puti-v-prostranstve-ne-kategoriya, antiburbakizm-zoopark
+уровень: — (элемент конструкции курса)
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:783-785
+статус: seed
+```
+```
+id: anons-test
+род: находка
+суть: операционный критерий владельца — анонс, в котором слова «категории» нет, а есть вопросы, на которые категорный язык отвечает
+котёл: научпоп
+находка: Единственный критерий, который владелец сформулировал сам и до конца арки не отменил
+  (`2026-07-20_teorkat-motivacia/SESSIYA.md:92`): *«я хочу написать анонс, в котором слова "категории"
+  не будет. А будет набор вопросов, на которые категорные конструкции так или иначе позволяют дать
+  ответ»*. И зачем: *«они должны прийти потому, что их заинтересовало что-то, где категорий нет»*.
+  Тест работает как гейт на весь материал: если сюжет нельзя назвать в анонсе без слова «категория» —
+  приз у него свой, а не чужой, и по `DUH §1` он не проходит. То есть анонс-тест есть проверяемая
+  форма главного закона.
+  ⚠ Позже сужен владельцем до «один из критериев», не отменён.
+  🔴 Работает прямо сейчас: `SPEKA §Слой 2` объявляет лекцию на среду 29.07 с открытым входом,
+  а вход не найден (`vhod-l1-podveshen`).
+связи: vhod-l1-podveshen, antiburbakizm-zoopark, krasivaya-biekciya-vhod-l1
+уровень: — (гейт отбора)
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:88-94, :168-170
+статус: seed
+```
+```
+id: lambda-test-zapret
+род: инструмент/донор
+суть: подстановка $f=\lambda\cdot\mathrm{id}$ в квадрат естественности убивает четыре разных запрета одним вычислением
+котёл: математика
+находка: ⭐ Ближайший аналог `retrakt-priyom` на этаже естественных преобразований — и потому
+  сильнейший кандидат в мета-утверждение, которого владелец просит (`ep-etazh-bez-instrumenta`).
+  Одно вычисление, четыре разных мира: нет естественного $V\cong V^*$ (`dual-not-natural-proof`);
+  кручение не расщепляется естественно; **запрет клонирования** — нет естественного
+  $\mathrm{Id}\Rightarrow V\otimes V$, кроме нуля, потому что $\lambda\Delta=\lambda^2\Delta$;
+  и $\mathrm{Sym}\not\leftrightarrow\mathrm{Ord}$.
+  Формулировка-кандидат: *естественное преобразование обязано коммутировать со ВСЕМИ эндоморфизмами
+  объекта, в том числе со скалярными; поэтому оно не может зависеть от структуры, которую скаляр
+  разрушает.*
+  🎯 Запрет клонирования отдельно ценен тем, что даёт несущей конструкции лупа C **второй мир, и он
+  дешевле Понтрягина**: приз целиком чужой (квантовая информация), а вычисление то же самое.
+  ⚠ Родственная, но ДРУГАЯ техника: инвариант естественности из обзора видов — естественная биекция
+  обязана сохранять запас симметрий, $\mathrm{fix}\,F[\sigma]=\mathrm{fix}\,G[\sigma]$. Математически
+  сильнее, но требует языка видов.
+связи: dual-not-natural-proof, mo-bank-neestestvennost, ep-etazh-bez-instrumenta, retrakt-priyom
+уровень: зал берёт (вычисление в три строки на группоиде)
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:1170-1172 · VIDY/01-estestvennost.md:132-137
+статус: seed
+```
+```
+id: tozhdestvo-protiv-velichiny
+род: находка
+суть: категорный язык окупается там, где содержателен вопрос «когда две вещи — одна», и молчит там, где содержателен вопрос «насколько вещь велика»
+котёл: математика
+находка: Результат внешнего аудита критерия — тем же ходом, которым появились три канала `DUH §2`;
+  три канала в раму доехали, эта половина нет. Практический лакмус, отличающий пласт от эпизода
+  за секунду: **«выигрыш приходит не туда, где трудно доказать, а туда, где трудно сказать»**.
+  Словарь-детектор: канонично · не зависит от выбора · одно и то же · перенос · склейка · нельзя —
+  сюжет годится. Безнадёжно: оценим · достаточно велико · асимптотически.
+  Три механизма выигрыша, названные там же: естественность · универсальность и финальность · ЗАПРЕТ
+  («категорные аксиомы умеют запрещать; теоретико-множественные — нет, в Set можно всё»).
+связи: retrakt-priyom, lambda-test-zapret, anons-test
+уровень: — (гейт отбора)
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:1198 · fable_generacia-sjuzhetov.md:319-326
+статус: seed
+```
+```
+id: menyat-korpus-a-ne-vyborku
+род: находка
+суть: восемь структурных дыр карты — свойство КОРПУСА источников, а не выборки; ещё тысяча страниц того же канона их не закроет
+котёл: математика
+находка: 🔴 Диагноз, полученный внешним аудитом и адресованный следующей фазе поиска: наша карта
+  с высокой точностью совпадает с каноном nLab + Баэз + HoTT, и потому дыры воспроизводятся.
+  Восемь дыр поимённо: **анализ · вероятность и статистика · информатика поведения · игры ·
+  субструктурные логики · оптимизация и ML** — это наша слепота; **модельная теория · теория
+  информации** — свойство поля. Вывод дословно: *«прочесав ещё тысячу страниц того же канона, вы
+  этих дыр не закроете — нужно менять корпус, а не увеличивать выборку»*.
+  Операционально это правит запрос поиска: искать в учебниках ЧУЖИХ разделов (руль Р-А,
+  `vakil-motivaciya-pered-yazykom`), а не в литературе по теории категорий.
+  ⚠ `2026-07-23_vneshnie-istorii/KARTA-PROBELOV.md` называет только две дыры из восьми.
+связи: vakil-motivaciya-pered-yazykom, tozhdestvo-protiv-velichiny, anons-test
+уровень: — (прицел поиска)
+источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:1203 · fable_generacia-sjuzhetov.md:223
 статус: seed
 ```

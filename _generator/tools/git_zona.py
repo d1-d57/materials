@@ -990,6 +990,171 @@ def cmd_adopt(args):
     return 0
 
 
+def cmd_merge(args):
+    """Влить ветку в ТЕКУЩУЮ — единственная законная дверь к слиянию.
+
+    ЗАЧЕМ ПОДКОМАНДА. Канон (`GIT-disciplina §0`) запрещает выдавать владельцу
+    голый shell, а слияния в инструменте не было — и ровно поэтому ветка
+    `arka/konsolidacia-l1` месяц не была влита («у `git_zona.py` нет команды
+    слияния — долг инструмента», корневой `CLAUDE.md`). Цена долга измерена:
+    две ветки писали картотеку независимо и разошлись на 25 карточек, пять пар
+    описывали одно и то же разными словами.
+
+    🔴 ЧИСТОТА ДЕРЕВА — УСЛОВИЕ ТОЧНОЕ, А НЕ ГРУБОЕ. «Требуем чистое дерево»
+    звучит строже, но в этом репозитории оно недостижимо: рядом всегда пишет
+    кто-то третий (владелец, Cowork, соседний заход), и грубое условие сделало бы
+    команду неисполнимой — то есть вернуло бы всех к голому `git merge`, от
+    которого мы и уходим. Опасно НЕ «что-то грязное в дереве», а ровно одно:
+    грязный путь, который слияние собирается переписать. Его и проверяем; про
+    остальную грязь ГРОМКО предупреждаем и называем поимённо — она в слияние не
+    участвует и в merge-коммит не поедет (индекс не трогаем).
+
+    `--zone` (можно повторять) — тот же механизм, что у `commit --zone`: если
+    ветка тащит пути ВНЕ названных зон, не сливаем ничего. Заход работает в своей
+    зоне и не должен молча привезти чужую.
+
+    Конфликт НЕ разрешаем сами: печатаем конфликтные пути и останавливаемся —
+    разрешение смысловое, его делает человек или исполнитель захода. Дальше
+    `merge --continue` (завершить) или `merge --abort` (откатить целиком).
+    """
+    # --abort / --continue: хвосты незаконченного слияния. Обе пишут в .git.
+    if args.abort or args.cont:
+        if in_sandbox():
+            return refuse_write("merge --abort/--continue",
+                                suggest=f"merge {args.branch or ''} "
+                                        f"{'--abort' if args.abort else '--continue'}".strip())
+        if not (REPO / ".git" / "MERGE_HEAD").exists():
+            print("⚠ Незаконченного слияния нет — отменять/продолжать нечего.\n"
+                  "   Что с репо сейчас: `git_zona.py doctor`")
+            return 1
+        if args.abort:
+            r = git("merge", "--abort", check=False)
+            if r.returncode != 0:
+                print(f"❌ merge --abort упал (rc={r.returncode}):\n   {r.stderr.strip()}")
+                return 1
+            print("✅ Слияние отменено, дерево вернулось к состоянию до него.")
+            return 0
+        unmerged = [l for l in git("diff", "--name-only", "--diff-filter=U").stdout.splitlines() if l]
+        if unmerged:
+            print(f"⛔ Ещё {len(unmerged)} путей с неразрешённым конфликтом — не завершаю:")
+            for p in unmerged:
+                print(f"   {p}")
+            print("   Разреши их и повтори `merge --continue`.")
+            return 1
+        if not wait_for_lock():
+            return 2
+        r = git("commit", "--no-edit", check=False)
+        if r.returncode != 0:
+            out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+            print(f"❌ merge-коммит упал (rc={r.returncode}):")
+            for l in (out[-5:] or ["(вывод пуст)"]):
+                print(f"   {l}")
+            log_incident("merge --continue: коммит слияния не прошёл",
+                         "смотреть вывод хука и `doctor`")
+            return 1
+        print(f"✅ Слияние завершено: {git('log', '-1', '--oneline').stdout.strip()}")
+        return 0
+
+    if not args.branch:
+        sys.exit("❌ Нужна ветка: `git_zona.py merge <ветка> [--zone <путь>]`")
+    branch = args.branch
+    if git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}",
+           check=False).returncode != 0:
+        sys.exit(f"❌ Ветки нет: {branch}")
+
+    head = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    if head == branch:
+        sys.exit(f"❌ `{branch}` — это и есть текущая ветка. Сливать нечего.")
+    if (REPO / ".git" / "MERGE_HEAD").exists():
+        print("⛔ В репозитории уже идёт незаконченное слияние — второе не начинаю.\n"
+              "   Завершить: `git_zona.py merge --continue` · отменить: `merge --abort`")
+        return 1
+
+    base = git("merge-base", "HEAD", branch).stdout.strip()
+    commits = [l for l in git("log", "--oneline", f"HEAD..{branch}").stdout.splitlines() if l]
+    touched = [l for l in git("diff", "--name-only", f"HEAD...{branch}").stdout.splitlines() if l]
+
+    print(f"═══ merge: `{branch}` → `{head}` ═══\n")
+    if not commits:
+        print(f"✅ Всё, что есть в `{branch}`, уже в `{head}` — сливать нечего.")
+        return 0
+    print(f"База слияния: {base[:7]}  ({git('log', '-1', '--format=%s', base).stdout.strip()})")
+    print(f"\nПриедет коммитов: {len(commits)}")
+    for l in commits:
+        print(f"   {l}")
+    print(f"\nЗатронет путей: {len(touched)}")
+    for p in touched:
+        print(f"   {p}")
+
+    # Зона — механизм, а не просьба (та же защита, что в cmd_commit).
+    if args.zone:
+        outside = [p for p in touched if not any(in_zone(p, z) for z in args.zone)]
+        if outside:
+            print(f"\n⛔ Слияние выходит за зон{'ы' if len(args.zone) > 1 else 'у'} "
+                  f"({', '.join(args.zone)}) — не сливаю НИЧЕГО.")
+            for p in outside[:20]:
+                print(f"     {p}")
+            if len(outside) > 20:
+                print(f"     … ещё {len(outside) - 20}")
+            log_incident(f"merge {branch} выходит за зону",
+                         "назвать все зоны через повторный --zone либо сливать без --zone осознанно")
+            return 1
+
+    # 🔴 Пересечение грязного с тем, что слияние перепишет, — единственный
+    # настоящий блокер: git такие правки затрёт или встанет на середине.
+    dirty_rows = dirty()
+    collision = sorted({p for _, p in dirty_rows if p in touched})
+    other = sorted({p for _, p in dirty_rows if p not in touched})
+    if collision:
+        print(f"\n⛔ {len(collision)} путей ОДНОВРЕМЕННО грязные и участвуют в слиянии — "
+              "не сливаю:")
+        for p in collision:
+            print(f"   {p}")
+        print("   Сперва закоммить их (`commit --zone <зона> -m …`) или откати — "
+              "иначе слияние их затрёт.")
+        log_incident(f"merge {branch}: грязные пути пересекаются со сливаемыми",
+                     "закоммитить или откатить эти пути и повторить merge")
+        return 1
+    if other:
+        print(f"\n⚠ Вне слияния грязных путей: {len(other)}. Они в merge-коммит НЕ поедут "
+              "(индекс не трогаю), но и не защищены:")
+        for p in other[:20]:
+            print(f"   {p}")
+        if len(other) > 20:
+            print(f"   … ещё {len(other) - 20}")
+
+    sweep_dead_locks()
+    if not wait_for_lock():
+        log_incident("merge: чужой лок держится дольше 90 с",
+                     "подождать и повторить ту же команду")
+        return 2
+
+    r = git("merge", "--no-edit", branch, check=False)
+    if r.returncode == 0:
+        print(f"\n✅ Влито без конфликтов: {git('log', '-1', '--oneline').stdout.strip()}")
+        return 0
+
+    conflicts = [l for l in git("diff", "--name-only", "--diff-filter=U").stdout.splitlines() if l]
+    if not conflicts:
+        # не конфликт, а отказ самого git — показываем причину, а не первую строку
+        out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+        print(f"\n❌ merge не прошёл (rc={r.returncode}):")
+        for l in (out[:5] or ["(вывод пуст)"]):
+            print(f"   {l}")
+        log_incident(f"merge {branch} не прошёл", "смотреть вывод команды и `doctor`")
+        return 1
+    print(f"\n🔴 КОНФЛИКТ в {len(conflicts)} путях — слияние ОСТАНОВЛЕНО, "
+          "сама не разрешаю (это смысловое решение):")
+    for p in conflicts:
+        print(f"   {p}")
+    print("\n   Разрешает человек или исполнитель захода. Дальше:\n"
+          "     завершить — `git_zona.py merge --continue`\n"
+          "     откатить целиком — `git_zona.py merge --abort`")
+    log_incident(f"merge {branch}: конфликт в {len(conflicts)} путях",
+                 "разрешить конфликты, затем merge --continue (или merge --abort)")
+    return 1
+
+
 def cmd_purge(args):
     """Снять ПОДОЗРИТЕЛЬНЫЙ untracked-мусор (имя с ведущим `-`) без shell.
 
@@ -1138,6 +1303,17 @@ def main():
     a.add_argument("--zone", required=True, help="префикс зоны")
     a.add_argument("--yes", action="store_true", help="выполнить (без него — только предпросмотр)")
     a.set_defaults(func=cmd_adopt)
+
+    mg = sub.add_parser("merge", help="влить ветку в текущую (конфликт — останавливается и показывает пути)")
+    mg.add_argument("branch", nargs="?", help="ветка-источник")
+    # --zone повторяемый: заход законно держит НЕСКОЛЬКО каталогов записи
+    # (картотека + папка арки + инструменты), одним префиксом они не накрываются.
+    mg.add_argument("--zone", action="append",
+                    help="разрешённый префикс пути; можно повторять — слияние вне зон откажется")
+    mg.add_argument("--abort", action="store_true", help="откатить незаконченное слияние целиком")
+    mg.add_argument("--continue", dest="cont", action="store_true",
+                    help="завершить слияние после разрешения конфликтов")
+    mg.set_defaults(func=cmd_merge)
 
     pu = sub.add_parser("purge",
                         help="снять подозрительный untracked-мусор (имя с ведущим `-`); без --yes — предпросмотр")
