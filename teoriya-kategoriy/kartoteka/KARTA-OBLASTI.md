@@ -13,8 +13,8 @@
 ## Индекс по роду
 
 - **мотивация:** `vopros-chetyre-teoremy` `nod-universalnoe` `galiley-proizvedenie` `pochemu-do-izo` `zachem-zakryvat` `curry-howard-lambek` `kategorifikaciya-arifmetiki` `motivation-EM` `motivation-floor-ceiling` `motivation-hom-language` `motivation-scalar-product-is-choice` `motivation-adjoint-everywhere` `zachem-zavisimaya-funkciya` `mot-sloi-reshenija-sistemy` `mot-sloi-spektr` `mot-zabytoe-otobrazhenie` `mot-obratimost-i-universum` `mot-otkuda-sigma` `mot-gde-zhivet-vasha-logika` `mot-kategoriya-radi-funktora` `mazur-obekt-set-otnoshenij` `mot-kommutativnaya-diagramma` `mot-ekvivalentnost-dlya-finala` `krasivaya-biekciya-vhod-l1` `antiburbakizm-zoopark` `invarianty-cherez-moschnosti`
-- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
-- **утверждение:** `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost` `pervaya-teorema-izomorfizma` `ekvivalentnost-cherez-nat-izo` `ekvivalentnost-est-izomorfizm-etazhom-vyshe` `htop-ne-konkretiziruema` `podobie-matric-izo-v-funktorah` `raskraski-inekcii-ne-funktor` `set-nad-x-est-semejstvo` `retrakciya-v-set-est-aksioma-vybora`
+- **понятие:** `kategoriya-opredelenie` `universalnoe-svojstvo` `terminalnyj-obekt` `nachalnyj-obekt` `proizvedenie-opredelenie` `dvojstvennost-princip` `eksponenta-opredelenie` `karrirovanie` `ccc-opredelenie` `functor` `contravariance` `nat-transf` `naturality-square` `hom-functor` `representable` `adjunction` `unit-counit` `monad` `kleisli` `nno` `zavisimoe-proizvedenie` `tip-tozhdestva` `omega-opredelenie` `kombinatornye-vidy` `uravnitel-opredelenie` `predel-opredelenie` `pullback-podstanovka` `slajs-kategoriya` `kouravnitel-opredelenie` `pushout-sklejka-opredelenie` `kopredel-opredelenie` `lccc-opredelenie`
+- **утверждение:** `u24-dokazyvaem-vybor-oplachen` `edinstvennost-terminalnogo` `edinstvennost-proizvedeniya` `zakon-stepenej-karrirovanie` `vect-ne-ccc` `heyting-vyrozhdennyj-ccc` `distributivnost-ccc` `dual-not-natural-proof` `yoneda` `cayley` `adjoint-unique` `currying-adjunction` `chl` `recursion-nno` `omega-bez-yonedy` `nno-initial-rig` `predel-iz-proizvedenij-i-uravnitelej` `yadro-est-uravnitel` `sobstvennoe-est-uravnitel` `proizvedenie-v-slajse-est-pullback` `lccc-est-slajsy-ccc` `arifmetika-zavisimogo-proizvedeniya` `sechenie-neset-vybor` `kopredel-iz-koproizvedenij-i-kouravnitelej` `koyadro-est-kouravnitel` `kriterij-horoshaya-kategoriya` `diagonal-kantora-daet-godelya` `us-kak-terminalnost` `nol-odin-granica-vyrozhdennosti` `tochki-eksponenty-eto-morfizmy` `ccc-uravneniyami-beta-eta` `est-izo-obratnye-avtomaticheski` `slabaya-yoneda-bezuslovna` `sohranenie-protiv-otrazheniya` `ekvivalentnost-perenosit-zamknutost` `pervaya-teorema-izomorfizma` `ekvivalentnost-cherez-nat-izo` `ekvivalentnost-est-izomorfizm-etazhom-vyshe` `htop-ne-konkretiziruema` `podobie-matric-izo-v-funktorah` `raskraski-inekcii-ne-funktor` `set-nad-x-est-semejstvo` `retrakciya-v-set-est-aksioma-vybora`
 - **пример:** `mat-pervaya-kategoriya` `set-kategoriya` `chum-kategoriya` `monoid-odin-obekt` `kobordizmy-kameo` `tangly-kameo` `mat-biproduct` `transpose-contravariant` `dual-functor` `double-dual` `det-natural` `free-forgetful-vect` `free-vect-monad` `currying-bilinear` `gl-action-dual` `stochastic-matrices` `floor-ceiling` `closure-monad` `abelianization` `puchok-primer` `yoneda-elementarnye-preobrazovaniya` `zavisimaya-vektornoe-pole` `zavisimaya-vybor-resheniya` `zavisimaya-dokazatelstvo-vseh` `nno-arifmetika-rekursiej` `chain-rule-est-funktorialnost` `opora-mnogochleny-l7` `uravnitel-okruzhnost` `nepodvizhnye-tochki-uravnitel` `pullback-join-dannye` `pullback-ogranichenie-rassloenia` `slajs-primer-semejstva` `zn-kouravnitel-teoriya-chisel` `sklejka-tor-pushout` `gomologii-grafa-funktor-vect` `raskraska-3-uzla-verdikt` `eulerova-harakteristika-razlichit` `galua-verdikt` `ekvivalentnost-primery-vp-boole` `raskraska-est-strelka` `leinster-universalnoe-bez-zhargona` `hovanov-vidit-uzel` `uravnitel-teoriya-i-eksperiment` `pullback-rubashki-bryuki` `pryamye-rejsy-ne-kategoriya` `botinki-i-noski` `nyuton-est-dejstvie-monoida` `i-i-minus-i-nerazlichimy` `est-preobr-est-zamena-bazisa` `kvantory-kak-sopryazhennye` `polovina-yabloka` `smeshenie-cvetov-reshetka` `karta-est-funktor` `lineinaya-so-sdvigom-ne-funktor` `nekommutiruyushchaya-otec-gorod` `spyashchij-mladenec-kompoziciya` `komanda-i-slabejshij` `neobratimye-processy-cheng` `stulya-na-koncerte` `kitajskij-restoran-cena` `sfera-shar-okruzhnost-v-set` `princip-vzryva-daet-terminalnyj` `himicheskie-seti-funktor` `yazyk-est-funktor` `fibonacci-nepreryvnyj-funktor` `dinamika-est-funktor-vremeni` `klany-volka-i-medvedya` `nat-preobr-rukami` `centr-gruppy-ne-funktor` `izo-kategorij-tri-opredeleniya` `delenie-na-3-konvej-dojl` `net-retrakcii-d2-s1` `gruppovoj-obekt-grp-grp-ab` `rank-nullity-kanon-izo` `orbita-stabilizator-kanon` `funktor-shlopyvaet-minimalno` `ciklicheskie-gruppy-bez-kanona` `veshch-x2plus1-izo-c` `affinnoe-vs-vektornoe-neestestvenno` `konechnaya-abeleva-haraktery` `umnozhenie-est-est-preobr` `centr-est-est-preobr-id` `mat-ekvivalentna-ne-izomorfna` `biekciya-ne-izo-v-rel` `boorng-izo-boo` `kategoriya-fejnmana` `kategoriya-algoritmov-sostoyanij` `obekty-i-diagrammy-kak-funktory` `atiyah-macdonald-funktor-bez-slova` `avtomat-kak-funktor-ep` `fmap-ne-vsegda-suschestvuet` `funktor-reshenij-uravnenij` `hatcher-brauer-v-rodnom-kontekste` `klein-affinnoe-proektivnoe-ek` `lenta-mebiusa-semejstvo-nad-okruzhnostyu` `puti-v-prostranstve-ne-kategoriya` `segal-gamma-ekvivalentnost` `vneshnyaya-aksioma-vybora` `rasscheplenie-vlozhenij-po-kategoriyam`
 - **сцена:** `eksponenta-2v3` `iskl-tretie-lomaetsya` `edinstvennost-scena` `scena-dve-teni` `scena-perevorot` `hasse-scena` `scene-naturality-slide` `scene-det-square` `scene-numberline` `scene-hull` `scene-yoneda-probe` `scene-nno-staircase` `scene-kleisli-sigma` `scena-zavisimaya-korobka` `omega-scena-edinstvennaya` `omega-otkrytye-mnozhestva` `scena-podstanovka-tjanet-sloj` `mazur-spotlight-scena` `kub-hofshtadtera-teni` `skomkannaya-karta`
 - **находка:** `mit-tozhdestvo-est-nol` `mit-slogany-aksiomy` `mit-perspektiva-yonedy-rano` `mit-lestnica-rodstva` `mat-ne-nuzhna-zapis` `koproizvedenie-diz-obedinenie` `dvojstvennost-ne-simmetriya` `vect-lovushka` `dekategorifikaciya-teryaet` `chto-ne-kategorificiruetsya` `maclane-topos-v-glave-sopryazhennyh` `dva-vhoda-v-ccc` `lawvere-medlennyj-tempo` `lawvere-exponenta-motivaciya` `byudzhet-pf-l5` `granica-hott-topos` `sloi-diagnoz-kartoteki` `lawvere-stacking-fibering` `kategoriya-pobochnyj-produkt` `lawvere-delenie-syrjo` `maclane-gruppoid-ne-2-5` `l8-tri-syuzheta-verdikt` `omega-otkrytye-verifikaciya` `eff-topos-verifikaciya` `verdict-nno-adres` `nno-dva-vhoda` `lawvere-n-do-us` `opora-kombinatorika-l3` `opora-kombinatorika-potolok` `verdict-shkolnye-opory` `vyhod-l4-reshat-est-predel` `atlas-predely-po-kategoriyam` `varying-sloj-verdikt` `vyhod-l4-reshat-i-skleivat` `atlas-kopredely-po-kategoriyam` `verdict-rifma-lccc` `throughline-kolco-vvedeniya` `rosetta-baez-svyaznaya-kartina` `invariant-vynosit-verdikt` `glava-ne-lekciya` `kak-otkryvayut-vvedeniya` `leinster-vzglyad-sverhu` `rosetta-tablica-baez-stay` `cheng-rol-vs-harakter` `cheng-analogii-i-otnosheniya` `troyka-obekt-cherez-svyazi` `cheng-nizkij-pol-vysokij-potolok` `math3ma-obshchij-gen` `interesnye-otkazy-cheng` `tri-stupeni-zabyvaniya` `implikaciya-est-eksponenta` `suhoj-list-s-pizy` `associativnost-ne-iz-edinstvennosti` `cena-lakuny-kompozicii-preobrazovanij` `eksponenta-po-osnovaniyu-tolko-uslovnomu` `koproizvedenie-bez-kolonki-ili` `kategoriya-funktorov-cena-razmerov` `mo-bank-neestestvennost` `v-dual-ne-primer-neestestvennosti` `zoopark-ekvivalentnostej` `gomotopiya-est-est-preobr` `uprazhneniya-ru-l1` `2-kategoriya-imya-uzhe-postroennomu` `bank-uprazhnenij-ohvat` `dolg-razvernut-palais-i-sem-derevev` `ep-gomotopiya-klassificiruyuschee` `gelfand-manin-dlya-neznayuschego` `metod-slovar-surrogat` `shafarevich-ot-primera` `spivak-funktory-grafy-poryadki` `vajb-processnyj-chetvertyj-klass` `vakil-motivaciya-pered-yazykom` `gejt-otneseniya-l1` `chetyre-lupa-l1` `ep-etazh-bez-instrumenta` `primery-vsegda-vneshnee` `vhod-l1-podveshen` `dozirovka-i-ekskurs` `vtoraya-os-kalibrovki-lektor` `vspyshki-ryadom-s-liniyami` `anons-test` `tozhdestvo-protiv-velichiny` `menyat-korpus-a-ne-vyborku` `arka-kanonicheskih-izomorfizmov` `hom-funktor-zapakovyvaet-associativnost`
@@ -409,7 +409,7 @@ id: eksponenta-2v3
   слова «экспонента»: сначала считаем, потом называем. Стоит 0.
 связи: eksponenta-opredelenie, zakon-stepenej-karrirovanie, kategorifikaciya-arifmetiki
 уровень: зал берёт
-источник: ../SPEKA.md §Визуал; https://en.wikipedia.org/wiki/Exponential_object
+источник: ../SPEKA.md, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07; https://en.wikipedia.org/wiki/Exponential_object
 статус: черновик
 ```
 ```
@@ -1233,7 +1233,7 @@ id: edinstvennost-scena
   осязаемой только на фоне провала.
 связи: universalnoe-svojstvo, proizvedenie-opredelenie
 уровень: зал берёт
-источник: ../SPEKA.md §Визуал
+источник: ../SPEKA.md, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07
 статус: черновик
 ```
 ```
@@ -1259,7 +1259,7 @@ id: scena-perevorot
   даёт ДРУГОЙ ОТВЕТ (лечит dvojstvennost-ne-simmetriya).
 связи: dvojstvennost-princip, dvojstvennost-ne-simmetriya, koproizvedenie-diz-obedinenie
 уровень: зал берёт
-источник: ../SPEKA.md §Визуал
+источник: ../SPEKA.md, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07
 статус: черновик
 ```
 ```
@@ -1785,7 +1785,7 @@ id: omega-scena-edinstvennaya
 род: сцена
 суть: анимация универсального свойства Ω — на каждое вложение возникает ровно ОДНА характеристическая стрелка
 котёл: математика
-находка: визуал несущий (SPEKA §Визуал: «универсальное свойство нельзя нарисовать статично»). На
+находка: визуал несущий (SPEKA, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07: «универсальное свойство нельзя нарисовать статично»). На
   экране вложение m: S↣X; сверху — единственная стрелка X→1 и истина 1→Ω; снизу пунктиром возникает
   РОВНО ОДНА φ: X→Ω, замыкающая коуниверсальный квадрат (диаграмма (3) Маклейна, с.124). Зал видит
   слово «единственная» глазами, а не слышит. Тот же приём «единственная стрелка», что для
@@ -1793,7 +1793,7 @@ id: omega-scena-edinstvennaya
   биекция Sub(X) ≅ Hom(X,Ω) — и именно она делает Ω «объектом истинностных значений».
 связи: omega-opredelenie, put-ccc-topos
 уровень: зал берёт (как картинка)
-источник: рус. Маклейн §4.9, коуниверсальный квадрат (3) (печ. с.124–125); SPEKA §Визуал
+источник: рус. Маклейн §4.9, коуниверсальный квадрат (3) (печ. с.124–125); SPEKA, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07
 статус: черновик
 ```
 ```
@@ -1809,7 +1809,7 @@ id: omega-bez-yonedy
   Йонеда: Ω(c) = подобъекты представимого (решёта). Маклейн ставит это прямо после определения (с.125):
   «Если C — произвольная категория, то в категории функторов Sets^(C^op) существует классификатор
   подобъектов (найдите его!)». СЛЕДСТВИЕ ДЛЯ Л9: раз ТЗ ограничивает финал «даём Ω и пучковый пример,
-  аксиомы не доказываем» (SPEKA §Ограничения), Л9 остаётся на элементарной стороне ⇒ Йонеда для Ω в Л9
+  аксиомы не доказываем» (SPEKA, раздел «Ограничения» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07), Л9 остаётся на элементарной стороне ⇒ Йонеда для Ω в Л9
   НЕ несущая. Значит предпосылка ТЗ «без Йонеды Ω — магия» ЛОЖНА для определения, но имеет истинное
   зерно для «почему/откуда»: канoничность без Йонеды не объясняется. Аналитику это освобождает
   полулекции — но платой названа именно потеря рассказа «почему Ω канонична».
@@ -3055,7 +3055,7 @@ id: opora-kombinatorika-l3
   **the number of maps** between any two finite sets… The most immediate way I can think of is to
   **draw them** (taking care not to repeat any and not to omit any), **and then count them**» —
   и дальше буквально таблица 3→2:8, 3→3:27, 2→3:9, записанная как 2³, 3³, 3². Это `eksponenta-2v3`,
-  найденный в книге: у карточки до сих пор стоял источник «SPEKA §Визуал + wikipedia», **книги не было**.
+  найденный в книге: у карточки до сих пор стоял источник «SPEKA, раздел «Визуал» — СЕКЦИЯ УТРАЧЕНА, проверено 27.07 + wikipedia», **книги не было**.
   ⭐⭐ Главное — печ. с.34, где закон степеней выводит СТУДЕНТ: «Chad: for every element of the domain
   there are as many possibilities as there are elements in the codomain, and since the choices for
   the different elements of the domain are **independent**, we must **multiply** all these values».
@@ -5832,5 +5832,58 @@ id: menyat-korpus-a-ne-vyborku
 связи: vakil-motivaciya-pered-yazykom, tozhdestvo-protiv-velichiny, anons-test
 уровень: — (прицел поиска)
 источник: _studio/zhurnal/2026-07-20_teorkat-motivacia/SESSIYA.md:1203 · fable_generacia-sjuzhetov.md:223
+статус: seed
+```
+
+## Карточки — закрытие висячих рёбер (27.07, аналитик)
+
+> Обе ссылки стояли в поле `связи` карточек волны «архитектура Л1» как заявки на будущее и остались незаведёнными. Гейт `check_kartoteka.py --gates` ворота 3 поймал их первым же прогоном. Проверка истории: ни та ни другая карточка не существовала никогда — это не потеря, а долг.
+
+```
+id: kombinatornye-vidy
+род: понятие
+суть: комбинаторный вид — функтор из группоида конечных множеств; ровно то, чем занимается комбинаторика, до всякого категорного языка
+котёл: математика
+находка: ⭐⭐ Понятие, которым владелец 27.07 предложил открывать лекцию, и оно объясняет, почему
+  первая четверть начинается с БИЕКЦИЙ, а не с общих отображений. Дословно: «естественные
+  конструкции, которые возникают в комбинаторике, — это именно комбинаторные виды, то есть
+  коммутативный квадрат ПРО БИЕКЦИИ; как будто бы именно их больше всего в комбинаторике».
+  Механика без единого термина: конструкция сопоставляет конечному множеству множество, и
+  переименование элементов проходит насквозь — применить биекцию, потом конструкцию, или
+  наоборот, результат один. Это квадрат естественности, увиденный до слова.
+  🔴 ОГРАНИЧЕНИЕ, названное самим владельцем и подтверждённое поиском: конструкции, НЕ являющейся
+  комбинаторным видом, найти не удаётся — любая конструкция теории множеств, заданная формулой
+  без параметров, эквивариантна. Заход `konsolidacia-l1` проверил все 109 внешних узлов и 21
+  сюжет: такой конструкции в корпусе НЕТ ни одной. Владелец: «такого отображения, наверное,
+  вообще не существует».
+  ⭐ СЛЕДСТВИЕ ДЛЯ ВХОДА: мотивировать функтор контрпримером к виду нельзя. Содержательный вопрос
+  другой — не «бывает ли не-вид», а СКОЛЬКО СТРЕЛОК ВИД ВЫДЕРЖИВАЕТ: продолжается ли он с
+  группоида на все отображения, и в какую сторону. Ровно это и делает найденный вход
+  (прообраз против образа): три ответа при трёх классах стрелок.
+связи: pervaya-chetvert-nachinaetsya-s-biekcij, krasivaya-biekciya-vhod-l1, dual-functor, vhod-l1-podveshen, mo-bank-neestestvennost
+уровень: зал берёт (комбинаторика — родная опора зала)
+источник: диалог владельца 2026-07-27; отрицательный результат — заход konsolidacia-l1, разметка внешнего
+статус: seed
+```
+```
+id: u24-dokazyvaem-vybor-oplachen
+род: утверждение
+суть: критерий эквивалентности доказываем, а не объявляем: аксиома выбора, которой он платит, произнесена раньше и дешевле — в галерее, на школьном материале
+котёл: математика
+находка: ⭐⭐ Решение владельца 27.07, снимающее вердикт `вне-школы` из MAT-KOSTYAK: «я думаю, мы
+  можем доказать, и это совсем не сложно. Я бы это доказал. Это важное утверждение».
+  Цена доказательства — выбор для каждого объекта изоморфизма с образом, то есть аксиома выбора.
+  🎯 И она УЖЕ ОПЛАЧЕНА раньше по ходу лекции: в множествах ретракция ⟺ сюръекция, и это
+  равносильно аксиоме выбора (`retrakciya-v-set-est-aksioma-vybora`). Значит к критерию
+  эквивалентности новых расходов нет — владелец: «классное замечание, и оно действительно нам
+  потом играет дальше».
+  ⚠ Уточнение имени: «основной теоремой теории категорий» обычно называют лемму Йонеды, а не этот
+  критерий; у Riehl он просто теорема 1.5.9.
+  ⚠ Статус AC для конечного и счётного случаев владелец проверяет сам; ответ по конечному лежит
+  в `sechenie-neset-vybor` — у конечного семейства сечение есть ⟺ ни один слой не пуст, число
+  сечений = произведение размеров слоёв, то есть выбор не нужен и это видно из счёта.
+связи: retrakciya-v-set-est-aksioma-vybora, sechenie-neset-vybor, vneshnyaya-aksioma-vybora, sohranenie-protiv-otrazheniya, ekvivalentnost-cherez-nat-izo
+уровень: требует приручения (строгий и полный функтор — новые слова)
+источник: диалог владельца 2026-07-27; MAT-KOSTYAK У24; Riehl теорема 1.5.9
 статус: seed
 ```
