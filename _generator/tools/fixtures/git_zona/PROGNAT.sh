@@ -241,6 +241,50 @@ V=$(grep -c "пустое или плейсхолдер" "$T/_studio/zhurnal/_IN
 [ "$V" = "1" ] && echo "  ✅ другой класс симптома — отдельная строка (пустое -m)" \
                || { echo "  ❌ пустое -m не залогировано в INCIDENTY"; FAIL=1; }
 
+# ── ЛОВУШКА 15: --no-verify обходит хук, но НЕ МОЛЧА ──
+# Урок 9: чужой красный гейт останавливал работу целиком — голого
+# `git commit --no-verify` в этом репо нет, весь git идёт через инструмент.
+# Флаг заведён вместе с тем, что краснеет при злоупотреблении: обход САМ
+# пишется в INCIDENTY. Обе половины обязательны и проверены порознь —
+# «коммит прошёл» без следа означал бы тихий обход гейтов, то есть их конец.
+mkdir -p "$T/krasnyj-hook"
+cat > "$T/krasnyj-hook/pre-commit" <<'HOOK'
+#!/bin/sh
+echo "❌ фикстурный красный гейт"; exit 1
+HOOK
+chmod +x "$T/krasnyj-hook/pre-commit"
+git -C "$T" config core.hooksPath "$T/krasnyj-hook"
+mkdir -p "$T/moya-zona"
+echo "под красным хуком" > "$T/moya-zona/pod-krasnym.md"
+
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit --zone moya-zona \
+    -m "зона: коммит под чужим красным гейтом" > /dev/null 2>&1 || true
+V=$(git -C "$T" show --stat --format= HEAD | grep -c 'pod-krasnym' || true)
+[ "$V" = "0" ] && echo "  ✅ без флага красный хук коммит ОСТАНАВЛИВАЕТ (гейт жив)" \
+               || { echo "  ❌ красный pre-commit не остановил коммит — гейт мёртв"; FAIL=1; }
+
+# Голый флаг БЕЗ причины обязан отказать: обход, у которого не названо, что
+# обходят, ничем не отличается от тихого (урок 9 требует причину строкой).
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit --zone moya-zona --no-verify \
+    -m "зона: коммит под чужим красным гейтом" > /dev/null 2>&1 || true
+V=$(git -C "$T" show --stat --format= HEAD | grep -c 'pod-krasnym' || true)
+[ "$V" = "0" ] && echo "  ✅ --no-verify БЕЗ причины отказал (обход без причины = тихий)" \
+               || { echo "  ❌ --no-verify без причины провёз коммит — обход снова тихий"; FAIL=1; }
+
+GIT_ZONA_REPO="$T" python3 "$TOOLS/git_zona.py" commit --zone moya-zona \
+    --no-verify "чужой долг: фикстурный красный гейт" \
+    -m "зона: коммит под чужим красным гейтом" > /dev/null 2>&1 || true
+V=$(git -C "$T" show --stat --format= HEAD | grep -c 'pod-krasnym' || true)
+[ "$V" = "1" ] && echo "  ✅ --no-verify с причиной провёз зону мимо ЧУЖОГО красного гейта" \
+               || { echo "  ❌ --no-verify не сработал — урок 9 не закрыт, работа встаёт"; FAIL=1; }
+
+V=$(grep -c "чужой долг: фикстурный красный гейт" \
+        "$T/_studio/zhurnal/_INFRA-git/INCIDENTY.md" 2>/dev/null || true)
+[ "$V" = "1" ] && echo "  ✅ обход САМ записал в INCIDENTY.md ПРИЧИНУ, а не факт обхода" \
+               || { echo "  ❌ ТИХИЙ ОБХОД ГЕЙТА: причина --no-verify не попала в INCIDENTY"; FAIL=1; }
+
+git -C "$T" config --unset core.hooksPath
+
 # ── ЛОВУШКА 8: ❌ на НОРМАЛЬНОМ исходе ──
 # `commit` сам удаляет план после успеха; повторный запуск не должен пугать.
 # ЦЕНА (23.07): владелец прочитал «❌ Плана нет» как «коммит не сработал» —

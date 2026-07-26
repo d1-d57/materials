@@ -623,7 +623,7 @@ def cmd_untrack(args):
     return 0
 
 
-def execute_commits(commits, push=False, delete_plan=False):
+def execute_commits(commits, push=False, delete_plan=False, no_verify=False):
     """Общее ядро ОБОИХ путей коммита — планового (`commit`) и однокомандного
     (`commit --zone -m`).
 
@@ -638,6 +638,22 @@ def execute_commits(commits, push=False, delete_plan=False):
         log_incident("чужой лок держится дольше 90 с",
                      "подождать и повторить ту же команду; лок руками не удалять")
         return 2
+
+    # 🔴 --no-verify: обойти хук МОЖНО, но НЕ МОЛЧА (ISTOCHNIK-PRAVDY §3).
+    # ЦЕНА (урок 9): гейт судит только пути коммита, но фикстуры и общие гейты
+    # краснеют на ЧУЖОМ долге — и тогда собственная чистая зона не коммитится
+    # вовсе. Голого `git commit --no-verify` в этом репо нет (весь git идёт
+    # через этот инструмент), значит без флага здесь работа встаёт совсем.
+    # Правило «красное на чужой зоне — в отчёт долгом, а не правкой»
+    # (ISTOCHNIK-PRAVDY §4.5) держится тем, что обход САМ пишется в INCIDENTY:
+    # запись, которую забудут сделать руками, инструмент делает за них.
+    if no_verify:
+        print(f"⚠ --no-verify: pre-commit ОБОЙДЁН. Причина: {no_verify}\n"
+              "   Это законно только когда красное — ЧУЖОЕ (фикстура/гейт чужой зоны).\n"
+              "   Своя красная зона чинится, а не обходится. Обход записан в\n"
+              "   INCIDENTY.md — назвать его долгом в отчёте захода.")
+        log_incident(f"коммит с --no-verify: {no_verify}",
+                     "назвать причину долгом в отчёте захода; своё красное — чинить")
 
     done, failed = [], []
     for c in commits:
@@ -674,7 +690,10 @@ def execute_commits(commits, push=False, delete_plan=False):
                   + (r.stderr.strip().splitlines() or ["(stderr пуст)"])[0])
             failed.append(c["msg"])
             continue
-        r = git("commit", "-m", c["msg"], "--", *c["paths"], check=False)
+        # Флаг встраивается ЗДЕСЬ, в общем ядре, а не в обёртках: тропы `commit`
+        # и `commit --zone -m` обязаны вести себя одинаково (см. докстроку).
+        nv = ["--no-verify"] if no_verify else []
+        r = git("commit", *nv, "-m", c["msg"], "--", *c["paths"], check=False)
         if r.returncode != 0:
             # Показываем ПРИЧИНУ, а не первую попавшуюся строку.
             # Цена: 21.07 коммит уронил pre-commit-хук, а печаталась первая
@@ -802,7 +821,8 @@ def commit_zone_oneshot(args):
             print(f"   … ещё {len(снаружи) - 20}")
         print("   Это норма, если рядом работает кто-то ещё. Если это ТВОЯ работа —\n"
               "   назови её вторым коммитом со своей зоной, иначе она останется вне git.\n")
-    rc = execute_commits([{"msg": msg, "paths": [p for _, p in rows]}], push=args.push)
+    rc = execute_commits([{"msg": msg, "paths": [p for _, p in rows]}], push=args.push,
+                         no_verify=getattr(args, "no_verify", None))
     if rc == 0 and PLAN.exists():
         print("\n⚠ Лежит черновик _studio/.commit-plan — эта команда его НЕ исполняла.\n"
               "   Устарел → пересобрать `plan --force`; актуален → исполнить `commit` без -m.")
@@ -810,6 +830,20 @@ def commit_zone_oneshot(args):
 
 
 def cmd_commit(args):
+    # 🔴 --no-verify без ПРИЧИНЫ не бывает (урок 9 арки 2026-07-25_lekcia-1).
+    # Флаг заведён ровно затем, чтобы обход чужого красного был ВИДИМЫМ; обход
+    # без названной причины видимым не является — в INCIDENTY попала бы строка,
+    # по которой через неделю не восстановить, чей долг обходили и закрыт ли он.
+    # Отказ человеческим языком, а не питоновый usage (§0в канона).
+    if getattr(args, "no_verify", None) == "":
+        print("⛔ `--no-verify` требует ПРИЧИНУ строкой сразу за флагом — обход,\n"
+              "   у которого не названо, что именно обходят, ничем не отличается\n"
+              "   от тихого. Образец:\n"
+              "     commit --zone <зона> --no-verify \"чужой долг: 51 мёртвая секция рамы\" \\\n"
+              "            -m \"<что и зачем>\" --push")
+        log_incident("--no-verify без причины", "назвать причину строкой сразу за флагом")
+        return 1
+
     # 🔴 ПЕРВЫМ ходом, до любой работы: писать из песочницы нельзя (см. refuse_write).
     # Раньше запрет жил только словами в каноне — и был нарушён: три отказа за
     # сессию 22.07, репозиторий дважды вставал на полчаса для всех писателей.
@@ -817,11 +851,16 @@ def cmd_commit(args):
     # Пустой или плейсхолдерный -m ЗДЕСЬ законен: Cowork из песочницы готовит
     # команду (получая отказ с готовой строкой для владельца), а жмёт владелец.
     if in_sandbox():
+        # Флаг обхода обязан попасть в ПРЕДЛОЖЕННУЮ владельцу строку: он её
+        # копирует целиком, и потерянный здесь флаг вернёт ему тот же красный
+        # хук, из-за которого команда и собиралась.
+        nv = (f" --no-verify {shlex.quote(args.no_verify)}"
+              if getattr(args, "no_verify", None) else "")
         if args.message is not None:
             m = args.message.strip() or "<что и зачем>"
-            sug = f"commit --zone {args.zone or '<зона>'} -m {shlex.quote(m)} --push"
+            sug = f"commit --zone {args.zone or '<зона>'} -m {shlex.quote(m)} --push{nv}"
         else:
-            sug = "commit --push"
+            sug = f"commit --push{nv}"
         log_incident("песочница: запись в .git запрещена",
                      "команду исполняет владелец в своём терминале")
         return refuse_write("Коммит", suggest=sug)
@@ -888,7 +927,8 @@ def cmd_commit(args):
         return 1
 
     print(f"План: {len(commits)} коммит(ов).\n")
-    return execute_commits(commits, push=args.push, delete_plan=True)
+    return execute_commits(commits, push=args.push, delete_plan=True,
+                           no_verify=getattr(args, "no_verify", None))
 
 
 # ─────────────────────────────── worktree ───────────────────────────────
@@ -1299,6 +1339,12 @@ def main():
     k.add_argument("-m", "--message",
                    help="однокомандная тропа: закоммитить зону с этим сообщением, без плана")
     k.add_argument("--push", action="store_true", help="сразу вывезти на origin")
+    # Значение ОБЯЗАТЕЛЬНО по букве урока 9: `--no-verify "чужой долг: …"`.
+    # nargs="?", а не required-значение, — чтобы голый флаг ловился не питоновым
+    # usage, а человеческим отказом с диагнозом (§0в канона).
+    k.add_argument("--no-verify", nargs="?", const="", metavar="ПРИЧИНА",
+                   help="обойти pre-commit, когда красное — ЧУЖОЕ; ПРИЧИНА обязательна "
+                        "и пишется в INCIDENTY")
     k.set_defaults(func=cmd_commit)
 
     cl = sub.add_parser("clean", help="снять мёртвые локи и мусор из .git")
