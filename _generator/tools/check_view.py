@@ -49,9 +49,15 @@ def check(srcdir):
             if re.search(r'[<>]', f.group(0)):
                 bad.append(("ОПАСНАЯ ФОРМУЛА (%s) — сырой < или >; пиши \\lt / \\gt" % md.name,
                             f.group(0)[:60]))
+        hidden = False           # секция `## Заголовок {скрыть}` в HTML не попадает — и не должна
         for blk in re.split(r'\n\s*\n', src):
             blk = blk.strip()
-            if not blk or blk.startswith(SKIP):
+            if blk.startswith('## '):
+                hidden = '{скрыть}' in blk.split('\n')[0]
+            # мат-долги (⚑ / «Флаг закрыт») — учёт автора, в HTML не идут по решению владельца
+            if '⚑' in blk or 'Флаг закрыт' in blk:
+                continue
+            if not blk or hidden or blk.startswith(SKIP):
                 continue
             tail = norm(blk)[-35:]
             if len(tail) > 12 and tail not in plain:

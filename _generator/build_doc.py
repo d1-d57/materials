@@ -86,8 +86,18 @@ def render_inline(text):
     text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
     text = re.sub(r"(?<!\*)\*(?!\*)([^*\n]+?)\*(?!\*)", r"<em>\1</em>", text)
     text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", r'<a href="\2">\1</a>', text)
+    text = _nbsp(text)
     text = re.sub(r"\x00M(\d+)\x00", lambda m: stash[int(m.group(1))], text)
     return text
+
+
+# висячие слова: короткое слово не должно оставаться в конце строки одно (типографский минимум).
+# Математика к этому моменту уже спрятана в плейсхолдеры, тегам неразрывный пробел не мешает.
+_NBSP_RE = re.compile(r"(?<![\wЀ-ӿ])([а-яёА-ЯЁa-zA-Z]{1,2}|«|—)[  ]+(?=[\wЀ-ӿ«\x00])")
+
+
+def _nbsp(text):
+    return _NBSP_RE.sub(lambda m: m.group(1) + " ", text)
 
 
 def _join(lines):
@@ -128,7 +138,9 @@ def render_field(kind, body):
             tag, txt = body.split("|", 1)
         else:
             tag, txt = "Прозрение", body
-        return ('<div class="insight"><span class="tag">%s</span> %s</div>'
+        # Р-владелец 2026-07-24: прозрение — это мост и комментарий, а не главная линия;
+        # его место на поле, голубым. В потоке оно разрывало ход рассуждения.
+        return ('<div class="mn insight"><span class="tag">%s</span> %s</div>'
                 % (render_inline(tag.strip()), render_inline(txt.strip())))
     if kind == "уровень":
         return '<p class="level-line">Уровень: <span class="level">%s</span></p>' % render_inline(body)
@@ -154,36 +166,81 @@ def render_ill(text):
 # номер метки → id-якорь (defn=d-N, thm=t-N). Курсивные зачины — логика/статус/техфакт/рассказ.
 _KW_THM = ("Теорема", "Лемма", "Предложение", "Утверждение")
 _BOLD_STMT = re.compile(
-    r"^\*\*(Определение|Теорема|Лемма|Предложение|Утверждение|Пример|Замечание)"
+    r"^\*\*(Определение|Теорема|Лемма|Предложение|Утверждение|Пример|Задача|Замечание)"
     r"\s+(\d+)(.*?)\.\*\*\s*(.*)$", re.S)
+# Р-владелец 2026-07-24: врезки должны быть ОДНОГО вида и различаться только цветом метки —
+# серые безымянные плашки («Пример», «Замечание») из вида убраны, геометрия у всех общая.
+_STMT_CLS = {"Определение": ("stmt defn", "d"), "Пример": ("stmt task", "e"),
+             "Задача": ("stmt task", "e"), "Замечание": ("stmt rem", "n")}
 
 
-def _typed_block(joined, sid):
-    """Зачин блока → HTML-врезка нужного типа, либо None (пусть решают прочие ветки)."""
+# зачин свёрнутого вывода: идёт СРАЗУ за утверждением (без пустой строки между блоками — блок один)
+_PROOF_HEAD = re.compile(r"^\*(Доказательство|Логика|Идея|Решение)([^*]*)\*\s*(.*)$", re.S)
+
+
+def _body_html(text):
+    """Тело врезки → абзацы. Строка целиком из `$$…$$` — отдельный центрированный абзац
+    (Р-владелец 2026-07-24: равенство-утверждение должно стоять по центру, как в TeX);
+    соседние обычные строки склеиваются в один абзац, чтобы перенос строки в источнике
+    не рвал предложение."""
+    out, buf = [], []
+
+    def flush():
+        if buf:
+            out.append("<p>%s</p>" % render_inline(" ".join(buf)))
+            buf.clear()
+
+    for ln in [l.strip() for l in text.split("\n")]:
+        if not ln:
+            continue
+        if ln.startswith("$$") and ln.endswith("$$") and len(ln) > 4:
+            flush()
+            out.append('<p class="eq">%s</p>' % ln)
+        elif ln.startswith("**"):        # жирный зачин шага («**Симметрия.** …») — новый абзац
+            flush()
+            buf.append(ln)
+        else:
+            buf.append(ln)
+    flush()
+    return "".join(out)
+
+
+def proof_details(joined):
+    """`*Доказательство — подпись.* тело` → свёрнутый кат. СВЁРНУТ ПО УМОЛЧАНИЮ (Р-владелец
+    2026-07-24: «сворачивать — на уровне генератора, раз и навсегда»). Хвост зачина после
+    тире идёт в подпись кнопки: «доказательство — счёт двумя способами»."""
+    m = _PROOF_HEAD.match(joined.strip())
+    if not m:
+        return ""
+    kw, tail, body = m.group(1), m.group(2).strip(" .—-"), m.group(3)
+    cap = kw.lower() + (" — " + tail if tail else "")
+    return ('<details class="d-proof"><summary>%s</summary><div class="proof">%s</div></details>'
+            % (esc(cap), _body_html(body)))
+
+
+def _typed_block(joined, sid, proof_html=""):
+    """Зачин блока → HTML-врезка нужного типа, либо None (пусть решают прочие ветки).
+    Метка стоит ОТДЕЛЬНОЙ строкой над телом, кат вывода вращён внутрь той же врезки —
+    чтобы между утверждением и кнопкой «доказательство» не было разрыва."""
     m = _BOLD_STMT.match(joined)
     if m:
         kw, num, name, body = m.group(1), m.group(2), m.group(3), m.group(4)
         label = "%s %s%s." % (kw, num, name)              # имя в скобках сохранено
-        if kw == "Определение":
-            cls, anchor = "stmt defn", ' id="%s-d-%s"' % (sid, num)
-        elif kw in _KW_THM:
-            cls, anchor = "stmt thm", ' id="%s-t-%s"' % (sid, num)
-        elif kw == "Пример":
-            cls, anchor = "example", ""
-        else:                                             # Замечание
-            cls, anchor = "note", ""
-        return ('<div class="%s"%s><span class="lbl">%s</span> %s</div>'
-                % (cls, anchor, render_inline(label), render_inline(body)))
+        cls, key = _STMT_CLS.get(kw, ("stmt thm", "t"))
+        anchor = ' id="%s-%s-%s"' % (sid, key, num)
+        return ('<div class="%s"%s><span class="lbl">%s</span>%s%s</div>'
+                % (cls, anchor, render_inline(label), _body_html(body), proof_html))
     # курсивный зачин: *Логика…* / *Доказательство…* / *Статус…* / *Техфакт…* / *Рассказ…*
     m = re.match(r"^\*([^*].*?)\*\s*(.*)$", joined, re.S)
     if m:
         label, body = m.group(1), m.group(2)
         head = label.lstrip()
-        if head.startswith(("Логика", "Доказательство")):
-            cls = "proof"
-        elif head.startswith("Статус"):
-            cls = "blackbox"
-        elif head.startswith("Техфакт"):
+        if head.startswith(("Логика", "Доказательство", "Идея", "Решение")):
+            return proof_details(joined)                  # отдельно стоящий вывод — тоже под кат
+        if head.startswith("Статус"):
+            # Р-владелец 2026-07-24: статусы, оговорки и мосты живут на ПОЛЯХ, не в потоке
+            return '<p class="mn"><b>%s</b> %s</p>' % (render_inline(label), render_inline(body))
+        if head.startswith("Техфакт"):
             cls = "tech"
         elif head.startswith("Рассказ"):
             cls = "rasskaz"
@@ -192,6 +249,29 @@ def _typed_block(joined, sid):
         return ('<div class="%s"><span class="lbl">%s</span> %s</div>'
                 % (cls, render_inline(label), render_inline(body)))
     return None
+
+
+def attach_marker(out, html, sid, num):
+    """Двусторонняя метка «текст ↔ поле» (Р-владелец 2026-07-24): в тексте — звёздочка в конце
+    того блока, к которому заметка относится; в самой заметке — такая же звёздочка, ведущая
+    обратно. Так видно, в какой момент заметку читать, и откуда она пришла."""
+    mid, rid = "%s-mn-%d" % (sid, num), "%s-mnr-%d" % (sid, num)
+    out_mark = '<a class="mn-ref" id="%s" href="#%s">✳</a>' % (rid, mid)
+    placed = False
+    for j in range(len(out) - 1, -1, -1):
+        b = out[j]
+        for tag in ("</p>", "</div>", "</table>", "</ul>"):
+            if b.endswith(tag):
+                out[j] = b[: -len(tag)] + out_mark + tag
+                placed = True
+                break
+        if placed:
+            break
+    k = html.index(">") + 1
+    head = html[:k].replace('class="', 'id="%s" class="' % mid, 1)
+    # якоря в тексте нет (заметка открывает раздел) — обратной стрелки тоже не рисуем
+    back = '<a class="mn-back" href="#%s">✳</a> ' % rid if placed else ""
+    return head + back + html[k:]
 
 
 def _toc_title(md):
@@ -204,24 +284,134 @@ def _toc_title(md):
 
 
 # ───────────────────────── поток текста: блоки → HTML (модель данных doc-движка) ─────────────────────────
+# ссылка внутри текста на уже доказанное: «по утверждению 4», «из определения 2» → якорь врезки.
+# Пишется СО СТРОЧНОЙ — так отличается упоминание в тексте от самой метки врезки («Утверждение 4.»),
+# и метка не ссылается сама на себя. Р-владелец 2026-07-24: энциклопедический текст должен уметь
+# сослаться на прежний результат, не пересказывая его.
+_REF_RE = re.compile(
+    r"\b(утвержден|теорем|лемм|предложени|определени|пример|задач|замечани)(\w*)(\s+)(\d+)\b")
+_REF_KIND = {"утвержден": "t", "теорем": "t", "лемм": "t", "предложени": "t",
+             "определени": "d", "пример": "e", "задач": "e", "замечани": "n"}
+
+
+def linkify_refs(html, sid):
+    """Упоминания «утверждению 4» → `<a href="#sid-t-4">`. Работает ТОЛЬКО по тексту между тегами
+    (внутрь атрибутов и уже существующих ссылок не лезет) и только если такой якорь реально есть."""
+    have = set(re.findall(r'id="(%s-[tden]-\d+)"' % re.escape(sid), html))
+    if not have:
+        return html
+    parts = re.split(r"(<[^>]+>)", html)
+    in_link = False
+    for j, part in enumerate(parts):
+        if part.startswith("<"):
+            low = part.lower()
+            if low.startswith("<a "):
+                in_link = True
+            elif low.startswith("</a"):
+                in_link = False
+            continue
+        if in_link:                           # внутри уже существующей ссылки — не трогаем
+            continue                          # (в TeX русских слов нет, формулам ничего не грозит)
+
+        def rep(m):
+            tid = "%s-%s-%s" % (sid, _REF_KIND[m.group(1)], m.group(4))
+            if tid not in have:
+                return m.group(0)
+            return '<a class="xref" href="#%s">%s%s%s%s</a>' % (
+                tid, m.group(1), m.group(2), m.group(3), m.group(4))
+
+        parts[j] = _REF_RE.sub(rep, part)
+    return "".join(parts)
+
+
+# маркеры в заголовке `##` (Р-владелец 2026-07-24): служебное — вон из вида, длинное — под кат
+_SEC_HIDE = "{скрыть}"       # секция остаётся в markdown, в HTML не попадает (напр. «Источники»)
+_SEC_FOLD = "{свёрнуто}"     # закрыть, даже если по умолчанию было бы открыто
+_SEC_OPEN = "{развёрнуто}"   # открыть, даже если по умолчанию было бы закрыто
+
+
 def render_stream(body, sid="s0"):
-    """Пустая строка = граница блока. Возвращает (html, toc): toc — список (id, заголовок) по h2
-    для бокового оглавления (§4). Порядок распознавания важен (флаги до заголовка,
+    """Пустая строка = граница блока. Возвращает (html, toc): toc — список (id, заголовок, уровень)
+    по h2 и h3 для бокового оглавления (§4). Порядок распознавания важен (флаги до заголовка,
     чтобы `## ⚑ …` тоже стал бейджем-долгом; типы-блоки — до абзаца)."""
-    out, toc, h2n = [], [], 0
-    for block in re.split(r"\n\s*\n", body.strip("\n")):
+    out, toc, h2n, h3n, h4n, mn_n = [], [], 0, 0, 0, 0
+    blocks = re.split(r"\n\s*\n", body.strip("\n"))
+    hiding = False
+    open_secs = []          # стек уровней открытых <details class="sec">
+
+    def close_to(level):
+        while open_secs and open_secs[-1] >= level:
+            out.append("</div></details>")
+            open_secs.pop()
+
+    i = 0
+    while i < len(blocks):
+        block = blocks[i]
+        i += 1
         lines = [ln.rstrip() for ln in block.split("\n") if ln.strip() != ""]
         if not lines:
             continue
         joined = _join(lines)
         first = lines[0].lstrip()
+        hm = re.match(r"^(#{1,4})\s+(.*)$", first)
+
+        # 0. граница секции. КАЖДЫЙ раздел и подраздел — свой <details> (Р-владелец 2026-07-24:
+        #    «должно сворачиваться всё, и в тексте, и в оглавлении» — иначе длинный текст не
+        #    пролистать глазами). По умолчанию открыт; `{свёрнуто}` — закрыт; `{скрыть}` — вон.
+        if hm and len(hm.group(1)) in (2, 3, 4) and "⚑" not in joined:
+            lvl = len(hm.group(1))
+            title = hm.group(2)
+            fold = _SEC_FOLD in title
+            unfold = _SEC_OPEN in title
+            hide = _SEC_HIDE in title
+            for mk in (_SEC_HIDE, _SEC_FOLD, _SEC_OPEN):
+                title = title.replace(mk, "")
+            title = title.strip()
+            close_to(lvl)
+            if lvl == 2:
+                hiding = hide
+            elif hiding:                # подраздел внутри скрытого раздела — тоже вон
+                continue
+            if hide:
+                continue
+            if lvl == 2:
+                h2n += 1
+                h3n = h4n = 0
+                hid = "%s-h-%d" % (sid, h2n)
+            elif lvl == 3:
+                h3n += 1
+                h4n = 0
+                hid = "%s-h-%d-%d" % (sid, h2n, h3n)
+            else:
+                h4n += 1
+                hid = "%s-h-%d-%d-%d" % (sid, h2n, h3n, h4n)
+            head = '<h%d id="%s">%s</h%d>' % (lvl, hid, render_inline(title), lvl)
+            if lvl <= 3:
+                toc.append((hid, _toc_title(title), lvl))
+            # Р-владелец 2026-07-24: единое правило — РАЗДЕЛ открыт, всё внутри свёрнуто.
+            # `{свёрнуто}` / `{развёрнуто}` перебивают правило поштучно.
+            is_open = (lvl == 2 and not fold) or unfold
+            out.append('<details class="sec sec%d"%s><summary>%s</summary><div class="sec-body">'
+                       % (lvl, " open" if is_open else "", head))
+            open_secs.append(lvl)
+            if len(lines) > 1:
+                out.append("<p>%s</p>" % render_inline(_join(lines[1:])))
+            continue
+        if hiding:
+            continue
 
         # 1. цитата / поле  (все строки блока начинаются с '>')
         if all(l.lstrip().startswith(">") for l in lines):
             inner = _join([re.sub(r"^\s*>\s?", "", l) for l in lines])
             fm = re.match(r"^поле:(\S*)\s*(.*)$", inner, re.S)
             if fm:
-                out.append(render_field(fm.group(1), fm.group(2)))
+                if fm.group(1).strip() == "foot":         # закрывающий статус черновика — не для вида
+                    continue
+                fh = render_field(fm.group(1), fm.group(2))
+                if 'class="mn"' in fh or 'class="insight"' in fh:
+                    mn_n += 1
+                    fh = attach_marker(out, fh, sid, mn_n)
+                out.append(fh)
             else:
                 out.append("<blockquote>%s</blockquote>" % render_inline(inner))
             continue
@@ -233,32 +423,22 @@ def render_stream(body, sid="s0"):
 
         # 2b. сырой HTML-блок автора верхнего уровня (доверенный источник) — без обёртки <p>
         if first.startswith(("<figure", "<svg", "<div", "<table", "<details")):
+            if first.startswith('<figure class="mn"'):
+                mn_n += 1
+                joined = attach_marker(out, joined, sid, mn_n)
             out.append(joined)
             continue
 
-        # 3. закрытый мат-долг (до открытого и до заголовка — распознаётся по фразе)
-        if "Флаг закрыт" in joined:
-            txt = re.sub(r"^#{1,4}\s*", "", joined)
-            out.append('<p class="flag closed"><b>✔ закрыт.</b> %s</p>' % render_inline(txt))
+        # 3-4. мат-долги (⚑ / «Флаг закрыт») — учёт автора, В ВИД НЕ ИДУТ (Р-владелец
+        #      2026-07-24: неунифицированный блок, читателю не нужен). Линтер их по-прежнему
+        #      считает по markdown, так что дисциплина долгов не теряется.
+        if "⚑" in joined or "Флаг закрыт" in joined:
             continue
 
-        # 4. открытый мат-долг
-        if "⚑" in joined:
-            txt = re.sub(r"^#{1,4}\s*", "", joined)
-            out.append('<p class="flag open">%s</p>' % render_inline(txt))
-            continue
-
-        # 5. заголовок (# … #### …); h2 → якорь + пункт бокового оглавления (§4); хвост блока — как абзац
-        hm = re.match(r"^(#{1,4})\s+(.*)$", first)
+        # 5. прочие заголовки (h1, h4) — без секции
         if hm:
             lvl = len(hm.group(1))
-            if lvl == 2:
-                h2n += 1
-                hid = "%s-h-%d" % (sid, h2n)
-                out.append('<h2 id="%s">%s</h2>' % (hid, render_inline(hm.group(2))))
-                toc.append((hid, _toc_title(hm.group(2))))
-            else:
-                out.append("<h%d>%s</h%d>" % (lvl, render_inline(hm.group(2)), lvl))
+            out.append("<h%d>%s</h%d>" % (lvl, render_inline(hm.group(2)), lvl))
             if len(lines) > 1:
                 out.append("<p>%s</p>" % render_inline(_join(lines[1:])))
             continue
@@ -269,14 +449,26 @@ def render_stream(body, sid="s0"):
             out.append("<ul>%s</ul>" % items)
             continue
 
-        # 6b. типизированный блок-утверждение (§3): распознаётся по зачину, между списком и абзацем
-        tb = _typed_block(joined, sid)
+        # 6b. типизированный блок-утверждение (§3): распознаётся по зачину, между списком и абзацем.
+        #     Следующий блок-вывод втягивается ВНУТРЬ врезки свёрнутым катом (Р-владелец 2026-07-24).
+        # ВАЖНО: во врезку отдаём СЫРОЙ блок с переводами строк (_join их схлопывает в пробелы,
+        # а телу врезки они нужны: строка `$$…$$` = отдельный центрированный абзац).
+        raw = "\n".join(lines)
+        proof_html = ""
+        if _BOLD_STMT.match(raw) and i < len(blocks) and _PROOF_HEAD.match(blocks[i].strip()):
+            proof_html = proof_details(blocks[i])
+            i += 1
+        tb = _typed_block(raw, sid, proof_html)
         if tb:
+            if tb.startswith('<p class="mn"'):
+                mn_n += 1
+                tb = attach_marker(out, tb, sid, mn_n)
             out.append(tb)
             continue
 
         # 7. абзац
         out.append("<p>%s</p>" % render_inline(joined))
+    close_to(2)
     return "\n".join(out), toc
 
 
@@ -794,6 +986,7 @@ def load_streams(src):
             "meta": meta,
             "body": body,
             "label": meta.get("tab") or first_heading(body) or p.stem,
+            "h1": first_heading(body),
             "debt_open": max(0, opened - closed),
             "debt_raw": (opened, closed),
         })
@@ -802,7 +995,10 @@ def load_streams(src):
     for i, st in enumerate(streams):
         render = (render_stream_drill if st["meta"].get("format") == "drill-down"
                   else render_stream)                      # ОПТ-ИН drill-down; без флага — как раньше
-        st["html"], st["toc"] = render(st["body"], "s%d" % i)
+        sid = "s%d" % i
+        st["html"], st["toc"] = render(st["body"], sid)
+        if render is render_stream:                        # drill-поток линкуется своим механизмом
+            st["html"] = linkify_refs(st["html"], sid)
     return streams
 
 
@@ -860,6 +1056,8 @@ PAGE = r"""<!DOCTYPE html>
     if (window.renderMathInElement) renderMathInElement(document.body, {
       delimiters: [{left: "$$", right: "$$", display: true},
                    {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
       throwOnError: false
     });
   });
@@ -882,31 +1080,44 @@ html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
   line-height:1.7;font-size:21px;font-optical-sizing:auto}
 a{color:var(--link)}
-.wrap{max-width:1335px;margin:0 auto;padding:1.6rem 30px 130px}
-.doc-head,.runtime-note{max-width:1015px}
-.doc-head{font-family:var(--sans)}
-.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .1em}
-.gen-note{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:0 0 1.4rem}
-.runtime-note{font-family:var(--sans);font-size:.82rem;line-height:1.5;background:#fff8e6;
-  border:1px solid #e6d7a2;border-radius:6px;padding:.7rem .9rem;margin:0 0 1.6rem;color:#6a5a1e}
-.runtime-note code{background:#f0e6c8;padding:0 .25em;border-radius:3px}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
 
-/* ── §4 макет трёх зон: [оглавление 210px][текст ≤820][жёлоб .mn ~195] (порт catalan/kurs) ── */
-.layout{display:grid;grid-template-columns:210px minmax(0,1015px);gap:46px}
-.layout.solo{grid-template-columns:minmax(0,1015px)}
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
+.layout.solo{grid-template-columns:minmax(0,1240px)}
 main{min-width:0}
 
 /* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
 .toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
-  font-family:var(--sans);font-size:.83rem;line-height:1.4;border-right:1px solid var(--rule);padding-right:14px}
-.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:.74rem;letter-spacing:.09em;
+  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
 .toc>summary::-webkit-details-marker{display:none}
 .toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
-.toc li{counter-increment:toc;margin:.16em 0}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
 .toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
   border-radius:3px;position:relative}
-.toc a::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;font-variant-numeric:tabular-nums}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
 .toc a:hover{color:var(--accent);background:var(--accent-soft)}
 .toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
 .toc a.active::before{color:var(--accent)}
@@ -922,33 +1133,56 @@ main{min-width:0}
 {{TABCSS}}
 
 /* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
-.stream{max-width:820px;counter-reset:sec}
+.stream{max-width:790px;counter-reset:sec}
 .stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
 .stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
   margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
 .stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
-.stream h3{font-family:var(--sans);font-size:1.18rem;font-weight:600;margin:1.6em 0 .5rem}
-.stream p{margin:0 0 1.05em}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
 .stream ul{margin:.7em 0;padding-left:1.3em}
 .stream li{margin:.3em 0}
 .stream a{border-bottom:1px solid #bcd2dd}
 .stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
+  margin-left:.12em;text-decoration:none}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
 
 /* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
 .stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
-.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:.98rem;letter-spacing:.01em}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
 .defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
 .defn .lbl{color:var(--accent)}
 .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
 .thm .lbl{color:var(--warm)}
-.proof{color:var(--muted);font-size:.99rem;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
 .proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
-.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:1rem}
+.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
 .example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
 div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
-  padding:.7em 1.05em;margin:1.5em 0;font-size:1rem}
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
 div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
@@ -978,9 +1212,14 @@ table tbody tr:nth-child(even){background:var(--panel)}
 table tbody td:first-child{color:var(--muted)}
 
 /* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
-.mn{float:right;clear:right;width:172px;margin:.35em -195px 1.1em 22px;
-  font-family:var(--sans);font-size:.8rem;line-height:1.5;color:var(--muted);
-  border-left:2px solid var(--rule);padding-left:.75em}
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
 .mn b,.mn strong{color:var(--text)}
 /* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
 @media(max-width:900px){
@@ -990,7 +1229,9 @@ table tbody td:first-child{color:var(--muted)}
     padding:0 0 1em;margin-bottom:1.5em}
   .toc>summary{cursor:pointer}
   .toc ol{columns:2;column-gap:22px}
-  .mn{float:none;width:auto;margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
 }
 @media(max-width:520px){
   body{font-size:19px}
@@ -1005,10 +1246,10 @@ aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
 aside.note.thread{border-left-color:var(--thread)}
 
 /* ── .insight: крупное прозрение/разворот ── */
-.insight{background:var(--insight-bg);border-left:4px solid var(--accent);
-  padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 6px 6px 0}
-.insight .tag{display:inline-block;font-family:var(--sans);font-size:.7rem;font-weight:700;
-  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-right:.5em}
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
 
 /* ── .foot: статус черновика ── */
 .foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
@@ -1040,7 +1281,7 @@ aside.note.thread{border-left-color:var(--thread)}
 /* ── иллюстрация (готовый SVG автора) ── */
 figure{margin:2.1em 0;text-align:center}
 figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
-figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
 
 /* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
 .s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
@@ -1062,19 +1303,51 @@ figure figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);ma
 .s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
 
 /* ── мета-строка потока ── */
-.stream-meta{font-family:var(--sans);font-size:.8rem;color:var(--muted);
-  margin:0 0 1.2rem;display:flex;flex-wrap:wrap;gap:.5rem 1rem}
-.stream-meta .status{font-weight:700;color:var(--text)}
-.stream-meta .debt{color:var(--flag-open);font-weight:700}
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
+  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{color:var(--accent)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:#c3bbaa;font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="doc-head">
   <h1>{{TITLE}}</h1>
-  <p class="gen-note">Вид doc-движка · вкладки = потоки-«котёл» (стадия склада сюжетов). Источник истины — markdown; правь его и пересобирай (0 токенов).</p>
 </div>
-<div class="runtime-note">Математика набрана <b>KaTeX через CDN</b> — это <b>авторский рантайм-вид для вычитки</b> (Р7), единственная внешняя зависимость. Офлайн формулы деградируют в сырой <code>$…$</code>, страница не падает. Финальный дек несёт статический кэш формул, не рантайм.</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
 <div class="tabs">
 {{RADIOS}}
 <nav class="tabbar">
@@ -1095,7 +1368,11 @@ window.addEventListener("DOMContentLoaded", function () {
   var current = null, visible = {};
   function setActive(a) {
     if (current) current.classList.remove("active");
-    if (a) { a.classList.add("active"); current = a; }
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
   }
   var obs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
@@ -1112,6 +1389,90 @@ window.addEventListener("DOMContentLoaded", function () {
   Object.keys(links).forEach(function (id) {
     var el = document.getElementById(id); if (el) obs.observe(el);
   });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
 });
 </script>
 </body>
@@ -1141,30 +1502,51 @@ def build_html(streams, title):
 
 
 def _toc_html(toc):
-    """Боковое оглавление из h2 (§4): sticky-список с якорями; пусто → нет оглавления."""
+    """Боковое оглавление (§4): h2 — нумерованный пункт, h3 — вложенный список под ним,
+    сворачиваемый (Р-владелец 2026-07-24). Элементы toc — (id, заголовок) или
+    (id, заголовок, уровень); двойки приходят из drill-потока и считаются уровнем 2."""
     if not toc:
         return ""
-    items = "".join('<li><a href="#%s">%s</a></li>' % (tid, title) for tid, title in toc)
-    return ('<details class="toc" open><summary>Содержание</summary>'
-            '<ol>%s</ol></details>' % items)
+    items, sub_open = [], False
+
+    def close_grp():
+        # группа с подпунктами закрывается как <details>, без подпунктов — как обычный <li>
+        if sub_open:
+            items.append("</ul></details></li>")
+        elif items:
+            items.append("</details></li>")
+
+    for t in toc:
+        tid, title, lvl = (t + (2,))[:3] if len(t) == 2 else t
+        if lvl == 3:
+            if not sub_open:
+                # подпункты появились — превращаем уже выписанный пункт в сворачиваемую группу
+                items.append('<ul class="toc-sub">')
+                sub_open = True
+            items.append('<li><a href="#%s">%s</a></li>' % (tid, title))
+            continue
+        close_grp()
+        sub_open = False
+        # группы рождаются ЗАКРЫТЫМИ: меню — компактный скелет из разделов, подразделы
+        # раскрываются кликом по разделу (аккордеон, скрипт §4в)
+        items.append('<li><details class="toc-grp"><summary>'
+                     '<a class="toc-h2" href="#%s">%s</a></summary>' % (tid, title))
+    close_grp()
+    ctl = ('<div class="toc-ctl">'
+           '<button type="button" data-toc="open">развернуть всё</button>'
+           '<button type="button" data-toc="close">свернуть всё</button></div>')
+    return ('<details class="toc" open><summary>Содержание</summary>%s'
+            '<ol>%s</ol></details>' % (ctl, "".join(items)))
 
 
 def _panel_html(i, st):
-    meta = st["meta"]
-    bits = []
-    if meta.get("status"):
-        bits.append('<span class="status">status: %s</span>' % esc(meta["status"]))
-    if meta.get("registr"):
-        bits.append('регистр: %s' % esc(meta["registr"]))
-    if st["debt_open"] > 0:
-        bits.append('<span class="debt">⚑ открытых долгов: %d</span>' % st["debt_open"])
-    bits.append('источник: %s' % esc(st["name"]))
-    meta_line = '<div class="stream-meta">%s</div>' % " ".join('<span>%s</span>' % b for b in bits)
-    # §4 макет трёх зон: [оглавление 210px][текст ≤820][жёлоб .mn]; нет h2 → одна колонка (.solo)
+    """§4 макет трёх зон: [оглавление][текст][жёлоб .mn]; нет h2 → одна колонка (.solo).
+    Служебной мета-строки (status / регистр / долги / имя источника) в виде НЕТ:
+    Р-владелец 2026-07-24 — это сведения для автора, они живут в markdown, не на экране."""
     toc = _toc_html(st["toc"])
-    return ('<section class="panel" id="panel-%d">%s'
+    return ('<section class="panel" id="panel-%d">'
             '<div class="layout%s">%s<main><article class="stream">%s</article></main></div>'
-            '</section>' % (i, meta_line, "" if toc else " solo", toc, st["html"]))
+            '</section>' % (i, "" if toc else " solo", toc, st["html"]))
 
 
 # ───────────────────────── CLI ─────────────────────────
@@ -1200,7 +1582,9 @@ def main():
     if args.lint:
         return 0
 
-    title = args.title or src.name
+    # заголовок вида: явный --title, иначе `#` первого потока (осмысленное имя вместо имени папки),
+    # иначе имя папки. Р-владелец 2026-07-24: в шапке стояло «kotly» — служебное, читателю пустое.
+    title = args.title or (streams[0].get("h1") if streams else "") or src.name
     out_text = build_html(streams, title)
     out_path = Path(args.out) if args.out else (src / "view.html")
     write_text(out_path, out_text)
