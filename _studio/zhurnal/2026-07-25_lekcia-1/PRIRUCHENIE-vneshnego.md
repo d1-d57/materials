@@ -36,9 +36,10 @@ python3 - <<'PY'
 import re
 from collections import Counter
 t=open('PRIRUCHENIE-vneshnego.md').read()
-marks=[('М0','# М0 —'),('М1','# М1 —'),('М2','# М2 —'),('М3','# М3 —'),('М4','# М4 —'),
-       ('ЗА','# ЗА —'),('НЕ ПОНЯЛ','# 🔴 НЕ ПОНЯЛ'),('Мимо','# Мимо —'),('Картина','# Что я увидел')]
-pos=[(n,t.index(s)) for n,s in marks]
+# заголовки ищем ТОЛЬКО с начала строки: те же строки встречаются внутри этого блока
+marks=[('М0','М0 —'),('М1','М1 —'),('М2','М2 —'),('М3','М3 —'),('М4','М4 —'),
+       ('ЗА','ЗА —'),('НЕ ПОНЯЛ','🔴 НЕ ПОНЯЛ'),('Мимо','Мимо —'),('Картина','Что я увидел')]
+pos=[(n,re.search('^# '+re.escape(s),t,re.M).start()) for n,s in marks]
 sect=lambda i:[n for n,p in pos if i>=p][-1]
 c=Counter()
 for p in [l for l in open('.ohvat-vneshnego.txt').read().split('\n') if l.strip()]:
