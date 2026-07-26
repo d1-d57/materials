@@ -1,0 +1,379 @@
+mat-pervaya-kategoriya
+chum-kategoriya
+set-kategoriya
+monoid-odin-obekt
+kobordizmy-kameo
+tangly-kameo
+mat-biproduct
+nno-prodolzhenie
+transpose-contravariant
+dual-functor
+double-dual
+gl-action-dual
+det-natural
+floor-ceiling
+free-forgetful-vect
+currying-bilinear
+free-vect-monad
+closure-monad
+stochastic-matrices
+abelianization
+riehl-lccc-donor
+pf-est-pi-tip
+cep-univalentnost
+put-ccc-topos
+puchok-primer
+effektivnyj-topos-obraz
+most-sloi-iz-proizvedenija
+uravnitel-okruzhnost
+nepodvizhnye-tochki-uravnitel
+pullback-join-dannye
+pullback-ogranichenie-rassloenia
+slajs-primer-semejstva
+zn-kouravnitel-teoriya-chisel
+sklejka-tor-pushout
+yoneda-elementarnye-preobrazovaniya
+zavisimaya-vektornoe-pole
+zavisimaya-vybor-resheniya
+zavisimaya-dokazatelstvo-vseh
+nno-arifmetika-rekursiej
+chain-rule-est-funktorialnost
+opora-mnogochleny-l7
+assoc-linal-vysshaya-algebra
+assoc-ordinaly-maclane
+assoc-topologiya-razlichit-figury
+assoc-graf-so-strelkami-kolchan
+gomologii-grafa-funktor-vect
+raskraska-3-uzla-verdikt
+eulerova-harakteristika-razlichit
+galua-verdikt
+ekvivalentnost-primery-vp-boole
+raskraska-est-strelka
+leinster-universalnoe-bez-zhargona
+hovanov-vidit-uzel
+uravnitel-teoriya-i-eksperiment
+pullback-rubashki-bryuki
+pryamye-rejsy-ne-kategoriya
+botinki-i-noski
+nyuton-est-dejstvie-monoida
+i-i-minus-i-nerazlichimy
+est-preobr-est-zamena-bazisa
+kvantory-kak-sopryazhennye
+polovina-yabloka
+smeshenie-cvetov-reshetka
+karta-est-funktor
+lineinaya-so-sdvigom-ne-funktor
+nekommutiruyushchaya-otec-gorod
+spyashchij-mladenec-kompoziciya
+komanda-i-slabejshij
+neobratimye-processy-cheng
+stulya-na-koncerte
+kitajskij-restoran-cena
+sfera-shar-okruzhnost-v-set
+princip-vzryva-daet-terminalnyj
+himicheskie-seti-funktor
+yazyk-est-funktor
+fibonacci-nepreryvnyj-funktor
+dinamika-est-funktor-vremeni
+klany-volka-i-medvedya
+nat-preobr-rukami
+centr-gruppy-ne-funktor
+izo-kategorij-tri-opredeleniya
+delenie-na-3-konvej-dojl
+net-retrakcii-d2-s1
+gruppovoj-obekt-grp-grp-ab
+rank-nullity-kanon-izo
+orbita-stabilizator-kanon
+funktor-shlopyvaet-minimalno
+ciklicheskie-gruppy-bez-kanona
+veshch-x2plus1-izo-c
+affinnoe-vs-vektornoe-neestestvenno
+konechnaya-abeleva-haraktery
+umnozhenie-est-est-preobr
+centr-est-est-preobr-id
+mat-ekvivalentna-ne-izomorfna
+biekciya-ne-izo-v-rel
+boorng-izo-boo
+kategoriya-fejnmana
+kategoriya-algoritmov-sostoyanij
+obekty-i-diagrammy-kak-funktory
+segal-gamma-ekvivalentnost
+klein-affinnoe-proektivnoe-ek
+avtomat-kak-funktor-ep
+fmap-ne-vsegda-suschestvuet
+vneshnyaya-aksioma-vybora
+funktor-reshenij-uravnenij
+atiyah-macdonald-funktor-bez-slova
+hatcher-brauer-v-rodnom-kontekste
+puti-v-prostranstve-ne-kategoriya
+lenta-mebiusa-semejstvo-nad-okruzhnostyu
+rasscheplenie-vlozhenij-po-kategoriyam
+A7
+A1
+A6
+A2
+A3
+A4
+A5
+A8
+B1
+B2
+B3
+B4
+B5
+B6
+B7
+B8
+B9
+dekategorifikaciya-teryaet
+mot-obratimost-i-universum
+interesnye-otkazy-cheng
+mat-ne-nuzhna-zapis
+mot-zabytoe-otobrazhenie
+skomkannaya-karta
+suhoj-list-s-pizy
+[lawvere 175]
+[lawvere 168–169]
+[lawvere 153]
+[lawvere 209–210]
+[lawvere 100–101]
+[lawvere 117–119]
+[lawvere 68–69]
+[lawvere 89–93]
+[lawvere 52 · 109–110]
+[cheng-mfa23-s3]
+[riehl 12]
+[lawvere 57]
+[lawvere 57–58]
+[perrone 16]
+[perrone 13]
+[fong-spivak 73 · 53]
+[cheng-joy 147]
+[lawvere 22]
+[lawvere 96/416]
+opora-kombinatorika-potolok
+kategorifikaciya-arifmetiki
+Брауэр-кластер
+[riehl 45]
+[perrone 30]
+[perrone 32]
+[perrone 37]
+[spivak-cts 75]
+[lawvere 190–192]
+[bradley 35 · 40]
+[spivak-cts 104–108]
+[leinster 27]
+[leinster 30–31]
+[baez-course 43]
+[cheng-joy 304]
+motivation-scalar-product-is-choice
+dual-not-natural-proof
+scene-naturality-slide
+scene-det-square
+[perrone 52 C№3 · riehl 47–48 C№2]
+[perrone 53 C№4]
+[leinster 40–48 C№5]
+[lawvere 119 C№1]
+[cti-11]
+[perrone 44 ×2 · nesin 13–14]
+[leinster 11]
+[leinster 14]
+[riehl 47]
+[perrone 52 1.4.15]
+[perrone 49 1.4.7]
+[math3ma]
+scene-yoneda-probe
+cayley
+[perrone 76]
+[perrone 77]
+[perrone 70 2.1.9]
+[math3ma-yoneda, Серпинский]
+[math3ma 638]
+diagonal-kantora-daet-godelya
+vopros-chetyre-teoremy
+nod-universalnoe
+galiley-proizvedenie
+kub-hofshtadtera-teni
+scena-dve-teni
+hasse-scena
+koproizvedenie-diz-obedinenie
+eksponenta-2v3
+zakon-stepenej-karrirovanie
+implikaciya-est-eksponenta
+heyting-vyrozhdennyj-ccc
+iskl-tretie-lomaetsya
+vect-ne-ccc
+vect-lovushka
+distributivnost-ccc
+chto-ne-kategorificiruetsya
+recursion-nno
+scene-nno-staircase
+nno-initial-rig
+opora-kombinatorika-l3
+arifmetika-zavisimogo-proizvedeniya
+sechenie-neset-vybor
+mot-sloi-reshenija-sistemy
+lawvere-stacking-fibering
+[leinster 9, корзина A№3]
+[cheng-joy 224 · 238–239 · 334]
+[awodey 75]
+[perrone 81 · nesin 20]
+[cheng-joy 232 · nesin 30 · lawvere 179–181]
+[cheng-joy 315 · lawvere 236]
+[cheng-joy 283 ×2 · nesin 26 · awodey 77 · baez-course 37]
+[baez-course 39]
+[lawvere 238]
+[awodey 95]
+[leinster 20 · baez-course 10 · nesin 7 · 11 · perrone 26 ×2 · 27 · baez-course 14 · cheng-joy 197 · 147-Z8 · nesin 23 · leinster 20-обратное]
+[lawvere 148]
+[lawvere 60–61]
+[lawvere 304–305, C№6]
+[baez-dolan 11, C№7]
+[lawvere 138]
+[cti-06 general principle]
+[cti-06 Positive/negative types]
+[cti-06 Kinds]
+[cheng-joy 325]
+[leinster 18–19]
+[lawvere 336–337]
+[lawvere 333]
+[lawvere 292–293]
+koyadro-est-kouravnitel
+yadro-est-uravnitel
+sobstvennoe-est-uravnitel
+mot-sloi-spektr
+[leinster 15]
+[perrone Ex5.3.4 · 5.3.8 · 5.4.14]
+[lawvere 256–257]
+[perrone 130 ×2 · 102 · 111-пересечение]
+[leinster 43–44]
+[leinster 44]
+scene-numberline
+scene-hull
+[math3ma-adj-3 Galois]
+[perrone Ex5.1.33 · §5.2.1]
+[perrone Ex5.1.34]
+[perrone Ex5.1.1]
+mot-otkuda-sigma
+scene-kleisli-sigma
+[perrone Ex5.1.2 · 5.2.9 · 5.2.26]
+[perrone Ex5.2.19 · 5.5.7 · 5.2.2 · 5.1.7 · 5.1.9–10]
+omega-otkrytye-mnozhestva
+mot-gde-zhivet-vasha-logika
+zachem-zavisimaya-funkciya
+scena-zavisimaya-korobka
+[fong-spivak 52 · 51]
+curry-howard-lambek
+chl
+rosetta-tablica-baez-stay
+rosetta-baez-svyaznaya-kartina
+[cti-05 BHK ×2 · truth tables · free Heyting]
+[cti-05 · 06 Modus ponens · применение = MP]
+[cti-06 Inductive types]
+granica-hott-topos
+omega-otkrytye-verifikaciya
+eff-topos-verifikaciya
+С1
+С2
+С3
+С4
+С5
+С6
+С7
+С8
+С9
+С10
+С11
+С12
+С13
+С14
+С15
+С16
+С17
+С18
+С19
+С20
+С21
+В1-а
+В1-б
+В1-в
+В1-г
+В1-д
+В1-е
+В1-ж
+Б1
+Б2
+Б3
+Б4
+Б5
+Б6
+Б7
+Б8
+Б9
+Б10
+ГА1⋄1а
+U001
+U002
+U003
+U004
+U006
+U007
+U011
+U016
+U017
+U020
+U023
+U029
+F2-1
+F2-2
+F2-3
+F2-4
+[perrone 102]
+[perrone 50]
+[spivak-cts 99]
+[lawvere 181–182]
+[lawvere 193]
+[cheng-joy 120]
+[cheng-joy 76]
+[lawvere 316–321 · 318]
+[cti-02 external]
+[awodey 778]
+[baez-course 49]
+[lawvere 171]
+[lawvere 627]
+[lawvere 635]
+[spivak-cts 926]
+[cheng-joy 946]
+[perrone 670 · 736]
+[perrone 47]
+[leinster 28–29]
+[leinster 29]
+[math3ma-adj-3 Data Migration]
+[math3ma-adj-3 звери/признаки FCA]
+[perrone §5.3.1]
+[perrone Ex5.1.7 writer]
+[baez-course 892]
+[cheng-joy 171/376]
+[math3ma-adj-3 Product-Hom тор]
+[perrone 28 · cheng-joy 198 · leinster 20]
+[cheng-joy 322–323]
+[lawvere 331–332]
+[lawvere 331–332, спорная]
+[lawvere 773 (310–311), спорная]
+[cheng-joy 285]
+[baez-course 33]
+[leinster 37–38]
+[perrone 51 · leinster 40–41]
+[baez-course 27 · cheng-joy 281 ×2]
+[perrone 31 · perrone 70-2.1.10]
+[cheng-joy 283-абелевы]
+[cti-05 BHK-пара]
+[cheng-joy 81]
+[картотечная currying-adjunction]
+[cheng-joy 612 (243–244), спорная]
+contravariance
+nno
+zavisimoe-proizvedenie
+tip-tozhdestva
+pushout-sklejka-opredelenie
+vyhod-l4-reshat-est-predel
