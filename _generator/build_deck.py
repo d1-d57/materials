@@ -23,6 +23,19 @@ from pathlib import Path
 PLACEHOLDER_RE = re.compile(r"\{\{[A-Za-z0-9_:.\-]+\}\}")
 GEN_BANNER = "<!-- ⚠ СГЕНЕРИРОВАНО ИЗ src/ ГЕНЕРАТОРОМ _generator/build_deck.py — РУКАМИ НЕ ПРАВИТЬ. Правь источник в src/. -->\n"
 
+# ───────────────────────── канон трёх служебных слайдов ─────────────────────────
+# Обложка, визитка «Про меня» и финал «Спасибо за внимание» ПОРОЖДАЮТСЯ из полей
+# brief.md и заготовок ниже — рукописных `slides/<id>.html` для них не существует.
+# Это хук H6 (`_studio/konvejer/GEJTY.md`) в слое вёрстки: величина, обязанная
+# совпадать между деками, порождается, а не выписывается руками в каждом.
+SLUZHEBNYE = Path(__file__).resolve().parent / "skeleton" / "sluzhebnye"
+COVER_ID, VIZITKA_ID, FINAL_ID = "sl-title", "sl-vizitka", "sl-thanks"
+SERVICE_IDS = (COVER_ID, VIZITKA_ID, FINAL_ID)
+# `?ПОЛЕ` в начале строки заготовки — строка живёт, только если поле объявлено;
+# `!ПОЛЕ` — только если НЕ объявлено. Нет поля — нет элемента: значений по
+# умолчанию у служебных слайдов нет ни одного, выводить их из `id`/`title` нельзя.
+OPT_LINE_RE = re.compile(r"^([ \t]*)([?!])([A-Z]+)(.*)$")
+
 
 # ───────────────────────── чтение/запись без трансляции переводов строк ─────────────────────────
 def read_text(path):
@@ -169,6 +182,75 @@ def render_md(text, math, acc_tag="b"):
     return "\n".join(out)
 
 
+# ───────────────────────── порождение служебных слайдов ─────────────────────────
+def fill_template(text, fields):
+    """Заготовка из `skeleton/sluzhebnye/` + поля → HTML слайда.
+
+    Диалект нарочно крошечный (две формы, обе построчные), чтобы заготовку можно
+    было читать как обычный HTML: `?ПОЛЕ`/`!ПОЛЕ` в начале строки — условная
+    строка, `{ПОЛЕ}` — подстановка. Значения идут из `brief.md` как есть (сырой
+    HTML не экранируется — та же договорённость, что в render_inline_md)."""
+    kept = []
+    for line in text.split("\n"):
+        m = OPT_LINE_RE.match(line)
+        if m:
+            indent, sign, name, rest = m.groups()
+            if (sign == "?") != bool(fields.get(name)):
+                continue
+            line = indent + rest
+        kept.append(line)
+    out = "\n".join(kept)
+    for name, val in fields.items():
+        out = out.replace("{%s}" % name, val if isinstance(val, str) else "")
+    return out
+
+
+def generate_service_slides(meta, filemap, names, math):
+    """Обложка/визитка/финал → filemap; возвращает (порождённые id, порядок слайдов).
+
+    Порядок служебных слайдов — тоже не рукописный: обложка первая, визитка ВСЕГДА
+    вторая (снимается только явным `vizitka: net`), финал последний. Если дек всё
+    же несёт рукописный `slides/<служебный id>.html` — приоритет у него, а
+    порождение молчит: три немигрированных дека обязаны собираться как прежде."""
+    hand = set(names.get("slides", []))
+    middle = [x for x in (meta.get("slide_order") or []) if x not in SERVICE_IDS]
+    order = [COVER_ID]
+    if str(meta.get("vizitka", "")).strip().lower() != "net":
+        order.append(VIZITKA_ID)
+    order += middle + [FINAL_ID]
+
+    generated = []
+
+    def emit(sid, shablon_name, fields):
+        if sid in hand:                       # рукописный слайд имеет приоритет
+            return
+        tpl = read_text(SLUZHEBNYE / shablon_name)
+        filemap["{{SLIDE:%s}}" % sid] = fill_template(tpl, fields).rstrip("\n")
+        generated.append(sid)
+
+    date_place = " · ".join(x for x in (meta.get("cover_date", ""), meta.get("cover_place", ""))
+                            if isinstance(x, str) and x)
+    emit(COVER_ID, "oblozhka.html", {
+        "ID": COVER_ID,
+        "TITLE": meta.get("title", ""),
+        "SUB": meta.get("cover_sub", ""),
+        "DATEPLACE": date_place,
+        "ILL": meta.get("cover_ill", ""),
+    })
+    if VIZITKA_ID in order:
+        emit(VIZITKA_ID, "vizitka.html", {
+            "ID": VIZITKA_ID,
+            # активы визитки живут в каноне и вшиваются ОТТУДА: копий в деках нет,
+            # правка биографии/фото должна быть в одном месте на все деки.
+            "PHOTO": read_text(SLUZHEBNYE / "vizitka-photo.html").strip(),
+            "QR": read_text(SLUZHEBNYE / "vizitka-qr.html").strip(),
+            "COPY": render_md(read_text(SLUZHEBNYE / "vizitka.md"), math,
+                              meta.get("accent_tag", "b")),
+        })
+    emit(FINAL_ID, "final.html", {"ID": FINAL_ID, "ILL": meta.get("final_ill", "")})
+    return generated, order
+
+
 # ───────────────────────── загрузка src/ ─────────────────────────
 def load_source(src):
     """shablon.html + все дословные части → (shablon, filemap{token:content}, meta, names{kind:[имена]})."""
@@ -216,6 +298,19 @@ def load_source(src):
     for p in sorted((src / "content").glob("*.md")) if (src / "content").is_dir() else []:
         filemap["{{MD:%s}}" % p.stem] = render_md(read_text(p), math, meta.get("accent_tag", "b"))
         names["content"].append(p.stem)
+
+    # Канон-CSS служебных слайдов — по требованию шаблона (у деков, собранных до
+    # перехода на порождение, плейсхолдера нет, и подстановка их не касается).
+    filemap["{{SLUZHEBNYE_CSS}}"] = read_text(SLUZHEBNYE / "style.css")
+
+    # Порождение включается ОДНИМ признаком — плейсхолдером {{SLIDES}} в шаблоне.
+    # Его отсутствие у buffon/dandelin/fibonacci и есть гарантия, что их выход не
+    # меняется: ни одна ветка ниже для них не исполняется.
+    names["generated"] = []
+    if "{{SLIDES}}" in shablon:
+        names["generated"], names["order"] = generate_service_slides(meta, filemap, names, math)
+        filemap["{{SLIDES}}"] = "\n".join(
+            filemap.get("{{SLIDE:%s}}" % sid, "{{SLIDE:%s}}" % sid) for sid in names["order"])
 
     return shablon, filemap, meta, names
 
@@ -276,9 +371,11 @@ def lint(shablon, filemap, meta, names):
     for m in ext_re.finditer(assembled):
         errors.append("внешний asset-URL: %s…" % m.group(0)[:70])
 
-    # 5. slide_order покрывает все slides/, нет сирот/дублей
-    order = meta.get("slide_order", [])
-    present = set(names.get("slides", []))
+    # 5. slide_order покрывает все slides/, нет сирот/дублей.
+    # У дека на порождении судится ЭФФЕКТИВНЫЙ порядок (со служебными слайдами,
+    # которые генератор вставил сам) — иначе линтер объявил бы их сиротами.
+    order = names.get("order") or meta.get("slide_order", [])
+    present = set(names.get("slides", [])) | set(names.get("generated", []))
     missing = present - set(order)
     extra = set(order) - present
     dupes = sorted({x for x in order if order.count(x) > 1})
@@ -288,6 +385,14 @@ def lint(shablon, filemap, meta, names):
         errors.append("slide_order ссылается на несуществующие слайды: %s" % sorted(extra))
     if dupes:
         errors.append("дубли id в slide_order: %s" % dupes)
+
+    # 5b. в выходе есть хотя бы один слайд. Ловит опечатку в плейсхолдере потока:
+    # `{{ SLIDES }}` с пробелами — не плейсхолдер (PLACEHOLDER_RE пробелов не знает),
+    # он молча уезжает в выход как текст, порождение не включается, и дек собирается
+    # ЧИСТЫМ, но пустым. Такое состояние не ловил никто (найдено верификатором 28.07).
+    if not re.search(r'<section[^>]*class="slide"', assembled):
+        errors.append("в собранном деке ноль слайдов — проверь плейсхолдер потока "
+                      "{{SLIDES}} (пробелы внутри скобок его убивают) и slide_order")
 
     # 6. (мягко) неиспользуемые illustrations/*
     used_ill = set(re.findall(r'data-ill="([^"]+)"', assembled))
@@ -309,7 +414,8 @@ def lint(shablon, filemap, meta, names):
 # ───────────────────────── самопроверка-статистика ─────────────────────────
 def stats_line(assembled, names):
     return ("слайдов:%d  шаблонов(иллюстраций):%d  глав(3D):%d  драйверов:%d  sims:%d  вес:%dКБ"
-            % (len(names.get("slides", [])), len(names.get("illustrations", [])),
+            % (len(names.get("slides", [])) + len(names.get("generated", [])),
+               len(names.get("illustrations", [])),
                len(names.get("chapters", [])), len(names.get("drivers", [])),
                len(names.get("sims", [])),
                len(assembled.encode("utf-8")) // 1024))

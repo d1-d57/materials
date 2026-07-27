@@ -6,8 +6,9 @@ provenance: greenfield
 milestone: демо блока I (S1–S7); render-identity гейт неприменим на 1-й сборке — замена линтер + глаз
 accent_tag: span
 register: читаемый
+cover_ill: title-art
+final_ill: sierpinski
 slide_order:
-  - sl-title
   - sl-cliff
   - sl-columns
   - sl-cells
@@ -28,7 +29,6 @@ slide_order:
   - sl-formula
   - sl-telescope
   - sl-answer
-  - sl-course
 ---
 
 # paskal — источник дека открытой лекции «Внутри треугольника Паскаля»

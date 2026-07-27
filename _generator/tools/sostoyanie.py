@@ -680,13 +680,63 @@ def _slide_own_text(slide_html):
     return re.sub(r"<[^>]+>", " ", body)
 
 
+def _na_porozhdenii(src):
+    """Дек переведён на ПОРОЖДЕНИЕ служебных слайдов?
+
+    Признак один и грепаемый — плейсхолдер `{{SLIDES}}` в `shablon.html`; им же
+    включает порождение сам генератор, так что признак не может разойтись с
+    механикой. Замер 28.07.2026: до миграции Паскаля — 0 совпадений на четырёх
+    живых деках, значит структурная ветка ниже НЕ судит немигрированные деки и
+    даёт им 0 ложных ❌ (buffon держит все три служебных слайда рукописными и
+    остаётся законным)."""
+    return "{{SLIDES}}" in (read(src / "shablon.html") or "")
+
+
 def check_g12(lek, ctx):
     if ctx.get("slides_flag") == "нет":
         return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    if _na_porozhdenii(src):
+        # Дек на порождении судится по ДВУМ вещам сразу, и обе нужны.
+        # (1) СТРУКТУРА: рукописный служебный слайд перебивает канон.
+        # (2) ОБЪЁМ ОБЪЯВЛЕННОГО: «писать лишнее негде» — неправда, канал есть, и
+        #     он же санкционированный: `cover_sub`/`cover_date`/`cover_place`
+        #     подставляются как есть. Верификатор захода собрал через них обложку
+        #     на 52 слова при пороге 25, и структурная ветка сказала PASS. Счёт слов
+        #     не выключается, а ПЕРЕНАЦЕЛИВАЕТСЯ с рукописного слайда на поля.
+        meta = _load_src_brief(src)
+        # Множество рукописных слайдов берём ТЕМ ЖЕ способом, что генератор
+        # (`load_dir` глобит `*` и ключует по `p.stem`), а не по `<id>.html`:
+        # `slides/sl-title.txt` и `sl-title.html~` (бэкап редактора!) точно так же
+        # перебивают порождение, и проверка по расширению их не видела.
+        stems = {p.stem for p in (src / "slides").glob("*") if p.is_file()} \
+            if (src / "slides").is_dir() else set()
+        vizitka_off = str(meta.get("vizitka", "")).strip().lower() == "net"
+        wanted = [sid for sid in bd.SERVICE_IDS
+                  if not (sid == bd.VIZITKA_ID and vizitka_off)]
+        detail = []
+        hand = [sid for sid in wanted if sid in stems]
+        if hand:
+            detail.append("рукописные служебные слайды перебивают канон "
+                          "`_generator/skeleton/sluzhebnye/`: %s — удалить, "
+                          "элементами управляют поля brief.md" % hand)
+        cover_fields = [meta.get(k, "") for k in ("title", "cover_sub", "cover_date", "cover_place")]
+        cover_words = count_words(" ".join(x for x in cover_fields if isinstance(x, str)))
+        if cover_words > G12_WORD_LIMIT:
+            detail.append("обложка объявлена на %d слов > %d — режь `cover_sub`/`cover_date`/"
+                          "`cover_place` в brief.md" % (cover_words, G12_WORD_LIMIT))
+        if detail:
+            return GateResult(FAIL, "; ".join(detail), True)
+        return GateResult(PASS, "обложка, визитка и финал порождены генератором "
+                          "(рукописных нет, обложка объявлена в %d слов)" % cover_words,
+                          True, ["автор-чекпоинт: сильный ли образ финала — вкус, "
+                                 "механически не решается"])
     order = _order_of(lek, ctx)
     if len(order) < 2:
         return GateResult(NA, "в slide_order меньше двух слайдов — обложки и финала нет")
-    src = lek / "src"
+    # Ниже — прежняя проверка счётом слов. Она остаётся ТОЛЬКО для немигрированных
+    # деков (buffon/dandelin/fibonacci): у них служебные слайды рукописные, и
+    # единственное, что можно проверить снаружи, — не перегружены ли они.
     detail = []
     for role, sid in (("обложка", order[0]), ("финал", order[-1])):
         slide_html, content_md = _slide_pair(src, sid)

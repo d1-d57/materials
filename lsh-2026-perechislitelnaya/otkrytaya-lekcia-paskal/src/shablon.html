@@ -7,7 +7,7 @@
   Дек «Внутри треугольника Паскаля» (открытая лекция ЛШП NlogN).
   ДЕМО: блок I, слайды S1–S7. Канон-контракт, четыре блока:
     [1] DECK STYLES — токены, шрифты, base.css, overlay.css (KaTeX), пер-слайдовые гриды
-    [2] SLIDES      — текст и зоны ({{SLIDE:<id>}} в порядке brief.slide_order)
+    [2] SLIDES      — плейсхолдер SLIDES: обложка + визитка + brief.slide_order + финал (порождает генератор)
     [3] ASSETS      — иллюстрации в <template>
     [4] ENGINE      — движок дословно, не править
   Холст 1440×810. Два плана: бумага (текст-тезис) / доска (рисунок).
@@ -19,22 +19,14 @@
 
 {{TOKENS_CSS}}
 {{BASE_CSS}}
+{{SLUZHEBNYE_CSS}}
 {{OVERLAY_CSS}}
 
 /* ---------- пер-слайдовые гриды (bespoke) ---------- */
-
-/* обложка: доска во весь холст, Forum caps по центру, мотив-треугольник снизу */
-.slide[data-kind="cover"] { background: var(--board); }
-.slide[data-kind="cover"] .wrap { position: absolute; inset: 0; display: grid;
-  grid-template-rows: 1fr auto 1.7fr; align-items: center; padding: 0 130px; }
-.slide[data-kind="cover"] .head { grid-row: 2; }
-.slide[data-kind="cover"] .t-display { font-size: 96px; }
-.slide[data-kind="cover"] .sub { font-family: 'Glacial Indifference','Noto Sans',sans-serif;
-  text-align: center; color: var(--ink); font-size: 32px; letter-spacing: .04em; margin-top: 36px; }
-.slide[data-kind="cover"] .sub2 { font-size: 22px; margin-top: 14px; color: var(--ink); opacity: .78; line-height: 1.5; }
-.slide[data-kind="cover"] .art { position: absolute; left: 0; right: 0; bottom: 46px; height: 250px; }
-.slide[data-kind="cover"] .art .ill-box { height: 100%; }   /* без явной высоты svg берёт высоту из viewBox и уезжает за холст */
-.slide[data-kind="cover"] .art .s-txt { font-size: 18px; }  /* мотив мельче тела, но не микроскопический */
+/* Обложки, визитки и финала здесь НЕТ намеренно: три служебных слайда и их CSS
+   порождаются генератором из канона `_generator/skeleton/sluzhebnye/`
+   (плейсхолдер SLUZHEBNYE_CSS выше). Править их в деке нечего и негде — только полями
+   `brief.md` (`cover_ill`/`cover_sub`/`cover_date`/`cover_place`/`final_ill`). */
 
 /* контент-слайд по умолчанию (data-kind="board-wide"): лента-тезис (бумага) сверху,
    доска во всю ширину снизу. Мера строки ~48 знаков при кегле 38 — канонная. */
@@ -158,29 +150,9 @@
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ===== [2] SLIDES (порядок = brief.slide_order) ===== -->
-{{SLIDE:sl-title}}
-{{SLIDE:sl-cliff}}
-{{SLIDE:sl-columns}}
-{{SLIDE:sl-cells}}
-{{SLIDE:sl-pascal}}
-{{SLIDE:sl-views}}
-{{SLIDE:sl-tri}}
-{{SLIDE:sl-team}}
-{{SLIDE:sl-cut-middle}}
-{{SLIDE:sl-pairs}}
-{{SLIDE:sl-squares}}
-{{SLIDE:sl-ban}}
-{{SLIDE:sl-fib}}
-{{SLIDE:sl-domiki}}
-{{SLIDE:sl-diagonals}}
-{{SLIDE:sl-cliff-return}}
-{{SLIDE:sl-cut4}}
-{{SLIDE:sl-reflect}}
-{{SLIDE:sl-formula}}
-{{SLIDE:sl-telescope}}
-{{SLIDE:sl-answer}}
-{{SLIDE:sl-course}}
+<!-- ===== [2] SLIDES — весь поток порождает генератор: обложка, визитка,
+     brief.slide_order, финал. Порядок здесь не дублируется (H6). ===== -->
+{{SLIDES}}
 
 </div></div>
 <div id="lect-zone" style="position:fixed;left:0;bottom:0;width:100%;height:14px;z-index:200;cursor:pointer"></div>
