@@ -6,6 +6,7 @@ accent_tag: span
 register: читаемый
 slide_order:
   - s1
+  - s2
 ---
 
 Фикстура трекера. Намеренно ломающий вход — см. PROGNAT.sh рядом.

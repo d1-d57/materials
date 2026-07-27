@@ -481,7 +481,8 @@ def check_g7(lek, ctx):
         detail.append("разделов ленты %d, а slide_order %d — лента не покрывает деку "
                       "(раздел = слайд, 06-tekst/DOK.md)" % (len(sections), len(order)))
 
-    no_layout = [h for h, b in sections if not RASKLADKA_RE.search(b)]
+    # первый раздел = обложка: раскладке там нечего решать (GEJTY.md §G7, освобождено 28.07.2026)
+    no_layout = [h for h, b in sections[1:] if not RASKLADKA_RE.search(b)]
     if no_layout:
         detail.append("без «поле:mn **Раскладка.**»: %s" % no_layout)
 
