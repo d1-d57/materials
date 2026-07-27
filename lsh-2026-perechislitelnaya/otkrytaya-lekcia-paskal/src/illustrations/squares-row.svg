@@ -1,0 +1,21 @@
+<svg viewBox="30 24 366 104" role="img" aria-label="Строка треугольника Паскаля, под ней квадраты её чисел, справа их сумма — число центрального столбца">
+<text class="s-txt" x="60" y="46" text-anchor="middle">1</text>
+<text class="s-txt" x="112" y="46" text-anchor="middle">4</text>
+<text class="s-txt" x="164" y="46" text-anchor="middle">6</text>
+<text class="s-txt" x="216" y="46" text-anchor="middle">4</text>
+<text class="s-txt" x="268" y="46" text-anchor="middle">1</text>
+<text class="s-txt" x="60" y="104" text-anchor="middle">1</text>
+<line class="s-thin" x1="60" y1="58" x2="60" y2="86"/>
+<text class="s-txt" x="112" y="104" text-anchor="middle">16</text>
+<line class="s-thin" x1="112" y1="58" x2="112" y2="86"/>
+<text class="s-txt" x="164" y="104" text-anchor="middle">36</text>
+<line class="s-thin" x1="164" y1="58" x2="164" y2="86"/>
+<text class="s-txt" x="216" y="104" text-anchor="middle">16</text>
+<line class="s-thin" x1="216" y1="58" x2="216" y2="86"/>
+<text class="s-txt" x="268" y="104" text-anchor="middle">1</text>
+<line class="s-thin" x1="268" y1="58" x2="268" y2="86"/>
+<line class="s-thin" x1="40" y1="122" x2="272" y2="122"/>
+<line class="s-ar-a" x1="290" y1="104" x2="330" y2="104"/>
+<polyline class="s-ar-a" points="321,99.5 330,104 321,108.5"/>
+<text class="s-txt" x="366" y="110" text-anchor="middle">70</text>
+</svg>

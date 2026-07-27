@@ -1,0 +1,35 @@
+<svg viewBox="30 14 464 292" role="img" aria-label="Сверху ломаная, в которой каждый подъём сразу сменяется спуском: подъёмы собраны в домики, они выделены; снизу та же ломаная после сжатия — каждый домик заменён одним шагом вниз, и ломаная стала короче">
+<polyline class="s-line" points="46,52 82,30 118,52 154,30 190,52 226,74 262,52 298,74 334,52 370,74 406,96 442,74 478,96"/>
+<polyline class="s-accent" points="46,52 82,30 118,52"/>
+<polyline class="s-accent" points="118,52 154,30 190,52"/>
+<polyline class="s-accent" points="226,74 262,52 298,74"/>
+<polyline class="s-accent" points="298,74 334,52 370,74"/>
+<polyline class="s-accent" points="406,96 442,74 478,96"/>
+<circle class="s-node-a" cx="46" cy="52" r="3.4"/>
+<circle class="s-node" cx="82" cy="30" r="3.4"/>
+<circle class="s-node" cx="118" cy="52" r="3.4"/>
+<circle class="s-node" cx="154" cy="30" r="3.4"/>
+<circle class="s-node" cx="190" cy="52" r="3.4"/>
+<circle class="s-node" cx="226" cy="74" r="3.4"/>
+<circle class="s-node" cx="262" cy="52" r="3.4"/>
+<circle class="s-node" cx="298" cy="74" r="3.4"/>
+<circle class="s-node" cx="334" cy="52" r="3.4"/>
+<circle class="s-node" cx="370" cy="74" r="3.4"/>
+<circle class="s-node" cx="406" cy="96" r="3.4"/>
+<circle class="s-node" cx="442" cy="74" r="3.4"/>
+<circle class="s-node-a" cx="478" cy="96" r="3.4"/>
+<path class="s-ar-m" d="M262,104 L262,124"/>
+<path class="s-ar-m" d="M257.5,123 l4.5,9 l4.5,-9 z"/>
+<polyline class="s-line" points="136,136 172,158 208,180 244,202 280,224 316,246 352,268 388,290"/>
+<polyline class="s-accent" points="136,136 172,158 208,180"/>
+<polyline class="s-accent" points="244,202 280,224 316,246"/>
+<polyline class="s-accent" points="352,268 388,290"/>
+<circle class="s-node-a" cx="136" cy="136" r="3.4"/>
+<circle class="s-node" cx="172" cy="158" r="3.4"/>
+<circle class="s-node" cx="208" cy="180" r="3.4"/>
+<circle class="s-node" cx="244" cy="202" r="3.4"/>
+<circle class="s-node" cx="280" cy="224" r="3.4"/>
+<circle class="s-node" cx="316" cy="246" r="3.4"/>
+<circle class="s-node" cx="352" cy="268" r="3.4"/>
+<circle class="s-node-a" cx="388" cy="290" r="3.4"/>
+</svg>

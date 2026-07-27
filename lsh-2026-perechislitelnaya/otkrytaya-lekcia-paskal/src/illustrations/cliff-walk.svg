@@ -1,0 +1,9 @@
+<svg viewBox="24 10 372 136" role="img" aria-label="Ломаная траектория частицы: время слева направо, положение вверх; частица стартует на нулевом уровне и ни разу не опускается до нижней запретной черты">
+<line class="s-thin" x1="38" y1="112" x2="386" y2="112" stroke-dasharray="5 4"/>
+<line class="s-line" x1="38" y1="134" x2="386" y2="134"/>
+<polyline class="s-accent" points="44,112 72,90 100,112 128,90 156,68 184,46 212,24 240,46 268,68 296,46 324,68 352,90 380,112"/>
+<circle class="s-node" cx="72" cy="90" r="3.4"/><circle class="s-node" cx="100" cy="112" r="3.4"/><circle class="s-node" cx="128" cy="90" r="3.4"/><circle class="s-node" cx="156" cy="68" r="3.4"/><circle class="s-node" cx="184" cy="46" r="3.4"/><circle class="s-node" cx="212" cy="24" r="3.4"/><circle class="s-node" cx="240" cy="46" r="3.4"/><circle class="s-node" cx="268" cy="68" r="3.4"/><circle class="s-node" cx="296" cy="46" r="3.4"/><circle class="s-node" cx="324" cy="68" r="3.4"/><circle class="s-node" cx="352" cy="90" r="3.4"/><circle class="s-node" cx="380" cy="112" r="3.4"/>
+<circle class="s-node-r" cx="44" cy="112" r="4.4"/>
+<text class="s-txt-m" x="30" y="116" text-anchor="end">0</text>
+<text class="s-txt-m" x="30" y="138" text-anchor="end">−1</text>
+</svg>

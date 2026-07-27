@@ -1,0 +1,44 @@
+<svg viewBox="10 18 482 220" role="img" aria-label="Шесть панелей: все шесть траекторий из четырёх шагов вверх или вниз, которые стартуют на нулевом уровне и ни разу не опускаются ниже него">
+<line class="s-thin" x1="18" y1="118" x2="162" y2="118" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="30,118 60,96 90,74 120,52 150,30"/>
+<circle class="s-node-r" cx="30" cy="118" r="3.4"/>
+<circle class="s-node" cx="60" cy="96" r="3.4"/>
+<circle class="s-node" cx="90" cy="74" r="3.4"/>
+<circle class="s-node" cx="120" cy="52" r="3.4"/>
+<circle class="s-node" cx="150" cy="30" r="3.4"/>
+<line class="s-thin" x1="178" y1="118" x2="322" y2="118" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="190,118 220,96 250,74 280,52 310,74"/>
+<circle class="s-node-r" cx="190" cy="118" r="3.4"/>
+<circle class="s-node" cx="220" cy="96" r="3.4"/>
+<circle class="s-node" cx="250" cy="74" r="3.4"/>
+<circle class="s-node" cx="280" cy="52" r="3.4"/>
+<circle class="s-node" cx="310" cy="74" r="3.4"/>
+<line class="s-thin" x1="338" y1="118" x2="482" y2="118" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="350,118 380,96 410,74 440,96 470,74"/>
+<circle class="s-node-r" cx="350" cy="118" r="3.4"/>
+<circle class="s-node" cx="380" cy="96" r="3.4"/>
+<circle class="s-node" cx="410" cy="74" r="3.4"/>
+<circle class="s-node" cx="440" cy="96" r="3.4"/>
+<circle class="s-node" cx="470" cy="74" r="3.4"/>
+<line class="s-thin" x1="18" y1="226" x2="162" y2="226" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="30,226 60,204 90,182 120,204 150,226"/>
+<circle class="s-node-r" cx="30" cy="226" r="3.4"/>
+<circle class="s-node" cx="60" cy="204" r="3.4"/>
+<circle class="s-node" cx="90" cy="182" r="3.4"/>
+<circle class="s-node" cx="120" cy="204" r="3.4"/>
+<circle class="s-node" cx="150" cy="226" r="3.4"/>
+<line class="s-thin" x1="178" y1="226" x2="322" y2="226" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="190,226 220,204 250,226 280,204 310,182"/>
+<circle class="s-node-r" cx="190" cy="226" r="3.4"/>
+<circle class="s-node" cx="220" cy="204" r="3.4"/>
+<circle class="s-node" cx="250" cy="226" r="3.4"/>
+<circle class="s-node" cx="280" cy="204" r="3.4"/>
+<circle class="s-node" cx="310" cy="182" r="3.4"/>
+<line class="s-thin" x1="338" y1="226" x2="482" y2="226" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="350,226 380,204 410,226 440,204 470,226"/>
+<circle class="s-node-r" cx="350" cy="226" r="3.4"/>
+<circle class="s-node" cx="380" cy="204" r="3.4"/>
+<circle class="s-node" cx="410" cy="226" r="3.4"/>
+<circle class="s-node" cx="440" cy="204" r="3.4"/>
+<circle class="s-node" cx="470" cy="226" r="3.4"/>
+</svg>

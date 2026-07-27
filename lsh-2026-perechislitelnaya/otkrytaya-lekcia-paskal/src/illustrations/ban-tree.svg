@@ -1,0 +1,33 @@
+<svg viewBox="14 12 292 160" role="img" aria-label="Дерево слов из букв О и Р без двух О подряд: из корня две ветви, на втором шаге три, на третьем пять концов">
+<line class="s-line" x1="44" y1="82.5" x2="122" y2="53"/>
+<line class="s-line" x1="44" y1="82.5" x2="122" y2="112"/>
+<line class="s-line" x1="122" y1="53" x2="200" y2="53"/>
+<line class="s-line" x1="122" y1="112" x2="200" y2="92"/>
+<line class="s-line" x1="122" y1="112" x2="200" y2="131"/>
+<line class="s-line" x1="200" y1="53" x2="278" y2="40"/>
+<line class="s-line" x1="200" y1="53" x2="278" y2="66"/>
+<line class="s-line" x1="200" y1="92" x2="278" y2="92"/>
+<line class="s-line" x1="200" y1="131" x2="278" y2="118"/>
+<line class="s-line" x1="200" y1="131" x2="278" y2="144"/>
+<text class="s-txt" x="83" y="62" text-anchor="middle">О</text>
+<text class="s-txt" x="83" y="111" text-anchor="middle">Р</text>
+<text class="s-txt" x="161" y="45" text-anchor="middle">Р</text>
+<text class="s-txt" x="149" y="99" text-anchor="middle">О</text>
+<text class="s-txt" x="173" y="137" text-anchor="middle">Р</text>
+<text class="s-txt" x="227" y="43" text-anchor="middle">О</text>
+<text class="s-txt" x="259" y="77" text-anchor="middle">Р</text>
+<text class="s-txt" x="231" y="85" text-anchor="middle">Р</text>
+<text class="s-txt" x="227" y="121" text-anchor="middle">О</text>
+<text class="s-txt" x="251" y="153" text-anchor="middle">Р</text>
+<circle class="s-node-r" cx="44" cy="82.5" r="3.4"/>
+<circle class="s-node" cx="122" cy="53" r="3.4"/>
+<circle class="s-node" cx="122" cy="112" r="3.4"/>
+<circle class="s-node" cx="200" cy="53" r="3.4"/>
+<circle class="s-node" cx="200" cy="92" r="3.4"/>
+<circle class="s-node" cx="200" cy="131" r="3.4"/>
+<circle class="s-node" cx="278" cy="40" r="3.4"/>
+<circle class="s-node" cx="278" cy="66" r="3.4"/>
+<circle class="s-node" cx="278" cy="92" r="3.4"/>
+<circle class="s-node" cx="278" cy="118" r="3.4"/>
+<circle class="s-node" cx="278" cy="144" r="3.4"/>
+</svg>

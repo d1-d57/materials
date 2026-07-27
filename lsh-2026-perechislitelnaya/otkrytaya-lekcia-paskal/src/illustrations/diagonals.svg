@@ -1,0 +1,40 @@
+<svg viewBox="14 22 250 178" role="img" aria-label="Треугольник Паскаля из семи строк; пять восходящих диагоналей отмечены пунктиром, у начала каждой стоит сумма её чисел: один, два, три, пять, восемь">
+<line class="s-dash" x1="110" y1="77" x2="160" y2="51"/>
+<text class="s-txt-m" x="98" y="85" text-anchor="end">1</text>
+<line class="s-dash" x1="92" y1="103" x2="194" y2="51"/>
+<text class="s-txt-m" x="80" y="111" text-anchor="end">2</text>
+<line class="s-dash" x1="76" y1="129" x2="178" y2="77"/>
+<text class="s-txt-m" x="64" y="137" text-anchor="end">3</text>
+<line class="s-dash" x1="58" y1="155" x2="212" y2="77"/>
+<text class="s-txt-m" x="46" y="163" text-anchor="end">5</text>
+<line class="s-dash" x1="42" y1="181" x2="194" y2="103"/>
+<text class="s-txt-m" x="30" y="189" text-anchor="end">8</text>
+<text class="s-txt" x="148" y="34" text-anchor="middle">1</text>
+<text class="s-txt" x="131" y="60" text-anchor="middle">1</text>
+<text class="s-txt" x="165" y="60" text-anchor="middle">1</text>
+<text class="s-txt" x="114" y="86" text-anchor="middle">1</text>
+<text class="s-txt" x="148" y="86" text-anchor="middle">2</text>
+<text class="s-txt" x="182" y="86" text-anchor="middle">1</text>
+<text class="s-txt" x="97" y="112" text-anchor="middle">1</text>
+<text class="s-txt" x="131" y="112" text-anchor="middle">3</text>
+<text class="s-txt" x="165" y="112" text-anchor="middle">3</text>
+<text class="s-txt" x="199" y="112" text-anchor="middle">1</text>
+<text class="s-txt" x="80" y="138" text-anchor="middle">1</text>
+<text class="s-txt" x="114" y="138" text-anchor="middle">4</text>
+<text class="s-txt" x="148" y="138" text-anchor="middle">6</text>
+<text class="s-txt" x="182" y="138" text-anchor="middle">4</text>
+<text class="s-txt" x="216" y="138" text-anchor="middle">1</text>
+<text class="s-txt" x="63" y="164" text-anchor="middle">1</text>
+<text class="s-txt" x="97" y="164" text-anchor="middle">5</text>
+<text class="s-txt" x="131" y="164" text-anchor="middle">10</text>
+<text class="s-txt" x="165" y="164" text-anchor="middle">10</text>
+<text class="s-txt" x="199" y="164" text-anchor="middle">5</text>
+<text class="s-txt" x="233" y="164" text-anchor="middle">1</text>
+<text class="s-txt" x="46" y="190" text-anchor="middle">1</text>
+<text class="s-txt" x="80" y="190" text-anchor="middle">6</text>
+<text class="s-txt" x="114" y="190" text-anchor="middle">15</text>
+<text class="s-txt" x="148" y="190" text-anchor="middle">20</text>
+<text class="s-txt" x="182" y="190" text-anchor="middle">15</text>
+<text class="s-txt" x="216" y="190" text-anchor="middle">6</text>
+<text class="s-txt" x="250" y="190" text-anchor="middle">1</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg viewBox="66 26 168 306" role="img" aria-label="Одна и та же последовательность из четырёх бросков в четырёх обликах: ломаная траектория; ряд из четырёх кружков, где залиты первый и четвёртый; ступенчатый маршрут по решётке; ряд из четырёх клеток, где закрашены первая и четвёртая">
+<line class="s-thin" x1="70" y1="62" x2="230" y2="62" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="82,62 116,40 150,62 184,84 218,62"/>
+<circle class="s-node-a" cx="82" cy="62" r="3.4"/>
+<circle class="s-node" cx="116" cy="40" r="3.4"/>
+<circle class="s-node" cx="150" cy="62" r="3.4"/>
+<circle class="s-node" cx="184" cy="84" r="3.4"/>
+<circle class="s-node-a" cx="218" cy="62" r="3.4"/>
+<circle class="s-node-r" cx="82" cy="136" r="7"/>
+<circle class="s-node" cx="116" cy="136" r="7"/>
+<circle class="s-node" cx="150" cy="136" r="7"/>
+<circle class="s-node-r" cx="184" cy="136" r="7"/>
+<line class="s-thin" x1="110" y1="180" x2="190" y2="180"/>
+<line class="s-thin" x1="110" y1="220" x2="190" y2="220"/>
+<line class="s-thin" x1="110" y1="260" x2="190" y2="260"/>
+<line class="s-thin" x1="110" y1="180" x2="110" y2="260"/>
+<line class="s-thin" x1="150" y1="180" x2="150" y2="260"/>
+<line class="s-thin" x1="190" y1="180" x2="190" y2="260"/>
+<polyline class="s-accent" points="110,260 150,260 150,220 150,180 190,180"/>
+<circle class="s-node-a" cx="110" cy="260" r="3.4"/>
+<circle class="s-node-a" cx="190" cy="180" r="3.4"/>
+<rect class="s-fillsh" x="82" y="296" width="34" height="26"/>
+<rect class="s-line" x="116" y="296" width="34" height="26"/>
+<rect class="s-line" x="150" y="296" width="34" height="26"/>
+<rect class="s-fillsh" x="184" y="296" width="34" height="26"/>
+</svg>

@@ -1,0 +1,14 @@
+<svg viewBox="14 24 212 164" role="img" aria-label="Сверху: рамка охватывает четыре кружка, один из них залит. Снизу: та же четвёрка, но рамка охватывает три кружка, а залитый стоит вне рамки, и стрелка ведёт от рамки к нему">
+<rect class="s-fillsh" x="38" y="36" width="164" height="44" rx="8"/>
+<circle class="s-node" cx="62" cy="58" r="9"/>
+<circle class="s-node-r" cx="102" cy="58" r="9"/>
+<circle class="s-node" cx="142" cy="58" r="9"/>
+<circle class="s-node" cx="182" cy="58" r="9"/>
+<rect class="s-fillsh" x="26" y="132" width="124" height="44" rx="8"/>
+<circle class="s-node" cx="50" cy="154" r="9"/>
+<circle class="s-node" cx="90" cy="154" r="9"/>
+<circle class="s-node" cx="130" cy="154" r="9"/>
+<line class="s-thin" x1="160" y1="154" x2="186" y2="154"/>
+<path class="s-ar-m" d="M 184,150 l9,4 -9,4 z"/>
+<circle class="s-node-r" cx="206" cy="154" r="9"/>
+</svg>

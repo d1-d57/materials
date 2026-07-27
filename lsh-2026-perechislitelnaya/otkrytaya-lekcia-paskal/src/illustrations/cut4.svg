@@ -1,0 +1,21 @@
+<svg viewBox="24 10 336 106" role="img" aria-label="Ломаная из шагов плюс-минус один стартует в нуле и в середине впервые опускается на уровень минус один; в этой точке путь разрезан пунктирной вертикалью, левый кусок выделен, правый доходит до высоты два">
+<line class="s-thin" x1="36" y1="70" x2="352" y2="70" stroke-dasharray="5 4"/>
+<line class="s-thin" x1="36" y1="94" x2="352" y2="94"/>
+<polyline class="s-accent" points="46,70 76,46 106,70 136,46 166,70 196,94"/>
+<polyline class="s-line" points="196,94 226,70 256,46 286,70 316,46 346,22"/>
+<line class="s-dash" x1="196" y1="18" x2="196" y2="112"/>
+<circle class="s-node" cx="46" cy="70" r="3.4"/>
+<circle class="s-node" cx="76" cy="46" r="3.4"/>
+<circle class="s-node" cx="106" cy="70" r="3.4"/>
+<circle class="s-node" cx="136" cy="46" r="3.4"/>
+<circle class="s-node" cx="166" cy="70" r="3.4"/>
+<circle class="s-node" cx="226" cy="70" r="3.4"/>
+<circle class="s-node" cx="256" cy="46" r="3.4"/>
+<circle class="s-node" cx="286" cy="70" r="3.4"/>
+<circle class="s-node" cx="316" cy="46" r="3.4"/>
+<circle class="s-node" cx="346" cy="22" r="3.4"/>
+<circle class="s-node-a" cx="46" cy="70" r="3.4"/>
+<circle class="s-node-r" cx="196" cy="94" r="4.2"/>
+<text class="s-txt-m" x="30" y="74" text-anchor="end">0</text>
+<text class="s-txt-m" x="30" y="98" text-anchor="end">−1</text>
+</svg>
