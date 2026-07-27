@@ -1,59 +1,78 @@
-<svg viewBox="24 2 336 450" role="img" aria-label="Три кадра сверху вниз: путь с разрезом в точке первого касания уровня минус один; затем левый кусок отражён относительно уровня минус один и идёт из уровня минус два, исходный показан бледно; затем склеенный путь целиком из уровня минус два в ту же конечную высоту">
-<line class="s-thin" x1="36" y1="78" x2="352" y2="78" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="102" x2="352" y2="102" stroke-dasharray="5 4"/>
-<polyline class="s-accent" points="46,78 76,54 106,78 136,54 166,78 196,102"/>
-<polyline class="s-line" points="196,102 226,78 256,54 286,78 316,54 346,30"/>
-<line class="s-dash" x1="196" y1="6" x2="196" y2="126"/>
-<circle class="s-node" cx="46" cy="78" r="3.4"/>
-<circle class="s-node" cx="76" cy="54" r="3.4"/>
-<circle class="s-node" cx="106" cy="78" r="3.4"/>
-<circle class="s-node" cx="136" cy="54" r="3.4"/>
-<circle class="s-node" cx="166" cy="78" r="3.4"/>
-<circle class="s-node" cx="226" cy="78" r="3.4"/>
-<circle class="s-node" cx="256" cy="54" r="3.4"/>
-<circle class="s-node" cx="286" cy="78" r="3.4"/>
-<circle class="s-node" cx="316" cy="54" r="3.4"/>
-<circle class="s-node" cx="346" cy="30" r="3.4"/>
-<circle class="s-node-a" cx="46" cy="78" r="4.2"/>
-<circle class="s-node-r" cx="196" cy="102" r="4.2"/>
-<text class="s-txt-m" x="30" y="82" text-anchor="end">0</text>
-<text class="s-txt-m" x="30" y="106" text-anchor="end">−1</text>
-<line class="s-thin" x1="36" y1="216" x2="352" y2="216" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="264" x2="352" y2="264" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="288" x2="352" y2="288" stroke-dasharray="5 4"/>
-<line class="s-dash" x1="36" y1="240" x2="352" y2="240"/>
-<polyline class="s-thin" points="46,216 76,192 106,216 136,192 166,216 196,240"/>
-<polyline class="s-accent" points="46,264 76,288 106,264 136,288 166,264 196,240"/>
-<polyline class="s-thin" points="196,240 226,216 256,192 286,216 316,192 346,168"/>
-<circle class="s-node" cx="46" cy="264" r="3.4"/>
-<circle class="s-node" cx="76" cy="288" r="3.4"/>
-<circle class="s-node" cx="106" cy="264" r="3.4"/>
-<circle class="s-node" cx="136" cy="288" r="3.4"/>
-<circle class="s-node" cx="166" cy="264" r="3.4"/>
-<circle class="s-node-a" cx="46" cy="264" r="4.2"/>
-<circle class="s-node-r" cx="196" cy="240" r="4.2"/>
-<text class="s-txt-m" x="30" y="220" text-anchor="end">0</text>
-<text class="s-txt-m" x="30" y="244" text-anchor="end">−1</text>
-<text class="s-txt-m" x="30" y="268" text-anchor="end">−2</text>
-<line class="s-thin" x1="36" y1="366" x2="352" y2="366" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="390" x2="352" y2="390" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="414" x2="352" y2="414" stroke-dasharray="5 4"/>
-<line class="s-thin" x1="36" y1="438" x2="352" y2="438" stroke-dasharray="5 4"/>
-<polyline class="s-accent" points="46,414 76,438 106,414 136,438 166,414 196,390"/>
-<polyline class="s-line" points="196,390 226,366 256,342 286,366 316,342 346,318"/>
-<circle class="s-node" cx="46" cy="414" r="3.4"/>
-<circle class="s-node" cx="76" cy="438" r="3.4"/>
-<circle class="s-node" cx="106" cy="414" r="3.4"/>
-<circle class="s-node" cx="136" cy="438" r="3.4"/>
-<circle class="s-node" cx="166" cy="414" r="3.4"/>
-<circle class="s-node" cx="226" cy="366" r="3.4"/>
-<circle class="s-node" cx="256" cy="342" r="3.4"/>
-<circle class="s-node" cx="286" cy="366" r="3.4"/>
-<circle class="s-node" cx="316" cy="342" r="3.4"/>
-<circle class="s-node" cx="346" cy="318" r="3.4"/>
-<circle class="s-node-a" cx="46" cy="414" r="4.2"/>
-<circle class="s-node-r" cx="196" cy="390" r="4.2"/>
-<text class="s-txt-m" x="30" y="370" text-anchor="end">0</text>
-<text class="s-txt-m" x="30" y="394" text-anchor="end">−1</text>
-<text class="s-txt-m" x="30" y="418" text-anchor="end">−2</text>
+<svg viewBox="0 0 396 556" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Три кадра: путь разрезан в первом касании уровня минус один; начальный кусок отражён относительно этого уровня и теперь идёт из уровня минус два; склеенный путь целиком идёт из минус двух в ту же конечную высоту">
+<line class="s-thin" x1="34" y1="70" x2="378" y2="70" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="74" text-anchor="end">0</text>
+<line class="s-thin" x1="34" y1="96" x2="378" y2="96" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="100" text-anchor="end">−1</text>
+<line class="s-thin" x1="34" y1="122" x2="378" y2="122" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="126" text-anchor="end">−2</text>
+<polyline class="s-accent" points="38,70 72,44 106,70 140,96"/>
+<polyline class="s-line" points="140,96 174,70 208,96 242,122 276,148 310,122 344,96 378,122"/>
+<line class="s-dash" x1="140" y1="18" x2="140" y2="174"/>
+<circle class="s-node-a" cx="38" cy="70" r="3.4"/>
+<circle class="s-node" cx="72" cy="44" r="3.4"/>
+<circle class="s-node" cx="106" cy="70" r="3.4"/>
+<circle class="s-node-r" cx="140" cy="96" r="4.2"/>
+<circle class="s-node" cx="174" cy="70" r="3.4"/>
+<circle class="s-node" cx="208" cy="96" r="3.4"/>
+<circle class="s-node" cx="242" cy="122" r="3.4"/>
+<circle class="s-node" cx="276" cy="148" r="3.4"/>
+<circle class="s-node" cx="310" cy="122" r="3.4"/>
+<circle class="s-node" cx="344" cy="96" r="3.4"/>
+<circle class="s-node-a" cx="378" cy="122" r="3.4"/>
+<text class="s-txt-m" x="55" y="189" text-anchor="middle">О</text>
+<text class="s-txt-m" x="89" y="189" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="123" y="189" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="157" y="189" text-anchor="middle">О</text>
+<text class="s-txt-m" x="191" y="189" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="225" y="189" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="259" y="189" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="293" y="189" text-anchor="middle">О</text>
+<text class="s-txt-m" x="327" y="189" text-anchor="middle">О</text>
+<text class="s-txt-m" x="361" y="189" text-anchor="middle">Р</text>
+<line class="s-thin" x1="34" y1="252" x2="378" y2="252" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="256" text-anchor="end">0</text>
+<line class="s-thin" x1="34" y1="278" x2="378" y2="278" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="282" text-anchor="end">−1</text>
+<line class="s-thin" x1="34" y1="304" x2="378" y2="304" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="308" text-anchor="end">−2</text>
+<polyline class="s-thin" points="38,252 72,226 106,252 140,278"/>
+<polyline class="s-thin" points="140,278 174,252 208,278 242,304 276,330 310,304 344,278 378,304"/>
+<polyline class="s-accent" points="38,304 72,330 106,304 140,278"/>
+<line class="s-dash" x1="34" y1="278" x2="378" y2="278"/>
+<circle class="s-node-a" cx="38" cy="304" r="3.4"/>
+<circle class="s-node" cx="72" cy="330" r="3.4"/>
+<circle class="s-node" cx="106" cy="304" r="3.4"/>
+<circle class="s-node-r" cx="140" cy="278" r="4.2"/>
+<text class="s-txt-m" x="55" y="371" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="89" y="371" text-anchor="middle">О</text>
+<text class="s-txt-m" x="123" y="371" text-anchor="middle">О</text>
+<line class="s-thin" x1="34" y1="434" x2="378" y2="434" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="438" text-anchor="end">0</text>
+<line class="s-thin" x1="34" y1="460" x2="378" y2="460" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="464" text-anchor="end">−1</text>
+<line class="s-thin" x1="34" y1="486" x2="378" y2="486" stroke-dasharray="5 4"/>
+<text class="s-txt-m" x="28" y="490" text-anchor="end">−2</text>
+<polyline class="s-accent" points="38,486 72,512 106,486 140,460"/>
+<polyline class="s-line" points="140,460 174,434 208,460 242,486 276,512 310,486 344,460 378,486"/>
+<circle class="s-node-a" cx="38" cy="486" r="3.4"/>
+<circle class="s-node" cx="72" cy="512" r="3.4"/>
+<circle class="s-node" cx="106" cy="486" r="3.4"/>
+<circle class="s-node-r" cx="140" cy="460" r="4.2"/>
+<circle class="s-node" cx="174" cy="434" r="3.4"/>
+<circle class="s-node" cx="208" cy="460" r="3.4"/>
+<circle class="s-node" cx="242" cy="486" r="3.4"/>
+<circle class="s-node" cx="276" cy="512" r="3.4"/>
+<circle class="s-node" cx="310" cy="486" r="3.4"/>
+<circle class="s-node" cx="344" cy="460" r="3.4"/>
+<circle class="s-node-a" cx="378" cy="486" r="3.4"/>
+<text class="s-txt-m" x="55" y="553" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="89" y="553" text-anchor="middle">О</text>
+<text class="s-txt-m" x="123" y="553" text-anchor="middle">О</text>
+<text class="s-txt-m" x="157" y="553" text-anchor="middle">О</text>
+<text class="s-txt-m" x="191" y="553" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="225" y="553" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="259" y="553" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="293" y="553" text-anchor="middle">О</text>
+<text class="s-txt-m" x="327" y="553" text-anchor="middle">О</text>
+<text class="s-txt-m" x="361" y="553" text-anchor="middle">Р</text>
 </svg>

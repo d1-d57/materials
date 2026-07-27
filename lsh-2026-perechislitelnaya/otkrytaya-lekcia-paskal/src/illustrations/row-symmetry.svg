@@ -1,0 +1,11 @@
+<svg viewBox="0 0 416 132" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Одна строка треугольника Паскаля; дуги связывают числа, равноудалённые от краёв, посередине пунктирная ось">
+<line class="s-dash" x1="208" y1="18" x2="208" y2="32"/>
+<line class="s-dash" x1="208" y1="70" x2="208" y2="114"/>
+<text class="s-txt" x="56" y="52" text-anchor="middle">1</text>
+<text class="s-txt" x="132" y="52" text-anchor="middle">4</text>
+<text class="s-txt" x="208" y="52" text-anchor="middle">6</text>
+<text class="s-txt" x="284" y="52" text-anchor="middle">4</text>
+<text class="s-txt" x="360" y="52" text-anchor="middle">1</text>
+<path class="s-thin" d="M 56,66 Q 208,122 360,66"/>
+<path class="s-thin" d="M 132,66 Q 208,102 284,66"/>
+</svg>

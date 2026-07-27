@@ -31,22 +31,46 @@
 .slide[data-kind="cover"] .t-display { font-size: 96px; }
 .slide[data-kind="cover"] .sub { font-family: 'Glacial Indifference','Noto Sans',sans-serif;
   text-align: center; color: var(--ink); font-size: 32px; letter-spacing: .04em; margin-top: 36px; }
+.slide[data-kind="cover"] .sub2 { font-size: 22px; margin-top: 14px; color: var(--ink); opacity: .78; line-height: 1.5; }
 .slide[data-kind="cover"] .art { position: absolute; left: 0; right: 0; bottom: 46px; height: 250px; }
 .slide[data-kind="cover"] .art .ill-box { height: 100%; }   /* без явной высоты svg берёт высоту из viewBox и уезжает за холст */
 .slide[data-kind="cover"] .art .s-txt { font-size: 18px; }  /* мотив мельче тела, но не микроскопический */
 
-/* контент-слайд по умолчанию: лента-тезис (бумага) сверху, доска во всю ширину снизу */
+/* контент-слайд по умолчанию (data-kind="board-wide"): лента-тезис (бумага) сверху,
+   доска во всю ширину снизу. Мера строки ~48 знаков при кегле 38 — канонная. */
 .slide .grid { position: absolute; inset: 0; display: grid;
-  grid-template-columns: 72px 1fr 72px; grid-template-rows: 40px auto minmax(300px, 1fr) 30px; }
-.slide .copy { grid-area: 2 / 2; padding-bottom: 22px; }  /* последняя строка не должна упираться в доску */
+  grid-template-columns: 72px 1fr 72px; grid-template-rows: 40px auto minmax(270px, 1fr) 30px; }
+.slide .copy { grid-area: 2 / 2; padding-bottom: 12px; }  /* последняя строка не должна упираться в доску */
 .slide .board { grid-area: 3 / 1 / 4 / 4; background: var(--board); position: relative; overflow: hidden; }
 .slide .board .panel { position: absolute; inset: 38px 96px; background: transparent; }
 
+/* КАНВАС-СЛАЙД: та же лента сверху, но доска гарантированно крупная.
+   Жёсткий минимум 430px — это ограничение НА ТЕКСТ: не влез — слайд делится,
+   а не ужимается (канон: floor 4.3%H, «split, don't shrink»). Переполнение
+   ловит audit.py, поэтому правило работает само, без моей дисциплины. */
+.slide[data-kind="stage"] .grid { grid-template-rows: 40px auto minmax(306px, 1fr) 26px; }
+
+/* канвас-слайд: отбой между абзацами вдвое меньше — четыре отбоя по 36px
+   съедали целую строку текста, а резать надо было не текст, а воздух */
+.slide[data-kind="stage"] .t-body p + p { margin-top: calc(.38em * var(--lh)); }
+.slide[data-kind="stage"] .board .panel { inset: 26px 72px; background: var(--card); }
+
+/* доска во весь холст: слайд-канвас без текста (сумма квадратов, §7 разбора) */
+.slide[data-kind="full"] .grid { grid-template-columns: 0 1fr 0; grid-template-rows: 0 0 1fr 0; }
+.slide[data-kind="full"] .board .panel { inset: 34px 60px; background: var(--card); }
+
+/* только текст, без доски: выкладка занимает весь холст (телескоп) */
+.slide[data-kind="solid"] .grid { grid-template-rows: 54px 1fr 40px; }
+.slide[data-kind="solid"] .copy { grid-area: 2 / 2 / 3 / 3; padding-bottom: 0; }
+
 /* две колонки: текст слева, узкая доска-полоса справа (для вертикальных рисунков) */
-.slide[data-kind="cols"] .grid { grid-template-columns: 72px 1fr 470px; grid-template-rows: 44px 1fr 34px; }
+.slide[data-kind="cols"] .grid { grid-template-columns: 72px 1fr 430px; grid-template-rows: 36px 1fr 24px; }
 .slide[data-kind="cols"] .copy { grid-area: 2 / 2 / 3 / 3; }
 .slide[data-kind="cols"] .board { grid-area: 1 / 3 / 4 / 4; }
 .slide[data-kind="cols"] .board .panel { inset: 56px 44px; }
+/* две панели в вертикальной полосе: верхняя и нижняя половины */
+.slide[data-kind="cols"] .board .ptop { inset: 40px 34px auto; height: 46%; }
+.slide[data-kind="cols"] .board .pbot { inset: auto 34px 40px; height: 40%; }
 
 /* роли текста на слайде */
 .slide .t-body { --t-body: 38px; }
@@ -62,16 +86,12 @@
 .slide .tlist li { position: relative; padding-left: 50px; }
 .slide .tlist li::before { content: '—'; position: absolute; left: 0; color: var(--steel); }
 
-/* S3 «Столбцы»: таблица сверху полосы, схема прихода в клетку — снизу, со сценой 3 */
-#sl-columns .board .ptop { inset: 80px 30px auto; height: 340px; }
-#sl-columns .board .pbot { inset: auto 96px 84px; height: 250px; }
-
-/* Кегль меток внутри рисунка. Рисунки пришли из doc-вида, где 13px соразмерны фигуре
-   шириной 620px; на слайде та же фигура растягивается в разное число раз, и метка,
-   годная на одной доске, на другой становится нечитаемой. Правим там, где мало. */
-#sl-columns .board .ptop .s-txt { font-size: 26px; }
-/* у S4 кегль НЕ трогаем: строки треугольника стоят с шагом 34 единицы,
-   и «4/16» крупнее 13px наезжает на соседа */
+/* Кегль меток внутри рисунка. Рисунок задаётся в своих единицах viewBox и на доске
+   растягивается в разное число раз; метка, годная на широкой доске, в узкой полосе
+   становится нечитаемой. Генератор рисует всё в одной сетке (шаг 34×26, узел 3.4),
+   поэтому правится ОДНИМ местом на раскладку, а не по рисунку. */
+.slide[data-kind="cols"] .board .s-txt   { font-size: 15px; }
+.slide[data-kind="cols"] .board .s-txt-m { font-size: 14px; }
 
 /* ---------- иллюстрации: словарь примитивов .s-* в палитре дека ----------
    Рисунки взяты из doc-вида дословно; здесь те же классы переопределены
@@ -142,15 +162,22 @@
 {{SLIDE:sl-title}}
 {{SLIDE:sl-cliff}}
 {{SLIDE:sl-columns}}
+{{SLIDE:sl-cells}}
 {{SLIDE:sl-pascal}}
 {{SLIDE:sl-views}}
+{{SLIDE:sl-tri}}
+{{SLIDE:sl-team}}
 {{SLIDE:sl-cut-middle}}
+{{SLIDE:sl-pairs}}
 {{SLIDE:sl-squares}}
 {{SLIDE:sl-ban}}
+{{SLIDE:sl-fib}}
 {{SLIDE:sl-domiki}}
+{{SLIDE:sl-diagonals}}
 {{SLIDE:sl-cliff-return}}
 {{SLIDE:sl-cut4}}
 {{SLIDE:sl-reflect}}
+{{SLIDE:sl-formula}}
 {{SLIDE:sl-telescope}}
 {{SLIDE:sl-answer}}
 {{SLIDE:sl-course}}
@@ -162,27 +189,34 @@
 <div id="hint">← → листать · F — экран · B — чёрный · O — обзор</div>
 
 <!-- ===== [3] ASSETS REGISTRY ===== -->
-<template id="ill-title-art">{{ILL:title-art}}</template>
-<template id="ill-cliff-walk">{{ILL:cliff-walk}}</template>
-<template id="ill-cols-table">{{ILL:cols-table}}</template>
-<template id="ill-cols-path">{{ILL:cols-path}}</template>
-<template id="ill-cols-cell">{{ILL:cols-cell}}</template>
-<template id="ill-pascal-both">{{ILL:pascal-both}}</template>
-<template id="ill-views-four">{{ILL:views-four}}</template>
-<template id="ill-views-captain">{{ILL:views-captain}}</template>
-<template id="ill-cut-one">{{ILL:cut-one}}</template>
-<template id="ill-cut-both">{{ILL:cut-both}}</template>
-<template id="ill-squares-row">{{ILL:squares-row}}</template>
+<template id="ill-bad-walk">{{ILL:bad-walk}}</template>
 <template id="ill-ban-tree">{{ILL:ban-tree}}</template>
-<template id="ill-domiki">{{ILL:domiki}}</template>
+<template id="ill-counts-row">{{ILL:counts-row}}</template>
+<template id="ill-cut-middle">{{ILL:cut-middle}}</template>
 <template id="ill-diagonals">{{ILL:diagonals}}</template>
-<template id="ill-six-paths">{{ILL:six-paths}}</template>
-<template id="ill-crossed">{{ILL:crossed}}</template>
-<template id="ill-cut4">{{ILL:cut4}}</template>
-<template id="ill-reflect3">{{ILL:reflect3}}</template>
-<template id="ill-telescope">{{ILL:telescope}}</template>
+<template id="ill-domiki">{{ILL:domiki}}</template>
 <template id="ill-final-walk">{{ILL:final-walk}}</template>
+<template id="ill-pair-heights">{{ILL:pair-heights}}</template>
+<template id="ill-pascal-cut">{{ILL:pascal-cut}}</template>
+<template id="ill-pascal-frac">{{ILL:pascal-frac}}</template>
+<template id="ill-pascal-int">{{ILL:pascal-int}}</template>
+<template id="ill-reflect3">{{ILL:reflect3}}</template>
+<template id="ill-row-symmetry">{{ILL:row-symmetry}}</template>
+<template id="ill-safe-table">{{ILL:safe-table}}</template>
 <template id="ill-sierpinski">{{ILL:sierpinski}}</template>
+<template id="ill-six-paths">{{ILL:six-paths}}</template>
+<template id="ill-team-diag">{{ILL:team-diag}}</template>
+<template id="ill-team-row">{{ILL:team-row}}</template>
+<template id="ill-title-art">{{ILL:title-art}}</template>
+<template id="ill-tri-sums">{{ILL:tri-sums}}</template>
+
+<script>{{SIM:lab.core}}</script>
+<script>{{SIM:ladder}}</script>
+<script>{{SIM:reach}}</script>
+<script>{{SIM:probs}}</script>
+<script>{{SIM:views}}</script>
+<script>{{SIM:squares}}</script>
+<script>{{SIM:fib}}</script>
 
 <script>{{ENGINE_JS}}</script>
 

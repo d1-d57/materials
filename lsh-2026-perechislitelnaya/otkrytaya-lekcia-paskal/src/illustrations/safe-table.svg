@@ -1,0 +1,89 @@
+<svg viewBox="0 0 1980 218" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Все траектории, ни разу не опускающиеся ниже нулевого уровня, выписаны панельками по длинам; под каждой группой стоит их число">
+<line class="s-thin" x1="22" y1="57" x2="68" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="28,57 45,44 62,31"/>
+<circle class="s-node-a" cx="28" cy="57" r="2.4"/>
+<line class="s-thin" x1="76" y1="57" x2="122" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="82,57 99,44 116,57"/>
+<circle class="s-node-a" cx="82" cy="57" r="2.4"/>
+<text class="s-txt" x="72" y="206" text-anchor="middle">2</text>
+<line class="s-thin" x1="174" y1="57" x2="254" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="180,57 197,44 214,31 231,18 248,5"/>
+<circle class="s-node-a" cx="180" cy="57" r="2.4"/>
+<line class="s-thin" x1="262" y1="57" x2="342" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="268,57 285,44 302,31 319,18 336,31"/>
+<circle class="s-node-a" cx="268" cy="57" r="2.4"/>
+<line class="s-thin" x1="350" y1="57" x2="430" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="356,57 373,44 390,31 407,44 424,31"/>
+<circle class="s-node-a" cx="356" cy="57" r="2.4"/>
+<line class="s-thin" x1="438" y1="57" x2="518" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="444,57 461,44 478,31 495,44 512,57"/>
+<circle class="s-node-a" cx="444" cy="57" r="2.4"/>
+<line class="s-thin" x1="526" y1="57" x2="606" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="532,57 549,44 566,57 583,44 600,31"/>
+<circle class="s-node-a" cx="532" cy="57" r="2.4"/>
+<line class="s-thin" x1="614" y1="57" x2="694" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="620,57 637,44 654,57 671,44 688,57"/>
+<circle class="s-node-a" cx="620" cy="57" r="2.4"/>
+<text class="s-txt" x="434" y="206" text-anchor="middle">6</text>
+<line class="s-thin" x1="746" y1="57" x2="860" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="752,57 769,44 786,31 803,18 820,5 837,-8 854,-21"/>
+<circle class="s-node-a" cx="752" cy="57" r="2.4"/>
+<line class="s-thin" x1="868" y1="57" x2="982" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="874,57 891,44 908,31 925,18 942,5 959,-8 976,5"/>
+<circle class="s-node-a" cx="874" cy="57" r="2.4"/>
+<line class="s-thin" x1="990" y1="57" x2="1104" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="996,57 1013,44 1030,31 1047,18 1064,5 1081,18 1098,5"/>
+<circle class="s-node-a" cx="996" cy="57" r="2.4"/>
+<line class="s-thin" x1="1112" y1="57" x2="1226" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1118,57 1135,44 1152,31 1169,18 1186,5 1203,18 1220,31"/>
+<circle class="s-node-a" cx="1118" cy="57" r="2.4"/>
+<line class="s-thin" x1="1234" y1="57" x2="1348" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1240,57 1257,44 1274,31 1291,18 1308,31 1325,18 1342,5"/>
+<circle class="s-node-a" cx="1240" cy="57" r="2.4"/>
+<line class="s-thin" x1="1356" y1="57" x2="1470" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1362,57 1379,44 1396,31 1413,18 1430,31 1447,18 1464,31"/>
+<circle class="s-node-a" cx="1362" cy="57" r="2.4"/>
+<line class="s-thin" x1="1478" y1="57" x2="1592" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1484,57 1501,44 1518,31 1535,18 1552,31 1569,44 1586,31"/>
+<circle class="s-node-a" cx="1484" cy="57" r="2.4"/>
+<line class="s-thin" x1="1600" y1="57" x2="1714" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1606,57 1623,44 1640,31 1657,18 1674,31 1691,44 1708,57"/>
+<circle class="s-node-a" cx="1606" cy="57" r="2.4"/>
+<line class="s-thin" x1="1722" y1="57" x2="1836" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1728,57 1745,44 1762,31 1779,44 1796,31 1813,18 1830,5"/>
+<circle class="s-node-a" cx="1728" cy="57" r="2.4"/>
+<line class="s-thin" x1="1844" y1="57" x2="1958" y2="57" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1850,57 1867,44 1884,31 1901,44 1918,31 1935,18 1952,31"/>
+<circle class="s-node-a" cx="1850" cy="57" r="2.4"/>
+<line class="s-thin" x1="746" y1="148" x2="860" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="752,148 769,135 786,122 803,135 820,122 837,135 854,122"/>
+<circle class="s-node-a" cx="752" cy="148" r="2.4"/>
+<line class="s-thin" x1="868" y1="148" x2="982" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="874,148 891,135 908,122 925,135 942,122 959,135 976,148"/>
+<circle class="s-node-a" cx="874" cy="148" r="2.4"/>
+<line class="s-thin" x1="990" y1="148" x2="1104" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="996,148 1013,135 1030,122 1047,135 1064,148 1081,135 1098,122"/>
+<circle class="s-node-a" cx="996" cy="148" r="2.4"/>
+<line class="s-thin" x1="1112" y1="148" x2="1226" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1118,148 1135,135 1152,122 1169,135 1186,148 1203,135 1220,148"/>
+<circle class="s-node-a" cx="1118" cy="148" r="2.4"/>
+<line class="s-thin" x1="1234" y1="148" x2="1348" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1240,148 1257,135 1274,148 1291,135 1308,122 1325,109 1342,96"/>
+<circle class="s-node-a" cx="1240" cy="148" r="2.4"/>
+<line class="s-thin" x1="1356" y1="148" x2="1470" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1362,148 1379,135 1396,148 1413,135 1430,122 1447,109 1464,122"/>
+<circle class="s-node-a" cx="1362" cy="148" r="2.4"/>
+<line class="s-thin" x1="1478" y1="148" x2="1592" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1484,148 1501,135 1518,148 1535,135 1552,122 1569,135 1586,122"/>
+<circle class="s-node-a" cx="1484" cy="148" r="2.4"/>
+<line class="s-thin" x1="1600" y1="148" x2="1714" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1606,148 1623,135 1640,148 1657,135 1674,122 1691,135 1708,148"/>
+<circle class="s-node-a" cx="1606" cy="148" r="2.4"/>
+<line class="s-thin" x1="1722" y1="148" x2="1836" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1728,148 1745,135 1762,148 1779,135 1796,148 1813,135 1830,122"/>
+<circle class="s-node-a" cx="1728" cy="148" r="2.4"/>
+<line class="s-thin" x1="1844" y1="148" x2="1958" y2="148" stroke-dasharray="4 3"/>
+<polyline class="s-line" points="1850,148 1867,135 1884,148 1901,135 1918,148 1935,135 1952,148"/>
+<circle class="s-node-a" cx="1850" cy="148" r="2.4"/>
+<text class="s-txt" x="1352" y="206" text-anchor="middle">20</text>
+</svg>
