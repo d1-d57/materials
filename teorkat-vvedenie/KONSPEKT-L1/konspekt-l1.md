@@ -1,1 +1,0 @@
-../KONSPEKT-L1.md
