@@ -1,0 +1,72 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; background: #2b3038; }
+#stage { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
+.slide { width: 1440px; height: 810px; position: relative; overflow: hidden;
+         transform-origin: center center; background: var(--paper); color: var(--ink); }
+.zone  { position: relative; overflow: hidden; min-width: 0; min-height: 0; }
+.fit   { max-width: 100%; max-height: 100%; }
+
+.t-body { font-family: 'Noto Sans', sans-serif; font-size: var(--t-body); text-wrap: pretty;
+          line-height: var(--lh); color: var(--ink); }
+.t-body p + p { margin-top: calc(1em * var(--lh)); }  /* абзац = пустая строка */
+.t-body b { font-weight: 700; }
+.t-small { font-size: var(--t-small); }
+.t-display { font-family: 'Forum', serif; text-transform: uppercase; text-wrap: balance;
+             color: var(--ink); text-align: center; line-height: 1.18; letter-spacing: .01em; }
+.t-math { font-family: 'Glacial Indifference', 'Noto Sans', sans-serif; font-weight: 700; }
+
+/* пропуск «____ → ответ»: blank и ответ в одной inline-grid ячейке */
+.fill { display: inline-grid; text-align: center; }
+.fill > span { grid-area: 1 / 1; }
+.scene-off { opacity: 0 !important; visibility: hidden !important; }
+
+/* финальные штрихи: страница и шаги «проступают» (cinematic-longread: opacity-only) */
+@keyframes deck-in { from { opacity: 0; } to { opacity: 1; } }
+.slide { animation: deck-in .17s ease both; }
+#sl-title .head { animation: deck-in .55s .05s ease both; }
+#sl-title .art  { animation: deck-in .8s .4s ease both; }   /* второй «момент» титула */
+@media (prefers-reduced-motion: reduce) { .slide, #sl-title .head, #sl-title .art { animation: none; } }
+
+/* сцены: скрытые шаги сохраняют место (visibility, НИКОГДА display) */
+[data-scene-from] { opacity: 0; visibility: hidden; transition: opacity .24s ease; }
+.formula[data-scene-from], [data-scene-from] .formula { transition-delay: .14s; }
+.panel[data-scene-from] { transition-delay: .12s; }
+.scene-2 [data-scene-from="2"],
+.scene-3 [data-scene-from="2"], .scene-3 [data-scene-from="3"],
+.scene-4 [data-scene-from="2"], .scene-4 [data-scene-from="3"], .scene-4 [data-scene-from="4"],
+.scene-5 [data-scene-from="2"], .scene-5 [data-scene-from="3"], .scene-5 [data-scene-from="4"], .scene-5 [data-scene-from="5"]
+  { opacity: 1; visibility: visible; }
+@media (prefers-reduced-motion: reduce) { [data-scene-from] { transition: none; } }
+
+body.blanked #stage { visibility: hidden; }
+#hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+        color: #8a96a3; font: 13px/1 ui-monospace, monospace;
+        opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+#hint.is-shown { opacity: 1; }
+
+/* белая панель-паспарту */
+.panel { background: var(--card); }
+.panel > img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.panel > svg, .ill-box > svg { width: 100%; height: 100%; display: block; }
+.panel > canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* лабораторная строка экспериментов (SIM-DESIGN §2) */
+/* кнопки-иконки на док-панели (правый нижний угол канваса; в узких — по центру) */
+.lab-row { position: absolute; right: 12px; bottom: 8px; z-index: 6;
+  display: flex; gap: 4px; opacity: .8; transition: opacity .2s; }
+#sl-polygons .lab-row, #sl-circle .lab-row, #sl-result .lab-row {
+  right: 50%; transform: translateX(50%); bottom: 6px; gap: 2px; }
+.panel:hover .lab-row, .simzone:hover .lab-row { opacity: 1; }
+.lab-row button { font: 19px/1 "Noto Sans", sans-serif; color: var(--ink);
+  background: none; border: none; cursor: pointer;
+  width: 36px; height: 32px; border-radius: 3px; }
+.lab-row button:hover { background: rgba(51,51,51,.1); }
+.lab-row button.on { font-weight: 700; }
+
+/* контролы симуляций: тише контента, не хром */
+.sim-controls { position: absolute; left: 28px; bottom: 12px; z-index: 5;
+  font: 17px/1 ui-monospace, monospace; color: var(--ink); opacity: .5; }
+.sim-controls button { font: inherit; color: inherit; background: none;
+  border: none; cursor: pointer; padding: 2px 7px; }
+.sim-controls button:hover { background: rgba(51,51,51,.08); }
