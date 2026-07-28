@@ -45,3 +45,42 @@ if git diff --cached --name-only | grep -q '^_generator/tools/git_zona\.py$'; th
         exit 1
     }
 fi
+
+# ── Контракт инструмента: на КАЖДЫЙ правленый инструмент фабрики ──
+# Три гейта выше лечили КОНКРЕТНЫЕ поломки. Этот лечит их ОБЩИЙ корень: лекарство
+# каждый раз было прозой (канон, урок, заметка), а проза не переносится на
+# следующий инструмент. Живое доказательство — блок прямо надо мной: он поднимает
+# фикстуру git_zona только на правку git_zona.py, хотя ловушка 14 внутри неё
+# сторожит и три bootstrap_*. У гейта триггер был уже его охвата.
+# Здесь охват объявляет сама фикстура (`# TOOL-CONTRACT-COVERS:`), и хук читает
+# его, а не догадывается. Разбор — _studio/docs/kak-delat/GIT-disciplina.md §5.
+# Под контракт попадают и подпапки (`tools/lib/x.py` — такой же инструмент), и
+# то, что исполняется у владельца рядом с инструментами: фикстуры и сами хуки.
+# GIT_ZONA_REPO и TOOL_CONTRACT_HOME вычищаются наравне с GIT_*: обе
+# переадресуют гейт на другой репозиторий или другой дом фикстур, то есть
+# ВЫКЛЮЧАЮТ его — молча, а значит негодным способом (KONSTITUCIYA §11).
+TOOLS_STAGED=$(git diff --cached --name-only \
+    | grep -e '^_generator/tools/.*\.py$' -e '^_generator/tools/fixtures/.*\.sh$' -e '^\.githooks/')
+if [ -n "$TOOLS_STAGED" ]; then
+    env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE -u GIT_PREFIX \
+        -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
+        python3 _generator/tools/check_tool_contract.py --staged || exit 1
+
+    # Фикстуру git_zona исключаем, когда её уже поднял блок выше: двойной прогон
+    # ничего не проверяет, а секунду отнимает.
+    COVERING=$(env -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
+        python3 _generator/tools/check_tool_contract.py --fixtures-for $TOOLS_STAGED)
+    if echo "$TOOLS_STAGED" | grep -q '^_generator/tools/git_zona\.py$'; then
+        COVERING=$(echo "$COVERING" | grep -v '/fixtures/git_zona/')
+    fi
+    for FIX in $COVERING; do
+        echo "→ правленый инструмент входит в охват $FIX — гоню её"
+        env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE -u GIT_PREFIX \
+            -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
+            sh "$FIX" || {
+            echo "❌ Фикстура $FIX КРАСНАЯ — коммит остановлен."
+            echo "   Она объявила охват над правленым инструментом, и охват сработал."
+            exit 1
+        }
+    done
+fi
