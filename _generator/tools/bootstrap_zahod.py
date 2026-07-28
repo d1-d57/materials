@@ -184,13 +184,15 @@ def main(argv):
             "не трогай."
         )
         terminal_line = (
-            f'cd {REPO_ROOT} && claude -p --model {model_l} '
+            f'cd {REPO_ROOT} && claude -p --verbose --model {model_l} '
             f'--dangerously-skip-permissions "{prompt_text}" 2>&1 | '
             f'tee /tmp/zahod-{tema_log_safe}.log'
         )
         print("═══ СТАРТОВАЯ КОМАНДА — вставить в системный Терминал ДОСЛОВНО ═══")
         print("(RUKOVODSTVO §Два канала запуска, форма A: -p — разовый запуск без")
-        print(" диалога, модель — флагом, tee — единственный след, если прогон упадёт.)")
+        print(" диалога, --verbose — виден ход работы (иначе живой, зависший и")
+        print(" оборванный прогоны выглядят одинаково), модель — флагом,")
+        print(" tee — единственный след, если прогон упадёт.)")
         print()
         print("```")
         print(terminal_line)
