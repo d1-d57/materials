@@ -171,11 +171,32 @@
 `cairosvg` **не применяет CSS-классы** — зальёт всё чёрным и соврёт. Для проверки развернуть классы в presentation-атрибуты и отрендерить:
 
 ```python
-M = {'s-line':'fill="none" stroke="#211f1b" stroke-width="2" stroke-linecap="round"', ...}
+M = {
+ 's-line':'fill="none" stroke="#211f1b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"',
+ 's-thin':'fill="none" stroke="#726c60" stroke-width="1.2"',
+ 's-dash':'fill="none" stroke="#2f6e8e" stroke-width="1.3" stroke-dasharray="4 4"',
+ 's-accent':'fill="none" stroke="#2f6e8e" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"',
+ 's-node':'fill="#fbfaf6" stroke="#211f1b" stroke-width="1.5"',
+ 's-node-r':'fill="#211f1b" stroke="#211f1b" stroke-width="1.5"',
+ 's-node-a':'fill="#2f6e8e" stroke="#2f6e8e" stroke-width="1.5"',
+ 's-fillsh':'fill="#dfeaf0" stroke="#211f1b" stroke-width="1.5"',
+ 's-fillw':'fill="#f6ece2" stroke="#211f1b" stroke-width="1.5"',
+ 's-txt':'font-family="sans-serif" font-size="13" fill="#211f1b"',
+ 's-txt-m':'font-family="sans-serif" font-size="12" fill="#726c60"',
+ 's-txt-w':'font-family="sans-serif" font-size="13" fill="#fbfaf6"',
+ # ⚠ стрелка — ЗАЛИВКА наконечника, а не обводка (так она определена в build_doc.py)
+ 's-ar-m':'fill="#726c60" stroke="#726c60" stroke-width="1.2"',
+ 's-ar-a':'fill="#2f6e8e" stroke="#2f6e8e" stroke-width="1.2"',
+}
+svg = re.sub(r'\swidth="\d+"', '', svg, count=1)   # ⚠ см. ниже — иначе пропорция соврёт
 s = re.sub(r'class="([a-z0-9 -]+)"', lambda m: " ".join(M[c] for c in m.group(1).split()), svg)
 cairosvg.svg2png(bytestring=s.encode(), write_to='x.png', scale=2, background_color='#fbfaf6')
 ```
 Дальше — **посмотреть PNG**. В самом документе классы работают, это костыль только для гейта. *(Пойман на первом же рисунке: без разворачивания classes путь залился чёрным и картинка выглядела катастрофой, хотя в браузере верна.)*
+
+**⚠ Карта `M` неполна — гейт падает с `KeyError`, и это чинят молча у себя.** *Цена (2026-07-27, лекция про Паскаля): в карте не было `.s-ar-m` / `.s-ar-a`, и ДВА независимых исполнителя дописали их каждый в своей копии — то есть общий рецепт остался сломанным, а починка не доехала ни до кого. Поэтому карта выше выписана ПОЛНОСТЬЮ. Заводишь новый класс `.s-*` в движке — той же рукой добавь строку сюда.*
+
+**⚠ `cairosvg` масштабирует по атрибуту `width`, игнорируя пропорции `viewBox` — и PNG врёт про композицию.** Рисунок с `viewBox="0 0 372 122" width="640"` растянулся по горизонтали в 1,7 раза: автор смотрит на растянутый PNG, чинит несуществующий перекос и ломает верную картинку. Поэтому `width` снимается ПЕРЕД растеризацией (строка в рецепте выше) — тогда PNG совпадает с тем, что покажет браузер. *Цена: поймано на четырёх параллельных исполнителях сразу; без правки каждый следующий рисунок оценивался по искажённому виду.*
 
 **Плейсхолдер.** Пока рисунка нет — `🖼 описание {N}`: dashed-врезка с «✎». Это не заглушка-отписка, а **запись долга**: видно, что здесь обязана быть картинка и какая.
 
