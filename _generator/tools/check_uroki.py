@@ -79,7 +79,7 @@ def staged_files():
     """
     try:
         out = subprocess.run(
-            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
+            ["git", "--no-optional-locks", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
             cwd=REPO_ROOT, capture_output=True, text=True, check=True,
         ).stdout
     except (subprocess.CalledProcessError, FileNotFoundError):

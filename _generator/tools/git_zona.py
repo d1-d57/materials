@@ -334,9 +334,8 @@ def cmd_doctor(args):
               f"старейшему {age_of(junk[0])} — на работу не влияют, но копятся.")
 
     if locks or junk:
-        print("   Уборка — в терминале ВЛАДЕЛЬЦА и только когда живого git нет:")
-        print("     cd <корень репо> && rm -f .git/*.lock .git/objects/*.lock "
-              "&& find .git/objects -name 'tmp_obj_*' -delete")
+        print("   Уборка — одной командой (владелец; сама щадит свежий лок живого git):")
+        print("     python3 _generator/tools/git_zona.py clean")
 
     if in_sandbox():
         print("\n⚠ Ты в песочнице Cowork (репозиторий смонтирован через FUSE).\n"
