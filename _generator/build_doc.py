@@ -225,7 +225,11 @@ def _typed_block(joined, sid, proof_html=""):
     m = _BOLD_STMT.match(joined)
     if m:
         kw, num, name, body = m.group(1), m.group(2), m.group(3), m.group(4)
-        label = "%s %s%s." % (kw, num, name)              # имя в скобках сохранено
+        # Р-владелец 2026-07-28: номер уходит из ОТОБРАЖАЕМОЙ метки, оставаясь в источнике
+        # и в якоре (:230) — спотыкание вызывал не номер сам по себе, а два перемешанных
+        # ряда в отображении («201, 202, 2, 203, 204, 6, 205»). Автоссылки «по утверждению
+        # 207» (:287) берут номер из текста и не страдают.
+        label = "%s%s." % (kw, name)                      # имя в скобках сохранено
         cls, key = _STMT_CLS.get(kw, ("stmt thm", "t"))
         anchor = ' id="%s-%s-%s"' % (sid, key, num)
         return ('<div class="%s"%s><span class="lbl">%s</span>%s%s</div>'
