@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>КОНСПЕКТ ЛЕКЦИИ 1 — математический скелет</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
+
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
+.layout.solo{grid-template-columns:minmax(0,1240px)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:790px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
+  margin-left:.12em;text-decoration:none}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:#faf8f3}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
+table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
+table th,table td{border:1px solid var(--rule);padding:.45em .8em;text-align:left;vertical-align:top}
+table thead th{font-family:var(--sans);background:var(--shade);font-weight:600;color:var(--text)}
+table tbody tr:nth-child(even){background:var(--panel)}
+table tbody td:first-child{color:var(--muted)}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
+  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{color:var(--accent)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:#c3bbaa;font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>КОНСПЕКТ ЛЕКЦИИ 1 — математический скелет</h1>
+</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Конспект Л1</label>
+</nav>
+<section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">A. Вход — комбинаторные виды</a></summary><ul class="toc-sub"><li><a href="#s0-h-1-1">A1. Красивая биекция</a></li><li><a href="#s0-h-1-2">A2. Что значит «красивая»</a></li><li><a href="#s0-h-1-3">A3. Формализм: комбинаторные виды</a></li><li><a href="#s0-h-1-4">A4. Где виды жмут</a></li></ul></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">СТЫК A｜B. Три определения и конструкции категорий</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">B. Зоопарк: категории и функторы</a></summary><ul class="toc-sub"><li><a href="#s0-h-3-1">B1. Что бывает стрелкой</a></li><li><a href="#s0-h-3-2">B2. Что бывает функтором</a></li></ul></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">C. Функтор как инструмент — ретракт</a></summary><ul class="toc-sub"><li><a href="#s0-h-4-1">C1. Конструкция, которая не продолжается</a></li><li><a href="#s0-h-4-2">C2. Чего не бывает</a></li></ul></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">D. Сколько бывает красивых конструкций</a></summary><ul class="toc-sub"><li><a href="#s0-h-5-1">D0. Узнавание перед классификацией</a></li><li><a href="#s0-h-5-2">D1. Ответ «ни одного»: порядки против перестановок</a></li><li><a href="#s0-h-5-3">D2. Тот же вопрос второй раз: $V$ против $V^\ast$</a></li><li><a href="#s0-h-5-4">D3. Аксиоматизация: оба запрета — один приём</a></li><li><a href="#s0-h-5-5">D4. Ответы «ровно один» и «полный список»</a></li></ul></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-6">E. Когда две категории — одно и то же</a></summary><ul class="toc-sub"><li><a href="#s0-h-6-1">E1. Откуда берётся определение эквивалентности</a></li><li><a href="#s0-h-6-2">E2. Скелет</a></li><li><a href="#s0-h-6-3">E3. Основная теорема</a></li><li><a href="#s0-h-6-4">E4. Второй этаж</a></li></ul></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-7">F. Миры, которые оказались одним</a></summary><ul class="toc-sub"><li><a href="#s0-h-7-1">F1. Стоун в конечном случае</a></li><li><a href="#s0-h-7-2">F2. Морита и Сигал</a></li><li><a href="#s0-h-7-3">F3. Галуа</a></li></ul></details></li></ol></details><main><article class="stream"><h1>КОНСПЕКТ ЛЕКЦИИ 1 — математический скелет</h1>
+<p>Шкала лекции — <code>../_studio/zhurnal/2026-07-28_teksty-l1/KARTA-KUSKOV.md</code>: шесть разделов, стык и двадцать один подраздел, в том же порядке. Здесь только математика: определения, формулировки, примеры и доказательства.</p>
+<p>Нумерация определений и утверждений — сквозная по порядку лекции. Соответствие с номерами словаря курса — в служебной секции в конце.</p>
+<details class="sec sec2" open><summary><h2 id="s0-h-1">A. Вход — комбинаторные виды</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-1-1">A1. Красивая биекция</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-1"><span class="lbl">Утверждение 1 (свёртка Вандермонда).</span><p>Для целых $m,n\ge 0$ и $0\le k\le m+n$</p><p class="eq">$$\binom{m+n}{k}=\sum_{j=0}^{k}\binom{m}{j}\binom{n}{k-j}.$$</p><details class="d-proof"><summary>доказательство — биекцией</summary><div class="proof"><p>Пусть $M$ и $N$ — непересекающиеся множества, $\lvert M\rvert=m$, $\lvert N\rvert=n$. Левая часть считает $k$-элементные подмножества $S\subseteq M\sqcup N$. Сопоставление $S\mapsto(S\cap M,\;S\cap N)$ — биекция между такими $S$ и парами $(S_1,S_2)$, где $S_1\subseteq M$, $S_2\subseteq N$ и $\lvert S_1\rvert+\lvert S_2\rvert=k$; обратное сопоставление — объединение. Разбив пары по $j=\lvert S_1\rvert$, получаем правую часть. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-2"><span class="lbl">Замечание 2 (почему требование биекции формально пусто).</span><p>Если $\lvert X\rvert=\lvert Y\rvert$, то биекция $X\to Y$ существует. Поэтому требование «докажите тождество, предъявив биекцию» при известном равенстве чисел не добавляет к доказательству ничего: требуется не биекция, а биекция с дополнительным свойством, которое требованием не названо.</p></div>
+<div class="stmt thm" id="s0-t-3"><span class="lbl">Утверждение 3 (порядков и перестановок поровну).</span><p>На $n$-элементном множестве $U$ линейных порядков ровно $n!$ и перестановок (биекций $U\to U$) ровно $n!$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Линейный порядок на $U$ — это нумерация элементов числами $1,\dots,n$, то есть биекция $U\to\{1,\dots,n\}$; таких $n!$. Биекций $U\to U$ тоже $n!$. $\blacksquare$</p></div></details></div>
+<div class="stmt task" id="s0-e-4"><span class="lbl">Пример 4 (преобразование Фойе).</span><p>Биекция между перестановками и линейными порядками на $U$ строится так: зафиксировать на $U$ линейный порядок; записать перестановку в цикловой записи, начиная каждый цикл с его максимума и располагая циклы по возрастанию максимумов; стереть скобки — получится слово, то есть линейный порядок. Преобразование обратимо: по слову циклы восстанавливаются разрезанием перед каждым элементом, который больше всех предыдущих. Конструкция опирается на заранее выбранный порядок на $U$.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-1-2">A2. Что значит «красивая»</h3></summary><div class="sec-body">
+<div class="stmt rem" id="s0-n-5"><span class="lbl">Замечание 5 (три условия, скрытые в слове «красиво»).</span><p>Требование к семейству биекций $\varphi_n$ распадается на три независимых:</p></div>
+<ul><li><strong>(A) единообразие по $n$</strong> — одна конструкция, дающая нужную биекцию при подстановке любого $n$, а не выбор биекции для каждого $n$ отдельно;</li><li><strong>(B) согласованность с рекурсией</strong> — $\varphi$ коммутирует с разложениями обеих сторон;</li><li><strong>(C) независимость от имён элементов</strong> — при переименовании элементов носителя конструкция даёт переименованный результат.</li></ul>
+<div class="stmt thm" id="s0-t-6"><span class="lbl">Утверждение 6 (условие (C) для подмножеств).</span><p>Пусть $\mathcal P_k(A)$ — множество $k$-элементных подмножеств $A$, а биекция $\varphi_A\colon\mathcal P_k(A)\to\mathcal P_{n-k}(A)$ задана дополнением, $\varphi_A(S)=A\setminus S$. Тогда для любой биекции $\sigma\colon A\to A'$ квадрат коммутативен:</p><p class="eq">$$\varphi_{A'}\circ\mathcal P_k(\sigma)=\mathcal P_{n-k}(\sigma)\circ\varphi_A,$$</p><p>где $\mathcal P_k(\sigma)(S)=\sigma(S)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$\sigma(A\setminus S)=A'\setminus\sigma(S)$, поскольку $\sigma$ — биекция $A\to A'$. Это и есть равенство двух композиций. $\blacksquare$</p></div></details></div>
+<figure><svg viewBox="0 0 420 160" width="420" role="img" aria-label="Коммутативный квадрат: переименование носителя проходит насквозь через биекцию дополнения"><text class="s-txt" x="70" y="44" text-anchor="middle">P<tspan dy="4" font-size="9.5">k</tspan><tspan dy="-4">(A)</tspan></text><text class="s-txt" x="330" y="44" text-anchor="middle">P<tspan dy="4" font-size="9.5">k</tspan><tspan dy="-4">(A′)</tspan></text><text class="s-txt" x="70" y="126" text-anchor="middle">P<tspan dy="4" font-size="9.5">n−k</tspan><tspan dy="-4">(A)</tspan></text><text class="s-txt" x="330" y="126" text-anchor="middle">P<tspan dy="4" font-size="9.5">n−k</tspan><tspan dy="-4">(A′)</tspan></text><line class="s-thin" x1="120" y1="40" x2="268" y2="40"></line><path class="s-ar-m" d="M259,36 l9,4 -9,4 z"></path><line class="s-thin" x1="120" y1="122" x2="268" y2="122"></line><path class="s-ar-m" d="M259,118 l9,4 -9,4 z"></path><line class="s-thin" x1="70" y1="56" x2="70" y2="104"></line><path class="s-ar-m" d="M66,95 l4,9 4,-9 z"></path><line class="s-thin" x1="330" y1="56" x2="330" y2="104"></line><path class="s-ar-m" d="M326,95 l4,9 4,-9 z"></path><text class="s-txt-m" x="194" y="30" text-anchor="middle">σ</text><text class="s-txt-m" x="194" y="146" text-anchor="middle">σ</text><text class="s-txt-m" x="58" y="84" text-anchor="end">φ<tspan dy="4" font-size="9.5">A</tspan><tspan dy="-4"></tspan></text><text class="s-txt-m" x="342" y="84">φ<tspan dy="4" font-size="9.5">A′</tspan><tspan dy="-4"></tspan></text></svg><figcaption>Условие (C) в записи: переименовать носитель и потом взять дополнение — то же, что взять дополнение и потом переименовать. Утверждение 6.</figcaption></figure>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-1-3">A3. Формализм: комбинаторные виды</h3></summary><div class="sec-body">
+<div class="stmt defn" id="s0-d-7"><span class="lbl">Определение 7 (вид).</span><p>Вид $F$ — правило, которое каждому конечному множеству $U$ сопоставляет конечное множество $F[U]$, а каждой биекции $\sigma\colon U\to V$ — отображение $F[\sigma]\colon F[U]\to F[V]$, причём</p><p class="eq">$$F[\tau\circ\sigma]=F[\tau]\circ F[\sigma],\qquad F[\mathrm{Id}_U]=\mathrm{Id}_{F[U]}.$$</p><p>Элементы $F[U]$ называются $F$-структурами на $U$, отображение $F[\sigma]$ — транспортом структур вдоль $\sigma$. Понятие введено Эресманом, силу его для перечисления показал Жуайаль (1981); формулировка — определение 1.3 у Бержерона–Лабеля–Леру.</p></div>
+<div class="stmt thm" id="s0-t-8"><span class="lbl">Утверждение 8 (транспорт обратим).</span><p>Каждое $F[\sigma]$ — биекция.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$F[\sigma]\circ F[\sigma^{-1}]=F[\sigma\circ\sigma^{-1}]=F[\mathrm{Id}]=\mathrm{Id}$, и симметрично. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-9"><span class="lbl">Утверждение 9 (мощность зависит только от размера).</span><p>$\lvert F[U]\rvert$ зависит только от $\lvert U\rvert$; поэтому корректны обозначения $F[n]:=F[\{1,\dots,n\}]$ и $f_n:=\lvert F[n]\rvert$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Между равномощными $U$ и $V$ есть биекция $\sigma$, а $F[\sigma]$ — биекция $F[U]\to F[V]$ по <a class="xref" href="#s0-t-8">утверждению 8</a>. $\blacksquare$</p></div></details></div>
+<div class="stmt task" id="s0-e-10"><span class="lbl">Пример 10 (четыре вида).</span><p>$L$ — вид линейных порядков: $L[U]$ — линейные порядки на $U$, транспорт переносит порядок вдоль $\sigma$ (в новом порядке $\sigma(u)\lt\sigma(u')$ тогда и только тогда, когда $u\lt u'$ в старом), $\ell_n=n!$. $S$ — вид перестановок: $S[U]$ — биекции $U\to U$, транспорт $S[\sigma](\pi)=\sigma\circ\pi\circ\sigma^{-1}$, $s_n=n!$. $E$ — вид множеств: $E[U]=\{U\}$, $e_n=1$. $C$ — вид циклических порядков: $C[U]$ — циклические расположения элементов $U$ при $U\ne\varnothing$, $c_n=(n-1)!$.</p></div>
+<div class="stmt rem" id="s0-n-11"><span class="lbl">Замечание 11 (почему транспорт перестановок — сопряжение).</span><p>Сопоставление $\pi\mapsto\sigma\circ\pi$ транспортом быть не может: оно не даёт отображения $V\to V$ и нарушает $F[\mathrm{Id}]=\mathrm{Id}$. Сопряжение сохраняет цикловой тип, то есть переименование не меняет формы перестановки.</p></div>
+<div class="stmt defn" id="s0-d-12"><span class="lbl">Определение 12 (равномощность).</span><p>Виды $F$ и $G$ равномощны ($F\equiv G$), если существует семейство биекций $\alpha_U\colon F[U]\to G[U]$ — по одной на каждое конечное $U$, без условий согласования.</p></div>
+<div class="stmt defn" id="s0-d-13"><span class="lbl">Определение 13 (изоморфизм видов).</span><p>Виды $F$ и $G$ изоморфны ($F\simeq G$), если существует семейство биекций $\alpha_U\colon F[U]\to G[U]$, удовлетворяющее условию естественности: для любой биекции $\sigma\colon U\to V$</p><p class="eq">$$\alpha_V\circ F[\sigma]=G[\sigma]\circ\alpha_U.$$</p><p>Содержательно условие означает, что $G$-структура $\alpha_U(s)$ описывается без обращения к природе элементов $U$. Это определения 1.16 и 1.17 у Бержерона–Лабеля–Леру.</p></div>
+<div class="stmt thm" id="s0-t-14"><span class="lbl">Утверждение 14 (равномощность — это равенство рядов).</span><p>$F\simeq G\Rightarrow F\equiv G$, и $F\equiv G$ равносильно равенству экспоненциальных производящих функций $F(x)=G(x)$, где $F(x)=\sum_{n\ge0}f_n x^n/n!$. Обратная импликация к первой ложна (<a class="xref" href="#s0-t-45">утверждение 45</a>).</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Первая импликация — забыть условие естественности. Равносильность: равномощность значит $f_n=g_n$ при всех $n$ (<a class="xref" href="#s0-t-9">утверждение 9</a>), то есть покоэффициентное равенство рядов. $\blacksquare$</p></div></details></div>
+<div class="stmt defn" id="s0-d-15"><span class="lbl">Определение 15 (простейшие виды).</span><p>$\mathbf 0[U]:=\varnothing$ для всех $U$. $\mathbf 1[\varnothing]:=\{\ast\}$ и $\mathbf 1[U]:=\varnothing$ при $U\ne\varnothing$. $X[U]:=\{U\}$ при $\lvert U\rvert=1$ и $\varnothing$ иначе. Транспорт во всех трёх случаях единственно возможный.</p></div>
+<div class="stmt defn" id="s0-d-16"><span class="lbl">Определение 16 (сумма и произведение).</span><p>$(F+G)[U]:=F[U]\sqcup G[U]$, транспорт покомпонентный. $(F\cdot G)[U]:=\sum_{U_1\sqcup U_2=U}F[U_1]\times G[U_2]$, где сумма берётся по всем упорядоченным разбиениям носителя на два непересекающихся подмножества (пустые допускаются); биекция $\sigma$ переводит разбиение $U=U_1\sqcup U_2$ в $V=\sigma(U_1)\sqcup\sigma(U_2)$, а пару структур — транспортами $F[\sigma|_{U_1}]$ и $G[\sigma|_{U_2}]$. Структура вида $F+G$ — это $F$-структура или $G$-структура с пометкой, какая именно; структура вида $F\cdot G$ — разрезание носителя на две части и структура на каждой.</p></div>
+<div class="stmt thm" id="s0-t-17"><span class="lbl">Утверждение 17 (алгебра видов).</span><p>$(\mathbf 0,+)$ и $(\mathbf 1,\cdot)$ — нейтральные элементы, обе операции ассоциативны и коммутативны с точностью до изоморфизма, умножение дистрибутивно относительно сложения.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Проверки однотипны; коммутативность произведения: изоморфизм $(F\cdot G)[U]\to(G\cdot F)[U]$ переставляет части разбиения вместе с сомножителями, пара $(U_1,U_2)$ со структурами $(s,t)$ идёт в $(U_2,U_1)$ со структурами $(t,s)$. Это биекция, и она естественна, потому что определена без ссылки на природу элементов. Ассоциативность: обе стороны суть суммы по упорядоченным разбиениям $U$ на три части. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-18"><span class="lbl">Теорема 18 (сумма и произведение на рядах).</span><p>$(F+G)(x)=F(x)+G(x)$ и $(F\cdot G)(x)=F(x)\cdot G(x)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Для суммы $\lvert(F+G)[n]\rvert=f_n+g_n$, ряды складываются почленно. Для произведения упорядоченное разбиение $[n]=U_1\sqcup U_2$ задаётся выбором $U_1$; при $\lvert U_1\rvert=k$ таких выборов $\binom{n}{k}$, и на каждом $f_k$ структур слева и $g_{n-k}$ справа, откуда $\lvert(F\cdot G)[n]\rvert=\sum_{k=0}^n\binom nk f_k g_{n-k}$. Разделив на $n!$ и раскрыв $\binom nk=n!/(k!(n-k)!)$, получаем $\sum_k \dfrac{f_k}{k!}\cdot\dfrac{g_{n-k}}{(n-k)!}$ — коэффициент при $x^n$ в произведении рядов. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-19"><span class="lbl">Замечание 19 (откуда факториал).</span><p>Факториал в знаменателе экспоненциального ряда — бухгалтерия биномиального коэффициента, возникающего оттого, что при умножении видов режется множество меток. Если резать не множество, а число, то есть положить $(A\cdot B)_n=\coprod_{i+j=n}A_i\times B_j$, биномиальный коэффициент не появляется и ряд выходит обычным: тип производящей функции определяется типом произведения.</p></div>
+<div class="stmt defn" id="s0-d-20"><span class="lbl">Определение 20 (подстановка).</span><p>Пусть $G[\varnothing]=\varnothing$. Тогда</p><p class="eq">$$(F\circ G)[U]:=\sum_{\pi\,\vdash\,U}F[\pi]\times\prod_{B\in\pi}G[B],$$</p><p>где $\pi$ пробегает разбиения $U$ на непустые блоки, $F[\pi]$ — множество $F$-структур на множестве блоков, произведение берётся по блокам. Транспорт: $\sigma$ переводит $\pi$ в $\sigma(\pi)$, индуцирует биекцию множеств блоков и действует на $F[\pi]$ через $F$ от неё, а на каждом сомножителе — через $G[\sigma|_B]$. Содержательно: $(F\circ G)$-структура есть $F$-структура из $G$-структур. Условие $G[\varnothing]=\varnothing$ существенно, иначе к разбиению можно бесконечно добавлять пустые блоки.</p></div>
+<div class="stmt thm" id="s0-t-21"><span class="lbl">Теорема 21 (подстановка на рядах).</span><p>$(F\circ G)(x)=F(G(x))$.</p></div>
+<div class="stmt task" id="s0-e-22"><span class="lbl">Пример 22 (три уравнения, читаемые вслух).</span><p>Перестановка — это множество циклов: $S=E\circ C$. Разбиение множества — это множество непустых множеств: $\Pi=E\circ E_+$. Граф — это множество связных графов: $\mathrm{Graph}=E\circ\mathrm{Conn}$.</p></div>
+<div class="stmt thm" id="s0-t-23"><span class="lbl">Утверждение 23 (экспоненциальная формула).</span><p>Если $F=E\circ G$ и $G[\varnothing]=\varnothing$, то $F(x)=e^{G(x)}$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$E(x)=\sum_{n\ge0}x^n/n!=e^x$, и по <a class="xref" href="#s0-t-21">теореме 21</a> $F(x)=E(G(x))=e^{G(x)}$. $\blacksquare$</p></div></details></div>
+<div class="stmt task" id="s0-e-24"><span class="lbl">Пример 24 (контрольная сумма к $S=E\circ C$).</span><p>Циклов на $n$ метках ровно $(n-1)!$ при $n\ge1$, поэтому $C(x)=\sum_{n\ge1}(n-1)!\,x^n/n!=\sum_{n\ge1}x^n/n=\ln\frac1{1-x}$. По <a class="xref" href="#s0-t-23">утверждению 23</a> $S(x)=e^{C(x)}=\frac1{1-x}$; напрямую $S(x)=\sum_{n\ge0}n!\,x^n/n!=\frac1{1-x}$. Совпало.</p></div>
+<div class="stmt thm" id="s0-t-25"><span class="lbl">Утверждение 25 (классификация неразложимых видов).</span><p>Неразложимые в сумму виды степени $n$ отвечают классам сопряжённых подгрупп в $S_n$, и разложение вида в сумму неразложимых единственно.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-1-4">A4. Где виды жмут</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-26"><span class="lbl">Пример 26 (расширение на все отображения удаётся).</span><p>Сопоставление $X\mapsto\mathcal P(X)$, $f\mapsto(S\mapsto f(S))$ — функтор на всех отображениях: $\mathcal P(g\circ f)=\mathcal P(g)\circ\mathcal P(f)$, поскольку $g(f(S))=(g\circ f)(S)$, и $\mathcal P(\mathrm{id})=\mathrm{id}$.</p></div>
+<div class="stmt task" id="s0-e-27"><span class="lbl">Пример 27 (расширение удаётся, но со развёрнутой стрелкой).</span><p>Сопоставление $X\mapsto\mathcal P(X)$, $f\mapsto(T\mapsto f^{-1}(T))$ определено для всех отображений, но переворачивает стрелку: если $f\colon X\to Y$, то прообраз даёт $\mathcal P(Y)\to\mathcal P(X)$, и $(g\circ f)^{-1}(T)=f^{-1}(g^{-1}(T))$, то есть порядок композиции меняется. Это единственная мотивация противоположной категории в лекции.</p></div>
+<div class="stmt task" id="s0-e-28"><span class="lbl">Пример 28 (расширение не удаётся).</span><p>Сопоставление $X\mapsto X^X$ (все отображения $X\to X$) — вид: транспорт $\sigma\cdot f=\sigma\circ f\circ\sigma^{-1}$ корректен для биекций. На произвольные отображения оно не продолжается: для неинъективного $u\colon X\to Y$ формула $u\circ f\circ u^{-1}$ не определена, а естественного восполнения нет — как такое доказывают — <a class="xref" href="#s0-t-72">утверждение 72</a>.</p></div>
+<div class="stmt rem" id="s0-n-29"><span class="lbl">Замечание 29 (вторая ось обобщения).</span><p>Второе направление — виды со значениями не в множествах: вместо $F[U]$ конечного множества берётся объект другой категории (векторное пространство, взвешенное множество). Оба направления — расширение класса стрелок и смена цели — упаковываются одним формализмом, и это определения категории, функтора и естественного преобразования.</p></div>
+</div></details>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-2">СТЫК A｜B. Три определения и конструкции категорий</h2></summary><div class="sec-body">
+<div class="stmt defn" id="s0-d-30"><span class="lbl">Определение 30 (категория).</span><p>Категория $\mathcal C$ состоит из класса объектов; из множества морфизмов $\mathcal C(A,B)$ для каждой упорядоченной пары объектов (запись $f\colon A\to B$); из операции композиции, сопоставляющей паре $f\colon A\to B$, $g\colon B\to C$ морфизм $g\circ f\colon A\to C$; и из морфизма $1_A\colon A\to A$ для каждого объекта $A$. Требуется ассоциативность $h\circ(g\circ f)=(h\circ g)\circ f$ и закон единицы $f\circ 1_A=f=1_B\circ f$ для всякого $f\colon A\to B$.</p></div>
+<div class="stmt rem" id="s0-n-31"><span class="lbl">Замечание 31 (малые и большие категории).</span><p>Категория мала, если её объекты и морфизмы образуют множества; $\mathbf{Set}$, $\mathbf{Grp}$ и подобные малыми не являются — объекты составляют класс. Дальше это различие не используется.</p></div>
+<div class="stmt defn" id="s0-d-32"><span class="lbl">Определение 32 (коммутативная диаграмма).</span><p>Диаграмма — ориентированный граф, вершины которого помечены объектами, а рёбра морфизмами. Диаграмма коммутативна, если для любых двух путей с общим началом и общим концом композиции вдоль них равны.</p></div>
+<div class="stmt defn" id="s0-d-33"><span class="lbl">Определение 33 (изоморфизм).</span><p>Морфизм $f\colon A\to B$ — изоморфизм, если существует $g\colon B\to A$ с $g\circ f=1_A$ и $f\circ g=1_B$. Объекты $A$ и $B$ изоморфны ($A\cong B$), если такой морфизм есть.</p></div>
+<div class="stmt thm" id="s0-t-34"><span class="lbl">Утверждение 34 (обратный морфизм единствен).</span><p>Если $g$ и $g'$ оба обратны к $f\colon A\to B$, то $g=g'$; поэтому запись $f^{-1}$ законна.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$g=g\circ 1_B=g\circ(f\circ g')=(g\circ f)\circ g'=1_A\circ g'=g'$. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-35"><span class="lbl">Утверждение 35 (изоморфизмы: тождество, композиция, отношение).</span><p>Тождественный морфизм — изоморфизм. Композиция изоморфизмов — изоморфизм, причём $(g\circ f)^{-1}=f^{-1}\circ g^{-1}$. Изоморфность объектов рефлексивна, симметрична и транзитивна.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$1_A$ обратен сам себе. Для изоморфизмов $f\colon A\to B$ и $g\colon B\to C$: $(f^{-1}\circ g^{-1})\circ(g\circ f)=f^{-1}\circ(g^{-1}\circ g)\circ f=f^{-1}\circ f=1_A$, и симметрично в другую сторону. Три свойства отношения — это те же три фразы, прочитанные про объекты. $\blacksquare$</p></div></details></div>
+<div class="stmt defn" id="s0-d-36"><span class="lbl">Определение 36 (противоположная категория).</span><p>$\mathcal C^{\mathrm{op}}$ — категория с теми же объектами, что $\mathcal C$, с морфизмами $\mathcal C^{\mathrm{op}}(A,B)=\mathcal C(B,A)$ и композицией $g\circ_{\mathrm{op}}f=f\circ g$.</p></div>
+<div class="stmt defn" id="s0-d-37"><span class="lbl">Определение 37 (свободная категория ориентированного графа).</span><p>По ориентированному графу строится категория: объекты — вершины, морфизмы $u\to v$ — пути из $u$ в $v$ (в том числе пустой путь при $u=v$), композиция — приписывание путей, тождество — пустой путь.</p></div>
+<div class="stmt defn" id="s0-d-38"><span class="lbl">Определение 38 (функтор).</span><p>Функтор $F\colon\mathcal C\to\mathcal D$ сопоставляет каждому объекту $A$ категории $\mathcal C$ объект $FA$ категории $\mathcal D$ и каждому морфизму $f\colon A\to B$ морфизм $Ff\colon FA\to FB$, причём $F(g\circ f)=Fg\circ Ff$ и $F(1_A)=1_{FA}$.</p></div>
+<div class="stmt defn" id="s0-d-39"><span class="lbl">Определение 39 (контравариантный функтор).</span><p>Контравариантный функтор из $\mathcal C$ в $\mathcal D$ — функтор $\mathcal C^{\mathrm{op}}\to\mathcal D$; в развёрнутом виде каждому $f\colon A\to B$ отвечает $Ff\colon FB\to FA$, и $F(g\circ f)=Ff\circ Fg$.</p></div>
+<div class="stmt defn" id="s0-d-40"><span class="lbl">Определение 40 (естественное преобразование).</span><p>Естественное преобразование $\alpha\colon F\Rightarrow G$ между функторами $F,G\colon\mathcal C\to\mathcal D$ — семейство морфизмов $\alpha_A\colon FA\to GA$, по одному на объект, такое, что для всякого $f\colon A\to B$ квадрат коммутативен:</p><p class="eq">$$Gf\circ\alpha_A=\alpha_B\circ Ff.$$</p><p>Этот квадрат называют квадратом естественности.</p></div>
+<figure><svg viewBox="0 0 420 160" width="420" role="img" aria-label="Квадрат естественности: компонента преобразования, применённая до и после действия морфизма, даёт один результат"><text class="s-txt" x="70" y="44" text-anchor="middle">FA</text><text class="s-txt" x="330" y="44" text-anchor="middle">FB</text><text class="s-txt" x="70" y="126" text-anchor="middle">GA</text><text class="s-txt" x="330" y="126" text-anchor="middle">GB</text><line class="s-thin" x1="110" y1="40" x2="288" y2="40"></line><path class="s-ar-m" d="M279,36 l9,4 -9,4 z"></path><line class="s-thin" x1="110" y1="122" x2="288" y2="122"></line><path class="s-ar-m" d="M279,118 l9,4 -9,4 z"></path><line class="s-thin" x1="70" y1="56" x2="70" y2="104"></line><path class="s-ar-m" d="M66,95 l4,9 4,-9 z"></path><line class="s-thin" x1="330" y1="56" x2="330" y2="104"></line><path class="s-ar-m" d="M326,95 l4,9 4,-9 z"></path><text class="s-txt-m" x="199" y="30" text-anchor="middle">Ff</text><text class="s-txt-m" x="199" y="146" text-anchor="middle">Gf</text><text class="s-txt-m" x="58" y="84" text-anchor="end">α<tspan dy="4" font-size="9.5">A</tspan><tspan dy="-4"></tspan></text><text class="s-txt-m" x="342" y="84">α<tspan dy="4" font-size="9.5">B</tspan><tspan dy="-4"></tspan></text></svg><figcaption>Определение 40: перевести и потом подействовать — то же, что подействовать и потом перевести. Квадрат <a class="xref" href="#s0-t-6">утверждения 6</a> есть этот же квадрат для двух видов.</figcaption></figure>
+<div class="stmt defn" id="s0-d-41"><span class="lbl">Определение 41 (естественный изоморфизм).</span><p>Естественное преобразование $\alpha\colon F\Rightarrow G$ — естественный изоморфизм, если каждая компонента $\alpha_A$ — изоморфизм.</p></div>
+<div class="stmt thm" id="s0-t-42"><span class="lbl">Утверждение 42 (обратное преобразование естественно автоматически).</span><p>Естественное преобразование $\alpha\colon F\Rightarrow G$ обратимо — то есть существует естественное $\beta\colon G\Rightarrow F$, покомпонентно обратное $\alpha$, — тогда и только тогда, когда каждая компонента $\alpha_A$ есть изоморфизм. Обратные компоненты при этом естественны автоматически и определены однозначно.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Слева направо — по определению. Справа налево: положим $\beta_A=\alpha_A^{-1}$ (однозначность даёт <a class="xref" href="#s0-t-34">утверждение 34</a>). Из квадрата $Gf\circ\alpha_A=\alpha_B\circ Ff$ домножением на обратные следует $\alpha_B^{-1}\circ Gf=Ff\circ\alpha_A^{-1}$, то есть квадрат естественности для $\beta$. $\blacksquare$</p></div></details></div>
+<div class="stmt defn" id="s0-d-43"><span class="lbl">Определение 43 (группоид).</span><p>Группоид — категория, в которой каждый морфизм есть изоморфизм. Ядро-группоид категории $\mathcal C$ — подкатегория с теми же объектами и только изоморфизмами в качестве морфизмов.</p></div>
+<div class="stmt thm" id="s0-t-44"><span class="lbl">Утверждение 44 (виды суть функторы).</span><p>Вид — это в точности функтор из группоида конечных множеств и биекций в $\mathbf{Set}$; равномощность (<a class="xref" href="#s0-d-12">определение 12</a>) — семейство биекций без условий, изоморфизм видов (<a class="xref" href="#s0-d-13">определение 13</a>) — естественный изоморфизм таких функторов.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Два условия согласования <a class="xref" href="#s0-d-7">определения 7</a> суть в точности $F(g\circ f)=Fg\circ Ff$ и $F(1)=1$ <a class="xref" href="#s0-d-38">определения 38</a>, записанные для биекций; условие естественности <a class="xref" href="#s0-d-13">определения 13</a> есть квадрат <a class="xref" href="#s0-d-40">определения 40</a>. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-45"><span class="lbl">Утверждение 45 (равномощность не влечёт изоморфизма).</span><p>Существуют равномощные, но не изоморфные виды; поэтому обратная импликация в <a class="xref" href="#s0-t-14">утверждении 14</a> ложна. Носитель — <a class="xref" href="#s0-t-90">теорема 90</a>.</p></div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-3">B. Зоопарк: категории и функторы</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-3-1">B1. Что бывает стрелкой</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-46"><span class="lbl">Пример 46 ($\mathbf{Set}$).</span><p>Объекты — множества, морфизмы $\mathbf{Set}(A,B)$ — отображения $A\to B$, композиция — обычная композиция отображений, тождества — тождественные отображения.</p></div>
+<div class="stmt task" id="s0-e-47"><span class="lbl">Пример 47 (стрелка как сохраняющее структуру отображение).</span><p>Группы и гомоморфизмы; векторные пространства и линейные отображения; топологические пространства и непрерывные отображения. Аксиомы выполняются потому, что композиция сохраняющих структуру отображений сохраняет структуру, а тождественное её сохраняет.</p></div>
+<div class="stmt task" id="s0-e-48"><span class="lbl">Пример 48 ($\mathbf{Mat}$).</span><p>Объекты — натуральные числа, морфизмы $n\to m$ — матрицы размера $m\times n$ над фиксированным полем, композиция — умножение матриц, тождество — единичная матрица. Ассоциативность — ассоциативность умножения матриц. Объект здесь не множество: вся информация уехала в стрелки.</p></div>
+<div class="stmt task" id="s0-e-49"><span class="lbl">Пример 49 ($\mathbf{Rel}$: биекция перестаёт быть изоморфизмом).</span><p>Объекты — множества, морфизм $A\to B$ — отношение $R\subseteq A\times B$, композиция — композиция отношений, тождество — диагональ. Возьмём $X=\{1,2\}$ без дополнительной структуры и морфизм-отношение $R=\{(1,2)\}\colon X\to X$. Биективный на носителях морфизм не обязан быть изоморфизмом: тождественное отношение является морфизмом, а обратное отношение композиции с $R$ до диагонали не доводит.</p></div>
+<div class="stmt defn" id="s0-d-50"><span class="lbl">Определение 50 (предупорядоченное множество как категория).</span><p>Множество с рефлексивным транзитивным отношением $\le$ считается категорией: объекты — элементы, множество $\mathcal C(x,y)$ одноэлементно при $x\le y$ и пусто иначе. Композиция и тождества существуют и единственны по транзитивности и рефлексивности.</p></div>
+<div class="stmt task" id="s0-e-51"><span class="lbl">Пример 51 (стрелка как «отсюда следует то»).</span><p>Натуральные числа с делимостью; они же с отношением «не больше»; булевы алгебры с $\le$; высказывания с выводимостью. Во всех между двумя объектами не более одной стрелки, поэтому вопрос «сколько стрелок» вырождается в «есть или нет».</p></div>
+<div class="stmt task" id="s0-e-52"><span class="lbl">Пример 52 (стрелка как геометрический объект: кобордизмы).</span><p>Объекты — конечные наборы окружностей, морфизм — поверхность, границей которой служат наборы-источник и наборы-цель, с точностью до диффеоморфизма; композиция — склейка поверхностей по общей границе, тождество — цилиндр. Ассоциативность склейки и есть ассоциативность композиции.</p></div>
+<div class="stmt defn" id="s0-d-53"><span class="lbl">Определение 53 (моноид как категория с одним объектом).</span><p>Категория с единственным объектом $\ast$ — это в точности моноид: элементы — морфизмы $\ast\to\ast$, умножение — композиция, единица — $1_\ast$. Если вдобавок каждый морфизм обратим, это группа; такую категорию обозначают $BG$.</p></div>
+<div class="stmt task" id="s0-e-54"><span class="lbl">Пример 54 (стрелка как процесс).</span><p>Конечные автоматы: объекты — состояния, морфизм — слово, переводящее одно состояние в другое. Категория алгоритмов: морфизм — вычисление, переводящее вход в выход. Пути в ориентированном графе: это свободная категория графа (<a class="xref" href="#s0-d-37">определение 37</a>). Объекты здесь пусты: состояние — просто метка, а необратимость морфизма есть содержание примера.</p></div>
+<div class="stmt defn" id="s0-d-55"><span class="lbl">Определение 55 (подкатегория, полная подкатегория).</span><p>Подкатегория $\mathcal D\subseteq\mathcal C$ — класс объектов и для каждой пары объектов подмножество $\mathcal D(A,B)\subseteq\mathcal C(A,B)$, замкнутое относительно композиции и содержащее тождества. Подкатегория полна, если $\mathcal D(A,B)=\mathcal C(A,B)$ для всех её объектов.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-3-2">B2. Что бывает функтором</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-56"><span class="lbl">Пример 56 (забывание, тремя ступенями).</span><p>Забыть свойства: $\mathbf{Ab}\to\mathbf{Grp}$. Забыть структуру: $\mathbf{Grp}\to\mathbf{Set}$ (кольцо забывает умножение и становится группой, группа забывает операцию и становится множеством). Забыть материал: $\mathbf{Set}^2\to\mathbf{Set}$. Ступень читается по трём свойствам критерия эквивалентности (<a class="xref" href="#s0-t-126">теорема 126</a>): полный и верный — забыты только свойства; верный — забыта структура; ни то ни другое — забыт материал.</p></div>
+<div class="stmt task" id="s0-e-57"><span class="lbl">Пример 57 (обратный ход).</span><p>Свободное векторное пространство на множестве, $F\colon\mathbf{Set}\to\mathbf{Vect}$; абелианизация группы, $G\mapsto G/[G,G]$, функтор $\mathbf{Grp}\to\mathbf{Ab}$.</p></div>
+<div class="stmt task" id="s0-e-58"><span class="lbl">Пример 58 (цепное правило есть функториальность).</span><p>Пусть объекты — точки евклидовых пространств, морфизм — гладкое отображение-росток. Сопоставление, переводящее точку $a\in\mathbb R^n$ в число $n$, а росток $f$ в его матрицу Якоби в точке $a$, — функтор в $\mathbf{Mat}$. Функториальность $D(g\circ f)_a=Dg_{f(a)}\cdot Df_a$ — это в точности цепное правило; $D(\mathrm{id})=I$. В одномерном случае матрица имеет размер $1\times1$ и равенство сводится к школьному $(g\circ f)'=g'(f(a))\cdot f'(a)$.</p></div>
+<div class="stmt task" id="s0-e-59"><span class="lbl">Пример 59 (решения уравнения как функтор).</span><p>Зафиксируем систему полиномиальных уравнений с целыми коэффициентами. Сопоставление «поле $K\mapsto$ множество решений системы в $K$» — функтор из полей в $\mathbf{Set}$: гомоморфизм полей переносит решения в решения, тождество и композиция сохраняются. Для $x^2=2$: над $\mathbb Q$ решений нет, над $\mathbb R$ их два, над полем из семи элементов — два. Множества разные, функтор один.</p></div>
+<div class="stmt rem" id="s0-n-60"><span class="lbl">Замечание 60 (приёмом пользуются, не называя).</span><p>У Атьи–Макдональда, гл. 1 упр. 21, гомоморфизму колец $\varphi\colon A\to B$ сопоставляется отображение спектров $\varphi^\ast\colon\mathrm{Spec}\,B\to\mathrm{Spec}\,A$ вместе с проверкой согласованности — это контравариантный функтор целиком, а слово «функтор» не произнесено.</p></div>
+<div class="stmt task" id="s0-e-61"><span class="lbl">Пример 61 (называния, одной строкой каждое).</span><p>Функтор между группами как категориями с одним объектом — это гомоморфизм. Функтор между предупорядоченными множествами — монотонное отображение. Функтор $BG\to\mathbf{Set}$ — $G$-множество. Функтор $BG\to\mathbf{Vect}$ — представление группы $G$.</p></div>
+<div class="stmt task" id="s0-e-62"><span class="lbl">Пример 62 (алгебры Фробениуса как полная классификация).</span><p>Опишем все функторы из категории двумерных кобордизмов (<a class="xref" href="#s0-e-52">пример 52</a>) в векторные пространства. Окружности сопоставляется пространство $V$, пустому набору — поле $k$; шапочка даёт морфизм $k\to V$, цилиндр — тождественный морфизм, штаны — умножение $V\otimes V\to V$; цилиндр, прочитанный как кобордизм из двух окружностей в пустой набор, даёт двойственность $V\otimes V\to k$. Аксиомы категории кобордизмов переходят в ассоциативность, единицу и невырожденность формы: получается в точности коммутативная алгебра Фробениуса, и обратно.</p></div>
+<div class="stmt task" id="s0-e-63"><span class="lbl">Пример 63 (представления колчана).</span><p>Функторы из свободной категории ориентированного графа в векторные пространства — представления колчана; колчан имеет конечный тип тогда и только тогда, когда его граф — диаграмма типа $A$, $D$ или $E$. Формулировка называется, доказательство не приводится.</p></div>
+<div class="stmt defn" id="s0-d-64"><span class="lbl">Определение 64 (Hom-функтор).</span><p>Для объекта $A$ категории $\mathcal C$ ковариантный Hom-функтор $\mathcal C(A,-)\colon\mathcal C\to\mathbf{Set}$ переводит объект $X$ в множество $\mathcal C(A,X)$, а морфизм $f\colon X\to Y$ — в отображение $u\mapsto f\circ u$. Контравариантный $\mathcal C(-,B)$ переводит $X$ в $\mathcal C(X,B)$, а $f\colon X\to Y$ — в $v\mapsto v\circ f$.</p></div>
+<div class="stmt thm" id="s0-t-65"><span class="lbl">Утверждение 65 (Hom — функтор).</span><p>Сопоставления <a class="xref" href="#s0-d-64">определения 64</a> действительно функторы: $\mathcal C(A,-)$ — ковариантный, $\mathcal C(-,B)$ — контравариантный.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Функториальность $\mathcal C(A,-)$ есть в точности $(g\circ f)\circ u=g\circ(f\circ u)$ и $1\circ u=u$, то есть ассоциативность композиции и закон единицы из <a class="xref" href="#s0-d-30">определения 30</a>. Для контравариантного случая та же ассоциативность, прочитанная справа налево. $\blacksquare$</p></div></details></div>
+<div class="stmt defn" id="s0-d-66"><span class="lbl">Определение 66 (изоморфизм категорий).</span><p>Категории $\mathcal C$ и $\mathcal D$ изоморфны, если существуют функторы $F\colon\mathcal C\to\mathcal D$ и $G\colon\mathcal D\to\mathcal C$ с $G\circ F=\mathrm{Id}_{\mathcal C}$ и $F\circ G=\mathrm{Id}_{\mathcal D}$ — то есть равенствами, а не изоморфизмами.</p></div>
+<div class="stmt task" id="s0-e-67"><span class="lbl">Пример 67 (булевы алгебры и булевы кольца изоморфны как категории).</span><p>Булево кольцо — кольцо с $x^2=x$ для всех $x$. По булевой алгебре строится булево кольцо: умножение — конъюнкция, сложение — симметрическая разность; обратно, по булеву кольцу — булева алгебра: $x\wedge y=xy$, $x\vee y=x+y+xy$, $\neg x=1+x$. Оба перехода взаимно обратны на объектах и на морфизмах, поэтому категории не просто эквивалентны, а изоморфны.</p></div>
+<div class="stmt task" id="s0-e-68"><span class="lbl">Пример 68 (три определения топологического пространства).</span><p>Определения через открытые множества, через замкнутые множества и через оператор замыкания дают изоморфные категории; «эквивалентные определения» получают тем самым точный смысл. В лекции — упражнение.</p></div>
+</div></details>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-4">C. Функтор как инструмент — ретракт</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-4-1">C1. Конструкция, которая не продолжается</h3></summary><div class="sec-body">
+<div class="stmt defn" id="s0-d-69"><span class="lbl">Определение 69 (ретракция, сечение, ретракт).</span><p>Пусть $r\colon B\to A$ и $s\colon A\to B$ таковы, что $r\circ s=1_A$. Тогда $r$ называется ретракцией, $s$ — сечением, а объект $A$ — ретрактом объекта $B$. Изоморфизм — это в точности случай, когда обе композиции тождественны; ретракт оставляет половину условий изоморфизма.</p></div>
+<div class="stmt thm" id="s0-t-70"><span class="lbl">Утверждение 70 (функтор сохраняет коммутативность).</span><p>Образ коммутативной диаграммы при функторе — коммутативная диаграмма.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Функтор переводит композицию вдоль пути в композицию вдоль образа пути ($F(g\circ f)=Fg\circ Ff$, индукция по длине пути, база — $F(1)=1$), а равенство двух композиций сохраняется применением $F$ к обеим частям. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-71"><span class="lbl">Утверждение 71 (функтор сохраняет ретракты).</span><p>Если $r\circ s=1_A$, то $Fr\circ Fs=1_{FA}$ для любого функтора $F$; то есть $FA$ — ретракт $FB$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$Fr\circ Fs=F(r\circ s)=F(1_A)=1_{FA}$. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-72"><span class="lbl">Утверждение 72 (обратный ход: способ доказывать несуществование).</span><p>Если $A$ — ретракт $B$, а $FA$ ретрактом $FB$ не является ни при каком продолжении $F$ на морфизмы, то функтора $F$ с заданными значениями на объектах не существует. В частности: если между $FA$ и $FB$ нет пары морфизмов с тождественной композицией, конструкция $A\mapsto FA$ функтором не продолжается.</p></div>
+<div class="stmt thm" id="s0-t-73"><span class="lbl">Утверждение 73 (функтор сохраняет изоморфизмы).</span><p>Если $f\colon A\to B$ — изоморфизм, то $Ff$ — изоморфизм, и $(Ff)^{-1}=F(f^{-1})$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>$F(f^{-1})\circ Ff=F(f^{-1}\circ f)=F(1_A)=1_{FA}$, и симметрично; единственность обратного даёт <a class="xref" href="#s0-t-34">утверждение 34</a>. Это частный случай <a class="xref" href="#s0-t-71">утверждения 71</a>, применённого в обе стороны. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-74"><span class="lbl">Утверждение 74 (центр группы — не функтор).</span><p>Сопоставление $G\mapsto Z(G)$ не продолжается до функтора $\mathbf{Grp}\to\mathbf{Grp}$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Слабая форма: очевидное продолжение не годится — при гомоморфизме $\varphi\colon G\to H$ образ $\varphi(Z(G))$ не обязан лежать в $Z(H)$. Она запрещает одно продолжение, а не все. Сильная форма: пусть $Z$ — функтор, значения которого на объектах суть центры. Группа $C_2$ — ретракт группы $S_3$: сечение $s\colon C_2\to S_3$ — вложение подгруппы, порождённой транспозицией, ретракция $r=\mathrm{sgn}\colon S_3\to C_2$ — знак перестановки, и $\mathrm{sgn}\circ s=1_{C_2}$, поскольку транспозиция нечётна. По <a class="xref" href="#s0-t-71">утверждению 71</a> тогда $Z(C_2)$ — ретракт $Z(S_3)$. Но $Z(C_2)=C_2$, а $Z(S_3)=1$, и цепочка $C_2\to 1\to C_2$ тождественной композиции не даёт: всякий гомоморфизм из единичной группы тривиален. Значит функтора нет. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-75"><span class="lbl">Утверждение 75 (раскраски без повторов — не функтор).</span><p>Сопоставление $X\mapsto\{\text{инъекции }X\hookrightarrow\{1,\dots,k\}\}$ не продолжается до функтора $\mathbf{Set}\to\mathbf{Set}$ ни ковариантно, ни контравариантно.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $\lvert A\rvert=k$ и $\lvert B\rvert=k+1$. Тогда $A$ — ретракт $B$: сечение $s\colon A\hookrightarrow B$ — любое вложение, ретракция $r\colon B\to A$ — тождество на образе $s$ и произвольное значение на оставшемся элементе, так что $r\circ s=1_A$. Обозначим через $FX$ множество инъекций $X\hookrightarrow\{1,\dots,k\}$. Тогда $\lvert FA\rvert=k!$, а $FB=\varnothing$, поскольку инъекции из $(k+1)$-элементного множества в $k$-элементное нет. По <a class="xref" href="#s0-t-71">утверждению 71</a> функтор дал бы морфизмы $FA\to FB$ и $FB\to FA$ с тождественной композицией; но в пустое множество отображает только пустое, значит $FA=\varnothing$, тогда как $\lvert FA\rvert=k!\ne 0$. Противоречие. Контравариантный случай — то же рассуждение с переставленными ролями $r$ и $s$. $\blacksquare$</p></div></details></div>
+<div class="stmt task" id="s0-e-76"><span class="lbl">Пример 76 (та же лестница в слабой форме).</span><p>Сопоставление $X\mapsto X^X$ живёт на биекциях (<a class="xref" href="#s0-e-28">пример 28</a>) и на все отображения не продолжается. На изоморфизмах обе конструкции — и центр, и раскраски — вполне определены; содержательным вопрос становится именно при переходе ко всем отображениям.</p></div>
+<div class="stmt thm" id="s0-t-77"><span class="lbl">Утверждение 77 (ретракция и сечение в множествах).</span><p>В $\mathbf{Set}$: морфизм $s\colon A\to B$ имеет ретракцию тогда и только тогда, когда $s$ инъективно (при $A\ne\varnothing$); морфизм $r\colon B\to A$ имеет сечение тогда и только тогда, когда $r$ сюръективно, и это равносильно аксиоме выбора.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Если $r\circ s=1_A$, то $s$ инъективно, а $r$ сюръективно. Обратно: для инъективного $s$ ретракция строится как обратное на образе и произвольная фиксированная точка $A$ вне образа. Для сюръективного $r$ сечение выбирает по одному прообразу в каждом непустом слое $r^{-1}(a)$, $a\in A$ — это в точности функция выбора на семействе слоёв; обратно, из существования сечений у всех сюръекций функция выбора получается для произвольного семейства непустых множеств. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-78"><span class="lbl">Замечание 78 (аксиома выбора как свойство мира).</span><p>Утверждение «всякая ретракция расщепляется» — не аксиома теории множеств, а свойство конкретной категории: в $\mathbf{Set}$ оно выполняется, в $\mathbf{Grp}$ и $\mathbf{Top}$ нет. Тем же выбором оплачено доказательство <a class="xref" href="#s0-t-124">теоремы 124</a>.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-4-2">C2. Чего не бывает</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-79"><span class="lbl">Задача 79 (Б1).</span><p>Существует ли конструкция, сопоставляющая конечному множеству множество строго меньшего размера согласованно с отображениями?</p></div>
+<div class="stmt task" id="s0-e-80"><span class="lbl">Задача 80 (Б2).</span><p>То же утверждение про размерность в линейной алгебре: существует ли конструкция, сопоставляющая конечномерному пространству пространство строго меньшей размерности согласованно с линейными отображениями. В лекции — упражнение, на слайде одна фраза.</p></div>
+<div class="stmt thm" id="s0-t-81"><span class="lbl">Утверждение 81 (нет ретракции диска на окружность).</span><p>Окружность $S^1$ не является ретрактом диска $D^2$ в категории топологических пространств и непрерывных отображений.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Фундаментальная группа $\pi_1$ — функтор из топологических пространств с отмеченной точкой в группы (существование функтора здесь используется, конструкция не приводится), и $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=0$. Если бы $r\circ i=1_{S^1}$ для вложения $i\colon S^1\to D^2$, то по <a class="xref" href="#s0-t-71">утверждению 71</a> тождественный морфизм группы $\mathbb Z$ разложился бы через нулевую группу: $\mathbb Z\to 0\to\mathbb Z$. Такая композиция тождественна лишь при $\mathbb Z=0$. Противоречие. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-82"><span class="lbl">Теорема 82 (Брауэр о неподвижной точке).</span><p>Всякое непрерывное отображение $f\colon D^2\to D^2$ имеет неподвижную точку.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $f(x)\ne x$ для всех $x$. Тогда определено непрерывное отображение $r\colon D^2\to S^1$: точке $x$ сопоставляется точка пересечения границы с лучом, идущим из $f(x)$ через $x$. Для $x\in S^1$ этот луч упирается в саму $x$, значит $r\circ i=1_{S^1}$, то есть $S^1$ — ретракт $D^2$, что противоречит <a class="xref" href="#s0-t-81">утверждению 81</a>. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-83"><span class="lbl">Замечание 83 (Эйленберг и Маклейн: хронология).</span><p>В работе 1942 года «Natural isomorphisms in group theory» функтор и естественный изоморфизм уже есть, слова «категория» нет; в работе 1945 года добавлены категория и естественное преобразование. Первый мотивирующий пример 1945 года — $L$ и $T(L)$, то есть пространство против его двойного двойственного: изоморфизм $L\cong T(L)$ нельзя предъявить без базиса и он меняется с выбором базиса, а для $T(T(L))$ он предъявляется без всякого базиса. Порядок понятий: естественность, затем функтор, затем категория. Ходовая формула «categories are what one must define in order to define functors» принадлежит Фрейду (введение к «Abelian Categories»), не Маклейну.</p></div>
+</div></details>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-5">D. Сколько бывает красивых конструкций</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-5-1">D0. Узнавание перед классификацией</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-84"><span class="lbl">Пример 84 (матрица перехода есть естественный изоморфизм).</span><p>Пусть $\mathcal V$ — группоид конечномерных векторных пространств и изоморфизмов. Выбор базиса в каждом пространстве задаёт функтор $\mathcal V\to\mathbf{Mat}$, переводящий пространство в его размерность, а изоморфизм — в его матрицу в выбранных базисах. Два разных набора базисов дают два функтора $F$ и $G$ с одинаковым действием на объектах. Естественное преобразование $\alpha\colon F\Rightarrow G$ — это семейство обратимых матриц $M_V$, и квадрат естественности принимает вид</p><p class="eq">$$G(f)=M_W\cdot F(f)\cdot M_V^{-1}\quad\text{для }f\colon V\to W,$$</p><p>то есть в точности формулу замены базиса из первого курса. Компоненты $\alpha$ обратимы, значит это естественный изоморфизм.</p></div>
+<div class="stmt task" id="s0-e-85"><span class="lbl">Пример 85 (эквивалентность автоматов как естественный изоморфизм).</span><p>Конечный автомат задаётся функтором из свободной категории графа входных символов в $\mathbf{Set}$; естественный изоморфизм двух таких функторов — это биекция состояний, согласованная со всеми переходами, то есть «тот же автомат с переименованными состояниями». Полиморфная функция, написанная сразу для всех типов, обязана коммутировать с переименованием элементов — то же условие естественности.</p></div>
+<div class="stmt thm" id="s0-t-86"><span class="lbl">Утверждение 86 (двойное двойственное естественно изоморфно тождественному).</span><p>На конечномерных векторных пространствах отображение $\eta_V\colon V\to V^{\ast\ast}$, $v\mapsto(f\mapsto f(v))$, есть естественный изоморфизм тождественного функтора в функтор двойного двойственного.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Формула $v\mapsto(f\mapsto f(v))$ определена без выбора базиса. Линейность по $v$ проверяется прямо. Инъективность: если $f(v)=0$ для всех $f$, то $v=0$; равенство размерностей $\dim V^{\ast\ast}=\dim V$ в конечномерном случае даёт биективность. Естественность: для линейного $u\colon V\to W$ и любых $v\in V$, $g\in W^\ast$ имеем $\bigl(u^{\ast\ast}\eta_V(v)\bigr)(g)=\eta_V(v)(u^\ast g)=(u^\ast g)(v)=g(u(v))=\eta_W(u(v))(g)$, то есть $u^{\ast\ast}\circ\eta_V=\eta_W\circ u$. Двойное переворачивание стрелок даёт ковариантность. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-87"><span class="lbl">Замечание 87 (что уже было).</span><p>Морфизм комбинаторных видов (<a class="xref" href="#s0-d-13">определение 13</a>) есть естественное преобразование — это <a class="xref" href="#s0-t-44">утверждение 44</a>; тем самым конструкция, с которой лекция началась, получает имя.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-5-2">D1. Ответ «ни одного»: порядки против перестановок</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-88"><span class="lbl">Лемма 88 (инвариант естественности).</span><p>Пусть $F\simeq G$. Тогда для любого конечного $U$ и любой перестановки $\sigma$ множества $U$</p><p class="eq">$$\operatorname{fix}F[\sigma]=\operatorname{fix}G[\sigma].$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Возьмём $V=U$. Условие естественности даёт $\alpha_U\circ F[\sigma]=G[\sigma]\circ\alpha_U$, а так как $\alpha_U$ — биекция, то $G[\sigma]=\alpha_U\circ F[\sigma]\circ\alpha_U^{-1}$. Значит из $F[\sigma](s)=s$ следует $G[\sigma](\alpha_U(s))=\alpha_U(s)$, и обратно применением $\alpha_U^{-1}$: биекция $\alpha_U$ переводит множество неподвижных точек в множество неподвижных точек. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-89"><span class="lbl">Замечание 89 (смысл <a class="xref" href="#s0-t-88">леммы 88</a>).</span><p>Неподвижная точка транспорта $F[\sigma]$ — структура, не изменившаяся при переименовании $\sigma$, то есть структура, для которой $\sigma$ есть автоморфизм. Лемма 88 говорит: естественная биекция обязана сохранять запас симметрий.</p></div>
+<div class="stmt thm" id="s0-t-90"><span class="lbl">Теорема 90 (о линейных порядках и перестановках).</span><p>$L\equiv S$, но $L\not\simeq S$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Равномощность: $\lvert L[n]\rvert=\lvert S[n]\rvert=n!$ (<a class="xref" href="#s0-t-3">утверждение 3</a>), семейство биекций даёт, например, преобразование Фойе (<a class="xref" href="#s0-e-4">пример 4</a>). Неизоморфность проверяется при $n=2$. Пусть $U=\{1,2\}$ и $\sigma$ — перестановка, меняющая 1 и 2. Слева: $L[U]$ состоит из двух порядков, $1\lt2$ и $2\lt1$; транспорт вдоль $\sigma$ переводит порядок $1\lt2$ в порядок, где первым идёт $\sigma(1)=2$, то есть в $2\lt1$, и симметрично, поэтому $L[\sigma]$ меняет два элемента местами и $\operatorname{fix}L[\sigma]=0$. Справа: $S[U]$ состоит из тождественной перестановки и самой $\sigma$; транспорт — сопряжение, $\sigma\,\mathrm{id}\,\sigma^{-1}=\mathrm{id}$ и $\sigma\sigma\sigma^{-1}=\sigma$, поэтому $S[\sigma]$ тождественно и $\operatorname{fix}S[\sigma]=2$. Числа 0 и 2 различны, и по <a class="xref" href="#s0-t-88">лемме 88</a> изоморфизма нет. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-91"><span class="lbl">Замечание 91 (то же одной фразой).</span><p>У линейного порядка нет нетривиальных автоморфизмов, а у перестановки их сколько угодно. Словесная форма того же аргумента: если бы каноническая биекция между порядками и перестановками существовала — какому порядку отвечала бы тождественная перестановка? Тождественная перестановка выделена среди перестановок, среди линейных порядков не выделен никто.</p></div>
+<div class="stmt thm" id="s0-t-92"><span class="lbl">Утверждение 92 (полный список естественных преобразований $L\Rightarrow S$).</span><p>Естественные преобразования между видом линейных порядков и видом перестановок существуют, и их удаётся описать все; тем самым вопрос «есть ли изоморфизм» оказывается частным случаем вопроса «опишите все».</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-5-3">D2. Тот же вопрос второй раз: $V$ против $V^\ast$</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-93"><span class="lbl">Пример 93 (мнимая единица).</span><p>Число $i$ определяется как корень уравнения $x^2=-1$; корнем является и $-i$, и по роли они неразличимы: всякое утверждение, верное для одного, верно для другого. Один из них выбирается произвольно, и сказать, какой выбран, нельзя.</p></div>
+<div class="stmt rem" id="s0-n-94"><span class="lbl">Замечание 94 (скалярное произведение есть выбор).</span><p>Скалярное произведение на конечномерном $V$ — это выбор изоморфизма $V\cong V^\ast$: вектору $v$ сопоставляется функционал $\langle v,-\rangle$. Поднимание и опускание индексов есть применение этого изоморфизма, а метрика делает выбор за нас; в ортонормированном базисе матрица формы равна единичной, и то, что выбор был сделан, перестаёт быть видно.</p></div>
+<div class="stmt defn" id="s0-d-95"><span class="lbl">Определение 95 (двойственность как функтор на группоиде).</span><p>На всей категории конечномерных векторных пространств сопоставление $V\mapsto V^\ast$ контравариантно (<a class="xref" href="#s0-d-39">определение 39</a>), поэтому естественного преобразования из тождественного функтора в него не существует по типизации: оба функтора обязаны идти в одну сторону. На группоиде $\mathcal V$ (только изоморфизмы) двойственность становится ковариантным функтором по правилу $f\mapsto(f^{-1})^\ast$, и вопрос ставится корректно: есть ли естественный изоморфизм $\mathrm{Id}\Rightarrow(-)^\ast$ на $\mathcal V$.</p></div>
+<div class="stmt thm" id="s0-t-96"><span class="lbl">Утверждение 96 (действие скаляра на двойственном).</span><p>Обратимый оператор $g$ действует на $V^\ast$ как $(g^{\mathsf T})^{-1}$; в частности скалярный оператор $\lambda\cdot\mathrm{id}$ действует на $V$ умножением на $\lambda$, а на $V^\ast$ умножением на $\lambda^{-1}$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>По <a class="xref" href="#s0-d-95">определению 95</a> действие на $V^\ast$ есть $f\mapsto((\lambda\cdot\mathrm{id})^{-1})^\ast f=f\circ(\lambda^{-1}\cdot\mathrm{id})=\lambda^{-1}f$. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-97"><span class="lbl">Теорема 97 (естественного изоморфизма $V\cong V^\ast$ нет).</span><p>На группоиде конечномерных векторных пространств над полем, содержащим элемент $\lambda$ с $\lambda^2\ne1$, естественного изоморфизма $\mathrm{Id}\Rightarrow(-)^\ast$ не существует.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $\eta$ — такое естественное преобразование. Подставим в квадрат естественности $f=\lambda\cdot\mathrm{id}_V$. Левая часть даёт $\eta_V\circ(\lambda\cdot\mathrm{id})=\lambda\cdot\eta_V$, правая по <a class="xref" href="#s0-t-96">утверждению 96</a> даёт $\lambda^{-1}\cdot\eta_V$. Значит $\lambda\,\eta_V=\lambda^{-1}\eta_V$, то есть $(\lambda^2-1)\,\eta_V=0$ для всех $\lambda\ne0$. При $\lambda=2$ отсюда $\eta_V=0$, что не изоморфизм (при $V\ne0$). $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-98"><span class="lbl">Замечание 98 (контроль: запрет не запрещает лишнего).</span><p>Та же подстановка $f=\lambda\cdot\mathrm{id}$ для двойного двойственного даёт $\lambda\cdot\eta_V=\lambda\cdot\eta_V$ — препятствия нет, и изоморфизм действительно существует (<a class="xref" href="#s0-t-86">утверждение 86</a>), причём формулой без выбора.</p></div>
+<div class="stmt thm" id="s0-t-99"><span class="lbl">Утверждение 99 (нет естественной диагонали).</span><p>На группоиде конечномерных векторных пространств единственное естественное преобразование $\mathrm{Id}\Rightarrow(-)\otimes(-)$ — нулевое.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $\Delta_V\colon V\to V\otimes V$ естественно. Подстановка $f=\lambda\cdot\mathrm{id}_V$ даёт слева $\Delta_V\circ(\lambda\cdot\mathrm{id})=\lambda\,\Delta_V$, справа $(\lambda\cdot\mathrm{id}\otimes\lambda\cdot\mathrm{id})\circ\Delta_V=\lambda^2\,\Delta_V$. Значит $\lambda\Delta_V=\lambda^2\Delta_V$ для всех $\lambda\ne0$, и при $\lambda=2$ получаем $\Delta_V=0$. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-100"><span class="lbl">Замечание 100 (честная граница).</span><p>Утверждение 99 запрещает естественную линейную диагональ; физическая теорема о запрете клонирования — утверждение об унитарных операторах на тензорном произведении. Утверждения родственны, но не совпадают, и продавать одно за другое нельзя.</p></div>
+<div class="stmt task" id="s0-e-101"><span class="lbl">Пример 101 (та же подстановка в других мирах).</span><p>Аффинное пространство изоморфно векторному той же размерности, но неестественно: забыть начало координат ($\mathbf{Vect}\to\mathbf{Aff}$) и вернуть его формальными разностями ($\mathbf{Aff}\to\mathbf{Vect}$) — в одну сторону композиция естественно изоморфна тождественному функтору, в другую только поточечно, потому что выбор начала произволен. Резерв: кручение абелевой группы не расщепляется естественно — то же вычисление со скаляром.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-5-4">D3. Аксиоматизация: оба запрета — один приём</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-102"><span class="lbl">Утверждение 102 (естественность на группоиде есть эквивариантность).</span><p>Пусть $\mathcal G$ — группоид, $A$ — его объект, $F,G\colon\mathcal G\to\mathcal D$ — функторы. Тогда компонента $\alpha_A$ естественного преобразования $\alpha\colon F\Rightarrow G$ есть в точности морфизм, эквивариантный относительно группы $\mathrm{Aut}(A)$: для всех $\sigma\in\mathrm{Aut}(A)$</p><p class="eq">$$\alpha_A\circ F\sigma=G\sigma\circ\alpha_A.$$</p><p>Обратно, если $\mathcal G$ связен, то эквивариантный морфизм $\alpha_A$ однозначно продолжается до естественного преобразования на всём $\mathcal G$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Первое утверждение — квадрат естественности <a class="xref" href="#s0-d-40">определения 40</a>, взятый для морфизмов $\sigma\colon A\to A$. Обратно: пусть $\mathcal G$ связен, то есть между любыми двумя объектами есть морфизм, и все морфизмы обратимы. Для объекта $B$ выберем $\tau\colon A\to B$ и положим $\alpha_B:=G\tau\circ\alpha_A\circ(F\tau)^{-1}$; корректность (независимость от выбора $\tau$) равносильна эквивариантности $\alpha_A$: два выбора отличаются на $\sigma=\tau'^{-1}\circ\tau\in\mathrm{Aut}(A)$, и равенство $G\tau'\circ\alpha_A\circ(F\tau')^{-1}=G\tau\circ\alpha_A\circ(F\tau)^{-1}$ переписывается как $\alpha_A\circ F\sigma=G\sigma\circ\alpha_A$. Квадрат естественности для произвольного $f\colon B\to B'$ получается подстановкой определения $\alpha_B$ и функториальности. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-103"><span class="lbl">Утверждение 103 (связный группоид определяется одной группой).</span><p>Связный группоид с точностью до эквивалентности задаётся группой $\mathcal G(x,x)$ автоморфизмов любого своего объекта: он эквивалентен категории $B\mathcal G(x,x)$ (<a class="xref" href="#s0-d-53">определение 53</a>).</p></div>
+<div class="stmt thm" id="s0-t-104"><span class="lbl">Утверждение 104 (рецепт несуществования).</span><p>Естественный изоморфизм $F\cong G$ переносит действие группы $\mathrm{Aut}(A)$ вместе со всеми его инвариантами — орбитами, стабилизаторами, числом неподвижных точек. Поэтому: чтобы доказать, что естественного изоморфизма нет, достаточно найти объект $A$ и элемент $\sigma\in\mathrm{Aut}(A)$, у которого инварианты действий на $FA$ и $GA$ не совпали.</p></div>
+<div class="stmt rem" id="s0-n-105"><span class="lbl">Замечание 105 (оба запрета в одной схеме).</span><p>В <a class="xref" href="#s0-t-90">теореме 90</a> группа — $S_n$ при $n=2$, подставляется перестановка, инвариант — число неподвижных точек. В <a class="xref" href="#s0-t-97">теореме 97</a> группа — $GL(V)$, подставляется скалярный оператор, инвариант — вес, с которым скаляр действует. Группы разные, схема одна: подставить в квадрат естественности обратимую стрелку объекта в себя и сравнить, что она делает слева и справа. Утверждать «один и тот же аргумент» можно только в этом виде: в <a class="xref" href="#s0-t-90">теореме 90</a> никакого скаляра нет.</p></div>
+<div class="stmt rem" id="s0-n-106"><span class="lbl">Замечание 106 (граница инструмента).</span><p>Утверждение 104 закрывает только ответ «ни одного». Для ответов «ровно один» и «полный список» работает другой приём — подстановка порождающего объекта (<a class="xref" href="#s0-n-114">замечание 114</a>).</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-5-5">D4. Ответы «ровно один» и «полный список»</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-107"><span class="lbl">Утверждение 107 (естественные преобразования тождественного функтора суть центр).</span><p>Пусть $G$ — группа, рассмотренная как категория $BG$ с одним объектом. Тогда естественные преобразования $\mathrm{Id}\Rightarrow\mathrm{Id}$ находятся в биекции с элементами центра $Z(G)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Естественное преобразование имеет ровно одну компоненту $\alpha_\ast$ — это элемент $x\in G$. Квадрат естественности для морфизма $g$ читается как $x\cdot g=g\cdot x$, то есть как перестановочность $x$ со всеми элементами. Значит преобразования — в точности элементы $Z(G)$; соответствие взаимно однозначно по построению. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-108"><span class="lbl">Замечание 108 (петля из раздела C).</span><p>Сопоставление $G\mapsto Z(G)$ функтором не является (<a class="xref" href="#s0-t-74">утверждение 74</a>), а тот же центр оказывается полным множеством естественных преобразований тождественного функтора (<a class="xref" href="#s0-t-107">утверждение 107</a>).</p></div>
+<div class="stmt thm" id="s0-t-109"><span class="lbl">Утверждение 109 (естественные преобразования забывающего функтора).</span><p>Для забывающего функтора $U\colon\mathbf{Grp}\to\mathbf{Set}$ естественные преобразования $U\Rightarrow U$ находятся в биекции с $\mathbb Z$: это в точности отображения $x\mapsto x^n$.</p><details class="d-proof"><summary>доказательство — (идея)</summary><div class="proof"><p>Компонента задаётся выражением, которое можно записать в произвольной группе от одного элемента и которое коммутирует со всеми гомоморфизмами; такие выражения — в точности степени $x^n$, $n\in\mathbb Z$. Аккуратный вывод: компонента на бесконечной циклической группе $\mathbb Z$ определяется образом порождающего, а естественность переносит ответ на все группы, поскольку всякий элемент любой группы есть образ порождающего при некотором гомоморфизме из $\mathbb Z$. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-110"><span class="lbl">Утверждение 110 (предупорядоченные множества: не более одного).</span><p>Если $F,G\colon\mathcal C\to\mathcal P$ — функторы в предупорядоченное множество как категорию (<a class="xref" href="#s0-d-50">определение 50</a>), то естественных преобразований $F\Rightarrow G$ не более одного.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Между двумя объектами $\mathcal P$ не более одной стрелки, поэтому компонента $\alpha_A$ определена однозначно, если существует, и условие естественности выполняется автоматически (обе композиции — стрелки между одной парой объектов). $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-111"><span class="lbl">Утверждение 111 (только проекции).</span><p>Естественные преобразования $A\times B\Rightarrow A$ — в точности проекции. Естественные преобразования $G\times G\Rightarrow G$ на группах находятся в биекции со свободной группой $F_2$ ранга 2.</p></div>
+<div class="stmt defn" id="s0-d-112"><span class="lbl">Определение 112 (граф как функтор).</span><p>Пусть $\mathcal J$ — категория с двумя объектами $E$, $V$, тождествами и двумя параллельными морфизмами $s,t\colon E\to V$. Функтор $\mathcal J\to\mathbf{Set}$ — это в точности ориентированный граф: множество рёбер, множество вершин и две функции «начало» и «конец». Полный граф $K_k$ — граф с $k$ вершинами и рёбрами между всеми упорядоченными парами различных вершин.</p></div>
+<div class="stmt thm" id="s0-t-113"><span class="lbl">Теорема 113 (раскраски суть естественные преобразования).</span><p>Естественные преобразования графа $G$ в полный граф $K_k$, рассмотренных как функторы $\mathcal J\to\mathbf{Set}$, находятся в биекции с правильными раскрасками $G$ в $k$ цветов; их число есть значение хроматического многочлена $P(G,k)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Естественное преобразование $\alpha\colon G\Rightarrow K_k$ — это пара отображений $\alpha_V\colon G(V)\to K_k(V)$ и $\alpha_E\colon G(E)\to K_k(E)$, для которой оба квадрата коммутативны: $\alpha_V\circ G(s)=K_k(s)\circ\alpha_E$ и то же для $t$. Первое отображение — раскраска вершин; коммутативность означает, что для каждого ребра $e$ пара цветов его концов есть пара концов ребра $\alpha_E(e)$ графа $K_k$, а в $K_k$ рёбра соединяют только различные вершины, значит концы $e$ окрашены по-разному, то есть раскраска правильна. Обратно, правильная раскраска $\alpha_V$ определяет $\alpha_E$ однозначно (в $K_k$ между упорядоченной парой различных вершин ровно одно ребро), и квадраты коммутируют по построению. Соответствие взаимно однозначно, поэтому число преобразований равно числу правильных раскрасок, то есть $P(G,k)$. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-114"><span class="lbl">Замечание 114 (приём для ответов «ровно один» и «список»).</span><p>Эквивариантные отображения из группы в множество с действием находятся в биекции с элементами этого множества; поэтому естественное преобразование восстанавливается по своему значению на порождающем объекте, и вычисление всех преобразований сводится к перечислению таких значений. Слово, под которым приём стоит в литературе, в лекции не произносится.</p></div>
+</div></details>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-6">E. Когда две категории — одно и то же</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-6-1">E1. Откуда берётся определение эквивалентности</h3></summary><div class="sec-body">
+<div class="stmt defn" id="s0-d-115"><span class="lbl">Определение 115 (категория занумерованных множеств).</span><p>Категория $\mathbf N$: объекты — натуральные числа, морфизмы $n\to m$ — отображения $\{1,\dots,n\}\to\{1,\dots,m\}$, композиция и тождества — как в $\mathbf{Set}$. Обозначим через $\mathbf{FinSet}$ категорию конечных множеств и отображений.</p></div>
+<div class="stmt thm" id="s0-t-116"><span class="lbl">Утверждение 116 (изоморфизма категорий между $\mathbf N$ и $\mathbf{FinSet}$ нет).</span><p>Категории $\mathbf N$ и $\mathbf{FinSet}$ не изоморфны в смысле <a class="xref" href="#s0-d-66">определения 66</a>.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Изоморфизм категорий даёт биекцию объектов, а функтор сохраняет изоморфизмы (<a class="xref" href="#s0-t-73">утверждение 73</a>) в обе стороны, поэтому биекция объектов переводит класс изоморфных объектов в класс изоморфных. В $\mathbf N$ разные объекты не изоморфны: морфизм $n\to m$ есть отображение, обратимое лишь при $n=m$; значит класс объекта 3 одноэлементен. В $\mathbf{FinSet}$ трёхэлементных множеств больше одного, и все они изоморфны. Одноэлементный класс не биективен классу из нескольких элементов. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-117"><span class="lbl">Утверждение 117 ($\mathbf N$ — ретракт $\mathbf{FinSet}$).</span><p>Пусть $G\colon\mathbf N\to\mathbf{FinSet}$ — вложение $n\mapsto\{1,\dots,n\}$, а $F\colon\mathbf{FinSet}\to\mathbf N$ — функтор, сопоставляющий множеству его число элементов, а отображению — его запись в выбранной нумерации (нумерация выбирается для каждого множества). Тогда $F\circ G=\mathrm{Id}_{\mathbf N}$ буквально, то есть $\mathbf N$ — ретракт $\mathbf{FinSet}$ в категории категорий; композиция $G\circ F$ тождественной не равна, но естественно изоморфна тождественному функтору.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>На объектах $F(G(n))=\lvert\{1,\dots,n\}\rvert=n$, и на морфизмах запись отображения $\{1,\dots,n\}\to\{1,\dots,m\}$ в стандартной нумерации есть оно само; значит $F\circ G=\mathrm{Id}$. Обратная композиция даёт $G(F(X))=\{1,\dots,\lvert X\rvert\}$, что множеству $X$ не равно, но выбранная нумерация $\theta_X\colon X\to\{1,\dots,\lvert X\rvert\}$ обратима, и по построению $F$ для любого $u\colon X\to Y$ выполнено $G(F(u))\circ\theta_X=\theta_Y\circ u$ — это квадрат естественности <a class="xref" href="#s0-d-40">определения 40</a>. Значит $\theta$ — естественный изоморфизм $\mathrm{Id}\Rightarrow G\circ F$. $\blacksquare$</p></div></details></div>
+<div class="stmt defn" id="s0-d-118"><span class="lbl">Определение 118 (эквивалентность категорий).</span><p>Функтор $F\colon\mathcal C\to\mathcal D$ — эквивалентность, если существует функтор $G\colon\mathcal D\to\mathcal C$ и естественные изоморфизмы $G\circ F\cong\mathrm{Id}_{\mathcal C}$ и $F\circ G\cong\mathrm{Id}_{\mathcal D}$. Категории эквивалентны ($\mathcal C\simeq\mathcal D$), если такой функтор есть. От <a class="xref" href="#s0-d-66">определения 66</a> отличается одним: равенство заменено естественным изоморфизмом.</p></div>
+<div class="stmt thm" id="s0-t-119"><span class="lbl">Утверждение 119 ($\mathbf{Mat}$ эквивалентна конечномерным пространствам и не изоморфна им).</span><p>Функтор из $\mathbf{Mat}$ в категорию конечномерных векторных пространств над тем же полем, переводящий число $n$ в координатное пространство размерности $n$, а матрицу — в задаваемое ею линейное отображение, есть эквивалентность; изоморфизма категорий между ними нет.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Обратный функтор строится выбором базиса в каждом пространстве: пространству сопоставляется его размерность, линейному отображению — его матрица в выбранных базисах; композиция в одну сторону тождественна, в другую естественно изоморфна тождественному функтору через матрицы перехода (<a class="xref" href="#s0-e-84">пример 84</a>). Отсутствие изоморфизма — рассуждение <a class="xref" href="#s0-t-116">утверждения 116</a>: в $\mathbf{Mat}$ разные объекты не изоморфны, а пространств размерности $n$ бесконечно много и все они изоморфны. $\blacksquare$</p></div></details></div>
+<div class="stmt rem" id="s0-n-120"><span class="lbl">Замечание 120 (что здесь добавилось по сравнению с множествами).</span><p>На множествах роль обратного функтора играла нумерация, на пространствах — выбор базиса, и естественный изоморфизм между двумя такими выборами есть матрица перехода (<a class="xref" href="#s0-e-84">пример 84</a>). Слово «естественный» к этому месту уже куплено разделом D.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-6-2">E2. Скелет</h3></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-121"><span class="lbl">Задача 121.</span><p>Привести пример двух неэквивалентных категорий.</p></div>
+<div class="stmt task" id="s0-e-122"><span class="lbl">Пример 122 (эквивалентные, но не изоморфные).</span><p>Пусть $\mathcal C$ — категория с одним объектом и одним морфизмом; $\mathcal D$ — категория с двумя объектами $x,y$, тождествами и парой взаимно обратных морфизмов $x\to y$, $y\to x$. Функтор $\mathcal C\to\mathcal D$, посылающий объект в $x$, — эквивалентность: обратный функтор сваливает оба объекта $\mathcal D$ в единственный объект $\mathcal C$, одна композиция тождественна, другая естественно изоморфна тождественному функтору через данную пару обратных морфизмов. Изоморфизма нет: у категорий разное число объектов.</p></div>
+<div class="stmt defn" id="s0-d-123"><span class="lbl">Определение 123 (скелет).</span><p>Скелет категории $\mathcal C$ — её полная подкатегория, содержащая ровно по одному объекту из каждого класса изоморфных объектов.</p></div>
+<div class="stmt thm" id="s0-t-124"><span class="lbl">Утверждение 124 (скелет и эквивалентность).</span><p>Категория эквивалентна своему скелету; у категорий $\mathcal C$ и $\mathcal D$ <a class="xref" href="#s0-e-122">примера 122</a> скелеты изоморфны при разном числе объектов, и $\mathbf N$ есть скелет $\mathbf{FinSet}$, а $\mathbf{Mat}$ — скелет конечномерных векторных пространств.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Вложение скелета полно и строго по <a class="xref" href="#s0-d-123">определению 123</a> и существенно сюръективно, поскольку каждый объект изоморфен выбранному представителю своего класса; дальше — <a class="xref" href="#s0-t-126">теорема 126</a>. Для <a class="xref" href="#s0-e-122">примера 122</a> скелет обеих категорий — категория с одним объектом и одним морфизмом. Для $\mathbf N$ и $\mathbf{Mat}$ утверждение «разные объекты не изоморфны» проверено в <a class="xref" href="#s0-t-116">утверждениях 116</a> и 119, а существенная сюръективность — это <a class="xref" href="#s0-t-117">утверждения 117</a> и 119. $\blacksquare$</p></div></details></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-6-3">E3. Основная теорема</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-125"><span class="lbl">Утверждение 125 (строгий и полный функтор отражает изоморфизмы).</span><p>Пусть функтор $F$ строг (инъективен на каждом множестве морфизмов) и полон (сюръективен на нём же). Если $Ff$ — изоморфизм, то и $f$ — изоморфизм; если $FA\cong FB$, то $A\cong B$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $Ff\colon FA\to FB$ обратим. По полноте $(Ff)^{-1}=Fg$ для некоторого $g\colon B\to A$. Тогда $F(g\circ f)=Fg\circ Ff=1_{FA}=F(1_A)$, и по строгости $g\circ f=1_A$; симметрично $f\circ g=1_B$. Второе утверждение — то же рассуждение для изоморфизма $FA\to FB$, который по полноте имеет вид $Ff$. Обратное верно для любого функтора и есть <a class="xref" href="#s0-t-73">утверждение 73</a>: изоморфизмы сохраняются всегда, а отражаются только строгими и полными. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-126"><span class="lbl">Теорема 126 (критерий эквивалентности).</span><p>Функтор $F\colon\mathcal C\to\mathcal D$ — эквивалентность тогда и только тогда, когда он строг, полон и существенно сюръективен (каждый объект $\mathcal D$ изоморфен объекту вида $FA$).</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $F$ — эквивалентность: даны $G$, естественные изоморфизмы $\eta\colon\mathrm{Id}_{\mathcal C}\Rightarrow GF$ и $\varepsilon\colon FG\Rightarrow\mathrm{Id}_{\mathcal D}$. Существенная сюръективность: $\varepsilon_d\colon F(Gd)\to d$ — изоморфизм. Строгость: если $Ff=Fg$ для $f,g\colon A\to B$, то $GFf=GFg$, и по естественности $\eta$ имеем $f=\eta_B^{-1}\circ GFf\circ\eta_A=\eta_B^{-1}\circ GFg\circ\eta_A=g$; тем же рассуждением с $\varepsilon$ строг и $G$. Полнота: для $h\colon FA\to FB$ положим $f:=\eta_B^{-1}\circ Gh\circ\eta_A$. Естественность $\eta$ даёт $GFf\circ\eta_A=\eta_B\circ f=Gh\circ\eta_A$, откуда $GFf=Gh$, и по строгости $G$ получаем $Ff=h$. Обратно, пусть $F$ строг, полон и существенно сюръективен. Для каждого объекта $d$ категории $\mathcal D$ выберем объект $Gd$ и изоморфизм $\varepsilon_d\colon F(Gd)\to d$ — это и есть плата аксиомой выбора (<a class="xref" href="#s0-t-77">утверждение 77</a>, <a class="xref" href="#s0-n-78">замечание 78</a>). Для $\varphi\colon d\to d'$ морфизм $\varepsilon_{d'}^{-1}\circ\varphi\circ\varepsilon_d\colon F(Gd)\to F(Gd')$ по полноте имеет вид $F\psi$, и по строгости такой $\psi$ единствен; положим $G\varphi:=\psi$. Функториальность: $F\bigl(G(\varphi'\circ\varphi)\bigr)=\varepsilon^{-1}_{d''}\circ\varphi'\circ\varphi\circ\varepsilon_d=(\varepsilon^{-1}_{d''}\varphi'\varepsilon_{d'})(\varepsilon^{-1}_{d'}\varphi\varepsilon_d)=F(G\varphi')\circ F(G\varphi)=F(G\varphi'\circ G\varphi)$, и строгость даёт равенство самих морфизмов; тождества — так же. Равенство $F(G\varphi)=\varepsilon^{-1}_{d'}\circ\varphi\circ\varepsilon_d$ переписывается как $\varphi\circ\varepsilon_d=\varepsilon_{d'}\circ F(G\varphi)$, то есть как квадрат естественности, значит $\varepsilon\colon FG\Rightarrow\mathrm{Id}_{\mathcal D}$ — естественный изоморфизм. Наконец, $\varepsilon_{Fc}\colon FGFc\to Fc$ — изоморфизм, поэтому по <a class="xref" href="#s0-t-125">утверждению 125</a> существует единственный изоморфизм $\eta_c\colon c\to GFc$ с $F\eta_c=\varepsilon_{Fc}^{-1}$; естественность: для $f\colon c\to c'$ равенство $F(GFf\circ\eta_c)=F(\eta_{c'}\circ f)$ есть естественность $\varepsilon$ для морфизма $Ff$, и строгость $F$ даёт $GFf\circ\eta_c=\eta_{c'}\circ f$. $\blacksquare$</p></div></details></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-6-4">E4. Второй этаж</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-127"><span class="lbl">Утверждение 127 (эквивалентность есть изоморфизм этажом выше).</span><p>Сравнение <a class="xref" href="#s0-d-33">определений 33</a> и 118 построчно: изоморфизм в категории — это $g\circ f=1$, $f\circ g=1$; эквивалентность категорий — это $G\circ F\cong\mathrm{Id}$, $F\circ G\cong\mathrm{Id}$. Второе получается из первого заменой равенства на изоморфизм.</p></div>
+<div class="stmt rem" id="s0-n-128"><span class="lbl">Замечание 128 (2-категория как имя собранному).</span><p>К этому месту на доске стоят три этажа: категории, функторы между ними, естественные преобразования между функторами. Функторы $\mathcal C\to\mathcal D$ вместе с естественными преобразованиями сами образуют категорию; поэтому категории, функторы и преобразования образуют 2-категорию, и эквивалентность есть изоморфизм в ней. Слово даётся уже собранному объекту; категория функторов здесь только обозначается и не разворачивается.</p></div>
+<div class="stmt thm" id="s0-t-129"><span class="lbl">Утверждение 129 (пути в пространстве не образуют категорию).</span><p>Пусть объекты — точки топологического пространства, морфизм $x\to y$ — непрерывный путь из $x$ в $y$, композиция — склейка. Аксиомы категории не выполняются: склейка не ассоциативна и постоянный путь не является единицей.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пути $(\alpha\beta)\gamma$ и $\alpha(\beta\gamma)$ проходят по одному следу, но имеют разные параметризации и потому как отображения отрезка различны; аналогично $\mathrm{const}_x\cdot\alpha\ne\alpha$. Равенства выполняются лишь с точностью до гомотопии. Отсюда две ветки: профакторить по гомотопии — получится фундаментальный группоид, аксиомы выполнены; либо помнить гомотопии как стрелки второго этажа — тогда ассоциативность становится изоморфизмом. Строго вторая ветка даёт бикатегорию, а не 2-категорию. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-130"><span class="lbl">Утверждение 130 (фундаментальная группа без отмеченной точки).</span><p>Сопоставление пространству его фундаментальной группы без выбора отмеченной точки функтором не является.</p></div>
+</div></details>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-7">F. Миры, которые оказались одним</h2></summary><div class="sec-body">
+<details class="sec sec3"><summary><h3 id="s0-h-7-1">F1. Стоун в конечном случае</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-131"><span class="lbl">Теорема 131 (представление конечной булевой алгебры).</span><p>Пусть $B$ — конечная булева алгебра, $\mathrm{At}(B)$ — множество её атомов (минимальных ненулевых элементов). Тогда отображение $b\mapsto\{a\in\mathrm{At}(B):a\le b\}$ — изоморфизм $B$ на булеву алгебру всех подмножеств $\mathrm{At}(B)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Всякий ненулевой элемент содержит атом: спускаясь по конечной цепочке ненулевых элементов, дойдём до минимального. Для $b\in B$ положим $A_b=\{a\in\mathrm{At}(B):a\le b\}$ и покажем $b=\bigvee A_b$. Обозначим $c=\bigvee A_b\le b$. Если $b\wedge\neg c\ne0$, в нём есть атом $a$; тогда $a\le b$, значит $a\in A_b$ и $a\le c$, но одновременно $a\le\neg c$, откуда $a=a\wedge c\wedge\neg c=0$ — противоречие. Значит $b\wedge\neg c=0$, то есть $b\le c$ и $b=c$. Отображение $b\mapsto A_b$ сохраняет $\wedge$ и $\le$ прямо по определению, дополнение — потому что каждый атом лежит либо под $b$, либо под $\neg b$ и не под обоими; инъективность даёт равенство $b=\bigvee A_b$, сюръективность — то, что произвольное множество атомов есть $A_b$ для $b$ равного его объединению. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-132"><span class="lbl">Теорема 132 (конечная двойственность Стоуна).</span><p>Сопоставление $B\mapsto\mathrm{At}(B)$, переводящее гомоморфизм $f\colon B\to B'$ в отображение $\mathrm{At}(B')\to\mathrm{At}(B)$, есть эквивалентность категории конечных булевых алгебр и категории, противоположной категории конечных множеств.</p><details class="d-proof"><summary>доказательство — (по <a class="xref" href="#s0-t-131">теореме 131</a>)</summary><div class="proof"><p>Обратный функтор — $X\mapsto\mathcal P(X)$ с прообразом на морфизмах: гомоморфизмы $\mathcal P(X)\to\mathcal P(Y)$ находятся в биекции с отображениями $Y\to X$ (гомоморфизм определён своими значениями на одноэлементных подмножествах, а сохранение дополнения и объединения означает, что прообразы одноэлементных подмножеств образуют разбиение). Композиция в одну сторону есть $X\mapsto\mathrm{At}(\mathcal P(X))$ — множество одноэлементных подмножеств, естественно биективное $X$; в другую сторону это <a class="xref" href="#s0-t-131">теорема 131</a>, дающая естественный изоморфизм $B\cong\mathcal P(\mathrm{At}(B))$. По <a class="xref" href="#s0-d-118">определению 118</a> это эквивалентность. Ручная проверка: у алгебры подмножеств трёхэлементного множества восемь элементов и три атома, и решётка её элементов совпадает с решёткой подмножеств трёх атомов. $\blacksquare$</p></div></details></div>
+<div class="stmt thm" id="s0-t-133"><span class="lbl">Утверждение 133 (это эквивалентность, а не изоморфизм).</span><p>Изоморфизм $B\cong\mathcal P(\mathrm{At}(B))$ <a class="xref" href="#s0-t-131">теоремы 131</a> не есть равенство: элементы $B$ — не подмножества множества её атомов. Поэтому пара функторов <a class="xref" href="#s0-t-132">теоремы 132</a> изоморфизма категорий в смысле <a class="xref" href="#s0-d-66">определения 66</a> не даёт.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-7-2">F2. Морита и Сигал</h3></summary><div class="sec-body">
+<div class="stmt rem" id="s0-n-134"><span class="lbl">Замечание 134 (Морита).</span><p>Существуют неизоморфные кольца с эквивалентными категориями модулей. Врезкой на слайде, без разбора.</p></div>
+<div class="stmt task" id="s0-e-135"><span class="lbl">Пример 135 (категория $\Gamma$ Сигала).</span><p>Категория $\Gamma$ (Сигал, 1974): объекты — конечные множества, морфизмы $S\to T$ — отображения в множество подмножеств $T$ с попарно непересекающимися образами. Она эквивалентна категории, противоположной категории конечных множеств с отмеченной точкой.</p></div>
+</div></details>
+<details class="sec sec3"><summary><h3 id="s0-h-7-3">F3. Галуа</h3></summary><div class="sec-body">
+<div class="stmt thm" id="s0-t-136"><span class="lbl">Теорема 136 (основная теорема теории Галуа).</span><p>Для конечного расширения Галуа $L/K$ с группой $G=\mathrm{Gal}(L/K)$ соответствие «подгруппа $H\mapsto$ поле $L^H$ её неподвижных элементов» — обращающая включения биекция между подгруппами $G$ и промежуточными полями $K\subseteq M\subseteq L$; на языке категорий — эквивалентность решётки промежуточных полей и решётки подгрупп, взятой наизнанку.</p></div>
+<div class="stmt thm" id="s0-t-137"><span class="lbl">Утверждение 137 (вердикт о разрешимости).</span><p>Уравнение разрешимо в радикалах тогда и только тогда, когда его группа Галуа разрешима. Общее уравнение пятой степени неразрешимо в радикалах, поскольку его группа Галуа есть $S_5$, а $A_5$ проста и неабелева.</p></div>
+</div></details>
+</div></details></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
+});
+</script>
+</body>
+</html>
