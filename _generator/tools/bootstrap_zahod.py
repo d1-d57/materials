@@ -134,11 +134,14 @@ def main(argv):
                   f"→ должно быть `{a.branch}`.")
         start_line = f"cd {wt_path}"
     else:
-        mesto = (f"ветка `{a.branch}` в основной папке репозитория — "
-                 f"`git checkout {a.branch}` первым ходом. Ветку НЕ переключай "
-                 f"дальше, в другие НЕ коммить.")
-        pervyj = f"- `git checkout {a.branch}`."
-        start_line = f"git checkout {a.branch}"
+        mesto = (f"ветка `{a.branch}` в основной папке. 🔴 Она должна УЖЕ стоять. "
+                 f"НЕ на ней — СТОП, НЕ делай `git checkout`: в общей папке он МОЛЧА "
+                 f"откатывает дерево к состоянию ветки (цена 27→28.07: файл сильно "
+                 f"откатился ночью, поймал владелец вручную; след в git НЕ остаётся). "
+                 f"Тогда заход пересобрать с `--worktree`. Ветку не переключай, в другие НЕ коммить.")
+        pervyj = (f"- Проверь ветку: `git branch --show-current` — обязано быть `{a.branch}`. "
+                  f"Не она — СТОП, `git checkout` НЕ делай (§4 GIT-disciplina), нужен `--worktree`.")
+        start_line = "git branch --show-current"
 
     text = (
         TEMPLATE.read_text(encoding="utf-8")
