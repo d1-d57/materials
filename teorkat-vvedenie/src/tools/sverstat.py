@@ -26,7 +26,8 @@ import re, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from porodit import load_all, archetype, visible_chars, slug  # один источник разбора ленты
+from porodit import (load_all, archetype, visible_chars, slug,   # один источник разбора ленты
+                     scen_count, chars_by_scene)                 # и семантики сцен
 
 SRC = Path(__file__).resolve().parents[1]
 W, H = 1440, 810
@@ -34,13 +35,23 @@ W, H = 1440, 810
 # ── ручная доводка по PNG (шаг 6). Ключ — id, значения перекрывают расчёт. ──
 # Каждая строка — результат просмотра снятого кадра, а не догадка.
 PRAVKI = {
-    # s52 «Стоун: конечный случай полностью» — единственный слайд, которому не
-    # хватило всей лестницы: промер даёт +15px, то есть треть строки, при семи
-    # блоках и двух опорных точках. Взят ПЕРВЫЙ рычаг канон-порядка починки
-    # (`07-verstka/DOK.md` §4 — «блок-гэп → …»): промежуток между блоками 26→22px,
-    # шесть промежутков дают 24px, чего хватает. Кегль 35px и межстрочье не
-    # тронуты, SPLIT не понадобился.
-    "s52": {"css": [".copy{--blok:22px}"]},
+    # ПЕРЕНЕСЕНО ПО КАРТЕ (`karta.py`): запись стояла на старом `s52` «Стоун:
+    # конечный случай полностью», а он вошёл в новый `s30` («Стоун: конечный случай
+    # и общий», s52+s53). Оставить ключ «s52» значило бы навести оплаченную глазами
+    # правку на «Стоун в общем виде» — другой слайд.
+    # Почему правка вообще есть: единственный слайд старого дека, которому не хватило
+    # всей лестницы — промер давал +15px, треть строки, при семи блоках и двух опорных
+    # точках. Взят ПЕРВЫЙ рычаг канон-порядка починки (`07-verstka/DOK.md` §4:
+    # «блок-гэп → …»): промежуток между блоками 26→22px, шесть промежутков дают 24px.
+    # Кегль и межстрочье не тронуты, SPLIT не понадобился.
+    "s30": {"css": [".copy{--blok:22px}"]},
+    # s17 «Как доказывают, что функтора нет» — самый плотный слайд дека:
+    # 25 абзацев, 7 опорных точек, 5 сцен. На последней ступени промер даёт
+    # +3px — десятая доля строки. Тот же ПЕРВЫЙ рычаг канон-порядка, что
+    # спас старый s52: промежуток блоков 26→22px. Кегль (35px), межстрочье
+    # и число сцен не тронуты; SPLIT не понадобился (и запрещён — у захода
+    # обратная задача).
+    "s17": {"css": [".copy{--blok:22px}"]},
 }
 
 # ── СТУПЕНИ ПЛОТНОСТИ ──────────────────────────────────────────────────────────
@@ -68,6 +79,116 @@ STUPENI = [
                                           #     дальше только SPLIT
 ]
 PLOTNOST = SRC / "tools" / "plotnost.json"
+RITM = SRC / "tools" / "ritm.json"
+POTOK = SRC / "tools" / "reflow.json"
+
+
+def potok(sid):
+    """Нужно ли слайду перетекание по сценам (отступление от «никогда display»).
+
+    Список ведёт `podognat.py --potok`: слайд попадает в него ТОЛЬКО если при
+    замороженной геометрии его зона переполнена, то есть весь текст слайда
+    физически не влезает разом. Остальные слайды держат канон дословно.
+    """
+    try:
+        import json
+        return sid in set(json.loads(POTOK.read_text(encoding="utf-8")))
+    except FileNotFoundError:
+        return False
+
+
+def ritm(sid):
+    """Промежуток между абзацами, пер-слайдово. База дека — 26px, и это НЕ
+    эстетический выбор, а лечение переполнения: канонный ритм = полная пустая строка
+    (58px при кегле 38). Сжатие текста освободило место, и `podognat.py
+    --minimizirovat` возвращает ритм обратно к 58px там, где он влезает, — это
+    первый рычаг в заходном порядке отдачи места, раньше ступени и раньше кегля."""
+    try:
+        import json
+        return json.loads(RITM.read_text(encoding="utf-8")).get(sid, 26)
+    except FileNotFoundError:
+        return 26
+
+# ── КАРТИНКА ПО СЦЕНАМ: сменный ярус (заход, шаг 3¾, «образец 2») ──────────────
+# Склейка приносит на слайд по картинке от каждого вошедшего старого слайда — до пяти
+# (s13). Стопка из пяти панелей в рейке 344px даёт каждой ~140px: нечитаемо, и при
+# этом четыре из пяти в любой момент не к месту. Лента просит другого и просит прямо,
+# указывая сцену КАЖДОЙ картинке: «по картинке на сцену: нерастягивающее отображение
+# (1), раскраска как гомоморфизм (2), отношение против диагонали (3), кобордизм и
+# тангл (4)». Это и есть сменный ярус: одно место, содержимое меняется.
+#
+# Поэтому сцена картинки НЕ выдумывается вёрсткой, а читается из пометки ленты
+# (`07-verstka/DOK.md`: «арка 7 реализует принятую раскладку, а не выбирает её»).
+# Разбор прозы, однако, доверия не заслуживает молча: у s13 четыре аннотации на пять
+# фигур («кобордизм и тангл» — одна аннотация на две картинки), у s16 порядок
+# аннотаций обратен порядку файлов (сначала портрет, потом фигура), у s18 первая
+# картинка объявлена словами «на сцене 1», а не «(1)». Поэтому правило такое:
+#   · аннотаций РОВНО столько же, сколько картинок → берём их;
+#   · иначе → берём запись из KARTINKI ниже, каждая с цитатой из ленты;
+#   · нет ни того, ни другого → стопка с первой сцены, то есть поведение старого
+#     дека (класс A так и остаётся байт-в-байт: у него картинок 0, 1 или 2).
+# Разрешённое назначение печатается по каждому слайду вместе с ИСТОЧНИКОМ — ни одна
+# картинка не встаёт на сцену молча.
+ANN_RE = re.compile(r"\((\d+)(?:[–—-](\d+))?\)")
+
+KARTINKI = {
+    # «по картинке на сцену: нерастягивающее (1), раскраска как гомоморфизм (2),
+    #  отношение против диагонали (3), кобордизм и тангл (4)» — аннотаций 4 на 5
+    #  фигур: последняя покрывает ДВЕ картинки, они стоят на сцене 4 вместе.
+    "s13": [(1, 1), (2, 2), (3, 3), (4, None), (4, None)],
+    # «портрет Фробениуса (1), два функтора навстречу друг другу (2–3)» — порядок
+    #  аннотаций обратен порядку файлов: фигура у нас первая, портрет второй.
+    "s16": [(2, 3), (1, 1)],
+    # «на сцене 1 согласованность с отображениями целиком, дальше окружность в диске
+    #  (2) и луч внутри диска с портретом (3)» — первая картинка объявлена словами,
+    #  а портрет Брауэра идёт вместе с лучом, то есть тоже на сцене 3.
+    "s18": [(1, 1), (2, 2), (3, None), (3, None)],
+}
+
+
+def kartinki_po_scenam(sid, n_ill, n_sc, layout):
+    """[(от, до|None)] на каждую картинку + источник решения."""
+    if sid in KARTINKI and len(KARTINKI[sid]) == n_ill:
+        return KARTINKI[sid], "таблица"
+    ann = ANN_RE.findall(layout or "")
+    if ann and len(ann) == n_ill:
+        # Одиночное «(N)» при ДВУХ И БОЛЕЕ аннотациях читается как «на сцене N», а не
+        # «с N и до конца»: лента вводит эти пометки словами «ПО КАРТИНКЕ НА СЦЕНУ»
+        # (s13, s17) и перечисляет разные картинки для разных сцен. Прочитанное как
+        # «с N и далее», это накопило бы все картинки одновременно — то есть вернуло
+        # стопку из пяти панелей по 140px, ровно то, от чего лента уходит.
+        # При ЕДИНСТВЕННОЙ аннотации так читать нельзя (одна картинка слайда никуда
+        # не уходит), поэтому там оставляем открытый конец.
+        zakryt = len(ann) >= 2
+        return ([(int(a), int(b) if b else (int(a) if zakryt else None))
+                 for a, b in ann]), "пометка ленты"
+    return [(1, None)] * n_ill, "стопка с 1-й сцены"
+
+
+def slots(intervals, n_sc):
+    """Раскладка интервалов по слотам: интервалы, не пересекающиеся по сценам, живут
+    в ОДНОМ месте (сменный ярус); пересекающиеся получают разные слоты. Число слотов
+    = максимальное число картинок, видимых ОДНОВРЕМЕННО, — а не число картинок."""
+    def vidno(iv, k):
+        f, u = iv
+        return f <= k and (u is None or k <= u)
+    zanyato = []            # список слотов, каждый — список индексов картинок
+    for i, iv in enumerate(intervals):
+        for sl in zanyato:
+            if not any(vidno(intervals[j], k) and vidno(iv, k)
+                       for j in sl for k in range(1, n_sc + 1)):
+                sl.append(i)
+                break
+        else:
+            zanyato.append([i])
+    return zanyato
+
+
+def scene_attrs(iv):
+    f, u = iv
+    a = (' data-scene-from="%d"' % f) if f > 1 or u is not None else ""
+    b = (' data-scene-until="%d"' % u) if u is not None else ""
+    return a + b
 
 
 def stupen(sid):
@@ -80,6 +201,14 @@ def stupen(sid):
 
 # ── кегль тела: ВЫБОР под объём слайда, не патч переполнения (PRIMERY.md §2). ──
 # Пол — 35px (audit.py FLOOR_PX), ниже не опускается нигде и никогда.
+#
+# 🔴 `chars` здесь — знаки САМОГО ТЯЖЁЛОГО КАДРА, а не всего текста слайда, и это
+# не уточнение, а разница между читаемым деком и нечитаемым. По новой ленте
+# `porodit.py --inventar` печатает: медиана слайда 980 знаков, медиана тяжёлого
+# кадра 526. По слайду все 32 получили бы 35px — пол, — под текст, которого зал
+# никогда не видит одновременно: часть его приходит и уходит по кликам. По кадру
+# медианный слайд встаёт на штатные 38px. Заход назвал это провалом захода прямо:
+# «если сдашь дек, где кегль опущен под невидимый текст, — заход провален».
 def kegl(chars):
     if chars <= 430:
         return 40
@@ -91,17 +220,31 @@ def kegl(chars):
 # ── data-scenes: ВЫЧИСЛЯЕТСЯ из content, а не выписывается руками ──
 # Хук H6 прямо про это: «величина, обязанная совпадать с другой, должна
 # порождаться, а не сверяться»; гейты G14/G15 ловят именно разъехавшуюся пару.
-# Считаем максимум по всем статическим источникам сцены, как это делает признак
-# G14: `{@k}` / `{@k|…}` / `{blur@k}` / `{fill@k}`.
-SCENE_RE = re.compile(r"\{(?:@|blur@|fill@)(\d+)")
+#
+# 🔴 Прежний счётчик читал регексом `\{(?:@|blur@|fill@)(\d+)` — то есть только
+# ГРАНИЦУ ПРИХОДА. На деке без замены это было верно; на ленте со заменой — нет:
+# слайд с одним `{@1-3}` объявлял бы ОДНУ сцену вместо трёх, а `{@-2}` регекс не
+# видит вовсе (после `@` стоит минус, а не цифра). Число сцен считается теперь по
+# интервалам видимости — `porodit.scen_count`, единственный дом этой семантики,
+# тот же, по которому мерится тяжесть кадра.
+SCENE_RE = re.compile(r"\{(?:blur@|fill@)(\d+)")
 
 
 def scenes_of(sid):
     p = SRC / "content" / (sid + ".md")
     if not p.is_file():
         return 1
-    nums = [int(n) for n in SCENE_RE.findall(p.read_text(encoding="utf-8"))]
-    return max(nums) if nums else 1
+    txt = p.read_text(encoding="utf-8")
+    nums = [int(n) for n in SCENE_RE.findall(txt)]
+    return max([scen_count(txt)] + nums)
+
+
+def kadry_of(sid):
+    """Знаки по сценам слайда: [видно на сцене 1, на сцене 2, …]."""
+    p = SRC / "content" / (sid + ".md")
+    if not p.is_file():
+        return [0]
+    return chars_by_scene(p.read_text(encoding="utf-8"))
 
 
 def panel_box(fig, box_w, box_h, pad):
@@ -117,19 +260,25 @@ def panel_box(fig, box_w, box_h, pad):
 
 def build(slides):
     ids = ["s%02d" % (i + 1) for i in range(len(slides))]
-    html_files, css_parts, stats, levels = {}, [], [], {}
+    html_files, css_parts, stats, levels, kart = {}, [], [], {}, {}
 
     for sid, s in zip(ids, slides):
         arch = archetype(s)
-        chars = visible_chars(s["text"])
+        chars = s["tyazh"]                  # знаки ТЯЖЁЛОГО КАДРА, не всего слайда
+        vsego = visible_chars(s["text"])    # весь текст — только для отчёта
         st = PRAVKI.get(sid, {}).get("stupen", stupen(sid))
         lh, r_top, r_bot, r_rail, r_left, r_cap, r_board = STUPENI[min(st, len(STUPENI) - 1)]
         tb = PRAVKI.get(sid, {}).get("t-body", kegl(chars))
         if r_cap:
             tb = min(tb, r_cap)
         ills = ill_names(sid, s)
+        nsc = scenes_of(sid)
+        intervals, istochnik = kartinki_po_scenam(sid, len(ills), nsc, s["layout"])
         css = ["#%s{--t-body:%dpx%s}"
                % (sid, tb, (";--lh:%s" % lh) if lh else "")]
+        rt = ritm(sid)
+        if rt != 26:
+            css.append("#%s .copy{--blok:%dpx}" % (sid, rt))
         zones = []
 
         if arch == "рейка-справа":
@@ -144,19 +293,22 @@ def build(slides):
             css.append("#%s .rail{grid-area:1/4/4/5;background:var(--board);"
                        "position:relative}" % sid)
             panels = []
-            n = max(1, len(ills))
+            zan = slots(intervals, nsc)
+            n = max(1, len(zan))
             slot_h = (H - 2 * 26 - (n - 1) * 22) / n
-            y = 26.0
-            for k, nm in enumerate(ills):
-                fig = s["figures"][k] if k < len(s["figures"]) else {"w": 250, "h": 310}
-                pw, ph = panel_box(fig, rail, slot_h, 22)
-                cy = y + (slot_h - ph) / 2
-                css.append("#%s .p%d{position:absolute;left:%dpx;top:%dpx;"
-                           "width:%dpx;height:%dpx}"
-                           % (sid, k + 1, round((rail - pw) / 2), round(cy), pw, ph))
-                panels.append('      <div class="panel p%d ill-box" data-ill="%s"></div>'
-                              % (k + 1, nm))
-                y += slot_h + 22
+            for si, sl in enumerate(zan):
+                y = 26.0 + si * (slot_h + 22)
+                for k in sl:
+                    fig = (s["figures"][k] if k < len(s["figures"])
+                           else {"w": 250, "h": 310})
+                    pw, ph = panel_box(fig, rail, slot_h, 22)
+                    cy = y + (slot_h - ph) / 2
+                    css.append("#%s .p%d{position:absolute;left:%dpx;top:%dpx;"
+                               "width:%dpx;height:%dpx}"
+                               % (sid, k + 1, round((rail - pw) / 2), round(cy), pw, ph))
+                    panels.append('      <div class="panel p%d ill-box" '
+                                  'data-ill="%s"%s></div>'
+                                  % (k + 1, ills[k], scene_attrs(intervals[k])))
             zones = ['    <div class="zone copy t-body">{{MD:%s}}</div>' % sid,
                      '    <div class="rail">', *panels, '    </div>']
 
@@ -187,13 +339,30 @@ def build(slides):
                        % (sid, left, text_w, left, top, gap, board_h, bot))
             css.append("#%s .copy{grid-area:2/2}" % sid)
             css.append("#%s .board{grid-area:4/2;background:var(--board);"
-                       "position:relative;display:grid;place-items:center}" % sid)
-            pw, ph = panel_box(fig, text_w, board_h, 24)
-            css.append("#%s .p1{width:%dpx;height:%dpx}" % (sid, pw, ph))
+                       "position:relative}" % sid)
+            # 🔴 Доска кладёт ВСЕ свои картинки, а не только первую. Прежняя версия
+            # брала `ills[0]` — на деке из 55 слайдов у такого слайда картинка и была
+            # одна, а после склейки их четыре (s18: три фигуры + портрет Брауэра), и
+            # три уезжали в сироты: файл на диске есть, `data-ill` на него нет.
+            # Линтер это ловит мягким предупреждением, которое легко проехать.
+            zan = slots(intervals, nsc)
+            cols = max(1, len(zan))
+            panels = []
+            for si, sl in enumerate(zan):
+                bw = (text_w - 24 * (cols - 1)) / cols
+                for k in sl:
+                    f = s["figures"][k] if k < len(s["figures"]) else {"w": 620, "h": 160}
+                    pw, ph = panel_box(f, bw, board_h, 24)
+                    css.append("#%s .p%d{position:absolute;left:%dpx;top:%dpx;"
+                               "width:%dpx;height:%dpx}"
+                               % (sid, k + 1,
+                                  round(si * (bw + 24) + (bw - pw) / 2),
+                                  round((board_h - ph) / 2), pw, ph))
+                    panels.append('      <div class="panel p%d ill-box" '
+                                  'data-ill="%s"%s></div>'
+                                  % (k + 1, ills[k], scene_attrs(intervals[k])))
             zones = ['    <div class="zone copy t-body">{{MD:%s}}</div>' % sid,
-                     '    <div class="board">',
-                     '      <div class="panel p1 ill-box" data-ill="%s"></div>' % ills[0],
-                     '    </div>']
+                     '    <div class="board">', *panels, '    </div>']
             stats.append((sid, arch, chars, tb, text_h))
 
         else:  # лестница-во-всю-ширину
@@ -219,15 +388,17 @@ def build(slides):
         for extra in PRAVKI.get(sid, {}).get("css", []):
             css.append("#%s %s" % (sid, extra))
 
-        html_files[sid] = ('<section class="slide" id="%s" data-scenes="%d">\n'
+        flow_attr = ' data-flow="reflow"' if potok(sid) else ""
+        html_files[sid] = ('<section class="slide" id="%s" data-scenes="%d"%s>\n'
                            '  <div class="grid">\n%s\n  </div>\n</section>\n'
-                           % (sid, scenes_of(sid), "\n".join(zones)))
+                           % (sid, nsc, flow_attr, "\n".join(zones)))
         css_parts.append("\n".join(css))
         if arch != "илл-полосой-снизу":
             stats.append((sid, arch, chars, tb, None))
         levels[sid] = st
+        kart[sid] = (istochnik, intervals, len(slots(intervals, nsc)), vsego)
 
-    return ids, html_files, css_parts, stats, levels
+    return ids, html_files, css_parts, stats, levels, kart
 
 
 def ill_names(sid, s):
@@ -262,7 +433,7 @@ def splice(text, a, b, payload):
 
 def main():
     slides = load_all()[1:]                     # [0] — обложка, служебный слой
-    ids, html_files, css_parts, stats, levels = build(slides)
+    ids, html_files, css_parts, stats, levels, kart = build(slides)
 
     (SRC / "slides").mkdir(exist_ok=True)
     for old in (SRC / "slides").glob("*"):
@@ -297,6 +468,27 @@ def main():
     sc = {s: scenes_of(s) for s in ids if scenes_of(s) > 1}
     print("data-scenes>1 (вычислено из content): %s" % sc)
     print("ручных правок по глазам (PRAVKI): %d" % len(PRAVKI))
+    from collections import Counter as _C3
+    print("перетекание по сценам (отступление от канона): %d слайдов из %d — %s"
+          % (sum(1 for s in ids if potok(s)), len(ids),
+             " ".join(s for s in ids if potok(s)) or "нет"))
+    print("блочный ритм по деку: %s (база дека 26px, канон 58px)"
+          % dict(sorted(_C3(ritm(s) for s in ids).items())))
+
+    # ни одна картинка не встаёт на сцену молча: печатается и назначение, и источник
+    from collections import Counter as _C2
+    print("картинок по сценам — источник решения: %s"
+          % dict(_C2(v[0] for v in kart.values() if v[1])))
+    smen = {k: v for k, v in kart.items() if v[1] and v[2] < len(v[1])}
+    print("сменный ярус (картинок больше, чем слотов): %s"
+          % {k: "%d карт. в %d слот." % (len(v[1]), v[2]) for k, v in smen.items()})
+    for sid in sorted(kart):
+        ist, iv, ns, _ = kart[sid]
+        if iv and ist != "стопка с 1-й сцены":
+            print("   %s [%s] слотов %d · %s" % (sid, ist, ns, iv))
+    print("знаков: тяжёлый кадр медиана %d · весь слайд медиана %d (кегль считается по КАДРУ)"
+          % (sorted(s[2] for s in stats)[len(stats) // 2],
+             sorted(v[3] for v in kart.values())[len(kart) // 2]))
     return 0
 
 

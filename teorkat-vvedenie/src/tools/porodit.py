@@ -141,16 +141,31 @@ def table_to_list(html):
 # то есть инлайн-акцент — а Р23 требует ОТДЕЛЬНОГО надзаголовка. Слова те же, меняется
 # только форма подачи; цвета — из Р23: определение зелёным, утверждение/теорема
 # стальным, задача кирпичным. «Пример» в словаре Р23 нет — остаётся инлайн-акцентом.
+#
+# 🔴 Ведущий сценовый тег ленты обязан пройти сквозь эту разбивку И РАЗМНОЖИТЬСЯ.
+# Прежний якорь был `^\*\*`, и в новой ленте он промахивался мимо 39 опорных точек
+# из 42: там перед `**Утверждение.**` стоит тег (`{@1-1} **Утверждение.** …`).
+# Мимо якоря — значит Р23 не исполнялось бы почти нигде, а точка осталась бы
+# инлайн-акцентом. Хуже: разбивка РВЁТ абзац на два (надзаголовок + формулировка),
+# и без размножения тега цветное слово пришло бы на сцене 1, а его формулировка —
+# на сцене 4. Обе половины опорной точки живут и уходят одной сценой по построению.
 OP_CLS = {"Определение": "op-def", "Утверждение": "op-utv", "Теорема": "op-utv",
           "Задача": "op-task"}
-OP_RE = re.compile(r"^\*\*(Определение|Утверждение|Теорема|Задача)([^*]*?)\.?\*\*\s*", re.M)
+OP_RE = re.compile(
+    r"^(\{@[-\d]+\}[ \t]*)?\*\*(Определение|Утверждение|Теорема|Задача)([^*]*?)\.?\*\*\s*",
+    re.M)
 
 
 def opornye_tochki(text):
     def sub(m):
-        word, tail = m.group(1), m.group(2).strip()
+        tag, word, tail = (m.group(1) or "").strip(), m.group(2), m.group(3).strip()
         label = (word + " " + tail).strip()
-        return "{.%s} %s\n\n" % (OP_CLS[word], label)
+        pref = (tag + " ") if tag else ""
+        # тег на надзаголовке идёт вместе с классом одним тегом: `{@1-1 .op-utv}`.
+        # `_attrs_from_tag` (build_deck.py:79-97) разбирает тег по пробелам и держит
+        # `@`-токен рядом с `.`-токеном — проверено чтением кода, не документации.
+        head = ("{%s .%s}" % (tag[1:-1], OP_CLS[word])) if tag else ("{.%s}" % OP_CLS[word])
+        return "%s %s\n\n%s" % (head, label, pref)
     return OP_RE.sub(sub, text)
 
 
@@ -197,6 +212,71 @@ def sceny(text):
     return "".join(out), mx
 
 
+# ── ИНТЕРВАЛЫ ВИДИМОСТИ: единственный дом семантики сцен для всех инструментов ──
+# Лента называет свою семантику в шапке `A-krasivaya.md`: «`{@N-M}` — приходит на
+# N-й и УХОДИТ ПОСЛЕ M-й». Значит блок виден на сценах [F, U] ВКЛЮЧИТЕЛЬНО:
+#   {@N}   → F=N, U=∞      {@N-M} → F=N, U=M      {@-M}  → F=1, U=M      без тега → 1..∞
+# Движок ставит `scene-off` при `k >= until`, то есть гасит НА сцене until; каскад
+# `until`-семьи в `sobrat_overlay.py` возвращает единицу обратно. Считать «сколько
+# видно разом» ОБЯЗАНО по этим же интервалам, иначе кегль опускается под текст,
+# которого зал никогда не видит одновременно (ровно та ловушка, о которой заход
+# предупредил: медиана слайда 968 знаков против медианы кадра 410).
+TAG_RE = re.compile(r"^\{([^}]*)\}[ \t]*")
+INF = 10 ** 6
+
+
+def _interval(tag_body):
+    """Тело ведущего тега → (F, U). Классы `.x` игнорируются, `@`-токен решает."""
+    f, u = 1, INF
+    for tok in tag_body.split():
+        if not tok.startswith("@"):
+            continue
+        b = tok[1:]
+        if "-" in b:
+            a, c = b.split("-", 1)
+            if a:
+                f = int(a)
+            if c:
+                u = int(c)
+        elif b:
+            f = int(b)
+    return f, u
+
+
+def blocks_with_intervals(text):
+    """[(F, U, знаков)] по абзацам/спискам content-текста."""
+    out = []
+    for block in re.split(r"\n\s*\n", text.strip("\n")):
+        lines = [l for l in block.split("\n") if l.strip()]
+        if not lines:
+            continue
+        m = TAG_RE.match(lines[0])
+        f, u = _interval(m.group(1)) if m else (1, INF)
+        body = "\n".join(lines)
+        if m:
+            body = body[m.end():] if len(lines) == 1 else body.replace(m.group(0), "", 1)
+        out.append((f, u, visible_chars(body)))
+    return out
+
+
+def scen_count(text):
+    """Число сцен слайда = максимум по ВСЕМ границам тегов, включая границу ухода.
+    Прежний счётчик (`sverstat.scenes_of`) читал регексом только `from`, поэтому
+    слайд с одним `{@1-3}` объявлял одну сцену вместо трёх, а `{@-2}` не видел вовсе."""
+    mx = 1
+    for f, u, _ in blocks_with_intervals(text):
+        mx = max(mx, f, (u if u < INF else 1))
+    return mx
+
+
+def chars_by_scene(text):
+    """[знаков видимых на сцене k] для k = 1..scen_count. Максимум этого списка —
+    и есть «самый тяжёлый кадр», по которому обязаны считаться кегль и ступень."""
+    n = scen_count(text)
+    blocks = blocks_with_intervals(text)
+    return [sum(ch for f, u, ch in blocks if f <= k <= u) for k in range(1, n + 1)]
+
+
 def parse_section(title, body):
     """Раздел ленты → dict со всем, что нужно и content, и вёрстке."""
     layout = None
@@ -238,8 +318,14 @@ def parse_section(title, body):
     # таблицы тождеств это случилось дважды), один режим рендера побеждает другой.
     # С префиксом ключи различны по построению, а пределы у \sum встают над и под
     # сигмой без блочной обёртки katex-display, которая рвала бы абзац.
-    text = re.sub(r"^\$\$(.+?)\$\$[ \t]*$",
-                  lambda m: "{.formula} $\\displaystyle %s$" % m.group(1).strip(),
+    # 🔴 Ведущий тег ленты перед выключной формулой ловится ЗДЕСЬ, а не теряется.
+    # Регекс `^\$\$` промахивался мимо `{@3} $$X$$` — таких мест в новой ленте 5 из 7.
+    # Промах не безобиден: дальше `render_inline_md`'s `\$(.+?)\$` берёт ключом `$X`
+    # (с лишним долларом), формулы с таким ключом в кэше нет ⇒ ⟦MISSING-MATH⟧ на слайде.
+    text = re.sub(r"^(\{@[-\d]+\}[ \t]*)?\$\$(.+?)\$\$[ \t]*$",
+                  lambda m: "{%s.formula} $\\displaystyle %s$"
+                            % ((m.group(1).strip()[1:-1] + " ") if m.group(1) else "",
+                               m.group(2).strip()),
                   text, flags=re.M)
     # Пунктуация после формулы ПРИКЛЕИВАЕТСЯ к ней словосоединителем U+2060.
     # Поймано глазом на s03: строка начиналась с «. Совпало» — точка ушла на
@@ -284,10 +370,17 @@ def parse_section(title, body):
     text = opornye_tochki(text)
     # схлопнуть пустые строки до одной, обрезать края
     text = re.sub(r"\n{3,}", "\n\n", text).strip("\n \t")
-    text, scenes = sceny(text)
+    text, _auto = sceny(text)
+    # Число сцен берётся ИЗ ТЕГОВ ЛЕНТЫ, а не из авторазметки пошаговых перечней:
+    # драматургию расставил заход сжатия, арка 7 её исполняет. `sceny()` остаётся
+    # рабочей (на новой ленте не срабатывает ни разу — перечни там уже абзацами),
+    # но её счётчик `mx` больше не считается числом сцен слайда.
+    scenes = max(scen_count(text), _auto)
+    kadry = chars_by_scene(text)
 
     return {"title": title, "layout": layout, "figures": figures,
-            "portraits": portraits, "text": text, "scenes": scenes}
+            "portraits": portraits, "text": text, "scenes": scenes,
+            "kadry": kadry, "tyazh": max(kadry) if kadry else 0}
 
 
 def load_all():
@@ -335,6 +428,17 @@ def archetype(s):
     a = archetype_lenty(s)
     if a == "рейка-справа" and not s["figures"] and not s["portraits"]:
         return "доска-пустая"
+    # 🔴 Симметричная поправка, и она обязательна после склейки. `archetype_lenty`
+    # ищет в пометке подстроку «полоса пустая» — а новая лента пишет её С ОГОВОРКОЙ
+    # ПО СЦЕНАМ: «правая полоса пустая на сценах 1–2; СО СЦЕНЫ 3 справа образ
+    # функтора» (s28), «на сцене 3 полоса пустая» (s22). Пустая полоса там не
+    # состояние слайда, а состояние сцены. Прочитанная буквально, подстрока давала
+    # архетип без единой панели — и картинка слайда уезжала в СИРОТЫ: файл на диске
+    # есть, `data-ill` на него нет. Ловится это только мягким предупреждением
+    # линтера, которое легко проехать глазами по 5 строкам.
+    # Ключ поправки — ФАКТ (у слайда есть картинка), а не разбор прозы.
+    if a == "доска-пустая" and (s["figures"] or s["portraits"]):
+        return "рейка-справа"
     return a
 
 
@@ -379,7 +483,8 @@ def main():
             (SRC / "content" / (sid + ".md")).write_text(s["text"] + "\n", encoding="utf-8")
         rows.append((sid, s["block"], s["title"], visible_chars(s["text"]),
                      archetype(s), len(s["figures"]), len(names) - len(s["figures"]),
-                     [(f["w"], f["h"]) for f in s["figures"]]))
+                     [(f["w"], f["h"]) for f in s["figures"]],
+                     s["scenes"], s["tyazh"], s["kadry"]))
 
     print("── ИНВЕНТАРЬ ЛЕНТЫ (всё счётом, ни одно число руками) ──")
     print("разделов в ленте: %d   из них обложка: 1   содержательных слайдов: %d"
@@ -387,15 +492,26 @@ def main():
     print("обложка: «%s» — %d знаков (в slide_order НЕ входит)"
           % (cover["title"], visible_chars(cover["text"])))
     print()
-    print("%-5s %-2s %-46s %5s  %-22s %s" % ("id", "бл", "раздел", "знак", "архетип", "илл"))
-    for sid, blk, title, ch, arch, nfig, nport, aspects in rows:
+    print("%-5s %-2s %-42s %5s %3s %5s  %-22s %s"
+          % ("id", "бл", "раздел", "слайд", "сц", "кадр", "архетип", "илл"))
+    for sid, blk, title, ch, arch, nfig, nport, aspects, nsc, tz, kd in rows:
         mark = "  " if nfig or nport else " ∅"
-        print("%-5s %-2s %-46s %5d  %-22s %d+%dп%s"
-              % (sid, blk, title[:46], ch, arch, nfig, nport, mark))
+        print("%-5s %-2s %-42s %5d %3d %5d  %-22s %d+%dп%s"
+              % (sid, blk, title[:42], ch, nsc, tz, arch, nfig, nport, mark))
     chars = sorted(r[3] for r in rows)
+    heavy = sorted(r[9] for r in rows)
+    kadry = sorted(k for r in rows for k in r[10])
     print()
-    print("знаки: медиана %d · макс %d · мин %d · сумма %d"
+    print("знаков НА СЛАЙД (весь текст):    медиана %d · макс %d · мин %d · сумма %d"
           % (chars[len(chars) // 2], chars[-1], chars[0], sum(chars)))
+    # 🔴 Вот та пара чисел, из-за которой кегль нельзя считать от текста слайда:
+    # верстать надо под «самый тяжёлый кадр», а не под сумму всех сцен.
+    print("знаков НА ТЯЖЁЛЫЙ КАДР:          медиана %d · макс %d · мин %d"
+          % (heavy[len(heavy) // 2], heavy[-1], heavy[0]))
+    print("знаков НА КАДР (все %d кадров):   медиана %d · макс %d · кадров >650: %d"
+          % (len(kadry), kadry[len(kadry) // 2], kadry[-1],
+             sum(1 for k in kadry if k > 650)))
+    print("кадров всего (сумма сцен по деку): %d" % sum(r[8] for r in rows))
     from collections import Counter
     print("архетипы (исполняемые):", dict(Counter(r[4] for r in rows)))
     print("архетипы (как назначила лента):", dict(Counter(archetype_lenty(s) for s in content)))
