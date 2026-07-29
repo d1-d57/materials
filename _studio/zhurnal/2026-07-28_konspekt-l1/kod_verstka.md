@@ -423,4 +423,8 @@ python3 _generator/tools/sostoyanie.py teorkat-vvedenie         → rc=1   ра�
 
 Заведены новые файлы (ничего не перезаписали): `src/overlay.css`, `src/math/katex.json`, `src/tools/{porodit,sverstat,promer,podognat,sobrat_formuly,sobrat_overlay}.py`, `src/tools/katex_kesh.js`, `src/tools/{formuly,plotnost}.json`, 55 `content/*.md`, 55 `slides/*.html`, 51 `illustrations/*`. Новых `.md`-документов среди них нет — регистрировать в `KARTA.md` нечего (`## ВОПРОСЫ` п.1).
 
-**КОММИТ:** `<заполняется ниже>`
+**КОММИТ:** `82a5cfc` — «вёрстка Л1: дек из 55 слайдов собран — 4 архетипа по пометкам ленты, 0 переполнений без единого SPLIT, 322 формулы, 43 иллюстрации на токенах дека, 4 слайда со сценами; audit ALL PASS, scene-diff ALL PASS, 55 из 55 кадров просмотрены» · `git_zona.py check --zone teorkat-vvedenie` → **rc=0, ✅ «работа доехала в git, вне git ничего нет»**
+
+Два хода, как требует §4: `add` по двум путям зоны, затем `commit` **с теми же путями после `--`**, оба с `--no-optional-locks`. `git show --stat` → **176 файлов, чужих путей 0** (проверено грепом по `--name-only`). Хук `pre-commit` не краснел, обходить было нечего, `--no-verify` не применялся. `git status --porcelain` по зоне → **0 строк: зона чиста**.
+
+Точка отката до всей работы — коммит **`9355032`** (канон-скелет Фазы II, 8 файлов): им же закрыт долг, который доложила предвёрстка — вся `teorkat-vvedenie/src/` лежала вне git.
