@@ -274,11 +274,12 @@ def main():
     print("   на плакатную единицу : %5.1f слова  (%d слов / %d единиц)" % (sum(ws) / units, sum(ws), units))
 
     groups = groups_of(secs)
-    print("\nОБРАТНАЯ СКЛЕЙКА ПО SPLIT (групп = слайдов; обязано быть 33 = обложка + 32):")
+    print("\nОБРАТНАЯ СКЛЕЙКА ПО SPLIT (групп = слайдов; рамка владельца: цель 33 = обложка + 32,")
+    print("приемлемо до 36, больше 41 — провал; МЕНЬШЕ 33 законно — состав режется по PRAVKI §СОСТАВ):")
     gw = [sum(x["w"] for x in g) for g in groups]
     gc = [sum(x["c"] for x in g) for g in groups]
     print("   ГРУПП: %d %s   медиана %g слов / %g знаков   макс %d/%d"
-          % (len(groups), "✅" if len(groups) == 33 else "❌", median(gw), median(gc), max(gw), max(gc)))
+          % (len(groups), "✅" if len(groups) <= 36 else "❌", median(gw), median(gc), max(gw), max(gc)))
     multi = [g for g in groups if len(g) > 1]
     print("   групп из >1 раздела (несхлопнутых): %d %s"
           % (len(multi), "✅" if not multi else "— " + ", ".join(g[0]["name"][:22] for g in multi)))
