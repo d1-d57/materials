@@ -37,13 +37,17 @@ registr: читаемый
 
 > поле:mn **Вёрстка.** Осиротела иллюстрация с корнями $\pm i$: разбор выкинут по бюджету.
 
-{@1-2} Скалярное произведение на конечномерном $V$ — выбор изоморфизма $V\cong V^{\ast}$: вектору $v$ отвечает $\langle v,-\rangle$
+{@1-2} **Есть ли естественный изоморфизм $\mathrm{Id}\Rightarrow(-)^{\ast}$ на $\mathcal V$?**
 
-{@1-2} **Утверждение.** Обратимый $g$ действует на $V^{\ast}$ как $(g^{\mathsf T})^{-1}$: растяжение $\lambda\cdot\mathrm{id}$ умножает $V$ на $\lambda$, а $V^{\ast}$ на $\lambda^{-1}$
+{@1-1} Скалярное произведение на конечномерном $V$ — выбор изоморфизма $V\cong V^{\ast}$: вектору $v$ отвечает $\langle v,-\rangle$
 
-{@2} Компонента $\alpha_V\colon V\to V^{\ast}$, подстановка $f=\lambda\cdot\mathrm{id}_V$: слева $\lambda\,\alpha_V$, справа $\lambda^{-1}\alpha_V$, отсюда $\alpha_V=0$ — не изоморфизм
+**Теорема.** Если в поле есть обратимый $\lambda$ с $\lambda^2\ne1$, то на группоиде $\mathcal V$ конечномерных пространств естественного изоморфизма $\mathrm{Id}\Rightarrow(-)^{\ast}$ не существует
 
-{@2} Для $V^{\ast\ast}$ та же подстановка даёт $\lambda\,\eta_V=\lambda\,\eta_V$: препятствия нет, изоморфизм $v\mapsto(f\mapsto f(v))$ есть формулой, без выбора
+{@2} $f=\lambda\,\mathrm{id}_V$ умножает $V$ на $\lambda$, а $V^{\ast}$ — на $\lambda^{-1}$
+
+{@2} Компонента $\alpha_V\colon V\to V^{\ast}$, квадрат на $v$: $\lambda\,\alpha_V(v)=\lambda^{-1}\alpha_V(v)$ · $(\lambda^2-1)\,\alpha_V(v)=0$ ⇒ $\alpha_V=0$, при $V\ne0$ не изоморфизм
+
+{@2} $V^{\ast\ast}$: та же подстановка $\lambda\,\eta_V=\lambda\,\eta_V$ — препятствия нет; $\eta_V(v)=(\psi\mapsto\psi(v))$ формулой
 
 <figure class="mn">
 <svg viewBox="0 0 200 200" width="200" role="img" aria-label="Две одинаковые белые точки на вертикальной оси, симметричные относительно горизонтальной оси; верхняя помечена i, нижняя помечена минус i">
@@ -73,7 +77,7 @@ registr: читаемый
 <figcaption>Изоморфизмов $V\to V^{\ast}$ много: каждое скалярное произведение даёт свой, и ни один из них не выделен. Пунктир стоит там, где стрелка не построена, а выбрана.</figcaption>
 </figure>
 
-<figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности с подставленным скаляром: сверху умножение на лямбда, снизу на обратную лямбда, поэтому квадрат не сходится"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">V*</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">V*</text><line class="s-thin" x1="70" y1="29" x2="180" y2="29"></line><path class="s-ar-m" d="M171,25 l9,4 -9,4 z"></path><line class="s-thin" x1="74" y1="173" x2="176" y2="173"></line><path class="s-ar-m" d="M167,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="125" y="18" text-anchor="middle" font-size="15">·λ</text><text class="s-txt-m" x="125" y="196" text-anchor="middle" font-size="15">·λ⁻¹</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">η</text><text class="s-txt-m" x="206" y="105" font-size="15">η</text><text class="s-txt-m" x="125" y="108" text-anchor="middle" font-size="14">λ ≠ λ⁻¹</text></svg><figcaption>Тот же квадрат, что задавал определение, впервые служит орудием: в него подставлена обратимая стрелка объекта в себя. Наверху растяжение умножает на $\lambda$, внизу, на двойственном, — на $\lambda^{-1}$; центральная метка называет требование, которое из этого выходит.</figcaption></figure>
+<figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности с подставленным обратимым скаляром: сверху умножение на лямбда, снизу на обратную лямбда, поэтому квадрат не сходится"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">V*</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">V*</text><line class="s-thin" x1="70" y1="29" x2="180" y2="29"></line><path class="s-ar-m" d="M171,25 l9,4 -9,4 z"></path><line class="s-thin" x1="74" y1="173" x2="176" y2="173"></line><path class="s-ar-m" d="M167,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="125" y="18" text-anchor="middle" font-size="15">·λ</text><text class="s-txt-m" x="125" y="196" text-anchor="middle" font-size="15">·λ⁻¹</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">η</text><text class="s-txt-m" x="206" y="105" font-size="15">η</text><text class="s-txt-m" x="125" y="108" text-anchor="middle" font-size="14">λ ≠ λ⁻¹</text></svg><figcaption>Тот же квадрат, что задавал определение, впервые служит орудием: в него подставлена обратимая стрелка объекта в себя. Наверху растяжение умножает на $\lambda$, внизу, на двойственном, — на $\lambda^{-1}$; центральная метка называет требование, которое из этого выходит: $\lambda\ne\lambda^{-1}$, то есть в поле нужен обратимый $\lambda$ с $\lambda^2\ne1$.</figcaption></figure>
 
 ## Ответ не нуль: центр и степени
 
@@ -93,7 +97,7 @@ registr: читаемый
 
 {@1-1} **Классификационные результаты, списком**
 
-{@1-1} Функторы в предупорядоченное множество: преобразований не более одного · $A\times B\Rightarrow A$: в точности проекции · $G\times G\Rightarrow G$: биекция со свободной группой $F_2$ · $\mathrm{Id}\Rightarrow(-)\otimes(-)$ на $\mathcal V$: только нулевое
+{@1-1} Функторы в предупорядоченное множество: преобразований не более одного · $A\times B\Rightarrow A$: в точности проекции · $G\times G\Rightarrow G$: биекция со свободной группой $F_2$
 
 {@2} Категория $\mathcal J$: объекты $E$, $V$ и морфизмы $s,t\colon E\to V$. Функтор $\mathcal J\to\mathbf{Set}$ — в точности ориентированный граф
 
@@ -121,11 +125,9 @@ registr: читаемый
 
 > поле:mn **Раскладка.** Вертикальная полоса справа: объект со своими симметриями по обе стороны от компоненты. Разбор случаев стоит таблицей в потоке, на второй сцене.
 
-{@1-2} **Утверждение.** Для $F,G\colon\mathcal G\to\mathcal D$ на группоиде компонента $\alpha_A$ преобразования $\alpha\colon F\Rightarrow G$ есть в точности морфизм, эквивариантный относительно $\mathrm{Aut}(A)$:
+{@1-2} **Утверждение.** Для $F,G\colon\mathcal G\to\mathcal D$ на связном группоиде компонента $\alpha_A$ преобразования $\alpha\colon F\Rightarrow G$ есть в точности морфизм, эквивариантный относительно $\mathrm{Aut}(A)$:
 
 {@1-2} $$\alpha_A\circ F\sigma=G\sigma\circ\alpha_A$$
-
-{@2} **Утверждение.** Естественный изоморфизм $F\cong G$ переносит действие $\mathrm{Aut}(A)$ на $FA$ в его действие на $GA$ вместе с орбитами, стабилизаторами и числом неподвижных точек
 
 {@2} Рецепт: найти $A$ и $\sigma\in\mathrm{Aut}(A)$, у которых эти инварианты не совпали
 
@@ -152,3 +154,25 @@ registr: читаемый
 <tr><td>$V$ против $V^{\ast}$</td><td>$GL(V)$</td><td>скаляр $\lambda\cdot\mathrm{id}$</td><td>вес, с которым действует скаляр</td></tr>
 </tbody>
 </table>
+
+## Что можно доказать самому
+
+> поле:mn **Раскладка.** Один экран, одна сцена: восемь строк списком во всю ширину. Картинки у врезки нет — полоса справа пустая, лист читается сам.
+
+> поле:mn **Адрес листа.** Полные формулировки этих восьми позиций — `teorkat-vvedenie/UPRAZHNENIYA-L1.md`; на слайде стоят только называния, лектор ссылается на лист голосом. Порядок строк врезки = порядок позиций листа.
+
+Классификация естественных преобразований: $\mathrm{Id}$ в себя · забывающий из групп · предупорядоченное множество · проекции · раскраски
+
+Функтор из двумерных кобордизмов в векторные пространства = фробениусова алгебра
+
+Изоморфизма категорий $\mathbf{FinBool}\cong\mathbf{FinSet}^{\mathrm{op}}$ не существует
+
+Инъекции в палитру: функтора, совпадающего на объектах с $X\mapsto\mathrm{Inj}_k(X)$, не существует
+
+Теорема Стоуна, конечный случай
+
+Основная теорема об эквивалентности: стрелка построена — докажите, что изоморфизм
+
+Порядки и симметрии
+
+Естественных преобразований ровно центр · ровно $\mathbb Z$ · хроматический многочлен

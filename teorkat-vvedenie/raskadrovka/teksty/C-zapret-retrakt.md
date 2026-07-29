@@ -13,22 +13,24 @@ registr: читаемый
 
 > поле:mn **Раскладка.** Текстовая область — на всю ширину, коммутативная диаграмма ложится горизонтальной полосой снизу (правка 20.2).
 
-> поле:mn **Вёрстка.** Осиротели две иллюстрации: «носитель против палитры» (пример с инъекциями выкинут по бюджету) и, на следующем слайде, схема $FX\to FY$. Обе либо снимаются, либо им нужен свой текст.
+> поле:mn **Вёрстка.** Осиротели две иллюстрации, обе оставлены в файле нетронутыми. (1) «Носитель против палитры»: текста под неё на ленте нет (пример с инъекциями выкинут по бюджету), но сама задача про инъекции уходит в лист упражнений — картинка может уехать туда вместе с ней, решение за аналитиком. (2) На следующем слайде схема $FX\to FY$ — по-прежнему без своего текста: либо снимается, либо ей нужен текст, которого в источнике нет.
 
 **Утверждение.** Сопоставление $G\mapsto Z(G)$ не продолжается до функтора $\mathbf{Grp}\to\mathbf{Grp}$
 
-**Центр** $Z(G)$ — элементы, коммутирующие со всеми: $zg=gz$ при любом $g\in G$
+{@1-1} **Центр** $Z(G)$ — элементы, коммутирующие со всеми: $zg=gz$ при любом $g\in G$
 
-1. $s\colon C_2\to S_3$, образующая $\mapsto(1\,2)$, и знак $\mathrm{sgn}\colon S_3\to C_2$: $\mathrm{sgn}\circ s=1_{C_2}$
+$\mathbb Z_2=\{0,1\}$ · $s\colon\mathbb Z_2\to S_3$: $0\mapsto e$, $1\mapsto(1\,2)$ · $\mathrm{sgn}\colon S_3\to\mathbb Z_2$: нечётные $\mapsto1$, чётные $\mapsto0$
 
-2. $Z(C_2)=C_2$, $Z(S_3)=1$
+$\mathrm{sgn}\circ s\colon 0\mapsto e\mapsto 0$, $1\mapsto(1\,2)\mapsto 1$ — то есть $\mathrm{sgn}\circ s=\mathrm{id}_{\mathbb Z_2}$
 
-3. Функтор дал бы $C_2\to 1\to C_2$, где композиция обязана быть $1_{C_2}$; через $1$ она не проходит
+{@2} $Z(\mathbb Z_2)=\mathbb Z_2$ · $Z(S_3)=\{e\}$: центральный $z$ сохраняет $\{a,b\}$ у каждой транспозиции $(a\,b)$, откуда $z(1)=1$ и далее $z=e$
+
+{@2} Функтор дал бы $\mathrm{id}_{\mathbb Z_2}\colon\mathbb Z_2\to\{e\}\to\mathbb Z_2$, но $1\mapsto e\mapsto 0$ — постоянное, не тождество
 
 <figure class="mn">
-<svg viewBox="0 0 300 200" width="300" role="img" aria-label="Наверху группа C2, стрелка в S3 и стрелка знака обратно в C2, композиция тождественна. Внизу их центры: C2, единичная группа, C2, и обратного пути внизу нет">
-<text class="s-txt" x="30" y="34" text-anchor="middle" font-size="17">C₂</text><text class="s-txt" x="150" y="34" text-anchor="middle" font-size="17">S₃</text><text class="s-txt" x="270" y="34" text-anchor="middle" font-size="17">C₂</text>
-<text class="s-txt" x="30" y="180" text-anchor="middle" font-size="17">C₂</text><text class="s-txt" x="150" y="180" text-anchor="middle" font-size="17">1</text><text class="s-txt" x="270" y="180" text-anchor="middle" font-size="17">C₂</text>
+<svg viewBox="0 0 300 200" width="300" role="img" aria-label="Наверху группа ℤ₂, стрелка в S3 и стрелка знака обратно в ℤ₂, композиция тождественна. Внизу их центры: ℤ₂, единичная группа, ℤ₂, и обратного пути внизу нет">
+<text class="s-txt" x="30" y="34" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="34" text-anchor="middle" font-size="17">S₃</text><text class="s-txt" x="270" y="34" text-anchor="middle" font-size="17">ℤ₂</text>
+<text class="s-txt" x="30" y="180" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="180" text-anchor="middle" font-size="17">{e}</text><text class="s-txt" x="270" y="180" text-anchor="middle" font-size="17">ℤ₂</text>
 <line class="s-thin" x1="46" y1="29" x2="132" y2="29"></line><path class="s-ar-m" d="M123,25 l9,4 -9,4 z"></path>
 <line class="s-thin" x1="168" y1="29" x2="252" y2="29"></line><path class="s-ar-m" d="M243,25 l9,4 -9,4 z"></path>
 <line class="s-thin" x1="54" y1="175" x2="126" y2="175"></line><path class="s-ar-m" d="M117,171 l9,4 -9,4 z"></path>
@@ -39,10 +41,10 @@ registr: читаемый
 <text class="s-txt-m" x="89" y="18" text-anchor="middle" font-size="15">s</text><text class="s-txt-m" x="210" y="18" text-anchor="middle" font-size="15">sgn</text>
 <text class="s-txt-m" x="90" y="198" text-anchor="middle" font-size="15">Zs</text><text class="s-txt-m" x="210" y="198" text-anchor="middle" font-size="15">Zr</text>
 <text class="s-txt-m" x="38" y="106" font-size="15">Z</text><text class="s-txt-m" x="158" y="106" font-size="15">Z</text><text class="s-txt-m" x="278" y="106" font-size="15">Z</text>
-<text class="s-txt-m" x="150" y="62" text-anchor="middle" font-size="14">sgn ∘ s = 1</text>
-<text class="s-txt-m" x="150" y="146" text-anchor="middle" font-size="14">= 1 ?</text>
+<text class="s-txt-m" x="150" y="62" text-anchor="middle" font-size="14">sgn ∘ s = id</text>
+<text class="s-txt-m" x="150" y="146" text-anchor="middle" font-size="14">= id ?</text>
 </svg>
-<figcaption>Наверху пара стрелок с тождественной композицией: транспозиция вкладывается в $S_3$, знак возвращает её обратно. Внизу тот же чертёж после взятия центров, и здесь средний этаж стал единичной группой: пройти $C_2\to 1\to C_2$ тождественно нельзя.</figcaption>
+<figcaption>Наверху пара стрелок с тождественной композицией: транспозиция вкладывается в $S_3$, знак возвращает её обратно. Внизу тот же чертёж после взятия центров, и здесь средний этаж стал единичной группой: пройти $\mathbb Z_2\to\{e\}\to\mathbb Z_2$ тождественно нельзя.</figcaption>
 </figure>
 
 <figure class="mn">
@@ -67,13 +69,21 @@ registr: читаемый
 
 > поле:mn **Раскладка.** Мало текста, крупная горизонтальная иллюстрация снизу: окружность в диске и луч внутри диска с портретом.
 
-**Утверждение.** В $\mathbf{Top}$ нет $r\colon D^2\to S^1$ с $r\circ i=1_{S^1}$
+**Утверждение.** В $\mathbf{Top}$ нет $r\colon D^2\to S^1$ с $r\circ i=\mathrm{id}_{S^1}$
 
-$\pi_1$ — функтор; $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=0$, а $\mathbb Z\to 0\to\mathbb Z$ тождественным не бывает
+$D^2=\{x\in\mathbb R^2:\lVert x\rVert\le1\}$ · $S^1=\{\lVert x\rVert=1\}$ · $i\colon S^1\to D^2$, $i(x)=x$
 
-**Теорема (Брауэр).** Всякое непрерывное $f\colon D^2\to D^2$ имеет неподвижную точку
+{@1-1} Известным берём: $\pi_1$ — функтор пространств с отмеченной точкой, $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=\{e\}$
 
-Если $f(x)\ne x$ всюду, луч из $f(x)$ через $x$ задаёт $r\colon D^2\to S^1$ с $r\circ i=1_{S^1}$
+{@1-1} Пара $(r,i)$ дала бы $\mathbb Z\to\{e\}\to\mathbb Z$: гомоморфизм из $\{e\}$ шлёт каждый элемент в нейтральный, композиция постоянна — тождественной не бывает
+
+{@2} **Теорема (Брауэр).** Всякое непрерывное $f\colon D^2\to D^2$ имеет неподвижную точку
+
+{@2} Пусть $f(x)\ne x$ всюду · $u=\dfrac{x-f(x)}{\lVert x-f(x)\rVert}$, $a=\langle x,u\rangle$, $t=-a+\sqrt{a^2+1-\lVert x\rVert^2}$ · $r(x)=x+tu\in S^1$, непрерывно
+
+{@2} На границе $\lVert x\rVert=1$: $\langle x,x-f(x)\rangle=1-\langle x,f(x)\rangle\ge0$ при $\lVert f(x)\rVert\le1$, значит $a\ge0$, $t=0$, $r(x)=x$
+
+{@2} Но такое $r$ запрещено утверждением выше ⇒ $f(x)\ne x$ ложно
 
 🖼 Портрет Лёйтзена Брауэра {1}
 
@@ -104,7 +114,7 @@ $\pi_1$ — функтор; $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=0$, а $\mat
 </figure>
 
 <figure class="mn">
-<svg viewBox="0 0 220 250" width="220" role="img" aria-label="Наверху окружность и диск, стрелка вложения вперёд и пунктирная стрелка обратно. Внизу их фундаментальные группы: целые числа и нулевая группа, и обратный путь через нулевую группу помечен вопросом">
+<svg viewBox="0 0 220 250" width="220" role="img" aria-label="Наверху окружность и диск, стрелка вложения вперёд и пунктирная стрелка обратно. Внизу их фундаментальные группы: целые числа и единичная группа, и обратный путь через единичную группу помечен вопросом">
 <circle class="s-line" cx="54" cy="52" r="24"/>
 <circle class="s-fillsh" cx="166" cy="52" r="24"/><circle class="s-line" cx="166" cy="52" r="24"/>
 <text class="s-txt" x="54" y="92" text-anchor="middle" font-size="17">S¹</text>
@@ -118,12 +128,12 @@ $\pi_1$ — функтор; $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=0$, а $\mat
 <text class="s-txt-m" x="62" y="128" font-size="15">π₁</text>
 <text class="s-txt-m" x="174" y="128" font-size="15">π₁</text>
 <text class="s-txt" x="54" y="176" text-anchor="middle" font-size="17">ℤ</text>
-<text class="s-txt" x="166" y="176" text-anchor="middle" font-size="17">0</text>
+<text class="s-txt" x="166" y="176" text-anchor="middle" font-size="17">{e}</text>
 <line class="s-thin" x1="70" y1="194" x2="146" y2="194"/><path class="s-ar-m" d="M144,190 l9,4 -9,4 z"/>
 <line class="s-dash" x1="150" y1="210" x2="73" y2="210"/><path class="s-ar-a" d="M73,206 l-9,4 9,4 z"/>
 <text class="s-txt-m" x="110" y="228" text-anchor="middle" font-size="14">= id ?</text>
 </svg>
-<figcaption>Окружность вкладывается в диск; вопрос в том, есть ли непрерывный путь обратно, тождественный на окружности. Фундаментальная группа переводит эту пару в пару между $\mathbb Z$ и нулевой группой, а там тождество через нуль не проходит.</figcaption>
+<figcaption>Окружность вкладывается в диск; вопрос в том, есть ли непрерывный путь обратно, тождественный на окружности. Фундаментальная группа переводит эту пару в пару между $\mathbb Z$ и единичной группой, а там тождество через единичную группу не проходит.</figcaption>
 </figure>
 
 <figure class="mn">
