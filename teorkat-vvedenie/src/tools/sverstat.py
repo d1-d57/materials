@@ -516,6 +516,60 @@ def sluzhebnye():
         "#sl-title .sub{grid-area:4/2;font-family:'Forum',serif;"
         "text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}\n"
         "#sl-title .date{grid-area:6/2;font-size:26px;color:var(--steel)}")
+    # Визитка. Разметка и гриды взяты из буффона (`buffon/src/slides/sl-vizitka.html`
+    # и `buffon/src/shablon.html`, промер p-02) — осознанное отступление от G12,
+    # разрешённое владельцем 29.07: G12 велит служебным слайдам рождаться из полей
+    # `brief.md`, а поле `vizitka: da` там стоит с 28.07 и слайда не породило.
+    # Текст и картинки — ИНЛАЙНОМ, без {{MD:}} и {{ILL:}}: `porodit.py` затирает
+    # и `content/`, и `illustrations/` целиком, поэтому скопированный туда файл
+    # не переживёт первую же пересборку. Ассеты лежат в `src/sluzhebnye/` —
+    # каталог, которого не касается ни один генератор.
+    vz = SRC / "sluzhebnye"
+    foto = (vz / "vizitka-photo.html").read_text(encoding="utf-8").strip()
+    qr = (vz / "vizitka-qr.html").read_text(encoding="utf-8").strip()
+    out["sl-vizitka"] = (
+        '<section class="slide" id="sl-vizitka" data-scenes="1">\n'
+        '  <div class="grid">\n'
+        '    <div class="zone board">\n'
+        '      <div class="brd-title t-display">Про меня</div>\n'
+        '      <div class="panel p-photo ill-box">%s</div>\n'
+        '      <div class="panel p-qr ill-box">%s</div>\n'
+        '    </div>\n'
+        '    <div class="zone copy t-body">\n'
+        '      <ul class="bullets">\n'
+        '        <li>Закончил <b>Матфак ВШЭ</b></li>\n'
+        '        <li>Работаю в <b>179</b> школе</li>\n'
+        '        <li>Преподаю математику<br>школьникам, студентам и<br>'
+        'взрослым, организую<br>математические события</li>\n'
+        '        <li>Веду телеграм-канал<br><b>Кроссворд Тьюринга<br>'
+        '<a class="tg-link" href="https://t.me/turings_crossword">'
+        '@turings_crossword</a></b></li>\n'
+        '        <li>Телеграм <b><a class="tg-link" href="https://t.me/d1_d57">'
+        '@d1_d57</a></b></li>\n'
+        '      </ul>\n'
+        '    </div>\n'
+        '  </div>\n</section>\n' % (foto, qr),
+        "#sl-vizitka{--t-body:38px}\n"
+        "#sl-vizitka .grid{position:absolute;inset:0;display:grid;"
+        "grid-template-columns:410px 56px 1fr;grid-template-rows:107px 1fr}\n"
+        "#sl-vizitka .board{grid-area:1/1/3/2;background:var(--board);position:relative}\n"
+        "#sl-vizitka .brd-title{position:absolute;left:36px;top:34px;"
+        "font-size:74px;text-align:left}\n"
+        "#sl-vizitka .p-photo{position:absolute;left:81px;top:174px;"
+        "width:251px;height:260px}\n"
+        # в буффоне картинки шли через {{ILL:}} и ловились правилом .ill-box>svg;
+        # здесь это <img> инлайном, поэтому размер задаётся явно
+        "#sl-vizitka .ill-box > img{width:100%;height:100%;display:block;"
+        "object-fit:cover}\n"
+        "#sl-vizitka .p-qr{position:absolute;left:81px;top:479px;"
+        "width:250px;height:250px}\n"
+        "#sl-vizitka .p-qr img{object-fit:contain}\n"
+        "#sl-vizitka .copy{grid-area:2/3;letter-spacing:.15em;line-height:1.537}\n"
+        "#sl-vizitka .bullets{list-style:none;padding-left:32px}\n"
+        "#sl-vizitka .bullets li{position:relative}\n"
+        "#sl-vizitka .bullets li::before{content:'';position:absolute;left:-30px;"
+        "top:.55em;width:9px;height:9px;border-radius:50%;background:var(--ink)}\n"
+        "#sl-vizitka .tg-link{color:inherit;text-decoration:none}")
     for i, txt in enumerate(RAZDELITELI, start=1):
         sid = "sl-divider%d" % i
         out[sid] = (
@@ -539,9 +593,9 @@ def sluzhebnye():
 
 
 def poryadok(ids, slides):
-    """Поток слайдов: обложка · акт 1 · разделитель · акт 2 · … · финал."""
+    """Поток слайдов: обложка · визитка · акт 1 · разделитель · акт 2 · … · финал."""
     AKTY = akty(slides)
-    flow, i = ["sl-title"], 0
+    flow, i = ["sl-title", "sl-vizitka"], 0      # визитка — ВТОРОЙ слайд (владелец, 29.07)
     for a, n in enumerate(AKTY):
         if a:
             flow.append("sl-divider%d" % a)

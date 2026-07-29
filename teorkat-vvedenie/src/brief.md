@@ -12,6 +12,7 @@ cover_date: "29 июля 2026"
 vizitka: da
 slide_order:
   - sl-title
+  - sl-vizitka
   - s01
   - s02
   - s03
