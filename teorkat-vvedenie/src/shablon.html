@@ -38,18 +38,18 @@
 #s03 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s03 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
 #s04{--t-body:35px;--lh:1.24}
-#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 116px 14px}
+#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s04 .copy{grid-area:2/2}
-#s04 .board{grid-area:4/2;background:var(--board);position:relative}
-#s04 .p1{position:absolute;left:292px;top:24px;width:85px;height:68px}
-#s04 .p2{position:absolute;left:888px;top:24px;width:277px;height:68px}
+#s04 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s04 .copy ul{column-count:2;column-gap:56px}
 #s04 .copy{--blok:22px}
+#s04 .rail{display:none}
+#s04 .grid{grid-template-columns:40px 1fr 40px}
+#s04 .copy{grid-area:2/2;align-content:center}
 #s05{--t-body:35px;--lh:1.24}
-#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:16px minmax(0,1fr) 12px}
+#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s05 .copy{grid-area:2/2}
-#s05 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s05 .p1{position:absolute;left:22px;top:305px;width:200px;height:200px}
+#s05 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s05 .copy{--blok:22px}
 #s06{--t-body:35px;--lh:1.38}
 #s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1036px 24px 328px;grid-template-rows:28px minmax(0,1fr) 22px}
@@ -118,7 +118,7 @@
 #s16 .p1{position:absolute;left:75px;top:48px;width:194px;height:194px}
 #s16 .p2{position:absolute;left:70px;top:308px;width:204px;height:194px}
 #s16 .p3{position:absolute;left:51px;top:568px;width:242px;height:194px}
-#s17{--t-body:38px}
+#s17{--t-body:40px}
 #s17 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s17 .copy{grid-area:2/2}
 #s17 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
@@ -249,9 +249,6 @@
 <!-- ===== ПОРОЖДЁННЫЙ реестр иллюстраций (sverstat.py) ===== -->
 <template id="ill-s02-tri-sostoyaniya-elementa">{{ILL:s02-tri-sostoyaniya-elementa}}</template>
 <template id="ill-s03-trebovanie-krasoty">{{ILL:s03-trebovanie-krasoty}}</template>
-<template id="ill-s04-galereya-vidov-1">{{ILL:s04-galereya-vidov-1}}</template>
-<template id="ill-s04-galereya-vidov-2">{{ILL:s04-galereya-vidov-2}}</template>
-<template id="ill-s05-tri-polomki-na-yazyke-vidov">{{ILL:s05-tri-polomki-na-yazyke-vidov}}</template>
 <template id="ill-s06-menyat-nado-ne-biekciyu-a-arenu">{{ILL:s06-menyat-nado-ne-biekciyu-a-arenu}}</template>
 <template id="ill-s08-kategoriya-funktor-estestvennoe-pr-1">{{ILL:s08-kategoriya-funktor-estestvennoe-pr-1}}</template>
 <template id="ill-s08-kategoriya-funktor-estestvennoe-pr-2">{{ILL:s08-kategoriya-funktor-estestvennoe-pr-2}}</template>

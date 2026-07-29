@@ -428,6 +428,10 @@
 "display": false
 },
 {
+"tex": "\\displaystyle \\sum_{k=0}^{n}(-1)^k\\binom nk=0\\qquad (n\\ge1)",
+"display": false
+},
+{
 "tex": "\\displaystyle \\varphi_V\\circ F[\\sigma]=G[\\sigma]\\circ\\varphi_U",
 "display": false
 },
@@ -812,10 +816,6 @@
 "display": false
 },
 {
-"tex": "g",
-"display": false
-},
-{
 "tex": "g\\circ f=1_A",
 "display": false
 },
@@ -904,10 +904,6 @@
 "display": false
 },
 {
-"tex": "x\\in G\\text{;}",
-"display": false
-},
-{
 "tex": "x\\le y",
 "display": false
 },
@@ -921,10 +917,6 @@
 },
 {
 "tex": "x_0",
-"display": false
-},
-{
-"tex": "xg=gx",
 "display": false
 }
 ]

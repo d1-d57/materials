@@ -131,7 +131,7 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 
 ## Галерея видов
 
-> поле:mn **Раскладка.** Мало текста, перечень примеров колонкой; крупная горизонтальная иллюстрация снизу (пять конструкций в ряд — пять из перечня, не все) и диаграмма двух этажей в правой полосе, со сцены 2, под строкой про композицию. Перечень зал пробегает разом.
+> поле:mn **Раскладка.** Только перечень примеров, **центрированный по вертикали**; иллюстраций нет, полосы нет. Перечень зал пробегает разом. *Правка владельца 29.07: нижняя горизонтальная иллюстрация (пять конструкций в ряд) и диаграмма двух этажей в правой полосе сняты — «здесь вообще нижняя часть не нужна»; список стоял высоко, под ним были непонятные подписи.*
 
 **Примеры видов**
 
@@ -146,46 +146,6 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 - графы с вершинами $U$;
 - инъекции $U\hookrightarrow\{1,\dots,k\}$ — раскраски без повторов
 
-<figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Вид как правило: этаж носителей внизу, этаж структур наверху, переименование поднимается наверх"><text class="s-txt" x="52" y="40" text-anchor="middle" font-size="17">F[U]</text><text class="s-txt" x="198" y="40" text-anchor="middle" font-size="17">F[V]</text><text class="s-txt" x="52" y="184" text-anchor="middle" font-size="17">U</text><text class="s-txt" x="198" y="184" text-anchor="middle" font-size="17">V</text><line class="s-thin" x1="92" y1="35" x2="152" y2="35"></line><path class="s-ar-m" d="M143,31 l9,4 -9,4 z"></path><line class="s-thin" x1="72" y1="179" x2="172" y2="179"></line><path class="s-ar-m" d="M163,175 l9,4 -9,4 z"></path><line class="s-dash" x1="52" y1="158" x2="52" y2="60"></line><path class="s-ar-a" d="M48,69 l4,-9 4,9 z"></path><line class="s-dash" x1="198" y1="158" x2="198" y2="60"></line><path class="s-ar-a" d="M194,69 l4,-9 4,9 z"></path><text class="s-txt-m" x="122" y="24" text-anchor="middle" font-size="15">F[σ]</text><text class="s-txt-m" x="122" y="198" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="44" y="112" text-anchor="end" font-size="15">F</text><text class="s-txt-m" x="206" y="112" font-size="15">F</text></svg><figcaption>Внизу носители и переименование между ними, наверху структуры; каждое переименование поднимается наверх. Согласованность с композицией означает, что подъём двух переименований подряд даёт то же, что подъём их композиции.</figcaption></figure>
-
-<figure>
-<svg viewBox="0 0 620 152" width="620" role="img" aria-label="Пять конструкций в ряд. Линейный порядок: четыре точки цепочкой со стрелками. Перестановка: четыре точки, две дуги в одну сторону и одна обратно, плюс отдельная петля. Циклический порядок: четыре точки на окружности со стрелками по кругу, начала нет. Беспорядок: четыре точки, разбитые на две пары взаимных стрелок. Инъекция: три точки, от каждой стрелка в свою клетку палитры">
-<circle class="s-node" cx="22" cy="66" r="4.4"/><circle class="s-node" cx="56" cy="66" r="4.4"/><circle class="s-node" cx="90" cy="66" r="4.4"/><circle class="s-node" cx="124" cy="66" r="4.4"/>
-<line class="s-thin" x1="30" y1="66" x2="46" y2="66"/><path class="s-ar-m" d="M44,62 l9,4 -9,4 z"/>
-<line class="s-thin" x1="64" y1="66" x2="80" y2="66"/><path class="s-ar-m" d="M78,62 l9,4 -9,4 z"/>
-<line class="s-thin" x1="98" y1="66" x2="114" y2="66"/><path class="s-ar-m" d="M112,62 l9,4 -9,4 z"/>
-<text class="s-txt-m" x="73" y="120" text-anchor="middle">L</text>
-<circle class="s-node" cx="164" cy="66" r="4.4"/><circle class="s-node" cx="198" cy="66" r="4.4"/><circle class="s-node" cx="232" cy="66" r="4.4"/><circle class="s-node" cx="266" cy="66" r="4.4"/>
-<path class="s-thin" d="M164,58 C176,34 186,34 198,58"/><path class="s-ar-m" d="M195,50 l5,9 3,-9 z"/>
-<path class="s-thin" d="M198,58 C210,34 220,34 232,58"/><path class="s-ar-m" d="M229,50 l5,9 3,-9 z"/>
-<path class="s-thin" d="M232,74 C210,98 186,98 164,74"/><path class="s-ar-m" d="M167,82 l-5,-9 -3,9 z"/>
-<path class="s-thin" d="M259,60 C258,44 274,44 273,60"/>
-<text class="s-txt-m" x="215" y="120" text-anchor="middle">S</text>
-<circle class="s-node" cx="336" cy="38" r="4.4"/><circle class="s-node" cx="366" cy="66" r="4.4"/><circle class="s-node" cx="336" cy="94" r="4.4"/><circle class="s-node" cx="306" cy="66" r="4.4"/>
-<line class="s-thin" x1="342" y1="44" x2="357" y2="58"/><path class="s-ar-m" d="M351,60 l9,3 -3,-9 z"/>
-<line class="s-thin" x1="360" y1="73" x2="343" y2="89"/><path class="s-ar-m" d="M348,88 l-9,3 3,-9 z"/>
-<line class="s-thin" x1="330" y1="88" x2="313" y2="73"/><path class="s-ar-m" d="M318,73 l-9,-3 3,9 z"/>
-<line class="s-thin" x1="312" y1="59" x2="329" y2="44"/><path class="s-ar-m" d="M324,45 l9,-3 -3,9 z"/>
-<text class="s-txt-m" x="336" y="126" text-anchor="middle">C</text>
-<circle class="s-node" cx="406" cy="66" r="4.4"/><circle class="s-node" cx="440" cy="66" r="4.4"/><circle class="s-node" cx="482" cy="66" r="4.4"/><circle class="s-node" cx="516" cy="66" r="4.4"/>
-<path class="s-thin" d="M406,58 C418,38 428,38 440,58"/><path class="s-ar-m" d="M437,50 l5,9 3,-9 z"/>
-<path class="s-thin" d="M440,74 C428,94 418,94 406,74"/><path class="s-ar-m" d="M409,82 l-5,-9 -3,9 z"/>
-<path class="s-thin" d="M482,58 C494,38 504,38 516,58"/><path class="s-ar-m" d="M513,50 l5,9 3,-9 z"/>
-<path class="s-thin" d="M516,74 C504,94 494,94 482,74"/><path class="s-ar-m" d="M485,82 l-5,-9 -3,9 z"/>
-<text class="s-txt-m" x="461" y="120" text-anchor="middle">D</text>
-<circle class="s-node" cx="556" cy="34" r="4.4"/><circle class="s-node" cx="556" cy="66" r="4.4"/><circle class="s-node" cx="556" cy="98" r="4.4"/>
-<rect class="s-fillsh" x="596" y="24" width="18" height="18"/>
-<rect class="s-line" x="596" y="46" width="18" height="18"/>
-<rect class="s-fillsh" x="596" y="68" width="18" height="18"/>
-<rect class="s-fillsh" x="596" y="90" width="18" height="18"/>
-<line class="s-thin" x1="564" y1="34" x2="588" y2="34"/><path class="s-ar-m" d="M586,30 l9,4 -9,4 z"/>
-<line class="s-thin" x1="564" y1="66" x2="588" y2="76"/><path class="s-ar-m" d="M585,71 l9,5 -6,-8 z"/>
-<line class="s-thin" x1="564" y1="98" x2="588" y2="98"/><path class="s-ar-m" d="M586,94 l9,4 -9,4 z"/>
-<text class="s-txt-m" x="580" y="132" text-anchor="middle">Inj</text>
-</svg>
-<figcaption>Пять видов подряд: линейный порядок, перестановка (две дуги — трёхцикл, отдельная петля — неподвижная точка), циклический порядок без выделенного начала, беспорядок из двух двуциклов, инъекция в палитру. Каждая конструкция сопоставляет множеству множество структур, а переименованию — переименование структур вдоль него.</figcaption>
-</figure>
-
 ## Три поломки на языке видов
 
 > поле:mn **Раскладка.** Много текста, вертикальная полоса справа: полный цикл на четырёх точках, приходит с доказательством на сцене 2.
@@ -194,9 +154,9 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 
 Проверим: какие из тождеств — изоморфизмы видов?
 
-- **1, 4, 6, 7** — да: биекция описана принадлежностью элементов;
-- **2** Паскаль, **3** Вандермонд — сторона не вид: нет отмеченного элемента; нет раскраски;
-- **5** — обе стороны виды, изоморфизма нет
+$$\sum_{k=0}^{n}(-1)^k\binom nk=0\qquad (n\ge1)$$
+
+{@2} **1, 4, 6, 7** — да · **2, 3, 8** — не вид · **5** — обе стороны вида, изоморфизма нет
 
 {@2} Биекция для 5: $S\mapsto S\,\triangle\,\{x_0\}$ — как в Паскале, нужен выбор $x_0$
 
@@ -205,28 +165,6 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 {@2} $n=2$: $\tau=(1\,2)$ держит на месте оба элемента $E^{+}=\{\varnothing,\{1,2\}\}$ и переставляет оба $E^{-}=\{\{1\},\{2\}\}$ — квадрат не коммутирует
 
 {@2} **Упражнение.** При нечётном $n$ изоморфизм существует и единствен
-
-{@2} **Тождество 4: какая здесь биекция?**
-
-<figure class="mn">
-<svg viewBox="0 0 200 200" width="200" role="img" aria-label="Четыре точки на окружности, занумерованные от одного до четырёх, соединённые стрелками по кругу в один цикл; в центре две метки — пустое множество и всё множество">
-<circle class="s-node" cx="100" cy="34" r="5.4"/>
-<circle class="s-node" cx="166" cy="100" r="5.4"/>
-<circle class="s-node" cx="100" cy="166" r="5.4"/>
-<circle class="s-node" cx="34" cy="100" r="5.4"/>
-<path class="s-thin" d="M108,38 C136,50 150,64 162,92"/><path class="s-ar-m" d="M156,86 l8,7 -1,-10 z"/>
-<path class="s-thin" d="M162,108 C150,136 136,150 108,162"/><path class="s-ar-m" d="M114,157 l-8,7 10,1 z"/>
-<path class="s-thin" d="M92,162 C64,150 50,136 38,108"/><path class="s-ar-m" d="M44,114 l-8,-7 1,10 z"/>
-<path class="s-thin" d="M38,92 C50,64 64,50 92,38"/><path class="s-ar-m" d="M86,43 l8,-7 -10,-1 z"/>
-<text class="s-txt" x="100" y="20" text-anchor="middle">1</text>
-<text class="s-txt" x="184" y="105" text-anchor="middle">2</text>
-<text class="s-txt" x="100" y="188" text-anchor="middle">3</text>
-<text class="s-txt" x="16" y="105" text-anchor="middle">4</text>
-<text class="s-txt-m" x="100" y="96" text-anchor="middle">∅</text>
-<text class="s-txt-m" x="100" y="118" text-anchor="middle">U</text>
-</svg>
-<figcaption>Полный цикл переставляет все элементы по кругу, поэтому подмножество, которое он оставляет на месте, либо пусто, либо совпадает со всем носителем. При чётном $n$ оба этих подмножества чётные — значит справа, среди нечётных, неподвижных не остаётся.</figcaption>
-</figure>
 
 ## Менять надо не биекцию, а арену
 
