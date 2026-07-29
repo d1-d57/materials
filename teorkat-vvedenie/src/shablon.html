@@ -232,6 +232,22 @@
 #s32 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s32 .p1{position:absolute;left:42px;top:48px;width:261px;height:324px}
 #s32 .p2{position:absolute;left:42px;top:438px;width:261px;height:324px}
+#sl-title .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 28px auto 12px auto 1fr}
+#sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}
+#sl-title .sub{grid-area:4/2;font-family:'Forum',serif;text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}
+#sl-title .date{grid-area:6/2;font-size:26px;color:var(--steel)}
+#sl-divider1{background:var(--board)}
+#sl-divider1 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider1 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-divider2{background:var(--board)}
+#sl-divider2 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider2 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-divider3{background:var(--board)}
+#sl-divider3 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider3 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-thanks{background:var(--board)}
+#sl-thanks .grid{position:absolute;inset:0;display:grid;place-items:center}
+#sl-thanks .head{font-size:72px}
 /* ---------- конец порождённых гридов ---------- */
 </style>
 </head>
@@ -240,6 +256,7 @@
 
 <!-- ===== [2] SLIDES — поток в порядке brief.slide_order ===== -->
 <!-- ===== ПОРОЖДЁННЫЙ поток слайдов (sverstat.py) ===== -->
+{{SLIDE:sl-title}}
 {{SLIDE:s01}}
 {{SLIDE:s02}}
 {{SLIDE:s03}}
@@ -249,6 +266,7 @@
 {{SLIDE:s07}}
 {{SLIDE:s08}}
 {{SLIDE:s09}}
+{{SLIDE:sl-divider1}}
 {{SLIDE:s10}}
 {{SLIDE:s11}}
 {{SLIDE:s12}}
@@ -256,6 +274,7 @@
 {{SLIDE:s14}}
 {{SLIDE:s15}}
 {{SLIDE:s16}}
+{{SLIDE:sl-divider2}}
 {{SLIDE:s17}}
 {{SLIDE:s18}}
 {{SLIDE:s19}}
@@ -264,6 +283,7 @@
 {{SLIDE:s22}}
 {{SLIDE:s23}}
 {{SLIDE:s24}}
+{{SLIDE:sl-divider3}}
 {{SLIDE:s25}}
 {{SLIDE:s26}}
 {{SLIDE:s27}}
@@ -272,6 +292,7 @@
 {{SLIDE:s30}}
 {{SLIDE:s31}}
 {{SLIDE:s32}}
+{{SLIDE:sl-thanks}}
 <!-- ===== конец потока слайдов ===== -->
 
 </div></div>

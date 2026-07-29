@@ -766,6 +766,22 @@ body.blanked #stage { visibility: hidden; }
 #s32 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s32 .p1{position:absolute;left:42px;top:48px;width:261px;height:324px}
 #s32 .p2{position:absolute;left:42px;top:438px;width:261px;height:324px}
+#sl-title .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 28px auto 12px auto 1fr}
+#sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}
+#sl-title .sub{grid-area:4/2;font-family:'Forum',serif;text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}
+#sl-title .date{grid-area:6/2;font-size:26px;color:var(--steel)}
+#sl-divider1{background:var(--board)}
+#sl-divider1 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider1 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-divider2{background:var(--board)}
+#sl-divider2 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider2 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-divider3{background:var(--board)}
+#sl-divider3 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
+#sl-divider3 .head{grid-area:2/2;font-size:72px;line-height:1.14}
+#sl-thanks{background:var(--board)}
+#sl-thanks .grid{position:absolute;inset:0;display:grid;place-items:center}
+#sl-thanks .head{font-size:72px}
 /* ---------- конец порождённых гридов ---------- */
 </style>
 </head>
@@ -774,6 +790,14 @@ body.blanked #stage { visibility: hidden; }
 
 <!-- ===== [2] SLIDES — поток в порядке brief.slide_order ===== -->
 <!-- ===== ПОРОЖДЁННЫЙ поток слайдов (sverstat.py) ===== -->
+<section class="slide" id="sl-title" data-scenes="1">
+  <div class="grid">
+    <div class="zone head t-display">Зачем нужны категории</div>
+    <div class="zone sub">Formal Labs</div>
+    <div class="zone date">29.07.26</div>
+  </div>
+</section>
+
 <section class="slide" id="s01" data-scenes="3">
   <div class="grid">
     <div class="zone copy t-body"><p>Семь тождеств: обе стороны считают комбинаторное</p>
@@ -884,6 +908,12 @@ body.blanked #stage { visibility: hidden; }
     <div class="rail">
       <div class="panel p1 ill-box" data-ill="portret-1-andre-zhuajalya"></div>
     </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-divider1" data-scenes="1">
+  <div class="grid">
+    <div class="zone head t-display">Зоопарк</div>
   </div>
 </section>
 
@@ -1015,6 +1045,12 @@ body.blanked #stage { visibility: hidden; }
       <div class="panel p1 ill-box" data-ill="s16-voprosy-ne-pro-obekty-a-pro-katego" data-scene-from="2" data-scene-until="3"></div>
       <div class="panel p2 ill-box" data-ill="portret-2-ferdinanda-georga-froben" data-scene-from="1" data-scene-until="1"></div>
     </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-divider2" data-scenes="1">
+  <div class="grid">
+    <div class="zone head t-display">Чего не бывает</div>
   </div>
 </section>
 
@@ -1171,6 +1207,12 @@ body.blanked #stage { visibility: hidden; }
   </div>
 </section>
 
+<section class="slide" id="sl-divider3" data-scenes="1">
+  <div class="grid">
+    <div class="zone head t-display">Словарь между мирами</div>
+  </div>
+</section>
+
 <section class="slide" id="s25" data-scenes="3" data-flow="reflow">
   <div class="grid">
     <div class="zone copy t-body"><p>Последний вопрос лекции: когда две категории считать одной и той же?</p>
@@ -1287,6 +1329,12 @@ body.blanked #stage { visibility: hidden; }
       <div class="panel p1 ill-box" data-ill="portret-7-galua"></div>
       <div class="panel p2 ill-box" data-ill="portret-8-grotendika"></div>
     </div>
+  </div>
+</section>
+
+<section class="slide" id="sl-thanks" data-scenes="1">
+  <div class="grid">
+    <div class="zone head t-display">Спасибо за внимание</div>
   </div>
 </section>
 

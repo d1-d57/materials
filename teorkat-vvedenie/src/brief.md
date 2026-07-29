@@ -11,6 +11,7 @@ cover_sub: "Лекция 1"
 cover_date: "29 июля 2026"
 vizitka: da
 slide_order:
+  - sl-title
   - s01
   - s02
   - s03
@@ -20,6 +21,7 @@ slide_order:
   - s07
   - s08
   - s09
+  - sl-divider1
   - s10
   - s11
   - s12
@@ -27,6 +29,7 @@ slide_order:
   - s14
   - s15
   - s16
+  - sl-divider2
   - s17
   - s18
   - s19
@@ -35,6 +38,7 @@ slide_order:
   - s22
   - s23
   - s24
+  - sl-divider3
   - s25
   - s26
   - s27
@@ -43,6 +47,7 @@ slide_order:
   - s30
   - s31
   - s32
+  - sl-thanks
 ---
 
 # Дек лекции 1 курса «Зачем нужны категории?»

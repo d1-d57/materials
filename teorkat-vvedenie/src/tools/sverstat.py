@@ -415,6 +415,87 @@ def ill_names(sid, s):
     return names
 
 
+# ── СЛУЖЕБНЫЕ СЛАЙДЫ И РАЗДЕЛИТЕЛИ (заход, шаг 6) ─────────────────────────────
+# ⚠ Это ОСОЗНАННОЕ отступление от гейта G12, разрешённое владельцем 29.07: генератор
+# служебные слайды НЕ порождает (`{{SLIDES}}`, `{{SLUZHEBNYE_CSS}}`,
+# `_generator/skeleton/sluzhebnye/` в живом коде не существуют — проверено заходом
+# вёрстки и перепроверено мной: `ls _generator/skeleton/` даёт 10 записей, папки
+# `sluzhebnye/` среди них нет). Поэтому они свёрстаны здесь, а не руками в `slides/`:
+# выход `slides/` перезаписывается каждым прогоном, и рукописный файл потерялся бы.
+# Долг генератора остаётся долгом генератора; `_generator/` не тронут.
+#
+# Разметка — по живому образцу буффона (`buffon/src/slides/{sl-title,sl-thanks,
+# sl-divider1}.html` и его гриды в `shablon.html`), а не изобретена.
+#
+# АКТЫ приняты владельцем 28.07 и не переоткрываются, распределение 9·7·8·8 = 32.
+# Разделитель ставится ПЕРЕД началом актов 2, 3 и 4 — три штуки.
+# ⛔ Картинок на разделителях нет: владелец хочет туда изображения, но это арка 9 и
+# отдельный заход (прямая граница шага 6).
+AKTY = [9, 7, 8, 8]
+RAZDELITELI = ["Зоопарк", "Чего не бывает", "Словарь между мирами"]
+
+# Обложка — РОВНО три строки, как задал заход, без подзаголовков и без места
+# (`07-verstka/DOK.md`: «обложка — без несогласованных подписей»; `cover_place` в
+# брифе не заполнено). Расхождения с полями `brief.md` названы в отчёте, не молча.
+COVER = ["Зачем нужны категории", "Formal Labs", "29.07.26"]
+
+
+def sluzhebnye():
+    """{id: (html, css)} — обложка, три разделителя, финал."""
+    out = {}
+    out["sl-title"] = (
+        '<section class="slide" id="sl-title" data-scenes="1">\n'
+        '  <div class="grid">\n'
+        '    <div class="zone head t-display">%s</div>\n'
+        '    <div class="zone sub">%s</div>\n'
+        '    <div class="zone date">%s</div>\n'
+        '  </div>\n</section>\n' % tuple(COVER),
+        "#sl-title .grid{position:absolute;inset:0;display:grid;"
+        "grid-template-columns:96px 1fr 96px;"
+        "grid-template-rows:1fr auto 28px auto 12px auto 1fr}\n"
+        # text-align:left — потому что `.t-display` в базе центрирует, и на снятом
+        # кадре заголовок стоял по центру, а «Formal Labs» и дата — по левому краю:
+        # три строки обложки разъезжались по двум разным осям. Поймано глазом.
+        "#sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}\n"
+        "#sl-title .sub{grid-area:4/2;font-family:'Forum',serif;"
+        "text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}\n"
+        "#sl-title .date{grid-area:6/2;font-size:26px;color:var(--steel)}")
+    for i, txt in enumerate(RAZDELITELI, start=1):
+        sid = "sl-divider%d" % i
+        out[sid] = (
+            '<section class="slide" id="%s" data-scenes="1">\n'
+            '  <div class="grid">\n'
+            '    <div class="zone head t-display">%s</div>\n'
+            '  </div>\n</section>\n' % (sid, txt),
+            "#%s{background:var(--board)}\n"
+            "#%s .grid{position:absolute;inset:0;display:grid;"
+            "grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}\n"
+            "#%s .head{grid-area:2/2;font-size:72px;line-height:1.14}" % (sid, sid, sid))
+    out["sl-thanks"] = (
+        '<section class="slide" id="sl-thanks" data-scenes="1">\n'
+        '  <div class="grid">\n'
+        '    <div class="zone head t-display">Спасибо за внимание</div>\n'
+        '  </div>\n</section>\n',
+        "#sl-thanks{background:var(--board)}\n"
+        "#sl-thanks .grid{position:absolute;inset:0;display:grid;place-items:center}\n"
+        "#sl-thanks .head{font-size:72px}")
+    return out
+
+
+def poryadok(ids):
+    """Поток слайдов: обложка · акт 1 · разделитель · акт 2 · … · финал."""
+    flow, i = ["sl-title"], 0
+    for a, n in enumerate(AKTY):
+        if a:
+            flow.append("sl-divider%d" % a)
+        flow.extend(ids[i:i + n])
+        i += n
+    if i != len(ids):
+        raise SystemExit("акты %s покрывают %d слайдов, а их %d" % (AKTY, i, len(ids)))
+    flow.append("sl-thanks")
+    return flow
+
+
 MARK_CSS_A = "/* ---------- ПОРОЖДЁННЫЕ пер-слайдовые гриды (sverstat.py) ---------- */"
 MARK_CSS_B = "/* ---------- конец порождённых гридов ---------- */"
 MARK_SL_A = "<!-- ===== ПОРОЖДЁННЫЙ поток слайдов (sverstat.py) ===== -->"
@@ -441,10 +522,17 @@ def main():
     for sid in ids:
         (SRC / "slides" / (sid + ".html")).write_text(html_files[sid], encoding="utf-8")
 
+    # служебные слайды и разделители: тот же порождаемый слой, не рукописные файлы
+    sluzh = sluzhebnye()
+    for sid, (html, _css) in sluzh.items():
+        (SRC / "slides" / (sid + ".html")).write_text(html, encoding="utf-8")
+    css_parts.extend(css for _h, css in sluzh.values())
+    poryadok_ids = poryadok(ids)
+
     ill_files = sorted(p.stem for p in (SRC / "illustrations").glob("*"))
     templates = "\n".join('<template id="ill-%s">{{ILL:%s}}</template>' % (n, n)
                           for n in ill_files)
-    flow = "\n".join("{{SLIDE:%s}}" % s for s in ids)
+    flow = "\n".join("{{SLIDE:%s}}" % s for s in poryadok_ids)
 
     sh = (SRC / "shablon.html").read_text(encoding="utf-8")
     sh = splice(sh, MARK_CSS_A, MARK_CSS_B, "\n".join(css_parts))
@@ -453,13 +541,15 @@ def main():
     (SRC / "shablon.html").write_text(sh, encoding="utf-8")
 
     brief = (SRC / "brief.md").read_text(encoding="utf-8")
-    order = "slide_order:\n" + "\n".join("  - %s" % s for s in ids)
+    order = "slide_order:\n" + "\n".join("  - %s" % s for s in poryadok_ids)
     brief = re.sub(r"^slide_order:(?:\n  - .*)*", order, brief, count=1, flags=re.M)
     (SRC / "brief.md").write_text(brief, encoding="utf-8")
 
     from collections import Counter
-    print("слайдов: %d · шаблонов илл.: %d · slide_order: %d"
-          % (len(ids), len(ill_files), len(ids)))
+    print("содержательных слайдов: %d · служебных и разделителей: %d · "
+          "ВСЕГО секций: %d · шаблонов илл.: %d"
+          % (len(ids), len(sluzh), len(poryadok_ids), len(ill_files)))
+    print("порядок: %s" % " ".join(poryadok_ids))
     print("архетипы:", dict(Counter(s[1] for s in stats)))
     print("кегли:", dict(sorted(Counter(s[3] for s in stats).items(), reverse=True)))
     print("минимум кегля по деку: %dpx (пол audit.py — 35px)" % min(s[3] for s in stats))
