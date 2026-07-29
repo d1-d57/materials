@@ -60,13 +60,13 @@
 #s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s07 .copy{grid-area:2/2}
 #s07 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s08{--t-body:35px}
-#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s08{--t-body:35px;--lh:1.32}
+#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:48px 1056px 24px 312px;grid-template-rows:24px minmax(0,1fr) 20px}
 #s08 .copy{grid-area:2/2}
 #s08 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s08 .p1{position:absolute;left:51px;top:48px;width:242px;height:194px}
-#s08 .p2{position:absolute;left:51px;top:308px;width:242px;height:194px}
-#s08 .p3{position:absolute;left:70px;top:568px;width:204px;height:194px}
+#s08 .p1{position:absolute;left:35px;top:48px;width:242px;height:194px}
+#s08 .p2{position:absolute;left:35px;top:308px;width:242px;height:194px}
+#s08 .p3{position:absolute;left:54px;top:568px;width:204px;height:194px}
 #s09{--t-body:35px}
 #s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s09 .copy{grid-area:2/2}
@@ -96,92 +96,88 @@
 #s12 .p1{position:absolute;left:22px;top:90px;width:300px;height:240px}
 #s12 .p2{position:absolute;left:22px;top:480px;width:300px;height:240px}
 #s13{--t-body:35px}
-#s13 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s13 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 34px}
 #s13 .copy{grid-area:2/2}
 #s13 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s14{--t-body:35px}
-#s14 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 34px}
+#s13 .copy ul.tlist{column-count:2;column-gap:56px}
+#s14{--t-body:35px;--lh:1.24}
+#s14 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 164px 14px}
 #s14 .copy{grid-area:2/2}
-#s14 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s14 .copy ul.tlist{column-count:2;column-gap:56px}
-#s15{--t-body:35px;--lh:1.24}
-#s15 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 164px 14px}
+#s14 .board{grid-area:4/2;background:var(--board);position:relative}
+#s14 .p1{position:absolute;left:71px;top:24px;width:295px;height:116px}
+#s14 .p2{position:absolute;left:629px;top:24px;width:102px;height:116px}
+#s14 .p3{position:absolute;left:1082px;top:24px;width:119px;height:116px}
+#s14 .copy{--blok:22px}
+#s15{--t-body:40px}
+#s15 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s15 .copy{grid-area:2/2}
-#s15 .board{grid-area:4/2;background:var(--board);position:relative}
-#s15 .p1{position:absolute;left:71px;top:24px;width:295px;height:116px}
-#s15 .p2{position:absolute;left:629px;top:24px;width:102px;height:116px}
-#s15 .p3{position:absolute;left:1082px;top:24px;width:119px;height:116px}
-#s15 .copy{--blok:22px}
-#s16{--t-body:40px}
-#s16 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s15 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s16{--t-body:35px;--lh:1.44}
+#s16 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:32px minmax(0,1fr) 26px}
 #s16 .copy{grid-area:2/2}
-#s16 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s17{--t-body:35px;--lh:1.44}
-#s17 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:32px minmax(0,1fr) 26px}
+#s16 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
+#s16 .p1{position:absolute;left:75px;top:48px;width:194px;height:194px}
+#s16 .p2{position:absolute;left:70px;top:308px;width:204px;height:194px}
+#s16 .p3{position:absolute;left:51px;top:568px;width:242px;height:194px}
+#s17{--t-body:38px}
+#s17 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s17 .copy{grid-area:2/2}
 #s17 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s17 .p1{position:absolute;left:75px;top:48px;width:194px;height:194px}
-#s17 .p2{position:absolute;left:70px;top:308px;width:204px;height:194px}
-#s17 .p3{position:absolute;left:51px;top:568px;width:242px;height:194px}
-#s18{--t-body:38px}
-#s18 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s17 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
+#s18{--t-body:37px;--lh:1.32}
+#s18 .grid{position:absolute;inset:0;display:grid;grid-template-columns:48px 1056px 24px 312px;grid-template-rows:24px minmax(0,1fr) 20px}
 #s18 .copy{grid-area:2/2}
 #s18 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s18 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
-#s19{--t-body:37px;--lh:1.32}
-#s19 .grid{position:absolute;inset:0;display:grid;grid-template-columns:48px 1056px 24px 312px;grid-template-rows:24px minmax(0,1fr) 20px}
+#s18 .p1{position:absolute;left:22px;top:258px;width:268px;height:295px}
+#s19{--t-body:38px}
+#s19 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s19 .copy{grid-area:2/2}
 #s19 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s19 .p1{position:absolute;left:22px;top:258px;width:268px;height:295px}
-#s20{--t-body:38px}
-#s20 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s19 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
+#s20{--t-body:35px}
+#s20 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s20 .copy{grid-area:2/2}
-#s20 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s20 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
-#s21{--t-body:35px;--lh:1.26}
-#s21 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1252px 28px 116px;grid-template-rows:20px minmax(0,1fr) 16px}
+#s20 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s21{--t-body:35px;--lh:1.24}
+#s21 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1088px 24px 288px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s21 .copy{grid-area:2/2}
-#s21 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s21 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
+#s21 .p1{position:absolute;left:22px;top:132px;width:244px;height:156px}
+#s21 .p2{position:absolute;left:22px;top:448px;width:244px;height:305px}
 #s22{--t-body:35px;--lh:1.24}
 #s22 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s22 .copy{grid-area:2/2}
 #s22 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s22 .p1{position:absolute;left:22px;top:146px;width:200px;height:128px}
-#s22 .p2{position:absolute;left:22px;top:475px;width:200px;height:250px}
-#s23{--t-body:35px;--lh:1.24}
-#s23 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:16px minmax(0,1fr) 12px}
+#s22 .p1{position:absolute;left:22px;top:325px;width:200px;height:160px}
+#s23{--t-body:40px}
+#s23 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s23 .copy{grid-area:2/2}
 #s23 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s23 .p1{position:absolute;left:22px;top:325px;width:200px;height:160px}
-#s24{--t-body:40px}
-#s24 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s23 .p1{position:absolute;left:22px;top:255px;width:300px;height:300px}
+#s24{--t-body:35px;--lh:1.24}
+#s24 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1088px 24px 288px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s24 .copy{grid-area:2/2}
 #s24 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s24 .p1{position:absolute;left:22px;top:255px;width:300px;height:300px}
-#s25{--t-body:35px;--lh:1.24}
-#s25 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1088px 24px 288px;grid-template-rows:16px minmax(0,1fr) 12px}
+#s24 .p1{position:absolute;left:22px;top:274px;width:244px;height:263px}
+#s25{--t-body:38px;--lh:1.38}
+#s25 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1036px 24px 328px;grid-template-rows:28px minmax(0,1fr) 22px}
 #s25 .copy{grid-area:2/2}
 #s25 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s25 .p1{position:absolute;left:22px;top:274px;width:244px;height:263px}
+#s25 .p1{position:absolute;left:22px;top:286px;width:284px;height:239px}
 #s26{--t-body:38px;--lh:1.38}
 #s26 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1036px 24px 328px;grid-template-rows:28px minmax(0,1fr) 22px}
 #s26 .copy{grid-area:2/2}
 #s26 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s26 .p1{position:absolute;left:22px;top:286px;width:284px;height:239px}
-#s27{--t-body:38px;--lh:1.38}
-#s27 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1036px 24px 328px;grid-template-rows:28px minmax(0,1fr) 22px}
+#s26 .p1{position:absolute;left:22px;top:246px;width:284px;height:318px}
+#s27{--t-body:40px}
+#s27 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s27 .copy{grid-area:2/2}
 #s27 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s27 .p1{position:absolute;left:22px;top:246px;width:284px;height:318px}
-#s28{--t-body:40px}
-#s28 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s27 .p1{position:absolute;left:22px;top:239px;width:300px;height:332px}
+#s28{--t-body:38px}
+#s28 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s28 .copy{grid-area:2/2}
-#s28 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s28 .p1{position:absolute;left:22px;top:239px;width:300px;height:332px}
-#s29{--t-body:38px}
-#s29 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s29 .copy{grid-area:2/2}
-#s29 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s28 .rail{grid-area:1/4/4/5;background:var(--board)}
 #sl-title .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 28px auto 12px auto 1fr}
 #sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}
 #sl-title .sub{grid-area:4/2;font-family:'Forum',serif;text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}
@@ -220,8 +216,8 @@
 {{SLIDE:s10}}
 {{SLIDE:s11}}
 {{SLIDE:s12}}
-{{SLIDE:s13}}
 {{SLIDE:sl-divider2}}
+{{SLIDE:s13}}
 {{SLIDE:s14}}
 {{SLIDE:s15}}
 {{SLIDE:s16}}
@@ -229,8 +225,8 @@
 {{SLIDE:s18}}
 {{SLIDE:s19}}
 {{SLIDE:s20}}
-{{SLIDE:s21}}
 {{SLIDE:sl-divider3}}
+{{SLIDE:s21}}
 {{SLIDE:s22}}
 {{SLIDE:s23}}
 {{SLIDE:s24}}
@@ -238,7 +234,6 @@
 {{SLIDE:s26}}
 {{SLIDE:s27}}
 {{SLIDE:s28}}
-{{SLIDE:s29}}
 {{SLIDE:sl-thanks}}
 <!-- ===== конец потока слайдов ===== -->
 
@@ -261,35 +256,35 @@
 <template id="ill-s08-kategoriya-funktor-estestvennoe-pr-3">{{ILL:s08-kategoriya-funktor-estestvennoe-pr-3}}</template>
 <template id="ill-s09-konstrukcii-1">{{ILL:s09-konstrukcii-1}}</template>
 <template id="ill-s09-konstrukcii-2">{{ILL:s09-konstrukcii-2}}</template>
-<template id="ill-s10-zoopark-chem-byvaet-strelka-1">{{ILL:s10-zoopark-chem-byvaet-strelka-1}}</template>
-<template id="ill-s10-zoopark-chem-byvaet-strelka-2">{{ILL:s10-zoopark-chem-byvaet-strelka-2}}</template>
-<template id="ill-s10-zoopark-chem-byvaet-strelka-3">{{ILL:s10-zoopark-chem-byvaet-strelka-3}}</template>
-<template id="ill-s10-zoopark-chem-byvaet-strelka-4">{{ILL:s10-zoopark-chem-byvaet-strelka-4}}</template>
-<template id="ill-s10-zoopark-chem-byvaet-strelka-5">{{ILL:s10-zoopark-chem-byvaet-strelka-5}}</template>
+<template id="ill-s10-kategorii-mnozhestvo-so-strukturoj-1">{{ILL:s10-kategorii-mnozhestvo-so-strukturoj-1}}</template>
+<template id="ill-s10-kategorii-mnozhestvo-so-strukturoj-2">{{ILL:s10-kategorii-mnozhestvo-so-strukturoj-2}}</template>
+<template id="ill-s10-kategorii-mnozhestvo-so-strukturoj-3">{{ILL:s10-kategorii-mnozhestvo-so-strukturoj-3}}</template>
+<template id="ill-s10-kategorii-mnozhestvo-so-strukturoj-4">{{ILL:s10-kategorii-mnozhestvo-so-strukturoj-4}}</template>
+<template id="ill-s10-kategorii-mnozhestvo-so-strukturoj-5">{{ILL:s10-kategorii-mnozhestvo-so-strukturoj-5}}</template>
 <template id="ill-s11-strelka-kak-sledovanie-i-kak-shag-1">{{ILL:s11-strelka-kak-sledovanie-i-kak-shag-1}}</template>
 <template id="ill-s11-strelka-kak-sledovanie-i-kak-shag-2">{{ILL:s11-strelka-kak-sledovanie-i-kak-shag-2}}</template>
 <template id="ill-s11-strelka-kak-sledovanie-i-kak-shag-3">{{ILL:s11-strelka-kak-sledovanie-i-kak-shag-3}}</template>
 <template id="ill-s12-funktory-1">{{ILL:s12-funktory-1}}</template>
 <template id="ill-s12-funktory-2">{{ILL:s12-funktory-2}}</template>
-<template id="ill-s14-kak-dokazyvayut-chto-funktora-net-1">{{ILL:s14-kak-dokazyvayut-chto-funktora-net-1}}</template>
-<template id="ill-s14-kak-dokazyvayut-chto-funktora-net-2">{{ILL:s14-kak-dokazyvayut-chto-funktora-net-2}}</template>
-<template id="ill-s15-brauer-v-rabote-1">{{ILL:s15-brauer-v-rabote-1}}</template>
-<template id="ill-s15-brauer-v-rabote-2">{{ILL:s15-brauer-v-rabote-2}}</template>
-<template id="ill-s15-brauer-v-rabote-3">{{ILL:s15-brauer-v-rabote-3}}</template>
-<template id="ill-s17-otvet-snova-ni-odnogo-1">{{ILL:s17-otvet-snova-ni-odnogo-1}}</template>
-<template id="ill-s17-otvet-snova-ni-odnogo-2">{{ILL:s17-otvet-snova-ni-odnogo-2}}</template>
-<template id="ill-s17-otvet-snova-ni-odnogo-3">{{ILL:s17-otvet-snova-ni-odnogo-3}}</template>
-<template id="ill-s18-otvet-ne-nul-centr-i-stepeni">{{ILL:s18-otvet-ne-nul-centr-i-stepeni}}</template>
-<template id="ill-s19-ostalnye-otvety-i-graf-kak-funktor">{{ILL:s19-ostalnye-otvety-i-graf-kak-funktor}}</template>
-<template id="ill-s20-priem-poluchaet-imya">{{ILL:s20-priem-poluchaet-imya}}</template>
-<template id="ill-s22-kategoriya-zanumerovannyh-mnozhest-1">{{ILL:s22-kategoriya-zanumerovannyh-mnozhest-1}}</template>
-<template id="ill-s22-kategoriya-zanumerovannyh-mnozhest-2">{{ILL:s22-kategoriya-zanumerovannyh-mnozhest-2}}</template>
-<template id="ill-s23-vtoraya-kompoziciya-vedet-sebya-in">{{ILL:s23-vtoraya-kompoziciya-vedet-sebya-in}}</template>
-<template id="ill-s24-rabota-zala-ekvivalentny-ili-net">{{ILL:s24-rabota-zala-ekvivalentny-ili-net}}</template>
-<template id="ill-s25-strogij-i-polnyj-funktor">{{ILL:s25-strogij-i-polnyj-funktor}}</template>
-<template id="ill-s26-vtoroj-etazh-imya-tomu-chto-uzhe-p">{{ILL:s26-vtoroj-etazh-imya-tomu-chto-uzhe-p}}</template>
-<template id="ill-s27-stoun-konechnyj-sluchaj-i-obschij">{{ILL:s27-stoun-konechnyj-sluchaj-i-obschij}}</template>
-<template id="ill-s28-raznye-sootvetstviya-v-matematike">{{ILL:s28-raznye-sootvetstviya-v-matematike}}</template>
+<template id="ill-s13-kak-dokazyvayut-chto-funktora-net-1">{{ILL:s13-kak-dokazyvayut-chto-funktora-net-1}}</template>
+<template id="ill-s13-kak-dokazyvayut-chto-funktora-net-2">{{ILL:s13-kak-dokazyvayut-chto-funktora-net-2}}</template>
+<template id="ill-s14-brauer-v-rabote-1">{{ILL:s14-brauer-v-rabote-1}}</template>
+<template id="ill-s14-brauer-v-rabote-2">{{ILL:s14-brauer-v-rabote-2}}</template>
+<template id="ill-s14-brauer-v-rabote-3">{{ILL:s14-brauer-v-rabote-3}}</template>
+<template id="ill-s16-otvet-snova-ni-odnogo-1">{{ILL:s16-otvet-snova-ni-odnogo-1}}</template>
+<template id="ill-s16-otvet-snova-ni-odnogo-2">{{ILL:s16-otvet-snova-ni-odnogo-2}}</template>
+<template id="ill-s16-otvet-snova-ni-odnogo-3">{{ILL:s16-otvet-snova-ni-odnogo-3}}</template>
+<template id="ill-s17-otvet-ne-nul-centr-i-stepeni">{{ILL:s17-otvet-ne-nul-centr-i-stepeni}}</template>
+<template id="ill-s18-ostalnye-otvety-i-graf-kak-funktor">{{ILL:s18-ostalnye-otvety-i-graf-kak-funktor}}</template>
+<template id="ill-s19-priem-poluchaet-imya">{{ILL:s19-priem-poluchaet-imya}}</template>
+<template id="ill-s21-kategoriya-zanumerovannyh-mnozhest-1">{{ILL:s21-kategoriya-zanumerovannyh-mnozhest-1}}</template>
+<template id="ill-s21-kategoriya-zanumerovannyh-mnozhest-2">{{ILL:s21-kategoriya-zanumerovannyh-mnozhest-2}}</template>
+<template id="ill-s22-vtoraya-kompoziciya-vedet-sebya-in">{{ILL:s22-vtoraya-kompoziciya-vedet-sebya-in}}</template>
+<template id="ill-s23-rabota-zala-ekvivalentny-ili-net">{{ILL:s23-rabota-zala-ekvivalentny-ili-net}}</template>
+<template id="ill-s24-strogij-i-polnyj-funktor">{{ILL:s24-strogij-i-polnyj-funktor}}</template>
+<template id="ill-s25-vtoroj-etazh-imya-tomu-chto-uzhe-p">{{ILL:s25-vtoroj-etazh-imya-tomu-chto-uzhe-p}}</template>
+<template id="ill-s26-stoun-konechnyj-sluchaj-i-obschij">{{ILL:s26-stoun-konechnyj-sluchaj-i-obschij}}</template>
+<template id="ill-s27-raznye-sootvetstviya-v-matematike">{{ILL:s27-raznye-sootvetstviya-v-matematike}}</template>
 <!-- ===== конец реестра иллюстраций ===== -->
 
 <script>{{ENGINE_JS}}</script>

@@ -72,10 +72,6 @@
 "display": false
 },
 {
-"tex": "A\\mapsto\\mathcal P(A)",
-"display": false
-},
-{
 "tex": "A\\times B\\Rightarrow A\\text{:}",
 "display": false
 },
@@ -193,6 +189,10 @@
 },
 {
 "tex": "F[\\tau\\circ\\sigma]=F[\\tau]\\circ F[\\sigma]\\text{:}",
+"display": false
+},
+{
+"tex": "F\\Rightarrow G",
 "display": false
 },
 {
@@ -368,10 +368,6 @@
 "display": false
 },
 {
-"tex": "U\\mapsto",
-"display": false
-},
-{
 "tex": "U\\text{,}",
 "display": false
 },
@@ -408,10 +404,6 @@
 "display": false
 },
 {
-"tex": "X\\mapsto\\mathrm{Inj}_k(X)\\text{,}",
-"display": false
-},
-{
 "tex": "X\\mapsto|X|\\text{,}",
 "display": false
 },
@@ -437,10 +429,6 @@
 },
 {
 "tex": "[|X|]\\ne X\\text{;}",
-"display": false
-},
-{
-"tex": "\\Pi_1",
 "display": false
 },
 {
@@ -596,14 +584,6 @@
 "display": false
 },
 {
-"tex": "\\mathbb Z",
-"display": false
-},
-{
-"tex": "\\mathbb Z[t^{\\pm1}]",
-"display": false
-},
-{
 "tex": "\\mathbb Z\\text{:}",
 "display": false
 },
@@ -632,7 +612,7 @@
 "display": false
 },
 {
-"tex": "\\mathbf{FinBool}\\cong\\mathbf{FinSet}^{\\mathrm{op}}",
+"tex": "\\mathbf{FinBool}\\not\\cong\\mathbf{FinSet}^{\\mathrm{op}}",
 "display": false
 },
 {
@@ -645,10 +625,6 @@
 },
 {
 "tex": "\\mathbf{Grph}",
-"display": false
-},
-{
-"tex": "\\mathbf{Grph}\\to\\mathbf{Top}",
 "display": false
 },
 {
@@ -665,10 +641,6 @@
 },
 {
 "tex": "\\mathbf{Hilb}",
-"display": false
-},
-{
-"tex": "\\mathbf{Hilb}\\to\\mathbf{Hilb}\\text{,}",
 "display": false
 },
 {
@@ -692,10 +664,6 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Met}\\to\\mathbf{Met}\\text{,}",
-"display": false
-},
-{
 "tex": "\\mathbf{Mod}_R",
 "display": false
 },
@@ -705,10 +673,6 @@
 },
 {
 "tex": "\\mathbf{Rel}",
-"display": false
-},
-{
-"tex": "\\mathbf{Rel}\\to\\mathbf{Set}\\text{,}",
 "display": false
 },
 {
@@ -725,10 +689,6 @@
 },
 {
 "tex": "\\mathbf{Top}",
-"display": false
-},
-{
-"tex": "\\mathbf{Top}\\to",
 "display": false
 },
 {
@@ -821,10 +781,6 @@
 },
 {
 "tex": "\\mathrm{Aut}(A)\\text{:}",
-"display": false
-},
-{
-"tex": "\\mathrm{Id}",
 "display": false
 },
 {
@@ -924,19 +880,7 @@
 "display": false
 },
 {
-"tex": "\\to\\mathbf{Mat}",
-"display": false
-},
-{
-"tex": "\\to\\mathbf{Top}",
-"display": false
-},
-{
 "tex": "\\varphi",
-"display": false
-},
-{
-"tex": "\\varphi\\mapsto\\varphi^{\\ast}",
 "display": false
 },
 {
@@ -949,10 +893,6 @@
 },
 {
 "tex": "\\{e\\}",
-"display": false
-},
-{
-"tex": "^{\\mathrm{op}}\\to\\mathbf{Set}\\text{,}",
 "display": false
 },
 {

@@ -25,8 +25,8 @@ slide_order:
   - s10
   - s11
   - s12
-  - s13
   - sl-divider2
+  - s13
   - s14
   - s15
   - s16
@@ -34,8 +34,8 @@ slide_order:
   - s18
   - s19
   - s20
-  - s21
   - sl-divider3
+  - s21
   - s22
   - s23
   - s24
@@ -43,7 +43,6 @@ slide_order:
   - s26
   - s27
   - s28
-  - s29
   - sl-thanks
 ---
 

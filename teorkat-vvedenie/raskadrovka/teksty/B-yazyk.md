@@ -24,6 +24,8 @@ registr: читаемый
 
 **Естественное преобразование** $\alpha\colon F\Rightarrow G$: $\alpha_A\in\mathcal D(FA,GA)$ с $Gf\circ\alpha_A=\alpha_B\circ Ff$ при всяком $f\in\mathcal C(A,B)$
 
+Пример: матрица перехода между двумя базисами — компонента естественного изоморфизма
+
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Треугольник композиции: стрелка из A в B, стрелка из B в C и нижняя стрелка из A в C, помеченная композицией"><text class="s-txt" x="40" y="170" text-anchor="middle" font-size="17">A</text><text class="s-txt" x="125" y="46" text-anchor="middle" font-size="17">B</text><text class="s-txt" x="210" y="170" text-anchor="middle" font-size="17">C</text><line class="s-thin" x1="50" y1="152" x2="112" y2="60"></line><path class="s-ar-m" d="M105,58 l10,-4 -2,10 z"></path><line class="s-thin" x1="138" y1="60" x2="200" y2="152"></line><path class="s-ar-m" d="M192,150 l10,4 -2,-10 z"></path><line class="s-thin" x1="58" y1="176" x2="190" y2="176"></line><path class="s-ar-m" d="M181,172 l9,4 -9,4 z"></path><text class="s-txt-m" x="70" y="106" text-anchor="end" font-size="15">f</text><text class="s-txt-m" x="182" y="106" font-size="15">g</text><text class="s-txt-m" x="125" y="196" text-anchor="middle" font-size="15">g∘f</text></svg><figcaption>Композиция — единственная операция категории: у пары стрелок с общим средним объектом есть третья стрелка, замыкающая треугольник. Ассоциативность означает, что при четырёх объектах порядок замыканий не важен.</figcaption></figure>
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности: компонента преобразования, применённая до и после действия морфизма, даёт один результат"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">FA</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">FB</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">GA</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">GB</text><line class="s-thin" x1="86" y1="29" x2="158" y2="29"></line><path class="s-ar-m" d="M149,25 l9,4 -9,4 z"></path><line class="s-thin" x1="86" y1="173" x2="158" y2="173"></line><path class="s-ar-m" d="M149,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="122" y="18" text-anchor="middle" font-size="15">Ff</text><text class="s-txt-m" x="122" y="196" text-anchor="middle" font-size="15">Gf</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">α<tspan dy="3" font-size="11">A</tspan></text><text class="s-txt-m" x="206" y="105" font-size="15">α<tspan dy="3" font-size="11">B</tspan></text></svg><figcaption>Перевести и потом подействовать — то же, что подействовать и потом перевести. Этот квадрат уже стоял в требовании красоты; там оба функтора были видами, здесь они произвольны.</figcaption></figure>
@@ -61,13 +63,13 @@ registr: читаемый
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Три вершины графа в ряд, соединённые двумя рёбрами; ниже акцентная дуга ведёт из первой вершины прямо в третью — это путь, который в свободной категории служит одним морфизмом"><circle class="s-node-a" cx="44" cy="60" r="4.6"></circle><circle class="s-node" cx="125" cy="60" r="4.6"></circle><circle class="s-node-a" cx="206" cy="60" r="4.6"></circle><line class="s-line" x1="52" y1="60" x2="117" y2="60"></line><path class="s-ar-m" d="M108,56 l9,4 -9,4 z"></path><line class="s-line" x1="133" y1="60" x2="198" y2="60"></line><path class="s-ar-m" d="M189,56 l9,4 -9,4 z"></path><path class="s-accent" d="M44,72 C60,150 190,150 206,72"></path><path class="s-ar-a" d="M202,82 l4,-10 5,9 z"></path><text class="s-txt" x="44" y="42" text-anchor="middle" font-size="17">u</text><text class="s-txt" x="206" y="42" text-anchor="middle" font-size="17">v</text></svg><figcaption>Рёбра графа сами морфизмами не считаются: морфизмом объявлен путь. Два ребра подряд дают одну стрелку из $u$ в $v$, композиция сводится к приписыванию путей, а тождество есть путь нулевой длины.</figcaption></figure>
 
-## Зоопарк: чем бывает стрелка
+## Категории: множество со структурой
 
 > поле:mn **Раскладка.** Один экран: список обозначений четырьмя группами. Справа только полезные картинки: нерастягивающее отображение и отношение против диагонали. **Задача вёрстки (текст не трогал):** figure раскраски графов остался без текста — разбор раскраски выкинут; figure кобордизма и тангла ушли текстом на следующий слайд, картинки перенести туда же.
 
 Стрелка — отображение, сохраняющее структуру. Алгебраические:
 
-$\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\mathbf{Mod}_R$ · $\mathbf{Lie}$ · **группоид**: все морфизмы обратимы
+$\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\mathbf{Mod}_R$ · $\mathbf{Lie}$
 
 Геометрические: $\mathbf{Top}$ · $\mathbf{Man}$ · $\mathbf{Met}$ · $\mathbf{Hilb}$
 
@@ -109,11 +111,11 @@ $\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\math
 
 ## Функторы
 
-> поле:mn **Раскладка.** Список вскрывается двумя порциями. Справа три ступени забывания и дифференциал.
+> поле:mn **Раскладка.** Список вскрывается двумя порциями. Справа три ступени забывания и дифференциал. **Слито из двух разделов:** «Функторы» и «Зоопарк функторов» были двумя слайдами про одно и то же; экзотика зоопарка снята по критерию понятности, уцелевшая строка приехала сюда последней, реплика-мостик — за ней.
 
 Забывание: $\mathbf{Ab}\to\mathbf{Grp}$ свойство · $\mathbf{Grp}\to\mathbf{Set}$ структуру · $\mathbf{Set}^2\to\mathbf{Set}$ материал
 
-Цепное правило: матрица Якоби. Спектр кольца: $\varphi\mapsto\varphi^{\ast}$
+**Цепное правило** — матрица Якоби: без языка категорий у самого школьного утверждения нет имени
 
 {@2} Фундаментальная группа $\pi_1$ · называния: гомоморфизм, монотонное отображение, $G$-множество, представление
 
@@ -121,32 +123,10 @@ $\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\math
 
 {@2} Функтор из свободной категории графа в $\mathbf{Vect}$ называется **представлением колчана**
 
-{@2} **Цепное правило — самое школьное утверждение, которое без языка категорий не имеет имени**
+{@2} $\mathbf{Mat}\simeq\mathbf{Vect}^{\mathrm{fd}}$ · $\mathbf{FinBool}\simeq\mathbf{FinSet}^{\mathrm{op}}$
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Столбик из трёх категорий: абелевы группы, группы, множества, соединённые стрелками сверху вниз; сбоку стоят пары множеств, и от них стрелка тоже ведёт в множества"><text class="s-txt" x="70" y="40" text-anchor="middle" font-size="17">Ab</text><text class="s-txt" x="70" y="112" text-anchor="middle" font-size="17">Grp</text><text class="s-txt" x="70" y="184" text-anchor="middle" font-size="17">Set</text><text class="s-txt" x="200" y="112" text-anchor="middle" font-size="17">Set²</text><line class="s-thin" x1="70" y1="52" x2="70" y2="94"></line><path class="s-ar-m" d="M66,85 l4,9 4,-9 z"></path><line class="s-thin" x1="70" y1="124" x2="70" y2="166"></line><path class="s-ar-m" d="M66,157 l4,9 4,-9 z"></path><line class="s-dash" x1="192" y1="124" x2="106" y2="172"></line><path class="s-ar-a" d="M115,171 l-10,3 4,-9 z"></path></svg><figcaption>Три ступени забывания различаются тем, что именно забыто: свойство коммутативности, вся операция или сам материал, из которого объект собран. Ступень читается по свойствам функтора, а не на глаз.</figcaption></figure>
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Гладкое отображение переводит точку в точку, а его дифференциал переводит касательную плоскость в касательную плоскость"><circle class="s-line" cx="62" cy="126" r="38"></circle><circle class="s-line" cx="188" cy="126" r="38"></circle><line class="s-accent" x1="22" y1="88" x2="102" y2="88"></line><line class="s-accent" x1="148" y1="88" x2="228" y2="88"></line><circle class="s-node-r" cx="62" cy="88" r="4"></circle><circle class="s-node-r" cx="188" cy="88" r="4"></circle><line class="s-thin" x1="108" y1="126" x2="142" y2="126"></line><path class="s-ar-m" d="M133,122 l9,4 -9,4 z"></path><line class="s-dash" x1="108" y1="66" x2="142" y2="66"></line><path class="s-ar-a" d="M133,62 l9,4 -9,4 z"></path><text class="s-txt-m" x="125" y="148" text-anchor="middle" font-size="15">f</text><text class="s-txt-m" x="125" y="56" text-anchor="middle" font-size="15">Df</text><text class="s-txt" x="50" y="80" text-anchor="end" font-size="15">a</text><text class="s-txt" x="200" y="80" font-size="15">f(a)</text></svg><figcaption>Внизу гладкое отображение переводит точку в точку, наверху дифференциал переводит касательную плоскость в касательную плоскость. Два отображения подряд дают наверху произведение матриц, и это равенство есть цепное правило.</figcaption></figure>
-
-## Зоопарк функторов
-
-> поле:mn **Раскладка.** Один экран, две порции: шесть функторов (1), ещё два и пара эквивалентностей (2). Правая полоса пустая — список зал пробегает сам. **Задача вёрстки (текст не трогал):** единственный слайд ленты вовсе без иллюстрации.
-
-**Хаусдорфова конструкция** · $\mathbf{Met}\to\mathbf{Met}$, на нерастягивающих
-
-**Топология Александрова** · предпорядки $\to\mathbf{Top}$
-
-**Пучок функций** · открытые с включением$^{\mathrm{op}}\to\mathbf{Set}$, $U\mapsto$ функции на $U$
-
-**Клик-комплекс** · $\mathbf{Grph}\to\mathbf{Top}$
-
-**Представление Бурау** · косы $\to\mathbf{Mat}$ над $\mathbb Z[t^{\pm1}]$
-
-**Детерминизация** · $\mathbf{Rel}\to\mathbf{Set}$, $A\mapsto\mathcal P(A)$
-
-{@2} **Второе квантование** · $\mathbf{Hilb}\to\mathbf{Hilb}$, на сжатиях
-
-{@2} **Фундаментальный группоид** $\Pi_1$ · $\mathbf{Top}\to$ группоиды
-
-{@2} $\mathbf{Mat}\simeq\mathbf{Vect}^{\mathrm{fd}}$ · $\mathbf{FinBool}\simeq\mathbf{FinSet}^{\mathrm{op}}$
 
 > поле:mn **Реплика (не слайд).** Лектор произносит мостик в следующую вкладку: мы назвали десяток функторов, а вот эта конструкция функтором не оказывается, и эта тоже. А как такое вообще доказывают?
