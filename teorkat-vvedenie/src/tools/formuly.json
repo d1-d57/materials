@@ -40,6 +40,10 @@
 "display": false
 },
 {
+"tex": "A",
+"display": false
+},
+{
 "tex": "A,B",
 "display": false
 },
@@ -57,6 +61,10 @@
 },
 {
 "tex": "BG",
+"display": false
+},
+{
+"tex": "B\\text{,}",
 "display": false
 },
 {
@@ -356,7 +364,15 @@
 "display": false
 },
 {
+"tex": "X\\mapsto\\mathrm{Inj}_k(X)",
+"display": false
+},
+{
 "tex": "X\\mapsto|X|\\text{,}",
+"display": false
+},
+{
+"tex": "X\\to\\{1,\\dots,k\\}",
 "display": false
 },
 {
@@ -476,6 +492,14 @@
 "display": false
 },
 {
+"tex": "\\lvert A\\rvert=k\\text{,}",
+"display": false
+},
+{
+"tex": "\\lvert B\\rvert=k+1\\text{:}",
+"display": false
+},
+{
 "tex": "\\lvert F(U)\\rvert",
 "display": false
 },
@@ -493,6 +517,10 @@
 },
 {
 "tex": "\\lvert U\\rvert=n\\text{.}",
+"display": false
+},
+{
+"tex": "\\lvert\\mathrm{Inj}_k(A)\\rvert=k!\\text{,}",
 "display": false
 },
 {
@@ -536,6 +564,10 @@
 "display": false
 },
 {
+"tex": "\\mathbf{FinSet}\\to\\mathbf{FinSet}\\text{:}",
+"display": false
+},
+{
 "tex": "\\mathbf{Grph}",
 "display": false
 },
@@ -561,10 +593,6 @@
 },
 {
 "tex": "\\mathbf{Man}",
-"display": false
-},
-{
-"tex": "\\mathbf{Mat}",
 "display": false
 },
 {
@@ -700,6 +728,14 @@
 "display": false
 },
 {
+"tex": "\\mathrm{Inj}_k(A)\\to\\varnothing\\to\\mathrm{Inj}_k(A)",
+"display": false
+},
+{
+"tex": "\\mathrm{Inj}_k(B)=\\varnothing",
+"display": false
+},
+{
 "tex": "\\mathrm{Ob}\\,\\mathcal C",
 "display": false
 },
@@ -729,6 +765,10 @@
 },
 {
 "tex": "\\sigma\\colon U\\to V",
+"display": false
+},
+{
+"tex": "\\sigma\\colon X\\to Y",
 "display": false
 },
 {
@@ -812,6 +852,10 @@
 "display": false
 },
 {
+"tex": "f\\mapsto f\\circ\\sigma^{-1}",
+"display": false
+},
+{
 "tex": "f\\mapsto f\\mapsto\\theta_{[m]}\\circ f\\circ\\theta_{[n]}^{-1}=f",
 "display": false
 },
@@ -833,10 +877,6 @@
 },
 {
 "tex": "k\\text{-}",
-"display": false
-},
-{
-"tex": "m\\times n",
 "display": false
 },
 {
@@ -869,6 +909,14 @@
 },
 {
 "tex": "n\\to m",
+"display": false
+},
+{
+"tex": "r",
+"display": false
+},
+{
+"tex": "s",
 "display": false
 },
 {

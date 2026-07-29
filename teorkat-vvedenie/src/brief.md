@@ -33,8 +33,8 @@ slide_order:
   - s16
   - s17
   - s18
-  - sl-divider3
   - s19
+  - sl-divider3
   - s20
   - s21
   - s22
