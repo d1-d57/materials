@@ -53,11 +53,11 @@ registr: читаемый
 
 > поле:mn **Раскладка.** Один экран: четыре конструкции. Справа подкатегория внутри категории и путь как один морфизм.
 
-**Определение.** **Противоположная** $\mathcal C^{\mathrm{op}}$: те же объекты, $\mathcal C^{\mathrm{op}}(A,B)=\mathcal C(B,A)$, композиция $g\circ_{\mathrm{op}}f=f\circ g$
+**Противоположная** $\mathcal C^{\mathrm{op}}$: те же объекты, $\mathcal C^{\mathrm{op}}(A,B)=\mathcal C(B,A)$, композиция $g\circ_{\mathrm{op}}f=f\circ g$
 
-**Определение.** **Подкатегория** $\mathcal D\subseteq\mathcal C$: класс объектов и $\mathcal D(A,B)\subseteq\mathcal C(A,B)$, замкнутое по композиции и с тождествами. **Полна**, если $\mathcal D(A,B)=\mathcal C(A,B)$ всюду
+**Подкатегория** $\mathcal D\subseteq\mathcal C$: класс объектов и $\mathcal D(A,B)\subseteq\mathcal C(A,B)$, замкнутое по композиции и с тождествами. **Полна**, если $\mathcal D(A,B)=\mathcal C(A,B)$ всюду
 
-**Определение.** **Произведение** $\mathcal C\times\mathcal D$: покомпонентно, $(\mathcal C\times\mathcal D)\bigl((C,D),(C',D')\bigr)=\mathcal C(C,C')\times\mathcal D(D,D')$
+**Произведение** $\mathcal C\times\mathcal D$: покомпонентно, $(\mathcal C\times\mathcal D)\bigl((C,D),(C',D')\bigr)=\mathcal C(C,C')\times\mathcal D(D,D')$
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Внутри категории выделена залитая область: четыре её объекта со стрелками между ними образуют подкатегорию, пятый объект остался снаружи, и стрелка к нему в подкатегорию не входит"><rect class="s-fillsh" x="26" y="32" width="132" height="128" rx="10"></rect><circle class="s-node-a" cx="58" cy="64" r="4.6"></circle><circle class="s-node-a" cx="126" cy="64" r="4.6"></circle><circle class="s-node-a" cx="58" cy="128" r="4.6"></circle><circle class="s-node-a" cx="126" cy="128" r="4.6"></circle><circle class="s-node" cx="212" cy="96" r="4.6"></circle><line class="s-line" x1="66" y1="64" x2="118" y2="64"></line><path class="s-ar-m" d="M109,60 l9,4 -9,4 z"></path><line class="s-line" x1="58" y1="72" x2="58" y2="120"></line><path class="s-ar-m" d="M54,111 l4,9 4,-9 z"></path><line class="s-line" x1="126" y1="72" x2="126" y2="120"></line><path class="s-ar-m" d="M122,111 l4,9 4,-9 z"></path><line class="s-thin" x1="134" y1="70" x2="204" y2="90"></line><path class="s-ar-m" d="M196,86 l9,4 -10,4 z"></path><text class="s-txt" x="40" y="176" text-anchor="middle" font-size="17">D</text><text class="s-txt" x="228" y="120" text-anchor="middle" font-size="17">C</text></svg><figcaption>Залитая область — подкатегория: часть объектов и часть стрелок между ними, замкнутая относительно композиции. Стрелка к внешнему объекту в неё не входит; подкатегория полна, если между своими объектами она забрала все стрелки без исключения.</figcaption></figure>
 

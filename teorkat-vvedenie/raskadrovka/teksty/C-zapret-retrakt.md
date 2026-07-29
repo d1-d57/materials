@@ -9,6 +9,28 @@ registr: читаемый
 
 > поле:mn **Что это.** Тексты слайдов лекции 1 в том объёме, в котором они лягут на слайд, собранные лентой. Каждый раздел ниже = ОДИН слайд. Сцены несёт сама лента: `{@N}` — приходит с $N$-й сцены, `{@N-M}` — приходит на $N$-й и уходит после $M$-й. Бюджет — на СЦЕНУ, не на слайд.
 
+## Откуда взялся этот язык
+
+> поле:mn **Раскладка.** Один экран, одна сцена: список слева, два портрета столбиком и хронология таблицей справа.
+
+{@1} **Этот язык — побочный продукт другого вопроса: что значит «конструкция задана единообразно»**
+
+{@1} Эйленберг и Маклейн, топологи
+
+{@1} Порядок понятий: естественность, затем функтор, затем категория
+
+{@1} **Отсюда два сюжета этой части: $V$ и $V^{\ast}$, затем Брауэр**
+
+🖼 Портрет Сэмюэла Эйленберга {1} · 🖼 Портрет Сондерса Маклейна {1}
+
+<table>
+<thead><tr><th>год</th><th>что появилось</th></tr></thead>
+<tbody>
+<tr><td>1942</td><td>«Natural isomorphisms in group theory»: функтор и естественный изоморфизм; слова «категория» нет</td></tr>
+<tr><td>1945</td><td>категория и естественное преобразование</td></tr>
+</tbody>
+</table>
+
 ## Как доказывают, что функтора нет
 
 > поле:mn **Раскладка.** Текстовая область — на всю ширину, коммутативная диаграмма ложится горизонтальной полосой снизу (правка 20.2).
@@ -17,15 +39,9 @@ registr: читаемый
 
 **Утверждение.** Сопоставление $G\mapsto Z(G)$ не продолжается до функтора $\mathbf{Grp}\to\mathbf{Grp}$
 
-{@1-1} **Центр** $Z(G)$ — элементы, коммутирующие со всеми: $zg=gz$ при любом $g\in G$
+{@1-2} $Z(G)=\{z\in G:\ zg=gz\ \ \forall g\in G\}$
 
-$\mathbb Z_2=\{0,1\}$ · $s\colon\mathbb Z_2\to S_3$: $0\mapsto e$, $1\mapsto(1\,2)$ · $\mathrm{sgn}\colon S_3\to\mathbb Z_2$: нечётные $\mapsto1$, чётные $\mapsto0$
-
-$\mathrm{sgn}\circ s\colon 0\mapsto e\mapsto 0$, $1\mapsto(1\,2)\mapsto 1$ — то есть $\mathrm{sgn}\circ s=\mathrm{id}_{\mathbb Z_2}$
-
-{@2} $Z(\mathbb Z_2)=\mathbb Z_2$ · $Z(S_3)=\{e\}$: центральный $z$ сохраняет $\{a,b\}$ у каждой транспозиции $(a\,b)$, откуда $z(1)=1$ и далее $z=e$
-
-{@2} Функтор дал бы $\mathrm{id}_{\mathbb Z_2}\colon\mathbb Z_2\to\{e\}\to\mathbb Z_2$, но $1\mapsto e\mapsto 0$ — постоянное, не тождество
+{@2} Рассмотрим группу $\mathbb Z_2$ и отображения $s\colon\mathbb Z_2\to S_3$ и $\mathrm{sgn}$, где $s(0)=e$, $s(1)=(1\,2)$
 
 <figure class="mn">
 <svg viewBox="0 0 300 200" width="300" role="img" aria-label="Наверху группа ℤ₂, стрелка в S3 и стрелка знака обратно в ℤ₂, композиция тождественна. Внизу их центры: ℤ₂, единичная группа, ℤ₂, и обратного пути внизу нет">
@@ -47,71 +63,17 @@ $\mathrm{sgn}\circ s\colon 0\mapsto e\mapsto 0$, $1\mapsto(1\,2)\mapsto 1$ — �
 <figcaption>Наверху пара стрелок с тождественной композицией: транспозиция вкладывается в $S_3$, знак возвращает её обратно. Внизу тот же чертёж после взятия центров, и здесь средний этаж стал единичной группой: пройти $\mathbb Z_2\to\{e\}\to\mathbb Z_2$ тождественно нельзя.</figcaption>
 </figure>
 
-<figure class="mn">
-<svg viewBox="0 0 200 196" width="200" role="img" aria-label="Слева столбик из пяти точек, справа четыре клетки палитры. Первые три точки уходят каждая в свою клетку, а последние две попадают в одну и ту же нижнюю клетку">
-<circle class="s-node" cx="52" cy="34" r="4.4"/><circle class="s-node" cx="52" cy="60" r="4.4"/><circle class="s-node" cx="52" cy="86" r="4.4"/><circle class="s-node" cx="52" cy="112" r="4.4"/><circle class="s-node-r" cx="52" cy="138" r="4.4"/>
-<rect class="s-line" x="132" y="25" width="18" height="18"/>
-<rect class="s-line" x="132" y="51" width="18" height="18"/>
-<rect class="s-line" x="132" y="77" width="18" height="18"/>
-<rect class="s-fillsh" x="132" y="103" width="18" height="18"/><rect class="s-line" x="132" y="103" width="18" height="18"/>
-<line class="s-thin" x1="60" y1="34" x2="122" y2="34"/><path class="s-ar-m" d="M120,30 l9,4 -9,4 z"/>
-<line class="s-thin" x1="60" y1="60" x2="122" y2="60"/><path class="s-ar-m" d="M120,56 l9,4 -9,4 z"/>
-<line class="s-thin" x1="60" y1="86" x2="122" y2="86"/><path class="s-ar-m" d="M120,82 l9,4 -9,4 z"/>
-<line class="s-accent" x1="60" y1="112" x2="120" y2="112"/><path class="s-ar-a" d="M119,108 l9,4 -9,4 z"/>
-<line class="s-accent" x1="60" y1="136" x2="118" y2="118"/><path class="s-ar-a" d="M117,114 l10,3 -7,7 z"/>
-<text class="s-txt" x="52" y="168" text-anchor="middle">k+1</text>
-<text class="s-txt" x="141" y="168" text-anchor="middle">k</text>
-</svg>
-<figcaption>Носитель на один элемент больше палитры, и одна клетка обязана принять две точки: инъекции из $B$ в $k$ цветов не существует ни одной, тогда как из $A$ их ровно $k!$.</figcaption>
-</figure>
-
 ## Брауэр в работе
 
-> поле:mn **Раскладка.** Мало текста, крупная горизонтальная иллюстрация снизу: окружность в диске и луч внутри диска с портретом.
+> поле:mn **Раскладка.** Мало текста, вертикальная полоса справа: окружность в диске и луч внутри диска с портретом (правка владельца 29.07 — нижнюю полоску снять, полосу сделать вертикальной).
 
-**Утверждение.** В $\mathbf{Top}$ нет $r\colon D^2\to S^1$ с $r\circ i=\mathrm{id}_{S^1}$
+**Теорема Брауэра.** В топологических пространствах нет ретракции из диска в $S^1$
 
-$D^2=\{x\in\mathbb R^2:\lVert x\rVert\le1\}$ · $S^1=\{\lVert x\rVert=1\}$ · $i\colon S^1\to D^2$, $i(x)=x$
+{@1-2} Предположим, что ретракция есть. Рассмотрим функтор $\pi_1$: $\pi_1(S^1)=\mathbb Z$, $\pi_1(D^2)=e$
 
-{@1-1} Известным берём: $\pi_1$ — функтор пространств с отмеченной точкой, $\pi_1(S^1)\cong\mathbb Z$, $\pi_1(D^2)=\{e\}$
-
-{@1-1} Пара $(r,i)$ дала бы $\mathbb Z\to\{e\}\to\mathbb Z$: гомоморфизм из $\{e\}$ шлёт каждый элемент в нейтральный, композиция постоянна — тождественной не бывает
-
-{@2} **Теорема (Брауэр).** Всякое непрерывное $f\colon D^2\to D^2$ имеет неподвижную точку
-
-{@2} Пусть $f(x)\ne x$ всюду · $u=\dfrac{x-f(x)}{\lVert x-f(x)\rVert}$, $a=\langle x,u\rangle$, $t=-a+\sqrt{a^2+1-\lVert x\rVert^2}$ · $r(x)=x+tu\in S^1$, непрерывно
-
-{@2} На границе $\lVert x\rVert=1$: $\langle x,x-f(x)\rangle=1-\langle x,f(x)\rangle\ge0$ при $\lVert f(x)\rVert\le1$, значит $a\ge0$, $t=0$, $r(x)=x$
-
-{@2} Но такое $r$ запрещено утверждением выше ⇒ $f(x)\ne x$ ложно
+{@2} Тогда была бы коммутативная диаграмма $\mathbb Z\to\{e\}\to\mathbb Z$, которой быть не может
 
 🖼 Портрет Лёйтзена Брауэра {1}
-
-<figure>
-<svg viewBox="0 0 560 220" width="560" role="img" aria-label="Внизу два множества по четыре точки и отображение между ними, наверху их образы по три точки и отображение между образами, вертикальные стрелки поднимают каждое множество в его образ">
-<rect class="s-line" x="76" y="46" width="80" height="36" rx="8"/>
-<circle class="s-node" cx="96" cy="64" r="4.4"/><circle class="s-node" cx="116" cy="64" r="4.4"/><circle class="s-node" cx="136" cy="64" r="4.4"/>
-<rect class="s-line" x="404" y="46" width="80" height="36" rx="8"/>
-<circle class="s-node" cx="424" cy="64" r="4.4"/><circle class="s-node" cx="444" cy="64" r="4.4"/><circle class="s-node" cx="464" cy="64" r="4.4"/>
-<rect class="s-line" x="64" y="150" width="104" height="36" rx="8"/>
-<circle class="s-node" cx="84" cy="168" r="4.4"/><circle class="s-node" cx="108" cy="168" r="4.4"/><circle class="s-node" cx="132" cy="168" r="4.4"/><circle class="s-node" cx="156" cy="168" r="4.4"/>
-<rect class="s-line" x="392" y="150" width="104" height="36" rx="8"/>
-<circle class="s-node" cx="412" cy="168" r="4.4"/><circle class="s-node" cx="436" cy="168" r="4.4"/><circle class="s-node" cx="460" cy="168" r="4.4"/><circle class="s-node" cx="484" cy="168" r="4.4"/>
-<line class="s-thin" x1="164" y1="64" x2="396" y2="64"/><path class="s-ar-m" d="M394,60 l9,4 -9,4 z"/>
-<line class="s-thin" x1="176" y1="168" x2="384" y2="168"/><path class="s-ar-m" d="M382,164 l9,4 -9,4 z"/>
-<line class="s-dash" x1="116" y1="146" x2="116" y2="90"/><path class="s-ar-a" d="M112,99 l4,-9 4,9 z"/>
-<line class="s-dash" x1="444" y1="146" x2="444" y2="90"/><path class="s-ar-a" d="M440,99 l4,-9 4,9 z"/>
-<text class="s-txt" x="116" y="36" text-anchor="middle" font-size="17">FX</text>
-<text class="s-txt" x="444" y="36" text-anchor="middle" font-size="17">FY</text>
-<text class="s-txt" x="116" y="198" text-anchor="middle" font-size="17">X</text>
-<text class="s-txt" x="444" y="198" text-anchor="middle" font-size="17">Y</text>
-<text class="s-txt-m" x="280" y="56" text-anchor="middle" font-size="15">Ff</text>
-<text class="s-txt-m" x="280" y="160" text-anchor="middle" font-size="15">f</text>
-<text class="s-txt-m" x="124" y="120" font-size="15">F</text>
-<text class="s-txt-m" x="452" y="120" font-size="15">F</text>
-</svg>
-<figcaption>Что требуется от конструкции: каждому множеству отвечает множество строго меньшего размера, каждому отображению $f$ отвечает отображение образов $Ff$, и композиции переходят в композиции.</figcaption>
-</figure>
 
 <figure class="mn">
 <svg viewBox="0 0 220 250" width="220" role="img" aria-label="Наверху окружность и диск, стрелка вложения вперёд и пунктирная стрелка обратно. Внизу их фундаментальные группы: целые числа и единичная группа, и обратный путь через единичную группу помечен вопросом">

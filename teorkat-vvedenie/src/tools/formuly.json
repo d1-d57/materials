@@ -24,31 +24,7 @@
 "display": false
 },
 {
-"tex": "(a\\,b)\\text{,}",
-"display": false
-},
-{
-"tex": "(r,i)",
-"display": false
-},
-{
 "tex": "0,1,2,\\dots",
-"display": false
-},
-{
-"tex": "0\\mapsto e\\text{,}",
-"display": false
-},
-{
-"tex": "1\\mapsto e\\mapsto 0",
-"display": false
-},
-{
-"tex": "1\\mapsto(1\\,2)",
-"display": false
-},
-{
-"tex": "1\\mapsto(1\\,2)\\mapsto 1",
 "display": false
 },
 {
@@ -61,10 +37,6 @@
 },
 {
 "tex": "3\\mapsto4",
-"display": false
-},
-{
-"tex": "A",
 "display": false
 },
 {
@@ -93,10 +65,6 @@
 },
 {
 "tex": "D[U]",
-"display": false
-},
-{
-"tex": "D^2=\\{x\\in\\mathbb R^2:\\lVert x\\rVert\\le1\\}",
 "display": false
 },
 {
@@ -168,10 +136,6 @@
 "display": false
 },
 {
-"tex": "F,G\\colon\\mathcal G\\to\\mathcal D",
-"display": false
-},
-{
 "tex": "F1_A=1_{FA}",
 "display": false
 },
@@ -185,14 +149,6 @@
 },
 {
 "tex": "F[\\sigma]\\colon F(U)\\to F(V)",
-"display": false
-},
-{
-"tex": "F[\\tau\\circ\\sigma]=F[\\tau]\\circ F[\\sigma]\\text{:}",
-"display": false
-},
-{
-"tex": "F\\Rightarrow G",
 "display": false
 },
 {
@@ -241,10 +197,6 @@
 },
 {
 "tex": "G=\\mathrm{Gal}(L/K)",
-"display": false
-},
-{
-"tex": "GL(V)",
 "display": false
 },
 {
@@ -344,7 +296,7 @@
 "display": false
 },
 {
-"tex": "S^1=\\{\\lVert x\\rVert=1\\}",
+"tex": "S^1",
 "display": false
 },
 {
@@ -372,11 +324,11 @@
 "display": false
 },
 {
-"tex": "V",
+"tex": "U\\text{;}",
 "display": false
 },
 {
-"tex": "V\\cong V^{\\ast}\\text{:}",
+"tex": "V",
 "display": false
 },
 {
@@ -412,11 +364,7 @@
 "display": false
 },
 {
-"tex": "Z(S_3)=\\{e\\}\\text{:}",
-"display": false
-},
-{
-"tex": "Z(\\mathbb Z_2)=\\mathbb Z_2",
+"tex": "Z(G)=\\{z\\in G:\\ zg=gz\\ \\ \\forall g\\in G\\}",
 "display": false
 },
 {
@@ -436,15 +384,7 @@
 "display": false
 },
 {
-"tex": "\\alpha\\colon F\\Rightarrow G",
-"display": false
-},
-{
 "tex": "\\alpha\\colon F\\Rightarrow G\\text{:}",
-"display": false
-},
-{
-"tex": "\\alpha_A",
 "display": false
 },
 {
@@ -476,11 +416,11 @@
 "display": false
 },
 {
-"tex": "\\displaystyle G\\circ F\\cong\\mathrm{Id},\\qquad F\\circ G\\cong\\mathrm{Id}",
+"tex": "\\displaystyle F[\\tau\\circ\\sigma]=F[\\tau]\\circ F[\\sigma]",
 "display": false
 },
 {
-"tex": "\\displaystyle \\alpha_A\\circ F\\sigma=G\\sigma\\circ\\alpha_A",
+"tex": "\\displaystyle G\\circ F\\cong\\mathrm{Id},\\qquad F\\circ G\\cong\\mathrm{Id}",
 "display": false
 },
 {
@@ -504,14 +444,6 @@
 "display": false
 },
 {
-"tex": "\\lVert f(x)\\rVert\\le1\\text{,}",
-"display": false
-},
-{
-"tex": "\\lVert x\\rVert=1\\text{:}",
-"display": false
-},
-{
 "tex": "\\lambda",
 "display": false
 },
@@ -524,10 +456,6 @@
 "display": false
 },
 {
-"tex": "\\lambda\\cdot\\mathrm{id}",
-"display": false
-},
-{
 "tex": "\\lambda\\text{,}",
 "display": false
 },
@@ -537,14 +465,6 @@
 },
 {
 "tex": "\\lambda^{-1}",
-"display": false
-},
-{
-"tex": "\\langle v,-\\rangle",
-"display": false
-},
-{
-"tex": "\\langle x,x-f(x)\\rangle=1-\\langle x,f(x)\\rangle\\ge0",
 "display": false
 },
 {
@@ -572,14 +492,6 @@
 "display": false
 },
 {
-"tex": "\\mapsto0",
-"display": false
-},
-{
-"tex": "\\mapsto1\\text{,}",
-"display": false
-},
-{
 "tex": "\\mathbb N",
 "display": false
 },
@@ -588,11 +500,11 @@
 "display": false
 },
 {
-"tex": "\\mathbb Z\\to\\{e\\}\\to\\mathbb Z\\text{:}",
+"tex": "\\mathbb Z\\to\\{e\\}\\to\\mathbb Z\\text{,}",
 "display": false
 },
 {
-"tex": "\\mathbb Z_2=\\{0,1\\}",
+"tex": "\\mathbb Z_2",
 "display": false
 },
 {
@@ -609,10 +521,6 @@
 },
 {
 "tex": "\\mathbf{Cob}_2\\to\\mathbf{Vect}\\text{,}",
-"display": false
-},
-{
-"tex": "\\mathbf{FinBool}\\not\\cong\\mathbf{FinSet}^{\\mathrm{op}}",
 "display": false
 },
 {
@@ -780,10 +688,6 @@
 "display": false
 },
 {
-"tex": "\\mathrm{Aut}(A)\\text{:}",
-"display": false
-},
-{
 "tex": "\\mathrm{Id}\\Rightarrow(-)^{\\ast}",
 "display": false
 },
@@ -800,19 +704,7 @@
 "display": false
 },
 {
-"tex": "\\mathrm{id}_{\\mathbb Z_2}\\colon\\mathbb Z_2\\to\\{e\\}\\to\\mathbb Z_2\\text{,}",
-"display": false
-},
-{
-"tex": "\\mathrm{sgn}\\circ s=\\mathrm{id}_{\\mathbb Z_2}",
-"display": false
-},
-{
-"tex": "\\mathrm{sgn}\\circ s\\colon 0\\mapsto e\\mapsto 0\\text{,}",
-"display": false
-},
-{
-"tex": "\\mathrm{sgn}\\colon S_3\\to\\mathbb Z_2\\text{:}",
+"tex": "\\mathrm{sgn}\\text{,}",
 "display": false
 },
 {
@@ -820,19 +712,19 @@
 "display": false
 },
 {
-"tex": "\\pi_1(D^2)=\\{e\\}",
+"tex": "\\pi_1(D^2)=e",
 "display": false
 },
 {
-"tex": "\\pi_1(S^1)\\cong\\mathbb Z\\text{,}",
+"tex": "\\pi_1(S^1)=\\mathbb Z\\text{,}",
+"display": false
+},
+{
+"tex": "\\pi_1\\text{:}",
 "display": false
 },
 {
 "tex": "\\sigma\\colon U\\to V",
-"display": false
-},
-{
-"tex": "\\sigma\\in\\mathrm{Aut}(A)\\text{,}",
 "display": false
 },
 {
@@ -888,22 +780,6 @@
 "display": false
 },
 {
-"tex": "\\{a,b\\}",
-"display": false
-},
-{
-"tex": "\\{e\\}",
-"display": false
-},
-{
-"tex": "a=\\langle x,u\\rangle\\text{,}",
-"display": false
-},
-{
-"tex": "a\\ge0\\text{,}",
-"display": false
-},
-{
 "tex": "b\\colon 1\\mapsto2\\text{,}",
 "display": false
 },
@@ -920,19 +796,11 @@
 "display": false
 },
 {
-"tex": "f(x)\\ne x",
-"display": false
-},
-{
 "tex": "f=\\lambda\\,\\mathrm{id}_V",
 "display": false
 },
 {
 "tex": "f\\circ g=1_B",
-"display": false
-},
-{
-"tex": "f\\colon D^2\\to D^2",
 "display": false
 },
 {
@@ -953,18 +821,6 @@
 },
 {
 "tex": "g\\circ_{\\mathrm{op}}f=f\\circ g",
-"display": false
-},
-{
-"tex": "g\\in G",
-"display": false
-},
-{
-"tex": "i(x)=x",
-"display": false
-},
-{
-"tex": "i\\colon S^1\\to D^2\\text{,}",
 "display": false
 },
 {
@@ -1016,23 +872,11 @@
 "display": false
 },
 {
-"tex": "r",
+"tex": "s(0)=e\\text{,}",
 "display": false
 },
 {
-"tex": "r(x)=x",
-"display": false
-},
-{
-"tex": "r(x)=x+tu\\in S^1\\text{,}",
-"display": false
-},
-{
-"tex": "r\\circ i=\\mathrm{id}_{S^1}",
-"display": false
-},
-{
-"tex": "r\\colon D^2\\to S^1",
+"tex": "s(1)=(1\\,2)",
 "display": false
 },
 {
@@ -1040,27 +884,11 @@
 "display": false
 },
 {
-"tex": "s\\colon\\mathbb Z_2\\to S_3\\text{:}",
-"display": false
-},
-{
-"tex": "t=-a+\\sqrt{a^2+1-\\lVert x\\rVert^2}",
-"display": false
-},
-{
-"tex": "t=0\\text{,}",
-"display": false
-},
-{
-"tex": "u=\\dfrac{x-f(x)}{\\lVert x-f(x)\\rVert}\\text{,}",
+"tex": "s\\colon\\mathbb Z_2\\to S_3",
 "display": false
 },
 {
 "tex": "u\\colon X\\to Y",
-"display": false
-},
-{
-"tex": "v",
 "display": false
 },
 {
@@ -1097,22 +925,6 @@
 },
 {
 "tex": "xg=gx",
-"display": false
-},
-{
-"tex": "z",
-"display": false
-},
-{
-"tex": "z(1)=1",
-"display": false
-},
-{
-"tex": "z=e",
-"display": false
-},
-{
-"tex": "zg=gz",
 "display": false
 }
 ]

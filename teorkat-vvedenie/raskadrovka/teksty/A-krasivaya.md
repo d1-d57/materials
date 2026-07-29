@@ -125,6 +125,10 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 
 {@2} Такая конструкция $F$ — **вид**, такая $\varphi$ — **изоморфизм видов**
 
+{@2} Переименовывание переименовывает и элементы структуры — **композиция уважается**
+
+{@2} $$F[\tau\circ\sigma]=F[\tau]\circ F[\sigma]$$
+
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат на четырёх элементах: переименование проходит насквозь через взятие дополнения"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">{a, b}</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">{a′, b′}</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">{c, d}</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">{c′, d′}</text><line class="s-thin" x1="92" y1="29" x2="152" y2="29"></line><path class="s-ar-m" d="M143,25 l9,4 -9,4 z"></path><line class="s-thin" x1="92" y1="173" x2="152" y2="173"></line><path class="s-ar-m" d="M143,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="122" y="18" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="122" y="196" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">φ</text><text class="s-txt-m" x="206" y="105" font-size="15">φ</text></svg><figcaption>Требование целиком: $\varphi$ — дополнение, $\sigma$ — переименование $a,b,c,d$ в $a',b',c',d'$. Оба пути из левого верхнего угла в правый нижний дают один результат.</figcaption></figure>
 
 ## Галерея видов
@@ -141,10 +145,8 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 - подмножества $E[U]$ и $k$-подмножества $E_k[U]$;
 - разбиения на блоки;
 - деревья и корневые деревья;
-- графы;
+- графы с вершинами $U$;
 - инъекции $U\hookrightarrow\{1,\dots,k\}$ — раскраски без повторов
-
-{@2} Всюду $F[\tau\circ\sigma]=F[\tau]\circ F[\sigma]$: **композиция уважается**. Это и есть **комбинаторный вид**, а биекция $\varphi$ из квадрата — **изоморфизм комбинаторных видов**
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Вид как правило: этаж носителей внизу, этаж структур наверху, переименование поднимается наверх"><text class="s-txt" x="52" y="40" text-anchor="middle" font-size="17">F[U]</text><text class="s-txt" x="198" y="40" text-anchor="middle" font-size="17">F[V]</text><text class="s-txt" x="52" y="184" text-anchor="middle" font-size="17">U</text><text class="s-txt" x="198" y="184" text-anchor="middle" font-size="17">V</text><line class="s-thin" x1="92" y1="35" x2="152" y2="35"></line><path class="s-ar-m" d="M143,31 l9,4 -9,4 z"></path><line class="s-thin" x1="72" y1="179" x2="172" y2="179"></line><path class="s-ar-m" d="M163,175 l9,4 -9,4 z"></path><line class="s-dash" x1="52" y1="158" x2="52" y2="60"></line><path class="s-ar-a" d="M48,69 l4,-9 4,9 z"></path><line class="s-dash" x1="198" y1="158" x2="198" y2="60"></line><path class="s-ar-a" d="M194,69 l4,-9 4,9 z"></path><text class="s-txt-m" x="122" y="24" text-anchor="middle" font-size="15">F[σ]</text><text class="s-txt-m" x="122" y="198" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="44" y="112" text-anchor="end" font-size="15">F</text><text class="s-txt-m" x="206" y="112" font-size="15">F</text></svg><figcaption>Внизу носители и переименование между ними, наверху структуры; каждое переименование поднимается наверх. Согласованность с композицией означает, что подъём двух переименований подряд даёт то же, что подъём их композиции.</figcaption></figure>
 

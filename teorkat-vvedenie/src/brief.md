@@ -32,17 +32,15 @@ slide_order:
   - s16
   - s17
   - s18
+  - sl-divider3
   - s19
   - s20
-  - sl-divider3
   - s21
   - s22
   - s23
   - s24
   - s25
   - s26
-  - s27
-  - s28
   - sl-thanks
 ---
 

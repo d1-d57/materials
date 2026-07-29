@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>СКЕЛЕТ greenfield-`src/` + `base.css` — контракт и обоснование</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
+
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
+.layout.solo{grid-template-columns:minmax(0,1240px)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-1:checked ~ #panel-1{display:block}
+#tab-1:checked ~ .tabbar label[for="tab-1"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:790px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
+  margin-left:.12em;text-decoration:none}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
+.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:#faf8f3}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+
+/* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
+table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
+table th,table td{border:1px solid var(--rule);padding:.45em .8em;text-align:left;vertical-align:top}
+table thead th{font-family:var(--sans);background:var(--shade);font-weight:600;color:var(--text)}
+table tbody tr:nth-child(even){background:var(--panel)}
+table tbody td:first-child{color:var(--muted)}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:#e7e0d2;color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
+  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{color:var(--accent)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:#c3bbaa;font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="doc-head">
+  <h1>СКЕЛЕТ greenfield-`src/` + `base.css` — контракт и обоснование</h1>
+</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-1">
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">СКЕЛЕТ greenfield-`src/` + `base.css` — контракт и обоснование</label>
+<label class="tab-label" for="tab-1">Дек лекции 1 курса «Зачем нужны категории?»</label>
+</nav>
+<section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">Состав</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">base.css — что вынесено и откуда граница</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">⚠ Важное: единого byte-shared base.css на ВСЕ деки НЕ существует</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">Гейт greenfield (1-я сборка — provenance_sha256 нет)</a></summary></details></li></ol></details><main><article class="stream"><h1>СКЕЛЕТ greenfield-<code>src/</code> + <code>base.css</code> — контракт и обоснование</h1>
+<blockquote>Стартовая папка нового дека Фазы II (шаг 0 «скопируй скелет» / выход раскадровки арки 5). Собран заходом <code>zhurnal/2026-07-10_sborka-konvejera/kod_infra.md</code> (стык C). Байт-безопасно. Канон-base переключён dandelin→buffon заходом <code>zhurnal/2026-07-10_sborka-konvejera/kod_base-buffon.md</code> (#13, Р16).</blockquote>
+<details class="sec sec2" open><summary><h2 id="s0-h-1">Состав</h2></summary><div class="sec-body">
+<p>``<code> _generator/skeleton/   brief.md манифест-шаблон: пустой slide_order, accent_tag=span, provenance=greenfield   shablon.html      каркас канона 4 блока + {{BASE_CSS}}; пер-слайдовый грид ПУСТ; SLIDES/ASSETS пусты   base.css          ОБЩИЙ канон-CSS (структура #stage/.slide/.zone/.fit, сцены, #hint, роли текста                     t-body/t-display/t-math, .panel/.lab-row/.sim-controls)   tokens.css        канон-палитра + типо-токены (дословно из buffon, Р16)   fonts/faces.css   5 @font-face (Forum · Glacial Indifference ×2 · Noto Sans ×2), дословно   engine.js движок, ДОСЛОВНО   content/          пусто (арка 6 → content/<id>.md)          [.gitkeep — генератор глобит <em>.md, безопасно]   slides/           отсутствует на диске как пустая → арка 7 создаёт slides/<id>.html   illustrations/    отсутствует → арка 9 создаёт illustrations/<name>.svg|.html </code>`<code> </code>build_deck.py <skeleton><code> на пустом деке проходит линтер (0 слайдов — валидно) и собирает самодостаточный </code>dist/index.html<code>. </code>slides/<code> и </code>illustrations/<code> НЕ несут keep-файл: генератор глобит в них </code></em><code> и любой файл был бы принят за слайд/иллюстрацию (линтер бы упал). Их создаёт арка при первом слайде; отсутствие пустой папки генератор терпит (</code>if folder.is_dir()`).</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-2"><code>base.css</code> — что вынесено и откуда граница</h2></summary><div class="sec-body">
+<p>Вынесен ОБЩИЙ канон-CSS из <code><style></code> эталона: сброс <code><em>{box-sizing}</code>, <code>#stage</code>, <code>.slide/.zone/.fit</code>, роли текста (<code>.t-body/.t-display/.t-math</code>, <code>.fill</code>), каскад сцен <code>[data-scene-from]</code>, <code>deck-in</code>, <code>#hint</code>, <code>.panel/.lab-row/.sim-controls</code>. Граница = комментарий-маркер <code>/</em> ---------- сетки слайдов ---------- */</code> в <code><style></code> эталона (в обоих текущих эталонах он идёт непосредственно перед ПЕРВЫМ пер-слайдовым правилом — не обязательно <code>.grid{…}</code>: в buffon перед ним ещё <code>#sl-reading a{…}</code>/<code>#sl-thanks{…}</code>/<code>#sl-title{background:…}</code>, все они уже bespoke, не base): всё до маркера — общий base (в <code>base.css</code>), всё от него — bespoke грид (остаётся в <code><style></code> <code>shablon.html</code>, слой арки 7). Механизм: генератор грузит <code>base.css</code> опционально (как <code>overlay.css</code>) в плейсхолдер <code>{{BASE_CSS}}</code> — добавлена ОДНА строка в <code>build_deck.py.load_source</code>. Лента прогресса (<code>#lect-zone</code>/<code>#lect-progress</code>) в buffon стилизована ИНЛАЙНОМ на самих <code><div></code> (не CSS-правилом в base) — скелет несёт тот же приём дословно (см. <code>shablon.html</code>, блок [2]/chrome).</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-3">⚠ Важное: единого byte-shared <code>base.css</code> на ВСЕ деки НЕ существует</h2></summary><div class="sec-body">
+<p>ALGORITM §2 предполагал «общий base определяется ОДИН раз, наследуется всеми деками». По живым <code>shablon.html</code> базовые CSS двух эталонов <strong>расходятся по существу канона</strong> (не пробелами): <code>.slide{background:#e6e5e1;color:#333}</code> (dandelin) ↔ <code>background:var(--paper);color:var(--ink)</code> (buffon); <code>transition:opacity .35s</code> ↔ <code>.24s</code>; разный словарь классов (<code>.copy/.cer/.tlist/.ph/ .ill-box</code> ↔ <code>.t-display/.t-math/.panel/.lab-row/.sim-controls</code>); фон стейджа <code>#111</code> ↔ <code>#2b3038</code>. Один общий byte-shared base воспроизвёл бы оба эталона байт-в-байт только ценой переверстки одного из них = <strong>рестайл замороженного канона (KONSTITUCIYA §1) — запрещён</strong>.</p>
+<p><strong>Следствие.</strong> Байт-безопасен только ПЕР-ДЕКОВЫЙ <code>base.css</code> (каждый дек выносит СВОЙ base в свой файл — доказано byte-exact на обоих эталонах, <code>verifikacia-infra.md</code>). Обещанная выгода «одна правка base на все деки» пер-дековым выносом НЕ достигается.</p>
+<p><strong>Решено (Р16, заход <code>kod_base-buffon</code> #13).</strong> Канон-база скелета — <strong>buffon</strong>: он фактический стандарт (совпадает с Canva-шаблоном и большинством референсов), а dandelin — первый пробный эталон, собранный быстро и «разъехавшийся» с остальными. Этот скелет несёт <code>base.css</code>/<code>tokens.css</code> = канон-base <strong>buffon</strong> (дословный экстракт из <code>buffon/src/shablon.html</code> + <code>tokens.css</code>, метод — см. выше). Дек в стиле dandelin при нужде стартует с иным per-дековым base (тот же принцип: свой <code>base.css</code> в своём <code>src/</code>) — это уже не развилка скелета; дефолт закрыт, альтернатива не блокирует.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-4">Гейт greenfield (1-я сборка — provenance_sha256 нет)</h2></summary><div class="sec-body">
+<p>render-identity неприменим на первом деке → замена: <strong>линтер + <code>audit.py</code> (браузер) + глаз (<code>render.py</code>)</strong>. render-identity включается со ВТОРОЙ сборки (правка уже собранного дека).</p>
+</div></details></article></main></div></section>
+<section class="panel" id="panel-1"><div class="layout solo"><main><article class="stream"><h1>Дек лекции 1 курса «Зачем нужны категории?»</h1>
+<p>Манифест собран аналитиком 28.07.2026 как вход Фазы II (гейт G6). Скелет скопирован из <code>_generator/skeleton/</code>.</p>
+<p><strong>Решения владельца, отражённые в полях.</strong> Регистр <strong>читаемый</strong> — зал просил плотный текст ⇒ <code>word_budget_per_slide: 50</code>, это медиана эталонной ленты Паскаля, а не потолок. <code>accent_tag: span</code> — дефолт канона (Р16).</p>
+<p>Сборка: <code>python3 _generator/build_deck.py teorkat-vvedenie/src</code> → <code>dist/index.html</code>.</p></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
+});
+</script>
+</body>
+</html>
