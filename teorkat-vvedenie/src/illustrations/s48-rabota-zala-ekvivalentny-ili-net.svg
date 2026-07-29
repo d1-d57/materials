@@ -1,0 +1,14 @@
+<svg viewBox="0 0 200 200" width="200" role="img" aria-label="Наверху категория с единственным залитым узлом и петлёй тождества. Внизу категория с двумя белыми узлами x и y, соединёнными парой дуг во встречных направлениях">
+<text class="s-txt-m" x="34" y="40">C</text>
+<circle class="s-node-r" cx="100" cy="60" r="5.4"/>
+<path class="s-thin" d="M93,53 C86,34 114,34 107,53"/>
+<text class="s-txt-m" x="34" y="132">D</text>
+<circle class="s-node" cx="66" cy="150" r="5.4"/>
+<circle class="s-node" cx="134" cy="150" r="5.4"/>
+<path class="s-thin" d="M70,144 C86,120 114,120 130,144"/>
+<path class="s-ar-m" d="M127,136 l5,9 3,-9 z"/>
+<path class="s-thin" d="M130,156 C114,180 86,180 70,156"/>
+<path class="s-ar-m" d="M73,164 l-5,-9 -3,9 z"/>
+<text class="s-txt" x="66" y="178" text-anchor="middle">x</text>
+<text class="s-txt" x="134" y="178" text-anchor="middle">y</text>
+</svg>

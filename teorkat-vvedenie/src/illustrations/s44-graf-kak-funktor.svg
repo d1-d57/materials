@@ -1,0 +1,12 @@
+<svg viewBox="0 0 200 220" width="200" role="img" aria-label="Треугольник из трёх вершин и трёх рёбер; все три вершины закрашены по-разному. Ниже палитра из трёх клеток">
+<line class="s-line" x1="100" y1="42" x2="42" y2="146"/>
+<line class="s-line" x1="100" y1="42" x2="158" y2="146"/>
+<line class="s-line" x1="42" y1="146" x2="158" y2="146"/>
+<circle class="s-node-r" cx="100" cy="42" r="6"/>
+<circle class="s-node-a" cx="42" cy="146" r="6"/>
+<circle class="s-node" cx="158" cy="146" r="6"/>
+<rect class="s-fillsh" x="52" y="168" width="20" height="20"/>
+<rect class="s-fillw" x="90" y="168" width="20" height="20"/>
+<rect class="s-line" x="128" y="168" width="20" height="20"/>
+<text class="s-txt-m" x="100" y="202" text-anchor="middle">K₃</text>
+</svg>

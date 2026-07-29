@@ -1,0 +1,16 @@
+<svg viewBox="0 0 200 200" width="200" role="img" aria-label="Четыре точки на окружности, занумерованные от одного до четырёх, соединённые стрелками по кругу в один цикл; в центре две метки — пустое множество и всё множество">
+<circle class="s-node" cx="100" cy="34" r="5.4"/>
+<circle class="s-node" cx="166" cy="100" r="5.4"/>
+<circle class="s-node" cx="100" cy="166" r="5.4"/>
+<circle class="s-node" cx="34" cy="100" r="5.4"/>
+<path class="s-thin" d="M108,38 C136,50 150,64 162,92"/><path class="s-ar-m" d="M156,86 l8,7 -1,-10 z"/>
+<path class="s-thin" d="M162,108 C150,136 136,150 108,162"/><path class="s-ar-m" d="M114,157 l-8,7 10,1 z"/>
+<path class="s-thin" d="M92,162 C64,150 50,136 38,108"/><path class="s-ar-m" d="M44,114 l-8,-7 1,10 z"/>
+<path class="s-thin" d="M38,92 C50,64 64,50 92,38"/><path class="s-ar-m" d="M86,43 l8,-7 -10,-1 z"/>
+<text class="s-txt" x="100" y="20" text-anchor="middle">1</text>
+<text class="s-txt" x="184" y="105" text-anchor="middle">2</text>
+<text class="s-txt" x="100" y="188" text-anchor="middle">3</text>
+<text class="s-txt" x="16" y="105" text-anchor="middle">4</text>
+<text class="s-txt-m" x="100" y="96" text-anchor="middle">∅</text>
+<text class="s-txt-m" x="100" y="118" text-anchor="middle">U</text>
+</svg>

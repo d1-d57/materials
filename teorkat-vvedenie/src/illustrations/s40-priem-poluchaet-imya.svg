@@ -1,0 +1,13 @@
+<svg viewBox="0 0 250 200" width="250" role="img" aria-label="Два узла один под другим, F от A и G от A, у каждого своя петля симметрий; между узлами вертикальная стрелка альфа">
+<text class="s-txt" x="128" y="52" text-anchor="middle" font-size="17">FA</text>
+<text class="s-txt" x="128" y="164" text-anchor="middle" font-size="17">GA</text>
+<line class="s-thin" x1="128" y1="66" x2="128" y2="140"/>
+<path class="s-ar-m" d="M124,131 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="140" y="108" font-size="15">α</text>
+<path class="s-dash" d="M104,42 C64,22 64,66 104,52"/>
+<path class="s-ar-a" d="M97,48 l9,4 -8,5 z"/>
+<path class="s-dash" d="M104,154 C64,134 64,178 104,164"/>
+<path class="s-ar-a" d="M97,160 l9,4 -8,5 z"/>
+<text class="s-txt-m" x="66" y="52" text-anchor="end" font-size="15">Fσ</text>
+<text class="s-txt-m" x="66" y="164" text-anchor="end" font-size="15">Gσ</text>
+</svg>

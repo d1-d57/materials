@@ -1,0 +1,28 @@
+<svg viewBox="0 0 200 268" width="200" role="img" aria-label="Три арены столбиком. Первая: четыре точки в рамке, одна залита и помечена звёздочкой. Вторая: четыре точки в двух рамках, левые две акцентные, правые две белые, рамки помечены M и N. Третья: рамка с тремя точками остаётся, рамка с четырьмя перечёркнута пунктиром">
+<rect class="s-line" x="30" y="16" width="140" height="42" rx="8"/>
+<circle class="s-node-r" cx="60" cy="37" r="5.4"/>
+<circle class="s-node" cx="92" cy="37" r="5.4"/>
+<circle class="s-node" cx="124" cy="37" r="5.4"/>
+<circle class="s-node" cx="152" cy="37" r="5.4"/>
+<text class="s-txt" x="60" y="76" text-anchor="middle">∗</text>
+<rect class="s-line" x="24" y="108" width="76" height="42" rx="8"/>
+<rect class="s-line" x="108" y="108" width="76" height="42" rx="8"/>
+<circle class="s-node-a" cx="48" cy="129" r="5.4"/>
+<circle class="s-node-a" cx="76" cy="129" r="5.4"/>
+<circle class="s-node" cx="132" cy="129" r="5.4"/>
+<circle class="s-node" cx="160" cy="129" r="5.4"/>
+<text class="s-txt-m" x="62" y="168" text-anchor="middle">M</text>
+<text class="s-txt-m" x="146" y="168" text-anchor="middle">N</text>
+<rect class="s-line" x="24" y="204" width="76" height="42" rx="8"/>
+<circle class="s-node" cx="42" cy="225" r="5.4"/>
+<circle class="s-node" cx="62" cy="225" r="5.4"/>
+<circle class="s-node" cx="82" cy="225" r="5.4"/>
+<rect class="s-line" x="108" y="204" width="76" height="42" rx="8"/>
+<circle class="s-node" cx="124" cy="225" r="5.4"/>
+<circle class="s-node" cx="140" cy="225" r="5.4"/>
+<circle class="s-node" cx="156" cy="225" r="5.4"/>
+<circle class="s-node" cx="172" cy="225" r="5.4"/>
+<line class="s-dash" x1="104" y1="252" x2="188" y2="198"/>
+<text class="s-txt" x="62" y="264" text-anchor="middle">3</text>
+<text class="s-txt" x="146" y="264" text-anchor="middle">4</text>
+</svg>

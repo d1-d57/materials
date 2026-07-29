@@ -1,0 +1,21 @@
+<svg viewBox="0 0 210 226" width="210" role="img" aria-label="Слева столбец из двух узлов категории C, справа их образы залитыми узлами, стрелки функтора между столбцами. Ниже белый узел d, связанный с образом пунктиром и знаком изоморфизма">
+<text class="s-txt-m" x="46" y="36" text-anchor="middle">C</text>
+<text class="s-txt-m" x="150" y="36" text-anchor="middle">D</text>
+<circle class="s-node" cx="46" cy="70" r="5.4"/>
+<circle class="s-node" cx="46" cy="150" r="5.4"/>
+<text class="s-txt" x="32" y="75" text-anchor="end">A</text>
+<text class="s-txt" x="32" y="155" text-anchor="end">B</text>
+<line class="s-thin" x1="60" y1="70" x2="136" y2="70"/>
+<path class="s-ar-m" d="M129,66 l9,4 -9,4 z"/>
+<line class="s-thin" x1="60" y1="150" x2="136" y2="150"/>
+<path class="s-ar-m" d="M129,146 l9,4 -9,4 z"/>
+<text class="s-txt-m" x="98" y="60" text-anchor="middle">F</text>
+<circle class="s-node-r" cx="150" cy="70" r="5.4"/>
+<circle class="s-node-r" cx="150" cy="150" r="5.4"/>
+<text class="s-txt" x="164" y="75">FA</text>
+<text class="s-txt" x="164" y="155">FB</text>
+<line class="s-dash" x1="150" y1="160" x2="150" y2="188"/>
+<circle class="s-node" cx="150" cy="196" r="5.4"/>
+<text class="s-txt-m" x="164" y="178">≅</text>
+<text class="s-txt" x="136" y="201" text-anchor="end">d</text>
+</svg>

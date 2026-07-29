@@ -1,0 +1,13 @@
+<svg viewBox="0 0 220 214" width="220" role="img" aria-label="Диск с выделенной границей: внутри точка f от x, точка x и пунктирный луч из f от x через x до границы, где он упирается в точку r от x">
+<circle class="s-fillsh" cx="110" cy="100" r="72"/>
+<circle class="s-accent" cx="110" cy="100" r="72"/>
+<line class="s-dash" x1="86" y1="128" x2="176" y2="81"/><path class="s-ar-a" d="M174,87 L170,80 L180,79 z"/>
+<circle class="s-node" cx="86" cy="128" r="4.4"/>
+<circle class="s-node-r" cx="120" cy="110" r="4.4"/>
+<circle class="s-node-a" cx="179" cy="79" r="4.4"/>
+<text class="s-txt" x="74" y="146" text-anchor="middle">f(x)</text>
+<text class="s-txt" x="126" y="102" text-anchor="middle">x</text>
+<text class="s-txt" x="172" y="64" text-anchor="middle">r(x)</text>
+<text class="s-txt" x="150" y="142" text-anchor="middle">D²</text>
+<text class="s-txt-m" x="110" y="196" text-anchor="middle">S¹</text>
+</svg>

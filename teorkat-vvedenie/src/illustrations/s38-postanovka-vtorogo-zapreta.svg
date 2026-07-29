@@ -1,0 +1,11 @@
+<svg viewBox="0 0 200 190" width="200" role="img" aria-label="Сверху пространство, снизу его двойственное, между ними три одинаковые пунктирные стрелки; у правой стоит метка скалярного произведения">
+<text class="s-txt" x="100" y="42" text-anchor="middle" font-size="17">V</text>
+<text class="s-txt" x="100" y="168" text-anchor="middle" font-size="17">V*</text>
+<line class="s-dash" x1="70" y1="58" x2="70" y2="140"/>
+<path class="s-ar-a" d="M66,131 l4,9 4,-9 z"/>
+<line class="s-dash" x1="100" y1="58" x2="100" y2="140"/>
+<path class="s-ar-a" d="M96,131 l4,9 4,-9 z"/>
+<line class="s-dash" x1="130" y1="58" x2="130" y2="140"/>
+<path class="s-ar-a" d="M126,131 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="140" y="103" font-size="12">⟨v,−⟩</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg viewBox="0 0 200 190" width="200" role="img" aria-label="Одна плоскость и в ней две пары осей из общего начала: сплошная пара помечена e с индексами, пунктирная акцентная пара помечена f с индексами">
+<circle class="s-node" cx="60" cy="130" r="4.4"/>
+<line class="s-thin" x1="66" y1="130" x2="140" y2="130"/>
+<path class="s-ar-m" d="M133,126 l9,4 -9,4 z"/>
+<line class="s-thin" x1="60" y1="124" x2="60" y2="52"/>
+<path class="s-ar-m" d="M56,61 l4,-9 4,9 z"/>
+<line class="s-dash" x1="66" y1="127" x2="132" y2="98"/>
+<path class="s-ar-a" d="M124,97 l9,1 -4,-9 z"/>
+<line class="s-dash" x1="63" y1="124" x2="98" y2="56"/>
+<path class="s-ar-a" d="M92,60 l6,-8 3,9 z"/>
+<text class="s-txt" x="150" y="135">e₁</text>
+<text class="s-txt" x="48" y="46" text-anchor="end">e₂</text>
+<text class="s-txt" x="142" y="94">f₁</text>
+<text class="s-txt" x="106" y="50">f₂</text>
+</svg>

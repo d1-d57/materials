@@ -1,0 +1,27 @@
+<svg viewBox="0 0 200 224" width="200" role="img" aria-label="Решётка из восьми элементов: внизу нуль, наверху единица, между ними ряд из трёх залитых атомов a b c и ряд из трёх их объединений">
+<circle class="s-node" cx="100" cy="196" r="4.8"/>
+<text class="s-txt-m" x="114" y="201">0</text>
+<circle class="s-node-r" cx="40" cy="144" r="4.8"/>
+<circle class="s-node-r" cx="100" cy="144" r="4.8"/>
+<circle class="s-node-r" cx="160" cy="144" r="4.8"/>
+<text class="s-txt" x="28" y="148" text-anchor="end">a</text>
+<text class="s-txt" x="112" y="158">b</text>
+<text class="s-txt" x="172" y="148">c</text>
+<circle class="s-node" cx="40" cy="92" r="4.8"/>
+<circle class="s-node" cx="100" cy="92" r="4.8"/>
+<circle class="s-node" cx="160" cy="92" r="4.8"/>
+<circle class="s-node" cx="100" cy="40" r="4.8"/>
+<text class="s-txt-m" x="114" y="45">1</text>
+<line class="s-thin" x1="96" y1="192" x2="44" y2="148"/>
+<line class="s-thin" x1="100" y1="191" x2="100" y2="149"/>
+<line class="s-thin" x1="104" y1="192" x2="156" y2="148"/>
+<line class="s-thin" x1="40" y1="139" x2="40" y2="97"/>
+<line class="s-thin" x1="44" y1="140" x2="96" y2="96"/>
+<line class="s-thin" x1="96" y1="140" x2="44" y2="96"/>
+<line class="s-thin" x1="104" y1="140" x2="156" y2="96"/>
+<line class="s-thin" x1="156" y1="140" x2="104" y2="96"/>
+<line class="s-thin" x1="160" y1="139" x2="160" y2="97"/>
+<line class="s-thin" x1="44" y1="88" x2="96" y2="44"/>
+<line class="s-thin" x1="100" y1="87" x2="100" y2="45"/>
+<line class="s-thin" x1="156" y1="88" x2="104" y2="44"/>
+</svg>

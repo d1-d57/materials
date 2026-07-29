@@ -1,0 +1,11 @@
+<svg viewBox="0 0 250 205" width="250" role="img" aria-label="Треугольник: из A стрелка сечения наверх в B, из B стрелка ретракции вниз в A, а нижняя стрелка из A в A подписана тождеством">
+<text class="s-txt" x="125" y="40" text-anchor="middle" font-size="17">B</text>
+<text class="s-txt" x="36" y="175" text-anchor="middle" font-size="17">A</text>
+<text class="s-txt" x="214" y="175" text-anchor="middle" font-size="17">A</text>
+<line class="s-thin" x1="48" y1="160" x2="110" y2="58"/><path class="s-ar-m" d="M113,60 L106,56 L114,50 z"/>
+<line class="s-thin" x1="138" y1="58" x2="199" y2="156"/><path class="s-ar-m" d="M203,154 L196,158 L204,164 z"/>
+<line class="s-thin" x1="56" y1="182" x2="188" y2="182"/><path class="s-ar-m" d="M186,178 l9,4 -9,4 z"/>
+<text class="s-txt-m" x="62" y="104" text-anchor="middle" font-size="15">s</text>
+<text class="s-txt-m" x="186" y="104" text-anchor="middle" font-size="15">r</text>
+<text class="s-txt-m" x="122" y="174" text-anchor="middle" font-size="15">id</text>
+</svg>
