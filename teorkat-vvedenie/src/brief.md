@@ -19,34 +19,31 @@ slide_order:
   - s05
   - s06
   - s07
+  - sl-divider1
   - s08
   - s09
-  - sl-divider1
   - s10
   - s11
   - s12
   - s13
+  - sl-divider2
   - s14
   - s15
   - s16
-  - sl-divider2
   - s17
   - s18
   - s19
   - s20
   - s21
+  - sl-divider3
   - s22
   - s23
   - s24
-  - sl-divider3
   - s25
   - s26
   - s27
   - s28
   - s29
-  - s30
-  - s31
-  - s32
   - sl-thanks
 ---
 

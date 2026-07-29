@@ -427,11 +427,25 @@ def ill_names(sid, s):
 # Разметка — по живому образцу буффона (`buffon/src/slides/{sl-title,sl-thanks,
 # sl-divider1}.html` и его гриды в `shablon.html`), а не изобретена.
 #
-# АКТЫ приняты владельцем 28.07 и не переоткрываются, распределение 9·7·8·8 = 32.
-# Разделитель ставится ПЕРЕД началом актов 2, 3 и 4 — три штуки.
+# АКТЫ приняты владельцем 28.07 — принято ЧЕТЫРЕ акта и три разделителя, и это не
+# переоткрывается. РАЗМЕРЫ актов не решение, а следствие ленты: раньше здесь стояло
+# `[9, 7, 8, 8] = 32`, вписанное руками, и 29.07 рез состава (PRAVKI §СОСТАВ снял три
+# раздела) сделал сборку неисполнимой — `SystemExit: акты покрывают 32 слайдов, а их 29`.
+# Поэтому размеры СЧИТАЮТСЯ из блоков ленты (KONSTITUCIYA §10: не число, а то, что его
+# считает). Акт ↔ блоки: 1=A, 2=B, 3=C+D (две половины «Чего не бывает»), 4=E.
 # ⛔ Картинок на разделителях нет: владелец хочет туда изображения, но это арка 9 и
 # отдельный заход (прямая граница шага 6).
-AKTY = [9, 7, 8, 8]
+AKT_BLOKI = [("A",), ("B",), ("C", "D"), ("E",)]
+
+
+def akty(slides):
+    """Размеры актов — счётом по блокам ленты, а не константой."""
+    sizes = [sum(1 for s in slides if s["block"] in blks) for blks in AKT_BLOKI]
+    lost = [s["block"] for s in slides if not any(s["block"] in b for b in AKT_BLOKI)]
+    if lost:
+        raise SystemExit("блоки ленты вне карты актов: %s — назовите их в AKT_BLOKI"
+                         % sorted(set(lost)))
+    return sizes
 RAZDELITELI = ["Зоопарк", "Чего не бывает", "Словарь между мирами"]
 
 # Обложка — РОВНО три строки, как задал заход, без подзаголовков и без места
@@ -482,8 +496,9 @@ def sluzhebnye():
     return out
 
 
-def poryadok(ids):
+def poryadok(ids, slides):
     """Поток слайдов: обложка · акт 1 · разделитель · акт 2 · … · финал."""
+    AKTY = akty(slides)
     flow, i = ["sl-title"], 0
     for a, n in enumerate(AKTY):
         if a:
@@ -527,7 +542,7 @@ def main():
     for sid, (html, _css) in sluzh.items():
         (SRC / "slides" / (sid + ".html")).write_text(html, encoding="utf-8")
     css_parts.extend(css for _h, css in sluzh.values())
-    poryadok_ids = poryadok(ids)
+    poryadok_ids = poryadok(ids, slides)
 
     ill_files = sorted(p.stem for p in (SRC / "illustrations").glob("*"))
     templates = "\n".join('<template id="ill-%s">{{ILL:%s}}</template>' % (n, n)

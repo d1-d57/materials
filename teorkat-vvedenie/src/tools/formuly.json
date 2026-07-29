@@ -1,14 +1,6 @@
 [
 {
-"tex": "(1\\,2\\,\\dots\\,n)",
-"display": false
-},
-{
-"tex": "(Ff)^{-1}=F(f^{-1})",
-"display": false
-},
-{
-"tex": "(Ff)^{-1}=Fg\\text{,}",
+"tex": "(Ff)^{-1}=Fg",
 "display": false
 },
 {
@@ -16,15 +8,15 @@
 "display": false
 },
 {
-"tex": "(U,\\ast)",
-"display": false
-},
-{
 "tex": "(U,\\ast)\\text{,}",
 "display": false
 },
 {
-"tex": "(\\mathcal C\\times\\mathcal D)\\bigl((C,D),(C',D')\\bigr)=\\mathcal C(C,C')\\times\\mathcal D(D,D')\\text{;}",
+"tex": "(X,\\le)",
+"display": false
+},
+{
+"tex": "(\\mathcal C\\times\\mathcal D)\\bigl((C,D),(C',D')\\bigr)=\\mathcal C(C,C')\\times\\mathcal D(D,D')",
 "display": false
 },
 {
@@ -32,19 +24,15 @@
 "display": false
 },
 {
-"tex": "(n-1)\\text{-}",
+"tex": "1",
 "display": false
 },
 {
-"tex": "-i",
+"tex": "1_A\\in\\mathcal C(A,A)",
 "display": false
 },
 {
-"tex": "0",
-"display": false
-},
-{
-"tex": "1_A\\colon A\\to A\\text{.}",
+"tex": "1_{C_2}\\text{;}",
 "display": false
 },
 {
@@ -56,7 +44,7 @@
 "display": false
 },
 {
-"tex": "A\\cong B",
+"tex": "A,B",
 "display": false
 },
 {
@@ -72,10 +60,6 @@
 "display": false
 },
 {
-"tex": "A\\to B",
-"display": false
-},
-{
 "tex": "A_5",
 "display": false
 },
@@ -88,27 +72,23 @@
 "display": false
 },
 {
-"tex": "B\\mapsto\\mathrm{At}(B)\\text{,}",
-"display": false
-},
-{
 "tex": "B\\text{,}",
 "display": false
 },
 {
-"tex": "C\\text{:}",
+"tex": "C[U]",
 "display": false
 },
 {
-"tex": "C_2\\to 1\\to C_2",
+"tex": "C_2\\to 1\\to C_2\\text{,}",
 "display": false
 },
 {
-"tex": "D",
+"tex": "D[U]",
 "display": false
 },
 {
-"tex": "D\\text{:}",
+"tex": "D\\text{,}",
 "display": false
 },
 {
@@ -120,6 +100,10 @@
 "display": false
 },
 {
+"tex": "E[U]",
+"display": false
+},
+{
 "tex": "E\\text{,}",
 "display": false
 },
@@ -128,7 +112,7 @@
 "display": false
 },
 {
-"tex": "E^{+}[U]",
+"tex": "E^{+}=\\{\\varnothing,\\{1,2\\}\\}",
 "display": false
 },
 {
@@ -140,11 +124,11 @@
 "display": false
 },
 {
-"tex": "E^{-}[U]",
+"tex": "E^{-}=\\{\\{1\\},\\{2\\}\\}",
 "display": false
 },
 {
-"tex": "E_k(M\\sqcup N)\\simeq\\bigsqcup_{i+j=k}E_i(M)\\times E_j(N)",
+"tex": "E_k[U]\\text{;}",
 "display": false
 },
 {
@@ -152,23 +136,23 @@
 "display": false
 },
 {
-"tex": "F(1_A)=1_{FA}",
+"tex": "F(U)=\\{\\,T\\subseteq S\\subseteq U\\,\\}\\text{;}",
 "display": false
 },
 {
-"tex": "F(g\\circ f)=F(1_A)\\text{,}",
+"tex": "F(U)\\text{,}",
 "display": false
 },
 {
-"tex": "F(g\\circ f)=Fg\\circ Ff",
+"tex": "F(U)\\to G(U)",
 "display": false
 },
 {
-"tex": "F,G",
+"tex": "F(g\\circ f)=F(1_A)\\text{;}",
 "display": false
 },
 {
-"tex": "F,G\\colon\\mathcal C\\to\\mathcal D\\text{:}",
+"tex": "F(g\\circ f)=Fg\\circ Ff\\text{,}",
 "display": false
 },
 {
@@ -176,19 +160,15 @@
 "display": false
 },
 {
+"tex": "F1_A=1_{FA}",
+"display": false
+},
+{
 "tex": "FA",
 "display": false
 },
 {
-"tex": "FA\\cong FB\\text{,}",
-"display": false
-},
-{
-"tex": "FA\\text{,}",
-"display": false
-},
-{
-"tex": "FA\\to FB\\to FA",
+"tex": "FA\\cong FB\\Rightarrow A\\cong B",
 "display": false
 },
 {
@@ -196,31 +176,15 @@
 "display": false
 },
 {
-"tex": "FB=\\varnothing\\text{.}",
+"tex": "F[\\sigma]\\colon F(U)\\to F(V)",
 "display": false
 },
 {
-"tex": "FX",
+"tex": "F[\\tau\\circ\\sigma]=F[\\tau]\\circ F[\\sigma]\\text{:}",
 "display": false
 },
 {
-"tex": "F[U]",
-"display": false
-},
-{
-"tex": "F[U]\\text{.}",
-"display": false
-},
-{
-"tex": "F[\\sigma]\\colon F[U]\\to F[V]\\text{,}",
-"display": false
-},
-{
-"tex": "F[\\sigma]\\text{,}",
-"display": false
-},
-{
-"tex": "F\\circ G=\\mathrm{Id}_{\\mathbf N}",
+"tex": "F\\circ G=\\mathrm{Id}_{\\mathbf N}\\text{,}",
 "display": false
 },
 {
@@ -228,11 +192,11 @@
 "display": false
 },
 {
-"tex": "F\\circ G\\cong\\mathrm{Id}_{\\mathcal D}\\text{.}",
+"tex": "F\\circ G\\cong\\mathrm{Id}_{\\mathcal D}\\text{;}",
 "display": false
 },
 {
-"tex": "F\\colon\\mathbf{FinSet}\\to\\mathbf N",
+"tex": "F\\colon\\mathbf{FinSet}\\to\\mathbf N\\text{,}",
 "display": false
 },
 {
@@ -248,10 +212,6 @@
 "display": false
 },
 {
-"tex": "F\\simeq G\\text{.}",
-"display": false
-},
-{
 "tex": "F\\text{:}",
 "display": false
 },
@@ -264,15 +224,7 @@
 "display": false
 },
 {
-"tex": "Ff\\colon FA\\to FB\\text{,}",
-"display": false
-},
-{
-"tex": "Fr\\circ Fs=1_{FA}",
-"display": false
-},
-{
-"tex": "Fr\\circ Fs=F(r\\circ s)=F(1_A)=1_{FA}",
+"tex": "Fr\\circ Fs=F(r\\circ s)=F(1_A)=1_{FA}\\text{:}",
 "display": false
 },
 {
@@ -280,7 +232,7 @@
 "display": false
 },
 {
-"tex": "G(f)=M_W\\cdot F(f)\\cdot M_V^{-1}",
+"tex": "G(U)=\\{\\,f\\colon U\\to\\{0,1,2\\}\\,\\}",
 "display": false
 },
 {
@@ -296,15 +248,11 @@
 "display": false
 },
 {
-"tex": "G[\\sigma]",
+"tex": "G\\circ F=\\mathrm{Id}_{\\mathcal C}\\text{,}",
 "display": false
 },
 {
-"tex": "G\\circ F",
-"display": false
-},
-{
-"tex": "G\\circ F=\\mathrm{Id}_{\\mathcal C}",
+"tex": "G\\circ F\\cong\\mathrm{Id}\\text{,}",
 "display": false
 },
 {
@@ -312,7 +260,7 @@
 "display": false
 },
 {
-"tex": "G\\colon\\mathbf N\\to\\mathbf{FinSet}",
+"tex": "G\\colon\\mathbf N\\to\\mathbf{FinSet}\\text{,}",
 "display": false
 },
 {
@@ -336,15 +284,7 @@
 "display": false
 },
 {
-"tex": "G\\text{.}",
-"display": false
-},
-{
-"tex": "G\\times G\\Rightarrow G",
-"display": false
-},
-{
-"tex": "G\\to K_k",
+"tex": "G\\times G\\Rightarrow G\\text{:}",
 "display": false
 },
 {
@@ -364,27 +304,11 @@
 "display": false
 },
 {
-"tex": "K_k\\text{.}",
-"display": false
-},
-{
-"tex": "K_k\\text{:}",
-"display": false
-},
-{
-"tex": "L",
-"display": false
-},
-{
 "tex": "L/K",
 "display": false
 },
 {
-"tex": "L\\cong T(L)",
-"display": false
-},
-{
-"tex": "L\\cong T(T(L))",
+"tex": "L[U]\\text{;}",
 "display": false
 },
 {
@@ -392,31 +316,15 @@
 "display": false
 },
 {
-"tex": "R=\\{(1,2)\\}\\colon X\\to X\\text{.}",
+"tex": "S[U]",
 "display": false
 },
 {
-"tex": "R\\subseteq A\\times B\\text{,}",
+"tex": "S\\mapsto S\\,\\triangle\\,\\{\\ast\\}\\text{.}",
 "display": false
 },
 {
-"tex": "S=\\{f\\ge1\\}\\text{,}",
-"display": false
-},
-{
-"tex": "S\\mapsto S\\,\\triangle\\,\\{\\ast\\}",
-"display": false
-},
-{
-"tex": "S\\setminus T\\text{,}",
-"display": false
-},
-{
-"tex": "S\\text{,}",
-"display": false
-},
-{
-"tex": "S\\text{.}",
+"tex": "S\\mapsto S\\,\\triangle\\,\\{x_0\\}",
 "display": false
 },
 {
@@ -432,22 +340,6 @@
 "display": false
 },
 {
-"tex": "T(L)",
-"display": false
-},
-{
-"tex": "T=\\{f=2\\}",
-"display": false
-},
-{
-"tex": "T\\subseteq S\\subseteq U\\text{:}",
-"display": false
-},
-{
-"tex": "T\\text{,}",
-"display": false
-},
-{
 "tex": "U",
 "display": false
 },
@@ -460,15 +352,11 @@
 "display": false
 },
 {
-"tex": "U\\hookrightarrow\\{1,\\dots,k\\}\\text{:}",
+"tex": "U\\hookrightarrow\\{1,\\dots,k\\}",
 "display": false
 },
 {
 "tex": "U\\text{,}",
-"display": false
-},
-{
-"tex": "U\\text{;}",
 "display": false
 },
 {
@@ -484,27 +372,15 @@
 "display": false
 },
 {
+"tex": "V^{\\ast\\ast}",
+"display": false
+},
+{
 "tex": "V^{\\ast}",
 "display": false
 },
 {
-"tex": "X=\\{1,2\\}\\text{,}",
-"display": false
-},
-{
-"tex": "X\\mapsto X^X",
-"display": false
-},
-{
-"tex": "X\\mapsto\\{\\text{инъекции }X\\hookrightarrow\\{1,\\dots,k\\}\\}\\text{,}",
-"display": false
-},
-{
-"tex": "X\\to Y",
-"display": false
-},
-{
-"tex": "X^X\\text{:}",
+"tex": "X\\mapsto|X|\\text{.}",
 "display": false
 },
 {
@@ -516,11 +392,15 @@
 "display": false
 },
 {
-"tex": "Z(H)",
+"tex": "Z(S_3)=1",
 "display": false
 },
 {
-"tex": "Z(S_3)=1\\text{,}",
+"tex": "\\Rightarrow",
+"display": false
+},
+{
+"tex": "\\Rightarrow f",
 "display": false
 },
 {
@@ -528,7 +408,7 @@
 "display": false
 },
 {
-"tex": "\\alpha\\colon F\\to G\\text{:}",
+"tex": "\\alpha\\colon F\\Rightarrow G\\text{:}",
 "display": false
 },
 {
@@ -536,15 +416,7 @@
 "display": false
 },
 {
-"tex": "\\alpha_A\\colon FA\\to GA",
-"display": false
-},
-{
-"tex": "\\alpha_U",
-"display": false
-},
-{
-"tex": "\\alpha_U\\colon F[U]\\to G[U]\\text{,}",
+"tex": "\\alpha_A\\in\\mathcal D(FA,GA)",
 "display": false
 },
 {
@@ -552,19 +424,11 @@
 "display": false
 },
 {
-"tex": "\\alpha_V\\circ F[\\sigma]=G[\\sigma]\\circ\\alpha_U\\text{.}",
+"tex": "\\alpha_V\\colon V\\to V^{\\ast}\\text{,}",
 "display": false
 },
 {
-"tex": "\\alpha_V\\colon V\\to V^{\\ast}",
-"display": false
-},
-{
-"tex": "\\ast",
-"display": false
-},
-{
-"tex": "\\ast\\text{.}",
+"tex": "\\ast\\text{;}",
 "display": false
 },
 {
@@ -576,11 +440,7 @@
 "display": false
 },
 {
-"tex": "\\det_R\\colon GL_n(R)\\to R^{\\times}",
-"display": false
-},
-{
-"tex": "\\displaystyle F[\\tau\\circ\\sigma]=F[\\tau]\\circ F[\\sigma]",
+"tex": "\\circ\\colon\\mathcal C(A,B)\\times\\mathcal C(B,C)\\to\\mathcal C(A,C)\\text{,}",
 "display": false
 },
 {
@@ -604,19 +464,7 @@
 "display": false
 },
 {
-"tex": "\\displaystyle h\\circ(g\\circ f)=(h\\circ g)\\circ f,\\qquad f\\circ 1_A=f=1_B\\circ f",
-"display": false
-},
-{
-"tex": "\\eta",
-"display": false
-},
-{
-"tex": "\\eta_V\\colon V\\to V^{\\ast\\ast}\\text{,}",
-"display": false
-},
-{
-"tex": "\\infty\\text{-}",
+"tex": "\\iff",
 "display": false
 },
 {
@@ -624,7 +472,7 @@
 "display": false
 },
 {
-"tex": "\\lambda\\,\\eta_V=\\lambda\\,\\eta_V\\text{.}",
+"tex": "\\lambda\\,\\eta_V=\\lambda\\,\\eta_V\\text{:}",
 "display": false
 },
 {
@@ -636,7 +484,7 @@
 "display": false
 },
 {
-"tex": "\\lambda^2\\ne1\\text{,}",
+"tex": "\\lambda^2\\ne1",
 "display": false
 },
 {
@@ -644,7 +492,7 @@
 "display": false
 },
 {
-"tex": "\\lambda^{-1}\\alpha_V\\text{.}",
+"tex": "\\lambda^{-1}\\alpha_V\\text{,}",
 "display": false
 },
 {
@@ -656,31 +504,23 @@
 "display": false
 },
 {
-"tex": "\\le\\text{.}",
+"tex": "\\lvert F(U)\\rvert",
 "display": false
 },
 {
-"tex": "\\lvert A\\rvert=k\\text{,}",
+"tex": "\\lvert F(U)\\rvert=\\lvert G(U)\\rvert",
 "display": false
 },
 {
-"tex": "\\lvert B\\rvert=k+1\\text{:}",
+"tex": "\\lvert F(U)\\rvert=\\lvert G(U)\\rvert\\Rightarrow",
 "display": false
 },
 {
-"tex": "\\lvert FA\\rvert=k!\\text{,}",
+"tex": "\\lvert G(U)\\rvert",
 "display": false
 },
 {
-"tex": "\\lvert S\\rvert=k\\text{,}",
-"display": false
-},
-{
-"tex": "\\lvert T\\rvert=l\\text{.}",
-"display": false
-},
-{
-"tex": "\\lvert X\\rvert=\\lvert Y\\rvert",
+"tex": "\\lvert U\\rvert=n\\text{.}",
 "display": false
 },
 {
@@ -688,15 +528,11 @@
 "display": false
 },
 {
+"tex": "\\mapsto(1\\,2)\\text{,}",
+"display": false
+},
+{
 "tex": "\\mathbb N",
-"display": false
-},
-{
-"tex": "\\mathbb Z",
-"display": false
-},
-{
-"tex": "\\mathbb Z=0",
 "display": false
 },
 {
@@ -704,7 +540,7 @@
 "display": false
 },
 {
-"tex": "\\mathbb Z\\to 0\\to\\mathbb Z\\text{,}",
+"tex": "\\mathbb Z\\to 0\\to\\mathbb Z",
 "display": false
 },
 {
@@ -712,7 +548,7 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Ab}\\text{,}",
+"tex": "\\mathbf{Ab}",
 "display": false
 },
 {
@@ -720,23 +556,19 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Cob}\\text{:}",
+"tex": "\\mathbf{Cob}",
 "display": false
 },
 {
-"tex": "\\mathbf{Cob}_2",
+"tex": "\\mathbf{Cob}_2\\to\\mathbf{Vect}\\text{,}",
 "display": false
 },
 {
-"tex": "\\mathbf{FinBool}\\simeq\\mathbf{FinSet}^{\\mathrm{op}}\\text{:}",
+"tex": "\\mathbf{FinBool}\\simeq\\mathbf{FinSet}^{\\mathrm{op}}",
 "display": false
 },
 {
 "tex": "\\mathbf{FinSet}",
-"display": false
-},
-{
-"tex": "\\mathbf{FinSet}\\text{.}",
 "display": false
 },
 {
@@ -745,10 +577,6 @@
 },
 {
 "tex": "\\mathbf{Grp}",
-"display": false
-},
-{
-"tex": "\\mathbf{Grp}\\text{;}",
 "display": false
 },
 {
@@ -776,7 +604,7 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Mat}\\text{:}",
+"tex": "\\mathbf{Mat}\\simeq\\mathbf{Vect}^{\\mathrm{fd}}\\text{:}",
 "display": false
 },
 {
@@ -792,7 +620,7 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Rel}\\text{:}",
+"tex": "\\mathbf{Rel}",
 "display": false
 },
 {
@@ -801,10 +629,6 @@
 },
 {
 "tex": "\\mathbf{Set}",
-"display": false
-},
-{
-"tex": "\\mathbf{Set}\\to\\mathbf{Set}\\text{,}",
 "display": false
 },
 {
@@ -820,15 +644,19 @@
 "display": false
 },
 {
-"tex": "\\mathbf{Vect}\\text{,}",
-"display": false
-},
-{
 "tex": "\\mathcal C",
 "display": false
 },
 {
+"tex": "\\mathcal C(A,B)",
+"display": false
+},
+{
 "tex": "\\mathcal C(A,B)\\text{,}",
+"display": false
+},
+{
+"tex": "\\mathcal C(A,B)\\to\\mathcal D(FA,FB)\\text{;}",
 "display": false
 },
 {
@@ -837,10 +665,6 @@
 },
 {
 "tex": "\\mathcal C\\simeq\\mathcal D",
-"display": false
-},
-{
-"tex": "\\mathcal C\\text{.}",
 "display": false
 },
 {
@@ -857,6 +681,10 @@
 },
 {
 "tex": "\\mathcal C\\to\\mathcal D\\text{,}",
+"display": false
+},
+{
+"tex": "\\mathcal C\\to\\mathcal D\\text{:}",
 "display": false
 },
 {
@@ -880,19 +708,7 @@
 "display": false
 },
 {
-"tex": "\\mathcal D\\subseteq\\mathcal C",
-"display": false
-},
-{
-"tex": "\\mathcal G",
-"display": false
-},
-{
-"tex": "\\mathcal G\\text{,}",
-"display": false
-},
-{
-"tex": "\\mathcal G\\text{.}",
+"tex": "\\mathcal D\\subseteq\\mathcal C\\text{:}",
 "display": false
 },
 {
@@ -904,27 +720,19 @@
 "display": false
 },
 {
-"tex": "\\mathcal P(Y)\\to\\mathcal P(X)",
-"display": false
-},
-{
-"tex": "\\mathcal P(g\\circ f)=\\mathcal P(g)\\circ\\mathcal P(f)",
-"display": false
-},
-{
 "tex": "\\mathcal V",
 "display": false
 },
 {
-"tex": "\\mathrm{At}(B')\\to\\mathrm{At}(B)\\text{,}",
+"tex": "\\mathcal V\\text{:}",
+"display": false
+},
+{
+"tex": "\\mathcal V\\text{?}",
 "display": false
 },
 {
 "tex": "\\mathrm{At}(B)\\text{,}",
-"display": false
-},
-{
-"tex": "\\mathrm{Aut}",
 "display": false
 },
 {
@@ -948,19 +756,19 @@
 "display": false
 },
 {
-"tex": "\\mathrm{sgn}\\circ s=1_{C_2}\\text{,}",
+"tex": "\\mathrm{Ob}\\,\\mathcal C",
 "display": false
 },
 {
-"tex": "\\mathrm{sgn}\\colon S_3\\to C_2",
+"tex": "\\mathrm{Ob}\\,\\mathcal C\\to\\mathrm{Ob}\\,\\mathcal D",
 "display": false
 },
 {
-"tex": "\\neg x=1+x",
+"tex": "\\mathrm{sgn}\\circ s=1_{C_2}",
 "display": false
 },
 {
-"tex": "\\pi\\mapsto\\sigma\\pi\\sigma^{-1}\\text{;}",
+"tex": "\\mathrm{sgn}\\colon S_3\\to C_2\\text{:}",
 "display": false
 },
 {
@@ -968,23 +776,11 @@
 "display": false
 },
 {
-"tex": "\\pi_1(D^2)=0",
+"tex": "\\pi_1(D^2)=0\\text{,}",
 "display": false
 },
 {
 "tex": "\\pi_1(S^1)\\cong\\mathbb Z\\text{,}",
-"display": false
-},
-{
-"tex": "\\pi_1\\text{:}",
-"display": false
-},
-{
-"tex": "\\sigma=(1\\,2\\,\\dots\\,n)\\text{.}",
-"display": false
-},
-{
-"tex": "\\sigma\\circ f\\circ\\sigma^{-1}",
 "display": false
 },
 {
@@ -993,6 +789,10 @@
 },
 {
 "tex": "\\sigma\\in\\mathrm{Aut}(A)\\text{,}",
+"display": false
+},
+{
+"tex": "\\sigma\\pi\\sigma^{-1}\\text{;}",
 "display": false
 },
 {
@@ -1016,23 +816,15 @@
 "display": false
 },
 {
-"tex": "\\to\\mathbf{Grp}\\text{.}",
+"tex": "\\sum_{k\\ge0}\\binom{n+1-k}{k}=F_{n+2}",
 "display": false
 },
 {
-"tex": "\\varepsilon_d\\colon F(Gd)\\to d",
+"tex": "\\tau=(1\\,2)",
 "display": false
 },
 {
-"tex": "\\varnothing",
-"display": false
-},
-{
-"tex": "\\varphi(Z(G))",
-"display": false
-},
-{
-"tex": "\\varphi\\colon G\\to H",
+"tex": "\\varphi",
 "display": false
 },
 {
@@ -1040,15 +832,7 @@
 "display": false
 },
 {
-"tex": "\\varphi_U\\colon F[U]\\to G[U]",
-"display": false
-},
-{
-"tex": "\\varphi_X\\colon X\\to\\{1,\\dots,\\lvert X\\rvert\\}\\text{.}",
-"display": false
-},
-{
-"tex": "\\{1,\\dots,n\\}\\text{.}",
+"tex": "\\varphi_U\\colon F(U)\\to G(U)",
 "display": false
 },
 {
@@ -1060,10 +844,6 @@
 "display": false
 },
 {
-"tex": "f",
-"display": false
-},
-{
 "tex": "f(x)",
 "display": false
 },
@@ -1072,43 +852,7 @@
 "display": false
 },
 {
-"tex": "f(x\\ast y)=f(x)\\ast f(y)",
-"display": false
-},
-{
-"tex": "f=0",
-"display": false
-},
-{
-"tex": "f=1",
-"display": false
-},
-{
-"tex": "f=2",
-"display": false
-},
-{
-"tex": "f=\\eta_B^{-1}\\circ Gh\\circ\\eta_A",
-"display": false
-},
-{
 "tex": "f=\\lambda\\cdot\\mathrm{id}_V\\text{:}",
-"display": false
-},
-{
-"tex": "f\\circ g=1_B\\text{;}",
-"display": false
-},
-{
-"tex": "f\\colon A\\to B",
-"display": false
-},
-{
-"tex": "f\\colon A\\to B\\text{;}",
-"display": false
-},
-{
-"tex": "f\\colon B\\to B'",
 "display": false
 },
 {
@@ -1116,27 +860,11 @@
 "display": false
 },
 {
-"tex": "f\\colon U\\to\\{0,1,2\\}",
-"display": false
-},
-{
-"tex": "f\\colon X\\to Y",
-"display": false
-},
-{
-"tex": "f\\mapsto(S\\mapsto f(S))\\text{:}",
-"display": false
-},
-{
-"tex": "f\\mapsto(T\\mapsto f^{-1}(T))\\text{:}",
+"tex": "f\\in\\mathcal C(A,B)",
 "display": false
 },
 {
 "tex": "f\\mapsto(f^{-1})^{\\ast}",
-"display": false
-},
-{
-"tex": "f\\text{;}",
 "display": false
 },
 {
@@ -1148,27 +876,11 @@
 "display": false
 },
 {
-"tex": "g\\circ f\\colon A\\to C\\text{;}",
-"display": false
-},
-{
 "tex": "g\\circ_{\\mathrm{op}}f=f\\circ g",
 "display": false
 },
 {
-"tex": "g\\colon B\\to A",
-"display": false
-},
-{
-"tex": "g\\colon B\\to C",
-"display": false
-},
-{
-"tex": "i",
-"display": false
-},
-{
-"tex": "i\\colon S^1\\to D^2\\text{.}",
+"tex": "g\\in G",
 "display": false
 },
 {
@@ -1192,19 +904,11 @@
 "display": false
 },
 {
-"tex": "n!\\text{.}",
+"tex": "n!\\text{;}",
 "display": false
 },
 {
-"tex": "n=3",
-"display": false
-},
-{
-"tex": "n=4",
-"display": false
-},
-{
-"tex": "n=\\lvert U\\rvert",
+"tex": "n=2\\text{:}",
 "display": false
 },
 {
@@ -1212,15 +916,7 @@
 "display": false
 },
 {
-"tex": "n\\ge1\\text{,}",
-"display": false
-},
-{
-"tex": "n\\ge2",
-"display": false
-},
-{
-"tex": "n\\text{,}",
+"tex": "n\\mapsto\\{1,\\dots,n\\}\\text{;}",
 "display": false
 },
 {
@@ -1232,23 +928,11 @@
 "display": false
 },
 {
-"tex": "p",
-"display": false
-},
-{
 "tex": "r",
 "display": false
 },
 {
 "tex": "r\\circ i=1_{S^1}",
-"display": false
-},
-{
-"tex": "r\\circ i=1_{S^1}\\text{,}",
-"display": false
-},
-{
-"tex": "r\\circ s=1_A",
 "display": false
 },
 {
@@ -1260,11 +944,7 @@
 "display": false
 },
 {
-"tex": "r\\colon B\\to A\\text{,}",
-"display": false
-},
-{
-"tex": "r\\colon D^2\\to S^1\\text{.}",
+"tex": "r\\colon D^2\\to S^1",
 "display": false
 },
 {
@@ -1280,23 +960,7 @@
 "display": false
 },
 {
-"tex": "s\\colon C_2\\to S_3",
-"display": false
-},
-{
-"tex": "u",
-"display": false
-},
-{
-"tex": "u=v\\text{;}",
-"display": false
-},
-{
-"tex": "u\\circ f\\circ u^{-1}",
-"display": false
-},
-{
-"tex": "u\\to v",
+"tex": "s\\colon C_2\\to S_3\\text{,}",
 "display": false
 },
 {
@@ -1304,11 +968,7 @@
 "display": false
 },
 {
-"tex": "v\\mapsto(f\\mapsto f(v))\\text{.}",
-"display": false
-},
-{
-"tex": "v\\text{,}",
+"tex": "v\\mapsto(f\\mapsto f(v))",
 "display": false
 },
 {
@@ -1320,11 +980,7 @@
 "display": false
 },
 {
-"tex": "x\\in G\\text{.}",
-"display": false
-},
-{
-"tex": "x\\in S^1",
+"tex": "x\\in G\\text{;}",
 "display": false
 },
 {
@@ -1340,27 +996,15 @@
 "display": false
 },
 {
-"tex": "x\\vee y=x+y+xy\\text{,}",
-"display": false
-},
-{
-"tex": "x\\wedge y=xy\\text{,}",
-"display": false
-},
-{
-"tex": "x^2=-1\\text{,}",
-"display": false
-},
-{
-"tex": "x^2=x\\text{.}",
-"display": false
-},
-{
 "tex": "x_0",
 "display": false
 },
 {
 "tex": "xg=gx",
+"display": false
+},
+{
+"tex": "zg=gz",
 "display": false
 }
 ]
