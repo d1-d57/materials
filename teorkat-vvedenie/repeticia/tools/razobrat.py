@@ -50,10 +50,14 @@ BLOKI = [
 RX_STOP = re.compile(r"(?<![\w-])стоп(?![\w-])", re.I)
 RX_STOP_SLIPSHIJSYA = re.compile(r"^\W*стоп(?=[а-яё])", re.I)
 RX_VOZVRAT = re.compile(
-    r"(?<![\w-])(продолжаем|продолжим|продолжаю|поехали|возвращаюсь|возвращаемся"
+    r"(?<![\w-])(старт|продолжаем|продолжим|продолжаю|поехали|возвращаюсь|возвращаемся"
     r"|дальше по тексту|дальше по плану|обратно к рассказу|конец комментария)(?![\w-])",
     re.I,
 )
+# «старт» стоит первым не по алфавиту: в акте 1 владелец сам его завёл на ходу
+# («сначала, наверное, старт слайда, а потом комментарий») и сказал трижды, тогда
+# как ни одного «продолжаем» в записи нет. Маркер возврата задаёт говорящий, а не
+# автор скрипта, — правило догоняет речь, а не наоборот.
 
 RX_SEGMENT = re.compile(r"^\*\*\[(\d+):(\d\d)\]\*\*\s*(.+)$")
 
@@ -164,6 +168,49 @@ def raskroit(segmenty):
     return gotovo
 
 
+def chitat_granicy(put):
+    """Границы потоков, поставленные СУЖДЕНИЕМ, — как данные для скрипта.
+
+    Зачем это есть. Маркеры ловят не всё: в акте 1 владелец сказал «стоп» трижды,
+    возврат обозначил словом «старт» (которого правило не знало), а на слайде 4
+    начал рассказ вообще без маркера. Механическая разметка дала бы «комментарий
+    с 18:00 до конца» — то есть соврала бы вдвое там, где тайминг и есть цель.
+
+    Но из того, что границу ставит человек, НЕ следует, что человек вписывает
+    минуты. Числа считает скрипт из этих границ — иначе в отчёт попадает не
+    измерение, а впечатление.
+
+    Формат строки:  MM:SS <поток> [метка слайда]
+    Поток: рассказ | комментарий | служебное. Пустые строки и # — комментарии.
+    """
+    granicy = []
+    for nomer, stroka in enumerate(open(put, encoding="utf-8"), 1):
+        s = stroka.strip()
+        if not s or s.startswith("#"):
+            continue
+        m = re.match(r"^(\d+):(\d\d)\s+(рассказ|комментарий|служебное)\s*(.*)$", s)
+        if not m:
+            sys.exit("границы, строка %d: не разобрана — «%s»" % (nomer, s))
+        granicy.append(
+            (int(m.group(1)) * 60 + int(m.group(2)), m.group(3), m.group(4).strip())
+        )
+    if not granicy:
+        sys.exit("в %s нет ни одной границы" % put)
+    granicy.sort(key=lambda g: g[0])
+    return granicy
+
+
+def razmetit_po_granicam(segmenty, granicy):
+    """Раскладывает сегменты по потокам из файла границ. Ни один не теряется."""
+    kuski = []
+    for ot, potok, metka in granicy:
+        kuski.append({"ot": ot, "potok": potok, "metka": metka, "seg": []})
+    for ot, do, t, _ in segmenty:
+        podhodit = [k for k in kuski if k["ot"] <= ot + 0.5]
+        (podhodit[-1] if podhodit else kuski[0])["seg"].append((ot, do, t))
+    return [k for k in kuski if k["seg"]]
+
+
 def razmetit(segmenty):
     """Поток → куски (потok, сегменты). Возвращает также журнал сработавших маркеров."""
     potok = "рассказ"
@@ -178,12 +225,12 @@ def razmetit(segmenty):
             markery.append((ot, novyj, pravilo + (", граница внутри сегмента — интерполирована" if interp else ""), t[:70]))
         if novyj != potok:
             if tekushchij:
-                kuski.append((potok, tekushchij))
+                kuski.append((potok, tekushchij, ""))
             tekushchij, potok = [], novyj
         tekushchij.append((ot, do, t))
     if tekushchij:
-        kuski.append((potok, tekushchij))
-    for i, (p, seg) in enumerate(kuski):
+        kuski.append((potok, tekushchij, ""))
+    for i, (p, seg, _) in enumerate(kuski):
         # комментарий, за которым нет возврата и который не последний — возврат
         # был молчаливым, и граница у него угадана, а не распознана
         if p == "комментарий" and i + 1 < len(kuski) and len(seg) > 12:
@@ -202,6 +249,7 @@ def minuty(sec):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("syroj")
+    ap.add_argument("--granicy", default="", help="файл границ потоков, поставленных суждением (см. chitat_granicy)")
     ap.add_argument("--out", default="")
     args = ap.parse_args()
 
@@ -229,10 +277,20 @@ def main():
     raskroeno = len(segmenty) - len(segmenty_syrye)
 
     spisok = slajdy()
-    kuski, markery, nezakrytye = razmetit(segmenty)
+    # маркеры считаем ВСЕГДА — даже когда границы заданы суждением: их журнал
+    # показывает, что правило поймало, а что пропустило, и как править правило
+    kuski_avto, markery, nezakrytye = razmetit(segmenty)
+    if args.granicy:
+        granicy = chitat_granicy(args.granicy)
+        kuski = [(k["potok"], k["seg"], k["metka"]) for k in razmetit_po_granicam(segmenty, granicy)]
+        chej_razbor = "границы поставлены СУЖДЕНИЕМ (`%s`), числа посчитаны из них скриптом" % os.path.basename(args.granicy)
+    else:
+        kuski = kuski_avto
+        chej_razbor = "границы распознаны автоматически по маркерам «стоп»/«старт»"
 
-    rasskaz = sum(do - ot for p, seg in kuski if p == "рассказ" for ot, do, _ in seg)
-    komm = sum(do - ot for p, seg in kuski if p == "комментарий" for ot, do, _ in seg)
+    rasskaz = sum(do - ot for p, seg, _ in kuski if p == "рассказ" for ot, do, _ in seg)
+    komm = sum(do - ot for p, seg, _ in kuski if p == "комментарий" for ot, do, _ in seg)
+    sluzh = sum(do - ot for p, seg, _ in kuski if p == "служебное" for ot, do, _ in seg)
     vsego = segmenty[-1][1] - segmenty[0][0]
 
     # ── разбор ───────────────────────────────────────────────────────────────
@@ -242,10 +300,12 @@ def main():
         "> Собран `tools/razobrat.py` из `%s`. Правки — в `PRAVKI.md`, не здесь."
         % os.path.basename(args.syroj),
         "",
+        "**Как размечено:** %s." % chej_razbor,
+        "",
         "**Правило маркера** (подстрой речь под него, если неудобно):",
-        "- **«стоп»** отдельным словом в любом регистре и с любыми знаками — рассказ → комментарий. «стоп-кадр» и «стопор» маркером НЕ считаются;",
-        "- возврат — словом: «продолжаем», «продолжим», «продолжаю», «поехали», «возвращаюсь», «дальше по тексту», «конец комментария»;",
-        "- **молчаливый возврат распознать нечем** — если возврат не назван, комментарием считается всё до следующего маркера. Подозрительно длинные комментарии перечислены в конце.",
+        "- **«стоп»** отдельным словом — рассказ → комментарий. «стоп-кадр» и «стопор» маркером НЕ считаются;",
+        "- **«старт»** — обратно к рассказу (годятся также «продолжаем», «продолжим», «поехали», «возвращаюсь», «дальше по тексту», «конец комментария»);",
+        "- **молчаливый возврат распознать нечем** — не назвали, и комментарием считается всё до следующего маркера. Именно поэтому существуют границы суждением.",
         "",
         "## 🔴 ТАЙМИНГ — этого акта",
         "",
@@ -253,13 +313,14 @@ def main():
         "|---|---|---|",
         "| **рассказ (чистый)** | **%s** | %d%% |" % (minuty(rasskaz), round(100 * rasskaz / max(1e-9, vsego))),
         "| комментарии | %s | %d%% |" % (minuty(komm), round(100 * komm / max(1e-9, vsego))),
+        "| служебное (разговор о процессе, не лекция) | %s | %d%% |" % (minuty(sluzh), round(100 * sluzh / max(1e-9, vsego))),
         "| всего на записи | %s | 100%% |" % minuty(vsego),
         "",
     ]
 
     # накопительно по всей лекции
     json.dump(
-        {"akt": imya, "rasskaz": rasskaz, "komm": komm, "vsego": vsego},
+        {"akt": imya, "rasskaz": rasskaz, "komm": komm, "sluzh": sluzh, "vsego": vsego},
         open(os.path.join(REPETICIA, "tajming-%s.json" % imya), "w", encoding="utf-8"),
         ensure_ascii=False,
     )
@@ -279,38 +340,52 @@ def main():
     else:
         L += ["*Накопительный итог появится со второго акта.*", ""]
 
+    def metka_kuska(seg, gotovaya):
+        """Метка слайда: поставленная суждением — как есть; иначе догадка с `?`."""
+        if gotovaya:
+            return gotovaya
+        kand = privyazka(" ".join(t for _, _, t in seg), spisok)
+        if kand and kand[0][1] > 0 and (len(kand) < 2 or kand[0][0] >= kand[1][0] * 1.5):
+            return "%s «%s»" % (kand[0][2]["metka"], kand[0][2]["zagolovok"])
+        if kand:
+            return "? " + " / ".join("%s «%s»" % (k[2]["metka"], k[2]["zagolovok"]) for k in kand[:2])
+        return "?"
+
+    # ── ход записи целиком: видно чередование потоков ────────────────────────
+    L += ["## Ход записи — чем сменялось что", "", "| # | таймкод | длит. | поток | слайд | начало реплики |", "|---|---|---|---|---|---|"]
+    for n, (p, seg, gotovaya) in enumerate(kuski, 1):
+        znak = {"рассказ": "🎙 рассказ", "комментарий": "💬 комментарий", "служебное": "⚙️ служебное"}[p]
+        tekst = " ".join(t for _, _, t in seg)
+        L.append(
+            "| %d | **[%s]** | %s | %s | %s | %s… |"
+            % (n, mmss(seg[0][0]), minuty(seg[-1][1] - seg[0][0]), znak,
+               metka_kuska(seg, gotovaya) if p != "служебное" else "—",
+               tekst[:80].replace("|", "/"))
+        )
+    L.append("")
+
     # ── комментарии ──────────────────────────────────────────────────────────
-    komm_kuski = [(i, seg) for i, (p, seg) in enumerate(kuski) if p == "комментарий"]
-    L += ["## Комментарии — сюда смотреть при правке дека", ""]
+    komm_kuski = [(i, seg, g) for i, (p, seg, g) in enumerate(kuski) if p == "комментарий"]
+    L += ["## Комментарии дословно — сюда смотреть при правке дека", ""]
     if not komm_kuski:
-        L.append("*Ни одного «стоп» не поймано. Либо дефектов не нашлось, либо маркер прозвучал иначе — проверь по сырой расшифровке.*")
+        L.append("*Ни одного комментария не выделено. Либо дефектов не нашлось, либо маркер прозвучал иначе — проверь по сырой расшифровке.*")
         L.append("")
     else:
-        L += ["| # | таймкод | длит. | слайд (догадка) | дословно |", "|---|---|---|---|---|"]
-        for n, (_, seg) in enumerate(komm_kuski, 1):
-            tekst = " ".join(t for _, _, t in seg)
-            kand = privyazka(tekst, spisok)
-            if kand and kand[0][1] > 0 and (len(kand) < 2 or kand[0][0] >= kand[1][0] * 1.5):
-                metka = "%s «%s»" % (kand[0][2]["metka"], kand[0][2]["zagolovok"])
-            elif kand:
-                metka = "? " + " / ".join("%s «%s»" % (k[2]["metka"], k[2]["zagolovok"]) for k in kand[:2])
-            else:
-                metka = "?"
+        for n, (_, seg, gotovaya) in enumerate(komm_kuski, 1):
             L.append(
-                "| %d | **[%s]** | %s | %s | %s |"
-                % (n, mmss(seg[0][0]), minuty(seg[-1][1] - seg[0][0]), metka, tekst.replace("|", "/"))
+                "### Комментарий %d — **[%s]**, %s, слайд: %s"
+                % (n, mmss(seg[0][0]), minuty(seg[-1][1] - seg[0][0]), metka_kuska(seg, gotovaya))
             )
-        L.append("")
+            L.append("")
+            for ot, _, t in seg:
+                L.append("**[%s]** %s" % (mmss(ot), t))
+                L.append("")
 
     # ── рассказ ──────────────────────────────────────────────────────────────
-    L += ["## Рассказ — куски между комментариями", "", "| # | таймкод | длит. | слайд (догадка) | начало реплики |", "|---|---|---|---|---|"]
-    for n, (p, seg) in enumerate([k for k in kuski if k[0] == "рассказ"], 1):
+    L += ["## Рассказ — куски и их длительность (это и есть калибровка лекции)", "", "| # | таймкод | длит. | слайд | начало реплики |", "|---|---|---|---|---|"]
+    for n, (p, seg, gotovaya) in enumerate([k for k in kuski if k[0] == "рассказ"], 1):
         tekst = " ".join(t for _, _, t in seg)
-        kand = privyazka(tekst, spisok)
-        metka = ("%s «%s»" % (kand[0][2]["metka"], kand[0][2]["zagolovok"])) if kand else "?"
-        if kand and len(kand) > 1 and kand[0][0] < kand[1][0] * 1.5:
-            metka = "? " + metka
-        L.append("| %d | **[%s]** | %s | %s | %s… |" % (n, mmss(seg[0][0]), minuty(seg[-1][1] - seg[0][0]), metka, tekst[:90].replace("|", "/")))
+        L.append("| %d | **[%s]** | %s | %s | %s… |" % (n, mmss(seg[0][0]), minuty(seg[-1][1] - seg[0][0]), metka_kuska(seg, gotovaya), tekst[:90].replace("|", "/")))
     L.append("")
 
     # ── служебное ────────────────────────────────────────────────────────────
@@ -321,7 +396,10 @@ def main():
     else:
         L.append("*ни одного*")
     L += ["", "## Непривязанные и сомнительные", ""]
-    bez = [n for n, (_, seg) in enumerate(komm_kuski, 1) if not privyazka(" ".join(t for _, _, t in seg), spisok)]
+    bez = [
+        n for n, (_, seg, g) in enumerate(komm_kuski, 1)
+        if not g and not privyazka(" ".join(t for _, _, t in seg), spisok)
+    ]
     L.append("- комментариев без привязки к слайду: **%d**%s" % (len(bez), (" (номера: %s)" % ", ".join(map(str, bez))) if bez else ""))
     L.append("- комментариев с привязкой под вопросом (`?`): смотри таблицу выше")
     if nezakrytye:
@@ -334,8 +412,8 @@ def main():
         "(добавлено границ: %d), разобрано **%d** — ни один не потерян; "
         "кусков рассказа %d, комментариев %d.*"
         % (len(segmenty_syrye), len(segmenty), raskroeno,
-           sum(len(seg) for _, seg in kuski),
-           len([1 for p, _ in kuski if p == "рассказ"]), len(komm_kuski))
+           sum(len(seg) for _, seg, _ in kuski),
+           len([1 for p, _, _ in kuski if p == "рассказ"]), len(komm_kuski))
     )
 
     vyhod = args.out or os.path.join(REPETICIA, "%s-razbor.md" % imya)
@@ -343,7 +421,7 @@ def main():
     print("→ %s" % vyhod)
     print("ТАЙМИНГ: рассказ %s | комментарии %s | всего %s" % (minuty(rasskaz), minuty(komm), minuty(vsego)))
     print("маркеров сработало %d, комментариев %d, сегментов %d/%d"
-          % (len(markery), len(komm_kuski), sum(len(seg) for _, seg in kuski), len(segmenty)))
+          % (len(markery), len(komm_kuski), sum(len(seg) for _, seg, _ in kuski), len(segmenty)))
 
 
 if __name__ == "__main__":
