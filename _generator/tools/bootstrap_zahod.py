@@ -169,12 +169,20 @@ def main(argv):
                   f"Не она — СТОП, `git checkout` НЕ делай (§4 GIT-disciplina), нужен `--worktree`.")
         start_line = "git branch --show-current"
 
+    # 🔴 Заход обязан входить в СОБСТВЕННУЮ зону — иначе его же отчёт физически
+    # лежит вне того, что коммитит `git_zona.py check --zone`, и заход не может
+    # закоммитить сам себя. Аналитик про это помнить не обязан: путь дописывается
+    # сюда, а не в задание. Задан аналитиком вручную (уже есть в `--zone`) —
+    # не удваиваем.
+    own_rel = dst.relative_to(REPO_ROOT).as_posix()
+    zone = a.zone if own_rel in a.zone.split() else f"{a.zone} {own_rel}"
+
     text = (
         TEMPLATE.read_text(encoding="utf-8")
         .replace("{{ТЕМА}}", a.tema)
         .replace("{{МОДЕЛЬ}}", a.model)
         .replace("{{ВЕТКА}}", a.branch)
-        .replace("{{ЗОНА}}", a.zone)
+        .replace("{{ЗОНА}}", zone)
         .replace("{{КОНТРАКТ_МЕСТО}}", mesto)
         .replace("{{ПЕРВЫЙ_ХОД}}", pervyj)
     )

@@ -16,9 +16,25 @@ import datetime
 import sys
 from pathlib import Path
 
+# Регистрацию делает ОБЩЕЕ ЯДРО, а не своя копия вставки в §6: та же причина,
+# что у bootstrap_zahod.py — шаг «арка» и шаг «заход» обязаны писать в индекс
+# одинаково, иначе строки разъедутся и разъезд обнаружится только через неделю.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import register_doc  # noqa: E402
+
 REPO_ROOT = Path(__file__).resolve().parents[2]  # .../materials
 TEMPLATE_DIR = REPO_ROOT / "_studio" / "zhurnal" / "_TEMPLATE-arka"
 ZHURNAL_DIR = REPO_ROOT / "_studio" / "zhurnal"
+
+# Роль файла, а не выдумка: описание должно называть ЧТО это и КАКОЙ арки —
+# иначе пять строк в §6 неотличимы друг от друга и от соседних арок.
+ОПИСАНИЯ_АРКИ = {
+    "PLAN.md": "план арки {slug}",
+    "TZ.md": "контракт арки {slug}",
+    "SESSIYA.md": "дневник арки {slug}",
+    "NAVIGATOR.md": "навигатор арки {slug} (ориентация, читается первым): {concept}",
+    "UROKI-FABRIKE.md": "уроки арки {slug} с ценой, вход закрывающей сессии",
+}
 
 
 def validate_slug(name, chto):
@@ -86,6 +102,25 @@ def main(argv):
 
     print(f"Готово: {target}")
     print("Дальше (ARKA §10 C): Cowork дозаполняет NAVIGATOR/TZ/PLAN (границы, задачи) и пишет хэндофф в эту арку.")
+
+    # 🔴 Дверь на все пять файлов ТЕМ ЖЕ ходом — иначе каждая новая арка рождает
+    # пять сирот: ворота 5 про них молчат по подстрочному совпадению чужих
+    # токенов §6 (в разделе уже есть `PLAN.md` и прочие от других арок), то
+    # есть дефект не просто есть, а невидим.
+    провал = False
+    for имя, шаблон_описания in ОПИСАНИЯ_АРКИ.items():
+        путь = target / имя
+        if not путь.is_file():
+            continue
+        описание = шаблон_описания.format(slug=slug, concept=concept)
+        if register_doc.registrate(путь, описание):
+            print(f"❌ АРКА СОЗДАНА, НО «{имя}» НЕ ЗАРЕГИСТРИРОВАН в KARTA.md §6 "
+                  f"(причина выше). Файлы НЕ удаляю — удаление лоссово; "
+                  f"зарегистрируй руками дверью register_doc.py "
+                  f"{путь.relative_to(REPO_ROOT)} \"<описание>\".", file=sys.stderr)
+            провал = True
+    if провал:
+        return 1
     return 0
 
 

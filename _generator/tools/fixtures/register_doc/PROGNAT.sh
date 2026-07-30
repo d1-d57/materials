@@ -1,9 +1,10 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: register_doc.py bootstrap_zahod.py check_kartoteka.py
-# ↑ ОХВАТ, а не список авторства. Три имени, потому что механизм «регистрация
-# исполнима» размазан по трём файлам: дверь (register_doc), генератор захода
-# (bootstrap_zahod, зовёт ту же дверь) и ворота 5 (check_kartoteka — там живёт
-# предикат «зарегистрирован», общий для двери и гейта). Правка ЛЮБОГО из трёх
+# TOOL-CONTRACT-COVERS: register_doc.py bootstrap_zahod.py bootstrap_arka.py check_kartoteka.py
+# ↑ ОХВАТ, а не список авторства. Четыре имени, потому что механизм «регистрация
+# исполнима» размазан по четырём файлам: дверь (register_doc), два генератора,
+# зовущих ту же дверь (bootstrap_zahod — заход, bootstrap_arka — арка на все
+# пять файлов), и ворота 5 (check_kartoteka — там живёт предикат
+# «зарегистрирован», общий для двери и гейта). Правка ЛЮБОГО из четырёх
 # может рассинхронизировать «дверь вписала» и «хук засчитал», и тогда обход
 # `--no-verify` вернётся штатным ходом. Пока охват жил в голове автора, хук
 # поднимал фикстуру git_zona только на правку git_zona.py — у гейта триггер был
@@ -51,8 +52,9 @@ ARKA=_studio/zhurnal/2026-07-30_proba
 mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
          "$T/$ARKA" "$T/teoriya-kategoriy/kartoteka" "$T/proekt"
 cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
-   "$TOOLS/bootstrap_zahod.py" "$T/_generator/tools/"
+   "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$T/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
+cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
 
 # Индекс-двойник: два раздела вокруг §6 — чтобы было видно, если вставка
 # заедет к соседям. Строка арки есть, значит проверяется и ветка «раздел
@@ -269,5 +271,48 @@ V=$(grep -c 'VLOZHENNYJ.md' "$T/_studio/docs/KARTA.md" || true)
 V=$(grep -c 'skeleton.*VLOZHENNYJ' "$T/_studio/docs/KARTA.md" || true)
 [ "$V" = "0" ] && echo "  ✅ строка-приманка с хвостом src/ записи НЕ получила" \
                || { echo "  ❌ МИСФАЙЛИНГ: запись уехала в чужой раздел (приманка src/)"; FAIL=1; }
+
+# ══ ЛОВУШКИ 11–12: dobivka-registracii — долги 1 и 3 ══
+
+# ── ЛОВУШКА 11 (долг 1): bootstrap_arka.py — арка рождается зарегистрированной
+# на ВСЕ пять файлов ──
+# Ворота 5 не ослабляются ни на йоту: без вызова двери каждая новая арка тихо
+# плодит пять сирот, и подстрочный предикат ворот про них МОЛЧИТ по совпадению
+# с чужими токенами §6 (`PLAN.md` и прочие уже стоят там у соседних арок) — то
+# есть дефект не просто есть, а невидим. Мутация «убрать вызов двери из
+# bootstrap_arka.py» обязана красить ЭТУ ловушку и НАЗВАТЬ ЧИСЛО осиротевших
+# файлов. Считаем ВХОЖДЕНИЯ путей (`grep -o | sort -u | wc -l`), а не строки
+# (`grep -c`): §6 — абзац-СТРОКА, и по строкам счётчик слеп на дубли — ровно на
+# этом ловушка 3 однажды осталась зелёной при снятой идемпотентности.
+ARKA_ARKI=2026-07-30-arka-proba
+python3 "$T/_generator/tools/bootstrap_arka.py" "$ARKA_ARKI" "проверка регистрации арки" > /dev/null 2>&1 || true
+if [ -d "$T/_studio/zhurnal/$ARKA_ARKI" ]; then
+    for f in PLAN.md TZ.md SESSIYA.md NAVIGATOR.md UROKI-FABRIKE.md; do
+        git add "_studio/zhurnal/$ARKA_ARKI/$f" 2>/dev/null || true
+    done
+    SIROT=$($GATE 2>&1 | grep -o "_studio/zhurnal/$ARKA_ARKI/[A-Za-z.-]*\.md" | sort -u | wc -l | tr -d ' ')
+    [ "$SIROT" = "0" ] && echo "  ✅ bootstrap_arka.py зарегистрировал все пять файлов арки тем же ходом" \
+                       || { echo "  ❌ АРКА РОДИЛАСЬ С СИРОТАМИ: $SIROT файл(ов) из пяти не в §6"; FAIL=1; }
+else
+    echo "  ❌ bootstrap_arka.py не создал арку — проверить нечего (ловушка 11)"; FAIL=1
+fi
+
+# ── ЛОВУШКА 12 (долг 3): заход содержит СВОЙ СОБСТВЕННЫЙ путь в тексте зоны ──
+# Без дописывания заход физически не может закоммитить свой же отчёт: файл
+# лежит вне объявленной {{ЗОНА}}, и `git_zona.py check --zone` его не видит —
+# ровно так вчерашний исполнитель оставил свой отчёт вне git. Мутация «убрать
+# дописывание own_rel к a.zone» обязана красить ЭТУ ловушку.
+python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" svoya-zona \
+    --branch fixture-branch --zone "moya-zona/" \
+    --opisanie "фикстурный заход: своя зона содержит свой путь" \
+    > /dev/null 2>&1 || true
+if [ -f "$T/$ARKA/kod_svoya-zona.md" ]; then
+    if grep -q "$ARKA/kod_svoya-zona.md" "$T/$ARKA/kod_svoya-zona.md"
+    then echo "  ✅ заход содержит собственный путь в тексте зоны"
+    else echo "  ❌ ЗАХОД НЕ ЗНАЕТ СВОЕЙ ЗОНЫ — собственный путь не дописан"; FAIL=1
+    fi
+else
+    echo "  ❌ bootstrap_zahod.py не создал заход — проверить нечего (ловушка 12)"; FAIL=1
+fi
 
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
