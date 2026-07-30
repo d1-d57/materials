@@ -44,7 +44,14 @@ echo ""                                                  >> "$ITOG"
 potracheno() {
   python3 - "$LOGI" <<'PY'
 import json, pathlib, sys
-s = 0.0
+
+# 🔴 total_cost_usd НАКОПИТЕЛЬНЫЙ ПО СЕССИИ, и в логе таких строк несколько.
+# Цена ошибки, оплачено 01.08: заход H1 выдал два result'а одной сессии
+# (промежуточный $17.89 и финальный $25.03) с ОДИНАКОВЫМ modelUsage; наивная
+# сумма дала $42.93 при реальных $25.03 — завышение на 71 %, предохранитель
+# сработал вхолостую и остановил ночь после первого звена.
+# Правило: максимум внутри session_id, сумма — по разным сессиям.
+po_sessii = {}
 for p in pathlib.Path(sys.argv[1]).glob("*.jsonl"):
     for line in p.read_text(errors="ignore").splitlines():
         try:
@@ -52,8 +59,9 @@ for p in pathlib.Path(sys.argv[1]).glob("*.jsonl"):
         except Exception:
             continue
         if d.get("type") == "result" and d.get("total_cost_usd"):
-            s += float(d["total_cost_usd"])
-print(f"{s:.2f}")
+            k = (p.name, d.get("session_id") or "—")
+            po_sessii[k] = max(po_sessii.get(k, 0.0), float(d["total_cost_usd"]))
+print(f"{sum(po_sessii.values()):.2f}")
 PY
 }
 
