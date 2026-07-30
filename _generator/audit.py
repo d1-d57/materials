@@ -185,8 +185,13 @@ if '--scene-diff' in sys.argv:
         b = p.chromium.launch()
         pg = b.new_page(viewport={'width': 1440, 'height': 810})
         pg.goto('file://' + DECK)
+        # `.slide:not([data-skip])` — тот же счёт, что у движка (render.py:36):
+        # `?only=i` индексирует массив slides движка, а он data-skip не включает.
+        # Со старым `.slide` каждый индекс после пропущенного слайда указывал на
+        # СОСЕДА (найдено 30.07 на dandelin: 19 узлов против 18 в slides).
         n_scenes = pg.evaluate(
-            "Array.from(document.querySelectorAll('.slide')).map(s=>+(s.dataset.scenes||1))")
+            "Array.from(document.querySelectorAll('.slide:not([data-skip])'))"
+            ".map(s=>+(s.dataset.scenes||1))")
         tmp = tempfile.mkdtemp()
         for i, n in enumerate(n_scenes):
             if n < 2:

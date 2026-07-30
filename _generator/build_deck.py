@@ -56,6 +56,15 @@ OPT_LINE_RE = re.compile(r"^([ \t]*)([?!])([A-Z]+)(.*)$")
 # имеет права быть хрупче того, что оно заменяет. Найдено верификатором.
 SCENE_ATTR_RE = re.compile(r'data-scene(?:s|-from|-until)\s*=\s*["\']?(\d+)')
 
+# Потолок сцен: `scene_cascade_css` растёт КВАДРАТИЧНО (n=12 → 2,9 КБ, n=100 →
+# 171 КБ, n=400 → 2,8 МБ CSS в самодостаточном монолите), а опечатка вроде
+# `data-scenes="44"` вместо `4` раздувала бы выход молча. Порог = фактический
+# максимум живых деков (buffon 5, fibonacci 4, dandelin 4, teorkat-vvedenie 2;
+# сверено 30.07 грепом по src/) с запасом вдвое — органический рост дека до
+# 6-9 сцен не спотыкается, а опечатка ловится. Найдено долгом фабрики, потолка
+# не было вовсе.
+SCENE_CAP = 10
+
 
 def max_scenes(*texts):
     """Фактический максимум сцен по источнику.
@@ -572,6 +581,16 @@ def lint(shablon, filemap, meta, names):
                 errors.append('slides/%s.html: на сцене %d раскрывается %d текстовых блоков разом '
                               '(порог 4 — худший слайд эталона buffon/sl-polygons). Дроби сцены: '
                               '{@N} по абзацу, SLIDE-FORMAT.md стр. 16.' % (sid, scene, count))
+
+    # 9. потолок сцен — error, а не молчаливые мегабайты CSS (SCENE_CAP выше).
+    # Судим КАЖДЫЙ слайд отдельно: `max_scenes` ловит и `data-scenes`, и
+    # `data-scene-from`/`-until` — опечатка в любом из трёх раздувает каскад.
+    for sid, shtml in _slide_sections(assembled):
+        n = max_scenes(shtml)
+        if n > SCENE_CAP:
+            errors.append('slides/%s.html: data-scenes/data-scene-from/-until даёт %d — выше '
+                          'потолка %d (build_deck.py:SCENE_CAP). Опечатка в числе? Каскад растёт '
+                          'квадратично, молчаливые мегабайты CSS не собираем.' % (sid, n, SCENE_CAP))
 
     return errors, warns, assembled
 

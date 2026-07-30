@@ -12,7 +12,7 @@
 cd "$(dirname "$0")/../../../.." || exit 1
 F=_generator/tools/fixtures/uroki/zhurnal/test-arka
 fail=0
-for c in "bez-ceny 1" "zhirnaya 0" "golaya 0" "pustaya 1"; do
+for c in "bez-ceny 1" "zhirnaya 0" "golaya 0" "pustaya 1" "obratnaya 0" "cenalog 1"; do
   set -- $c
   python3 _generator/tools/check_uroki.py "$F/kod_$1.md" >/dev/null 2>&1
   got=$?

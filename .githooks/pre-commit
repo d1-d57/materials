@@ -65,21 +65,34 @@ if [ -n "$TOOLS_STAGED" ]; then
     env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE -u GIT_PREFIX \
         -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
         python3 _generator/tools/check_tool_contract.py --staged || exit 1
+fi
 
-    # Фикстуру git_zona исключаем, когда её уже поднял блок выше: двойной прогон
-    # ничего не проверяет, а секунду отнимает.
+# Охват фикстур — по ВСЕМ staged-путям, не по шаблону выше. `TOOLS_STAGED» —
+# фильтр статического AST-гейта над python-инструментами; он уже сузил список
+# ДО вызова `--fixtures-for`, и объявленный охват (`skeleton/engine.js`,
+# `build_deck.py`, `render.py` — не под `_generator/tools/`) никогда не
+# срабатывал, хотя фикстура `dvizhok` честно его называла (найдено 30.07,
+# `fixtures/dvizhok/PROGNAT.sh:6-14`). Шаблон гадал, чей путь «похож на
+# инструмент»; теперь охват решает `check_tool_contract.py` по имени файла
+# (`fixture_coverage()`), а хук просто спрашивает — не угадывает. Дороже это
+# не делает: цена — число ФИКСТУР (десяток PROGNAT.sh шапок), а не число
+# staged-путей.
+ALL_STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+if [ -n "$ALL_STAGED" ]; then
     COVERING=$(env -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
-        python3 _generator/tools/check_tool_contract.py --fixtures-for $TOOLS_STAGED)
-    if echo "$TOOLS_STAGED" | grep -q '^_generator/tools/git_zona\.py$'; then
+        python3 _generator/tools/check_tool_contract.py --fixtures-for $ALL_STAGED)
+    # Фикстуру git_zona исключаем, когда её уже поднял блок в начале файла:
+    # двойной прогон ничего не проверяет, а секунду отнимает.
+    if echo "$ALL_STAGED" | grep -q '^_generator/tools/git_zona\.py$'; then
         COVERING=$(echo "$COVERING" | grep -v '/fixtures/git_zona/')
     fi
     for FIX in $COVERING; do
-        echo "→ правленый инструмент входит в охват $FIX — гоню её"
+        echo "→ правленый путь входит в охват $FIX — гоню её"
         env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE -u GIT_PREFIX \
             -u GIT_ZONA_REPO -u TOOL_CONTRACT_HOME \
             sh "$FIX" || {
             echo "❌ Фикстура $FIX КРАСНАЯ — коммит остановлен."
-            echo "   Она объявила охват над правленым инструментом, и охват сработал."
+            echo "   Она объявила охват над правленым путём, и охват сработал."
             exit 1
         }
     done
