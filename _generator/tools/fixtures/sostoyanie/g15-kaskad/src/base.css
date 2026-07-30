@@ -1,0 +1,4 @@
+.blur-reveal{filter:blur(8px)}
+.scene-2 .blur-reveal[data-reveal="2"],
+.scene-3 .blur-reveal[data-reveal="2"],
+.scene-3 .blur-reveal[data-reveal="3"]{filter:none}

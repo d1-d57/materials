@@ -1,0 +1,14 @@
+<svg viewBox="12 16 328 118" role="img" aria-label="Траектория, которая ни разу не опускается до горизонтали обрыва: ломаная идёт над сплошной чертой, старт отмечен залитым узлом">
+<line class="s-line" x1="20" y1="122" x2="336" y2="122"/>
+<polyline class="s-line" points="34,98 66,74 98,98 130,74 162,50 194,74 226,50 258,74 290,50 322,26"/>
+<circle class="s-node" cx="66" cy="74" r="3.4"/>
+<circle class="s-node" cx="98" cy="98" r="3.4"/>
+<circle class="s-node" cx="130" cy="74" r="3.4"/>
+<circle class="s-node" cx="162" cy="50" r="3.4"/>
+<circle class="s-node" cx="194" cy="74" r="3.4"/>
+<circle class="s-node" cx="226" cy="50" r="3.4"/>
+<circle class="s-node" cx="258" cy="74" r="3.4"/>
+<circle class="s-node" cx="290" cy="50" r="3.4"/>
+<circle class="s-node" cx="322" cy="26" r="3.4"/>
+<circle class="s-node-a" cx="34" cy="98" r="4.6"/>
+</svg>

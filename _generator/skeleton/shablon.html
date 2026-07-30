@@ -6,7 +6,7 @@
 <!-- ============================================================
   КАНОН-СКЕЛЕТ (замороженный канон, KONSTITUCIYA §1). Четыре блока:
     [1] DECK STYLES  — токены, шрифты, base.css (общий канон), пер-слайдовые гриды
-    [2] SLIDES       — только текст и зоны (арка 7 добавляет {{SLIDE:<id>}})
+    [2] SLIDES       — только текст и зоны (плейсхолдер SLIDES; порядок — brief.slide_order)
     [3] ASSETS       — иллюстрации в <template> (арка 9)
     [4] ENGINE       — движок дословно, не править
   Холст 1440×810. Стартовая точка greenfield-дека Фазы II («скопируй скелет»).
@@ -19,8 +19,12 @@
 
 {{TOKENS_CSS}}
 {{BASE_CSS}}
+{{SLUZHEBNYE_CSS}}
 
-/* ---------- пер-слайдовые гриды (bespoke — добавляет арка 7 «вёрстка») ---------- */
+/* ---------- пер-слайдовые гриды (bespoke — добавляет арка 7 «вёрстка») ----------
+   Обложки, визитки и финала здесь НЕ будет: три служебных слайда и их CSS
+   порождаются из канона `sluzhebnye/` (плейсхолдер SLUZHEBNYE_CSS выше),
+   ими управляют поля brief.md. Арка 7 их не верстает — см. SPEC.md. */
 /* напр.:  #s01 .grid{ position:absolute; inset:0; display:grid;
              grid-template-columns:34px 1372px 34px; grid-template-rows:18px 210px 582px; }
            #s01 .copy{ grid-area:2/2; } */
@@ -29,7 +33,10 @@
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ===== [2] SLIDES — арка 7 добавляет {{SLIDE:<id>}} в порядке brief.slide_order ===== -->
+<!-- ===== [2] SLIDES — весь поток порождает генератор: обложка, визитка,
+     brief.slide_order, финал. Порядок здесь НЕ дублируется (хук H6);
+     арка 7 добавляет содержательные слайды в brief.slide_order. ===== -->
+{{SLIDES}}
 
 </div></div>
 <div id="lect-zone" style="position:fixed;left:0;bottom:0;width:100%;height:14px;z-index:200;cursor:pointer"></div>

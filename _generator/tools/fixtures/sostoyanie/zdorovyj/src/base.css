@@ -1,0 +1,6 @@
+.scene-2 [data-scene-from="2"],
+.scene-3 [data-scene-from="2"],
+.scene-3 [data-scene-from="3"]{opacity:1}
+.scene-2 .blur-reveal[data-reveal="2"],
+.scene-3 .blur-reveal[data-reveal="2"],
+.scene-3 .blur-reveal[data-reveal="3"]{filter:none}

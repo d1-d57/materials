@@ -1,0 +1,18 @@
+<svg viewBox="0 0 764 174" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Два пути рядом, оба кончающиеся на одной высоте; уровень показан тонким пунктиром">
+<line class="s-thin" x1="18" y1="120" x2="746" y2="120" stroke-dasharray="5 4"/>
+<line class="s-thin" x1="18" y1="86" x2="746" y2="86" stroke-dasharray="5 4"/>
+<polyline class="s-line" points="32,120 90,86 148,120 206,86 264,52 322,86"/>
+<circle class="s-node-a" cx="32" cy="120" r="3.4"/>
+<circle class="s-node" cx="90" cy="86" r="3.4"/>
+<circle class="s-node" cx="148" cy="120" r="3.4"/>
+<circle class="s-node" cx="206" cy="86" r="3.4"/>
+<circle class="s-node" cx="264" cy="52" r="3.4"/>
+<circle class="s-node-a" cx="322" cy="86" r="3.4"/>
+<polyline class="s-accent" points="442,120 500,86 558,52 616,86 674,120 732,86"/>
+<circle class="s-node-a" cx="442" cy="120" r="3.4"/>
+<circle class="s-node" cx="500" cy="86" r="3.4"/>
+<circle class="s-node" cx="558" cy="52" r="3.4"/>
+<circle class="s-node" cx="616" cy="86" r="3.4"/>
+<circle class="s-node" cx="674" cy="120" r="3.4"/>
+<circle class="s-node-a" cx="732" cy="86" r="3.4"/>
+</svg>

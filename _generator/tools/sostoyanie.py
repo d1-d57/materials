@@ -4,17 +4,26 @@
 
     python3 sostoyanie.py <папка-лекции>
 
-Read-only: ничего в папке лекции не меняет. По каждому из 16 гейтов/хуков
-GEJTY.md считает PASS/FAIL/WARN/N-A по «признаку-на-диске», печатает таблицу,
+Read-only: ничего в папке лекции не меняет. По каждому гейту/хуку GEJTY.md
+считает PASS/FAIL/WARN/N-A по «признаку-на-диске», печатает таблицу,
 вычисляет ⏺ ТЫ ЗДЕСЬ (первый жёсткий гейт не-PASS) и сверяет журнал
 (<лекция>/dnevnik/zhurnal.md, см. ZHURNAL.md) с диском — молчаливый недобор:
 строка журнала говорит PASS, а сам гейт на диске FAIL.
 
-Реестр гейтов (GEJTY.md) — проза, не машиночитаема; поэтому 16 записей
-(G1-G11, H1-H5) закодированы здесь как структуры Python с одной
-check-функцией на гейт. Функции пишут в терминах grep/regex — буквально то,
-что называет «признак-на-диске» в GEJTY.md; где признак неоднозначен —
-проверка ослаблена до WARN/advisory с пометкой (см. kod_treker.md #ВОПРОСЫ).
+Число записей руками не выписываем (KONSTITUCIYA §10) — оно считается по файлу:
+    grep -c '^### G' _studio/konvejer/GEJTY.md
+    grep -c '^### H' _studio/konvejer/GEJTY.md
+Реестр гейтов (GEJTY.md) — проза, не машиночитаема; поэтому каждая запись
+закодирована здесь как структура Python с одной check-функцией на гейт.
+Функции пишут в терминах grep/regex — буквально то, что называет
+«признак-на-диске» в GEJTY.md; где признак неоднозначен — проверка ослаблена
+до WARN/advisory с пометкой (см. kod_treker.md #ВОПРОСЫ).
+
+⚠ Калибровка (27.07.2026, заход `kod_gejty-shaga-6.md`). Там, где буква
+GEJTY.md красит здоровый дек, реализовано не буквально, и КАЖДОЕ отступление
+названо у своей функции числом ложных ❌, которое буква давала на живых деках.
+Причина не в удобстве: гейт, краснеющий на здоровом деке, обходят через
+--no-verify — и пропадает вся защита, а не одна проверка.
 
 Гейты src/-слоя (G6, G10, линтер-часть G11) переиспользуют функции
 _generator/build_deck.py импортом — не копируют логику линтера.
@@ -319,7 +328,117 @@ def check_g6(lek, ctx):
                        bool(order) or bool(meta))
 
 
-# ───────────────────────── Фаза II: G7-G11 ─────────────────────────
+# ───────────── Фаза I, конец: G7 (предвёрсточный документ = лента) ─────────────
+# Признак переписан 27.07.2026: шаг 6 переехал в Фазу I, его выход — лента
+# <лекция>/raskadrovka/teksty/*.md + собранный view.html, а src/content/*.md стал
+# ПОРОЖДАЕМЫМ слоем Фазы II (GEJTY.md §G7, 06-tekst/DOK.md, FORMAT-ISTOCHNIKA.md).
+
+BUDGET_TOLERANCE = 0.25  # допуск бюджета слов числом в GEJTY.md не задан — назван здесь явно
+# «Раскладка» распознаётся не дословно: `**Раскладка.**`, `**Раскладка:**`, `**Раскладка**.`
+# — одно и то же для человека, и требовать одну форму значит краснеть на здоровой ленте.
+RASKLADKA_RE = re.compile(r"^\s*>?\s*поле:\s*mn\s*\**\s*Раскладка", re.M)
+TAB_FM_RE = re.compile(r"^tab\s*:\s*\S", re.M)
+ACC_RE = re.compile(r"\*\*(.+?)\*\*", re.S)
+FIGURE_RE = re.compile(r"<figure\b.*?</figure>", re.S | re.I)
+SVG_RE = re.compile(r"<svg\b.*?</svg>", re.S | re.I)
+FENCE_RE = re.compile(r"(?ms)^```.*?^```\s*$")
+QUOTE_LINE_RE = re.compile(r"(?m)^\s*>.*$")
+MATH_RE = re.compile(r"\$\$.*?\$\$|\$[^$\n]*\$", re.S)
+
+
+def strip_shortcodes(text):
+    """Снять шорткаты Р2, СОХРАНИВ их полезный текст (он живёт на слайде).
+
+    Формулы снимаются ПЕРВЫМИ, и это не косметика: `}` внутри TeX иначе рвёт
+    разбор — `{blur@2|$\\binom{2n}{n}$ путей}` схлопывается в мусор (build_deck.py
+    обходит то же место приёмом stash→parse→unstash). Заодно снимается перекос
+    счёта слов: `\\binom`/`\\quad` словами не являются."""
+    text = MATH_RE.sub(" ", text)
+    text = re.sub(r"\{fill@\d+\|([^|}]*)\|([^}]*)\}", r"\2", text)
+    text = re.sub(r"\{blur@\d+\|([^}]*)\}", r"\1", text)
+    text = re.sub(r"\{@[\d-]+[^|}]*\|([^}]*)\}", r"\1", text)
+    return re.sub(r"\{[@.][^}]*\}", " ", text)
+
+
+WORDLIKE_RE = re.compile(r"[^\W_]", re.UNICODE)
+
+
+def count_words(text):
+    """Слова, а не токены: одиночные `—`, `·`, `…`, `→` словами не считаются.
+
+    Через `str.split()` разделитель-глиф идёт в счёт наравне со словом, и слайд с
+    тремя пунктами через `·` получает +3 к объёму из ниоткуда. На пределе в 25
+    слов этого хватает, чтобы покраснеть без единого лишнего слова."""
+    return sum(1 for t in text.split() if WORDLIKE_RE.search(t))
+
+
+MARK_RE = re.compile(r"\{(?:@|blur@|fill@)(\d+)")
+RANGE_RE = re.compile(r"\{@(\d*)-(\d+)")
+
+
+def marks_all(content_md):
+    """Все номера сцен, упомянутые шорткатами, ВКЛЮЧАЯ диапазоны.
+
+    `{@5-8}` и `{@-6}` — законные формы (build_deck.py._attrs_from_tag); брать из
+    них только первое число значит проспать ровно урок 7 на верхней границе."""
+    nums = {int(x) for x in MARK_RE.findall(content_md)}
+    for lo, hi in RANGE_RE.findall(content_md):
+        if lo:
+            nums.add(int(lo))
+        nums.add(int(hi))
+    return nums
+
+
+def marks_revealing(content_md):
+    """Только «раскрывающая» сторона — ей и нужен каскад `.scene-N [data-scene-from]`.
+
+    `{@-6}` (=`data-scene-until`) сюда НЕ входит: сокрытие делает JS классом
+    `scene-off` (engine.js), правил `.scene-N` для него не существует ни в одном
+    живом деке — требовать их значит краснеть на здоровой вёрстке."""
+    nums = {int(x) for x in re.findall(r"\{(?:@|fill@)(\d+)", content_md)}
+    for lo, _hi in RANGE_RE.findall(content_md):
+        if lo:
+            nums.add(int(lo))
+    return nums
+
+
+def lenta_files(lek):
+    """(все *.md ленты, файлы без фронтматтера `tab:`) или None, если teksty/ нет вовсе.
+
+    Файл без `tab:` НЕ выбрасывается молча: молчаливое исключение превращается в
+    ложное обвинение «лента не покрывает деку» — виноват один опечатанный
+    фронтматтер, а трекер показывает пальцем на всю ленту. Он считается, а про
+    него говорится отдельной ⚠-строкой.
+    Пустой список ≠ None: `raskadrovka/teksty/` заведена, но не наполнена — недобор,
+    а отсутствие папки — «шаг 6 шёл по старой схеме» (bootstrap_lekcia.py заводит
+    raskadrovka/ с .gitkeep, но teksty/ не создаёт)."""
+    d = lek / "raskadrovka" / "teksty"
+    if not d.is_dir():
+        return None
+    files = sorted(d.glob("*.md"))
+    return files, [p.name for p in files if not TAB_FM_RE.search(read(p) or "")]
+
+
+def lenta_sections(text):
+    """[(заголовок, тело)] по `^## ` — раздел ленты = слайд (06-tekst/DOK.md).
+
+    Кодовые заборы снимаются до разбиения: `## ` внутри ``` — не раздел, а строка
+    примера, и фантомный раздел ломает сверку с длиной slide_order."""
+    text = FENCE_RE.sub("\n", text)
+    out = []
+    heads = list(re.finditer(r"^## +(.+?)\s*$", text, re.M))
+    for i, m in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+        out.append((m.group(1), text[m.end():end]))
+    return out
+
+
+def _lenta_clean(body):
+    """Тело раздела без того, что на слайд НЕ едет: <figure> с подписью, голый
+    <svg>, боковые врезки `> поле:mn …` (снимается вся блок-цитата, а не первая
+    её строка — многострочная врезка иначе уходит в счёт слов)."""
+    return QUOTE_LINE_RE.sub(" ", SVG_RE.sub(" ", FIGURE_RE.sub(" ", body)))
+
 
 def check_g7(lek, ctx):
     if ctx.get("slides_flag") == "нет":
@@ -327,41 +446,76 @@ def check_g7(lek, ctx):
     src = lek / "src"
     meta = _load_src_brief(src)
     order = meta.get("slide_order") or []
+    found = lenta_files(lek)
+    files, no_tab = (None, []) if found is None else found
+
+    if files is None:
+        extra = ["ленты нет: папка raskadrovka/teksty/ не заведена. bootstrap_lekcia.py создаёт "
+                 "raskadrovka/ без teksty/, значит её появление — намеренный акт шага 6 по новой схеме"]
+        if (src / "slides").is_dir() and list((src / "slides").glob("*.html")):
+            extra.append("дек уже в Фазе II, а предвёрсточного документа нет — шаг 6 по новой схеме "
+                         "не проходили (N/A не должен это прятать)")
+        return GateResult(NA, "шаг 6 шёл по старой схеме (конвейер до 27.07.2026)", False, extra)
+    if not files or len(no_tab) == len(files):
+        return GateResult(FAIL, "raskadrovka/teksty/ заведена, но ни одного *.md с фронтматтером tab:", True)
+
+    sections = []
+    for p in files:
+        sections.extend(lenta_sections(read(p) or ""))
+    detail, extra = [], []
+    if no_tab:
+        extra.append("в ленте есть *.md без фронтматтера `tab:` — их разделы всё равно посчитаны, "
+                     "но вид build_doc.py их не покажет: %s" % no_tab)
+
+    view = lek / "raskadrovka" / "teksty" / "view.html"
+    if not view.is_file():
+        detail.append("нет teksty/view.html — лента не собрана build_doc.py")
+    else:
+        stale = [p.name for p in files if p.stat().st_mtime > view.stat().st_mtime]
+        if stale:
+            detail.append("view.html не пересобран, свежее его: %s" % stale)
+
+    if not order:
+        detail.append("src/brief.md без slide_order — покрытие не с чем сверить")
+    elif len(sections) != len(order):
+        detail.append("разделов ленты %d, а slide_order %d — лента не покрывает деку "
+                      "(раздел = слайд, 06-tekst/DOK.md)" % (len(sections), len(order)))
+
+    # первый раздел = обложка: раскладке там нечего решать (GEJTY.md §G7, освобождено 28.07.2026)
+    no_layout = [h for h, b in sections[1:] if not RASKLADKA_RE.search(b)]
+    if no_layout:
+        detail.append("без «поле:mn **Раскладка.**»: %s" % no_layout)
+
     budget_raw = meta.get("word_budget_per_slide")
     budget_n = int(budget_raw) if budget_raw and str(budget_raw).isdigit() else None
-    empty, has_html, over_acc, over_budget = [], [], [], []
-    touched = False
-    for sid in order:
-        p = src / "content" / (sid + ".md")
-        text = read(p)
-        if not text or not text.strip():
-            empty.append(sid)
-            continue
-        touched = True
-        if re.search(r"<[a-zA-Z]", text):
-            has_html.append(sid)
-        if text.count("**") // 2 > 1:
-            over_acc.append(sid)
-        if budget_n:
-            words = len(text.split())
-            if words > budget_n * 1.2:
-                over_budget.append("%s(%d)" % (sid, words))
-    ok = not empty and not has_html and not over_acc
-    detail = []
-    if empty:
-        detail.append("нет/пуст content/: %s" % empty)
-    if has_html:
-        detail.append("html-теги в content/ (запрещено): %s" % has_html)
+    if budget_n:
+        limit = budget_n * (1 + BUDGET_TOLERANCE)
+        over = []
+        for h, b in sections:
+            words = count_words(re.sub(r"<[^>]+>", " ", strip_shortcodes(_lenta_clean(b))))
+            if words > limit:
+                over.append("%s(%d)" % (h, words))
+        if over:
+            detail.append("сверх word_budget_per_slide=%d +%d%%: %s"
+                          % (budget_n, round(BUDGET_TOLERANCE * 100), over))
+    else:
+        extra.append("word_budget_per_slide в src/brief.md не задан числом — объём разделов не судится")
+
+    over_acc = [h for h, b in sections if len(ACC_RE.findall(_lenta_clean(b))) > 1]
     if over_acc:
-        detail.append(">1 acc-блока: %s" % over_acc)
-    status = PASS if ok else FAIL
-    extra = ["автор-чекпоинт: голос/архетип/законченность мысли — вкус, не грепается"]
-    if not budget_n:
-        extra.append("word_budget_per_slide не число — бюджет слов не проверен")
-    elif over_budget:
-        extra.append("допуск бюджета слов не задан числом в GEJTY.md — эвристика +20%%: превышают %s" % over_budget)
-    return GateResult(status, "; ".join(detail) or "%d слайдов в бюджете, без html, ≤1 acc" % len(order),
-                       touched, extra)
+        extra.append("эвристика «≤1 акцент-блок на раздел» (GEJTY сам помечает её эвристикой и не "
+                     "включает в список жёстких пунктов поля «тип»): >1 `**…**` в %d разделах — %s"
+                     % (len(over_acc), over_acc[:6]))
+    extra.append("автор-чекпоинт: лента прочитана целиком, нарратив между слайдами не провисает — "
+                 "вкус, механически не решается")
+
+    status = FAIL if detail else PASS
+    return GateResult(status, "; ".join(detail) or
+                      "разделов ленты %d == slide_order, view.html свежий, раскладка везде" % len(sections),
+                      True, extra)
+
+
+# ───────────────────────── Фаза II: G8-G11 ─────────────────────────
 
 
 def check_g8(lek, ctx):
@@ -475,7 +629,267 @@ def check_g11(lek, ctx):
     ])
 
 
-# ───────────────────────── дисциплина-хуки H1-H5 ─────────────────────────
+# ───────────────── Фаза II: G12-G15 (заведены 27.07.2026) ─────────────────
+# Калибровка ниже — не вольность, а замер: см. `_studio/zhurnal/
+# 2026-07-27_paskal-lekcia-sborka/kod_gejty-shaga-6.md` §ПЛАН п.4, где по каждому
+# отступлению от буквы GEJTY.md названо, сколько ложных ❌ давала буква на живых деках.
+# Ложное срабатывание тут дороже пропуска: гейт, краснеющий на здоровом деке,
+# обходят через --no-verify — и тогда пропадает вся защита, а не одна проверка.
+
+G12_WORD_LIMIT = 25
+SCENES_ATTR_RE = re.compile(r'data-scenes="(\d+)"')
+SCENE_BIND_RE = re.compile(r'data-scene(?:-from|-until)?="(\d+)"')
+ILL_TAG_RE = re.compile(r'<[^>]*\bdata-ill="[^"]*"[^>]*>')
+ILL_NAME_RE = re.compile(r'data-ill="([^"]+)"')
+STAGES_RE = re.compile(r'data-stages="([^"]*)"')
+SCENE_ANY_ATTR_RE = re.compile(r'data-scene-(?:from|until)="(\d+)"')
+SCENE_FROM_ATTR_RE = re.compile(r'data-scene-from="(\d+)"')
+
+
+def _slide_pair(src, sid):
+    """(html слайда, md текста) — оба могут быть пустой строкой."""
+    return read(src / "slides" / (sid + ".html")) or "", read(src / "content" / (sid + ".md")) or ""
+
+
+def _order_of(lek, ctx):
+    return _load_src_brief(lek / "src").get("slide_order") or []
+
+
+def _scene_sources(slide_html, content_md):
+    """Номера сцен, ТРЕБУЕМЫЕ разметкой слайда: маркеры текста + `data-scene-from/until`.
+
+    Стадии канваса (`data-stages`) сюда не входят намеренно: стадия ≠ клик,
+    несколько стадий законно проигрываются внутри одной сцены, и приравнивать их
+    номеру сцены значит краснеть на здоровом sim-слайде. Их учитывает
+    `_stages_hint` — только чтобы ОБЪЯСНИТЬ избыток объявленных сцен, никогда
+    чтобы обвинить."""
+    return marks_all(content_md) | {int(x) for x in SCENE_ANY_ATTR_RE.findall(slide_html)}
+
+
+def _stages_hint(slide_html):
+    return max([len(s.split()) for s in STAGES_RE.findall(slide_html) if s.split()] or [0])
+
+
+def _slide_own_text(slide_html):
+    """Текст, напечатанный прямо в каркасе слайда (мимо `content/<id>.md`).
+
+    У обложек и финалов канонного устройства текст живёт именно здесь, а
+    `content/<id>.md` пуст — считать слова только по нему значит, что G12
+    беспрепятственно пропустит ровно ту перегруженную обложку, ради которой заведён."""
+    body = re.sub(r"(?s)<(script|style)\b.*?</\1>", " ", slide_html)
+    body = re.sub(r"\{\{[^}]*\}\}", " ", body)
+    return re.sub(r"<[^>]+>", " ", body)
+
+
+def _na_porozhdenii(src):
+    """Дек переведён на ПОРОЖДЕНИЕ служебных слайдов?
+
+    Признак один и грепаемый — плейсхолдер `{{SLIDES}}` в `shablon.html`; им же
+    включает порождение сам генератор, так что признак не может разойтись с
+    механикой. Замер 28.07.2026: до миграции Паскаля — 0 совпадений на четырёх
+    живых деках, значит структурная ветка ниже НЕ судит немигрированные деки и
+    даёт им 0 ложных ❌ (buffon держит все три служебных слайда рукописными и
+    остаётся законным)."""
+    return "{{SLIDES}}" in (read(src / "shablon.html") or "")
+
+
+def check_g12(lek, ctx):
+    if ctx.get("slides_flag") == "нет":
+        return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    if _na_porozhdenii(src):
+        # Дек на порождении судится по ДВУМ вещам сразу, и обе нужны.
+        # (1) СТРУКТУРА: рукописный служебный слайд перебивает канон.
+        # (2) ОБЪЁМ ОБЪЯВЛЕННОГО: «писать лишнее негде» — неправда, канал есть, и
+        #     он же санкционированный: `cover_sub`/`cover_date`/`cover_place`
+        #     подставляются как есть. Верификатор захода собрал через них обложку
+        #     на 52 слова при пороге 25, и структурная ветка сказала PASS. Счёт слов
+        #     не выключается, а ПЕРЕНАЦЕЛИВАЕТСЯ с рукописного слайда на поля.
+        meta = _load_src_brief(src)
+        # Множество рукописных слайдов берём ТЕМ ЖЕ способом, что генератор
+        # (`load_dir` глобит `*` и ключует по `p.stem`), а не по `<id>.html`:
+        # `slides/sl-title.txt` и `sl-title.html~` (бэкап редактора!) точно так же
+        # перебивают порождение, и проверка по расширению их не видела.
+        stems = {p.stem for p in (src / "slides").glob("*") if p.is_file()} \
+            if (src / "slides").is_dir() else set()
+        vizitka_off = str(meta.get("vizitka", "")).strip().lower() == "net"
+        wanted = [sid for sid in bd.SERVICE_IDS
+                  if not (sid == bd.VIZITKA_ID and vizitka_off)]
+        detail = []
+        hand = [sid for sid in wanted if sid in stems]
+        if hand:
+            detail.append("рукописные служебные слайды перебивают канон "
+                          "`_generator/skeleton/sluzhebnye/`: %s — удалить, "
+                          "элементами управляют поля brief.md" % hand)
+        cover_fields = [meta.get(k, "") for k in ("title", "cover_sub", "cover_date", "cover_place")]
+        cover_words = count_words(" ".join(x for x in cover_fields if isinstance(x, str)))
+        if cover_words > G12_WORD_LIMIT:
+            detail.append("обложка объявлена на %d слов > %d — режь `cover_sub`/`cover_date`/"
+                          "`cover_place` в brief.md" % (cover_words, G12_WORD_LIMIT))
+        if detail:
+            return GateResult(FAIL, "; ".join(detail), True)
+        return GateResult(PASS, "обложка, визитка и финал порождены генератором "
+                          "(рукописных нет, обложка объявлена в %d слов)" % cover_words,
+                          True, ["автор-чекпоинт: сильный ли образ финала — вкус, "
+                                 "механически не решается"])
+    order = _order_of(lek, ctx)
+    if len(order) < 2:
+        return GateResult(NA, "в slide_order меньше двух слайдов — обложки и финала нет")
+    # Ниже — прежняя проверка счётом слов. Она остаётся ТОЛЬКО для немигрированных
+    # деков (buffon/dandelin/fibonacci): у них служебные слайды рукописные, и
+    # единственное, что можно проверить снаружи, — не перегружены ли они.
+    detail = []
+    for role, sid in (("обложка", order[0]), ("финал", order[-1])):
+        slide_html, content_md = _slide_pair(src, sid)
+        text = strip_shortcodes(content_md)
+        if not text.strip():
+            text = _slide_own_text(slide_html)
+        words = count_words(re.sub(r"<[^>]+>", " ", text))
+        if words > G12_WORD_LIMIT:
+            detail.append("%s %s: %d слов > %d" % (role, sid, words, G12_WORD_LIMIT))
+        ills = ILL_NAME_RE.findall(slide_html)
+        if len(ills) > 1:
+            detail.append("%s %s: иллюстраций %d > 1 (%s)" % (role, sid, len(ills), ills))
+        marks = marks_all(content_md)
+        if marks:
+            detail.append("%s %s: сцен на обложке и финале не бывает (сцены %s)"
+                          % (role, sid, sorted(marks)))
+    status = FAIL if detail else PASS
+    return GateResult(status, "; ".join(detail) or
+                      "обложка %s и финал %s не перегружены" % (order[0], order[-1]), True,
+                      ["автор-чекпоинт: сильный ли образ финала — вкус, механически не решается"])
+
+
+def check_g13(lek, ctx):
+    if ctx.get("slides_flag") == "нет":
+        return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    detail, soft = [], []
+    touched = False
+    for sid in _order_of(lek, ctx):
+        slide_html, content_md = _slide_pair(src, sid)
+        if not slide_html:
+            continue
+        m = SCENES_ATTR_RE.search(slide_html)
+        # без объявленного data-scenes верхней границы не существует — а не «равна 1»:
+        # к этому состоянию ведёт сам H6 (величина порождается сборкой, в src/ её нет),
+        # и красить за достижение объявленной цели гейт не должен
+        n_scenes = int(m.group(1)) if m else None
+        tags = ILL_TAG_RE.findall(slide_html)
+        bound = [(t, int(SCENE_BIND_RE.search(t).group(1))) for t in tags if SCENE_BIND_RE.search(t)]
+        if tags:
+            touched = True
+        for tag, k in bound:
+            # жёсткая часть признака: привязка ведёт к СУЩЕСТВУЮЩЕЙ сцене, не к «сцене 0».
+            # Требовать вдобавок маркер `{@k}` в тексте нельзя: илл. вправе занимать
+            # собственную сцену, где текстовой дельты нет (fibonacci/s02-hook, paskal/sl-pairs).
+            if k < 2 or (n_scenes is not None and k > n_scenes):
+                detail.append("%s: илл. %s привязана к сцене %d вне 2..%s"
+                              % (sid, ILL_NAME_RE.search(tag).group(1), k,
+                                 n_scenes if n_scenes is not None else "?"))
+        if "{blur@" in content_md and tags and not bound:
+            soft.append("%s (%s)" % (sid, ", ".join(ILL_NAME_RE.findall(slide_html))))
+    extra = ["автор-чекпоинт: является ли рисунок ответом на вопрос слайда — вкус"]
+    if soft:
+        extra.append("рисунок показан с первой сцены, а в тексте есть {blur@ (спрятанный ответ): %s. "
+                     "Оставлено WARN, не FAIL: признак опирается на суждение «рисунок и есть ответ», "
+                     "которое GEJTY относит к автор-чекпоинту" % soft)
+    status = FAIL if detail else PASS
+    return GateResult(status, "; ".join(detail) or "привязки илл. ведут к существующим сценам",
+                      touched, extra)
+
+
+def check_g14(lek, ctx):
+    if ctx.get("slides_flag") == "нет":
+        return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    detail, soft = [], []
+    touched = False
+    for sid in _order_of(lek, ctx):
+        slide_html, content_md = _slide_pair(src, sid)
+        m = SCENES_ATTR_RE.search(slide_html)
+        if not m:
+            continue  # каркаса слайда нет — это предмет G6, не G14
+        touched = True
+        declared = int(m.group(1))
+        nums = _scene_sources(slide_html, content_md)
+        need = max(nums) if nums else 1
+        if need > declared:
+            # урок 7: блюр не раскрывается, кликер уходит на следующий слайд
+            detail.append("%s: data-scenes=%d, а разметка требует %d (сцены %s)"
+                          % (sid, declared, need, sorted(nums)))
+        elif need < declared and not ("data-sim=" in slide_html or "data-iframe=" in slide_html
+                                      or _stages_hint(slide_html) >= declared):
+            soft.append("%s: data-scenes=%d, статически видно %d" % (sid, declared, need))
+    extra = ["правильная починка — не сверка, а генерация: data-scenes должен вычисляться сборкой "
+             "из текста (GEJTY §G14, см. H6)"]
+    if soft:
+        extra.append("объявлено больше сцен, чем видно статически: %s — WARN, не FAIL "
+                     "(дед-клик ловит браузерный слой G9 --scene-diff)" % soft)
+    status = FAIL if detail else PASS
+    return GateResult(status, "; ".join(detail) or "data-scenes согласован с разметкой сцен",
+                      touched, extra)
+
+
+def _css_text(src):
+    """Весь статический CSS источника: собственные *.css + <style> шаблона."""
+    parts = [read(p) or "" for p in sorted(src.glob("*.css"))]
+    parts.append(read(src / "shablon.html") or "")
+    return "\n".join(parts)
+
+
+def check_g15(lek, ctx):
+    if ctx.get("slides_flag") == "нет":
+        return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    css = _css_text(src)
+    if not css.strip():
+        # без CSS источника обвинять каскад не в чем — это предмет G8, не G15
+        return GateResult(NA, "CSS источника не найден (нет src/*.css и shablon.html)", False)
+    cover_any = {int(m.group(1)) for m in re.finditer(r"\.scene-(\d+)", css)}
+    if not cover_any:
+        # каскада нет ни в одном src/*.css и ни в shablon.html. Это либо дек без
+        # сцен, либо каскад порождается сборкой (цель H6) — обвинять его в дырах
+        # нельзя, дыр не с чем сверять. Предел проверки назван вслух, а не замолчан.
+        return GateResult(NA, "правил `.scene-N` нет ни в src/*.css, ни в shablon.html — "
+                              "каскад либо не нужен, либо порождается сборкой", False,
+                          ["если каскад живёт вне src/ (в slides/*.html или в dist/), "
+                           "G15 его не видит и полноту НЕ подтверждает"])
+    cover = {
+        # семейство «раскладка»: {@N}/{fill@N} и data-scene-from/until
+        "data-scene-from": {int(m.group(1)) for m in
+                            re.finditer(r"\.scene-(\d+)\s*\[data-scene-(?:from|until)", css)} or cover_any,
+        # семейство «блюр»: {blur@N} → <span class="blur-reveal" data-reveal="N">
+        "blur-reveal": {int(m.group(1)) for m in
+                        re.finditer(r"\.scene-(\d+)[^,{]*(?:blur-reveal|data-reveal)", css)} or cover_any,
+    }
+    used = {"data-scene-from": set(), "blur-reveal": set()}
+    touched = bool(cover_any)
+    for sid in _order_of(lek, ctx):
+        slide_html, content_md = _slide_pair(src, sid)
+        used["data-scene-from"] |= marks_revealing(content_md)
+        used["data-scene-from"] |= {int(x) for x in SCENE_FROM_ATTR_RE.findall(slide_html)}
+        used["blur-reveal"] |= {int(x) for x in re.findall(r"\{blur@(\d+)", content_md)}
+        if slide_html:
+            touched = True
+    detail = []
+    for family, ks in used.items():
+        if not ks:
+            continue
+        # с 2, не с 1: сцена 1 — базовое состояние, раскрывать в каскаде нечего.
+        holes = sorted(k for k in range(2, max(ks) + 1) if k not in cover[family])
+        if holes:
+            detail.append("каскад %s оборван: сцены %s используются, правил .scene-N нет "
+                          "(урок 8 — последняя сцена начнёт повторять первую)" % (family, holes))
+    status = FAIL if detail else PASS
+    return GateResult(status, "; ".join(detail) or
+                      "каскады .scene-N покрывают все используемые сцены обоих семейств",
+                      touched,
+                      ["каскад судится по семействам (раскладка / блюр) отдельно: объединение "
+                       "`.scene-\\d+` проспало бы обрыв одного семейства при полном другом"])
+
+
+# ───────────────────────── дисциплина-хуки H1-H6 ─────────────────────────
 
 def check_h1(lek, ctx):
     text = read(lek / "kartoteka" / "KARTA-OBLASTI.md")
@@ -539,7 +953,42 @@ def check_h5(lek, ctx):
                        bool(order) or bool(present))
 
 
-GATE_ORDER = ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G8", "G9", "G10", "G11"]
+def check_h6(lek, ctx):
+    """Величина, обязанная совпадать с другой, выписана руками (GEJTY §H6).
+
+    WARN здесь — норма, а не поломка: пока data-scenes и каскад .scene-N пишутся
+    руками, а не порождаются сборкой, хук обязан говорить. Ноль совпадений —
+    цель, при которой G14/G15 становятся бессодержательными."""
+    if ctx.get("slides_flag") == "нет":
+        return GateResult(NA, "слайды: нет — доска")
+    src = lek / "src"
+    slides_dir = src / "slides"
+    hand_scenes = []
+    for p in sorted(slides_dir.glob("*.html")) if slides_dir.is_dir() else []:
+        n = len(SCENES_ATTR_RE.findall(read(p) or ""))
+        if n:
+            hand_scenes.append("%s×%d" % (p.stem, n))
+    hand_css = len(re.findall(r"\.scene-\d+", _css_text(src)))
+    if not hand_scenes and not hand_css:
+        return GateResult(PASS, "вычислимых величин, выписанных руками, нет",
+                          bool(list(slides_dir.glob("*.html"))) if slides_dir.is_dir() else False)
+    parts = []
+    if hand_scenes:
+        parts.append("data-scenes руками в %d слайдах (%s%s)"
+                     % (len(hand_scenes), ", ".join(hand_scenes[:5]),
+                        ", …" if len(hand_scenes) > 5 else ""))
+    if hand_css:
+        parts.append("рукописных `.scene-N` в CSS: %d" % hand_css)
+    return GateResult(WARN, "; ".join(parts) + " — должно вычисляться сборкой из текста", True,
+                      ["лечение — генерация в build_deck.py, не сверка; до неё G14/G15 лечат симптом"])
+
+
+# Порядок прохождения — из GEJTY.md: G1 → … → G5 → G7 → G6 → G8 → …
+# (G7 переехал в конец Фазы I 27.07.2026, id сохранён). G12–G15 живут внутри
+# арок 7–10; в цепочке «прыжков вперёд» участвуют только гейты-границы.
+GATE_ORDER = ["G1", "G2", "G3", "G4", "G5", "G7", "G6", "G8", "G9", "G10", "G11",
+              "G12", "G13", "G14", "G15"]
+STAGE_CHAIN = ["G1", "G2", "G3", "G4", "G5", "G7", "G6", "G8", "G9", "G10", "G11"]
 GATES = {
     "G1": ("бриф закрыт", "граница 1→2", check_g1),
     "G2": ("ресёрч закрыт", "граница 2→3", check_g2),
@@ -547,19 +996,24 @@ GATES = {
     "G4": ("источник закрыт", "граница 4→5", check_g4),
     "G5": ("раскадровка закрыта", "граница 5→вход Фазы II", check_g5),
     "G6": ("вход Фазы II готов", "precondition", check_g6),
-    "G7": ("плакатный баланс", "граница 6→7", check_g7),
+    "G7": ("предвёрсточный документ принят", "граница 6→вход Фазы II", check_g7),
     "G8": ("вёрстка", "граница 7→8", check_g8),
     "G9": ("сцены без дед-кликов", "граница 8→9/10", check_g9),
     "G10": ("иллюстрации", "граница 9→10", check_g10),
     "G11": ("сборка + QA", "финальный", check_g11),
+    "G12": ("обложка и финал", "внутри арки 7", check_g12),
+    "G13": ("илл.-ответ не раньше сцены", "границы 8→9, 9→10", check_g13),
+    "G14": ("data-scenes согласован", "внутри арки 8", check_g14),
+    "G15": ("каскады сцен полны", "границы 8→9, 10", check_g15),
 }
-HOOK_ORDER = ["H1", "H2", "H3", "H4", "H5"]
+HOOK_ORDER = ["H1", "H2", "H3", "H4", "H5", "H6"]
 HOOKS = {
     "H1": ("карточка без источника", check_h1),
     "H2": ("источник без дайджеста VYCHITANO", check_h2),
     "H3": ("висячее ребро в KARTA-OBLASTI", check_h3),
     "H4": ("открытый ⚑ Флаг (раннее предупреждение)", check_h4),
     "H5": ("slide_order-сироты/дубли (раннее предупреждение)", check_h5),
+    "H6": ("величина выписана руками в двух местах", check_h6),
 }
 
 
@@ -657,8 +1111,8 @@ def print_report(lek, ctx, results, hook_results):
 
     print("\n── ПРЫЖКИ ВПЕРЁД (артефакт стадии N+1 тронут, гейт N не PASS/N-A) ──")
     jumps = []
-    for i in range(len(GATE_ORDER) - 1):
-        cur, nxt = GATE_ORDER[i], GATE_ORDER[i + 1]
+    for i in range(len(STAGE_CHAIN) - 1):
+        cur, nxt = STAGE_CHAIN[i], STAGE_CHAIN[i + 1]
         if results[nxt].touched and results[cur].status not in (PASS, NA):
             jumps.append((nxt, cur))
     if jumps:

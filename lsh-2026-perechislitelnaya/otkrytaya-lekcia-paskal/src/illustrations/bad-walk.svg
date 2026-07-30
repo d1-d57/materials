@@ -1,0 +1,30 @@
+<svg viewBox="0 0 810 238" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Путь, который несколько раз опускается ниже нулевого уровня и уходит глубже; вертикаль отмечает первое касание">
+<line class="s-thin" x1="18" y1="86" x2="792" y2="86" stroke-dasharray="5 4"/>
+<line class="s-thin" x1="18" y1="120" x2="792" y2="120" stroke-dasharray="5 4"/>
+<polyline class="s-accent" points="32,86 108,52 184,86 260,120"/>
+<polyline class="s-line" points="260,120 336,86 412,120 488,154 564,188 640,154 716,120 792,154"/>
+<line class="s-dash" x1="260" y1="22" x2="260" y2="218"/>
+<circle class="s-node-a" cx="32" cy="86" r="3.4"/>
+<circle class="s-node" cx="108" cy="52" r="3.4"/>
+<circle class="s-node" cx="184" cy="86" r="3.4"/>
+<circle class="s-node" cx="260" cy="120" r="3.4"/>
+<circle class="s-node" cx="336" cy="86" r="3.4"/>
+<circle class="s-node" cx="412" cy="120" r="3.4"/>
+<circle class="s-node" cx="488" cy="154" r="3.4"/>
+<circle class="s-node" cx="564" cy="188" r="3.4"/>
+<circle class="s-node" cx="640" cy="154" r="3.4"/>
+<circle class="s-node" cx="716" cy="120" r="3.4"/>
+<circle class="s-node-a" cx="792" cy="154" r="3.4"/>
+<text class="s-txt-m" x="70" y="234" text-anchor="middle">О</text>
+<text class="s-txt-m" x="146" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="222" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="298" y="234" text-anchor="middle">О</text>
+<text class="s-txt-m" x="374" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="450" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="526" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="602" y="234" text-anchor="middle">О</text>
+<text class="s-txt-m" x="678" y="234" text-anchor="middle">О</text>
+<text class="s-txt-m" x="754" y="234" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="12" y="90" text-anchor="end">0</text>
+<text class="s-txt-m" x="12" y="124" text-anchor="end">−1</text>
+</svg>

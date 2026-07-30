@@ -1,0 +1,51 @@
+<svg viewBox="0 0 904 392.8" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Сверху ломаная, где каждый подъём сразу сменяется спуском; снизу она же после сжатия — каждый домик заменён одним шагом вверх, ломаная стала короче">
+<polyline class="s-line" points="28,70 106,44 184,70 262,44 340,70 418,96 496,70 574,96 652,70 730,96 808,122 886,148"/>
+<polyline class="s-accent" points="28,70 106,44 184,70"/>
+<polyline class="s-accent" points="184,70 262,44 340,70"/>
+<polyline class="s-accent" points="418,96 496,70 574,96"/>
+<polyline class="s-accent" points="574,96 652,70 730,96"/>
+<circle class="s-node-a" cx="28" cy="70" r="3.4"/>
+<circle class="s-node" cx="106" cy="44" r="3.4"/>
+<circle class="s-node" cx="184" cy="70" r="3.4"/>
+<circle class="s-node" cx="262" cy="44" r="3.4"/>
+<circle class="s-node" cx="340" cy="70" r="3.4"/>
+<circle class="s-node" cx="418" cy="96" r="3.4"/>
+<circle class="s-node" cx="496" cy="70" r="3.4"/>
+<circle class="s-node" cx="574" cy="96" r="3.4"/>
+<circle class="s-node" cx="652" cy="70" r="3.4"/>
+<circle class="s-node" cx="730" cy="96" r="3.4"/>
+<circle class="s-node" cx="808" cy="122" r="3.4"/>
+<circle class="s-node-a" cx="886" cy="148" r="3.4"/>
+<text class="s-txt" x="67" y="184.4" text-anchor="middle">О</text>
+<text class="s-txt" x="145" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt" x="223" y="184.4" text-anchor="middle">О</text>
+<text class="s-txt" x="301" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt" x="379" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt" x="457" y="184.4" text-anchor="middle">О</text>
+<text class="s-txt" x="535" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt" x="613" y="184.4" text-anchor="middle">О</text>
+<text class="s-txt" x="691" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt" x="769" y="184.4" text-anchor="middle">Р</text>
+<text class="s-txt-m" x="847" y="184.4" text-anchor="middle">Р</text>
+<line class="s-thin" x1="106" y1="198.4" x2="106" y2="219.4"/><path class="s-ar-m" d="M 106,228.4 L 102,219.4 L 110,219.4 Z"/>
+<polyline class="s-line" points="28,340.4 106,314.4 184,288.4 262,314.4 340,288.4 418,262.4 496,288.4 574,314.4"/>
+<polyline class="s-accent" points="28,340.4 106,314.4"/>
+<polyline class="s-accent" points="106,314.4 184,288.4"/>
+<polyline class="s-accent" points="262,314.4 340,288.4"/>
+<polyline class="s-accent" points="340,288.4 418,262.4"/>
+<circle class="s-node-a" cx="28" cy="340.4" r="3.4"/>
+<circle class="s-node" cx="106" cy="314.4" r="3.4"/>
+<circle class="s-node" cx="184" cy="288.4" r="3.4"/>
+<circle class="s-node" cx="262" cy="314.4" r="3.4"/>
+<circle class="s-node" cx="340" cy="288.4" r="3.4"/>
+<circle class="s-node" cx="418" cy="262.4" r="3.4"/>
+<circle class="s-node" cx="496" cy="288.4" r="3.4"/>
+<circle class="s-node-a" cx="574" cy="314.4" r="3.4"/>
+<text class="s-txt" x="67" y="388.8" text-anchor="middle">О</text>
+<text class="s-txt" x="145" y="388.8" text-anchor="middle">О</text>
+<text class="s-txt" x="223" y="388.8" text-anchor="middle">Р</text>
+<text class="s-txt" x="301" y="388.8" text-anchor="middle">О</text>
+<text class="s-txt" x="379" y="388.8" text-anchor="middle">О</text>
+<text class="s-txt" x="457" y="388.8" text-anchor="middle">Р</text>
+<text class="s-txt" x="535" y="388.8" text-anchor="middle">Р</text>
+</svg>
