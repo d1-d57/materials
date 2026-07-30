@@ -22,6 +22,7 @@ from pathlib import Path
 
 PLACEHOLDER_RE = re.compile(r"\{\{[A-Za-z0-9_:.\-]+\}\}")
 GEN_BANNER = "<!-- ⚠ СГЕНЕРИРОВАНО ИЗ src/ ГЕНЕРАТОРОМ _generator/build_deck.py — РУКАМИ НЕ ПРАВИТЬ. Правь источник в src/. -->\n"
+CYR = re.compile(r"[а-яА-ЯёЁ]")
 
 
 # ───────────────────────── чтение/запись без трансляции переводов строк ─────────────────────────
@@ -240,6 +241,20 @@ def chapter_base_name(name):
     return m.group(1) if m else name
 
 
+def _slide_sections(assembled):
+    """[(id, html)] — секции <section class="slide"> из assembled, в порядке файла."""
+    out = []
+    for m in re.finditer(r'<section\b[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>', assembled):
+        end = assembled.find("</section>", m.end())
+        if end == -1:
+            continue
+        body = assembled[m.start():end + len("</section>")]
+        mid = re.search(r'\bid="([^"]+)"', m.group(0))
+        if mid:
+            out.append((mid.group(1), body))
+    return out
+
+
 # ───────────────────────── линтер (структурный гейт, DESIGN.md §9) ─────────────────────────
 def lint(shablon, filemap, meta, names):
     errors, warns = [], []
@@ -289,19 +304,90 @@ def lint(shablon, filemap, meta, names):
     if dupes:
         errors.append("дубли id в slide_order: %s" % dupes)
 
-    # 6. (мягко) неиспользуемые illustrations/*
+    # 6. (мягко) неиспользуемые illustrations/* — сводная строка с ОХВАТОМ (иначе тонут в потоке)
     used_ill = set(re.findall(r'data-ill="([^"]+)"', assembled))
-    for name in names.get("illustrations", []):
-        if name not in used_ill:
-            warns.append("illustrations/%s не используется (нет data-ill=\"%s\")" % (name, name))
+    all_ill = names.get("illustrations", [])
+    orphans = sorted(n for n in all_ill if n not in used_ill)
+    if orphans:
+        warns.append('ассетов-сирот %d из %d в реестре (не используется ни одним слайдом): %s. '
+                     'Мёртвый вес в самодостаточном монолите.'
+                     % (len(orphans), len(all_ill), ", ".join(orphans)))
 
-    # (мягко, бонус) дублирующийся id главы в оригинале — второе вхождение недостижимо
+    # дублирующийся id главы в оригинале — второе вхождение недостижимо через getElementById
     from collections import Counter
     cnt = Counter(chapter_base_name(n) for n in names.get("chapters", []))
     for base, c in cnt.items():
         if c > 1:
-            warns.append('исходный id "tpl-%s" встречается %d× в оригинале — второе вхождение '
+            errors.append('исходный id "tpl-%s" встречается %d× в оригинале — второе вхождение '
                          'недостижимо через getElementById (сохранено дословно)' % (base, c))
+
+    # 7. русский текст внутри рисунка (illustrations/* и chapters/*) — error
+    # opt-out: data-text-ok="diagram" на корневом <svg> (коммутативные диаграммы легальны)
+    TEXT_NODE_RE = re.compile(r"<(text|tspan|figcaption)\b[^>]*>(.*?)</\1>", re.S)
+
+    def _svg_opts_out(content):
+        m = re.search(r"<svg\b[^>]*>", content)
+        return bool(m and 'data-text-ok="diagram"' in m.group(0))
+
+    cyr_sources = [("illustrations/%s" % n, filemap.get("{{ILL:%s}}" % n, ""))
+                   for n in names.get("illustrations", [])]
+    cyr_sources += [("chapters/%s" % n, filemap.get("{{CHAPTER:%s}}" % n, ""))
+                    for n in names.get("chapters", [])]
+    for path, content in cyr_sources:
+        if _svg_opts_out(content):
+            continue
+        found = []
+        for m in TEXT_NODE_RE.finditer(content):
+            inner = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(2))).strip()
+            if inner and CYR.search(inner):
+                found.append((m.group(1), inner))
+        if found:
+            tag, sample = found[0]
+            errors.append('%s: русский текст в рисунке — <%s> «%s» (всего таких узлов %d). '
+                          'Буквы выносятся в текст слайда. Коммутативная диаграмма — поставь '
+                          'data-text-ok="diagram" на корневой <svg>.' % (path, tag, sample, len(found)))
+
+    # 7b. (мягко) кириллица, рисуемая кодом sims/**/*.js — второй проход, обходит проверку выше
+    # opt-out: комментарий "// text-ok: hint" на той же строке (подсказки взаимодействия легальны)
+    SIM_TEXT_RE = re.compile(r"(fillText|textContent\s*=)\s*\(?\s*(['\"`])(.*?)\2")
+    sim_sources = []
+    if "{{SIM:lab.core}}" in filemap:
+        sim_sources.append(("sims/lab.core.js", filemap["{{SIM:lab.core}}"]))
+    for n in names.get("sims", []):
+        sim_sources.append(("sims/ext/%s.js" % n, filemap.get("{{SIM:%s}}" % n, "")))
+    for path, content in sim_sources:
+        for line in content.splitlines():
+            if "text-ok: hint" in line:
+                continue
+            m = SIM_TEXT_RE.search(line)
+            if m and CYR.search(m.group(3)):
+                kind = "fillText" if m.group(1) == "fillText" else "textContent"
+                warns.append('%s: %s с русским текстом «%s» — подпись рисуется кодом и обходит '
+                             'проверку рисунков. Подсказка взаимодействия — пометь // text-ok: hint.'
+                             % (path, kind, re.sub(r"\s+", " ", m.group(3)).strip()))
+
+    # 8. порция текста на клик — error, порог 4 (худший слайд эталона buffon/sl-polygons).
+    # Только слайды с реальной сменой сцен (data-scenes>1): у односценового слайда весь
+    # текст показан сразу при входе, «клика» как такового нет — метрика о нём не судит.
+    for sid, shtml in _slide_sections(assembled):
+        msc = re.search(r'data-scenes="(\d+)"', shtml)
+        if not msc or int(msc.group(1)) <= 1:
+            continue
+        body = re.sub(r"<(script|style|template)\b.*?</\1>", " ", shtml, flags=re.S)
+        buckets = {}
+        for m in re.finditer(r"<(p|li)\b([^>]*)>(.*?)</\1>", body, re.S):
+            text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(3))).strip()
+            if not text:
+                continue
+            msf = re.search(r'data-scene-from="(\d+)"', m.group(2))
+            scene = int(msf.group(1)) if msf else 1
+            buckets[scene] = buckets.get(scene, 0) + 1
+        if buckets:
+            scene, count = max(buckets.items(), key=lambda kv: kv[1])
+            if count > 4:
+                errors.append('slides/%s.html: на сцене %d раскрывается %d текстовых блоков разом '
+                              '(порог 4 — худший слайд эталона buffon/sl-polygons). Дроби сцены: '
+                              '{@N} по абзацу, SLIDE-FORMAT.md стр. 16.' % (sid, scene, count))
 
     return errors, warns, assembled
 
