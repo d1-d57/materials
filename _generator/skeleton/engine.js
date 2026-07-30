@@ -50,12 +50,38 @@ function fitAll(root) {
 }
 
 /* ---- scenes (progressive disclosure; geometry frozen) ---- */
-const scenesOf = s => parseInt(s.dataset.scenes || '1', 10) || 1;
+/* Math.max(1, …) — не украшение: parseInt('-3') даёт −3, а это ЧИСЛО, значит
+   `|| 1` его не отсекает. Отрицательное `data-scenes` уходило дальше во все
+   потребители сразу (next/prev/парковка скрытых/обзор), а с зажатием в
+   applyScene давало класс `scene--3`, которого нет ни в одном каскаде и который
+   не снимается фильтром `/^scene-\d+$/`. Порог стоит ЗДЕСЬ, в единственном
+   месте, где число сцен вообще читается, — иначе его пришлось бы повторять у
+   шести вызывающих. Найдено верификатором. */
+const scenesOf = s => Math.max(1, parseInt(s.dataset.scenes || '1', 10) || 1);
 function applyScene(slide, k) {
-  for (let i = 1; i <= 9; i++) slide.classList.remove('scene-' + i);
+  /* Сцена не может выйти за фактическое число сцен слайда. Ставится ЗДЕСЬ, а не
+     у вызывающих: так лечатся все входы разом — hash-роутинг #sN.K (readHash
+     ничего не проверяет), ручной ?scene=, ?scene=0, ?scene=-1, экспорт, будущие
+     инструменты. Один вход это уже умел (postMessage ниже зажимает сам) —
+     остальные приводятся к нему. NaN из мусора («?scene=abc») тоже сюда: он не
+     пройдёт ни одно сравнение и даст 1. */
+  const n = scenesOf(slide);
+  k = (k >= 1 && k <= n) ? Math.floor(k) : (k > n ? n : 1);
+  /* Снимаем ФАКТИЧЕСКИЕ scene-классы, а не диапазон 1..9. Цикл до девятки не
+     снимал ни scene-10 и выше, ни залипший scene-99 из старой ссылки — то есть
+     давал слайд с двумя классами сцен разом. Фильтр по classList верхней границы
+     не знает вовсе и потому не может от неё отстать снова. */
+  Array.from(slide.classList)
+    .filter(c => /^scene-\d+$/.test(c))
+    .forEach(c => slide.classList.remove(c));
   slide.classList.add('scene-' + k);
   slide.querySelectorAll('[data-scene-until]').forEach(el =>
     el.classList.toggle('scene-off', k >= +el.dataset.sceneUntil));
+  /* Возвращаем ФАКТИЧЕСКУЮ сцену. Нужна она ровно одному вызывающему —
+     showSingle: он держит `scene`, из которой syncHash пишет адрес. Остальные
+     (exportFrame, next, prev, обзор, postMessage) значение отбрасывают законно:
+     они и так передают k из диапазона, и своего состояния сцены не держат. */
+  return k;
 }
 
 /* ---- show / navigate ---- */
@@ -70,7 +96,11 @@ function showSingle(i, k) {
   slides.forEach((s, j) => {
     const active = j === cur;
     s.style.display = active ? '' : 'none';
-    applyScene(s, active ? scene : scenesOf(s));   // park hidden at final
+    /* активному слайду возвращённая сцена ПРИСВАИВАЕТСЯ: иначе `scene` держит
+       непроверенное число из хэша (#s2.99), DOM показывает зажатую сцену, а
+       syncHash пишет в адрес ту, которой на экране нет. */
+    const eff = applyScene(s, active ? scene : scenesOf(s));   // park hidden at final
+    if (active) scene = eff;
     s.querySelectorAll('video').forEach(v => {
       if (active) { v.currentTime = 0; const p = v.play(); p && p.catch(() => {}); }
       else v.pause();

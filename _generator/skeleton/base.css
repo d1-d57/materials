@@ -4,6 +4,15 @@ html, body { height: 100%; background: #2b3038; }
 #stage { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
 .slide { width: 1440px; height: 810px; position: relative; overflow: hidden;
          transform-origin: center center; background: var(--paper); color: var(--ink); }
+/* Черновой слайд прячется КАНОНОМ, а не каждым деком по-своему. `engine.js` уже
+   исключает `[data-skip]` из `slides` — но display ему не трогает НИКОГДА, ни в
+   показе, ни в экспорте: слайда нет в массиве, значит `style.display` ему никто не
+   ставит. Без этого правила скелет сам себе противоречил — помеченный слайд
+   оставался на экране рядом с текущим и попадал в кадр. Решение уже было найдено
+   и заперто в деке (`dandelin/src/shablon.html:54`, дословно эта строка) — здесь
+   оно перенесено в единственное место, откуда его получат все будущие деки.
+   Найдено ловушкой 1в собственной фикстуры. */
+.slide[data-skip] { display: none !important; }
 .zone  { position: relative; overflow: hidden; min-width: 0; min-height: 0; }
 .fit   { max-width: 100%; max-height: 100%; }
 
@@ -32,11 +41,7 @@ html, body { height: 100%; background: #2b3038; }
 [data-scene-from] { opacity: 0; visibility: hidden; transition: opacity .24s ease; }
 .formula[data-scene-from], [data-scene-from] .formula { transition-delay: .14s; }
 .panel[data-scene-from] { transition-delay: .12s; }
-.scene-2 [data-scene-from="2"],
-.scene-3 [data-scene-from="2"], .scene-3 [data-scene-from="3"],
-.scene-4 [data-scene-from="2"], .scene-4 [data-scene-from="3"], .scene-4 [data-scene-from="4"],
-.scene-5 [data-scene-from="2"], .scene-5 [data-scene-from="3"], .scene-5 [data-scene-from="4"], .scene-5 [data-scene-from="5"]
-  { opacity: 1; visibility: visible; }
+{{SCENE_CASCADE}}
 @media (prefers-reduced-motion: reduce) { [data-scene-from] { transition: none; } }
 
 body.blanked #stage { visibility: hidden; }
