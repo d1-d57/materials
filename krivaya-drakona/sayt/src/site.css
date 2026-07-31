@@ -1,0 +1,497 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Дизайн-язык взят из _referens/matema-fest.html: токены :root, каркас сцены,
+   грид 0.4/0.6, дыхание фона, маска-виньетка, плашка «глубже», адаптив 720px.
+   Отличия сознательные:
+     · акцент на весь сайт ОДИН — #B85A55, тот, что в референсе закреплён за
+       драконом. Второй, #C9A961, только там, где схеме нужно различить два
+       объекта (сцена 5), и больше нигде;
+     · шрифты вшиты, из сети не грузится ничего (@font-face ниже подставляет
+       сборщик). IBM Plex Sans локально не нашёлся — sans идёт системным
+       стеком, mono вшит и кириллицу покрывает;
+     · фотография растворяется маской, а не обводится рамкой: край у неё такой
+       же, как у крупных фигур, поэтому она и живёт в одной системе с ними.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/*__FONTS__*/
+
+:root {
+  --bg:             #0E0E10;
+  --bg-deep:        #08080A;
+  --text:           #ECECEC;
+  --text-secondary: #B8B8BC;
+  --text-muted:     #9A9AA0;
+  --rule:           #2A2A30;          /* единственный цвет всех границ */
+
+  --acc:            #B85A55;          /* дракон — акцент на весь сайт */
+  --acc2:           #C9A961;          /* только схемы доказательства: два объекта */
+
+  --font-sans: 'PlexSansLocal', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+               'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'PlexMonoLocal', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-body:   19px;
+  --fs-small:  16px;
+  --fs-title:  clamp(28px, 3.4vw, 46px);
+  --fs-num:    13px;
+  --lh-body:   1.62;
+  --measure:   54ch;
+
+  --scene-w:   1180px;
+  --pad-x:     24px;
+  --halo:      0.18;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; background: none; border: none; color: inherit;
+         cursor: pointer; padding: 0; }
+
+/* ═════════ каркас сцены ═════════ */
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: clamp(40px, 5vh, 64px) var(--pad-x);
+}
+
+/* сцена 5 — одна длинная секция из четырёх шагов, ей высота по содержанию */
+.scene--tall { min-height: auto; padding-top: clamp(56px, 8vh, 96px);
+               padding-bottom: clamp(56px, 8vh, 96px); }
+
+.scene__bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 62% 50%,
+      color-mix(in srgb, var(--acc) 8%, transparent) 0%, transparent 60%),
+    var(--bg);
+  animation: bg-breath 13s ease-in-out infinite;
+}
+@keyframes bg-breath { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+.scene__grid {
+  position: relative; z-index: 1;
+  width: 100%; max-width: var(--scene-w); margin: 0 auto;
+  display: flex; flex-direction: column; gap: 26px;
+}
+
+/* заголовок сцены — НАД гридом, на всю ширину */
+.scene__head { display: flex; flex-direction: column; gap: 10px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-num);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scene__title {
+  font-weight: 500;
+  font-size: var(--fs-title);
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* тело: узкая колонка текста слева, квадратная фигура справа */
+.scene__body {
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
+}
+
+.col {
+  display: flex; flex-direction: column; gap: 20px;
+  max-width: var(--measure);
+}
+.col p { margin: 0; }
+.col p + p { margin-top: -4px; }
+.col strong { font-weight: 500; color: var(--text); }
+.col .dim { color: var(--text-secondary); font-size: var(--fs-small); }
+
+/* появление текста — целиком, при въезде сцены */
+.col, .scene__head { opacity: 0; transform: translateY(14px);
+  transition: opacity 700ms ease, transform 700ms ease; }
+.scene.is-in .col, .scene.is-in .scene__head { opacity: 1; transform: none; }
+.scene.is-in .col { transition-delay: 90ms; }
+
+/* ═════════ фигура ═════════ */
+
+.figure {
+  position: relative; z-index: 2; margin: 0;
+  width: 100%; margin-inline: auto;
+  aspect-ratio: 1 / 1;
+}
+.figure--wide { aspect-ratio: 4 / 3; }
+
+/* ореол — фигура не обрывается краем, а живёт в свечении */
+.figure::before {
+  content: ''; position: absolute; inset: -22%;
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--acc) calc(var(--halo) * 100%), transparent) 0%,
+    transparent 65%);
+  border-radius: 50%; z-index: 0; pointer-events: none;
+  animation: halo 26s ease-in-out infinite;
+}
+@keyframes halo { 0%,100% { opacity: .85; } 50% { opacity: 1.15; } }
+
+.figure > svg, .figure > canvas {
+  display: block; position: relative; z-index: 1;
+  width: 100%; height: 100%;
+}
+
+/* МАСКА-ВИНЬЕТКА на крупных фигурах: картинка растворяется в фоне */
+.figure--veil > svg, .figure--veil > canvas {
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 58%, transparent 92%);
+          mask-image: radial-gradient(ellipse at center, #000 58%, transparent 92%);
+}
+
+/* ═════════ линии и заливки внутри SVG ═════════ */
+
+.d-line   { fill: none; stroke: var(--text);      stroke-width: 2;   stroke-linecap: round; }
+.d-acc    { fill: none; stroke: var(--acc);       stroke-width: 2;   stroke-linecap: round; }
+.d-acc2   { fill: none; stroke: var(--acc2);      stroke-width: 2;   stroke-linecap: round; }
+.d-dim    { fill: none; stroke: var(--rule);      stroke-width: 1.4; stroke-linecap: round; }
+/* четвёртый дракон сцены 6. На --rule он был почти невидим, а сцена ровно про
+   то, что видны все четыре и они не налезают: невидимая кривая ломает
+   утверждение сцены. Поэтому приглушённый серый, а не цвет границ. */
+.d-mute   { fill: none; stroke: var(--text-muted); stroke-width: 2;  stroke-linecap: round; }
+.d-faint  { fill: none; stroke: var(--text-muted); stroke-width: 1.6; stroke-linecap: round;
+            opacity: .5; }
+.d-dash   { fill: none; stroke: var(--text-muted); stroke-width: 1.3;
+            stroke-dasharray: 5 5; opacity: .75; }
+.d-ghost  { fill: none; stroke: var(--text-muted); stroke-width: 2;
+            stroke-dasharray: 4 6; opacity: .5; }
+.d-hot    { fill: none; stroke: var(--acc);       stroke-width: 4;   stroke-linecap: round; }
+.d-grid   { stroke: var(--rule); stroke-width: 1; opacity: .5; }
+/* Полоса решётки. 6 %, а не 9: на скриншоте полосы оказались ЯРЧЕ кривой,
+   которую они разлиновывают, и сцена читалась как полосатый фон. Разметка
+   обязана быть тише предмета. */
+.d-row    { fill: color-mix(in srgb, var(--acc2) 6%, transparent); }
+.d-area   { fill: color-mix(in srgb, var(--acc) 26%, transparent); stroke: none; }
+.d-node   { fill: var(--bg); stroke: var(--text); stroke-width: 1.6; }
+.d-node-b { fill: var(--text); stroke: none; }
+.d-node-a { fill: var(--acc);  stroke: none; }
+/* Зона наведения. pointer-events: stroke — ЯВНО, а не по умолчанию: при
+   visiblePainted попадание по прозрачному штриху зависит от браузера, и
+   единственный интерактив сцены 5в держать на такой предпосылке нельзя. */
+.d-hit    { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer;
+            pointer-events: stroke; }
+.d-arrow  { fill: var(--text-muted); stroke: none; }
+.d-arrow-a{ fill: var(--acc); stroke: none; }
+.d-cap    { fill: var(--text-muted); font-family: var(--font-mono); font-size: 12px;
+            letter-spacing: .12em; text-transform: uppercase; }
+
+.d-rib    { fill: none; stroke: var(--text-secondary); stroke-linecap: butt; }
+.d-rib-a  { fill: none; stroke: var(--acc);            stroke-linecap: butt; }
+
+/* ═════════ управление ═════════ */
+
+.ctrls { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+
+.ctrl { display: flex; flex-direction: column; gap: 7px; }
+.ctrl__lbl {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-muted);
+  display: flex; justify-content: space-between; gap: 12px;
+}
+.ctrl__lbl b { color: var(--text); font-weight: 400; }
+
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 22px; background: transparent; cursor: pointer; margin: 0;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  height: 1px; background: var(--rule);
+}
+input[type=range]::-moz-range-track { height: 1px; background: var(--rule); }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 13px; height: 13px; margin-top: -6px; border-radius: 2px;
+  background: var(--bg); border: 1px solid var(--text-secondary);
+  transition: border-color 160ms, background 160ms;
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 2px;
+  background: var(--bg); border: 1px solid var(--text-secondary);
+}
+input[type=range]:hover::-webkit-slider-thumb,
+input[type=range]:focus-visible::-webkit-slider-thumb {
+  border-color: var(--acc); background: color-mix(in srgb, var(--acc) 22%, var(--bg));
+}
+input[type=range]:focus-visible { outline: none; }
+
+.btn {
+  align-self: flex-start;
+  padding: 12px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text); border: 1px solid var(--rule); border-radius: 2px;
+  transition: border-color 200ms, color 200ms, background 200ms;
+}
+.btn:hover, .btn:focus-visible {
+  border-color: var(--acc); color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 6%, transparent);
+  outline: none;
+}
+
+.seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 2px;
+       align-self: flex-start; overflow: hidden; }
+.seg button {
+  padding: 8px 13px; font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: .08em; color: var(--text-muted);
+  border-right: 1px solid var(--rule);
+  transition: color 180ms, background 180ms;
+}
+.seg button:last-child { border-right: none; }
+.seg button:hover, .seg button:focus-visible { color: var(--text); outline: none;
+  background: color-mix(in srgb, var(--acc) 6%, transparent); }
+.seg button.on { color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 12%, transparent); }
+
+/* строка состояния под фигурой — только mono, только служебное */
+.readout {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+  color: var(--text-muted); min-height: 1.5em;
+}
+.readout b { color: var(--text); font-weight: 400; }
+.readout .hi { color: var(--acc); }
+
+/* ═════════ обложка ═════════ */
+
+.cover {
+  position: relative; min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 64px var(--pad-x); overflow: hidden;
+}
+.cover__bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 50% 50%,
+    color-mix(in srgb, var(--acc) 7%, transparent) 0%, transparent 70%);
+  animation: bg-breath 14s ease-in-out infinite;
+}
+.cover__canvas {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 26%, transparent 74%);
+          mask-image: radial-gradient(ellipse at center, #000 26%, transparent 74%);
+  opacity: .62;
+}
+.cover__canvas canvas { display: block; width: min(940px, 94vw); height: min(940px, 88vh); }
+
+/* Скрим под текстом обложки. Дракон ранга 14 — мелкая сетка, и заголовок на ней
+   рябит: буквы читаются, но глаз спотыкается. Скрим гасит фрактал ровно там, где
+   стоит текст, и не трогает остальное — фигура по-прежнему растворяется маской. */
+.cover__scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 46% 34% at 50% 52%,
+    var(--bg) 0%, color-mix(in srgb, var(--bg) 72%, transparent) 52%, transparent 78%);
+}
+
+.cover__inner {
+  position: relative; z-index: 2; max-width: 720px; text-align: center;
+  display: flex; flex-direction: column; gap: 28px; align-items: center;
+}
+.cover__title {
+  font-size: clamp(46px, 7vw, 92px); line-height: 1.04; font-weight: 500;
+  letter-spacing: -0.02em; margin: 0;
+}
+.cover__sub {
+  font-size: clamp(19px, 2vw, 23px); line-height: 1.5;
+  color: var(--text-secondary); margin: 0; max-width: 30em;
+}
+.cover .btn { align-self: center; margin-top: 8px; padding: 15px 30px;
+              letter-spacing: 0.18em; }
+
+/* ═════════ фотография — ЕДИНЫЙ ПРИЁМ на весь сайт ═════════
+   Фото не обводится рамкой: рамка дала бы жёсткий прямоугольник в системе,
+   где всё остальное растворяется. Приём вместо рамки — три хода:
+     1) обесцветить и притемнить, чтобы фото не спорило яркостью с линиями;
+     2) подкрасить в акцент через mix-blend-mode: color — фото попадает в
+        ту же гамму, что и дракон;
+     3) растворить края той же радиальной маской, что у крупных фигур.
+   Тот же приём пойдёт на любой портрет, если он появится. */
+
+/* Карточки записей сцены 1 — то, что стоит на месте двух фотографий, пока их
+   нет. Не заглушка: числа и есть содержание («до какого складывания дошли»),
+   и типографика несёт его лучше, чем нерелевантный снимок. Пластика та же —
+   одна линия границы сверху, mono для служебного, никаких теней. */
+.records { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,3vw,44px); }
+
+.record { margin: 0; display: flex; flex-direction: column;
+          border-top: 1px solid var(--rule); padding-top: 18px; }
+.record__year {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--acc);
+}
+.record__big {
+  font-size: clamp(56px, 7vw, 92px); line-height: 1; font-weight: 500;
+  letter-spacing: -0.03em; margin-top: 10px; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.record__unit {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-muted); margin-top: 8px;
+}
+.record p { margin: 16px 0 0; font-size: var(--fs-small);
+            color: var(--text-secondary); }
+
+/* ПРИЁМ ДЛЯ ФОТОГРАФИИ — определён и готов, ждёт файлов в foto/.
+   Сборщик подставит их base64-ом автоматически; разметку см. в комментарии
+   сцены 1. Тот же приём пойдёт на портрет, если он появится. */
+.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
+
+.photo { position: relative; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.photo__wrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.photo__wrap img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.06) brightness(.74);
+  -webkit-mask-image: radial-gradient(ellipse 92% 92% at 50% 48%, #000 52%, transparent 96%);
+          mask-image: radial-gradient(ellipse 92% 92% at 50% 48%, #000 52%, transparent 96%);
+}
+.photo__wrap::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: var(--acc); opacity: .16; mix-blend-mode: color;
+}
+.photo figcaption {
+  font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5;
+  letter-spacing: .06em; color: var(--text-muted);
+}
+.photo figcaption b { color: var(--text-secondary); font-weight: 400; }
+
+/* ═════════ сцена 5: четыре шага в одной секции ═════════ */
+
+.steps { display: flex; flex-direction: column; gap: clamp(56px, 7vh, 92px); }
+.step__num {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--acc);
+}
+.step__title { font-size: clamp(21px, 2vw, 26px); font-weight: 500; margin: 0;
+               line-height: 1.25; }
+.defs {
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 20px 0; display: flex; flex-direction: column; gap: 10px;
+  font-size: var(--fs-small); color: var(--text-secondary);
+}
+.defs p { margin: 0; }
+.defs dfn { font-style: normal; font-weight: 500; color: var(--text); }
+
+/* ═════════ плашка «глубже» ═════════ */
+
+.deeper {
+  position: fixed; top: 0; left: 0; width: 100vw;
+  height: 100vh; height: 100svh;
+  background: var(--bg-deep); border-right: 1px solid var(--rule);
+  --panel-x: 100vw;
+  transform: translateX(calc(-100% - var(--panel-x)));
+  transition: transform 400ms cubic-bezier(.16,1,.3,1);
+  overflow-y: auto; padding: 64px var(--panel-pad, 0) 40px 0;
+  z-index: 100;
+}
+.deeper[data-open="true"] { transform: translateX(0); }
+.deeper__in { display: flex; flex-direction: column; gap: 16px;
+              font-size: var(--fs-small); color: var(--text-secondary); }
+.deeper__in h3 { font-size: 20px; font-weight: 500; color: var(--text); margin: 0 0 4px; }
+.deeper__in p { margin: 0; }
+.deeper__in em { color: var(--text); font-style: normal; }
+.deeper__close {
+  position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+  font-family: var(--font-mono); font-size: 22px; line-height: 1;
+  color: var(--text-muted); border: 1px solid var(--rule); border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 180ms, border-color 180ms;
+}
+.deeper__close:hover, .deeper__close:focus-visible {
+  color: var(--text); border-color: var(--acc); outline: none; }
+
+.backdrop {
+  position: fixed; inset: 0; background: rgba(8,8,10,.55);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; transition: opacity 300ms; z-index: 99;
+}
+.backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+/* ═════════ навигация точками ═════════ */
+
+#nav {
+  position: fixed; top: 50%; right: 22px; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 13px; z-index: 50;
+}
+#nav button {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted);
+  opacity: .45; padding: 0; position: relative;
+  transition: opacity 180ms, transform 180ms, background 180ms;
+}
+#nav button:hover, #nav button:focus-visible { opacity: 1; outline: none; }
+#nav button.on { opacity: 1; background: var(--acc); transform: scale(1.45); }
+#nav span {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text); background: var(--bg-deep);
+  padding: 6px 11px; border: 1px solid var(--rule); border-radius: 3px;
+  white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 180ms;
+}
+#nav button:hover span, #nav button:focus-visible span { opacity: 1; }
+#nav button.on span { transform: translateY(-50%) scale(.69); transform-origin: right center; }
+
+/* ═════════ подвал ═════════ */
+
+.foot {
+  position: relative; padding: clamp(56px,9vh,110px) var(--pad-x);
+  border-top: 1px solid var(--rule); background: var(--bg-deep);
+}
+.foot__in { max-width: 660px; margin: 0 auto; text-align: center;
+            display: flex; flex-direction: column; gap: 18px;
+            color: var(--text-secondary); font-size: var(--fs-small); }
+.foot__in h2 { font-size: clamp(26px,3.4vw,38px); font-weight: 500;
+               color: var(--text); margin: 0; line-height: 1.2; }
+.foot__meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+              text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+
+/* ═════════ адаптив: одна точка, 720px ═════════ */
+
+@media (max-width: 720px) {
+  :root { --fs-body: 17px; --fs-small: 15px; --pad-x: 18px; }
+  .scene__body { grid-template-columns: 1fr; gap: 26px; }
+  .figure { order: -1; }          /* картинка уходит НАД текстом */
+  .col    { order: 0; max-width: none; }
+  .scene__title { font-size: clamp(23px, 6vw, 34px); }
+  #nav { display: none; }
+  .photos, .records { grid-template-columns: 1fr; gap: 26px; }
+  .record__big { font-size: clamp(44px, 14vw, 68px); }
+  .deeper {
+    top: auto; bottom: 0; left: 0 !important; width: 100vw !important;
+    height: 78vh; height: 78svh;
+    border-right: none; border-top: 1px solid var(--rule);
+    --panel-x: 0px; transform: translateY(100%);
+    padding: 56px 20px 32px;
+  }
+  .deeper[data-open="true"] { transform: translateY(0); }
+  .cover__canvas canvas { width: 96vw; height: 60vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene__bg, .cover__bg { animation: none; opacity: .75 !important; }
+  .figure::before { animation: none; opacity: 1 !important; }
+  .deeper, .backdrop { transition: none; }
+  .col, .scene__head { transition: none; opacity: 1; transform: none; }
+}

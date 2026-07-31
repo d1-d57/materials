@@ -1,0 +1,2369 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кривая дракона</title>
+<meta name="description" content="Полоска бумаги, сложенная двенадцать раз, разбирает плоскость без остатка. Восемь сцен с анимациями: как растёт кривая дракона, почему она не проходит дважды по одному звену и почему у линии есть площадь.">
+<style>/* ═══════════════════════════════════════════════════════════════════════════
+   Дизайн-язык взят из _referens/matema-fest.html: токены :root, каркас сцены,
+   грид 0.4/0.6, дыхание фона, маска-виньетка, плашка «глубже», адаптив 720px.
+   Отличия сознательные:
+     · акцент на весь сайт ОДИН — #B85A55, тот, что в референсе закреплён за
+       драконом. Второй, #C9A961, только там, где схеме нужно различить два
+       объекта (сцена 5), и больше нигде;
+     · шрифты вшиты, из сети не грузится ничего (@font-face ниже подставляет
+       сборщик). IBM Plex Sans локально не нашёлся — sans идёт системным
+       стеком, mono вшит и кириллицу покрывает;
+     · фотография растворяется маской, а не обводится рамкой: край у неё такой
+       же, как у крупных фигур, поэтому она и живёт в одной системе с ними.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@font-face{font-family:'PlexMonoLocal';font-style:normal;font-weight:400;font-display:block;src:url(data:font/woff2;base64,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) format('woff2');}
+
+:root {
+  --bg:             #0E0E10;
+  --bg-deep:        #08080A;
+  --text:           #ECECEC;
+  --text-secondary: #B8B8BC;
+  --text-muted:     #9A9AA0;
+  --rule:           #2A2A30;          /* единственный цвет всех границ */
+
+  --acc:            #B85A55;          /* дракон — акцент на весь сайт */
+  --acc2:           #C9A961;          /* только схемы доказательства: два объекта */
+
+  --font-sans: 'PlexSansLocal', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+               'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'PlexMonoLocal', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-body:   19px;
+  --fs-small:  16px;
+  --fs-title:  clamp(28px, 3.4vw, 46px);
+  --fs-num:    13px;
+  --lh-body:   1.62;
+  --measure:   54ch;
+
+  --scene-w:   1180px;
+  --pad-x:     24px;
+  --halo:      0.18;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: auto; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; background: none; border: none; color: inherit;
+         cursor: pointer; padding: 0; }
+
+/* ═════════ каркас сцены ═════════ */
+
+.scene {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: clamp(40px, 5vh, 64px) var(--pad-x);
+}
+
+/* сцена 5 — одна длинная секция из четырёх шагов, ей высота по содержанию */
+.scene--tall { min-height: auto; padding-top: clamp(56px, 8vh, 96px);
+               padding-bottom: clamp(56px, 8vh, 96px); }
+
+.scene__bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 62% 50%,
+      color-mix(in srgb, var(--acc) 8%, transparent) 0%, transparent 60%),
+    var(--bg);
+  animation: bg-breath 13s ease-in-out infinite;
+}
+@keyframes bg-breath { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+.scene__grid {
+  position: relative; z-index: 1;
+  width: 100%; max-width: var(--scene-w); margin: 0 auto;
+  display: flex; flex-direction: column; gap: 26px;
+}
+
+/* заголовок сцены — НАД гридом, на всю ширину */
+.scene__head { display: flex; flex-direction: column; gap: 10px; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-num);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.scene__title {
+  font-weight: 500;
+  font-size: var(--fs-title);
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* тело: узкая колонка текста слева, квадратная фигура справа */
+.scene__body {
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
+}
+
+.col {
+  display: flex; flex-direction: column; gap: 20px;
+  max-width: var(--measure);
+}
+.col p { margin: 0; }
+.col p + p { margin-top: -4px; }
+.col strong { font-weight: 500; color: var(--text); }
+.col .dim { color: var(--text-secondary); font-size: var(--fs-small); }
+
+/* появление текста — целиком, при въезде сцены */
+.col, .scene__head { opacity: 0; transform: translateY(14px);
+  transition: opacity 700ms ease, transform 700ms ease; }
+.scene.is-in .col, .scene.is-in .scene__head { opacity: 1; transform: none; }
+.scene.is-in .col { transition-delay: 90ms; }
+
+/* ═════════ фигура ═════════ */
+
+.figure {
+  position: relative; z-index: 2; margin: 0;
+  width: 100%; margin-inline: auto;
+  aspect-ratio: 1 / 1;
+}
+.figure--wide { aspect-ratio: 4 / 3; }
+
+/* ореол — фигура не обрывается краем, а живёт в свечении */
+.figure::before {
+  content: ''; position: absolute; inset: -22%;
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--acc) calc(var(--halo) * 100%), transparent) 0%,
+    transparent 65%);
+  border-radius: 50%; z-index: 0; pointer-events: none;
+  animation: halo 26s ease-in-out infinite;
+}
+@keyframes halo { 0%,100% { opacity: .85; } 50% { opacity: 1.15; } }
+
+.figure > svg, .figure > canvas {
+  display: block; position: relative; z-index: 1;
+  width: 100%; height: 100%;
+}
+
+/* МАСКА-ВИНЬЕТКА на крупных фигурах: картинка растворяется в фоне */
+.figure--veil > svg, .figure--veil > canvas {
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 58%, transparent 92%);
+          mask-image: radial-gradient(ellipse at center, #000 58%, transparent 92%);
+}
+
+/* ═════════ линии и заливки внутри SVG ═════════ */
+
+.d-line   { fill: none; stroke: var(--text);      stroke-width: 2;   stroke-linecap: round; }
+.d-acc    { fill: none; stroke: var(--acc);       stroke-width: 2;   stroke-linecap: round; }
+.d-acc2   { fill: none; stroke: var(--acc2);      stroke-width: 2;   stroke-linecap: round; }
+.d-dim    { fill: none; stroke: var(--rule);      stroke-width: 1.4; stroke-linecap: round; }
+/* четвёртый дракон сцены 6. На --rule он был почти невидим, а сцена ровно про
+   то, что видны все четыре и они не налезают: невидимая кривая ломает
+   утверждение сцены. Поэтому приглушённый серый, а не цвет границ. */
+.d-mute   { fill: none; stroke: var(--text-muted); stroke-width: 2;  stroke-linecap: round; }
+.d-faint  { fill: none; stroke: var(--text-muted); stroke-width: 1.6; stroke-linecap: round;
+            opacity: .5; }
+.d-dash   { fill: none; stroke: var(--text-muted); stroke-width: 1.3;
+            stroke-dasharray: 5 5; opacity: .75; }
+.d-ghost  { fill: none; stroke: var(--text-muted); stroke-width: 2;
+            stroke-dasharray: 4 6; opacity: .5; }
+.d-hot    { fill: none; stroke: var(--acc);       stroke-width: 4;   stroke-linecap: round; }
+.d-grid   { stroke: var(--rule); stroke-width: 1; opacity: .5; }
+/* Полоса решётки. 6 %, а не 9: на скриншоте полосы оказались ЯРЧЕ кривой,
+   которую они разлиновывают, и сцена читалась как полосатый фон. Разметка
+   обязана быть тише предмета. */
+.d-row    { fill: color-mix(in srgb, var(--acc2) 6%, transparent); }
+.d-area   { fill: color-mix(in srgb, var(--acc) 26%, transparent); stroke: none; }
+.d-node   { fill: var(--bg); stroke: var(--text); stroke-width: 1.6; }
+.d-node-b { fill: var(--text); stroke: none; }
+.d-node-a { fill: var(--acc);  stroke: none; }
+/* Зона наведения. pointer-events: stroke — ЯВНО, а не по умолчанию: при
+   visiblePainted попадание по прозрачному штриху зависит от браузера, и
+   единственный интерактив сцены 5в держать на такой предпосылке нельзя. */
+.d-hit    { fill: none; stroke: transparent; stroke-width: 18; cursor: pointer;
+            pointer-events: stroke; }
+.d-arrow  { fill: var(--text-muted); stroke: none; }
+.d-arrow-a{ fill: var(--acc); stroke: none; }
+.d-cap    { fill: var(--text-muted); font-family: var(--font-mono); font-size: 12px;
+            letter-spacing: .12em; text-transform: uppercase; }
+
+.d-rib    { fill: none; stroke: var(--text-secondary); stroke-linecap: butt; }
+.d-rib-a  { fill: none; stroke: var(--acc);            stroke-linecap: butt; }
+
+/* ═════════ управление ═════════ */
+
+.ctrls { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+
+.ctrl { display: flex; flex-direction: column; gap: 7px; }
+.ctrl__lbl {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-muted);
+  display: flex; justify-content: space-between; gap: 12px;
+}
+.ctrl__lbl b { color: var(--text); font-weight: 400; }
+
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 22px; background: transparent; cursor: pointer; margin: 0;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  height: 1px; background: var(--rule);
+}
+input[type=range]::-moz-range-track { height: 1px; background: var(--rule); }
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 13px; height: 13px; margin-top: -6px; border-radius: 2px;
+  background: var(--bg); border: 1px solid var(--text-secondary);
+  transition: border-color 160ms, background 160ms;
+}
+input[type=range]::-moz-range-thumb {
+  width: 13px; height: 13px; border-radius: 2px;
+  background: var(--bg); border: 1px solid var(--text-secondary);
+}
+input[type=range]:hover::-webkit-slider-thumb,
+input[type=range]:focus-visible::-webkit-slider-thumb {
+  border-color: var(--acc); background: color-mix(in srgb, var(--acc) 22%, var(--bg));
+}
+input[type=range]:focus-visible { outline: none; }
+
+.btn {
+  align-self: flex-start;
+  padding: 12px 20px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text); border: 1px solid var(--rule); border-radius: 2px;
+  transition: border-color 200ms, color 200ms, background 200ms;
+}
+.btn:hover, .btn:focus-visible {
+  border-color: var(--acc); color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 6%, transparent);
+  outline: none;
+}
+
+.seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 2px;
+       align-self: flex-start; overflow: hidden; }
+.seg button {
+  padding: 8px 13px; font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: .08em; color: var(--text-muted);
+  border-right: 1px solid var(--rule);
+  transition: color 180ms, background 180ms;
+}
+.seg button:last-child { border-right: none; }
+.seg button:hover, .seg button:focus-visible { color: var(--text); outline: none;
+  background: color-mix(in srgb, var(--acc) 6%, transparent); }
+.seg button.on { color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 12%, transparent); }
+
+/* строка состояния под фигурой — только mono, только служебное */
+.readout {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
+  color: var(--text-muted); min-height: 1.5em;
+}
+.readout b { color: var(--text); font-weight: 400; }
+.readout .hi { color: var(--acc); }
+
+/* ═════════ обложка ═════════ */
+
+.cover {
+  position: relative; min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 64px var(--pad-x); overflow: hidden;
+}
+.cover__bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 50% 50%,
+    color-mix(in srgb, var(--acc) 7%, transparent) 0%, transparent 70%);
+  animation: bg-breath 14s ease-in-out infinite;
+}
+.cover__canvas {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 26%, transparent 74%);
+          mask-image: radial-gradient(ellipse at center, #000 26%, transparent 74%);
+  opacity: .62;
+}
+.cover__canvas canvas { display: block; width: min(940px, 94vw); height: min(940px, 88vh); }
+
+/* Скрим под текстом обложки. Дракон ранга 14 — мелкая сетка, и заголовок на ней
+   рябит: буквы читаются, но глаз спотыкается. Скрим гасит фрактал ровно там, где
+   стоит текст, и не трогает остальное — фигура по-прежнему растворяется маской. */
+.cover__scrim {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 46% 34% at 50% 52%,
+    var(--bg) 0%, color-mix(in srgb, var(--bg) 72%, transparent) 52%, transparent 78%);
+}
+
+.cover__inner {
+  position: relative; z-index: 2; max-width: 720px; text-align: center;
+  display: flex; flex-direction: column; gap: 28px; align-items: center;
+}
+.cover__title {
+  font-size: clamp(46px, 7vw, 92px); line-height: 1.04; font-weight: 500;
+  letter-spacing: -0.02em; margin: 0;
+}
+.cover__sub {
+  font-size: clamp(19px, 2vw, 23px); line-height: 1.5;
+  color: var(--text-secondary); margin: 0; max-width: 30em;
+}
+.cover .btn { align-self: center; margin-top: 8px; padding: 15px 30px;
+              letter-spacing: 0.18em; }
+
+/* ═════════ фотография — ЕДИНЫЙ ПРИЁМ на весь сайт ═════════
+   Фото не обводится рамкой: рамка дала бы жёсткий прямоугольник в системе,
+   где всё остальное растворяется. Приём вместо рамки — три хода:
+     1) обесцветить и притемнить, чтобы фото не спорило яркостью с линиями;
+     2) подкрасить в акцент через mix-blend-mode: color — фото попадает в
+        ту же гамму, что и дракон;
+     3) растворить края той же радиальной маской, что у крупных фигур.
+   Тот же приём пойдёт на любой портрет, если он появится. */
+
+/* Карточки записей сцены 1 — то, что стоит на месте двух фотографий, пока их
+   нет. Не заглушка: числа и есть содержание («до какого складывания дошли»),
+   и типографика несёт его лучше, чем нерелевантный снимок. Пластика та же —
+   одна линия границы сверху, mono для служебного, никаких теней. */
+.records { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px,3vw,44px); }
+
+.record { margin: 0; display: flex; flex-direction: column;
+          border-top: 1px solid var(--rule); padding-top: 18px; }
+.record__year {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--acc);
+}
+.record__big {
+  font-size: clamp(56px, 7vw, 92px); line-height: 1; font-weight: 500;
+  letter-spacing: -0.03em; margin-top: 10px; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.record__unit {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--text-muted); margin-top: 8px;
+}
+.record p { margin: 16px 0 0; font-size: var(--fs-small);
+            color: var(--text-secondary); }
+
+/* ПРИЁМ ДЛЯ ФОТОГРАФИИ — определён и готов, ждёт файлов в foto/.
+   Сборщик подставит их base64-ом автоматически; разметку см. в комментарии
+   сцены 1. Тот же приём пойдёт на портрет, если он появится. */
+.photos { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 6px; }
+
+.photo { position: relative; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.photo__wrap { position: relative; aspect-ratio: 4 / 3; overflow: hidden; }
+.photo__wrap img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(1) contrast(1.06) brightness(.74);
+  -webkit-mask-image: radial-gradient(ellipse 92% 92% at 50% 48%, #000 52%, transparent 96%);
+          mask-image: radial-gradient(ellipse 92% 92% at 50% 48%, #000 52%, transparent 96%);
+}
+.photo__wrap::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: var(--acc); opacity: .16; mix-blend-mode: color;
+}
+.photo figcaption {
+  font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5;
+  letter-spacing: .06em; color: var(--text-muted);
+}
+.photo figcaption b { color: var(--text-secondary); font-weight: 400; }
+
+/* ═════════ сцена 5: четыре шага в одной секции ═════════ */
+
+.steps { display: flex; flex-direction: column; gap: clamp(56px, 7vh, 92px); }
+.step__num {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--acc);
+}
+.step__title { font-size: clamp(21px, 2vw, 26px); font-weight: 500; margin: 0;
+               line-height: 1.25; }
+.defs {
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+  padding: 20px 0; display: flex; flex-direction: column; gap: 10px;
+  font-size: var(--fs-small); color: var(--text-secondary);
+}
+.defs p { margin: 0; }
+.defs dfn { font-style: normal; font-weight: 500; color: var(--text); }
+
+/* ═════════ плашка «глубже» ═════════ */
+
+.deeper {
+  position: fixed; top: 0; left: 0; width: 100vw;
+  height: 100vh; height: 100svh;
+  background: var(--bg-deep); border-right: 1px solid var(--rule);
+  --panel-x: 100vw;
+  transform: translateX(calc(-100% - var(--panel-x)));
+  transition: transform 400ms cubic-bezier(.16,1,.3,1);
+  overflow-y: auto; padding: 64px var(--panel-pad, 0) 40px 0;
+  z-index: 100;
+}
+.deeper[data-open="true"] { transform: translateX(0); }
+.deeper__in { display: flex; flex-direction: column; gap: 16px;
+              font-size: var(--fs-small); color: var(--text-secondary); }
+.deeper__in h3 { font-size: 20px; font-weight: 500; color: var(--text); margin: 0 0 4px; }
+.deeper__in p { margin: 0; }
+.deeper__in em { color: var(--text); font-style: normal; }
+.deeper__close {
+  position: absolute; top: 16px; right: 16px; width: 32px; height: 32px;
+  font-family: var(--font-mono); font-size: 22px; line-height: 1;
+  color: var(--text-muted); border: 1px solid var(--rule); border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 180ms, border-color 180ms;
+}
+.deeper__close:hover, .deeper__close:focus-visible {
+  color: var(--text); border-color: var(--acc); outline: none; }
+
+.backdrop {
+  position: fixed; inset: 0; background: rgba(8,8,10,.55);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; transition: opacity 300ms; z-index: 99;
+}
+.backdrop[data-open="true"] { opacity: 1; pointer-events: auto; }
+
+/* ═════════ навигация точками ═════════ */
+
+#nav {
+  position: fixed; top: 50%; right: 22px; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 13px; z-index: 50;
+}
+#nav button {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted);
+  opacity: .45; padding: 0; position: relative;
+  transition: opacity 180ms, transform 180ms, background 180ms;
+}
+#nav button:hover, #nav button:focus-visible { opacity: 1; outline: none; }
+#nav button.on { opacity: 1; background: var(--acc); transform: scale(1.45); }
+#nav span {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text); background: var(--bg-deep);
+  padding: 6px 11px; border: 1px solid var(--rule); border-radius: 3px;
+  white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 180ms;
+}
+#nav button:hover span, #nav button:focus-visible span { opacity: 1; }
+#nav button.on span { transform: translateY(-50%) scale(.69); transform-origin: right center; }
+
+/* ═════════ подвал ═════════ */
+
+.foot {
+  position: relative; padding: clamp(56px,9vh,110px) var(--pad-x);
+  border-top: 1px solid var(--rule); background: var(--bg-deep);
+}
+.foot__in { max-width: 660px; margin: 0 auto; text-align: center;
+            display: flex; flex-direction: column; gap: 18px;
+            color: var(--text-secondary); font-size: var(--fs-small); }
+.foot__in h2 { font-size: clamp(26px,3.4vw,38px); font-weight: 500;
+               color: var(--text); margin: 0; line-height: 1.2; }
+.foot__meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em;
+              text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+
+/* ═════════ адаптив: одна точка, 720px ═════════ */
+
+@media (max-width: 720px) {
+  :root { --fs-body: 17px; --fs-small: 15px; --pad-x: 18px; }
+  .scene__body { grid-template-columns: 1fr; gap: 26px; }
+  .figure { order: -1; }          /* картинка уходит НАД текстом */
+  .col    { order: 0; max-width: none; }
+  .scene__title { font-size: clamp(23px, 6vw, 34px); }
+  #nav { display: none; }
+  .photos, .records { grid-template-columns: 1fr; gap: 26px; }
+  .record__big { font-size: clamp(44px, 14vw, 68px); }
+  .deeper {
+    top: auto; bottom: 0; left: 0 !important; width: 100vw !important;
+    height: 78vh; height: 78svh;
+    border-right: none; border-top: 1px solid var(--rule);
+    --panel-x: 0px; transform: translateY(100%);
+    padding: 56px 20px 32px;
+  }
+  .deeper[data-open="true"] { transform: translateY(0); }
+  .cover__canvas canvas { width: 96vw; height: 60vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene__bg, .cover__bg { animation: none; opacity: .75 !important; }
+  .figure::before { animation: none; opacity: 1 !important; }
+  .deeper, .backdrop { transition: none; }
+  .col, .scene__head { transition: none; opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═════════ 0 · ОБЛОЖКА ═════════ -->
+<section class="cover" id="s0" data-scene="cover">
+  <div class="cover__bg"></div>
+  <div class="cover__canvas"><canvas></canvas></div>
+  <div class="cover__scrim"></div>
+  <div class="cover__inner">
+    <span class="eyebrow">Одна полоска бумаги</span>
+    <h1 class="cover__title">Кривая дракона</h1>
+    <p class="cover__sub">Сложите полоску двенадцать раз, разверните — и получите линию,
+      которая разбирает плоскость без остатка.</p>
+    <button class="btn" data-goto="s1">Смотреть ↓</button>
+  </div>
+</section>
+
+<!-- ═════════ 1 · ПОЛОСКА ═════════ -->
+<section class="scene scene--tall" id="s1" data-scene="strip" data-nav="Полоска">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 1</span>
+      <h2 class="scene__title">Форму задал не художник</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Сложите полоску пополам. Ещё раз. Ещё. Разверните и расправьте каждый сгиб
+          в прямой угол — полоска встанет гармошкой. Посмотрите на неё сверху.</p>
+        <p>Отрезок между двумя соседними поворотами дальше называем <strong>звеном</strong>,
+          а число складываний — <strong>рангом</strong>. Ранг&nbsp;4 значит сложили четыре
+          раза: звеньев шестнадцать.</p>
+        <p>Никто не выбирал, куда повернуть. Форму задала последовательность сгибов,
+          и у всех она одна и та&nbsp;же.</p>
+        <div class="ctrls">
+          <label class="ctrl">
+            <span class="ctrl__lbl">Складываний <b data-out="folds">4</b></span>
+            <input type="range" min="1" max="7" value="4" step="1" data-in="folds">
+          </label>
+          <label class="ctrl">
+            <span class="ctrl__lbl">Угол сгиба <b data-out="angle">90°</b></span>
+            <input type="range" min="0" max="90" value="90" step="1" data-in="angle">
+          </label>
+        </div>
+      </div>
+      <figure class="figure figure--veil"><svg></svg></figure>
+    </div>
+    <div class="scene__body" style="align-items:start">
+      <div class="col">
+        <p>Руки кончаются на седьмом складывании: восьмое требует согнуть
+          256&nbsp;слоёв сразу. Стену пробивали дважды, и оба раза ценой.</p>
+        <p class="dim">А хочется ранг двенадцать.</p>
+        <button class="btn" data-open="d1">Кто открыл кривую →</button>
+      </div>
+      <!-- Здесь по заходу стояли две фотографии — Галливан 2002 и «Разрушители
+           легенд» 2007. Свободнолицензированных снимков ни того, ни другого
+           события не нашлось (Wikimedia Commons и Openverse — пусто; оригиналы
+           у Guinness и Discovery, лицензия закрытая). Ставить вместо факта
+           декоративный веер из Commons — хуже, чем не ставить: заход прямо
+           говорит, что плохо встроенная фотография хуже отсутствующей.
+           Поэтому здесь честная типографская пара, а приём для фотографии
+           готов и ждёт файлов: см. отчёт и build_sayt.py. -->
+      <div class="records">
+        <figure class="record">
+          <span class="record__year">2002</span>
+          <span class="record__big">12</span>
+          <span class="record__unit">складываний</span>
+          <p>Бритни Галливан разворачивает в торговом центре 1219&nbsp;метров
+            тонкой бумаги и складывает её пополам двенадцать раз. Семь часов
+            работы — и заодно формула, сколько для этого нужно длины.</p>
+        </figure>
+        <figure class="record">
+          <span class="record__year">2007</span>
+          <span class="record__big">11</span>
+          <span class="record__unit">складываний</span>
+          <p>«Разрушители легенд» берут лист размером с футбольное поле, ангар
+            NASA и дорожный каток. Дальше одиннадцатого не пошло:
+            дожимать стало нечем.</p>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 2 · ДВЕ ОДИНАКОВЫЕ ПОЛОВИНЫ ═════════ -->
+<section class="scene" id="s2" data-scene="halves" data-nav="Две половины">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 2 · кривая растёт сама</span>
+      <h2 class="scene__title">Две половины — одна и та же кривая</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Покрасим половину ленты и сложим. Каждая половина сложена на один раз
+          меньше — значит каждая половина кривой есть кривая на ранг младше.</p>
+        <p>Больше того: они не просто одинаковой формы. Одна получается из другой
+          поворотом на прямой угол вокруг стыка.</p>
+        <p>Отсюда способ расти без рук: приставить к готовой кривой её же копию,
+          повёрнутую на&nbsp;90°.</p>
+        <p class="dim">Наведите мышью или коснитесь любой половины — загорится вторая.</p>
+        <button class="btn" data-act="play">Сложить и развернуть</button>
+      </div>
+      <figure class="figure figure--veil"><svg></svg></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 3 · РЁБРА ПАРАМИ ═════════ -->
+<section class="scene" id="s3" data-scene="pairs" data-nav="Звенья парами">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 3 · второй способ</span>
+      <h2 class="scene__title">Каждое звено сгибается пополам</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Покрасим звенья через одно и сложим ещё раз. Цвета пойдут парами: из одного
+          звена вышли два звена его цвета — ни одно не поменяло сторону.</p>
+        <p>Соединим пары обратно — вернулись на ранг назад. Ход работает в обе стороны,
+          поэтому ранг&nbsp;12 берётся счётом, а не руками.</p>
+        <p class="dim">Мультик идёт по кругу: 4&nbsp;→&nbsp;10&nbsp;→&nbsp;4,
+          с паузой на каждом ранге.</p>
+        <div class="readout" data-out="pairs"></div>
+      </div>
+      <figure class="figure figure--veil"><svg></svg></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 4 · ПЛОТНОСТЬ ═════════ -->
+<section class="scene" id="s4" data-scene="dense" data-nav="Тесно">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 4</span>
+      <h2 class="scene__title">Четыре тысячи звеньев на пятачке</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Ранг&nbsp;12. Линия всюду подходит к себе вплотную и заполняет площадку
+          в несколько десятков клеток шириной.</p>
+        <p>Углы скруглены нарочно: в местах касания видно две отдельные дуги,
+          а не перекрёсток. Но скругление — это вид, а не доказательство.</p>
+        <p><strong>Есть ли звено, по которому кривая прошла дважды?</strong></p>
+        <div class="ctrls">
+          <div class="ctrl">
+            <span class="ctrl__lbl">Ранг</span>
+            <div class="seg" data-seg="rank">
+              <button data-v="8">8</button><button data-v="10">10</button
+              ><button class="on" data-v="12">12</button><button data-v="14">14</button>
+            </div>
+          </div>
+        </div>
+        <div class="readout" data-out="dense"></div>
+      </div>
+      <figure class="figure figure--veil"><canvas></canvas></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 5 · ДОКАЗАТЕЛЬСТВО ═════════ -->
+<section class="scene scene--tall" id="s5" data-scene="proof" data-nav="Доказательство">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 5 · единственное доказательство на сайте</span>
+      <h2 class="scene__title">Нет. И это видно по одному звену</h2>
+    </header>
+
+    <div class="defs">
+      <p>Три слова, дальше они значения не меняют.</p>
+      <p><dfn>Старая вершина</dfn> (закрашенная) — та, что была на кривой до последнего
+        складывания. <dfn>Новая вершина</dfn> (пустая) — появилась при нём.
+        <dfn>Уголок</dfn> — кусок кривой между двумя соседними старыми вершинами:
+        это и есть согнувшееся пополам звено прежней кривой, а излом уголка —
+        новая вершина.</p>
+    </div>
+
+    <div class="steps">
+
+      <div class="scene__body" data-step="a">
+        <div class="col">
+          <span class="step__num">Шаг 1</span>
+          <h3 class="step__title">Вершины двух сортов</h3>
+          <p>Из старой вершины кривая всегда уходит вбок, из новой — всегда вверх
+            или вниз. Пунктиром поверх — прежняя кривая: старые вершины лежат ровно на ней.</p>
+          <p>Значит у уголка первое звено горизонтальное, второе вертикальное. Глядя
+            на одно звено, уже видно, <em>какая это половина</em> уголка.</p>
+          <p class="dim">Наведите или коснитесь любой вершины — загорятся все вершины её сорта.</p>
+          <div class="readout" data-out="a"></div>
+        </div>
+        <figure class="figure"><svg></svg></figure>
+      </div>
+
+      <div class="scene__body" data-step="b">
+        <div class="col">
+          <span class="step__num">Шаг 2</span>
+          <h3 class="step__title">Строки решают, куда поворачивать</h3>
+          <p>Покрасим <strong>строки</strong> — горизонтальные полосы решётки — через одну.</p>
+          <p>Уголок, чей излом попал в крашеную строку, поворачивает налево; в чистую —
+            направо. По всей кривой, без единого исключения.</p>
+          <p class="dim">Стрелки показывают ход: без них «налево» не имеет смысла.</p>
+          <div class="readout" data-out="b"></div>
+        </div>
+        <figure class="figure"><svg></svg></figure>
+      </div>
+
+      <div class="scene__body" data-step="v">
+        <div class="col">
+          <span class="step__num">Шаг 3 · главное</span>
+          <h3 class="step__title">Уголок достраивается по одному звену</h3>
+          <p>Наведите или коснитесь любого звена. Показаны оба кандидата на продолжение —
+            и один сразу гаснет.</p>
+          <p>Звено <strong>горизонтальное</strong> — это первая половина, уголок пойдёт
+            вверх или вниз. Звено <strong>вертикальное</strong> — вторая половина, уголок
+            начался слева или справа.</p>
+          <p>Какой из двух — говорит строка, по правилу шага&nbsp;2: в крашеной
+            уголок поворачивает налево, в чистой направо. Поворот и есть ответ;
+            «вверх» или «вниз» получается из него вместе с направлением хода.</p>
+          <p>В обоих случаях уголок восстановлен целиком. А уголок — это одно звено
+            прежней кривой.</p>
+          <p class="dim">Четыре случая: звено вдоль и поперёк, строка крашеная и чистая.
+            Все четыре ниже отмечаются сами, когда вы их пройдёте.</p>
+          <div class="readout" data-out="v"></div>
+          <div class="readout" data-out="v4"></div>
+        </div>
+        <figure class="figure"><svg></svg></figure>
+      </div>
+
+      <div class="scene__body" data-step="g">
+        <div class="col">
+          <span class="step__num">Шаг 4</span>
+          <h3 class="step__title">Складывание не создаёт повторов</h3>
+          <p>Пусть на ранге&nbsp;6 повторов нет. Сложим ещё раз.</p>
+          <p>Каждое звено ранга&nbsp;7 достраивается до своего уголка, а уголок — это
+            одно звено ранга&nbsp;6. Значит одно звено не может достаться двум разным.
+            А одно звено даёт ровно два, и они разные: одно вбок, другое вверх-вниз.</p>
+          <p>Звеньев вдвое больше, и все по-прежнему разные. Начинаем с ранга&nbsp;1,
+            где звеньев два и они очевидно разные, — и повторяем до двенадцатого.</p>
+          <p class="dim">Наведите или коснитесь звена слева — загорится его уголок справа.
+            И наоборот.</p>
+          <div class="readout" data-out="g"></div>
+          <button class="btn" data-open="d5">Почему сорта вершин именно такие →</button>
+        </div>
+        <figure class="figure figure--wide"><svg></svg></figure>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 6 · ЧЕТЫРЕ ДРАКОНА ═════════ -->
+<section class="scene" id="s6" data-scene="four" data-nav="Четыре дракона">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 6</span>
+      <h2 class="scene__title">Четырёх хватает на всю решётку</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Одна кривая покрывает не всё. Выпустим четырёх драконов из одной точки,
+          по одному в каждую сторону.</p>
+        <p>По каждому отрезку решётки пройдёт ровно один из них и ровно один раз:
+          ни повтора, ни дырки. Это теорема Кнута 1970&nbsp;года; доказывать её мы
+          не будем — просто смотрите, как с каждым рангом решётка закрывается
+          плотнее, а цвета ни разу не налезают.</p>
+        <div class="ctrls">
+          <div class="ctrl">
+            <span class="ctrl__lbl">Ранг</span>
+            <div class="seg" data-seg="rank">
+              <button data-v="4">4</button><button data-v="5">5</button
+              ><button class="on" data-v="6">6</button><button data-v="8">8</button
+              ><button data-v="10">10</button>
+            </div>
+          </div>
+        </div>
+        <div class="readout" data-out="four"></div>
+      </div>
+      <figure class="figure figure--veil"><svg></svg></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 7 · ЛИНИЯ, У КОТОРОЙ ЕСТЬ ПЛОЩАДЬ ═════════ -->
+<section class="scene" id="s7" data-scene="area" data-nav="Площадь">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <span class="eyebrow">Сцена 7 · финал</span>
+      <h2 class="scene__title">У линии есть площадь</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Нарисуем звено не линией, а полосой шириной в полклетки — это ровно
+          половина клетки. Полосы смыкаются без зазора и без наложения: линия
+          становится заливкой, и у неё есть площадь.</p>
+        <p>Теперь загляните в край. На каждом увеличении он выглядит так же:
+          масштаба, на котором край стал бы гладким, нет. Это и называют
+          <strong>фрактальностью</strong> — её не объявляют, её видно.</p>
+        <div class="ctrls">
+          <label class="ctrl">
+            <span class="ctrl__lbl">Толщина звена <b data-out="thick">0</b></span>
+            <input type="range" min="0" max="100" value="0" step="1" data-in="thick">
+          </label>
+          <div class="ctrl">
+            <span class="ctrl__lbl">Ранг</span>
+            <div class="seg" data-seg="rank">
+              <button data-v="8">8</button><button data-v="10">10</button
+              ><button class="on" data-v="12">12</button><button data-v="14">14</button>
+            </div>
+          </div>
+          <div class="seg" data-seg="zoom">
+            <button data-v="in">Зум в край +</button><button data-v="out">−</button
+            ><button data-v="reset">Сброс</button>
+          </div>
+        </div>
+        <div class="readout" data-out="area"></div>
+        <div class="readout" data-out="dim"></div>
+        <button class="btn" data-open="d7">Откуда берётся 1,5236 →</button>
+      </div>
+      <figure class="figure"><canvas></canvas></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ подвал ═════════ -->
+<footer class="foot">
+  <div class="foot__in">
+    <h2>У вас в руках ранг четыре</h2>
+    <p>Продолжайте складывать: четырёх ваших полосок хватит, чтобы разобрать
+      плоскость без остатка.</p>
+    <p class="foot__meta">Кривая дракона · страница работает без сети</p>
+  </div>
+</footer>
+
+<!-- ═════════ плашки «глубже» ═════════ -->
+<div class="backdrop" id="backdrop"></div>
+
+<aside class="deeper" id="d1" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Кто открыл кривую</h3>
+    <p>Её нашли в 1960-х физики NASA Джон Хейтуэй, Уильям Хартер и Брюс Бэнкс —
+      складывая бумагу за работой. Мартин Гарднер напечатал кривую в 1967 году
+      в <em>Scientific American</em>, в колонке «Математические игры»,
+      и с тех пор она называется драконом.</p>
+    <p>Про предел складываний: Бритни Галливан в 2002 году не просто сложила бумагу
+      двенадцать раз — она вывела, какая длина для этого нужна, и показала, что
+      расход растёт как <em>4<sup>n</sup></em>. Поэтому восьмое складывание в руках
+      и не выходит: дело не в силе, а в длине.</p>
+  </div>
+</aside>
+
+<aside class="deeper" id="d5" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Почему сорта вершин именно такие</h3>
+    <p><em>Почему шаги чередуются.</em> Все повороты прямые, поэтому ход идёт вбок,
+      вверх, вбок, вверх. Первый шаг от начала — вбок, и дальше сорт вершины и тип
+      шага идут в ногу.</p>
+    <p><em>Почему старые вершины — это в точности прежние.</em> Увеличение картинки
+      переводит узел <em>(a, b)</em> в узел <em>(a−b, a+b)</em>, у которого сумма
+      координат чётна. Новая вершина стоит с ним рядом, и её сумма чётной быть
+      не может. Поэтому «была раньше» и «чётная сумма координат» — одно и то же.</p>
+    <p><em>Почему работает правило строк.</em> Уголок поворачивает налево ровно тогда,
+      когда его звено-родитель шло вбок. А цвет строки, где стоит излом, — это в
+      точности сорт вершины, из которой родитель выходил: то же увеличение переводит
+      узел <em>(a, b)</em> в узел с ординатой <em>a+b</em>. Дальше работает шаг 1,
+      применённый к прежней картинке.</p>
+    <p><em>Чего доказательство не использовало.</em> Ни один шаг не опирался на то,
+      что складывали всегда в одну сторону. Значит вывод верен для любого способа
+      складывания — всех 4096 вариантов ранга 12.</p>
+  </div>
+</aside>
+
+<aside class="deeper" id="d7" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Откуда берётся 1,5236</h3>
+    <p><em>Почему у фигуры площадь есть.</em> Четыре кривые проходят по каждому отрезку
+      решётки ровно один раз, а на клетку приходится два отрезка. Значит полосы шириной
+      в полклетки заполняют плоскость нацело. Складываем дальше, звено стремится
+      к нулю — а фигура не меняется. У линии остаётся площадь.</p>
+    <p><em>Почему это то же самое, что размерность 2.</em> Одно складывание удваивает
+      длину кривой, а размер фигуры увеличивает всего в 1,41 раза. Значит при удвоении
+      размера длина растёт вчетверо — как площадь, а не как линия. Такую линию
+      и называют двумерной.</p>
+    <p><em>А край устроен страннее тела.</em> Число сторон края считается прямо
+      на экране: переключите ранг и посмотрите на строку под фигурой. С каждым рангом
+      край удлиняется в одно и то же число раз, около 1,69, а размер растёт
+      в 1,41 раза. Логарифм одного по другому и даёт&nbsp;1,5236… — число, которое
+      не является целым ни при каком масштабе.</p>
+    <p>Площадь ½ на звено и само число 1,5236 взяты из литературы: Дэвис и Кнут
+      (1970), изрезанность края — Чанг и Чжан (1999). Всё остальное на этой
+      странице считается на месте.</p>
+  </div>
+</aside>
+
+<nav id="nav"></nav>
+
+<script>/* ═══════════════════════════════════════════════════════════════════════════
+   dragon.js — ЕДИНСТВЕННАЯ геометрия дракона на сайте.
+
+   Ядро перенесено из krivaya-drakona/L4/L4-razbory.html:121–281 (эталон
+   razbor/gen_ill.py). В репозитории геометрия написана девять раз; десятой
+   быть не должно, поэтому весь сайт считает только через этот файл, а
+   остальные восемь копий обслуживают листки курса и не трогаются.
+
+   Что добавлено сверх порта:
+     · dragCells / dragBoundary — из L4:1214–1235 (сцена 7);
+     · corner() — восстановление уголка по одному звену (сцена 5в).
+       Правило выведено из parent_edge() в gen_ill.py и проверено численно
+       ДО написания сцены: ранги 2..14, 32 764 звена, 0 расхождений.
+       Ключ вывода: в gen_ill.py sum(div(w)) тождественно равно ординате w,
+       поэтому «чётность узла» из питона — это ровно «чётность строки».
+   ═══════════════════════════════════════════════════════════════════════════ */
+'use strict';
+
+/* ─────────────────────────── слово дракона ─────────────────────────── */
+
+function flip(s){ let r=''; for(let i=s.length-1;i>=0;i--) r+=(s[i]==='L'?'R':'L'); return r; }
+
+function word(n, choices){ const ch=choices||Array(n).fill('L'); let s='';
+  for(let i=0;i<n;i++) s = s + ch[i] + flip(s); return s; }
+
+function wordByFolds(f){ return word(f.length, f.slice().reverse()); }   // порядок word() обратный
+
+function v2(k){ let r=0; while(k%2===0){ k/=2; r++; } return r; }
+
+/** на каком складывании родился сгиб номер p у дракона ранга n */
+function birthStep(n,p){ return n - v2(p); }
+
+/* ─────────────────────────── ломаная ─────────────────────────── */
+
+/** ломаная при ПРОИЗВОЛЬНЫХ углах сгибов: ang[k] — угол k-го сгиба в градусах.
+    При всех углах 0 это прямая полоска, при 90 — сама кривая дракона. Одна и
+    та же функция, а не два разных рисунка: этим и показано разгибание. */
+function polyAngles(w, ang, seg){
+  const L=seg||1; let x=L,y=0,dx=L,dy=0; const out=[[0,0],[L,0]];
+  for(let i=0;i<w.length;i++){
+    const s=(w[i]==='L')?1:-1, a=(ang[i+1]||0)*Math.PI/180*s;
+    const co=Math.cos(a), si=Math.sin(a);
+    const nx=dx*co-dy*si, ny=dx*si+dy*co;
+    dx=nx; dy=ny; x+=dx; y+=dy; out.push([x,y]);
+  }
+  return out;
+}
+
+function poly(w, a, seg){ const o={}; for(let p=1;p<=w.length;p++) o[p]=(a===undefined?90:a);
+  return polyAngles(w,o,seg); }
+
+/** ломаная ранга n ЦЕЛЫМИ координатами — самый частый вызов на сайте.
+    ⚠ ОКРУГЛЕНИЕ ЗДЕСЬ ОБЯЗАТЕЛЬНО, А НЕ ДЛЯ КРАСОТЫ. polyAngles крутит cos/sin,
+    и при 90° вершина выходит не (0,1), а (6.1e-17, 1). Любое рассуждение о
+    сорте вершины, о чётности строки и о том, горизонтально ли звено, на таких
+    числах ЛОЖНО: `a[1]===b[1]` не срабатывает, `%2` даёт мусор. Это поймал
+    гейт ядра — до округления он показал 21 811 расхождений в правиле уголка из
+    32 764 звеньев и перекос 37/6/18/3 вместо 16/16/16/16 в четырёх случаях
+    сцены 5в. Тот же урок, что в L4 про touches: скругление и углы — это ВИД,
+    считать по нему нельзя, счёт идёт по целой ломаной. */
+function rank(n){ return poly(word(n)).map(p=>[Math.round(p[0]), Math.round(p[1])]); }
+
+/** привести вершину к целой решётке: страховка на входе всех правил ниже */
+function lat(p){ return [Math.round(p[0]), Math.round(p[1])]; }
+
+function rot90(P,k){ let R=P; for(let i=0;i<(k%4);i++) R=R.map(p=>[-p[1],p[0]]); return R; }
+
+/** поворот набора точек вокруг центра на deg */
+function rotAbout(P, c, deg){
+  const a=deg*Math.PI/180, co=Math.cos(a), si=Math.sin(a);
+  return P.map(([x,y])=>{ const dx=x-c[0], dy=y-c[1];
+    return [c[0]+dx*co-dy*si, c[1]+dx*si+dy*co]; });
+}
+
+function keyShape(w){
+  const P=poly(w).map(p=>[Math.round(p[0]),Math.round(p[1])]); let best=null;
+  for(const rf of [false,true]){ const Q=rf?P.map(p=>[p[0],-p[1]]):P;
+    for(let k=0;k<4;k++){ const R=rot90(Q,k);
+      for(const rv of [false,true]){ const S=rv?R.slice().reverse():R; const [x0,y0]=S[0];
+        const t=S.map(p=>(p[0]-x0)+','+(p[1]-y0)).join(' '); if(best===null||t<best) best=t; } } }
+  return best;
+}
+
+/** касания — по ЛОМАНОЙ (целые вершины). Скругление это ВИД: считать по нему нельзя. */
+function touches(w){
+  const m=new Map();
+  for(const p of poly(w)){ const k=Math.round(p[0])+','+Math.round(p[1]); m.set(k,(m.get(k)||0)+1); }
+  return [...m.entries()].filter(e=>e[1]>1).map(e=>e[0].split(',').map(Number));
+}
+
+/** умножение на (1+i): растяжение в √2 и поворот на 45°.
+    Переводит ломаную ранга n−1 ровно в ЧЁТНЫЕ вершины ломаной ранга n
+    (проверено до ранга 14) — это и есть «прежняя кривая» пунктиром. */
+function mul1pi(P){ return P.map(([x,y])=>[x-y, x+y]); }
+
+/* ───────────────── два сорта вершин и уголок (сцена 5) ─────────────────
+   Определения — те же слова, что в лекции, и больше их значение не меняется:
+     чёрная вершина — была на кривой до последнего складывания;
+     новая вершина  — появилась при нём;
+     уголок         — кусок кривой между двумя соседними чёрными вершинами.  */
+
+/** чёрная (старая) вершина ⟺ чётная сумма координат ⟺ чётный индекс на ломаной */
+function isBlack(p){ const q=lat(p); return ((q[0]+q[1]) % 2 + 2) % 2 === 0; }
+
+/** строка «голубая» ⟺ её номер чётный. Красим через одну, начиная с нулевой. */
+function rowBlue(y){ const r=Math.round(y); return ((r % 2) + 2) % 2 === 0; }
+
+/** ПРАВИЛО ВОССТАНОВЛЕНИЯ. По ОДНОМУ звену a→b уголок определён однозначно.
+      · звено горизонтальное — это первая половина, излом = b, уголок пойдёт вверх/вниз;
+      · звено вертикальное  — это вторая половина, излом = a, уголок начался слева/справа.
+    Куда именно — говорит цвет строки излома: голубая → поворот НАЛЕВО, белая → НАПРАВО.
+    Возвращает {half, izlom, corner, other, horiz, blue}, где corner — выбранный уголок
+    [p0, излом, p2], а other — тот кандидат, который гаснет. */
+function corner(a0, b0){
+  const a = lat(a0), b = lat(b0);                      // считаем ТОЛЬКО по целым
+  const horiz = a[1] === b[1];
+  const izlom = horiz ? b : a;
+  const blue  = rowBlue(izlom[1]);
+  if(horiz){
+    const dx = b[0]-a[0];
+    const dy = blue ? dx : -dx;                        // налево ⟺ dx·dy > 0
+    return { half:0, horiz:true, blue, izlom,
+             corner:[a, b, [b[0], b[1]+dy]],
+             other: [a, b, [b[0], b[1]-dy]] };
+  }
+  const dy = b[1]-a[1];
+  const dx = blue ? dy : -dy;
+  return { half:1, horiz:false, blue, izlom,
+           corner:[[a[0]-dx, a[1]], a, b],
+           other: [[a[0]+dx, a[1]], a, b] };
+}
+
+/** уголки ломаной: уголок номер k — это звенья 2k и 2k+1 */
+function corners(P){ const out=[];
+  for(let k=0;k+2<P.length;k+=2) out.push([lat(P[k]),lat(P[k+1]),lat(P[k+2])]);
+  return out; }
+
+/** поворачивает ли уголок налево (по знаку векторного произведения) */
+function turnsLeft(a,b,c){ return (b[0]-a[0])*(c[1]-b[1]) - (b[1]-a[1])*(c[0]-b[0]) > 0; }
+
+/* ───────────────── область дракона и её граница (сцена 7) ─────────────────
+   Порт L4:1214–1235. Клетка — квадрат на звене как на диагонали, площадь ½.
+   Ключ клетки — удвоенная середина звена, поэтому ключи целые. */
+
+/** ПРОВЕРЕНО до ранга 14: плитки не налезают, то есть это ровно область дракона. */
+function dragCells(n){
+  const w=word(n); let x=0,y=0,dx=1,dy=0; const C=[];
+  for(let i=0;i<Math.pow(2,n);i++){
+    C.push([2*x+dx, 2*y+dy]);
+    x+=dx; y+=dy;
+    if(i<w.length){ const t=dx; if(w[i]==='L'){ dx=-dy; dy=t; } else { dx=dy; dy=-t; } }
+  }
+  return C;
+}
+
+/** ПРОВЕРЕНО ГЕОМЕТРИЕЙ: две клетки делят сторону ⟺ ключи отличаются на (±1,±1).
+    Считать соседей через (±2,0) неверно — там квадраты касаются лишь УГЛОМ. */
+const NB=[[1,1],[1,-1],[-1,1],[-1,-1]];
+function dragBoundary(n){
+  const C=dragCells(n), S=new Set(C.map(c=>c[0]+','+c[1])), out=[];
+  for(const [p,q] of C){
+    const cx=p/2, cy=q/2;
+    for(const [a,b] of NB) if(!S.has((p+a)+','+(q+b)))
+      out.push([[cx+a*0.5, cy], [cx, cy+b*0.5]]);
+  }
+  return out;
+}
+
+/** Сколько отрезков решётки берут на себя ДВА разных дракона из четырёх.
+    Сцена 6 утверждает «ни повтора, ни дырки» — и это число не вписывается
+    руками, а считается на месте: ключ отрезка — упорядоченная пара вершин,
+    поэтому общий отрезок даёт ровно одно совпадение. Ноль на экране означает
+    «проверено сейчас», а не «так было написано». */
+function sharedEdges(n){
+  const P=rank(n), seen=new Set(); let dup=0;
+  for(let r=0;r<4;r++){
+    const Q=rotAbout(P,[0,0],r*90).map(lat);
+    for(let i=0;i+1<Q.length;i++){
+      const a=Q[i], b=Q[i+1];
+      const k = (a[0]<b[0] || (a[0]===b[0] && a[1]<b[1]))
+        ? a[0]+','+a[1]+'|'+b[0]+','+b[1]
+        : b[0]+','+b[1]+'|'+a[0]+','+a[1];
+      if(seen.has(k)) dup++; else seen.add(k);
+    }
+  }
+  return dup;
+}
+
+/** клетка как ромб: полдиагонали в каждую сторону от центра.
+    t — насколько звено «растолстело»: 0 — сама линия, 1 — полная клетка. */
+function cellQuad(key, t){
+  const cx=key[0]/2, cy=key[1]/2, h=(t===undefined?1:t)*0.5;
+  return [[cx-0.5,cy],[cx,cy+h],[cx+0.5,cy],[cx,cy-h]];
+}
+
+/* ─────────────────────────── экранная кухня ─────────────────────────── */
+
+/** целые вершины → экранные, с сохранением пропорций и центровкой в боксе.
+    Возвращает функцию g; g.s — сколько пикселей в одной клетке.
+    common задаёт общую рамку на несколько кадров: тогда камера не прыгает. */
+function fit(P, b, common){
+  const pad=b.pad===undefined?26:b.pad;
+  let x0,x1,y0,y1;
+  if(common){ ({x0,x1,y0,y1}=common); }
+  else { const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+    x0=Math.min(...xs); x1=Math.max(...xs); y0=Math.min(...ys); y1=Math.max(...ys); }
+  const s=Math.min((b.w-2*pad)/Math.max(x1-x0,1e-6),(b.h-2*pad)/Math.max(y1-y0,1e-6));
+  const ox=b.x+pad+((b.w-2*pad)-s*(x1-x0))/2, oy=b.y+pad+((b.h-2*pad)-s*(y1-y0))/2;
+  const g=p=>[ox+(p[0]-x0)*s, b.y+b.h-(oy-b.y)-(p[1]-y0)*s];
+  g.s=s; g.box={x0,x1,y0,y1}; return g;
+}
+
+/** рамка по набору точек — чтобы посчитать её один раз и держать */
+function bounds(P){
+  const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+  return {x0:Math.min(...xs), x1:Math.max(...xs), y0:Math.min(...ys), y1:Math.max(...ys)};
+}
+
+function sharpD(P){ return 'M '+P.map(p=>p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' L '); }
+
+/** ПРИМИТИВ: угол → дуга. f — доля звена, уходящая в скругление (0..0.5).
+    Скругление это ВИД: ни одно утверждение по нему не считается. */
+function roundPath(P, f){
+  const k=(f===undefined?0.5:f); let d='';
+  if(P.length<3) return sharpD(P);
+  d+='M '+P[0][0].toFixed(2)+' '+P[0][1].toFixed(2);
+  for(let i=1;i<P.length-1;i++){
+    const u=P[i-1], v=P[i], w=P[i+1];
+    const a=[v[0]-u[0], v[1]-u[1]], b=[w[0]-v[0], w[1]-v[1]];
+    const la=Math.hypot(a[0],a[1]), lb=Math.hypot(b[0],b[1]);
+    const cross=a[0]*b[1]-a[1]*b[0];
+    if(Math.abs(cross)<1e-9||la<1e-9||lb<1e-9) continue;
+    const c=Math.min(la*k, lb*k), sw=cross>0?1:0;
+    const p1=[v[0]-a[0]/la*c, v[1]-a[1]/la*c], p2=[v[0]+b[0]/lb*c, v[1]+b[1]/lb*c];
+    d+=' L '+p1[0].toFixed(2)+' '+p1[1].toFixed(2);
+    d+=' A '+c.toFixed(2)+' '+c.toFixed(2)+' 0 0 '+sw+' '+p2[0].toFixed(2)+' '+p2[1].toFixed(2);
+  }
+  const L=P[P.length-1];
+  d+=' L '+L[0].toFixed(2)+' '+L[1].toFixed(2);
+  return d;
+}
+
+/** то же скругление, но на canvas: arcTo делает ровно дугу между двумя звеньями */
+function strokeRounded(ctx, P, f){
+  const k=(f===undefined?0.5:f);
+  ctx.beginPath();
+  if(P.length<2) return;
+  ctx.moveTo(P[0][0], P[0][1]);
+  for(let i=1;i<P.length-1;i++){
+    const u=P[i-1], v=P[i], w=P[i+1];
+    const la=Math.hypot(v[0]-u[0], v[1]-u[1]), lb=Math.hypot(w[0]-v[0], w[1]-v[1]);
+    const r=Math.min(la*k, lb*k);
+    if(r<0.2){ ctx.lineTo(v[0], v[1]); continue; }
+    ctx.arcTo(v[0], v[1], w[0], w[1], r);
+  }
+  const L=P[P.length-1];
+  ctx.lineTo(L[0], L[1]);
+  ctx.stroke();
+}
+
+/* ─────────────────────────── время ─────────────────────────── */
+
+const ease=t=> t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+const easeOutQuart=t=> 1-Math.pow(1-t,4);
+function lerp(a,b,t){ return a+(b-a)*t; }
+
+/** анимация from→to за ms. Возвращает промис; отмена — через token-объект:
+    если tok.v изменился, кадры перестают идти и промис разрешается сразу.
+    Без этого уехавшая со экрана сцена продолжает молотить (восемь холстов). */
+function anim(from,to,ms,step,tok){
+  const mark = tok ? tok.v : null;
+  return new Promise(res=>{ const t0=performance.now();
+    (function fr(now){
+      if(tok && tok.v!==mark){ res(false); return; }
+      const t=Math.min(1,(now-t0)/ms); step(from+(to-from)*ease(t));
+      if(t<1) requestAnimationFrame(fr); else res(true);
+    })(t0); });
+}
+
+function pause(ms,tok){
+  const mark = tok ? tok.v : null;
+  return new Promise(r=>setTimeout(()=>r(!tok || tok.v===mark), ms));
+}
+
+const REDUCED = typeof matchMedia==='function'
+  && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   scenes.js — восемь сцен. Вся геометрия берётся из dragon.js и только оттуда.
+
+   Рендер двумя способами, каждый там, где он верен:
+     · SVG   — сцены с наведением мыши и до 128 звеньев (1, 2, 3, 5а–5г, 6).
+               Так написан весь L4, и roundPath переносится как есть.
+     · canvas — тяжёлые сцены (0: ранг 14; 4: до ранга 14; 7: заливка и зум).
+               Так написан референс.
+   Третьего способа нет, геометрия у обоих одна.
+   ═══════════════════════════════════════════════════════════════════════════ */
+'use strict';
+
+/* ─────────────────────────── общая кухня ─────────────────────────── */
+
+const NS = 'http://www.w3.org/2000/svg';
+
+function mk(name, attrs, parent){
+  const e = document.createElementNS(NS, name);
+  if(attrs) for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function wipe(n){ while(n && n.firstChild) n.removeChild(n.firstChild); }
+
+function cssVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+/** все углы сразу — для разгибания полоски одним ползунком */
+function angs(v, n){ const o={}; for(let p=1;p<=n;p++) o[p]=v; return o; }
+
+/* ⚠ СКРУГЛЕНИЕ — ЭТО НАСТРОЙКА СЦЕНЫ, А НЕ ГЛОБАЛЬНАЯ КРАСОТА.
+   Первая версия ставила 0.42–0.5 везде, и это провалилось на глазах: при
+   скруглении в пол-звена прямых участков не остаётся вовсе, ломаная читается
+   как гладкая волна — а сцена 5а утверждает «первое звено горизонтальное,
+   второе вертикальное». Утверждение стало невидимым, то есть сцена перестала
+   доказывать то, ради чего она есть. Это ровно решение владельца, записанное
+   в L4:176 — «по умолчанию ПРЯМЫЕ, круглые только когда нужно показать, что
+   самопересечений нет». Поэтому крупное скругление осталось ровно там, где
+   оно и есть предмет: сцена 4 (две дуги вместо перекрёстка). */
+const ROUND = {
+  strip: 0.16, halves: 0.16, pairs: 0.20,
+  dense: 0.50,                       // предмет сцены: в касании читаются две дуги
+  a: 0.13,                           // должно быть видно, что звенья вдоль и поперёк
+  b: 0.26, v: 0.20, g: 0.24,
+  four: 0.20
+};
+
+/** решётка внутри рамки: только там, где она помогает читать клетки */
+function lattice(par, g, box, pad){
+  const p = pad===undefined ? 1 : pad;
+  for(let x=Math.floor(box.x0)-p; x<=Math.ceil(box.x1)+p; x++){
+    const a=g([x,box.y0-p]), b=g([x,box.y1+p]);
+    mk('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:'d-grid'},par);
+  }
+  for(let y=Math.floor(box.y0)-p; y<=Math.ceil(box.y1)+p; y++){
+    const a=g([box.x0-p,y]), b=g([box.x1+p,y]);
+    mk('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],class:'d-grid'},par);
+  }
+}
+
+/** Полосы через одну: строка крашеная ⟺ её номер чётный.
+    ⚠ Полосы кладутся ТОЛЬКО по охвату кривой (плюс полклетки), а не на всю
+    ширину холста. Первая версия тянула их от края до края и на всю высоту
+    рамки: получались шесть широких коричневых баров, которые перекрикивали
+    саму кривую, и на скриншоте сцена читалась как полосатый фон с еле
+    заметной линией. Полоса — это разметка решётки под фигурой, а не фон. */
+function rowBands(par, g, box){
+  const x0=g([box.x0-0.6, 0])[0], x1=g([box.x1+0.6, 0])[0];
+  for(let y=Math.floor(box.y0); y<=Math.ceil(box.y1); y++){
+    if(!rowBlue(y)) continue;
+    const top=g([0,y+0.5])[1], bot=g([0,y-0.5])[1];
+    mk('rect',{x:Math.min(x0,x1), y:Math.min(top,bot),
+               width:Math.abs(x1-x0), height:Math.abs(bot-top), class:'d-row'},par);
+  }
+}
+
+/** стрелка хода в середине звена — без неё «налево» не имеет смысла */
+function arrowOn(par, p, q, cls){
+  const mx=(p[0]+q[0])/2, my=(p[1]+q[1])/2;
+  const l=Math.hypot(q[0]-p[0], q[1]-p[1]) || 1;
+  const ux=(q[0]-p[0])/l, uy=(q[1]-p[1])/l, nx=-uy, ny=ux;
+  const t=Math.min(7, l*0.3), b=t*0.62;
+  mk('polygon',{class:cls||'d-arrow', points:
+    (mx+ux*t)+','+(my+uy*t)+' '+
+    (mx-ux*t*0.6+nx*b)+','+(my-uy*t*0.6+ny*b)+' '+
+    (mx-ux*t*0.6-nx*b)+','+(my-uy*t*0.6-ny*b)},par);
+}
+
+/** число по-русски: запятая, а не точка. В тексте сцены 7 уже стоит «1,5236»,
+    и точка в строке состояния рядом читается как другое число. */
+function num(x, d){ return x.toFixed(d).replace('.', ','); }
+
+function node(par, p, cls, r){
+  return mk('circle',{cx:p[0],cy:p[1],r:r||5,class:cls||'d-node'},par);
+}
+
+/** Наведение — мышью И КАСАНИЕМ. На телефоне mouseenter не приходит вообще,
+    и сцены 5а–5г, у которых весь интерактив на наведении, оказывались
+    мёртвыми: разметка адаптировалась, а работать было нечем. */
+function onHover(el, fn){
+  el.addEventListener('mouseenter', fn);
+  el.addEventListener('touchstart', e=>{ fn(e); }, {passive:true});
+  el.addEventListener('pointerdown', e=>{ if(e.pointerType!=='mouse') fn(e); });
+}
+
+/** canvas с ограничением devicePixelRatio двойкой */
+function setupCanvas(cv){
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const r = cv.getBoundingClientRect();
+  const w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+  cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr);
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr);
+  return { ctx, w, h };
+}
+
+/** ресайз с debounce — один обработчик на сцену */
+function onResize(fn, ms){
+  let t=null;
+  const h=()=>{ clearTimeout(t); t=setTimeout(fn, ms||200); };
+  window.addEventListener('resize', h);
+  return h;
+}
+
+/* ═══════════════════════ 0 · ОБЛОЖКА ═══════════════════════
+   Дракон высокого ранга рождается из точки и вырастает целиком: прогрессивная
+   отрисовка батчами по requestAnimationFrame, а не готовый кадр. Растворение
+   в фоне — маской из референса (.cover__canvas). */
+
+function sceneCover(sec){
+  const cv = sec.querySelector('canvas');
+  const N = 14;
+  const P = rank(N);
+  let ctx, W, H, g, raf=null, drawn=0;
+
+  function layout(){
+    const c = setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+    g = fit(P, {x:0,y:0,w:W,h:H,pad:Math.min(W,H)*0.06});
+    drawn = 0;
+  }
+  function paint(all){
+    const acc = cssVar('--acc');
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle = acc; ctx.lineWidth = 0.72; ctx.lineJoin='round'; ctx.lineCap='round';
+    const upto = all ? P.length-1 : drawn;
+    if(upto<1) return;
+    ctx.beginPath();
+    let s=g(P[0]); ctx.moveTo(s[0],s[1]);
+    for(let i=1;i<=upto;i++){ const p=g(P[i]); ctx.lineTo(p[0],p[1]); }
+    ctx.stroke();
+  }
+  function grow(){
+    if(raf) cancelAnimationFrame(raf);
+    if(REDUCED){ drawn=P.length-1; paint(true); return; }
+    drawn = 0;
+    const BATCH = Math.max(60, Math.round((P.length-1)/150));
+    const step = ()=>{
+      drawn = Math.min(P.length-1, drawn+BATCH);
+      paint(false);
+      if(drawn < P.length-1) raf = requestAnimationFrame(step); else raf=null;
+    };
+    raf = requestAnimationFrame(step);
+  }
+  onResize(()=>{ layout(); paint(true); });
+  return {
+    enter(){ layout(); grow(); },
+    leave(){ if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  };
+}
+
+/* ═══════════════════════ 1 · ПОЛОСКА ═══════════════════════
+   Основа — T17 (L4:671–714). Полоска и ломаная — ОДНА линия при угле 0° и 90°,
+   а не два рисунка. Ширина ленты падает вместе с ростом угла: это и есть
+   «камера встаёт сверху» — ширина уходит из плоскости картинки (урок T4).
+   Рамка считается по объединению «текущее положение + итог», иначе кадр
+   прыгает и прямая полоска торчит за сцену. */
+
+function sceneStrip(sec){
+  const svg = sec.querySelector('svg');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const inFolds = sec.querySelector('[data-in="folds"]');
+  const inAngle = sec.querySelector('[data-in="angle"]');
+  const outFolds = sec.querySelector('[data-out="folds"]');
+  const outAngle = sec.querySelector('[data-out="angle"]');
+  let n=+inFolds.value, a=+inAngle.value;
+
+  function draw(){
+    wipe(svg);
+    const w = word(n);
+    const P = polyAngles(w, angs(a, w.length));
+    const F = poly(w);                                  // итог: тот же при 90°
+    const g = fit(P.concat(F), {x:0,y:0,w:W,h:H,pad:88});
+    const S = P.map(g);
+    // ширина ленты: бумага сверху при 0°, край ленты при 90°
+    const band = lerp(Math.max(10, g.s*0.34), 2.4, a/90);
+    const d = a<45 ? sharpD(S) : roundPath(S, ROUND.strip);
+    mk('path',{d, class:'d-acc', 'stroke-width':band, 'stroke-linecap':'butt',
+               'stroke-linejoin':'round', opacity: 0.95},svg);
+    // засечки на сгибах, пока полоска ещё читается как полоска
+    if(a<58){
+      const fade = 1 - a/58;
+      for(let k=1;k<=w.length;k++){
+        const u=S[k-1], v=S[k];
+        const dx=v[0]-u[0], dy=v[1]-u[1], l=Math.hypot(dx,dy)||1;
+        const s=(w[k-1]==='L')?-1:1;
+        const nx=-dy/l*s, ny=dx/l*s, t=band*0.5+9;
+        mk('line',{x1:v[0],y1:v[1],x2:v[0]+nx*t,y2:v[1]+ny*t,
+                   class:'d-dim', opacity:(0.75*fade).toFixed(2)},svg);
+      }
+    }
+    node(svg, S[0], 'd-node-a', 5);
+    node(svg, S[S.length-1], 'd-node-b', 4);
+    outFolds.textContent = n;
+    outAngle.textContent = a + '°';
+  }
+  inFolds.addEventListener('input', ()=>{ n=+inFolds.value; draw(); });
+  inAngle.addEventListener('input', ()=>{ a=+inAngle.value; draw(); });
+  onResize(draw);
+
+  let tok={v:0};
+  return {
+    enter(){
+      draw();
+      if(REDUCED) return;
+      tok.v++;                                          // разогнуть один раз при въезде
+      a=0; inAngle.value=0; draw();
+      anim(0, 90, 2200, v=>{ a=Math.round(v); inAngle.value=a; draw(); }, tok);
+    },
+    leave(){ tok.v++; }
+  };
+}
+
+/* ═══════════════════════ 2 · ДВЕ ОДИНАКОВЫЕ ПОЛОВИНЫ ═══════════════════════
+   Основа — T4 (359–413) и T8 (511–542). Способ рисования ОДИН на все фазы:
+   лента сужается (w→0), а не подменяется линией (дефект, пойман 17.07).
+   Наведение на половину показывает вторую И её происхождение: копия первой,
+   повёрнутая на 90° вокруг стыка (проверенное правило T8). */
+
+function sceneHalves(sec){
+  const svg = sec.querySelector('svg');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const N=5, MID=Math.pow(2,N-1);                       // стык — середина ломаной
+  const w = word(N);
+  const FINAL = poly(w);
+  /* ⚠ РАМКА СЧИТАЕТСЯ КАЖДЫЙ КАДР как «текущее положение + итог» — ровно так,
+     как в T4 (L4:379-381). Фиксированная рамка по объединению с РАЗОГНУТОЙ
+     полоской провалилась на глазах: прямая полоска ранга 5 длиной 32 клетки
+     задавала масштаб на все кадры, и готовая кривая (около 6 клеток) выходила
+     красным пятном в тридцать пикселей. Объединение «текущая + итоговая»
+     непрерывно по углам, всегда вмещает обе, и камера едет ровно так, как
+     укорачивается лента. */
+  const btn = sec.querySelector('[data-act="play"]');
+  let ang=90, band=0, hover=0, tok={v:0}, ring=true;
+
+  function draw(){
+    wipe(svg);
+    const P = polyAngles(w, angs(ang, w.length));
+    const g = fit(P.concat(FINAL), {x:0,y:0,w:W,h:H,pad:80});
+    const S = P.map(g);
+    const A = S.slice(0, MID+1), B = S.slice(MID);
+    const bw = band>0 ? Math.max(3, g.s*0.30*band) : 0;
+    const dA = ang<45 ? sharpD(A) : roundPath(A,ROUND.halves);
+    const dB = ang<45 ? sharpD(B) : roundPath(B,ROUND.halves);
+
+    if(bw>3.2){                                         // лента: бумага, вид сверху
+      mk('path',{d:dB,class:'d-rib','stroke-width':bw},svg);
+      mk('path',{d:dA,class:'d-rib-a','stroke-width':bw},svg);
+    }
+    // призрак: первая половина, повёрнутая на 90° вокруг стыка, ложится на вторую
+    if(hover && ang>=88){
+      const src = hover===1 ? P.slice(0,MID+1) : P.slice(MID);
+      const rot = rotAbout(src, P[MID], hover===1 ? -90 : 90).map(g);
+      mk('path',{d:roundPath(rot,ROUND.halves), class:'d-ghost','stroke-width':5},svg);
+    }
+    mk('path',{d:dB, class:hover===2?'d-hot':'d-line', 'stroke-width':hover===2?5:2.6},svg);
+    mk('path',{d:dA, class:'d-acc', 'stroke-width':hover===1?5:2.6},svg);
+
+    if(ang>=88){                                        // зоны наведения на половины
+      const hitA = mk('path',{d:dA,class:'d-hit'},svg);
+      const hitB = mk('path',{d:dB,class:'d-hit'},svg);
+      const set=v=>{ hover=v; draw(); };
+      onHover(hitA, ()=>set(1));
+      onHover(hitB, ()=>set(2));
+      hitA.addEventListener('mouseleave',()=>set(0));
+      hitB.addEventListener('mouseleave',()=>set(0));
+    }
+    node(svg, S[0], 'd-node-a', 5);
+    if(ring) mk('circle',{cx:S[MID][0],cy:S[MID][1],r:13,class:'d-dim','stroke-width':1.6},svg);
+  }
+
+  /* Складывание идёт по сгибам РАЗНОГО ВОЗРАСТА (birthStep), поэтому углы
+     держим картой: сгиб, родившийся на шаге k, доезжает до 168° на шаге k,
+     а остальные стоят там, где стояли. Один общий угол этого не выражает. */
+  function drawAt(o){
+    wipe(svg);
+    const P = polyAngles(w, o);
+    const g = fit(P.concat(FINAL), {x:0,y:0,w:W,h:H,pad:80});
+    const S = P.map(g);
+    const A = S.slice(0, MID+1), B = S.slice(MID);
+    const bw = Math.max(2.6, g.s*0.30*band);
+    mk('path',{d:sharpD(B),class:'d-rib','stroke-width':bw},svg);
+    mk('path',{d:sharpD(A),class:'d-rib-a','stroke-width':bw},svg);
+    node(svg, S[0], 'd-node-a', 5);
+  }
+
+  async function playSeq(){
+    tok.v++; const my=tok;
+    if(REDUCED){ ang=90; band=0; ring=true; hover=0; draw(); return; }
+    hover=0; ring=false; band=1;
+    const o={}; for(let p=1;p<=w.length;p++) o[p]=0;
+    drawAt(o);
+    if(!await pause(380, my)) return;
+    if(!await anim(1, 0.16, 1000, v=>{ band=v; drawAt(o); }, my)) return;
+    for(let k=1;k<=N;k++){
+      const born=[]; for(let p=1;p<=w.length;p++) if(birthStep(N,p)===k) born.push(p);
+      if(!await anim(0, 168, 430, v=>{ born.forEach(p=>o[p]=v); drawAt(o); }, my)) return;
+      if(!await pause(140, my)) return;
+    }
+    if(!await pause(340, my)) return;
+    if(!await anim(168, 90, 1800, v=>{
+        for(let p=1;p<=w.length;p++) o[p]=v; drawAt(o); }, my)) return;
+    ang=90; band=0; ring=true; hover=0; draw();
+  }
+
+  btn.addEventListener('click', playSeq);
+  onResize(()=>{ if(ang>=88) draw(); });
+  return { enter(){ playSeq(); }, leave(){ tok.v++; } };
+}
+
+/* ═══════════════════════ 3 · ЗВЕНЬЯ ПАРАМИ ═══════════════════════
+   Основа — T20 (845–900). Красим через одно на ранге 4; при складывании из
+   одного звена выходят два звена ЕГО цвета, поэтому цвет звена k ранга n —
+   это цвет его прапрародителя: floor(k / 2^(n−4)) mod 2. Отсюда «цвета идут
+   парами» — не факт, который надо принять, а след построения.
+   Размер держим постоянным (seg = 2^(−n/2)): тогда видно, что звено СГИБАЕТСЯ
+   ПОПОЛАМ, а не что фигура растёт. */
+
+function scenePairs(sec){
+  const svg = sec.querySelector('svg');
+  const out = sec.querySelector('[data-out="pairs"]');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const LO=4, HI=10;
+  const cache={}, frames=[];
+  for(let n=LO;n<=HI;n++){
+    cache[n]=poly(word(n), 90, Math.pow(2,-n/2));
+    frames.push(...cache[n]);
+  }
+  const frame = bounds(frames);
+  let n=LO, tok={v:0};
+
+  function draw(){
+    wipe(svg);
+    const P=cache[n];
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:64},frame);
+    const S=P.map(g);
+    const blk = Math.pow(2, n-LO);                    // длина одноцветного куска
+    const lw = n>=9 ? 2 : (n>=7 ? 2.8 : 4);
+    let i=0;
+    while(i < S.length-1){
+      const c = Math.floor(i/blk) % 2;
+      let j=i;
+      while(j < S.length-1 && Math.floor(j/blk)%2 === c) j++;
+      const run = S.slice(i, j+1);
+      mk('path',{d:roundPath(run,ROUND.pairs), class: c? 'd-acc':'d-line',
+                 'stroke-width':lw},svg);
+      i=j;
+    }
+    node(svg, S[0], 'd-node-a', 4.5);
+    if(out) out.innerHTML='ранг <b>'+n+'</b> · звеньев <b>'+Math.pow(2,n)
+      +'</b> · одноцветный кусок — <b>'+blk+'</b> звеньев';
+  }
+  async function loop(){
+    tok.v++; const my=tok;
+    if(REDUCED){ n=HI; draw(); return; }
+    for(;;){
+      for(n=LO;n<=HI;n++){ draw(); if(!await pause(n===LO?900:620, my)) return; }
+      if(!await pause(500, my)) return;
+      for(n=HI;n>=LO;n--){ draw(); if(!await pause(n===HI?900:620, my)) return; }
+      if(!await pause(500, my)) return;
+    }
+  }
+  onResize(draw);
+  return { enter(){ loop(); }, leave(){ tok.v++; } };
+}
+
+/* ═══════════════════════ 4 · ПЛОТНОСТЬ ═══════════════════════
+   Ранг 12 крупно, углы скруглены ЗАМЕТНО: в местах касания должны читаться две
+   отдельные дуги, а не перекрёсток. Число касаний считается по ЛОМАНОЙ (целые
+   вершины) — по скруглённому виду считать нельзя (урок touches в L4). */
+
+function sceneDense(sec){
+  const cv = sec.querySelector('canvas');
+  const out = sec.querySelector('[data-out="dense"]');
+  const seg = sec.querySelector('[data-seg="rank"]');
+  let n=12, ctx, W, H, raf=null;
+  const cache={};
+  function pts(k){ return cache[k] || (cache[k]=rank(k)); }
+
+  function paint(progressive){
+    if(raf){ cancelAnimationFrame(raf); raf=null; }
+    const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+    const P=pts(n);
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:Math.min(W,H)*0.05});
+    const S=P.map(g);
+    const lw = n>=13 ? 1.05 : (n>=12 ? 1.5 : (n>=10 ? 2.2 : 3.2));
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle=cssVar('--acc'); ctx.lineWidth=lw; ctx.lineCap='round';
+    const total=S.length-1;
+    const run=(upto)=>{
+      ctx.clearRect(0,0,W,H);
+      strokeRounded(ctx, S.slice(0, upto+1), 0.5);      // скругление = половина звена
+    };
+    if(!progressive || REDUCED){ run(total); }
+    else {
+      let done=0; const B=Math.max(120, Math.round(total/120));
+      const step=()=>{ done=Math.min(total, done+B); run(done);
+        if(done<total) raf=requestAnimationFrame(step); else raf=null; };
+      raf=requestAnimationFrame(step);
+    }
+    const t=touches(word(n)).length;
+    out.innerHTML='ранг <b>'+n+'</b> · звеньев <b>'+Math.pow(2,n)
+      +'</b> · вершин, где линия подходит к себе: <b>'+t+'</b>';
+  }
+  seg.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+    n=+b.dataset.v; paint(true);
+  });
+  onResize(()=>paint(false));
+  return { enter(){ paint(true); }, leave(){ if(raf){cancelAnimationFrame(raf); raf=null;} } };
+}
+
+/* ═══════════════════════ 5 · ДОКАЗАТЕЛЬСТВО ═══════════════════════ */
+
+/* 5а. Вершины двух сортов. Наведение на вершину зажигает ВСЕ вершины её сорта.
+       Пунктиром — прежняя кривая, и скруглён он тоже (правка по f5). */
+function step5a(sec){
+  const svg = sec.querySelector('[data-step="a"] svg');
+  const out = sec.querySelector('[data-out="a"]');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const N=4;
+  const P=rank(N), Q=mul1pi(rank(N-1));
+  let sort=null;
+
+  function draw(){
+    wipe(svg);
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:64});
+    lattice(svg,g,g.box,1);
+    const S=P.map(g), T=Q.map(g);
+    mk('path',{d:roundPath(T,ROUND.a),class:'d-dash'},svg);   // прежняя кривая, скруглена так же
+    mk('path',{d:roundPath(S,ROUND.a),class:'d-line','stroke-width':2.6},svg);
+    for(let i=0;i<S.length-1;i++) arrowOn(svg,S[i],S[i+1],'d-arrow');
+    const seen=new Set();
+    P.forEach((p,i)=>{
+      const k=p[0]+','+p[1]; if(seen.has(k)) return; seen.add(k);
+      const black=isBlack(p);
+      const on = sort!==null && sort===black;
+      const el=node(svg, S[i], black ? 'd-node-b':'d-node', on?8:5.4);
+      if(on) el.setAttribute('class', black?'d-node-a':'d-node');
+      if(on && !black) el.setAttribute('stroke', cssVar('--acc'));
+      const hit=mk('circle',{cx:S[i][0],cy:S[i][1],r:17,fill:'transparent',
+                             style:'cursor:pointer'},svg);
+      onHover(hit, ()=>{ sort=black; draw(); });
+      hit.addEventListener('mouseleave',()=>{ sort=null; draw(); });
+    });
+    out.innerHTML = sort===null
+      ? 'наведите или коснитесь вершины'
+      : (sort ? '<span class="hi">чёрные вершины</span> — были на кривой раньше, лежат на пунктире'
+              : '<span class="hi">новые вершины</span> — появились при последнем складывании');
+  }
+  onResize(draw);
+  return { enter(){ draw(); }, leave(){} };
+}
+
+/* 5б. Строки двух цветов. Уголок красится по направлению поворота, и цвет
+       уголка совпадает с цветом его строки. Стрелки хода обязательны:
+       без них «налево» не имеет смысла (правка по f6). */
+function step5b(sec){
+  const svg = sec.querySelector('[data-step="b"] svg');
+  const out = sec.querySelector('[data-out="b"]');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const N=6, P=rank(N), C=corners(P);
+  let hi=null;
+
+  function draw(){
+    wipe(svg);
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:56});
+    rowBands(svg,g,g.box);
+    lattice(svg,g,g.box,0);
+    C.forEach(([a,b,c],k)=>{
+      const tri=[a,b,c].map(g);
+      const left=turnsLeft(a,b,c);
+      const on = hi===k;
+      mk('path',{d:roundPath(tri,ROUND.b), class: left?'d-acc2':'d-line',
+                 'stroke-width': on?5:2.6},svg);
+    });
+    for(let i=0;i<P.length-1;i++){
+      const a=g(P[i]), b=g(P[i+1]);
+      if(g.s>18) arrowOn(svg,a,b,'d-arrow');
+    }
+    C.forEach(([a,b,c],k)=>{
+      node(svg,g(a),'d-node-b',3.4);
+      node(svg,g(b),'d-node',3.4);
+      const hit=mk('path',{d:sharpD([a,b,c].map(g)),class:'d-hit'},svg);
+      onHover(hit, ()=>{ hi=k; draw(); });
+      hit.addEventListener('mouseleave',()=>{ hi=null; draw(); });
+    });
+    node(svg,g(P[P.length-1]),'d-node-b',3.4);
+    if(hi===null) out.innerHTML='уголков '+C.length+' · наведите или коснитесь любого';
+    else {
+      const [a,b,c]=C[hi];
+      out.innerHTML='излом в <b>'+(rowBlue(b[1])?'крашеной':'чистой')+'</b> строке · поворот '
+        +'<span class="hi">'+(turnsLeft(a,b,c)?'налево':'направо')+'</span>';
+    }
+  }
+  onResize(draw);
+  return { enter(){ draw(); }, leave(){} };
+}
+
+/* 5в. ГЛАВНЫЙ ИНТЕРАКТИВ. Наводишь на звено — показываются ОБА кандидата на
+       продолжение, и лишний гаснет. Правило и оба кандидата берутся из
+       corner() в dragon.js, проверенной на 32 764 звеньях.
+       Четыре случая (звено вдоль/поперёк × строка голубая/белая) отмечаются
+       по мере прохождения: читателю видно, что правило работает во всех. */
+function step5v(sec){
+  const svg = sec.querySelector('[data-step="v"] svg');
+  const out = sec.querySelector('[data-out="v"]');
+  const out4 = sec.querySelector('[data-out="v4"]');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const N=6, P=rank(N);
+  const CASES=[['гориз',true],['гориз',false],['вертик',true],['вертик',false]];
+  const LABEL={'гориз':'вдоль','вертик':'поперёк'};
+  const seen=new Set();
+  let pick=null, fade=1, tok={v:0};
+
+  function caseKey(r){ return (r.horiz?'гориз':'вертик')+(r.blue?'1':'0'); }
+
+  function draw(){
+    wipe(svg);
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:56});
+    rowBands(svg,g,g.box);
+    lattice(svg,g,g.box,0);
+    const S=P.map(g);
+    // базовая кривая ЯРЧЕ разметки: иначе не видно, на что наводить
+    mk('path',{d:roundPath(S,ROUND.v),class:'d-line','stroke-width':2,
+               opacity:0.62},svg);
+
+    if(pick!==null){
+      const r = corner(P[pick], P[pick+1]);
+      const known = [P[pick], P[pick+1]].map(g);
+      // оба кандидата: сначала оба видны, потом лишний гаснет
+      const goodTail = r.half===0 ? [r.corner[1], r.corner[2]] : [r.corner[0], r.corner[1]];
+      const badTail  = r.half===0 ? [r.other[1],  r.other[2] ] : [r.other[0],  r.other[1] ];
+      mk('path',{d:sharpD(badTail.map(g)), class:'d-acc2','stroke-width':4,
+                 'stroke-dasharray':'6 6', opacity:(0.12+0.68*fade).toFixed(3)},svg);
+      mk('path',{d:roundPath(r.corner.map(g),ROUND.v), class:'d-acc','stroke-width':4.4,
+                 opacity:(0.35+0.65*(1-fade)).toFixed(3)},svg);
+      mk('path',{d:sharpD(known), class:'d-hot','stroke-width':6},svg);
+      node(svg, g(r.izlom), 'd-node', 6.5);
+      node(svg, g(r.corner[0]), 'd-node-b', 5);
+      node(svg, g(r.corner[2]), 'd-node-b', 5);
+      node(svg, g(r.other[r.half===0?2:0]), 'd-node', 4.5);
+    }
+    for(let i=0;i<P.length-1;i++){
+      const hit=mk('line',{x1:S[i][0],y1:S[i][1],x2:S[i+1][0],y2:S[i+1][1],
+                           class:'d-hit'},svg);
+      onHover(hit, ()=>show(i));
+    }
+    svg.addEventListener('mouseleave',()=>{ pick=null; fade=1; draw(); }, {once:true});
+    report();
+  }
+
+  async function show(i){
+    if(pick===i) return;
+    pick=i; fade=1;
+    const r=corner(P[i],P[i+1]);
+    seen.add(caseKey(r));
+    draw();
+    tok.v++; const my=tok;
+    if(REDUCED){ fade=0; draw(); return; }
+    await anim(1,0,420,v=>{ fade=v; draw(); }, my);
+  }
+
+  function report(){
+    if(pick===null){ out.innerHTML='наведите или коснитесь любого звена'; }
+    else {
+      const r=corner(P[pick],P[pick+1]);
+      /* ⚠ СНАЧАЛА ПОВОРОТ, ПОТОМ НАПРАВЛЕНИЕ. Строка задаёт поворот НАЛЕВО или
+         НАПРАВО — величину, не зависящую от того, куда едем. «Вверх» или
+         «вниз» получается из поворота ВМЕСТЕ с направлением хода, поэтому в
+         одном и том же случае (скажем, звено вдоль в крашеной строке) уголок
+         честно идёт то вверх, то вниз. Проверено проходом по всем 64 звеньям.
+         Первая версия печатала только «пошёл вверх / пошёл вниз», и читатель
+         видел у одного случая два разных ответа — правило выглядело
+         неработающим ровно там, где оно работает. */
+      out.innerHTML='звено <b>'+(r.horiz?'вдоль':'поперёк')+'</b> — '
+        +(r.half===0?'первая':'вторая')+' половина · строка <b>'
+        +(r.blue?'крашеная':'чистая')+'</b> ⇒ поворот '
+        +'<span class="hi">'+(r.blue?'налево':'направо')+'</span> · '
+        +corDir(r);
+    }
+    out4.innerHTML = 'случаи: ' + CASES.map(([h,b])=>{
+      const k=h+(b?'1':'0'), on=seen.has(k);
+      return (on?'<b>':'<span style="opacity:.4">')
+        + LABEL[h]+'·'+(b?'крашеная':'чистая')
+        + (on?' ✓</b>':'</span>');
+    }).join(' · ') + ' — ' + seen.size + ' из 4';
+  }
+  function corDir(r){
+    const c=r.corner;
+    if(r.half===0) return c[2][1] > c[1][1] ? 'пошёл вверх' : 'пошёл вниз';
+    return c[0][0] < c[1][0] ? 'начался слева' : 'начался справа';
+  }
+  onResize(draw);
+  return { enter(){ draw(); }, leave(){ tok.v++; } };
+}
+
+/* 5г. Ранг 6 и ранг 7 рядом. Звено k ранга 6 ⟷ уголок k ранга 7: чётные
+       вершины ранга 7 — это ранг 6, умноженный на (1+i) (проверено гейтом).
+       Связь двусторонняя: наводишь слева — горит справа, и наоборот. */
+function step5g(sec){
+  const svg = sec.querySelector('[data-step="g"] svg');
+  const out = sec.querySelector('[data-out="g"]');
+  const W=1000, H=750;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const A=rank(6), B=rank(7), CB=corners(B);
+  let pick=null;
+
+  function draw(){
+    wipe(svg);
+    const gA=fit(A,{x:0,y:0,w:W/2,h:H,pad:46});
+    const gB=fit(B,{x:W/2,y:0,w:W/2,h:H,pad:46});
+    mk('text',{x:W*0.25,y:24,class:'d-cap','text-anchor':'middle'},svg).textContent='ранг 6';
+    mk('text',{x:W*0.75,y:24,class:'d-cap','text-anchor':'middle'},svg).textContent='ранг 7';
+    const SA=A.map(gA), SB=B.map(gB);
+    mk('path',{d:roundPath(SA,ROUND.g),class:'d-dim','stroke-width':2},svg);
+    mk('path',{d:roundPath(SB,ROUND.g),class:'d-dim','stroke-width':1.7},svg);
+    if(pick!==null){
+      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':6},svg);
+      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':5},svg);
+      node(svg, gB(CB[pick][1]), 'd-node', 5.5);
+    }
+    for(let i=0;i<A.length-1;i++){
+      const h=mk('line',{x1:SA[i][0],y1:SA[i][1],x2:SA[i+1][0],y2:SA[i+1][1],class:'d-hit'},svg);
+      onHover(h, ()=>{ pick=i; draw(); });
+    }
+    CB.forEach((c,k)=>{
+      const h=mk('path',{d:sharpD(c.map(gB)),class:'d-hit'},svg);
+      onHover(h, ()=>{ pick=k; draw(); });
+    });
+    svg.addEventListener('mouseleave',()=>{ pick=null; draw(); },{once:true});
+    out.innerHTML = pick===null
+      ? 'звеньев слева '+(A.length-1)+' · уголков справа '+CB.length+' — их ровно столько же'
+      : 'звено <b>'+(pick+1)+'</b> ранга 6 — это уголок <b>'+(pick+1)+'</b> ранга 7';
+  }
+  onResize(draw);
+  return { enter(){ draw(); }, leave(){} };
+}
+
+function sceneProof(sec){
+  const parts=[step5a(sec), step5b(sec), step5v(sec), step5g(sec)];
+  return { enter(){ parts.forEach(p=>p.enter()); },
+           leave(){ parts.forEach(p=>p.leave()); } };
+}
+
+/* ═══════════════════════ 6 · ЧЕТЫРЕ ДРАКОНА ═══════════════════════
+   Основа — T23 (1058–1090) и TB (1273–1289). Растут ОДНОВРЕМЕННО, все четыре,
+   с ранга 4 до выбранного. Рамка считается сразу по всем четырём и по всем
+   рангам — иначе камера прыгает при каждом шаге (урок T23 и TA). */
+
+function sceneFour(sec){
+  const svg = sec.querySelector('svg');
+  const out = sec.querySelector('[data-out="four"]');
+  const seg = sec.querySelector('[data-seg="rank"]');
+  const W=1000, H=1000;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  const LO=4, MAX=10;
+  const cache={}, all=[];
+  for(let n=LO;n<=MAX;n++){
+    const P=poly(word(n),90,Math.pow(2,-n/2));
+    cache[n]=P;
+    for(let r=0;r<4;r++) all.push(...rotAbout(P,[0,0],r*90));
+  }
+  const frame=bounds(all);
+  /* Четыре цвета: белый, акцент, второй акцент, серый. Второй акцент здесь
+     нужен по той же причине, что и в схемах доказательства — различить
+     объекты; на двух серых ранг 10 хайрлайнами уже не читается, а
+     нечитаемая сцена не выполняет то, ради чего стоит. */
+  const CLS=['d-line','d-acc','d-acc2','d-mute'];
+  let target=6, n=LO, tok={v:0};
+
+  function draw(){
+    wipe(svg);
+    const P=cache[n];
+    const g=fit(P,{x:0,y:0,w:W,h:H,pad:44},frame);
+    const lw = n>=10 ? 1.15 : (n>=8 ? 1.7 : (n>=6 ? 2.4 : 3.2));
+    for(let r=0;r<4;r++){
+      const S=rotAbout(P,[0,0],r*90).map(g);
+      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw},svg);
+    }
+    node(svg,g([0,0]),'d-node-b',4.5);
+    // общих отрезков — СЧИТАЕМ, а не утверждаем: это и есть предмет сцены
+    const dup=sharedEdges(n);
+    out.innerHTML='ранг <b>'+n+'</b> · звеньев у каждого <b>'+Math.pow(2,n)
+      +'</b> · отрезков, взятых дважды: <b'+(dup?' class="hi"':'')+'>'+dup+'</b>';
+  }
+  async function grow(){
+    tok.v++; const my=tok;
+    if(REDUCED){ n=target; draw(); return; }
+    for(n=LO;n<=target;n++){ draw(); if(!await pause(n===LO?820:560,my)) return; }
+    n=target; draw();
+  }
+  seg.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    target=+b.dataset.v; grow();
+  });
+  onResize(draw);
+  return { enter(){ grow(); }, leave(){ tok.v++; } };
+}
+
+/* ═══════════════════════ 7 · ЛИНИЯ, У КОТОРОЙ ЕСТЬ ПЛОЩАДЬ ═══════════════════════
+   Три движения.
+   1) Звено толстеет до полклетки. Клетка — квадрат на звене как на диагонали
+      (dragCells), площадь ровно ½; при t=0 ромб вырожден в само звено, поэтому
+      это НЕ подмена картинки, а одна фигура в двух положениях ручки.
+   2) Зум в край. Механика из FractalSlide референса: зум-курсор, зум по клику,
+      лог-интерполяция, компенсация плотности. Рисуется тем же аттрактором IFS,
+      что в референсе (два аффинных преобразования) — и это ровно наша область:
+      проверено сравнением занятости сетки 128×128, Жаккар 0,966 при
+      сопряжении (без сопряжения 0,188). Поэтому переход между заливкой и
+      облаком точек — смена текстуры, а не прыжок фигуры.
+   3) Изрезанность края считается на глазах: dragBoundary даёт число сторон,
+      отношение к прежнему рангу даёт 1,5236… */
+
+const IFS_DRAGON = [
+  {a: 0.5, b:-0.5, c: 0.5, d: 0.5, e:0, f:0},
+  {a:-0.5, b:-0.5, c: 0.5, d:-0.5, e:1, f:0}
+];
+
+/** охват аттрактора — замерен chaos game на 800 тыс. точек */
+const IFS_BOX = {x0:-1/3, x1:7/6, y0:-1/3, y1:2/3};
+
+/* ⚠ ПОЧЕМУ ЗДЕСЬ НЕ CHAOS GAME, ХОТЯ В РЕФЕРЕНСЕ ОН.
+   Chaos game сыплет точки по ВСЕМУ аттрактору, а в окно попадают только те,
+   что в него угодили. Площадь окна падает как Z², а число точек в
+   FractalSlide растёт как Z (`baseIterations * zoomLevel`) — значит заполнение
+   окна падает как 1/Z. Проверено скриншотом: на увеличении ×17,6 из 1,4 млн
+   точек в кадр попало около четырёх тысяч, и финальная сцена показывала
+   ПЫЛЬ вместо тела с изрезанным краем. А сцена утверждает ровно обратное:
+   «на каждом увеличении край выглядит так же». Утверждение опровергалось
+   собственной картинкой.
+
+   Вместо этого — точное рекурсивное измельчение с ОТСЕЧЕНИЕМ ПО ОКНУ.
+   Аттрактор есть объединение своих образов под f1 и f2, поэтому: берём охват,
+   применяем оба преобразования, куски вне окна выбрасываем, остальные делим
+   дальше, пока кусок не станет меньше пикселя. Стоимость — порядка числа
+   ВИДИМЫХ пикселей, а не всего аттрактора, поэтому картинка на любом
+   увеличении одинаково плотная. Это тот же дракон: множество задаётся теми
+   же двумя преобразованиями (совпадение с нашей ломаной проверено, Жаккар
+   0,966). Зум-курсор, зум по клику и лог-интерполяция взяты из FractalSlide
+   как есть — заменена только заливка. */
+function drawDeep(ctx, vp, W, H, o){
+  const m=o.margin, iw=W-2*m, ih=H-2*m;
+  const sx=iw/(vp.xMax-vp.xMin), sy=ih/(vp.yMax-vp.yMin);
+  const PX = o.px || 1.15;
+  ctx.globalAlpha = o.alpha===undefined ? 1 : o.alpha;
+  ctx.fillStyle = o.color;
+  // кусок = аффинное преобразование (a,b,c,d,e,f), приложенное к охвату
+  let cur=[[1,0,0,1,0,0]], next=[], depth=0;
+  const MAXD = o.maxDepth || 44;
+  let drawn=0;
+  while(cur.length && depth<MAXD){
+    next.length=0;
+    for(const T of cur){
+      const [a,b,c,d,e,f]=T;
+      // экранная рамка куска: образы четырёх углов охвата
+      let X0=Infinity,X1=-Infinity,Y0=Infinity,Y1=-Infinity;
+      for(const [ux,uy] of [[IFS_BOX.x0,IFS_BOX.y0],[IFS_BOX.x1,IFS_BOX.y0],
+                            [IFS_BOX.x1,IFS_BOX.y1],[IFS_BOX.x0,IFS_BOX.y1]]){
+        const wx=a*ux+b*uy+e, wy=c*ux+d*uy+f;
+        const px=(wx-vp.xMin)*sx+m, py=H-m-(wy-vp.yMin)*sy;
+        if(px<X0)X0=px; if(px>X1)X1=px; if(py<Y0)Y0=py; if(py>Y1)Y1=py;
+      }
+      if(X1<0||X0>W||Y1<0||Y0>H) continue;                 // вне окна — выбросить
+      if(X1-X0<=PX && Y1-Y0<=PX){                          // мельче пикселя — залить
+        ctx.fillRect(X0, Y0, Math.max(PX,X1-X0), Math.max(PX,Y1-Y0));
+        drawn++;
+        continue;
+      }
+      for(const t of IFS_DRAGON){                          // иначе — делить дальше
+        next.push([ a*t.a+b*t.c, a*t.b+b*t.d,
+                    c*t.a+d*t.c, c*t.b+d*t.d,
+                    a*t.e+b*t.f+e, c*t.e+d*t.f+f ]);
+      }
+    }
+    const tmp=cur; cur=next.slice(); next=tmp; depth++;
+    if(cur.length > 900000) break;                         // страховка от разрастания
+  }
+  ctx.globalAlpha=1;
+  return drawn;
+}
+
+function sceneArea(sec){
+  const cv  = sec.querySelector('canvas');
+  const fig = cv.parentNode;
+  const out = sec.querySelector('[data-out="area"]');
+  const outD= sec.querySelector('[data-out="dim"]');
+  const outT= sec.querySelector('[data-out="thick"]');
+  const inT = sec.querySelector('[data-in="thick"]');
+  const segR= sec.querySelector('[data-seg="rank"]');
+  const segZ= sec.querySelector('[data-seg="zoom"]');
+
+  /* HOME — КВАДРАТНАЯ рамка вокруг фактического охвата аттрактора
+     (x −0,333…1,167, y −0,333…0,667; замерено chaos game на 800 тыс. точек).
+     Квадратная обязательно: toScreen масштабирует x и y независимо, и на
+     неквадратной рамке квадратный холст растянул бы дракона. */
+  const HOME={xMin:-0.35, xMax:1.18, yMin:-0.60, yMax:0.93};
+  const MARGIN=14, ZF=2.6;
+  let n=12, t=0, ctx, W, H, raf=null, tok={v:0};
+  let vp={...HOME}, zoom=1, shown=1, blend=0;      // blend: 0 — клетки, 1 — облако точек
+  const cache={};
+
+  /* НОРМИРОВКА в координаты аттрактора: M(z) = conj(z / E), где E — конец
+     ломаной. M линейна (M(0)=0), поэтому её достаточно задать образами базиса:
+       M(1,0) = ( ex/den,  ey/den )
+       M(0,1) = ( ey/den, −ex/den )
+     Сопряжение обязательно: наша ломаная (первый сгиб L) — это аттрактор
+     референса, отражённый по y. Проверено занятостью сетки 128×128 на ранге 16:
+     с сопряжением Жаккар 0,966, без него 0,188. Поэтому переход «заливка →
+     облако точек» — смена текстуры, а не прыжок фигуры.
+
+     ⚠ ОДНА КАРТА, А НЕ ДВЕ. Первая версия держала отдельно базис (ux, uy) и
+     отдельно «полдиагональ в нормированных единицах» (0.5/|E|) и перемножала
+     их — а базис уже содержит 1/|E|. Полудиагональ выходила 0.5/|E|², то есть
+     на ранге 12 в четыре тысячи раз меньше нужной: сцена рисовалась ПУСТОЙ.
+     Поймано скриншотом, не кодом. Теперь смещение считается только через M,
+     и полдиагональ — честные 0.5 клетки ДО отображения. */
+  function normMap(k){
+    if(cache[k]) return cache[k];
+    const P=rank(k), E=P[P.length-1], den=E[0]*E[0]+E[1]*E[1];
+    const M=(x,y)=>[ (x*E[0]+y*E[1])/den, -((y*E[0]-x*E[1])/den) ];
+    const ux=M(1,0), uy=M(0,1);                    // образы базиса: уже с 1/|E|
+    const C=dragCells(k);
+    const q=C.map(([px,py])=>M(px/2, py/2));       // центры клеток
+    const line=P.map(([x,y])=>M(x,y));             // сама ломаная
+    /* Точка, в которую целится «Зум в край»: НЕ угаданная координата, а
+       настоящая точка границы области — ближайшая к верхней середине фигуры.
+       Считается из dragBoundary, поэтому попадает в край при любом ранге. */
+    const B=dragBoundary(k).map(([s,e])=>M((s[0]+e[0])/2,(s[1]+e[1])/2));
+    const aim=[0.4165, 0.667];
+    let edge=B[0], best=Infinity;
+    for(const p of B){
+      const d=(p[0]-aim[0])*(p[0]-aim[0])+(p[1]-aim[1])*(p[1]-aim[1]);
+      if(d<best){ best=d; edge=p; }
+    }
+    return (cache[k]={q, line, ux, uy, edge});
+  }
+
+  function toScreen(p){
+    const iw=W-2*MARGIN, ih=H-2*MARGIN;
+    return [ ((p[0]-vp.xMin)/(vp.xMax-vp.xMin))*iw+MARGIN,
+             H-MARGIN-((p[1]-vp.yMin)/(vp.yMax-vp.yMin))*ih ];
+  }
+
+  function paintCells(alpha){
+    const {q,line,ux,uy}=normMap(n);
+    const HALF=0.5;                                 // полдиагональ клетки, в клетках
+    ctx.globalAlpha=alpha;
+    const acc=cssVar('--acc');
+    if(t<0.02){                                     // t=0 — сама линия, без заливки
+      ctx.strokeStyle=acc; ctx.lineWidth=n>=13?1:(n>=12?1.4:2.2);
+      ctx.lineCap='round'; ctx.lineJoin='round';
+      ctx.beginPath();
+      for(let i=0;i<line.length;i++){
+        const s=toScreen(line[i]);
+        i? ctx.lineTo(s[0],s[1]) : ctx.moveTo(s[0],s[1]);
+      }
+      ctx.stroke(); ctx.globalAlpha=1; return;
+    }
+    ctx.fillStyle=acc;
+    ctx.beginPath();
+    for(let i=0;i<q.length;i++){
+      const c=q[i];
+      // ромб: ±полдиагональ вдоль звена и ±t·полдиагональ поперёк
+      const a=toScreen([c[0]-ux[0]*HALF,   c[1]-ux[1]*HALF]);
+      const b=toScreen([c[0]+uy[0]*HALF*t, c[1]+uy[1]*HALF*t]);
+      const d=toScreen([c[0]+ux[0]*HALF,   c[1]+ux[1]*HALF]);
+      const e=toScreen([c[0]-uy[0]*HALF*t, c[1]-uy[1]*HALF*t]);
+      ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]);
+      ctx.lineTo(d[0],d[1]); ctx.lineTo(e[0],e[1]); ctx.closePath();
+    }
+    ctx.fill();
+    ctx.globalAlpha=1;
+  }
+
+  function paint(){
+    if(raf){ cancelAnimationFrame(raf); raf=null; }
+    const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+    ctx.clearRect(0,0,W,H);
+    if(blend<1) paintCells(1-blend);
+    if(blend>0) drawDeep(ctx,vp,W,H,
+      {alpha:blend, color:cssVar('--acc'), margin:MARGIN});
+    readout();
+  }
+
+  function readout(){
+    outT.textContent = t<0.02 ? 'линия' : (t>=0.995 ? 'полклетки' : Math.round(t*100)+'%');
+    const cells=Math.pow(2,n);
+    /* В облаке ранг уже не тот, что на ползунке: измельчение идёт до пикселя,
+       то есть «складываем дальше». Врать про ранг 12 здесь нельзя. */
+    out.innerHTML = blend>0.5
+      ? 'складываем дальше · ранг <b>→ ∞</b> · увеличение <span class="hi">×'
+        + num(shown,1) + '</span>'
+      : 'ранг <b>'+n+'</b> · клеток <b>'+cells+'</b> · площадь <b>'
+        + (cells/2) + '</b> клеток';
+    const b=dragBoundary(n).length, pb=dragBoundary(n-1).length;
+    const r=b/pb, d=Math.log(r)/Math.log(Math.SQRT2);
+    outD.innerHTML='сторон края <b>'+b+'</b> · длиннее прежнего в <b>'+num(r,3)
+      +'</b> раза ⇒ изрезанность <span class="hi">'+num(d,4)+'</span>';
+  }
+
+  /* ── зум: лог-интерполяция viewport, как в FractalSlide ── */
+  async function goto(target, targetZoom){
+    tok.v++; const my=tok;
+    const from={...vp}, fromZ=shown;
+    if(REDUCED){ vp=target; zoom=targetZoom; shown=targetZoom; paint(); return; }
+    /* На кадрах полёта измельчаем грубее (px 3), на финальном — до пикселя:
+       иначе каждый кадр стоит как готовая картинка и полёт дёргается. */
+    await anim(0,1,760,e=>{
+      vp={ xMin:lerp(from.xMin,target.xMin,e), xMax:lerp(from.xMax,target.xMax,e),
+           yMin:lerp(from.yMin,target.yMin,e), yMax:lerp(from.yMax,target.yMax,e) };
+      shown=Math.exp(lerp(Math.log(fromZ),Math.log(targetZoom),e));
+      const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+      ctx.clearRect(0,0,W,H);
+      if(blend<1) paintCells(1-blend);
+      if(blend>0) drawDeep(ctx,vp,W,H,
+        {alpha:blend, color:cssVar('--acc'), margin:MARGIN, px:3});
+      readout();
+    }, my);
+    if(my.v!==tok.v) return;
+    vp=target; zoom=targetZoom; shown=targetZoom; paint();
+  }
+
+  async function toCloud(){
+    if(blend>=1) return;
+    t=1; inT.value=100;
+    tok.v++; const my=tok;
+    if(REDUCED){ blend=1; paint(); return; }
+    await anim(0,1,520,v=>{ blend=v; paint(); }, my);
+    blend=1; paint();
+  }
+
+  function zoomAt(fx, fy){                  // fx,fy — доля холста, куда целимся
+    const xs=vp.xMax-vp.xMin, ys=vp.yMax-vp.yMin;
+    const cx=vp.xMin+xs*fx, cy=vp.yMax-ys*fy;
+    const nx=xs/ZF, ny=ys/ZF;
+    return {xMin:cx-nx/2, xMax:cx+nx/2, yMin:cy-ny/2, yMax:cy+ny/2};
+  }
+
+  inT.addEventListener('input',()=>{
+    t=+inT.value/100;
+    if(blend>0){ blend=0; zoom=1; shown=1; vp={...HOME}; }
+    paint();
+  });
+  segR.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    segR.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+    n=+b.dataset.v; paint();
+  });
+  segZ.addEventListener('click',async e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.v==='reset'){ blend=0; t=+inT.value/100; vp={...HOME}; zoom=1; shown=1;
+      paint(); return; }
+    if(b.dataset.v==='out'){
+      if(zoom<=1.01) return;
+      const xs=vp.xMax-vp.xMin, ys=vp.yMax-vp.yMin;
+      const cx=(vp.xMin+vp.xMax)/2, cy=(vp.yMin+vp.yMax)/2;
+      const z=Math.max(1, zoom/ZF);
+      if(z<=1.01){ await goto({...HOME},1); return; }
+      await goto({xMin:cx-xs*ZF/2,xMax:cx+xs*ZF/2,yMin:cy-ys*ZF/2,yMax:cy+ys*ZF/2}, z);
+      return;
+    }
+    await toCloud();
+    // «в край»: центрируемся на настоящей точке границы (см. normMap.edge)
+    const E=normMap(n).edge;
+    const xs=(vp.xMax-vp.xMin)/ZF, ys=(vp.yMax-vp.yMin)/ZF;
+    await goto({xMin:E[0]-xs/2, xMax:E[0]+xs/2,
+                yMin:E[1]-ys/2, yMax:E[1]+ys/2}, zoom*ZF);
+  });
+
+  /* зум-курсор и зум по клику — прямо из референса */
+  const cur=document.createElement('div');
+  cur.style.cssText='position:absolute;pointer-events:none;display:none;z-index:5;'+
+    'border:1px solid color-mix(in srgb, var(--acc) 80%, white);'+
+    'background:color-mix(in srgb, var(--acc) 10%, transparent);';
+  fig.style.position='relative'; fig.appendChild(cur);
+  cv.addEventListener('mousemove',ev=>{
+    const r=cv.getBoundingClientRect();
+    const w=r.width/ZF, h=r.height/ZF;
+    const x=Math.max(w/2,Math.min(r.width-w/2, ev.clientX-r.left));
+    const y=Math.max(h/2,Math.min(r.height-h/2, ev.clientY-r.top));
+    cur.style.width=w+'px'; cur.style.height=h+'px';
+    cur.style.left=(x-w/2)+'px'; cur.style.top=(y-h/2)+'px';
+    cur.style.display='block'; cv.style.cursor='none';
+  });
+  cv.addEventListener('mouseleave',()=>{ cur.style.display='none'; cv.style.cursor=''; });
+  cv.addEventListener('click',async ev=>{
+    const r=cv.getBoundingClientRect();
+    await toCloud();
+    await goto(zoomAt((ev.clientX-r.left)/r.width, (ev.clientY-r.top)/r.height), zoom*ZF);
+  });
+
+  onResize(()=>paint());
+  return {
+    enter(){
+      paint();
+      if(REDUCED || t>0.02) return;
+      tok.v++; const my=tok;
+      pause(500,my).then(ok=>{ if(!ok) return;
+        anim(0,1,2000,v=>{ t=v; inT.value=Math.round(v*100); paint(); }, my); });
+    },
+    leave(){ tok.v++; if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  };
+}
+
+/* ═══════════════════════ каркас страницы ═══════════════════════ */
+
+const FACTORY = { cover:sceneCover, strip:sceneStrip, halves:sceneHalves,
+  pairs:scenePairs, dense:sceneDense, proof:sceneProof, four:sceneFour, area:sceneArea };
+
+/** снап-скролл и scrollAPI — порт из референса */
+function setupSnapScroll(ids){
+  let timer=null, animating=false, hush=0;
+  const DELAY=200, TOL=30, DUR=1000;
+  function animateScrollTo(y){
+    animating=true;
+    const y0=window.pageYOffset, dy=y-y0, t0=performance.now();
+    (function fr(now){
+      const t=Math.min(1,(now-t0)/DUR);
+      window.scrollTo(0, y0+dy*easeOutQuart(t));
+      if(t<1) requestAnimationFrame(fr);
+      else { animating=false; hush=performance.now()+120; }
+    })(t0);
+  }
+  function schedule(){
+    if(animating || performance.now()<hush) return;
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      const y=window.pageYOffset;
+      let best=null, dist=Infinity;
+      for(const id of ids){
+        const el=document.getElementById(id); if(!el) continue;
+        if(el.offsetHeight > window.innerHeight*1.4) continue;   // высокие сцены не снапим
+        const d=Math.abs(el.offsetTop-y);
+        if(d<dist){ dist=d; best=el; }
+      }
+      if(best && dist>TOL && dist<window.innerHeight*0.6) animateScrollTo(best.offsetTop);
+    }, DELAY);
+  }
+  window.addEventListener('scroll', schedule, {passive:true});
+  return { animateScrollTo, isAnimating:()=>animating };
+}
+
+function setupPanels(){
+  const back=document.getElementById('backdrop');
+  const panels=[...document.querySelectorAll('.deeper')];
+  function sync(p){
+    if(window.innerWidth<=720){
+      p.style.left=''; p.style.width='';
+      p.style.removeProperty('--panel-x'); p.style.removeProperty('--panel-pad');
+      return;
+    }
+    const host=document.querySelector('[data-open="'+p.id+'"]');
+    const col=host && host.closest('.col');
+    if(!col) return;
+    const r=col.getBoundingClientRect();
+    p.style.left=r.left+'px';
+    p.style.width=(r.width+44)+'px';
+    p.style.setProperty('--panel-x', r.left+'px');
+    p.style.setProperty('--panel-pad','44px');
+  }
+  function close(){
+    panels.forEach(p=>{ p.dataset.open='false'; p.setAttribute('aria-hidden','true'); });
+    back.dataset.open='false';
+  }
+  document.querySelectorAll('[data-open]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const p=document.getElementById(b.dataset.open); if(!p) return;
+      close(); sync(p);
+      p.dataset.open='true'; p.setAttribute('aria-hidden','false');
+      back.dataset.open='true';
+      const c=p.querySelector('.deeper__close'); if(c) c.focus();
+    });
+  });
+  panels.forEach(p=>p.querySelector('.deeper__close')
+    .addEventListener('click',close));
+  back.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); });
+  window.addEventListener('resize',()=>panels.forEach(p=>{
+    if(p.dataset.open==='true') sync(p); }));
+}
+
+function setupNav(sections, api){
+  const nav=document.getElementById('nav');
+  const items=sections.filter(s=>s.dataset.nav || s.id==='s0');
+  items.forEach(s=>{
+    const b=document.createElement('button');
+    b.dataset.target=s.id;
+    const sp=document.createElement('span');
+    sp.textContent=s.dataset.nav || 'Начало';
+    b.appendChild(sp);
+    b.addEventListener('click',()=>api.animateScrollTo(s.offsetTop));
+    nav.appendChild(b);
+  });
+  function mark(){
+    const y=window.pageYOffset+window.innerHeight*0.4;
+    let cur=items[0];
+    for(const s of items) if(s.offsetTop<=y) cur=s;
+    nav.querySelectorAll('button').forEach(b=>
+      b.classList.toggle('on', b.dataset.target===cur.id));
+  }
+  window.addEventListener('scroll',mark,{passive:true});
+  mark();
+}
+
+function boot(){
+  const sections=[...document.querySelectorAll('[data-scene]')];
+  const api=setupSnapScroll(sections.map(s=>s.id));
+  setupPanels();
+  setupNav(sections, api);
+  document.querySelectorAll('[data-goto]').forEach(b=>
+    b.addEventListener('click',()=>{
+      const t=document.getElementById(b.dataset.goto);
+      if(t) api.animateScrollTo(t.offsetTop);
+    }));
+
+  /* Анимация стартует по въезду и ГЛОХНЕТ при уходе: иначе восемь холстов
+     молотят одновременно. Это же и требование §2.5. */
+  const live=new Map();
+  const io=new IntersectionObserver(es=>{
+    for(const e of es){
+      const sec=e.target, inst=live.get(sec);
+      if(!inst) continue;
+      if(e.isIntersecting){ sec.classList.add('is-in'); inst.enter(); }
+      else { inst.leave(); }
+    }
+  }, {threshold:0.15});
+
+  for(const sec of sections){
+    const f=FACTORY[sec.dataset.scene];
+    if(!f) continue;
+    let inst;
+    try { inst=f(sec); }
+    catch(err){ console.error('сцена '+sec.dataset.scene+': '+err.message); continue; }
+    live.set(sec, inst);
+    io.observe(sec);
+  }
+  document.documentElement.dataset.ready='1';
+}
+
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+</script>
+</body>
+</html>
