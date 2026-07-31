@@ -19,12 +19,18 @@ registr: читаемый
 
 **Категория** $\mathcal C$:
 
-- объекты: класс $\mathrm{Ob}\,\mathcal C$
-- морфизмы: на упорядоченную пару $A,B$ множество $\mathcal C(A,B)$
-- композиция: $\circ\colon\mathcal C(A,B)\times\mathcal C(B,C)\to\mathcal C(A,C)$, ассоциативная
+- объекты: класс $\mathrm{Ob}\,\mathcal C$;
+- морфизмы: упорядоченной паре $A,B$ отвечает множество $\mathcal C(A,B)$;
+- композиция: $\circ\colon\mathcal C(B,C)\times\mathcal C(A,B)\to\mathcal C(A,C)$;
 - единица: $1_A\in\mathcal C(A,A)$
 
-**Функтор** $F\colon\mathcal C\to\mathcal D$: $\mathrm{Ob}\,\mathcal C\to\mathrm{Ob}\,\mathcal D$ и $\mathcal C(A,B)\to\mathcal D(FA,FB)$; $F(g\circ f)=Fg\circ Ff$, $F1_A=1_{FA}$
+Аксиомы: $h\circ(g\circ f)=(h\circ g)\circ f$ и $1_B\circ f=f=f\circ 1_A$ при $f\in\mathcal C(A,B)$
+
+**Функтор** $F\colon\mathcal C\to\mathcal D$ — отображения $\mathrm{Ob}\,\mathcal C\to\mathrm{Ob}\,\mathcal D$ и $\mathcal C(A,B)\to\mathcal D(FA,FB)$ с $F(g\circ f)=Fg\circ Ff$, $F1_A=1_{FA}$
+
+{@2} Конечные множества и биекции образуют категорию, а комбинаторный вид — функтор из неё в категорию множеств
+
+{@2} Отмеченные и покрашенные множества — тоже категории: смена арены есть смена категории-источника
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Треугольник композиции: стрелка из A в B, стрелка из B в C и нижняя стрелка из A в C, помеченная композицией"><text class="s-txt" x="40" y="170" text-anchor="middle" font-size="17">A</text><text class="s-txt" x="125" y="46" text-anchor="middle" font-size="17">B</text><text class="s-txt" x="210" y="170" text-anchor="middle" font-size="17">C</text><line class="s-thin" x1="50" y1="152" x2="112" y2="60"></line><path class="s-ar-m" d="M105,58 l10,-4 -2,10 z"></path><line class="s-thin" x1="138" y1="60" x2="200" y2="152"></line><path class="s-ar-m" d="M192,150 l10,4 -2,-10 z"></path><line class="s-thin" x1="58" y1="176" x2="190" y2="176"></line><path class="s-ar-m" d="M181,172 l9,4 -9,4 z"></path><text class="s-txt-m" x="70" y="106" text-anchor="end" font-size="15">f</text><text class="s-txt-m" x="182" y="106" font-size="15">g</text><text class="s-txt-m" x="125" y="196" text-anchor="middle" font-size="15">g∘f</text></svg><figcaption>Композиция — единственная операция категории: у пары стрелок с общим средним объектом есть третья стрелка, замыкающая треугольник. Ассоциативность означает, что при четырёх объектах порядок замыканий не важен.</figcaption></figure>
 
@@ -60,7 +66,7 @@ $\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\math
 
 Комбинаторика: **свободная категория графа** — объекты вершины, морфизмы пути
 
-Геометрия: $\mathbf{Cob}$ объекты — наборы окружностей, морфизмы — поверхности · косы и танглы: объекты — точки, морфизмы — сплетения
+Геометрия: $\mathbf{Cob}$ объекты — наборы окружностей, морфизмы — поверхности · косы и танглы: объекты — наборы точек, морфизмы — сплетения
 
 Шаг, а не соответствие: **конечные автоматы** — морфизм слово · **алгоритмы и правила вывода** — морфизм вычисление или правило
 
@@ -68,32 +74,10 @@ $\mathbf{Set}$ · $\mathbf{Grp}$ · $\mathbf{Vect}$ · $\mathbf{Ring}$ · $\math
 
 > поле:mn **Раскладка склеенного слайда (история 29.07).** Список вскрывается двумя порциями, полоса справа пустая — иллюстраций у слайда нет. **Слито из двух разделов:** «Функторы» и «Зоопарк функторов» были двумя слайдами про одно и то же; экзотика зоопарка снята по критерию понятности, уцелевшая строка приехала сюда последней, реплика-мостик — за ней. *Правка владельца 29.07: обе картинки сняты, заголовок переименован — он обязан прямо говорить, что это список функторов.*
 
-Забывание: $\mathbf{Ab}\to\mathbf{Grp}$ свойство · $\mathbf{Grp}\to\mathbf{Set}$ структуру · $\mathbf{Set}^2\to\mathbf{Set}$ материал
-
-**Цепное правило** — матрица Якоби: без языка категорий у самого школьного утверждения нет имени
-
-{@2} Фундаментальная группа $\pi_1$ · называния: гомоморфизм, монотонное отображение, $G$-множество, представление
-
-{@2} Функтор $\mathbf{Cob}_2\to\mathbf{Vect}$, согласованный с $\sqcup$, называется **топологической теорией поля**
-
-{@2} Функтор из свободной категории графа в $\mathbf{Vect}$ называется **представлением колчана**
-
-{@2} $\mathbf{Mat}\simeq\mathbf{Vect}^{\mathrm{fd}}$ · $\mathbf{FinBool}\simeq\mathbf{FinSet}^{\mathrm{op}}$
-
 > поле:mn **Реплика (не слайд).** Лектор произносит мостик в следующую вкладку: мы назвали десяток функторов, а вот эта конструкция функтором не оказывается, и эта тоже. А как такое вообще доказывают?
 
 > поле:mn 🕳 **БЕЗ ДОМА — ЗАКАЗ.** Пять блоков ниже список СНЯЛ из финала — конструкции над категориями («если мы впервые про это говорим, не уверен, что нужно») и **общее** определение естественного преобразования («перегружена немножко ситуация»). Дома в списке у них нет ни одного, а удалять блоки этому заходу запрещено, поэтому они лежат в хвосте справочника — единственного раздела, который «не произносится вслух». **Решение владельца:** снять их совсем или оставить в справочнике
 
 > поле:mn **Раскладка склеенного слайда (история 29.07).** Один экран: четыре конструкции, полоса справа пустая — иллюстраций у слайда нет. *Правка владельца 29.07: обе картинки справа сняты («просто к чертям, это просто кошмар»), текстовая область развёрнута на всю оставшуюся ширину.*
-
-**Противоположная** $\mathcal C^{\mathrm{op}}$: те же объекты, $\mathcal C^{\mathrm{op}}(A,B)=\mathcal C(B,A)$, композиция $g\circ_{\mathrm{op}}f=f\circ g$
-
-**Подкатегория** $\mathcal D\subseteq\mathcal C$: класс объектов и $\mathcal D(A,B)\subseteq\mathcal C(A,B)$, замкнутое по композиции и с тождествами. **Полна**, если $\mathcal D(A,B)=\mathcal C(A,B)$ всюду
-
-**Произведение** $\mathcal C\times\mathcal D$: покомпонентно, $(\mathcal C\times\mathcal D)\bigl((C,D),(C',D')\bigr)=\mathcal C(C,C')\times\mathcal D(D,D')$
-
-**Естественное преобразование** $\alpha\colon F\Rightarrow G$: $\alpha_A\in\mathcal D(FA,GA)$ с $Gf\circ\alpha_A=\alpha_B\circ Ff$ при всяком $f\in\mathcal C(A,B)$
-
-Пример: матрица перехода между двумя базисами — компонента естественного изоморфизма
 
 <figure class="mn"><svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности: компонента преобразования, применённая до и после действия морфизма, даёт один результат"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">FA</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">FB</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">GA</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">GB</text><line class="s-thin" x1="86" y1="29" x2="158" y2="29"></line><path class="s-ar-m" d="M149,25 l9,4 -9,4 z"></path><line class="s-thin" x1="86" y1="173" x2="158" y2="173"></line><path class="s-ar-m" d="M149,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="122" y="18" text-anchor="middle" font-size="15">Ff</text><text class="s-txt-m" x="122" y="196" text-anchor="middle" font-size="15">Gf</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">α<tspan dy="3" font-size="11">A</tspan></text><text class="s-txt-m" x="206" y="105" font-size="15">α<tspan dy="3" font-size="11">B</tspan></text></svg><figcaption>Перевести и потом подействовать — то же, что подействовать и потом перевести. Этот квадрат уже стоял в требовании красоты; там оба функтора были видами, здесь они произвольны.</figcaption></figure>
