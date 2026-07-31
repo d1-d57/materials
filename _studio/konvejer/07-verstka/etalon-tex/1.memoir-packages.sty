@@ -1,0 +1,147 @@
+% 1. Общие настройки
+% 1.1 Кодировка и локализация
+\usepackage[russian,english]{babel}
+
+% 1.2 Шрифты
+\usepackage{fontspec}       % Работа с шрифтами 
+\usepackage{euscript}       % Шрифты для каллиграфии
+\usepackage[noend]{algpseudocode} % Псевдокод для алгоритмов
+\usepackage{selnolig} % Отключение ненужных лигатур для улучшения читаемости текста
+\usepackage{csquotes}       % Корректное форматирование кавычек
+
+% 1.3 Цвета и стили
+\usepackage[dvipsnames,table]{xcolor} % Цвета и их настройки
+\usepackage[most]{tcolorbox} % Управление цветом, рамками и блоками
+
+% 1.4 Работа с текстом 
+\usepackage[protrusion=true, expansion=true, tracking=true, stretch=50, shrink=30, final]{microtype}
+\usepackage{hyphenat}       % Пакет для переносов
+\usepackage{changepage}     % Изменение ширины текста и отступов
+\usepackage[absolute,overlay]{textpos}        % Для позиционирования текста
+\usepackage{zref-user, zref-abspage}   % Для работы с абсолютными координатами на странице
+\usepackage{geometry}       % Настройки геометрии страницы
+\usepackage{layouts}        % Для работы с макетом страницы
+\usepackage{parskip}        % Автоматическое управление отступами между абзацами и списками
+
+
+% 2. Структура документа
+% 2.1 Заголовки, колонтитулы и оглавления
+\usepackage{titlesec}   % Настройка стилей заголовков   
+\usepackage{etoc}       % Гибкие настройки оглавления
+\usepackage{fancyhdr}   % Настройка колонтитулов
+\usepackage{totcount}   % Управление счетчиками
+
+% 2.2 Cсылки и навигация 
+\usepackage[hidelinks]{hyperref}  % Поддержка гиперссылок
+\usepackage{hyperxmp}
+
+% 2.3 Дополнитеольные элементы 
+\usepackage{caption} % Настройка подписей к рисункам и таблицам
+\usepackage{marginnote} % Работа с примечаниями на полях
+\usepackage{enumitem} % Настройка списков
+\usepackage[backend=biber,style=alphabetic,citestyle=authoryear]{biblatex} % Библиография и ссылки
+
+
+% 3. Оформление математических элементов
+% 3.1 Основные математические пакеты
+\usepackage{amsmath}        % Улучшенная работа с математическими формулами
+\usepackage{mathtools}      % Дополнительные инструменты для математики
+\usepackage{unicode-math}   % Поддержка математических шрифтов через Unicode
+\usepackage{amsthm}         % Оформление теорем и доказательств
+\usepackage{siunitx}  % Оформление чисел и единиц измерения
+
+% 3.2 Диаграммы и графы
+\usepackage{amscd}          % Коммутативные диаграммы
+\usepackage{tikz-cd}        % Диаграммы категорий
+
+
+% 4. Графика и таблицы
+% 4.1 Работа с изображениями и фигурами
+\usepackage{graphicx}       % Работа с изображениями
+\usepackage[mode=buildnew]{standalone}     % Работа с отдельными файлами графики (TikZ, PDF)
+\usepackage{wrapfig}        % Обтекание текста вокруг фигур
+\usepackage{adjustbox}      % Дополнительные инструменты для графики (настройка позиции объектов)
+\usepackage{float}          % Улучшенный контроль над плавающими объектами
+\usepackage{epsf} % Поддержка EPS файлов
+\usepackage{eso-pic} % Поддержка фоновых изображений
+
+% 4.2 Таблицы и их оформление
+\usepackage{tabularx}       % Таблицы с автоматическим управлением шириной колонок
+\usepackage{array}          % Улучшенная работа с таблицами
+\usepackage{longtable}      % Поддержка длинных таблиц
+\usepackage{makecell}       % Многострочные ячейки в таблицах
+\usepackage{colortbl}       % Цветные таблицы
+\usepackage{booktabs}  % Улучшенное форматирование таблиц (без вертикальных линий)
+\usepackage{multirow}       % Для объединения ячеек в несколько строк
+\usepackage{multicol}       % Для объединения ячеек в несколько столбцов
+\usepackage{nicematrix} % Улучшенное форматирование и оформление матриц
+
+% 4.3 Графики и диаграммы
+\usepackage{pgfplots}       % Построение графиков
+\usepackage{pgfplotstable}  % Построение таблиц
+\pgfplotsset{compat=1.18}   % Совместимость для pgfplots
+
+
+% 5. TikZ и связанные библиотеки
+% 5.1 Основные библиотеки TikZ
+\usepackage{tikz}           % Основная библиотека TikZ для построения графики
+
+% 5.2 Расширения TikZ
+\usetikzlibrary{calc, intersections} % Дополнительные библиотеки для вычислений и работы с точками пересечения
+\usepackage{tikzpagenodes}   % Библиотека для работы с определением узлов страницы
+\usetikzlibrary{patterns}    % Для использования узоров и текстур в объектах TikZ
+\usetikzlibrary{shadows}     % Добавление теней к объектам для придания объёмности
+\usetikzlibrary{shadings}    % Использование градиентов и плавных переходов цветов
+\usetikzlibrary{fadings}     % Плавные исчезновения и эффекты затухания для объектов
+\usetikzlibrary{backgrounds} % Работа с фоновыми слоями
+\usepackage{tikzscale}       % Масштабирование графиков TikZ при изменении размера фигуры
+\usetikzlibrary{tikzmark}    % Установка меток, доступных вне окружения TikZ
+
+% 5.3 Построение сложных графиков и таблиц
+\usetikzlibrary{matrix, positioning} % Работа с матрицами, таблицами и позиционированием объектов
+
+
+% 6. Программирование и макросы
+% 6.1 Создание новых окружений и макросов
+\usepackage{environ}        % Поддержка создания новых окружений
+\usepackage{xparse}         % Для создания сложных команд
+\usepackage{etoolbox}       % Расширенные инструменты для программирования в LaTeX
+\usepackage{printlen}       % Вывод значений длины в различных единицах измерения
+\usepackage{lipsum}         % Для генерации текста-заполнителя
+\usepackage{xstring}        % Работа со строками
+
+% 6.2 Математические вычисления
+\usepackage{calc}           % Для работы с вычислениями внутри команд
+\usepackage{fp}             % Пакет для работы с числами с плавающей точкой
+\usepackage{xfp}            % Дополнительные инструменты для работы с числами
+
+% 6.3 Управление процессом компиляции
+
+
+\usepackage{expl3}          % Низкоуровневое программирование в LaTeX
+\usepackage{luacode}        % Включение Lua-кода в LaTeX (используется с LuaTeX)
+\usepackage{silence}        % Отключение предупреждений и ошибок LaTeX
+
+% 6.4 Алгоритмы 
+\usepackage{algorithmicx} % Дополнения для алгоритмов
+\usepackage{algorithm} % Пакет для алгоритмов
+\usepackage{pgffor} % Для использования \foreach
+\usepackage{ifthen}         % Для использования условных конструкций в LaTeX
+
+
+% 7 Комментарии и заметки
+\usepackage{todonotes}      % Добавление заметок и задач в документ
+\usepackage{comment}        % Отключение кусоков кода
+
+
+\begin{comment}
+\usepackage{cmap} % Поддержка поиска кириллических символов в PDF
+\usepackage{sidenotes}      % Для сносков на стороне
+\usepackage{background} % Работа с фоновыми элементами
+\usepackage{cleveref}  % Автоматическое создание умных ссылок
+\usepackage[toc,acronym]{glossaries} % Глоссарии, списки сокращений и символов
+\usepackage{physics} % Упрощенный набор физических формул и символов
+\usepackage{tocloft}    % Настройка оглавления
+\usepackage{titletoc}   % Дополнительные функции для оглавления
+\usepackage{minitoc} 
+\end{comment}

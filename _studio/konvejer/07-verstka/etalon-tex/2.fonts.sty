@@ -1,0 +1,82 @@
+% Управление межсловным растяжением
+\emergencystretch=1em
+
+% Макрос для подключения шрифта
+\NewDocumentCommand{\setcustomfont}{m m O{} O{1} O{0} O{0} O{\relax} O{\relax}}{%
+  \newfontfamily#1{#2}[
+    #3    
+    Scale=#4,
+    Ligatures=TeX,
+    Kerning=On,
+    BoldFont={#7}, % Опционально указывается жирный шрифт
+    ItalicFont={#8}, % Опционально указывается жирный шрифт    
+    LetterSpace=#5, % Увеличенное расстояние между буквами, если указано
+    WordSpace=#6, % Увеличенное расстояние между словами, если указано
+  ]
+}
+
+\newcommand{\IBMPlexSansPath}{Path=./style/fonts/IBMPlexSans/,}
+
+%========================================================
+% 1. Основный шрифты
+%========================================================
+% Основной текст (с засечками)
+\setmainfont{Spectral}[
+  Scale=1, % Масштабируем под общий стиль
+  Ligatures=TeX, % Поддержка стандартных лигатур
+  Kerning=On,
+  BoldFont={Spectral Bold},
+  ItalicFont={Spectral Italic},
+  BoldItalicFont={Spectral Bold Italic},
+]
+
+% Математические формулы
+\setmathfont{STIXTwoMath}
+
+% Моноширинный шрифт (для псевдокода и технических вставок)
+\setmonofont{JetBrainsMono}[
+  Scale=0.9, % Немного меньше для компактности
+  Ligatures=TeX, % Поддержка лигатур, в том числе для кода
+]
+
+%========================================================
+% 2. Структура 
+%========================================================
+% Титульный лист
+\setcustomfont{\CoverFont}{IBMPlexSans-SemiBold}[\IBMPlexSansPath][3.2][][][][]
+
+% Заголовки
+\setcustomfont{\HeadingFont}{IBMPlexSans-Medium}[\IBMPlexSansPath][1.8][1.2][][][]
+
+% Подзаголовки
+\setcustomfont{\SubheadingFont}{IBMPlexSans-Regular}[\IBMPlexSansPath][1.2][0.8][][][]
+
+% Оглавление 
+\setcustomfont{\TOCFont}{Spectral}[][][1.5][1.2][][]
+
+%========================================================
+% 3. Оформление
+%========================================================
+% Таблицы и колонтитулы 
+\setcustomfont{\AuxiliaryFont}{IBMPlexSans-Regular}[\IBMPlexSansPath][0.9][1.0][1.0][IBMPlexSans-SemiBold][]
+
+% Подписи
+\setcustomfont{\CaptionFont}{IBMPlexSans-LightItalic}[\IBMPlexSansPath][0.9][0.5][1.0][][]
+
+
+\begin{comment}
+% Определение команды для заголовков с нужными параметрами
+\newfontfamily\VFont{WorkSans}[
+  Path=./style/fonts/WorkSans/,
+  Extension=.ttf,               % Расширение файла шрифта
+  Ligatures=TeX, 
+  UprightFont=WorkSans,
+  RawFeature={+axis={wght=300}},
+  LetterSpace=2.0,
+  Scale=1.8
+]
+
+% Заголовки глав 
+\setcustomfont{\ChapterHeading}{IBMPlexSans-Bold}[\IBMPlexSansPath][2.0][1.2][][][]
+
+\end{comment}

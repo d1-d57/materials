@@ -1,0 +1,43 @@
+%========================================================
+% 1. Палитра цветов
+%========================================================
+% Основной теплый цвет
+\definecolor{PrimaryBase}{RGB}{250, 245, 235} % Мягкий бежевый hsl(40, 60%, 95.1%)
+\definecolor{PrimaryMid}{RGB}{236, 179, 121} % hsl(30.26, 75.16%, 70%)
+\definecolor{PrimaryDark}{RGB}{179, 102, 25} % hsl(30, 75.49%, 40%)
+
+% Дополнительный цвет
+\definecolor{ComplementBase}{RGB}{235, 240, 250} % Воздушный голубой hsl(220, 60%, 95.1%)
+\definecolor{ComplementMid}{RGB}{133, 163, 224} % hsl(220.22, 59.48%, 70%)
+\definecolor{ComplementDark}{RGB}{42, 82, 162} % hsl(220, 58.82%, 40%)
+
+% Контрастный цвет
+\definecolor{AccentBase}{RGB}{243, 236, 249} % Нежный сиреневый hsl(272.31, 52%, 95.1%)
+\definecolor{AccentMid}{RGB}{182, 139, 218} % hsl(272.66, 51.63%, 70%)
+\definecolor{AccentDark}{RGB}{107, 49, 155} % hsl(272.83, 51.96%, 40%)
+
+% Серые цвета
+\definecolor{WhiteGray}{RGB}{249, 249, 249} 
+\colorlet{CaptionGray}{gray!57!black}
+\colorlet{OverlayText}{gray!20!black}
+\colorlet{Border}{CaptionGray} 
+
+%========================================================
+% 2. Стили
+%========================================================
+\pgfkeys{
+  /style/.is family,
+  /style,
+  Primary/BaseColor/.initial = {PrimaryBase},
+  Primary/MidColor/.initial = {PrimaryMid},
+  Primary/DarkColor/.initial = {PrimaryDark},
+  Primary/Texture/.initial = style/textures/Primary.jpg,
+  Complement/BaseColor/.initial = {ComplementBase},
+  Complement/MidColor/.initial = {ComplementMid},
+  Complement/DarkColor/.initial = {ComplementDark},
+  Complement/Texture/.initial = style/textures/Complement.jpg,
+  Accent/BaseColor/.initial = {AccentBase},
+  Accent/MidColor/.initial = {AccentMid},
+  Accent/DarkColor/.initial = {AccentDark},
+  Accent/Texture/.initial = style/textures/Accent.jpg,
+}

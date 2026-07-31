@@ -1,0 +1,192 @@
+\usepackage{style/memoir}
+
+\Style{Primary}
+
+% Настройка формата страницы
+\setstocksize{90mm}{160mm} % Высота и ширина страницы
+\settrimmedsize{\stockheight}{\stockwidth}{*} % Обрезанный размер страницы
+\settypeblocksize{50mm}{140mm}{*} % Размер текстового блока
+\setlrmarginsandblock{10mm}{10mm}{*} % Поля слева и справа
+\setulmarginsandblock{10mm}{10mm}{*} % Поля сверху и снизу
+\setlength{\footskip}{10pt} % Уменьшаем размер нижнего колонтитула
+\checkandfixthelayout % Проверяем макет
+
+
+\fancypagestyle{slidefooters}{
+    \fancyhf{} % Очищаем все колонтитулы
+    \renewcommand{\headrulewidth}{0pt} % Убираем линию в заголовке
+    \renewcommand{\footrulewidth}{0pt} % Убираем линию внизу страницы
+
+    % Номер страницы в нижнем левом углу
+    \fancyfoot[L]{%
+        \tikz[remember picture,overlay]{
+            % Прямоугольник с закругленными углами
+            \fill[NumberBackground] 
+                ($ (current page.south west) + (0cm,0.25cm) $) -- 
+                ++(0.65cm,0cm) arc[start angle=-90, end angle=0, radius=0.1cm] -- ++(0cm,0.3cm) arc[start angle=0, end angle=90, radius=0.1cm] -- ++(-0.65cm,0cm) -- cycle;
+            
+            % Номер страницы
+            \node[anchor=west, 
+                  text=OverlayText, 
+                  font=\small\AuxiliaryFont, 
+                  align=center, 
+                  inner sep=0pt] 
+            at ($ (current page.south west) + (0.2cm,0.5cm) $) {\thepage};
+        }
+    }
+
+    % Название раздела в центре нижней части
+    \fancyfoot[C]{%
+        \tikz[remember picture,overlay]{
+            % Текст заголовка
+            \node[anchor=west, 
+                  font=\small\AuxiliaryFont, 
+                  text=CaptionGray, 
+                  align=center] 
+            at ($ (current page.south west) + (2cm,0.5cm) $) {\hyperlink{section.\thesection}{\leftmark}};
+        }
+    }
+}
+
+
+
+\NewDocumentCommand{\slide}{+m}{%
+  \newpage
+  \pagestyle{empty} % Убираем оформление страницы (без колонтитулов)
+  \newgeometry{
+    top=5mm,            % Отступ сверху
+    bottom=2mm,         % Отступ снизу
+    left=10mm,           % Поля слева
+    right=10mm,          % Поля справа
+    includeheadfoot      % Включение колонтитулов
+  }
+  \normalfont % Устанавливаем базовый шрифт
+  \vfill
+  #1 % Содержимое слайда
+  \vfill
+  \restoregeometry % Восстанавливаем геометрию после блока
+  \pagestyle{slidefooters} % Восстанавливаем стиль колонтитулов
+}
+
+
+\NewDocumentCommand{\TitleSlide}{m}{%
+  % Основной слайд
+  \slide{%
+    \begin{tikzpicture}[remember picture, overlay]
+      % Полный фон слайда
+      \path[fill=WhiteGray] (current page.north west) rectangle (current page.south east);
+
+      % Фон заголовка с текстурой
+      \begin{scope}
+        % Прямоугольник для фона заголовка
+        \path[fill=BaseColor, opacity=0.8, rounded corners=5mm]
+          ([yshift=-15mm]current page.north west) rectangle ([yshift=-45mm]current page.north east);
+
+        % Текстура поверх фона
+        \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm, opacity=0.2]
+          at ([yshift=-15mm]current page.north west) {
+            \includegraphicsrounded[width=\paperwidth, height=30mm]{\NoteTexture}
+          };
+      \end{scope}
+
+      % Заголовок презентации
+      \node[
+        anchor=center, 
+        text=OverlayText, 
+        font=\HeadingFont\LARGE, 
+        align=center, 
+        text width=\paperwidth, 
+        minimum height=30mm, 
+        text centered
+      ] at ([yshift=-30mm]current page.north) {#1};
+    \end{tikzpicture}
+  }
+}
+
+\NewDocumentCommand{\SectionSlide}{m}{%
+  % Добавление в оглавление и установка меток
+  \addcontentsline{toc}{section}{#1}
+  \hypertarget{section.\thesection}{} % Метка для раздела
+  \markboth{#1}{} % Обновляем маркер для колонтитулов
+  
+  % Основной слайд
+  \slide{%
+    \begin{tikzpicture}[remember picture, overlay]
+      % Фон заголовка с текстурой
+      \begin{scope}
+        % Прямоугольник для фона заголовка
+        \path[fill=BaseColor, opacity=0.8, rounded corners=5mm]
+          ([yshift=-15mm]current page.north west) rectangle ([yshift=-45mm]current page.north east);
+
+        % Текстура поверх фона
+        \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm, opacity=0.2]
+          at ([yshift=-15mm]current page.north west) {
+            \includegraphicsrounded[width=\paperwidth, height=30mm]{\NoteTexture}
+          };
+      \end{scope}
+
+      % Заголовок раздела
+      \node[
+        anchor=center, 
+        text=OverlayText, 
+        font=\HeadingFont\Large, 
+        align=center, 
+        text width=\paperwidth, 
+        minimum height=30mm, 
+        text centered
+      ] at ([yshift=-30mm]current page.north) {#1};
+    \end{tikzpicture}
+  }
+}
+
+
+\NewDocumentEnvironment{ContentSlide}{m +b}
+{%
+  % Начало слайда
+  \slide{%
+    \pagestyle{slidefooters}
+
+    % Полоска с заголовком и текстурой
+    \begin{tikzpicture}[remember picture, overlay]
+      % Фон полоски
+      \path[fill=BaseColor, opacity=0.8, rounded corners=2mm]
+        (current page.north west) rectangle ([yshift=-14mm]current page.north east);
+
+      % Текстура полоски
+      \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm, opacity=0.2]
+        at (current page.north west) {
+          \includegraphics[width=\paperwidth, height=14mm]{\NoteTexture}
+        };
+
+    % Заголовок
+    \node[anchor=west, 
+      font=\SubheadingFont\large, 
+      text=DarkColor, 
+      align=left
+    ] at ([yshift=-7mm, xshift=10mm]current page.north west) {#1};
+
+    \end{tikzpicture}
+
+    % Содержимое слайда
+    \noindent #2 % Вставка блока с содержимым
+  }
+}
+{}
+
+
+
+\NewDocumentCommand{\ImageSlide}{m m o}{%
+  % Начало слайда
+  \slide{%
+    % Центрируем изображение
+    \begin{center}
+      \includegraphicsrounded[width=#2\textwidth]{#1} % Картинка с шириной, заданной вторым аргументом
+
+      % Подпись под изображением (если указана)
+      \IfValueT{#3}{%
+        \vspace{5mm} % Отступ между изображением и подписью
+        {\normalfont\footnotesize\itshape #3} % Подпись курсивом
+      }
+    \end{center}
+  }
+}

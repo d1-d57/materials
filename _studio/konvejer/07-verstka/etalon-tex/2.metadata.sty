@@ -1,0 +1,65 @@
+% 1. Данные
+%========================================================
+
+\hypersetup{
+    pdftitle={Путеводитель Тьюринга. Основания математики},
+    pdfauthor={Иван Яковлев},
+    pdfsubject={Энциклопедия абитуриентской математики от проекта Кроссворд Тьюринга},
+    pdfkeywords={Логика, множества, отображения, натуральные числа, комбинаторика},
+    pdfproducer={Turing},
+    pdfcreator={Turing},
+    pdfpagelayout={TwoColumnRight}
+}    
+
+% 2. Логотип, заголовок, микротекст
+%========================================================
+\providecommand{\turinglogo}{\href{http://turing.tilda.ws}{\includegraphics[width=0.5cm]{marks/logo_turing.jpeg}}} 
+
+\providecommand{\guideTitle}{Путеводитель Тьюринга}
+
+\providecommand{\microinheader}{\scalebox{0.05}{\text{\tiny{© 2024, Тьюринг}}}}
+
+\newcommand{\chapterlogo}{
+  \AddToShipoutPictureBG*{
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north east, yshift=-4.3cm, xshift=-1.3cm] at (current page.north east)
+        {\texorpdfstring{\href{http://turing.tilda.ws}{\includegraphics[width=2cm]{marks/logo_turing.jpg}}}{}};
+    \end{tikzpicture}
+  }
+}
+
+
+% 3. Водяной знак
+%========================================================
+\begin{comment}
+\backgroundsetup{
+  scale=1,
+  color=black,
+  opacity=0.02,
+  angle=45,
+  position=current page.center,
+  vshift=0cm,
+  hshift=0cm,
+  contents={\textbf{Путеводитель Тьюринга}}
+}    
+
+\providecommand{\randomwatermarkandmicrotext}{
+  \AddToShipoutPictureBG*{
+    \begin{tikzpicture}[remember picture,overlay]
+      \foreach \i in {1,...,25} {
+        % Генерация сложных координат для размещения водяных знаков и микротекста
+        \pgfmathsetmacro{\xpos}{(mod(\value{page} + \i^2, 10) - 5) * 0.6 + 2*sin(30*\i)}
+        \pgfmathsetmacro{\ypos}{(mod(\value{page} + \i^3, 10) - 5) * 0.6 + 2*cos(45*\i)}
+        
+        % Добавление водяного знака
+        \node[opacity=0.005, scale=3, color=gray] at (current page.center) [xshift=\xpos cm, yshift=\ypos cm] {\includegraphics[width=1cm]{marks/logo_turing.jpg}};
+        
+        % Добавление микротекста
+        \node[opacity=0.3, scale=1, color=black] at (current page.center) [xshift=\xpos cm, yshift=\ypos cm]
+        {\scalebox{0.06}{\text{\tiny © 2024, Иван Яковлев}}};
+      }
+    \end{tikzpicture}
+  }
+}
+
+\end{comment}

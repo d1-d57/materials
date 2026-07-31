@@ -1,0 +1,519 @@
+%--------------------------------------------------------
+% 1. Общие настройки
+%--------------------------------------------------------
+% Все вычисления в сантиметрах 
+\uselengthunit{cm}
+
+% Убираем отступ первой строки
+\setlength{\parindent}{0pt} 
+
+% Настройки отступов 
+\newdimen\standardparskip
+\setlength{\standardparskip}{0.25cm}        % Стандартный отступ 
+\newcommand{\medparskip}{\vspace{0.5cm}}    % Отступ побольше
+\newcommand{\bigparskip}{\vspace{1cm}}      % Совсем большой отступ
+\setlength{\parskip}{\standardparskip}      % Отступ между абзацами, который вызывавется par
+
+
+% Отключаем \scalebox в гиперссылках
+\pdfstringdefDisableCommands{%
+  \def\scalebox#1#2{}%
+}
+
+% Вертикальная линия по реальному краю страницы 
+\AddToHook{shipout/foreground}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \draw[dashed, thin] (current page.north east) -- (current page.south east);
+    \draw[dashed, thin] (current page.north west) -- (current page.south west);    
+  \end{tikzpicture}
+}
+
+\newcommand{\drawgrid}{
+  \begin{tikzpicture}[overlay, remember picture]
+    % Линии через каждые 0.25 см - очень тонкие серые
+    \draw[step=0.25cm, gray!50!white, very thin] (current page.south west) grid (current page.north east);
+    
+    % Линии через каждый 1 см - более толстые красные
+    \draw[step=1cm, red!60!white, very thin] (current page.south west) grid (current page.north east);
+    
+    % Линии через каждые 4 см - синие
+    \draw[step=4cm, blue!30!white, thick] (current page.south west) grid (current page.north east);
+    
+    % Отметки для линий (красные и синие на одном уровне)
+    \foreach \x in {0, 1,2,3,5,6,7,9,10,11,13,14,15,17,18,19} {
+      \node[font=\small] at (\x cm, 1cm) {\textcolor{red!60!black}{\x}};
+    }
+    
+    % Синие отметки каждые 4 см (после 3 красных)
+    \foreach \x in {4,8,12,16,20} {
+      \node[font=\small\bfseries] at (\x cm, 1cm) {\textcolor{blue!70!black}{\x}};
+    }
+  \end{tikzpicture}
+}
+
+%--------------------------------------------------------
+% 2. Специальные страницы
+%--------------------------------------------------------
+% Создание страницы с симметричной геометрией
+\NewDocumentEnvironment{specialpage}{O{\relax}}{%
+  \newpage
+  \pagestyle{empty} % Убираем оформление
+  \newgeometry{
+    top=20mm,            % Стандартный верхний отступ
+    bottom=20mm,         % Стандартный нижний отступ
+    inner=25mm,          % Стандартное внутреннее поле
+    outer=25mm,          % Стандартное внешнее поле
+    marginparwidth=0mm,  % Отключение поля для заметок
+    marginparsep=0mm,    % Отступ между текстом и заметками не нужен
+    bindingoffset=0mm,   % Смещение для переплета не нужно
+    includeheadfoot,     % Включение колонтитулов сверху и снизу
+    headheight=14pt,     % Высота верхнего колонтитула
+    headsep=10mm,        % Отступ между колонтитулом и текстом
+    footskip=12mm        % Отступ между текстом и нижним колонтитулом
+  }
+  \raggedbottom % Отключаем выравнивание текста по нижнему краю страницы
+  \Needspace{5\baselineskip} % Резервируем пространство перед концом страницы
+  
+% Базовый фон страницы
+  \begin{tikzpicture}[remember picture, overlay]
+    \fill[PrimaryBase] (current page.north west) rectangle (current page.south east); % Цветовая заливка
+    \ifx#1\relax
+      % Если параметр не указан, ничего не делать
+    \else
+      % Если параметр указан, добавляем фоновое изображение
+      \node[anchor=south west, xshift=0mm, yshift=0mm] 
+        at (current page.south west) {
+        \includegraphics[width=\paperwidth, height=\paperheight]{#1}
+      };
+    \fi
+  \end{tikzpicture}
+}{%
+  \vfill
+  \bigparskip % Добавляем отступ перед концом страницы
+  \restoregeometry % Восстанавливаем геометрию после блока
+  \pagestyle{scrheadings} % Восстанавливаем стиль колонтитулов
+  \newpage % Переход на новую страницу
+  \flushbottom % Возвращаем выравнивание по нижнему краю
+}
+
+%--------------------------------------------------------
+% 3. Оформление глав
+%--------------------------------------------------------
+
+\pgfkeys{
+    /startchapter/.is family,
+    /startchapter,
+    title/.store in=\chaptertitle,         % Название главы
+    author/.store in=\chapterauthor,       % Авторы
+    image/.store in=\chapterimage,         % Картинка 
+    caption/.store in=\chaptercaption,     % Подпись картинки
+}
+
+% 3.1 Титульный лист
+\newbox\mybox
+\setbox\mybox\hbox{%
+  \vrule\@height1\baselineskip
+        \@depth0.8\baselineskip
+        \@width\z@}
+\newcommand{\mystrut}{\relax\ifmmode\copy\mybox\else\unhcopy\mybox\fi}
+
+\NewDocumentCommand{\coverpage}{s +O{}}{%
+    % 1 - тип (наличие номера главы) 
+    % 2 - данные главы 
+
+    % Обработка ключей
+    \pgfkeys{/startchapter, #2}%
+
+    % Добавление главы в оглавление 
+    \addcontentsline{toc}{chapter}{\chaptertitle} 
+
+    % Добавление пустой страницы, если текущая страница чётная
+    \ifodd\value{page}\else\newpage\null\thispagestyle{empty}\newpage\fi
+    
+    % Метка начала главы и заголовок
+    \hypertarget{chapter.\thechapter}{} % Метка начала главы
+    \markboth{\chaptertitle}{} % Маркер для заголовка главы
+    
+    \begin{specialpage}
+    
+    % Фон страницы
+    \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south west, xshift=0mm, yshift=0mm, opacity=0.05] 
+    at (current page.south west) {
+    \includegraphics[width=\paperwidth, height=\paperheight]{style/textures/cover.jpg} 
+    };
+    \end{tikzpicture}
+    
+    % Вертикальная полоса слева
+    \begin{tikzpicture}[remember picture, overlay]
+    \shade[left color=AccentBase, right color=PrimaryBase, opacity=0.5] 
+      (current page.north west) rectangle ++(70mm,-\paperheight); % Цветовая полоса шириной 50 мм
+    
+    % Заголовок книги, выровненный вертикально
+    \node[
+      rotate=90, 
+      anchor=north east, 
+      xshift=-50mm, 
+      yshift=-5mm
+    ] at (current page.north west) {
+      \HeadingFont
+      \textcolor{CaptionGray}{\guideTitle} % Полупрозрачный заголовок книги
+    };
+    \end{tikzpicture}
+    
+  \IfBooleanF{#1}{%
+      \addtocounter{chapter}{1} % Увеличение счётчика глав
+      % Номер главы
+      \begin{tikzpicture}[remember picture, overlay]
+        \node[
+          opacity=0.1, 
+          anchor=north west, 
+          xshift=15mm, 
+          yshift=-50mm
+        ] at (current page.north west) {
+          \fontsize{250}{0}\CoverFont \textcolor{CaptionGray}{\the\numexpr\value{chapter}\relax} % Прозрачный номер главы
+        };
+      \end{tikzpicture}
+   }
+   
+    % Заголовок главы
+    \begin{tikzpicture}[remember picture, overlay]
+    % Заголовок главы
+    \node[anchor=north west] (title) at ($(current page.north west) + (55mm,-55mm)$) {
+      \parbox[t]{150mm}{ 
+        \raggedright 
+        \CoverFont 
+        \mystrut \chaptertitle % Заголовок главы
+      }
+    };
+    
+    % Авторы
+    \node[anchor=north east] (authors) at (title.south east) {
+      \parbox[t]{150mm}{
+        \bigparskip
+        \raggedleft 
+        \footnotesize
+        \HeadingFont 
+        \chapterauthor % Имена авторов
+      }
+    };
+    \end{tikzpicture}
+    
+    \end{specialpage}
+}
+
+
+% 3.2 Аннотация и титры
+\NewDocumentEnvironment{annotationpage}{+O{} +b}{%
+    % 1 - данные главы (картинка, полпись)
+    % 2 - текст аннотации 
+
+    % Обработка ключей
+    \pgfkeys{/startchapter, #1}%
+
+  \begin{specialpage}
+
+  % Если изображение указано, оно будет добавлено
+  \ifx&\chapterimage&% проверка на пустой аргумент
+    \begin{tikzpicture}[remember picture, overlay]
+        \coordinate (startannotation) at ($(current page.north) + (0,-70mm)$); % Отступ от верхнего края страницы
+    \end{tikzpicture}
+
+  \else
+    % Изображение
+    \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north, yshift=-40mm] (imagebottom) at (current page.north) {
+    \includegraphicsrounded[width=0.8\textwidth]{pictures/\chapterimage} % Центрируем изображение
+    };
+    \end{tikzpicture}
+
+    % Подпись изображения
+    \begin{tikzpicture}[remember picture, overlay]
+        \node[anchor=north east, xshift=0.8\textwidth] (captionbottom) at (imagebottom.south west) {
+        \normalfont
+        \footnotesize \itshape 
+        \textcolor{CaptionGray}{\chaptercaption} % Подпись под изображением, выровненная по правому краю
+  };
+    \end{tikzpicture}
+    \begin{tikzpicture}[remember picture, overlay]
+      \coordinate (startannotation) at ($(captionbottom.north east) + (-62.5mm,-20mm)$); % Отступ от подписи
+    \end{tikzpicture}
+  \fi
+
+  % Аннотация
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north] at (startannotation) {
+      \begin{minipage}{0.8\textwidth}
+         \normalfont
+         \setlength{\parskip}{0.2cm}
+         \setlength{\parindent}{0pt} 
+         #2 % Текст аннотации
+      \end{minipage}
+    };
+  \end{tikzpicture}
+
+  % Копирайт и авторы
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=south east, xshift=-10mm, yshift=10mm] at (current page.south east) {
+      {\color{CaptionGray} \AuxiliaryFont © 2024, \chapterauthor} % Текст копирайта и авторов, выравненный по правому краю
+    };
+  \end{tikzpicture}
+
+  \end{specialpage}
+}{}
+
+% 3.3 Введение и оглавление
+\etocsetlevel{chapter}{-1}  % Игнорируем главы
+\etocsetlevel{section}{1}   % Показываем только разделы
+\etocsetlevel{subsection}{2} % Игнорируем более глубокие уровни
+
+\newcommand{\largesection}{\scalebox{1.2}{\textsection}}
+
+\etocsetstyle{section}%
+{}%
+{}%
+{\hspace{1.5em}\TOCFont  \largesection \; \etocname \par}%
+{}%
+
+\NewDocumentEnvironment{intropage}{+b}{%
+  \begin{specialpage}
+    % Оглавление разделов
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north east, xshift=-10mm, yshift=-40mm] (toc) at (current page.north east) {
+        \begin{minipage}{0.5\textwidth}
+          \etocsettocstyle{ 
+              {\scriptsize
+              \HeadingFont
+              Содержание:
+              \bigparskip
+              \newline 
+              \vspace{0cm}}
+          }
+          {\bigparskip}
+          \localtableofcontents 
+        \end{minipage}
+      };
+    \end{tikzpicture}
+  
+    % Введение
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north, yshift=0mm, xshift=-0.35\textwidth] at (toc.south) {
+        \begin{minipage}{0.8\textwidth}
+          \normalfont
+          \setlength{\parskip}{0.2cm}
+          \setlength{\parindent}{0pt} 
+          #1 % Основной текст введения
+        \end{minipage}
+      };
+    \end{tikzpicture}
+  \end{specialpage}
+}{}
+
+
+%--------------------------------------------------------
+% 3. Общие настройки страницы
+%--------------------------------------------------------
+
+% Настройки геометрии страницы
+\geometry{
+  paperwidth=210mm,    % Ширина страницы (A4)
+  paperheight=297mm,   % Высота страницы (A4)
+  top=15mm,            % Уменьшенный верхний отступ
+  bottom=18mm,         % Нижний отступ до края страницы
+  inner=15mm,          % Узкое внутреннее поле
+  outer=75mm,          % Широкое внешнее поле для заметок
+  marginparwidth=60mm, % Ширина поля для заметок
+  marginparsep=10mm,   % Отступ между текстом и заметками
+  bindingoffset=0mm,
+  includefoot,
+  headheight=0pt,      % Высота верхнего колонтитула (нет колонтитула)
+  headsep=0pt,         % Отступ между верхним колонтитулом и текстом (нет отступа)
+  footskip=13mm        % Отступ между текстом и нижним колонтитулом
+}
+
+% Значение отступа от верха страницы до начала текста
+\newlength{\topmarginlength}
+\setlength{\topmarginlength}{\dimexpr\topskip + \voffset + 1in + \topmargin-0.15cm\relax} 
+
+
+\newdimen\fullcontentwidth
+\fullcontentwidth=\dimexpr\textwidth + \marginparwidth + \marginparsep\relax
+
+% Команда для контроля оставшегося пространства на странице 
+\newlength{\remainingheight} % Оставшееся место на странице
+
+\newcommand{\checkremainingheight}{%
+    % Вычисляем оставшееся место на странице
+    \setlength{\remainingheight}{\dimexpr \textheight - \pagetotal - 0.3cm \relax}%
+    % Проверяем, достаточно ли места для продолжения
+    \ifdim \remainingheight < 0.3cm
+        \newpage
+        % Заново вычисляем оставшееся место после переноса
+        \setlength{\remainingheight}{\dimexpr \textheight - \pagetotal \relax}%
+    \fi
+}
+
+
+\newlength{\pagedeffect} % Ассиметричность страницы 
+
+\newcommand{\deffect}{%
+  \ifodd\value{page} % Если страница нечётная
+    \setlength{\pagedeffect}{0pt}% На нечётных страницах сдвига нет
+  \else % Если страница чётная
+    \setlength{\pagedeffect}{\dimexpr 2\oddsidemargin - 2\evensidemargin\relax}% Вычисляем разницу для чётных страниц
+  \fi
+}
+
+\NewDocumentEnvironment{geometriccenter}{+b}{%
+  \checkremainingheight
+  \begingroup % Начало окружения
+  \deffect % Обновляем сдвиг в зависимости от страницы
+  \noindent\makebox[\dimexpr\textwidth + \marginparwidth + \marginparsep\relax][c]{%
+    \hspace*{\pagedeffect}{#1} % Вставляем содержимое окружения
+  }%
+}{%
+  \endgroup % Конец окружения
+}
+
+\NewDocumentEnvironment{linebox}{+b}{%
+  \checkremainingheight
+  \noindent
+  \hbox to \textwidth{%
+    #1 % Вставляем содержимое окружения
+  }%
+}{}
+
+%--------------------------------------------------------
+% 5. Колонтитулы
+%--------------------------------------------------------
+
+\fancypagestyle{scrheadings}{
+    \fancyhf{} % Очищаем все колонтитулы
+    \renewcommand{\headrulewidth}{0pt} % Убираем линию в заголовке
+    \renewcommand{\footrulewidth}{0pt} % Убираем линию внизу страницы
+
+    % Номер страницы на четных страницах (нижний левый угол)
+    \fancyfoot[LE]{%
+        \tikz[remember picture,overlay]{
+            % Прямоугольник с закругленными углами только на внутренней стороне
+            \fill[PrimaryBase] 
+                ($ (current page.south west) + (0cm,0.5cm) $) -- 
+                ++(1cm,0cm)  arc[start angle=-90, end angle=0, radius=0.125cm] -- ++(0cm,0.5cm) arc[start angle=0, end angle=90, radius=0.125cm] -- ++(-1cm,0cm) -- cycle;
+            
+            % Номер страницы, отцентрированный по вертикали внутри прямоугольника
+            \node[anchor=west, 
+                  text=OverlayText, 
+                  font=\AuxiliaryFont, 
+                  align=center, 
+                  inner sep=0pt] 
+            at ($ (current page.south west) + (0.5cm,0.875cm) $) {\thepage};
+        }
+    }
+
+    % Номер страницы на нечетных страницах (нижний правый угол)
+    \fancyfoot[RO]{%
+        \tikz[remember picture,overlay]{
+            % Прямоугольник с закругленными углами только на внутренней стороне
+            \fill[PrimaryBase] 
+                ($ (current page.south east) + (0cm,0.5cm) $) -- 
+                ++(-1cm,0cm)  arc[start angle=270, end angle=180, radius=0.125cm] --  ++(0cm,0.5cm) arc[start angle=180, end angle=90, radius=0.125cm] --
+                ++(1cm,0cm) -- cycle;
+            
+            % Номер страницы, отцентрированный по вертикали внутри прямоугольника
+            \node[anchor=east, 
+                  text=OverlayText, 
+                  font=\AuxiliaryFont, 
+                  align=center, 
+                  inner sep=0pt] 
+            at ($ (current page.south east) + (-0.5cm,0.875cm) $) {\thepage};
+        }
+    }
+    
+    % Название раздела на четных страницах
+    \fancyfoot[RE]{%
+    \tikz[remember picture,overlay]{
+        \node[anchor=west, font=\AuxiliaryFont, text=CaptionGray, align=center] 
+        at ($ (current page.south east) + (-15cm,0.875cm) $) {\hyperlink{chapter.\thechapter}{\AuxiliaryFont{\leftmark}}};
+    }
+  }
+}
+
+
+% Восстановление стиля колонтитулов после команд, отключающих их
+\AtBeginDocument{\pagestyle{scrheadings}}
+
+% Восстановление колонтитулов после \pagestyle{empty}
+\AddToHook{cmd/restoregeometry/after}{\pagestyle{scrheadings}}
+
+% Применение стиля к главам
+\renewcommand{\chaptermark}[1]{\markboth{\textsc{#1}}{}}
+\renewcommand{\sectionmark}[1]{\markright{\textsc{\thesection.\ #1}}}
+
+
+%--------------------------------------------------------
+% 6. Оформление разделов
+%--------------------------------------------------------
+
+\renewcommand{\section}[1]{%
+  % Добавление раздела в оглавление 
+  \addcontentsline{toc}{section}{#1}
+
+  % Отступ перед заголовком
+  \bigparskip
+
+  % Проверяем оставшееся место на странице 
+  \checkremainingheight
+  
+  % Заголовок раздела, выровненный по центру
+  \begin{geometriccenter}
+    \HeadingFont #1
+  \end{geometriccenter}
+
+  % Отступ после заголовка
+  \medparskip
+
+  % Восстановление стиля колонтитулов
+  \pagestyle{scrheadings} 
+}
+
+
+\begin{comment}
+
+% Вспомогатльные настройки на четных страницах 
+%========================================================
+% Определение команды для отступа логотипа на четных страницах
+\newcommand{\evenpageoffset}{\hspace{-\oddsidemargin}\hspace{-\hoffset}\hspace{-\marginparsep}\hspace{-\marginparwidth}}
+
+% Определение команды для отображения логотипа и текста на четных страницах (убрал логотип \quad\turinglogo пока)
+\newcommand{\evenpageheader}{\evenpageoffset\AuxiliaryFont{\hyperlink{http://turing.tilda.ws}{\guideTitle}} \microinheader}
+
+\fancyheadoffset[R]{4.3cm} % Смещение колонтитулов для правой стороны
+% Настройка стиля колонтитулов
+
+\fancypagestyle{scrheadings}{
+\fancyhf{} % Очистка всех настроек колонтитулов
+
+% Линия под колонтитулом
+  \renewcommand{\headrulewidth}{0.2pt} % Толщина линии
+  \renewcommand{\headrule}{%
+    \hbox to \headwidth{%
+      \ifodd\value{page} % Для нечетных страниц
+        \hfill\textcolor{CaptionGray}{\rule{\headwidth}{0.2pt}}%
+      \else % Для четных страниц
+        \evenpageoffset\textcolor{CaptionGray}{\rule{\headwidth}{0.2pt}\hfill}
+      \fi
+    }
+  }
+  
+% Настройка для нечетных страниц
+\fancyhead[RO]{\hyperlink{chapter.\thechapter}{\AuxiliaryFont{\leftmark}}} % Ссылка на начало главы
+  
+% Настройка для четных страниц
+\fancyhead[LE]{\evenpageheader} % Логотип и название проекта слева на четных страницах
+  
+% Номер страницы в центре нижнего колонтитула
+\fancyfoot[C]{%
+\raisebox{10pt}{\geometriccenter{\AuxiliaryFont\thepage}}}
+}
+
+\end{comment}

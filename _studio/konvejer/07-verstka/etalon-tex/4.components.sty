@@ -1,0 +1,421 @@
+%--------------------------------------------------------
+% 1. Общий стиль 
+%--------------------------------------------------------
+\tcbset{
+  universalbox/.style={
+    breakable, % Разрешает разбиение блока на несколько страниц
+    enhanced, % Включает расширенные возможности оформления
+    before skip=0.2cm, % Единый отступ перед блоком
+    after skip=0.2cm, % Единый отступ после блока
+    coltitle=black,
+    colframe=white, % Цвет рамки 
+    boxrule=0pt, % Толщина рамки
+    frame hidden, % Скрывает рамку
+    toprule=0pt, % Убирает верхнюю линию блока
+    left=0pt, right=0pt, top=0pt, bottom=0pt, % Убираем внутренние отступы
+    boxsep=5pt, % Стандартный отступ между текстом и границей
+    valign=center, % Выравнивание по вертикали
+  }
+}
+%--------------------------------------------------------
+% 2. Коробки (цветные окружения для пары строк текста)
+%--------------------------------------------------------
+\NewDocumentCommand{\unibox}{m m}{%
+      % #1 - Тип
+      % #2 — Текст
+    \par 
+    \begin{tcolorbox}[
+    universalbox,
+    unbreakable,
+    halign=center, % Выравнивание по горизонтали
+    overlay unbroken and first={
+          % Фон
+          \path[fill=\pgfkeysvalueof{/style/#1/BaseColor}, opacity=0.8, rounded corners=\mycorners] 
+          (frame.south west) rectangle (frame.north east);
+          % Текстура
+          \node[anchor=south west, opacity=0.2] at ([xshift=-0.15cm, yshift=-4pt]frame.south west){\includegraphicsrounded[width=\tcb@width, height=\tcb@height]{\pgfkeysvalueof{/style/#1/Texture}}}; 
+          % Рамка
+          \path[draw=Border, line width=\mylinewd, rounded corners=\mycorners]
+          (frame.south west) rectangle (frame.north east);
+        }
+    ]
+    \vspace*{0.05cm}
+    
+    \setlength{\parindent}{0pt} 
+    \setlength{\parskip}{\standardparskip}
+
+    #2
+    \end{tcolorbox}
+
+    \par 
+}
+
+% 2.1 Коробка <<важное>>
+\NewEnviron{importantbox}{%
+    \unibox
+    {Accent}{\color{OverlayText} \BODY}
+}
+
+% 2.2 Коробка <<пример>>
+\NewEnviron{examplebox}{%  
+    \unibox
+    {Complement}{\color{OverlayText} \BODY}
+}
+
+
+% 2.3 Коробка <<комментарий>>
+\NewEnviron{notebox}{%  
+    \unibox 
+    {Primary}{\raggedright \color{OverlayText} \BODY}
+}
+
+% Команда для создания примечаний на полях
+\newcommand{\mnote}[2][0pt]{%
+  \marginpar{%
+    \tiny
+    \vspace{#1+\baselineskip}%
+    \begin{notebox}%
+        #2 \microinheader%
+    \end{notebox}%
+    \vspace{-#1-\baselineskip}%
+  }%
+}
+
+%--------------------------------------------------------
+% 3. Блоки (окружения для больших кусков текста с цветными заголовками)
+
+% Универсальный блок
+
+% Подготовка данных блока
+\newsavebox{\mytitlebox} % Коробка для заголовка
+\newdimen\titleheight % Высота заголовка 
+\newsavebox{\mycontentbox} % Коробка для блока 
+\newdimen\blockheight % Суммарная высота 
+
+\newcommand{\prepareblock}[2]{%
+    % #1 — Заголовок
+    % #2 — Текст блока
+    
+    % Сохраняем заголовок
+    \sbox{\mytitlebox}{%
+        \begin{minipage}{\dimexpr\linewidth-0.3cm\relax}
+            #1
+        \end{minipage}
+    }
+
+    \setlength{\titleheight}{\dimexpr \ht\mytitlebox + \dp\mytitlebox + 0.25cm\relax}
+
+
+    % Сохраняем текст блока
+    \sbox{\mycontentbox}{%
+        \begin{minipage}{\dimexpr\linewidth-0.3cm\relax}
+            \setlength{\parindent}{0pt} 
+            \setlength{\parskip}{\standardparskip}
+            \vspace*{0.05cm}
+            #2
+        \end{minipage}
+    }
+
+    \setlength{\blockheight}{\dimexpr \titleheight + \ht\mycontentbox + \dp\mycontentbox+0.5cm\relax}
+}
+
+
+% Подготовка сноски 
+\newsavebox{\mynotebox} % Коробка для сноски 
+\newdimen\noteboxheight % Высота сноски 
+\newdimen\noteshift  % Сдвиг сноски относительно блока 
+\newcount\caseNumber % Версия расположения блока относительно разрыва странциы 
+
+\newcommand{\classifycase}[1]{%
+    % #1: Текст сноски
+    
+    % Сохраняем сноску и подпись в \mynotebox
+    \sbox{\mynotebox}{%
+        \ifx#1\relax
+            % Если сноски нет, создаём пустой бокс нулевого размера
+            \rule{0pt}{0pt}
+        \else
+            \begin{minipage}{\marginparwidth}
+                \begin{center}
+                    #1
+                \end{center}
+            \end{minipage}
+        \fi
+    }
+
+    % Вычисляем высоту сноски
+    \setlength{\noteboxheight}{\dimexpr\ht\mynotebox+\dp\mynotebox\relax}
+    
+    % Проверяем оставшееся место на текущей странице
+    \checkremainingheight
+
+    % Сдвиг сноски относительно блока
+    \setlength{\noteshift}{\dimexpr(\blockheight - \noteboxheight)/2 \relax}
+
+    % Классификация случаев 
+    \ifdim \blockheight < \remainingheight 
+        \caseNumber=1 % Блок помещается на этой странице
+    \else
+        \ifdim \noteboxheight < \remainingheight 
+            \caseNumber=2 % Блок не помещается, а сноска помещается на эту страницу 
+            \setlength{\noteshift}{\dimexpr(\remainingheight - \noteboxheight)/2 \relax}
+        \else
+            \ifdim \noteboxheight < \dimexpr \blockheight - \remainingheight \relax % Сноска помещается на следующую страницу
+                \caseNumber=3
+                \setlength{\noteshift}{\dimexpr(\blockheight - \remainingheight - \noteboxheight)/2 \relax}
+            \else % Блок не помещается на страницу, а сноска не помещается ни на одну из страниц 
+                \caseNumber=1
+                \newpage
+            \fi
+        \fi
+    \fi
+}
+
+\pgfkeys{
+    /block/.is family,
+    /block,
+    image/.store in=\blockimage,
+    tikz/.store in=\blocktikz,
+    table/.store in=\blocktable,
+    caption/.store in=\blockcaption
+}
+
+\newcommand{\resetblockkeys}{%
+    \let\blockimage\relax
+    \let\blocktikz\relax
+    \let\blocktable\relax
+    \let\blockcaption\relax
+}
+
+\newcommand{\none}{none}
+
+ \newcommand{\DefineBlock}[3]{%
+  % #1 — Название окружения
+  % #2 — Стиль
+  % #3 — Заголовок
+  
+    \NewDocumentEnvironment{#1}{+O{\relax} +b}{%
+        % ##1 — Сноска на полях
+        % ##2 — Текст
+        
+        \prepareblock{\SubheadingFont\color{\pgfkeysvalueof{/style/#2/DarkColor}}\textbf{#3}}{##2}
+        
+        \ifx##1\relax
+            \else
+                \resetblockkeys
+                \pgfkeys{/block, ##1}
+                \classifycase{
+                \displaygraphic{\blockimage}
+                \displaygraphic{\blocktikz}
+                \table{\blocktable}
+                \addcaption{\blockcaption}
+                }
+            \fi    
+            
+        \colorlet{BulletColor}{\pgfkeysvalueof{/style/#2/MidColor}}
+            
+        \medparskip
+        \begin{tcolorbox}[
+                universalbox,
+                before skip=0pt, % Единый отступ перед блоком
+                enlarge left by=0pt, 
+                enlarge right by=0pt, % Дополнительные настройки отступов
+                title={\SubheadingFont\color{\pgfkeysvalueof{/style/#2/DarkColor}}\textbf{#3}}, % Заголовок блока
+                overlay unbroken and first={
+                    % Рисуем основной блок
+                    \path[fill=WhiteGray, rounded corners=\mycorners] 
+                        (frame.north west) rectangle (frame.south east);
+                
+                    % Фон заголовка
+                    \begin{scope}
+                        \path[fill=\pgfkeysvalueof{/style/#2/BaseColor}, opacity=0.8, rounded corners=\mycorners] 
+                            (frame.north west) rectangle ([yshift=-\the\titleheight]frame.north east);
+                        \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm, opacity=0.2] at (frame.north west) {
+                            \includegraphicsrounded[width=\the\textwidth, height=\the\titleheight]{\pgfkeysvalueof{/style/#2/Texture}}
+                        };
+                    \end{scope}
+    
+                    \ifodd\value{page}
+                        \path ([xshift=\marginparsep]frame.north east) coordinate (note);
+                    \else
+                        \path ([xshift=-\dimexpr\marginparsep+\marginparwidth\relax]frame.north west) coordinate (note);
+                    \fi 
+    
+                    \ifnum\caseNumber<3
+                        \path ([yshift=-\noteshift]note) coordinate (note);
+                        \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm] at (note) {\usebox{\mynotebox}};
+                    \fi
+                }
+        ]
+            \setlength{\parindent}{0pt} 
+            \setlength{\parskip}{\standardparskip}
+            \vspace*{0.05cm}
+            ##2
+        \end{tcolorbox}       
+    
+        \ifnum\caseNumber=3    
+            \begin{tikzpicture}[remember picture, overlay] 
+            \ifodd\value{page}
+                % Для нечетных страниц — верхний правый угол текстовой области
+                \path ([xshift=\dimexpr\marginparsep-\marginparwidth\relax, yshift=-\topmarginlength]current page text area.north east) coordinate (note);
+            \else
+                % Для четных страниц — верхний левый угол текстовой области
+                \path ([xshift=-\dimexpr\marginparsep+\marginparwidth\relax, yshift=0]current page text area.north west) coordinate (note);
+            \fi
+            \fill[red] (note) circle (2pt);
+            \path ([yshift=-\noteshift]note) coordinate (note);
+            \node[anchor=north west, xshift=-0.15cm, yshift=0.15cm] at (note) {\usebox{\mynotebox}};
+            \end{tikzpicture}
+        \fi 
+        \par 
+    }{}%
+}
+
+\DefineBlock{definition}{Accent}{Определение:}
+\DefineBlock{theorem}{Accent}{Теорема:}
+\DefineBlock{example}{Complement}{Пример:}
+\DefineBlock{note}{Primary}{Замечание:}
+%------------------------------------------------------
+% 4. Доказательства 
+%--------------------------------------------------------
+
+\renewenvironment{proof}[1][\proofname]{\par
+	\pushQED{\qed}%
+	\normalfont \topsep6\p@\@plus6\p@\relax
+	\trivlist
+	\item[\hskip\labelsep
+	\itshape
+	\(\mathord{\mdlgwhtsquare}\)]\ignorespaces
+}{%
+	\popQED\endtrivlist\@endpefalse
+}
+\renewcommand{\proofname}{\relax} % Переопределение названия доказательства
+\renewcommand{\qedsymbol}{\ensuremath{\mathord{\mdlgblksquare}}} % Символ конца доказательства
+
+%--------------------------------------------------------
+% 5. Таблицы
+%--------------------------------------------------------
+\renewcommand{\arraystretch}{1.2} % Изменение вертикальных отступов 
+
+% Новые типы колонок
+\newcolumntype{2}{cc}
+\newcolumntype{3}{ccc}
+\newcolumntype{4}{cccc}
+\newcolumntype{5}{ccccc}
+\newcolumntype{6}{cccccc}
+\newcolumntype{s}[1]{>{\centering\arraybackslash}m{#1}}
+
+% Контейнеры для таблицы 
+\newsavebox{\baseTable} 
+\newsavebox{\colorfulTable} 
+
+\newcommand{\DefineTable}[2]{%
+  % #1 — Название таблицы
+  % #2 — Стиль
+
+    \NewDocumentEnvironment{#1}{m O{} +b}{%
+          % ##1 — Тип строк    
+          % ##2 — Ширина таблицы   
+          % ##3 — Текст
+          
+      % Сохраняем таблицу в контейнеры
+      \sbox{\baseTable}{% Обычная таблица (без цвета)
+        \AuxiliaryFont
+        \arrayrulecolor{black} % Убираем границы
+        \color{OverlayText}
+        \begin{tabular}{##1}
+          ##3
+        \end{tabular}
+      }
+      
+      \sbox{\colorfulTable}{% Цветная таблица (без границ)
+        \begingroup
+        \AuxiliaryFont
+        \rowcolors{1}{\pgfkeysvalueof{/style/#2/BaseColor}}{white} % Чередование цветов строк
+        \color{white} % Установка цвета текста
+        \arrayrulecolor{white} % Убираем границы
+        \begin{tabular}{##1}
+          ##3
+        \end{tabular}
+        \endgroup
+      }
+      
+      % Вычисление параметров таблицы
+      \newdimen\tablewidth \tablewidth=\dimexpr \wd\baseTable\relax % Ширина
+      \newdimen\tableheight \tableheight=\dimexpr\ht\baseTable+\dp\baseTable\relax % Высота
+      \def\resizewidth{\ifblank{##2}{\dimexpr\wd\baseTable\relax}{##2}} % Итоговая ширина 
+      
+      \resizebox{\resizewidth}{!}{%
+        \begin{tcolorbox}[
+          universalbox,
+          width=\dimexpr\tablewidth\relax, % Ширина таблицы
+          height=\tableheight, % Высота таблицы
+          overlay unbroken and first = {
+            \begin{scope}
+              % Обрезаем углы
+              \clip[rounded corners=\mycorners] ([xshift=1pt]frame.south west) rectangle ([xshift=-1pt]frame.north east);
+              
+              % Цветная таблица
+              \node[anchor=center] at (frame.center) {\hbox to \dimexpr\tablewidth\relax{\hfill\raisebox{-0.5\tableheight}{\usebox{\colorfulTable}}\hfill}};
+              
+              % Заливка фона
+              \path[fill=\pgfkeysvalueof{/style/#2/BaseColor}, opacity=0.1] (frame.south west) rectangle (frame.north east);
+    
+              % Нанесение текстуры
+              \node[anchor=south west, opacity=0.2] at ([xshift=-0.15cm, yshift=-4pt]frame.south west) {
+                \includegraphicsrounded[width=\tablewidth, height=\tableheight]{\pgfkeysvalueof{/style/#2/Texture}}};
+              
+              % Градиент сверху вниз
+              \path[shading=axis, top color=\pgfkeysvalueof{/style/#2/BaseColor}, bottom color=white, opacity=0.1, rounded corners=\mycorners]
+                (frame.north west) rectangle (frame.south east);
+    
+              % Обычная таблица с полноценным текстом
+              \node[anchor=center] at (frame.center) {\hbox to \dimexpr\tablewidth\relax{\hfill\raisebox{-0.5\tableheight}{\usebox{\baseTable}}\hfill}};
+            \end{scope}
+            
+            % Тонкая черная рамка вокруг блока
+            \path[draw=Border, line width=\mylinewd, rounded corners=\mycorners]([xshift=1pt]frame.south west) rectangle ([xshift=-1pt]frame.north east);
+          }
+        ]
+        \end{tcolorbox}
+      }
+      \par 
+    }{}
+}
+
+\DefineTable{importanttable}{Accent}
+\DefineTable{exampletable}{Complement}
+\DefineTable{notetable}{Primary}
+
+
+% Определение команды для вставки таблиц из папки tables
+\renewcommand{\table}[1]{%
+    \ifx#1\relax
+    \else
+        \input{tables/#1}
+    \fi
+}
+%--------------------------------------------------------
+% 6. Списки и термины 
+%--------------------------------------------------------
+
+\newcommand{\term}[1]{\textbf{#1}}
+
+\colorlet{BulletColor}{black} 
+
+\RenewDocumentEnvironment{itemize}{+b}{%
+    \begin{enumerate}[%
+        topsep=0.1\standardparskip,       % Отступ перед и после списка
+        itemsep=0.2\standardparskip,     % Расстояние между элементами списка
+        parsep=0pt,                       % Расстояние между абзацами внутри элемента списка
+        partopsep=0pt,                    % Дополнительный отступ перед списком после разрыва страницы
+        leftmargin=1cm,                   % Левый отступ
+        labelsep=0.05cm,                  % Расстояние между меткой и текстом элемента
+        align=left,                       % Выравнивание текста по левому краю метки
+        label=\textcolor{BulletColor}{\large\textbullet}, % Формат метки
+    ]%
+    \small
+    #1
+    \end{enumerate}
+}{}
+

@@ -1,0 +1,88 @@
+\newcommand{\mylinewd}{0.1mm} % Толщина страндартных линий 
+\newcommand{\mycorners}{1.9mm} % Степень сглаживания углов
+%------------------------------------------------------
+%  Настройки подписей  
+%-------------------------------------------------------
+
+\DeclareCaptionFont{customfont}{\CaptionFont \color{CaptionGray}}
+
+\captionsetup{
+  font={customfont},        % Используем кастомную команду для шрифта
+  labelformat=empty,        % Без меток
+  labelsep=none,            % Без разделителя
+  justification=centering  % Выравнивание подписи по центру
+}
+
+%------------------------------------------------------
+%  Изрбражение с округлыми углами
+%-------------------------------------------------------
+\newcommand{\includegraphicsrounded}[2][]{%
+  \begin{tikzpicture}
+    \node[inner sep=0pt, rounded corners=\mycorners, clip]{\includegraphics[#1]{#2}};
+  \end{tikzpicture}%
+  }
+
+%------------------------------------------------------
+% Команда для включения графики
+%------------------------------------------------------
+
+\NewDocumentCommand{\imagewithcaption}{m O{\relax} O{1}}{%
+    \begin{minipage}[t]{#3\textwidth} % Используем ширину из третьего параметра
+        \begin{center} % Центрирование изображения
+            \displaygraphic{#1}
+            \addcaption{#2}
+        \end{center}
+    \end{minipage}%
+}
+
+
+\NewDocumentCommand{\displaygraphic}{m}{%
+    \ifx#1\relax
+        % Если #1 равен \relax, ничего не делаем
+    \else
+        \begin{center} % Центрирование изображения или графики
+            \IfFileExists{graphics/#1.tex}{% Если это файл .tex
+                \resizebox{\textwidth}{!}{\includestandalone{graphics/#1}}% Подключаем через standalone
+            }{%
+                \includegraphicsrounded[width=\textwidth]{pictures/#1}% Подключаем как изображение
+            }
+        \end{center}
+    \fi
+}
+
+\NewDocumentCommand{\addcaption}{m}{%
+    \ifx#1\relax
+        % Если подпись не указана, ничего не делаем
+    \else
+        \vspace{0.2cm} % Отступ перед подписью
+        \captionof{figure}{#1} % Добавляем подпись
+    \fi
+}
+
+
+\begin{comment}
+\newcounter{ris} % Счётчик для рисунков
+\newcounter{tabl} % Счётчик для таблиц
+\newcommand{\resetcounters}{\setcounter{defn}{0} \setcounter{thm}{0} \setcounter{stat}{0} \setcounter{lem}{0} \setcounter{prop}{0}} % Сброс счётчиков
+
+
+\definecolor{Sepia}{RGB}{112, 66, 20}
+\newcommand{\sepiaimage}[2][]{%
+  \begin{tikzpicture}
+    \node[inner sep=0pt, opacity=0.9, rounded corners=\mycorners] (img) at (0,0)
+    {\includegraphics[#1]{#2}};
+    \begin{scope}[on background layer, rounded corners=\mycorners]
+      \fill[Sepia, blend mode=multiply, opacity=0.6, rounded corners=\mycorners] 
+        (img.south west) rectangle (img.north east);
+    \end{scope}
+  \end{tikzpicture}%
+}
+
+% Команда для вставки больших картинок
+\newcommand{\bigfig}[3][0pt]{%
+	\setlength{\columnsep}{#1}
+	\begin{wrapfigure}{r}{0.25 \textwidth}
+		\includegraphicsrounded[width=#3 \linewidth]{#2}
+	\end{wrapfigure}
+}
+\end{comment}
