@@ -31,6 +31,27 @@ MATERII = {"время", "кадр", "рисунок", "доказательст
 FORMY = {"ориентир", "WARN", "гейт"}
 
 
+def sohranit_hvost(path: Path, zagolovok: str) -> str:
+    """Достать из существующего файла раздел, который писала МОДЕЛЬ.
+
+    🔴 ЦЕНА, оплачено в ночь на 01.08. Скрипт перезаписывал файл целиком, и
+    каждый прогон молча съедал `## РАЗБОР` — главный артефакт захода. Пачка 1
+    предсказала это в плане и спасала раздел через `/tmp`; пачка 2 назвала себя
+    «первым потерпевшим» и спасала уже два чужих раздела (31 КБ разбора и 9 КБ
+    конфликтующих чисел). Финальный шлюз в `noch-2.sh` — то есть МОЙ шлюз —
+    прогнал сборку после всех пачек и снёс разбор насовсем.
+
+    Вывод, который дороже кода: инструмент, требующий ручного обходного манёвра
+    от каждого, кто им пользуется, — это не инструмент, а ловушка. Сохранение
+    обязано быть внутри, а не в инструкции.
+    """
+    if not path.exists():
+        return ""
+    t = path.read_text(encoding="utf-8")
+    i = t.find(zagolovok)
+    return t[i:] if i >= 0 else ""
+
+
 def chitat_tsv(path: Path):
     if not path.exists():
         sys.exit(f"❌ нет файла {path.name} — заход его не создал")
@@ -84,7 +105,13 @@ def rezhim_vladelca(brak):
     for gid, r in skelet.items():
         y, m, p = vd.get(gid, ("—", "—", ""))
         schet[y] += 1
-        if y.endswith("?") or "?" in m:
+        # Спорность помечают ДВУМЯ способами, и второй родился из дефекта этого
+        # же скрипта: формат `1?`, который велел заход, скрипт отвергал как
+        # неизвестный ярус, и все четыре пачки согласованно перешли на префикс
+        # `СПОРНО:` в поле причины. Счётчик видел только первый способ и печатал
+        # «спорных 0» — то самое число, которое заход сам называет подозрительным.
+        # Реально их было 285 из 1379.
+        if y.endswith("?") or "?" in m or p.startswith(("СПОРНО", "СОМНЕНИЕ")):
             spor += 1
         if y == "не ложится":
             ne_leglo.append((gid, r[2], p))
@@ -114,7 +141,8 @@ def rezhim_vladelca(brak):
             "", f"## НЕ ЛОЖИТСЯ — {len(ne_leglo)} записей", ""]
     for gid, zag, p in ne_leglo:
         pok.append(f"- `{gid}` {zag} — **{p}**")
-    pok += ["", "## РАЗБОР — заполняет заход", ""]
+    hvost = sohranit_hvost(ARKA / "POKRYTIE-karkasa.md", "## РАЗБОР")
+    pok += ["", hvost if hvost else "## РАЗБОР — заполняет заход\n"]
     (ARKA / "POKRYTIE-karkasa.md").write_text("\n".join(pok) + "\n", encoding="utf-8")
     return f"размечено {vsego - schet.get('—', 0)} из {vsego}, не легло {len(ne_leglo)}, спорных {spor}"
 
@@ -146,7 +174,8 @@ def rezhim_chisla(brak):
         m, f = vd.get(gid, ("—", "—"))
         formy[f] += 1
         out.append(f"| {gid} | {r[1]} | {m} | {f} | `{r[2]}` |")
-    out += ["", "## КОНФЛИКТУЮЩИЕ — заполняет заход", ""]
+    hvost = sohranit_hvost(ARKA / "CHISLA-s-kontekstom.md", "## КОНФЛИКТУЮЩИЕ")
+    out += ["", hvost if hvost else "## КОНФЛИКТУЮЩИЕ — заполняет заход\n"]
     (ARKA / "CHISLA-s-kontekstom.md").write_text("\n".join(out) + "\n", encoding="utf-8")
     return f"чисел {len(skelet)}, по формам: {dict(formy)}"
 
