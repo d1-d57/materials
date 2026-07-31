@@ -1,55 +1,55 @@
-<svg viewBox="0 0 820 300" width="790" role="img" aria-label="Вандермонд как разбор по случаям: сверху одна рамка с семью узлами — тройка слева и четвёрка справа, три узла в ней взяты, подпись C(7,3). Снизу четыре пары рамок, разнесённые пустотой: в каждой паре левая рамка с тремя узлами тройки, правая с четырьмя узлами четвёрки, взято r узлов слева и три минус r справа для r от нуля до трёх; подписи C(3,0) на C(4,3) плюс C(3,1) на C(4,2) плюс C(3,2) на C(4,1) плюс C(3,3) на C(4,0)">
-<text class="s-txt" style="font-size:19px" x="410" y="36" text-anchor="middle">C(7,3)</text>
-<rect class="s-line" x="258" y="51" width="304" height="56" rx="9"/>
-<circle class="s-node-r" cx="284" cy="79" r="13"/>
-<circle class="s-node-a" cx="326" cy="79" r="13"/>
-<circle class="s-node-a" cx="368" cy="79" r="13"/>
-<circle class="s-node" cx="410" cy="79" r="13"/>
-<circle class="s-node-r" cx="452" cy="79" r="13"/>
-<circle class="s-node" cx="494" cy="79" r="13"/>
-<circle class="s-node-r" cx="536" cy="79" r="13"/>
-<line class="s-thin" x1="389" y1="51" x2="389" y2="107"/>
-<rect class="s-line" x="16" y="188" width="74" height="46" rx="7"/>
-<circle class="s-node-a" cx="29" cy="211" r="9.5"/>
-<circle class="s-node-a" cx="53" cy="211" r="9.5"/>
-<circle class="s-node-a" cx="77" cy="211" r="9.5"/>
-<rect class="s-line" x="100" y="188" width="98" height="46" rx="7"/>
-<circle class="s-node-r" cx="113" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="137" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="161" cy="211" r="9.5"/>
-<circle class="s-node" cx="185" cy="211" r="9.5"/>
-<text class="s-txt" style="font-size:16px" x="107" y="266" text-anchor="middle">C(3,0)·C(4,3)</text>
-<text class="s-txt" style="font-size:20px" x="208" y="267" text-anchor="middle">+</text>
-<rect class="s-line" x="218" y="188" width="74" height="46" rx="7"/>
-<circle class="s-node-r" cx="231" cy="211" r="9.5"/>
-<circle class="s-node-a" cx="255" cy="211" r="9.5"/>
-<circle class="s-node-a" cx="279" cy="211" r="9.5"/>
-<rect class="s-line" x="302" y="188" width="98" height="46" rx="7"/>
-<circle class="s-node" cx="315" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="339" cy="211" r="9.5"/>
-<circle class="s-node" cx="363" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="387" cy="211" r="9.5"/>
-<text class="s-txt" style="font-size:16px" x="309" y="266" text-anchor="middle">C(3,1)·C(4,2)</text>
-<text class="s-txt" style="font-size:20px" x="410" y="267" text-anchor="middle">+</text>
-<rect class="s-line" x="420" y="188" width="74" height="46" rx="7"/>
-<circle class="s-node-r" cx="433" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="457" cy="211" r="9.5"/>
-<circle class="s-node-a" cx="481" cy="211" r="9.5"/>
-<rect class="s-line" x="504" y="188" width="98" height="46" rx="7"/>
-<circle class="s-node-r" cx="517" cy="211" r="9.5"/>
-<circle class="s-node" cx="541" cy="211" r="9.5"/>
-<circle class="s-node" cx="565" cy="211" r="9.5"/>
-<circle class="s-node" cx="589" cy="211" r="9.5"/>
-<text class="s-txt" style="font-size:16px" x="511" y="266" text-anchor="middle">C(3,2)·C(4,1)</text>
-<text class="s-txt" style="font-size:20px" x="612" y="267" text-anchor="middle">+</text>
-<rect class="s-line" x="622" y="188" width="74" height="46" rx="7"/>
-<circle class="s-node-r" cx="635" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="659" cy="211" r="9.5"/>
-<circle class="s-node-r" cx="683" cy="211" r="9.5"/>
-<rect class="s-line" x="706" y="188" width="98" height="46" rx="7"/>
-<circle class="s-node" cx="719" cy="211" r="9.5"/>
-<circle class="s-node" cx="743" cy="211" r="9.5"/>
-<circle class="s-node" cx="767" cy="211" r="9.5"/>
-<circle class="s-node" cx="791" cy="211" r="9.5"/>
-<text class="s-txt" style="font-size:16px" x="713" y="266" text-anchor="middle">C(3,3)·C(4,0)</text>
+<svg viewBox="0 0 1924 402" width="1924" role="img" aria-label="Вандермонд как разбор по случаям: сверху одна рамка с семью узлами — тройка слева и четвёрка справа, три узла в ней взяты, подпись C(7,3). Снизу четыре пары рамок, разнесённые пустотой: в каждой паре левая рамка с тремя узлами тройки, правая с четырьмя узлами четвёрки, взято r узлов слева и три минус r справа для r от нуля до трёх; подписи C(3,0) на C(4,3) плюс C(3,1) на C(4,2) плюс C(3,2) на C(4,1) плюс C(3,3) на C(4,0)">
+<text class="s-txt" style="font-size:30px" x="962" y="34" text-anchor="middle">C(7,3)</text>
+<rect class="s-line" x="785" y="52" width="354" height="92" rx="11"/>
+<circle class="s-node-r" cx="818" cy="98" r="19"/>
+<circle class="s-node-a" cx="866" cy="98" r="19"/>
+<circle class="s-node-a" cx="914" cy="98" r="19"/>
+<circle class="s-node" cx="962" cy="98" r="19"/>
+<circle class="s-node-r" cx="1010" cy="98" r="19"/>
+<circle class="s-node" cx="1058" cy="98" r="19"/>
+<circle class="s-node-r" cx="1106" cy="98" r="19"/>
+<line class="s-thin" x1="929" y1="52" x2="929" y2="144"/>
+<rect class="s-line" x="22" y="244" width="162" height="92" rx="11"/>
+<circle class="s-node-a" cx="55" cy="290" r="19"/>
+<circle class="s-node-a" cx="103" cy="290" r="19"/>
+<circle class="s-node-a" cx="151" cy="290" r="19"/>
+<rect class="s-line" x="210" y="244" width="210" height="92" rx="11"/>
+<circle class="s-node-r" cx="243" cy="290" r="19"/>
+<circle class="s-node-r" cx="291" cy="290" r="19"/>
+<circle class="s-node-r" cx="339" cy="290" r="19"/>
+<circle class="s-node" cx="387" cy="290" r="19"/>
+<rect class="s-line" x="516" y="244" width="162" height="92" rx="11"/>
+<circle class="s-node-r" cx="549" cy="290" r="19"/>
+<circle class="s-node-a" cx="597" cy="290" r="19"/>
+<circle class="s-node-a" cx="645" cy="290" r="19"/>
+<rect class="s-line" x="704" y="244" width="210" height="92" rx="11"/>
+<circle class="s-node" cx="737" cy="290" r="19"/>
+<circle class="s-node-r" cx="785" cy="290" r="19"/>
+<circle class="s-node" cx="833" cy="290" r="19"/>
+<circle class="s-node-r" cx="881" cy="290" r="19"/>
+<rect class="s-line" x="1010" y="244" width="162" height="92" rx="11"/>
+<circle class="s-node-r" cx="1043" cy="290" r="19"/>
+<circle class="s-node-r" cx="1091" cy="290" r="19"/>
+<circle class="s-node-a" cx="1139" cy="290" r="19"/>
+<rect class="s-line" x="1198" y="244" width="210" height="92" rx="11"/>
+<circle class="s-node-r" cx="1231" cy="290" r="19"/>
+<circle class="s-node" cx="1279" cy="290" r="19"/>
+<circle class="s-node" cx="1327" cy="290" r="19"/>
+<circle class="s-node" cx="1375" cy="290" r="19"/>
+<rect class="s-line" x="1504" y="244" width="162" height="92" rx="11"/>
+<circle class="s-node-r" cx="1537" cy="290" r="19"/>
+<circle class="s-node-r" cx="1585" cy="290" r="19"/>
+<circle class="s-node-r" cx="1633" cy="290" r="19"/>
+<rect class="s-line" x="1692" y="244" width="210" height="92" rx="11"/>
+<circle class="s-node" cx="1725" cy="290" r="19"/>
+<circle class="s-node" cx="1773" cy="290" r="19"/>
+<circle class="s-node" cx="1821" cy="290" r="19"/>
+<circle class="s-node" cx="1869" cy="290" r="19"/>
+<text class="s-txt" style="font-size:25px" x="221" y="380" text-anchor="middle">C(3,0)·C(4,3)</text>
+<text class="s-txt" style="font-size:30px" x="468" y="302" text-anchor="middle">+</text>
+<text class="s-txt" style="font-size:25px" x="715" y="380" text-anchor="middle">C(3,1)·C(4,2)</text>
+<text class="s-txt" style="font-size:30px" x="962" y="302" text-anchor="middle">+</text>
+<text class="s-txt" style="font-size:25px" x="1209" y="380" text-anchor="middle">C(3,2)·C(4,1)</text>
+<text class="s-txt" style="font-size:30px" x="1456" y="302" text-anchor="middle">+</text>
+<text class="s-txt" style="font-size:25px" x="1703" y="380" text-anchor="middle">C(3,3)·C(4,0)</text>
 </svg>

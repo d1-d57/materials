@@ -8,11 +8,7 @@
 "display": false
 },
 {
-"tex": "1_A\\in\\mathcal C(A,A)",
-"display": false
-},
-{
-"tex": "1_B\\circ f=f=f\\circ 1_A",
+"tex": "1_A\\in\\mathcal C(A,A)\\text{,}",
 "display": false
 },
 {
@@ -60,7 +56,7 @@
 "display": false
 },
 {
-"tex": "F(g\\circ f)=Fg\\circ Ff\\text{,}",
+"tex": "F(g\\circ f)=Fg\\circ Ff",
 "display": false
 },
 {
@@ -81,6 +77,14 @@
 },
 {
 "tex": "F\\text{:}",
+"display": false
+},
+{
+"tex": "M",
+"display": false
+},
+{
+"tex": "N",
 "display": false
 },
 {
@@ -136,7 +140,7 @@
 "display": false
 },
 {
-"tex": "\\binom{n-1}k",
+"tex": "\\binom{n-1}k\\text{,}",
 "display": false
 },
 {
@@ -176,11 +180,7 @@
 "display": false
 },
 {
-"tex": "\\mathcal C(A,B)\\to\\mathcal D(FA,FB)",
-"display": false
-},
-{
-"tex": "\\mathrm{Ob}\\,\\mathcal C\\text{:}",
+"tex": "\\mathcal C(A,B)\\to\\mathcal D(FA,FB)\\text{,}",
 "display": false
 },
 {
@@ -188,7 +188,7 @@
 "display": false
 },
 {
-"tex": "\\mathrm{Ob}\\,\\mathcal C\\to\\mathrm{Ob}\\,\\mathcal D",
+"tex": "\\mathrm{Ob}\\,\\mathcal C\\to\\mathrm{Ob}\\,\\mathcal D\\text{;}",
 "display": false
 },
 {
@@ -240,7 +240,7 @@
 "display": false
 },
 {
-"tex": "h\\circ(g\\circ f)=(h\\circ g)\\circ f",
+"tex": "h\\circ(g\\circ f)=(h\\circ g)\\circ f\\qquad 1_B\\circ f=f=f\\circ 1_A",
 "display": false
 },
 {
@@ -249,14 +249,6 @@
 },
 {
 "tex": "k\\text{-}",
-"display": false
-},
-{
-"tex": "m",
-"display": false
-},
-{
-"tex": "n",
 "display": false
 },
 {
