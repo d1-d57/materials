@@ -170,6 +170,11 @@ _BOLD_STMT = re.compile(
     r"\s+(\d+)(.*?)\.\*\*\s*(.*)$", re.S)
 # Р-владелец 2026-07-24: врезки должны быть ОДНОГО вида и различаться только цветом метки —
 # серые безымянные плашки («Пример», «Замечание») из вида убраны, геометрия у всех общая.
+# ОПТ-ИН показа номера во врезке (frontmatter `nomera: da`). Умолчание False = поведение
+# Р-владельца 2026-07-28 без изменений. Ставится в load_streams перед рендером каждого
+# потока, потому что флаг — свойство ФАЙЛА, а не сборки.
+SHOW_NUM = False
+
 _STMT_CLS = {"Определение": ("stmt defn", "d"), "Пример": ("stmt task", "e"),
              "Задача": ("stmt task", "e"), "Замечание": ("stmt rem", "n")}
 
@@ -229,7 +234,11 @@ def _typed_block(joined, sid, proof_html=""):
         # и в якоре (:230) — спотыкание вызывал не номер сам по себе, а два перемешанных
         # ряда в отображении («201, 202, 2, 203, 204, 6, 205»). Автоссылки «по утверждению
         # 207» (:287) берут номер из текста и не страдают.
-        label = "%s%s." % (kw, name)                      # имя в скобках сохранено
+        # 2026-07-30, ОПТ-ИН `nomera: da` во фронтматтере: там, где ряд ОДИН, снятый номер
+        # ломает чтение с другой стороны — ссылка «по утверждению 8» ведёт во врезку без
+        # номера, и глазами её не найти, только кликом. Умолчание не тронуто: без флага
+        # поведение прежнее до символа.
+        label = ("%s %s%s." % (kw, num, name)) if SHOW_NUM else ("%s%s." % (kw, name))
         cls, key = _STMT_CLS.get(kw, ("stmt thm", "t"))
         anchor = ' id="%s-%s-%s"' % (sid, key, num)
         return ('<div class="%s"%s><span class="lbl">%s</span>%s%s</div>'
@@ -999,6 +1008,8 @@ def load_streams(src):
     for i, st in enumerate(streams):
         render = (render_stream_drill if st["meta"].get("format") == "drill-down"
                   else render_stream)                      # ОПТ-ИН drill-down; без флага — как раньше
+        global SHOW_NUM
+        SHOW_NUM = st["meta"].get("nomera", "").strip().lower() in ("da", "да", "1", "yes", "true")
         sid = "s%d" % i
         st["html"], st["toc"] = render(st["body"], sid)
         if render is render_stream:                        # drill-поток линкуется своим механизмом
@@ -1301,9 +1312,17 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
    ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
    нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
 .s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-thin-a{fill:none;stroke:var(--accent);stroke-width:1.4}
+/* .s-thin-a / .s-txt-a — тонкая акцентная линия и акцентная метка. Заведены 2026-07-31 (записки Л1):
+   цветовое кодирование роли стрелки (акцент = переименование/перестановка, нейтральный = сама
+   конструкция) требовало ТОНКОЙ акцентной линии, а .s-accent 2.4px для 9 стрелок в ряд слишком
+   жирна. ЦЕНА пропуска: аналитик выдумал классы на месте, в движке их не было, и в разделе
+   «Почему это красиво» не нарисовалась НИ ОДНА из 9 стрелок σ и обе горизонтали квадрата —
+   `<line>` без своего stroke по SVG не рисуется вовсе. Все три гейта остались зелёными. */
 .s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
 .s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
 .s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-txt-a{font-family:var(--sans);font-size:12px;fill:var(--accent)}
 .s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
 
 /* ── мета-строка потока ── */
