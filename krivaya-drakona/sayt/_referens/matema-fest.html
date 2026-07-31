@@ -1,0 +1,3621 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Галерея самоподобных форм</title>
+
+<meta property="og:title" content="Галерея самоподобных форм">
+<meta property="og:description" content="Девять экспонатов в хронологическом порядке: от множества Кантора до папоротника Барнсли. К 50-летию слова «фрактал».">
+<meta property="og:image" content="https://matema-fest.ru/gallery/cover-gallery.png">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://matema-fest.ru/gallery/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="description" content="Девять экспонатов в хронологическом порядке: от множества Кантора до папоротника Барнсли. К 50-летию слова «фрактал».">
+
+<script>
+  MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    chtml: { scale: 0.95 }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:             #0E0E10;
+  --bg-deep:        #08080A;
+  --text:           #ECECEC;
+  --text-secondary: #B8B8BC;
+  --text-muted:     #9A9AA0;
+  --rule:           #2A2A30;
+  --color-link:     #58C4DD;
+
+  --halo-intensity: 0.20;
+  --halo-pulse-duration: 30s;
+  --bg-pulse-duration: 12s;
+
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-body:    21px;
+  --fs-body-compact: 17px;  /* для слайдов с длинными текстами (Ковёр, Дракон) */
+  --fs-title:   clamp(28px, 3.6vw, 48px);
+  --fs-num:     13px;
+  --lh-body:    1.65;
+  --lh-title:   1.2;
+  --measure-body: 56ch;
+  --gap-paragraph: 1em;
+
+  --scene-content-width: 1180px;
+  --scene-padding-x: 24px;
+  --grid-text-fr: 0.4fr;
+  --grid-canvas-fr: 0.6fr;
+  --canvas-max-width: 900px;
+}
+
+* { box-sizing: border-box; }
+
+.gala-slide, .hero-slide, .outro-slide, .intro-slide {
+  scroll-margin-top: 0;
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ============================================
+   GALA-СЛАЙД (общий каркас для всех экспонатов)
+   ============================================ */
+.gala-slide {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: clamp(40px, 5vh, 64px) var(--scene-padding-x);
+}
+
+.gala-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at 60% 50%,
+      color-mix(in srgb, var(--exhibit-accent) 8%, transparent) 0%,
+      transparent 60%
+    ),
+    var(--bg);
+  animation: bg-breath var(--bg-pulse-duration) ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes bg-breath {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1.0; }
+}
+
+.gala-grid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--scene-content-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Шапка слайда (номер + заголовок) — на всю ширину контента, чтобы длинные
+   названия типа "Ковёр Серпинского и губка Менгера" не переносились */
+.gala-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Тело слайда — двухколонный грид: текст слева, canvas справа */
+.gala-body {
+  display: grid;
+  grid-template-columns: var(--grid-text-fr) var(--grid-canvas-fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: center;
+}
+
+.gala-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: var(--measure-body);
+  font-size: var(--exhibit-fs-body, var(--fs-body));
+}
+
+.section__num {
+  font-family: var(--font-mono);
+  font-size: var(--fs-num);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section__title {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-title);
+  line-height: var(--lh-title);
+  letter-spacing: -0.01em;
+  margin: 0;
+  /* Если хочется ещё компактнее на узких экранах */
+  white-space: normal;
+}
+
+.prose {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-paragraph);
+}
+
+.prose p { margin: 0; }
+
+.deeper-trigger {
+  align-self: flex-start;
+  padding: 12px 20px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  transition: border-color 200ms, color 200ms, background 200ms;
+}
+.deeper-trigger:hover,
+.deeper-trigger:focus-visible {
+  border-color: var(--color-link);
+  color: var(--color-link);
+  background: color-mix(in srgb, var(--color-link) 6%, transparent);
+}
+.deeper-trigger:focus-visible { outline: none; }
+
+/* объект — фигура с canvas */
+.gala-object {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  width: 100%;
+  max-width: var(--canvas-max-width);
+  margin-inline: auto;
+  aspect-ratio: 1 / 1;
+}
+
+.gala-object::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--exhibit-accent) calc(var(--halo-intensity) * 100%), transparent) 0%,
+      transparent 65%
+    );
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: halo-pulse var(--halo-pulse-duration) ease-in-out infinite;
+}
+
+@keyframes halo-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 1.15; }
+}
+
+.fractal-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  cursor: none;
+}
+
+/* zoom-курсор — прямоугольник, следует за мышью */
+.zoom-cursor {
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--exhibit-accent) 80%, white);
+  background: color-mix(in srgb, var(--exhibit-accent) 10%, transparent);
+  z-index: 5;
+  display: none;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.4);
+  will-change: transform, width, height;
+}
+.gala-object[data-cursor="active"] .zoom-cursor {
+  display: block;
+}
+
+/* ============================================
+   MINIMAP — обзорная карта в углу canvas
+   ============================================ */
+.minimap-area {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(8, 8, 10, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 8px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.minimap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  cursor: default;
+}
+.gala-object[data-zoomed="true"] .minimap { cursor: grab; }
+.minimap.dragging { cursor: grabbing !important; }
+
+.minimap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.minimap-frame {
+  position: absolute;
+  border: 1.5px solid #D4A574;
+  background: rgba(212, 165, 116, 0.10);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 0 4px rgba(212, 165, 116, 0.45);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.minimap-frame.is-tiny {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.7),
+    0 0 12px rgba(212, 165, 116, 0.95);
+}
+
+.minimap-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.minimap-controls--single .zoom-btn {
+  flex: 0 0 calc(50% - 2px);
+}
+
+/* Ряд reset — отделён лёгким разделителем сверху, кнопка с текстом */
+.minimap-controls--reset {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--rule);
+}
+.minimap-controls--reset .zoom-btn {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 5px 0;
+}
+.minimap-controls--reset .zoom-btn:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.zoom-btn {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--text-secondary);
+  padding: 4px 0;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms, opacity 200ms;
+}
+.zoom-btn:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--color-link);
+}
+.zoom-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   SIDE PANEL — выезжает слева, занимает зону текста
+   ============================================ */
+.deeper-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  background: var(--bg-deep);
+  border-right: 1px solid var(--rule);
+  --panel-x: 100vw;
+  transform: translateX(calc(-100% - var(--panel-x)));
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  padding: 64px var(--panel-pad-right, 0px) 40px 0;
+  z-index: 100;
+  color: var(--text);
+}
+
+.deeper-panel[data-open="true"] {
+  transform: translateX(0);
+}
+
+.deeper-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-muted);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms, background 200ms;
+}
+.deeper-close:hover,
+.deeper-close:focus-visible {
+  color: var(--text);
+  background: var(--rule);
+  outline: none;
+}
+
+.deeper-content {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+
+.deeper-content h3 {
+  font-size: 13px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+.deeper-content p {
+  margin: 0 0 1em;
+}
+
+/* deeper-intro — особая плашка: ровно по ширине области intro-text, в 2 колонки, не наезжает на timeline */
+#deeper-intro .deeper-content {
+  font-size: 21px;
+  line-height: 1.5;
+  padding-right: 24px;
+  padding-left: 24px;
+  max-width: 100%;
+}
+#deeper-intro .deeper-content h3 {
+  margin: 0 0 18px;
+  font-size: 14px;
+}
+#deeper-intro .deeper-content p {
+  margin: 0 0 0.7em;
+}
+#deeper-intro {
+  padding-top: 32px;
+  padding-bottom: 16px;
+  border-right: none;
+  transform: translateY(20px) !important;
+  opacity: 0;
+  transition: transform 350ms ease, opacity 300ms ease;
+  pointer-events: none;
+}
+#deeper-intro[data-open="true"] {
+  transform: translateY(0) !important;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.deeper-content a.gloss {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--text-muted);
+  cursor: help;
+}
+.deeper-content a.gloss:hover {
+  color: var(--color-link);
+  border-bottom-color: var(--color-link);
+}
+
+.ifs-list {
+  margin: 1.4em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+.ifs-row {
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  font-size: 17px;
+  color: var(--text);
+}
+.ifs-row:last-child { border-bottom: 1px solid var(--rule); }
+
+.deeper-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms;
+  z-index: 99;
+}
+.deeper-backdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ============================================
+   КНОПКА "ДАЛЬШЕ" — переход к следующему слайду
+   ============================================ */
+.next-slide {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 200ms;
+  padding: 8px 16px;
+}
+.next-slide:hover, .next-slide:focus-visible {
+  color: var(--text);
+  outline: none;
+}
+.next-slide-arrow {
+  font-size: 16px;
+  line-height: 1;
+  animation: arrow-bob 2.4s ease-in-out infinite;
+}
+@keyframes arrow-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+
+/* Слайды с длинными текстами — компактный шрифт, чтобы помещалось на экран */
+#exhibit-carpet,
+#exhibit-dragon,
+#exhibit-hilbert,
+#exhibit-cantor,
+#exhibit-apollonian {
+  --exhibit-fs-body: var(--fs-body-compact);
+}
+#exhibit-carpet .gala-text,
+#exhibit-dragon .gala-text,
+#exhibit-hilbert .gala-text,
+#exhibit-cantor .gala-text,
+#exhibit-apollonian .gala-text {
+  gap: 18px;
+}
+
+/* ============================================
+   INTRO — вводный слайд между hero и первым экспонатом
+   ============================================ */
+.intro-slide {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--scene-padding-x);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.intro-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    color-mix(in srgb, #C9A961 4%, transparent) 0%,
+    transparent 70%
+  );
+  animation: bg-breath 14s ease-in-out infinite;
+  z-index: 0;
+}
+
+.intro-grid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-paragraph);
+  max-width: 56ch;
+  font-size: clamp(20px, 2.2vw, 26px);
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.intro-text p { margin: 0; }
+
+.intro-text .intro-link {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--text-muted);
+  transition: color 200ms, border-color 200ms;
+}
+.intro-text .intro-link:hover, .intro-text .intro-link:focus-visible {
+  color: var(--color-link);
+  border-bottom-color: var(--color-link);
+  outline: none;
+}
+
+.intro-text .deeper-trigger { align-self: center; margin-top: 16px; }
+
+/* TIMELINE — горизонтальная полоса с миниатюрами */
+.timeline {
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 8px;
+  position: relative;
+  padding: 12px 0 44px;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 32px;
+  right: 32px;
+  height: 1px;
+  background: var(--rule);
+  transform: translateY(-22px);
+}
+
+.timeline-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  gap: 8px;
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.timeline-thumb {
+  width: 92px;
+  height: 92px;
+  border-radius: 6px;
+  background: var(--bg-deep);
+  border: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 200ms, transform 200ms;
+}
+.timeline-thumb canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.timeline-year {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  transition: color 200ms;
+}
+
+.timeline-item:hover .timeline-thumb,
+.timeline-item:focus-visible .timeline-thumb {
+  border-color: var(--text);
+  transform: translateY(-2px);
+  outline: none;
+}
+.timeline-item:hover .timeline-year,
+.timeline-item:focus-visible .timeline-year {
+  color: var(--text);
+}
+
+@media (max-width: 720px) {
+  .timeline { display: none; }
+}
+
+/* ============================================
+   HERO — заглавная страница
+   ============================================ */
+.hero-slide {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--scene-padding-x);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    color-mix(in srgb, #C9A961 6%, transparent) 0%,
+    transparent 70%
+  );
+  animation: bg-breath 14s ease-in-out infinite;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+}
+.hero-eyebrow a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 200ms, border-color 200ms;
+}
+.hero-eyebrow a:hover, .hero-eyebrow a:focus-visible {
+  color: var(--text);
+  border-bottom-color: var(--text);
+  outline: none;
+}
+.hero-eyebrow-sep { color: var(--text-muted); }
+
+.hero-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  /* виньетирование от центра наружу — фрактал растворяется */
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  opacity: 0.5;
+}
+#hero-canvas {
+  display: block;
+  width: min(900px, 90vw);
+  height: min(900px, 90vh);
+}
+
+.hero-title {
+  font-size: clamp(48px, 7vw, 92px);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--text);
+}
+
+.hero-subtitle {
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 600px;
+}
+
+.hero-enter {
+  margin-top: 16px;
+  padding: 16px 32px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 200ms, color 200ms, background 200ms;
+}
+.hero-enter:hover, .hero-enter:focus-visible {
+  border-color: var(--color-link);
+  color: var(--color-link);
+  background: color-mix(in srgb, var(--color-link) 6%, transparent);
+  outline: none;
+}
+
+/* ============================================
+   OUTRO
+   ============================================ */
+.outro-slide {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px var(--scene-padding-x);
+  background: var(--bg);
+}
+
+.outro-content {
+  max-width: 640px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.outro-content h2 {
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0;
+}
+
+.outro-meta {
+  margin-top: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.outro-links {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: center;
+}
+
+.outro-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 200ms, border-color 200ms;
+}
+
+.outro-links a:hover, .outro-links a:focus-visible {
+  color: var(--text);
+  border-bottom-color: var(--text);
+  outline: none;
+}
+
+/* ============================================
+   DOT-NAV — точки справа по центру
+   ============================================ */
+#dot-nav {
+  position: fixed;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 50;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 200ms, transform 200ms, background 200ms;
+  position: relative;
+}
+.dot:hover, .dot:focus-visible { opacity: 1; outline: none; }
+.dot.active {
+  opacity: 1;
+  background: var(--text);
+  transform: scale(1.4);
+}
+
+.dot-label {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: var(--bg-deep);
+  padding: 8px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms;
+}
+.dot:hover .dot-label, .dot:focus-visible .dot-label { opacity: 1; }
+/* Активная точка увеличена через scale(1.4) — компенсируем у метки, чтобы шрифт оставался единым */
+.dot.active .dot-label { transform: translateY(-50%) scale(0.714); transform-origin: right center; }
+
+@media (max-width: 720px) {
+  #dot-nav { display: none; }
+}
+
+/* ============================================
+   MOBILE
+   ============================================ */
+@media (max-width: 720px) {
+  .gala-body {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .gala-object { order: -1; max-width: 100%; }
+  .gala-text   { order: 0; }
+  .section__title { font-size: clamp(24px, 6vw, 36px); }
+
+  .deeper-panel {
+    top: auto;
+    bottom: 0;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 75vh;
+    height: 75svh;
+    border-right: none;
+    border-top: 1px solid var(--rule);
+    --panel-x: 0px;
+    transform: translateY(100%);
+    padding: 56px 24px 32px;
+  }
+  .deeper-panel[data-open="true"] { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gala-object::before { animation: none; opacity: 1 !important; }
+  .gala-bg            { animation: none; opacity: 0.7 !important; }
+  .deeper-panel       { transition: none; }
+  .deeper-backdrop    { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     HERO — заглавная страница
+     ============================================ -->
+<section class="hero-slide" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-canvas-wrap">
+    <canvas id="hero-canvas"></canvas>
+  </div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">
+      <a href="https://t.me/turings_crossword" target="_blank" rel="noopener">Кроссворд Тьюринга</a>
+      <span class="hero-eyebrow-sep">·</span>
+      <a href="https://matema-fest.ru" target="_blank" rel="noopener">фрактальная одиссея</a>
+    </span>
+    <h1 class="hero-title">Галерея самоподобных&nbsp;форм</h1>
+    <p class="hero-subtitle">Девять экспонатов в&nbsp;хронологическом порядке: от&nbsp;множества Кантора до&nbsp;папоротника Барнсли. К&nbsp;50-летию слова «фрактал».</p>
+    <button class="hero-enter" data-target="intro">Войти в&nbsp;галерею ↓</button>
+  </div>
+</section>
+
+
+<!-- ============================================
+     INTRO — вводный слайд с timeline
+     ============================================ -->
+<section class="intro-slide" id="intro">
+  <div class="intro-bg"></div>
+  <div class="intro-grid">
+    <div class="intro-text">
+      <p>23 мая 2026&nbsp;года в&nbsp;Москве пройдёт фестиваль <a href="https://matema-fest.ru" target="_blank" rel="noopener" class="intro-link">«Фрактальная Одиссея»</a>&nbsp;— к&nbsp;пятидесятилетию слова «фрактал», которое Бенуа Мандельброт придумал в&nbsp;1975&nbsp;году.</p>
+
+      <p>Эта галерея&nbsp;— девять экспонатов из&nbsp;одной семьи самоподобных множеств. Все они получены одним приёмом: маленький набор правил применяется снова, снова и&nbsp;снова. Разные правила&nbsp;— разные формы.</p>
+
+      <p>У&nbsp;слова «фрактал» есть неформальное определение через самоподобие, и&nbsp;формальное через размерности&nbsp;— к&nbsp;нему мы&nbsp;будем возвращаться в&nbsp;каждой карточке.</p>
+
+      <button class="deeper-trigger" data-opens="deeper-intro">Что значит «фрактал» формально →</button>
+    </div>
+
+    <nav class="timeline" id="exhibit-timeline" aria-label="Временная шкала экспонатов">
+      <div class="timeline-line"></div>
+      <div class="timeline-items"></div>
+    </nav>
+  </div>
+</section>
+
+<aside class="deeper-panel" id="deeper-intro" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>За кулисами: про определение фрактала</h3>
+    <p>В&nbsp;1982&nbsp;году Бенуа Мандельброт дал такое определение: фрактал&nbsp;— это множество, у&nbsp;которого <strong>размерность Хаусдорфа</strong> строго больше <strong>топологической размерности</strong>. У&nbsp;отрезка обе равны&nbsp;1, у&nbsp;треугольника Серпинского хаусдорфова $\approx 1{.}585$, топологическая&nbsp;1.</p>
+
+    <p>Зачем изобретать такое сложное определение? Самоподобие плохо формализуется. Множество Мандельброта (в&nbsp;этой галерее его нет, но&nbsp;оно лицо всей фрактальной геометрии)&nbsp;— самоподобно только приближённо: его уменьшенные внутренние копии похожи на&nbsp;целое, но&nbsp;не&nbsp;равны ему. Определение через две размерности гораздо универсальнее.</p>
+
+    <p>Топологическая размерность&nbsp;— это привычная размерность: 0&nbsp;для точек, 1&nbsp;для линии, 2&nbsp;для поверхности и&nbsp;так далее. В&nbsp;наших примерах она очевидна и&nbsp;отдельно её&nbsp;комментировать не&nbsp;приходится.</p>
+
+    <p>Размерность Хаусдорфа сложнее. Для гладких объектов она совпадает с&nbsp;обычной. Для самоподобных множеств её&nbsp;удобно считать так: если объект состоит из&nbsp;$N$ непересекающихся копий самого себя, каждая в&nbsp;$1/r$ раз меньше, то&nbsp;его размерность&nbsp;$d$ удовлетворяет уравнению $N \cdot r^d = 1$.</p>
+
+    <p>Экспонаты галереи получены одной общей конструкцией&nbsp;— <strong>системой итерируемых функций</strong> (IFS). Это конечный набор сжимающих аффинных преобразований $f_1, \dots, f_k$ плоскости. По&nbsp;нему строится отображение $\Phi$, переводящее $X$ в&nbsp;объединение его образов: $\Phi(X) = f_1(X) \cup \dots \cup f_k(X)$.</p>
+
+    <p>Если стартовать с&nbsp;произвольного непустого компактного множества&nbsp;$X$, последовательность $X, \Phi(X), \Phi^2(X), \dots$ сходится к&nbsp;одному и&nbsp;тому&nbsp;же предельному множеству&nbsp;$A$, не&nbsp;зависящему от&nbsp;стартового. Оно называется <strong>аттрактором</strong> системы и&nbsp;удовлетворяет уравнению $A = f_1(A) \cup \dots \cup f_k(A)$. Аттрактор&nbsp;— пример фрактала.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 1 · МНОЖЕСТВО КАНТОРА
+     ============================================ -->
+<section class="gala-slide" id="exhibit-cantor" style="--exhibit-accent: #8B95A1;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 1 · 1883</span>
+      <h2 class="section__title">Множество Кантора</h2>
+    </header>
+
+    <div class="gala-body">
+      <aside class="gala-text">
+        <div class="prose">
+          <p>Возьмите отрезок $[0, 1]$, выкиньте среднюю треть&nbsp;— интервал $(1/3, 2/3)$. Повторите процедуру для двух оставшихся отрезков, потом для четырёх, и&nbsp;так дальше, до&nbsp;бесконечности.</p>
+
+          <p>То, что остаётся, называется множеством Кантора&nbsp;— в&nbsp;честь создателя теории множеств Георга Кантора, который описал его в&nbsp;1883&nbsp;году.</p>
+
+          <button class="deeper-trigger" data-opens="formulas-cantor">Формулы →</button>
+
+          <p>Получившийся объект самоподобен: левая и&nbsp;правая его половины&nbsp;— уменьшенные в&nbsp;три раза копии целого. Видно это из&nbsp;самой конструкции: после первого шага каждый из&nbsp;двух остатков устроен ровно так&nbsp;же, как исходный отрезок до&nbsp;начала процедуры.</p>
+
+          <p>У&nbsp;множества Кантора есть несколько неочевидных свойств. С&nbsp;одной стороны, его суммарная длина равна нулю. С&nbsp;другой, точек в&nbsp;нём столько&nbsp;же, сколько в&nbsp;исходном отрезке: между ними устанавливается взаимно однозначное соответствие. Это первый пример нигде не&nbsp;плотного совершенного множества.</p>
+
+          <p>Все остальные экспонаты галереи&nbsp;— варианты этого приёма с&nbsp;другими правилами выкидывания.</p>
+        </div>
+
+        <button class="deeper-trigger" data-opens="deeper-cantor">Детали →</button>
+      </aside>
+
+      <figure class="gala-object">
+        <canvas class="fractal-canvas"></canvas>
+        <div class="zoom-cursor"></div>
+        <div class="minimap-area">
+          <div class="minimap">
+            <canvas class="minimap-canvas"></canvas>
+            <div class="minimap-frame"></div>
+          </div>
+          <div class="minimap-controls">
+            <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+            <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+          </div>
+          <div class="minimap-controls minimap-controls--single">
+            <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+          </div>
+          <div class="minimap-controls">
+            <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+            <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+          </div>
+          <div class="minimap-controls minimap-controls--single">
+            <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-koch">
+    <span>дальше</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-cantor" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Множество Кантора состоит из&nbsp;2&nbsp;копий самого себя, каждая в&nbsp;3&nbsp;раза меньше. По&nbsp;формуле $N \cdot r^d = 1$ размерность Хаусдорфа: $d = \log 2 / \log 3 \approx 0{.}631$. Топологическая размерность $C$ равна&nbsp;0. Значит, это фрактал по&nbsp;определению Мандельброта.</p>
+  </div>
+</aside>
+
+<aside class="deeper-panel" id="formulas-cantor" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Формулы</h3>
+    <p>Рассмотрим преобразования отрезка $[0, 1]$ в&nbsp;себя:</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$f_1(x) = x / 3$</div>
+      <div class="ifs-row">$f_2(x) = x / 3 + 2/3$</div>
+    </div>
+    <p>Множество Кантора&nbsp;— аттрактор этой системы.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 6 · ДЕРЕВО ПИФАГОРА
+     ============================================ -->
+<section class="gala-slide" id="exhibit-pythagoras" style="--exhibit-accent: #B89A50;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 7 · 1942</span>
+      <h2 class="section__title">Дерево Пифагора</h2>
+    </header>
+
+    <div class="gala-body">
+      <aside class="gala-text">
+        <div class="prose">
+          <p>Альберт Босман, голландский учитель математики, нарисовал это дерево в&nbsp;1942&nbsp;году. На&nbsp;квадрате строится прямоугольный равнобедренный треугольник, на&nbsp;двух его катетах&nbsp;— два меньших квадрата, на&nbsp;каждом из&nbsp;них всё повторяется.</p>
+
+          <p>Каждый узел дерева&nbsp;— классическая школьная иллюстрация теоремы Пифагора: три квадрата, прижатых к&nbsp;сторонам прямоугольного треугольника.</p>
+
+          <p>Если изменить угол при гипотенузе с&nbsp;$45°$ на&nbsp;меньший, дерево становится асимметричным: у&nbsp;двух дочерних квадратов теперь разные размеры, и&nbsp;крона перекашивается. Один параметр управляет всей геометрией&nbsp;— получаются то&nbsp;ровные паркеты, то&nbsp;густые кроны, то&nbsp;разреженные ветвистые скелеты.</p>
+        </div>
+
+        <button class="deeper-trigger" data-opens="deeper-pythagoras">Детали →</button>
+      </aside>
+
+      <figure class="gala-object">
+        <canvas class="fractal-canvas"></canvas>
+        <div class="zoom-cursor"></div>
+        <div class="minimap-area">
+          <div class="minimap">
+            <canvas class="minimap-canvas"></canvas>
+            <div class="minimap-frame"></div>
+          </div>
+          <div class="minimap-controls">
+            <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+            <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+          </div>
+          <div class="minimap-controls minimap-controls--single">
+            <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+          </div>
+          <div class="minimap-controls">
+            <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+            <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+          </div>
+          <div class="minimap-controls minimap-controls--single">
+            <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-dragon">
+    <span>дальше</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-pythagoras" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>При угле $45°$ дерево&nbsp;— аттрактор IFS из&nbsp;двух подобий с&nbsp;коэффициентом $1/\sqrt{2}$. Формула $N \cdot r^d = 1$ даёт $d = 2$. У&nbsp;дерева есть внутренние точки (оно занимает прямоугольник $6L \times 4L$), поэтому и&nbsp;топологическая размерность тоже&nbsp;$2$&nbsp;— формально под определение Мандельброта дерево при $45°$ не&nbsp;подпадает. Это пограничный случай: самоподобие есть, формальной фрактальности&nbsp;— нет.</p>
+    <p>При меньших углах коэффициенты двух преобразований становятся разными&nbsp;— $\cos\alpha$ и&nbsp;$\sin\alpha$&nbsp;— и&nbsp;формула $N \cdot r^d = 1$ заменяется на $\cos^d\alpha + \sin^d\alpha = 1$, что даёт дробную размерность Хаусдорфа. Тогда дерево становится честным фракталом по&nbsp;Мандельброту.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 4 · СЕРПИНСКИЙ ТРЕУГОЛЬНИК
+     ============================================ -->
+<section class="gala-slide" id="exhibit-sierpinski" style="--exhibit-accent: #A088B8;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 4 · 1915</span>
+      <h2 class="section__title">Треугольник Серпинского</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>Этот фрактал описал польский математик Вацлав Серпинский в&nbsp;1915&nbsp;году. Возьмите равносторонний треугольник, выкиньте центральный (с&nbsp;вершинами в&nbsp;серединах сторон) и&nbsp;повторите процедуру для трёх оставшихся.</p>
+
+        <p>Один из&nbsp;следующих материалов серии будет посвящён вероятностному способу его&nbsp;получить.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-sierpinski">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-carpet">
+    <span>дальше · ковёр Серпинского</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<!-- Плашки Серпинского -->
+<aside class="deeper-panel" id="deeper-sierpinski" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Треугольник Серпинского&nbsp;— аттрактор IFS из&nbsp;трёх преобразований, действующих на&nbsp;вектор сжатием в&nbsp;2&nbsp;раза и&nbsp;сдвигом на&nbsp;$b_i$:</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$b_1 = (0,\,0)$</div>
+      <div class="ifs-row">$b_2 = (1/2,\,0)$</div>
+      <div class="ifs-row">$b_3 = (1/4,\,\sqrt{3}/4)$</div>
+    </div>
+    <p>По&nbsp;формуле $N \cdot r^d = 1$ размерность Хаусдорфа: $d = \log 3 / \log 2 \approx 1{.}585$. Топологическая размерность равна&nbsp;1, так что треугольник Серпинского&nbsp;— фрактал по&nbsp;определению Мандельброта.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 8 · ПАПОРОТНИК БАРНСЛИ
+     ============================================ -->
+<section class="gala-slide" id="exhibit-barnsley" style="--exhibit-accent: #7A9B6E;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 9 · 1988</span>
+      <h2 class="section__title">Папоротник Барнсли</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>Майкл Барнсли в&nbsp;книге <em>Fractals Everywhere</em> (1988) показал, что папоротник&nbsp;— точнее, конкретный его вид, костенец чёрный (<em>Asplenium adiantum-nigrum</em>)&nbsp;— можно построить четырьмя простыми преобразованиями плоскости: каждое сжимает картинку, поворачивает и&nbsp;сдвигает.</p>
+
+        <button class="deeper-trigger" data-opens="formulas-barnsley">Формулы →</button>
+
+        <p>Алгоритм такой. Берёте произвольную точку, применяете к&nbsp;ней случайно выбранное преобразование и&nbsp;ставите получившуюся точку на&nbsp;лист. К&nbsp;новой точке снова применяете случайно выбранное преобразование, ставите её&nbsp;на&nbsp;лист, и&nbsp;так миллион раз. Преобразования выбираются с&nbsp;разными вероятностями. Главное&nbsp;— в&nbsp;$85\%$ случаев, оно даёт уменьшенную копию всего папоротника. Два&nbsp;других, по&nbsp;$7\%$ каждое, рисуют левый и&nbsp;правый листики. Последнее, в&nbsp;$1\%$ случаев, даёт тонкий стебель.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-barnsley">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+</section>
+
+<!-- Плашки Барнсли -->
+<aside class="deeper-panel" id="deeper-barnsley" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>В&nbsp;отличие от&nbsp;треугольника Серпинского, папоротник самоаффинен, а&nbsp;не самоподобен в&nbsp;строгом смысле: преобразования сжимают по&nbsp;разным направлениям с&nbsp;разными коэффициентами. Формула $N \cdot r^d = 1$ напрямую неприменима, и&nbsp;размерность Хаусдорфа приходится считать численно: $\approx 1{.}85$ при топологической размерности&nbsp;1. По&nbsp;определению Мандельброта это фрактал.</p>
+  </div>
+</aside>
+
+<aside class="deeper-panel" id="formulas-barnsley" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Формулы</h3>
+    <p>Папоротник Барнсли&nbsp;— аттрактор IFS из&nbsp;четырёх преобразований: к&nbsp;вектору&nbsp;$v$ применяем матрицу&nbsp;$A_i$, потом прибавляем сдвиг&nbsp;$b_i$:</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$A_1 = \begin{pmatrix} 0 & 0 \\ 0 & 0{.}16 \end{pmatrix},\ b_1 = \begin{pmatrix} 0 \\ 0 \end{pmatrix}$</div>
+      <div class="ifs-row">$A_2 = \begin{pmatrix} 0{.}85 & 0{.}04 \\ -0{.}04 & 0{.}85 \end{pmatrix},\ b_2 = \begin{pmatrix} 0 \\ 1{.}6 \end{pmatrix}$</div>
+      <div class="ifs-row">$A_3 = \begin{pmatrix} 0{.}20 & -0{.}26 \\ 0{.}23 & 0{.}22 \end{pmatrix},\ b_3 = \begin{pmatrix} 0 \\ 1{.}6 \end{pmatrix}$</div>
+      <div class="ifs-row">$A_4 = \begin{pmatrix} -0{.}15 & 0{.}28 \\ 0{.}26 & 0{.}24 \end{pmatrix},\ b_4 = \begin{pmatrix} 0 \\ 0{.}44 \end{pmatrix}$</div>
+    </div>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 3 · СНЕЖИНКА КОХА
+     ============================================ -->
+<section class="gala-slide" id="exhibit-koch" style="--exhibit-accent: #A8C5DA;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 3 · 1904</span>
+      <h2 class="section__title">Снежинка Коха</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>В&nbsp;1872&nbsp;году Карл Вейерштрасс построил функцию, которая всюду непрерывна, но&nbsp;нигде не&nbsp;дифференцируема,&nbsp;— сумму ряда косинусов. Это был первый пример «патологической» кривой в&nbsp;анализе. В&nbsp;1904&nbsp;году шведский математик Хельге фон&nbsp;Кох получил такой объект чисто геометрической конструкцией.</p>
+
+        <p>Возьмите равносторонний треугольник; на&nbsp;средней трети каждой стороны постройте равносторонний выступ наружу и&nbsp;удалите его основание. Повторите конструкцию на&nbsp;каждой получившейся стороне, пока в&nbsp;пределе не&nbsp;получится снежинка Коха. Она непрерывна и&nbsp;нигде не&nbsp;имеет касательной.</p>
+
+        <button class="deeper-trigger" data-opens="formulas-koch">Формулы →</button>
+
+        <p>Граница снежинки имеет бесконечную длину, но&nbsp;огибает конечную площадь&nbsp;— ровно $8/5$ площади исходного треугольника.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-koch">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-sierpinski">
+    <span>дальше · треугольник Серпинского</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-koch" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Кривая Коха состоит из&nbsp;4&nbsp;копий самой себя, каждая в&nbsp;3&nbsp;раза меньше. Это аттрактор IFS из&nbsp;четырёх подобий с&nbsp;коэффициентом&nbsp;$1/3$. По&nbsp;формуле $N \cdot r^d = 1$ размерность Хаусдорфа: $d = \log 4 / \log 3 \approx 1{.}2619$. Топологическая размерность равна&nbsp;1, значит кривая Коха&nbsp;— фрактал по&nbsp;определению Мандельброта.</p>
+    <p>Длина после $n$ итераций равна $(4/3)^n$&nbsp;— растёт неограниченно. Площадь $8/5$ получается из&nbsp;суммы геометрической прогрессии: на&nbsp;$k$-й итерации к&nbsp;контуру прибавляется $3 \cdot 4^{k-1}$ маленьких треугольников, каждый со&nbsp;стороной $3^{-k}$ от&nbsp;исходной.</p>
+  </div>
+</aside>
+
+<aside class="deeper-panel" id="formulas-koch" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Формулы</h3>
+    <p>Одна сторона снежинки&nbsp;— аттрактор IFS из&nbsp;четырёх подобий с&nbsp;коэффициентом&nbsp;$1/3$. К&nbsp;вектору $v$ применяем матрицу&nbsp;$A_i$ (поворот на&nbsp;угол&nbsp;$\theta_i$ и&nbsp;сжатие в&nbsp;три раза), потом прибавляем сдвиг&nbsp;$b_i$:</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$\theta_1 = 0,\quad b_1 = (0,\,0)$</div>
+      <div class="ifs-row">$\theta_2 = +60°,\quad b_2 = (1/3,\,0)$</div>
+      <div class="ifs-row">$\theta_3 = -60°,\quad b_3 = (1/2,\,\sqrt{3}/6)$</div>
+      <div class="ifs-row">$\theta_4 = 0,\quad b_4 = (2/3,\,0)$</div>
+    </div>
+    <p>Полная снежинка&nbsp;— три таких стороны, повёрнутые на&nbsp;$0°$, $-120°$, $+120°$ вокруг вершин исходного равностороннего треугольника.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 5 · КОВЁР СЕРПИНСКОГО + ГУБКА МЕНГЕРА
+     ============================================ -->
+<section class="gala-slide" id="exhibit-carpet" style="--exhibit-accent: #B89568;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 5 · 1916, 1926</span>
+      <h2 class="section__title">Ковёр Серпинского и&nbsp;губка Менгера</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>Эти фракталы очень похожи на&nbsp;треугольник Серпинского. Ковёр получается из&nbsp;квадрата, который делится на&nbsp;9&nbsp;одинаковых клеток, центральная выкидывается; повторяется на&nbsp;восьми оставшихся. Губка&nbsp;— из&nbsp;куба: он&nbsp;делится на&nbsp;27, выкидываются центры всех граней и&nbsp;центр всего куба; остаётся 20&nbsp;кубиков, на&nbsp;каждом повторяется.</p>
+
+        <button class="deeper-trigger" data-opens="formulas-carpet">Формулы →</button>
+
+        <p>У&nbsp;этих двух фигур есть удивительное общее свойство, ради которого их&nbsp;и&nbsp;придумали. Серпинский в&nbsp;1916&nbsp;году доказал, что в&nbsp;ковёр можно непрерывно поместить любой граф на&nbsp;плоскости. Менгер в&nbsp;1926-м доказал аналогичное для губки и&nbsp;графов в&nbsp;пространстве сколь угодно высокой размерности.</p>
+
+        <p>В&nbsp;ноябре 2024-го Малорс Эспиноса с&nbsp;группой студентов показал: любой узел можно завязать из&nbsp;верёвки, целиком лежащей внутри губки Менгера. То&nbsp;есть кривая-трилистник, кривая-восьмёрка, любой другой узел&nbsp;— все они находятся внутри этой дырявой конструкции.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-carpet">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-dragon">
+    <span>дальше · дракон Хартера — Хейтуэя</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-carpet" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Размерности Хаусдорфа: ковёр $\log 8 / \log 3 \approx 1{.}893$; губка $\log 20 / \log 3 \approx 2{.}727$. Топологическая размерность у&nbsp;обоих равна&nbsp;1, так что эти объекты&nbsp;— фракталы по&nbsp;определению Мандельброта.</p>
+  </div>
+</aside>
+
+<aside class="deeper-panel" id="formulas-carpet" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Формулы</h3>
+    <p>Ковёр&nbsp;— аттрактор IFS из&nbsp;восьми подобий с&nbsp;коэффициентом&nbsp;$1/3$. Восемь сдвигов $b_{ij}$ (для&nbsp;$i, j \in \{0, 1, 2\}$, кроме&nbsp;$i = j = 1$):</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$b_{ij} = (i/3,\,j/3)$</div>
+    </div>
+    <p>То&nbsp;есть к&nbsp;вектору $v$ применяем $\tfrac{1}{3} v + b_{ij}$ для одной из&nbsp;восьми пар индексов.</p>
+    <p>Для куба конструкция аналогична.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 2 · КРИВЫЕ ПЕАНО И ГИЛЬБЕРТА
+     ============================================ -->
+<section class="gala-slide" id="exhibit-hilbert" style="--exhibit-accent: #C57B5B;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 2 · 1890–1891</span>
+      <h2 class="section__title">Кривые Пеано и&nbsp;Гильберта</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>Можно ли провести непрерывную кривую, которая пройдёт через каждую точку квадрата? До&nbsp;конца XIX&nbsp;века все были уверены, что нельзя: кривая одномерна, квадрат двумерен. Но&nbsp;Кантор показал, что между точками отрезка и&nbsp;точками квадрата существует взаимно однозначное соответствие&nbsp;— и&nbsp;встал вопрос, можно ли это соответствие сделать непрерывным.</p>
+
+        <p>В&nbsp;1890&nbsp;году Джузеппе Пеано построил такую кривую. В&nbsp;статье он&nbsp;сознательно отказался от&nbsp;иллюстраций&nbsp;— хотел чисто аналитического доказательства, не&nbsp;опираясь на&nbsp;наглядность. Через год Давид Гильберт описал свою&nbsp;— более простую&nbsp;— версию и&nbsp;нарисовал её. Пеано в&nbsp;итоге всё&nbsp;же выложил свою кривую плиткой на&nbsp;террасе купленной им&nbsp;виллы.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-hilbert">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-koch">
+    <span>дальше</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-hilbert" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Образ кривой Гильберта&nbsp;— весь единичный квадрат; его размерность Хаусдорфа равна&nbsp;2 (как у&nbsp;заполненного квадрата). Топологическая размерность&nbsp;1, значит кривая Гильберта&nbsp;— фрактал по&nbsp;определению Мандельброта.</p>
+    <p>Самоподобие у&nbsp;кривой Гильберта устроено хитрее, чем у&nbsp;Кантора. Если посмотреть на&nbsp;одну из&nbsp;четырёх клеток, на&nbsp;которые делится квадрат, кривая проходит через эту клетку точно так&nbsp;же, как через целый квадрат, только повёрнуто или отражено. Каждая клетка делится дальше на&nbsp;четыре, и&nbsp;в&nbsp;каждой&nbsp;— снова повёрнутая копия целого.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 7 · ДРАКОН ХАРТЕРА — ХЕЙТУЭЯ
+     ============================================ -->
+<section class="gala-slide" id="exhibit-dragon" style="--exhibit-accent: #B85A55;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 8 · 1967</span>
+      <h2 class="section__title">Дракон Хартера&nbsp;— Хейтуэя</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>Эту кривую открыли в&nbsp;1960-х физики NASA Джон Хейтуэй, Брюс Бэнкс и&nbsp;Уильям Хартер. Мартин Гарднер опубликовал её&nbsp;в&nbsp;1967&nbsp;году в&nbsp;<em>Scientific American</em>, в&nbsp;колонке «Математические игры».</p>
+
+        <p>Нарисовать дракона можно без компьютера. Возьмите длинную плотную полоску&nbsp;— бумажная лента или картонная полоска подойдут. Несколько раз сложите её&nbsp;пополам в&nbsp;одну сторону. Потом аккуратно разверните, расправив каждый сгиб в&nbsp;прямой пространственный угол: полоска встанет торчком, как гармошка. Посмотрите на&nbsp;неё сверху&nbsp;— перед вами дракон.</p>
+
+        <button class="deeper-trigger" data-opens="formulas-dragon">Формулы →</button>
+
+        <p>Самоподобие у&nbsp;дракона есть, но&nbsp;глазами его не&nbsp;сразу видно: внутри картинки спрятаны две уменьшенные копии того&nbsp;же дракона, каждая повёрнута на&nbsp;$45°$.</p>
+      </div>
+
+      <button class="deeper-trigger" data-opens="deeper-dragon">Детали →</button>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="exhibit-barnsley">
+    <span>дальше · папоротник Барнсли</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<aside class="deeper-panel" id="deeper-dragon" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Детали</h3>
+    <p>Формула $N \cdot r^d = 1$ даёт $d = 2$, и&nbsp;топологическая размерность множества тоже&nbsp;2. Как и&nbsp;у&nbsp;дерева Пифагора при $45°$, формально под определение Мандельброта сам дракон не&nbsp;подпадает&nbsp;— фрактальна только его граница (размерность Хаусдорфа $\approx 1{.}5236$, топологическая&nbsp;1).</p>
+    <p>У&nbsp;дракона есть и&nbsp;ещё одно неожиданное свойство: он&nbsp;замощает плоскость. Счётным семейством изометричных копий дракона можно покрыть $\mathbb{R}^2$ без перекрытий&nbsp;— копии вкладываются друг в&nbsp;друга, как фрагменты пазла.</p>
+  </div>
+</aside>
+
+<aside class="deeper-panel" id="formulas-dragon" data-open="false" aria-hidden="true">
+  <button class="deeper-close" aria-label="Закрыть">×</button>
+  <div class="deeper-content">
+    <h3>Формулы</h3>
+    <p>Дракон&nbsp;— аттрактор IFS из&nbsp;двух преобразований на&nbsp;комплексной плоскости:</p>
+    <div class="ifs-list">
+      <div class="ifs-row">$f_1(z) = \dfrac{1 + i}{2}\, z$</div>
+      <div class="ifs-row">$f_2(z) = 1 - \dfrac{1 - i}{2}\, z$</div>
+    </div>
+    <p>Каждое&nbsp;— сжатие в&nbsp;$\sqrt{2}$ раз с&nbsp;поворотом на&nbsp;$\pm 45°$.</p>
+  </div>
+</aside>
+
+
+<!-- ============================================
+     ЭКСПОНАТ 9 · АПОЛЛОНОВЫ УПАКОВКИ
+     ============================================ -->
+<section class="gala-slide" id="exhibit-apollonian" style="--exhibit-accent: #C9A961;">
+  <div class="gala-bg"></div>
+
+  <div class="gala-grid">
+    <header class="gala-header">
+      <span class="section__num">Экспонат 6 · 1936</span>
+      <h2 class="section__title">Аполлоновы упаковки</h2>
+    </header>
+
+    <div class="gala-body">
+    <aside class="gala-text">
+      <div class="prose">
+        <p>С&nbsp;античных времён известна такая задача: даны три попарно касающиеся окружности&nbsp;— найти все окружности, касающиеся всех трёх. Решил её&nbsp;Аполлоний Пергский около III&nbsp;века до&nbsp;н.&nbsp;э. в&nbsp;трактате «Касания».</p>
+
+        <p>В&nbsp;1643&nbsp;году Декарт в&nbsp;письме к&nbsp;принцессе Елизавете Богемской привёл формулу, которая по&nbsp;радиусам трёх касающихся окружностей даёт радиусы двух остальных, тоже касающихся всех трёх. Применяя её&nbsp;рекурсивно к&nbsp;каждому новому просвету, получаем аполлонову упаковку&nbsp;— фрактал из&nbsp;кругов.</p>
+
+        <p>В&nbsp;1936&nbsp;году англичанин Фредерик Содди, нобелевский лауреат по&nbsp;химии, переоткрыл формулу Декарта и&nbsp;опубликовал её&nbsp;в&nbsp;<em>Nature</em> в&nbsp;виде стихотворения «The Kiss Precise». В&nbsp;этой&nbsp;же&nbsp;статье он&nbsp;заметил неожиданный арифметический эффект: если стартовые кривизны (величины $1/r$)&nbsp;— целые числа, то&nbsp;<em>все</em> кривизны во&nbsp;всём бесконечном множестве&nbsp;— целые. С&nbsp;тех пор каждое расширение теоремы по&nbsp;традиции публикуется в&nbsp;стихах, а&nbsp;аполлоновы упаковки выросли в&nbsp;отдельный сюжет современной арифметики.</p>
+
+        <p>Размерность Хаусдорфа аполлоновой упаковки $\approx 1{.}3057$, топологическая размерность равна&nbsp;1. По&nbsp;определению Мандельброта это фрактал.</p>
+      </div>
+    </aside>
+
+    <figure class="gala-object">
+      <canvas class="fractal-canvas"></canvas>
+      <div class="zoom-cursor"></div>
+      <div class="minimap-area">
+        <div class="minimap">
+          <canvas class="minimap-canvas"></canvas>
+          <div class="minimap-frame"></div>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="zoom-out" aria-label="Отдалить" disabled>−</button>
+          <button class="zoom-btn" data-action="zoom-in"  aria-label="Приблизить">+</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-up" aria-label="Вверх" disabled>↑</button>
+        </div>
+        <div class="minimap-controls">
+          <button class="zoom-btn" data-action="pan-left"  aria-label="Влево" disabled>←</button>
+          <button class="zoom-btn" data-action="pan-right" aria-label="Вправо" disabled>→</button>
+        </div>
+        <div class="minimap-controls minimap-controls--single">
+          <button class="zoom-btn" data-action="pan-down" aria-label="Вниз" disabled>↓</button>
+        </div>
+      </div>
+    </figure>
+    </div>
+  </div>
+
+  <button class="next-slide" data-target="outro">
+    <span>дальше</span>
+    <span class="next-slide-arrow">↓</span>
+  </button>
+</section>
+
+<!-- ============================================
+     OUTRO
+     ============================================ -->
+<section class="outro-slide" id="outro">
+  <div class="outro-content">
+    <h2>До&nbsp;встречи</h2>
+    <p>23 мая 2026&nbsp;— Москва, Matema-фест «Фрактальная Одиссея». Один день, посвящённый самоподобию во&nbsp;всех видах.</p>
+    <p class="outro-links">
+      <a href="https://matema-fest.ru" target="_blank" rel="noopener">matema-fest.ru</a>
+      ·
+      <a href="https://t.me/turings_crossword" target="_blank" rel="noopener">@turings_crossword</a>
+    </p>
+    <div class="outro-meta">кроссворд тьюринга · 2026</div>
+  </div>
+</section>
+
+<nav id="dot-nav" aria-label="Навигация по галерее"></nav>
+
+<div class="deeper-backdrop" id="deeper-backdrop"></div>
+
+
+<script>
+// ============================================================================
+// IFS RENDERER — стратегия отрисовки для семейства IFS chaos game
+// ============================================================================
+// Формат преобразования: {a, b, c, d, e, f}
+//   x' = a*x + b*y + e
+//   y' = c*x + d*y + f
+// Это эквивалентно матрице A = [[a,b],[c,d]] и сдвигу (e, f): v ↦ A*v + b
+class IFSRenderer {
+  constructor({ transforms, probabilities }) {
+    this.transforms = transforms;
+    this.probs = probabilities;
+    // кумулятивные вероятности — для быстрого выбора преобразования
+    this.cumProbs = new Float64Array(probabilities.length);
+    let s = 0;
+    for (let i = 0; i < probabilities.length; i++) {
+      s += probabilities[i];
+      this.cumProbs[i] = s;
+    }
+  }
+
+  // Рисует n точек в текущий ctx, с данными viewport bounds.
+  // Не очищает canvas — может вызываться многократно для накопления плотности.
+  drawN(ctx, n, viewport, cssW, cssH, opts) {
+    const { alpha, size, color, margin = 16 } = opts;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+    const halfPt = size / 2;
+    const cssWplus = cssW + size;
+    const cssHplus = cssH + size;
+
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+
+    const transforms = this.transforms;
+    const cumProbs = this.cumProbs;
+    const tCount = transforms.length;
+
+    let x = 0, y = 0;
+    for (let i = 0; i < n; i++) {
+      // выбор преобразования по cumulative probability (линейный поиск,
+      // обычно 2–4 преобразования, не нужно бинарный)
+      const r = Math.random();
+      let t;
+      for (let j = 0; j < tCount; j++) {
+        if (r < cumProbs[j]) { t = transforms[j]; break; }
+      }
+      if (!t) t = transforms[tCount - 1];
+
+      const nx = t.a * x + t.b * y + t.e;
+      const ny = t.c * x + t.d * y + t.f;
+      x = nx; y = ny;
+
+      const cx = ((x - vxMin) / vxSpan) * innerW + margin;
+      const cy = cssH - margin - ((y - vyMin) / vySpan) * innerH;
+
+      if (cx < -size || cx > cssWplus) continue;
+      if (cy < -size || cy > cssHplus) continue;
+      ctx.fillRect(cx - halfPt, cy - halfPt, size, size);
+    }
+  }
+}
+
+
+// ============================================================================
+// FRACTAL SLIDE — общая инфраструктура: zoom, pan, minimap, controls
+// ============================================================================
+// Знает ничего про конкретный фрактал — рендеринг делегируется в config.renderer.
+// Один инстанс на одну <section class="gala-slide">.
+
+class FractalSlide {
+  constructor(config) {
+    this.root            = config.rootElement;
+    this.accent          = config.accent;
+    this.defaultViewport = Object.freeze({ ...config.defaultViewport });
+    this.viewport        = { ...config.defaultViewport };
+    this.zoomLevel       = 1;
+    this.displayZoomLevel = 1;
+    this.renderer        = config.renderer;
+
+    // настраиваемые рендеринговые параметры (с разумными дефолтами)
+    this.baseIterations    = config.baseIterations    ?? 250000;
+    this.maxIterations     = config.maxIterations     ?? 1500000;
+    this.minimapIterations = config.minimapIterations ?? 6000;
+    this.pointSize         = config.pointSize         ?? 1.3;
+    this.pointAlpha        = config.pointAlpha        ?? 0.40;
+    this.zoomFactor        = config.zoomFactor        ?? 3;
+    this.hasPanY           = config.hasPanY           ?? true;
+    this.canvasMargin      = config.canvasMargin      ?? 16;
+    this.minimapAlpha      = config.minimapAlpha      ?? 0.55;
+
+    this.renderToken = 0;
+
+    // DOM elements
+    this.canvas        = this.root.querySelector('.fractal-canvas');
+    this.galaObject    = this.root.querySelector('.gala-object');
+    this.zoomCursor    = this.root.querySelector('.zoom-cursor');
+    this.minimapEl     = this.root.querySelector('.minimap');
+    this.minimapCanvas = this.root.querySelector('.minimap-canvas');
+    this.minimapFrame  = this.root.querySelector('.minimap-frame');
+
+    this.setupCanvas();
+    this.setupMinimap();
+    this.setupZoomCursor();
+    this.setupZoomButtons();
+
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(() => {
+      this.updateMinimapFrame();
+      this.renderProgressive(!reduceMotion);
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.setupCanvas();
+        this.updateMinimapFrame();
+        this.renderProgressive(false);
+      }, 200);
+    });
+  }
+
+  setupCanvas() {
+    const canvas = this.canvas;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = rect.width  * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    this.ctx  = ctx;
+    this.cssW = rect.width;
+    this.cssH = rect.height;
+  }
+
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.cssW, this.cssH);
+  }
+
+  // Компенсация яркости и размера точек при zoom — чтобы плотность
+  // фрактала визуально оставалась постоянной.
+  currentAlpha() {
+    const step = Math.log(this.displayZoomLevel) / Math.log(this.zoomFactor);
+    return Math.min(this.pointAlpha + 0.15 * step, 1.0);
+  }
+  currentSize() {
+    const step = Math.log(this.displayZoomLevel) / Math.log(this.zoomFactor);
+    return Math.min(this.pointSize + 0.25 * step, 2.5);
+  }
+  currentIterations() {
+    return Math.min(this.baseIterations * this.zoomLevel, this.maxIterations);
+  }
+
+  drawNPoints(n) {
+    this.renderer.drawN(this.ctx, n, this.viewport, this.cssW, this.cssH, {
+      alpha:  this.currentAlpha(),
+      size:   this.currentSize(),
+      color:  this.accent,
+      margin: this.canvasMargin
+    });
+  }
+
+  // Полная отрисовка с очисткой. progressive=true → постепенно RAF-батчами.
+  renderProgressive(progressive) {
+    const myToken = ++this.renderToken;
+    this.clearCanvas();
+    const totalIters = this.currentIterations();
+    if (!progressive) {
+      this.drawNPoints(totalIters);
+      return;
+    }
+    let drawn = 0;
+    const BATCH = 5000;
+    const draw = () => {
+      if (myToken !== this.renderToken) return;
+      if (drawn >= totalIters) return;
+      const batch = Math.min(BATCH, totalIters - drawn);
+      this.drawNPoints(batch);
+      drawn += batch;
+      requestAnimationFrame(draw);
+    };
+    requestAnimationFrame(draw);
+  }
+
+  // ==========================================================================
+  // ANIMATION — viewport интерполяция кадр-за-кадром
+  // ==========================================================================
+  animateViewport(targetVP, targetZoomLevel, duration, onDone) {
+    const myToken = ++this.renderToken;
+    const startVP = { ...this.viewport };
+    const startZoom = this.displayZoomLevel;
+    const startTime = performance.now();
+    const QUICK_ITERS = 30000;
+
+    const frame = (now) => {
+      if (myToken !== this.renderToken) return;
+      const t = duration > 0 ? Math.min(1, (now - startTime) / duration) : 1;
+      const e = easeInOutCubic(t);
+
+      this.viewport = {
+        xMin: lerp(startVP.xMin, targetVP.xMin, e),
+        xMax: lerp(startVP.xMax, targetVP.xMax, e),
+        yMin: lerp(startVP.yMin, targetVP.yMin, e),
+        yMax: lerp(startVP.yMax, targetVP.yMax, e)
+      };
+      this.displayZoomLevel = Math.exp(lerp(Math.log(startZoom), Math.log(targetZoomLevel), e));
+
+      this.clearCanvas();
+      this.drawNPoints(QUICK_ITERS);
+      this.updateMinimapFrame();
+
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        // финал — фиксируем целевой viewport, дозаполняем плотность RAF-батчами
+        this.viewport = { ...targetVP };
+        this.zoomLevel = targetZoomLevel;
+        this.displayZoomLevel = targetZoomLevel;
+        this.updateMinimapFrame();
+        this.updateZoomButtons();
+
+        const totalIters = this.currentIterations();
+        let drawn = QUICK_ITERS;
+        const FILL_BATCH = 60000;
+        const fill = () => {
+          if (myToken !== this.renderToken) return;
+          if (drawn >= totalIters) { if (onDone) onDone(); return; }
+          const batch = Math.min(FILL_BATCH, totalIters - drawn);
+          this.drawNPoints(batch);
+          drawn += batch;
+          requestAnimationFrame(fill);
+        };
+        requestAnimationFrame(fill);
+      }
+    };
+    requestAnimationFrame(frame);
+  }
+
+  // ==========================================================================
+  // ZOOM CURSOR — прямоугольник, следует за мышью; click → zoom in to point
+  // ==========================================================================
+  setupZoomCursor() {
+    const obj = this.galaObject;
+    const canvas = this.canvas;
+    const cursor = this.zoomCursor;
+
+    canvas.addEventListener('mousemove', (e) => {
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      const w = r.width  / this.zoomFactor;
+      const h = r.height / this.zoomFactor;
+      const cx = Math.max(w/2, Math.min(r.width  - w/2, x));
+      const cy = Math.max(h/2, Math.min(r.height - h/2, y));
+      cursor.style.width  = w + 'px';
+      cursor.style.height = h + 'px';
+      cursor.style.left   = (cx - w/2) + 'px';
+      cursor.style.top    = (cy - h/2) + 'px';
+      obj.dataset.cursor = 'active';
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      obj.dataset.cursor = '';
+    });
+
+    canvas.addEventListener('click', (e) => {
+      const r = canvas.getBoundingClientRect();
+      const w = r.width, h = r.height;
+      const x = Math.max(0, Math.min(w, e.clientX - r.left));
+      const y = Math.max(0, Math.min(h, e.clientY - r.top));
+
+      const winW = w / this.zoomFactor;
+      const winH = h / this.zoomFactor;
+      const cx = Math.max(winW/2, Math.min(w - winW/2, x));
+      const cy = Math.max(winH/2, Math.min(h - winH/2, y));
+      const winLeft   = cx - winW/2;
+      const winTop    = cy - winH/2;
+      const winRight  = winLeft + winW;
+      const winBottom = winTop  + winH;
+
+      const margin = this.canvasMargin;
+      const cwInner = w - 2*margin, chInner = h - 2*margin;
+      const vXspan = this.viewport.xMax - this.viewport.xMin;
+      const vYspan = this.viewport.yMax - this.viewport.yMin;
+
+      const targetVP = {
+        xMin: this.viewport.xMin + (winLeft  - margin) / cwInner * vXspan,
+        xMax: this.viewport.xMin + (winRight - margin) / cwInner * vXspan,
+        yMax: this.viewport.yMin + (h - margin - winTop)    / chInner * vYspan,
+        yMin: this.viewport.yMin + (h - margin - winBottom) / chInner * vYspan
+      };
+
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this.animateViewport(targetVP, this.zoomLevel * this.zoomFactor, reduceMotion ? 0 : 700);
+    });
+  }
+
+  // ==========================================================================
+  // MINIMAP
+  // ==========================================================================
+  setupMinimap() {
+    const c = this.minimapCanvas;
+    const W = 120, H = 120, MARGIN = 4;
+    this.minimapW = W;
+    this.minimapH = H;
+    this.minimapMargin = MARGIN;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width  = W * dpr;
+    c.height = H * dpr;
+    const ctx = c.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    // упрощённый рендер фрактала — используем тот же IFSRenderer
+    this.renderer.drawN(ctx, this.minimapIterations, this.defaultViewport, W, H, {
+      alpha:  this.minimapAlpha,
+      size:   1,
+      color:  this.accent,
+      margin: MARGIN
+    });
+
+    this.setupMinimapDrag();
+  }
+
+  updateMinimapFrame() {
+    const W = this.minimapW, H = this.minimapH, MARGIN = this.minimapMargin;
+    const innerW = W - 2*MARGIN;
+    const innerH = H - 2*MARGIN;
+    const dvxMin = this.defaultViewport.xMin;
+    const dvxSpan = this.defaultViewport.xMax - dvxMin;
+    const dvyMin = this.defaultViewport.yMin;
+    const dvySpan = this.defaultViewport.yMax - dvyMin;
+
+    const left   = ((this.viewport.xMin - dvxMin) / dvxSpan) * innerW + MARGIN;
+    const right  = ((this.viewport.xMax - dvxMin) / dvxSpan) * innerW + MARGIN;
+    const top    = H - MARGIN - ((this.viewport.yMax - dvyMin) / dvySpan) * innerH;
+    const bottom = H - MARGIN - ((this.viewport.yMin - dvyMin) / dvySpan) * innerH;
+
+    const rawW = right - left;
+    const rawH = bottom - top;
+    const w = Math.max(6, rawW);
+    const h = Math.max(6, rawH);
+    const cx = (left + right) / 2;
+    const cy = (top + bottom) / 2;
+
+    const f = this.minimapFrame;
+    f.style.left   = (cx - w/2) + 'px';
+    f.style.top    = (cy - h/2) + 'px';
+    f.style.width  = w + 'px';
+    f.style.height = h + 'px';
+    f.classList.toggle('is-tiny', rawW < 12 || rawH < 12);
+  }
+
+  minimapMouseToFractal(e) {
+    const r = this.minimapEl.getBoundingClientRect();
+    const mx = e.clientX - r.left;
+    const my = e.clientY - r.top;
+    const innerW = this.minimapW - 2*this.minimapMargin;
+    const innerH = this.minimapH - 2*this.minimapMargin;
+    const fx = ((mx - this.minimapMargin) / innerW) * (this.defaultViewport.xMax - this.defaultViewport.xMin) + this.defaultViewport.xMin;
+    const fy = this.defaultViewport.yMax - ((my - this.minimapMargin) / innerH) * (this.defaultViewport.yMax - this.defaultViewport.yMin);
+    return { fx, fy };
+  }
+
+  moveViewportCenterTo(fx, fy) {
+    const w = this.viewport.xMax - this.viewport.xMin;
+    const h = this.viewport.yMax - this.viewport.yMin;
+    const xLo = this.defaultViewport.xMin + w/2;
+    const xHi = this.defaultViewport.xMax - w/2;
+    const yLo = this.defaultViewport.yMin + h/2;
+    const yHi = this.defaultViewport.yMax - h/2;
+    fx = Math.max(xLo, Math.min(xHi, fx));
+    fy = Math.max(yLo, Math.min(yHi, fy));
+    this.viewport = {
+      xMin: fx - w/2, xMax: fx + w/2,
+      yMin: fy - h/2, yMax: fy + h/2
+    };
+  }
+
+  setupMinimapDrag() {
+    const mm = this.minimapEl;
+
+    mm.addEventListener('mousedown', (e) => {
+      if (this.zoomLevel === 1) return;
+      e.preventDefault();
+      mm.classList.add('dragging');
+
+      const myToken = ++this.renderToken;
+      let target = this.minimapMouseToFractal(e);
+      let dirty = true;
+
+      const onMove = (ev) => {
+        target = this.minimapMouseToFractal(ev);
+        dirty = true;
+      };
+      const onUp = () => {
+        window.removeEventListener('mousemove', onMove);
+        window.removeEventListener('mouseup', onUp);
+        mm.classList.remove('dragging');
+        this.moveViewportCenterTo(target.fx, target.fy);
+        this.clearCanvas();
+        this.drawNPoints(30000);
+        this.updateMinimapFrame();
+        const totalIters = this.currentIterations();
+        let drawn = 30000;
+        const fill = () => {
+          if (this.renderToken !== myToken) return;
+          if (drawn >= totalIters) return;
+          const batch = Math.min(60000, totalIters - drawn);
+          this.drawNPoints(batch);
+          drawn += batch;
+          requestAnimationFrame(fill);
+        };
+        requestAnimationFrame(fill);
+      };
+
+      const dragFrame = () => {
+        if (this.renderToken !== myToken) return;
+        if (dirty) {
+          this.moveViewportCenterTo(target.fx, target.fy);
+          this.clearCanvas();
+          this.drawNPoints(30000);
+          this.updateMinimapFrame();
+          dirty = false;
+        }
+        if (mm.classList.contains('dragging')) requestAnimationFrame(dragFrame);
+      };
+
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', onUp);
+      requestAnimationFrame(dragFrame);
+    });
+  }
+
+  // ==========================================================================
+  // CONTROLS — D-pad + клавиатура
+  // ==========================================================================
+  isAtDefault() { return this.zoomLevel <= 1.001; }
+
+  canPanX(dxFraction) {
+    if (this.isAtDefault()) return false;
+    const w = this.viewport.xMax - this.viewport.xMin;
+    const xLo = this.defaultViewport.xMin + w/2;
+    const xHi = this.defaultViewport.xMax - w/2;
+    const cx = (this.viewport.xMin + this.viewport.xMax) / 2;
+    if (dxFraction < 0 && cx <= xLo + 1e-6) return false;
+    if (dxFraction > 0 && cx >= xHi - 1e-6) return false;
+    return true;
+  }
+  canPanY(dyFraction) {
+    if (this.isAtDefault()) return false;
+    if (!this.hasPanY) return false;
+    const h = this.viewport.yMax - this.viewport.yMin;
+    const yLo = this.defaultViewport.yMin + h/2;
+    const yHi = this.defaultViewport.yMax - h/2;
+    const cy = (this.viewport.yMin + this.viewport.yMax) / 2;
+    if (dyFraction < 0 && cy <= yLo + 1e-6) return false;
+    if (dyFraction > 0 && cy >= yHi - 1e-6) return false;
+    return true;
+  }
+
+  updateZoomButtons() {
+    this.galaObject.dataset.zoomed = this.isAtDefault() ? '' : 'true';
+    const get = (action) => this.root.querySelector(`[data-action="${action}"]`);
+    const out = get('zoom-out'), left = get('pan-left'), right = get('pan-right');
+    const up = get('pan-up'), down = get('pan-down'), reset = get('reset');
+    const atDefault = this.isAtDefault();
+    if (out) out.disabled = atDefault;
+    if (reset) reset.disabled = atDefault;
+    if (left) left.disabled = !this.canPanX(-1/3);
+    if (right) right.disabled = !this.canPanX(+1/3);
+    if (up) up.disabled = !this.canPanY(+1/3);
+    if (down) down.disabled = !this.canPanY(-1/3);
+  }
+
+  doZoomIn() {
+    const cx = (this.viewport.xMin + this.viewport.xMax) / 2;
+    const cy = (this.viewport.yMin + this.viewport.yMax) / 2;
+    const w = (this.viewport.xMax - this.viewport.xMin) / this.zoomFactor;
+    const h = (this.viewport.yMax - this.viewport.yMin) / this.zoomFactor;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.animateViewport({
+      xMin: cx - w/2, xMax: cx + w/2,
+      yMin: cy - h/2, yMax: cy + h/2
+    }, this.zoomLevel * this.zoomFactor, reduceMotion ? 0 : 700);
+  }
+
+  doZoomOut() {
+    if (this.isAtDefault()) return;
+    let cx = (this.viewport.xMin + this.viewport.xMax) / 2;
+    let cy = (this.viewport.yMin + this.viewport.yMax) / 2;
+    const maxW = this.defaultViewport.xMax - this.defaultViewport.xMin;
+    const maxH = this.defaultViewport.yMax - this.defaultViewport.yMin;
+    const newW = Math.min((this.viewport.xMax - this.viewport.xMin) * this.zoomFactor, maxW);
+    const newH = Math.min((this.viewport.yMax - this.viewport.yMin) * this.zoomFactor, maxH);
+    const newZoom = Math.max(1, this.zoomLevel / this.zoomFactor);
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (newW >= maxW * 0.999 && newH >= maxH * 0.999) {
+      this.animateViewport({ ...this.defaultViewport }, 1, reduceMotion ? 0 : 700);
+      return;
+    }
+    const xLo = this.defaultViewport.xMin + newW/2;
+    const xHi = this.defaultViewport.xMax - newW/2;
+    const yLo = this.defaultViewport.yMin + newH/2;
+    const yHi = this.defaultViewport.yMax - newH/2;
+    cx = Math.max(xLo, Math.min(xHi, cx));
+    cy = Math.max(yLo, Math.min(yHi, cy));
+    this.animateViewport({
+      xMin: cx - newW/2, xMax: cx + newW/2,
+      yMin: cy - newH/2, yMax: cy + newH/2
+    }, newZoom, reduceMotion ? 0 : 700);
+  }
+
+  doPanX(dxFraction) {
+    if (!this.canPanX(dxFraction)) return;
+    const w = this.viewport.xMax - this.viewport.xMin;
+    const h = this.viewport.yMax - this.viewport.yMin;
+    let cx = (this.viewport.xMin + this.viewport.xMax) / 2 + dxFraction * w;
+    const cy = (this.viewport.yMin + this.viewport.yMax) / 2;
+    const xLo = this.defaultViewport.xMin + w/2;
+    const xHi = this.defaultViewport.xMax - w/2;
+    cx = Math.max(xLo, Math.min(xHi, cx));
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.animateViewport({
+      xMin: cx - w/2, xMax: cx + w/2,
+      yMin: cy - h/2, yMax: cy + h/2
+    }, this.zoomLevel, reduceMotion ? 0 : 350);
+  }
+
+  doPanY(dyFraction) {
+    if (!this.canPanY(dyFraction)) return;
+    const w = this.viewport.xMax - this.viewport.xMin;
+    const h = this.viewport.yMax - this.viewport.yMin;
+    const cx = (this.viewport.xMin + this.viewport.xMax) / 2;
+    let cy = (this.viewport.yMin + this.viewport.yMax) / 2 + dyFraction * h;
+    const yLo = this.defaultViewport.yMin + h/2;
+    const yHi = this.defaultViewport.yMax - h/2;
+    cy = Math.max(yLo, Math.min(yHi, cy));
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.animateViewport({
+      xMin: cx - w/2, xMax: cx + w/2,
+      yMin: cy - h/2, yMax: cy + h/2
+    }, this.zoomLevel, reduceMotion ? 0 : 350);
+  }
+
+  doReset() {
+    if (this.isAtDefault()) return;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.animateViewport({ ...this.defaultViewport }, 1, reduceMotion ? 0 : 700);
+  }
+
+  setupZoomButtons() {
+    // Программно добавляем reset-кнопку: в HTML её нет, чтобы не дублировать
+    // в каждой из 9 секций. Вставляется в .minimap-area после всех существующих
+    // .minimap-controls групп.
+    const minimapArea = this.root.querySelector('.minimap-area');
+    if (minimapArea && !minimapArea.querySelector('[data-action="reset"]')) {
+      const resetRow = document.createElement('div');
+      resetRow.className = 'minimap-controls minimap-controls--reset';
+      const btn = document.createElement('button');
+      btn.className = 'zoom-btn';
+      btn.dataset.action = 'reset';
+      btn.setAttribute('aria-label', 'Сбросить');
+      btn.disabled = true;
+      btn.textContent = 'reset';
+      resetRow.appendChild(btn);
+      minimapArea.appendChild(resetRow);
+    }
+
+    this.root.querySelectorAll('.zoom-btn').forEach(btn => {
+      const action = btn.dataset.action;
+      const titles = {
+        'zoom-in':   'Приблизить (+)',
+        'zoom-out':  'Отдалить (−)',
+        'pan-left':  'Сдвинуть влево (←)',
+        'pan-right': 'Сдвинуть вправо (→)',
+        'pan-up':    'Сдвинуть вверх (↑)',
+        'pan-down':  'Сдвинуть вниз (↓)',
+        'reset':     'Сбросить (Esc)',
+      };
+      btn.title = titles[action] || '';
+      btn.addEventListener('click', () => {
+        switch (action) {
+          case 'zoom-in':   this.doZoomIn(); break;
+          case 'zoom-out':  this.doZoomOut(); break;
+          case 'pan-left':  this.doPanX(-1/3); break;
+          case 'pan-right': this.doPanX(+1/3); break;
+          case 'pan-up':    this.doPanY(+1/3); break;
+          case 'pan-down':  this.doPanY(-1/3); break;
+          case 'reset':     this.doReset(); break;
+        }
+      });
+    });
+  }
+}
+
+
+// ============================================================================
+// CANTOR RENDERER — горизонтальные полосы, 8 итераций сверху вниз
+// ============================================================================
+// Каждый уровень — горизонтальная "полоса" с горизонтальными отрезками
+// в местах оставшихся подынтервалов. Toplevel: один отрезок [0,1]. Уровень k:
+// 2^k отрезков длины (1/3)^k. Все отрезки на одном уровне рисуются в одной
+// y-координате уровня.
+class CantorRenderer {
+  constructor({ levels = 8 } = {}) {
+    this.levels = levels;
+    // pre-compute intervals на каждом уровне как массив [a, b]
+    this.intervals = [[[0, 1]]];
+    for (let k = 1; k <= levels; k++) {
+      const prev = this.intervals[k - 1];
+      const cur = [];
+      for (const [a, b] of prev) {
+        const len = (b - a) / 3;
+        cur.push([a, a + len]);
+        cur.push([b - len, b]);
+      }
+      this.intervals.push(cur);
+    }
+  }
+
+  drawN(ctx, _n, viewport, cssW, cssH, opts) {
+    const { color, margin = 16 } = opts;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 1;
+
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+
+    // y-координаты уровней: уровень 0 сверху, уровень N снизу.
+    // Используем math-up convention (как в IFSRenderer), чтобы пан/zoom/minimap
+    // согласованно работали: yFrac=1 (уровень 0) → верх canvas, yFrac=0 → низ.
+    for (let k = 0; k <= this.levels; k++) {
+      // инвертированная фрактальная y: уровень 0 → 1 (визуально верх), уровень N → 0 (визуально низ)
+      const yFrac = 1 - k / this.levels;
+      // Толщина полоски в фрактальных единицах
+      const thickFrac = Math.max(0.012, 0.04 * Math.pow(0.85, k));
+
+      // если уровень не попадает в viewport по y — пропускаем
+      const yPx = cssH - margin - ((yFrac - vyMin) / vySpan) * innerH;
+      if (yPx < -10 || yPx > cssH + 10) continue;
+      const thickPx = Math.max(1, (thickFrac / vySpan) * innerH);
+
+      for (const [a, b] of this.intervals[k]) {
+        // если отрезок не попадает в viewport по x — пропускаем
+        if (b < vxMin || a > viewport.xMax) continue;
+        const xPx1 = ((a - vxMin) / vxSpan) * innerW + margin;
+        const xPx2 = ((b - vxMin) / vxSpan) * innerW + margin;
+        const w = xPx2 - xPx1;
+        if (w < 0.5) continue;
+        ctx.fillRect(xPx1, yPx - thickPx / 2, w, thickPx);
+      }
+    }
+  }
+}
+
+
+// ============================================================================
+// KOCH SNOWFLAKE RENDERER — детерминированный рендер замкнутого контура
+// по L-системе. Работает с тем же viewport-API, что и IFSRenderer, поэтому
+// pan/zoom и minimap у него такие же.
+// Аксиома: F++F++F (равносторонний треугольник, выступы наружу)
+// Правило: F → F-F++F-F (угол 60°)
+// На итерации k число сегментов равно 3·4^k. Точки L-системы кэшируются на
+// нескольких уровнях детальности; уровень выбирается по текущему zoom — при
+// сильном приближении подгружается более глубокая версия, чтобы не было
+// заметно «полигональности» зубцов.
+// ============================================================================
+class KochSnowflakeRenderer {
+  constructor() {
+    // Точки нормированы так, чтобы снежинка была вписана в квадрат [0,1]×[0,1]
+    // (с отступом по краям) — viewport остальных слайдов работает в тех же
+    // координатах, и это удобно для согласованности.
+    this.cache = {};
+  }
+
+  buildPoints(iterations) {
+    if (this.cache[iterations]) return this.cache[iterations];
+
+    let s = 'F++F++F';
+    for (let i = 0; i < iterations; i++) {
+      let next = '';
+      for (const c of s) next += (c === 'F') ? 'F-F++F-F' : c;
+      s = next;
+    }
+
+    const pts = [];
+    let x = 0, y = 0;
+    let angle = 0;
+    pts.push([x, y]);
+    for (const c of s) {
+      if (c === 'F') {
+        x += Math.cos(angle);
+        y += Math.sin(angle);
+        pts.push([x, y]);
+      } else if (c === '+') {
+        angle += Math.PI / 3;
+      } else if (c === '-') {
+        angle -= Math.PI / 3;
+      }
+    }
+
+    // Нормализуем bbox в квадрат [0,1]×[0,1] со скромным отступом по краям
+    let xMin = Infinity, xMax = -Infinity, yMin = Infinity, yMax = -Infinity;
+    for (const [px, py] of pts) {
+      if (px < xMin) xMin = px; if (px > xMax) xMax = px;
+      if (py < yMin) yMin = py; if (py > yMax) yMax = py;
+    }
+    const w = xMax - xMin;
+    const h = yMax - yMin;
+    const scale = 0.92 / Math.max(w, h);
+    const ox = (1 - w * scale) / 2;
+    const oy = (1 - h * scale) / 2;
+    const norm = pts.map(([px, py]) => [
+      ox + (px - xMin) * scale,
+      oy + (py - yMin) * scale
+    ]);
+    this.cache[iterations] = norm;
+    return norm;
+  }
+
+  drawN(ctx, _n, viewport, cssW, cssH, opts) {
+    const { color, margin = 16 } = opts;
+
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+
+    // Адаптивная глубина: чем сильнее зум, тем больше итераций нужно,
+    // чтобы зубцы оставались мелкими в экранных координатах.
+    // На дефолтном viewport (~1.0 по x) хватает 5 итераций, при zoom×9 — 6, и т.д.
+    const zoom = 1 / Math.max(vxSpan, vySpan);
+    let iterations = 4;
+    if (zoom > 1.5) iterations = 5;
+    if (zoom > 6)   iterations = 6;
+    if (zoom > 24)  iterations = 7;
+
+    const pts = this.buildPoints(iterations);
+
+    ctx.save();
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = color;
+    // Толщина зависит от размера canvas: на минимапе тоньше
+    ctx.lineWidth = Math.max(0.6, Math.min(1.6, cssW / 600));
+    ctx.lineJoin = 'miter';
+    ctx.lineCap = 'butt';
+    ctx.miterLimit = 4;
+
+    ctx.beginPath();
+    for (let i = 0; i < pts.length; i++) {
+      const [px, py] = pts[i];
+      const cx = ((px - vxMin) / vxSpan) * innerW + margin;
+      const cy = cssH - margin - ((py - vyMin) / vySpan) * innerH;
+      if (i === 0) ctx.moveTo(cx, cy);
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+
+// ============================================================================
+// PYTHAGORAS TREE RENDERER — рекурсивно квадраты с углом 45°
+// ============================================================================
+// Дерево рисуется до глубины ~12. Базовый квадрат имеет сторону 1 и нижнюю
+// грань на y=0; левый нижний угол в (0, 0). Каждая итерация добавляет два
+// дочерних квадрата на верхней грани через прямоугольный равнобедренный
+// треугольник с гипотенузой = верхняя грань родителя.
+class PythagorasRenderer {
+  constructor({ maxDepth = 12, angleDeg = 45, strokeOnly = false } = {}) {
+    this.maxDepth = maxDepth;
+    this.angle = angleDeg * Math.PI / 180;
+    this.strokeOnly = strokeOnly;
+    // sin/cos для угла поворота левой ветви
+    this.cosA = Math.cos(this.angle);
+    this.sinA = Math.sin(this.angle);
+  }
+
+  drawN(ctx, _n, viewport, cssW, cssH, opts) {
+    const { color, size = 1, alpha = 1, margin = 16 } = opts;
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = size;
+    ctx.lineJoin = 'round';
+
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+
+    // Преобразование (fx, fy) фрактальных координат → canvas-пиксели
+    const toCanvas = (fx, fy) => [
+      ((fx - vxMin) / vxSpan) * innerW + margin,
+      cssH - margin - ((fy - vyMin) / vySpan) * innerH
+    ];
+
+    // Минимальный размер квадрата в пикселях, ниже которого не рисуем
+    const minPxSide = 0.5;
+
+    // Базовый квадрат: 4 угла в порядке (нижний левый, нижний правый,
+    // верхний правый, верхний левый)
+    const baseSquare = [
+      [0, 0], [1, 0], [1, 1], [0, 1]
+    ];
+
+    // Рисуем рекурсивно. Каждый квадрат задан 4 вершинами в фрактальных
+    // координатах (порядок: BL, BR, TR, TL).
+    const drawSquare = (sq, depth) => {
+      // Размер квадрата в пикселях — определяем по длине нижней стороны
+      const [bl, br, tr, tl] = sq;
+      const dx = br[0] - bl[0];
+      const dy = br[1] - bl[1];
+      const sideLenFrac = Math.sqrt(dx*dx + dy*dy);
+      const sideLenPx = Math.min(
+        (sideLenFrac / vxSpan) * innerW,
+        (sideLenFrac / vySpan) * innerH
+      );
+      if (sideLenPx < minPxSide) return;
+
+      // Рисуем квадрат — заливкой или контуром в зависимости от настройки
+      ctx.beginPath();
+      const [px0, py0] = toCanvas(bl[0], bl[1]);
+      ctx.moveTo(px0, py0);
+      for (let i = 1; i < 4; i++) {
+        const [px, py] = toCanvas(sq[i][0], sq[i][1]);
+        ctx.lineTo(px, py);
+      }
+      ctx.closePath();
+      if (this.strokeOnly) ctx.stroke();
+      else ctx.fill();
+
+      if (depth >= this.maxDepth) return;
+
+      // Дочерние квадраты строятся на верхней грани (от tl до tr).
+      // Прямоугольный равнобедренный треугольник: апекс = tl + cos²α·(tr-tl) + sin·cos·perp
+      // Левый дочерний квадрат: на гипотенузе от tl до апекса
+      // Правый дочерний квадрат: на гипотенузе от апекса до tr
+
+      const ux = tr[0] - tl[0]; // вектор верхней грани
+      const uy = tr[1] - tl[1];
+      // перпендикуляр (повёрнутый на +90° против часовой стрелки в нашей
+      // системе координат, где y растёт вверх, x вправо)
+      const px = -uy;
+      const py = ux;
+
+      // Апекс треугольника: tl + cos²α·u + sinα·cosα·p
+      const c2 = this.cosA * this.cosA;
+      const sc = this.sinA * this.cosA;
+      const apex = [
+        tl[0] + c2 * ux + sc * px,
+        tl[1] + c2 * uy + sc * py
+      ];
+
+      // Левый дочерний квадрат: основание = [tl, apex],
+      // sideL = |apex - tl|, поворот тоже в плоскости.
+      // Векторы: основание = apex - tl; перпендикуляр = повёрнутый на +90°
+      const lUx = apex[0] - tl[0];
+      const lUy = apex[1] - tl[1];
+      const lPx = -lUy;
+      const lPy = lUx;
+      const leftSquare = [
+        tl,                                           // BL
+        apex,                                         // BR
+        [apex[0] + lPx, apex[1] + lPy],              // TR
+        [tl[0] + lPx, tl[1] + lPy]                    // TL
+      ];
+
+      // Правый дочерний квадрат: основание = [apex, tr]
+      const rUx = tr[0] - apex[0];
+      const rUy = tr[1] - apex[1];
+      const rPx = -rUy;
+      const rPy = rUx;
+      const rightSquare = [
+        apex,                                         // BL
+        tr,                                           // BR
+        [tr[0] + rPx, tr[1] + rPy],                   // TR
+        [apex[0] + rPx, apex[1] + rPy]                // TL
+      ];
+
+      drawSquare(leftSquare, depth + 1);
+      drawSquare(rightSquare, depth + 1);
+    };
+
+    drawSquare(baseSquare, 0);
+  }
+}
+
+
+// ============================================================================
+// HILBERT CURVE RENDERER — рекурсивная L-system кривая
+// ============================================================================
+// L-system правила (классические для Гильберта):
+//   A → +B F −A F A− F B+
+//   B → −A F +B F B+ F A−
+// Где F — шаг вперёд, + — поворот налево на 90°, − — поворот направо.
+// При глубине рекурсии k получаем кривую из 4^k - 1 шагов, заполняющую
+// сетку 2^k × 2^k. Чем больше глубина — тем плотнее заполняется квадрат.
+class HilbertCurveRenderer {
+  constructor({ depth = 6 } = {}) {
+    this.depth = depth;
+  }
+
+  // Глубина рендера зависит от zoom — при приближении нужно показывать
+  // более мелкую структуру. depth = base + log_2(zoomLevel)
+  computeDepth(viewport) {
+    const baseSpan = 1.1;  // примерный диапазон default viewport
+    const curSpan = Math.max(viewport.xMax - viewport.xMin, viewport.yMax - viewport.yMin);
+    const zoomLog = Math.log2(baseSpan / curSpan);
+    return Math.max(this.depth, Math.min(9, Math.round(this.depth + zoomLog)));
+  }
+
+  drawN(ctx, _n, viewport, cssW, cssH, opts) {
+    const { color, size = 1, alpha = 1, margin = 16 } = opts;
+    const depth = this.computeDepth(viewport);
+
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha;
+    ctx.lineWidth = Math.max(0.6, size * 0.9);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+
+    // Кривая параметризована на сетке 2^depth × 2^depth, координаты (i, j)
+    // где i, j ∈ [0..N-1]. Маппим в фрактальные [0..1]×[0..1] добавляя 0.5.
+    const N = 1 << depth;
+    const stepFrac = 1 / N;
+    let x = 0.5 / N;
+    let y = 0.5 / N;
+    let dx = stepFrac;  // направление: вправо
+    let dy = 0;
+
+    ctx.beginPath();
+    const fxToPx = (fx) => ((fx - vxMin) / vxSpan) * innerW + margin;
+    const fyToPx = (fy) => cssH - margin - ((fy - vyMin) / vySpan) * innerH;
+    ctx.moveTo(fxToPx(x), fyToPx(y));
+
+    // Направления: turn left = rotate 90° CCW; turn right = rotate 90° CW
+    const turnLeft = () => { const t = dx; dx = -dy; dy = t; };
+    const turnRight = () => { const t = dx; dx = dy; dy = -t; };
+    const forward = () => {
+      x += dx; y += dy;
+      ctx.lineTo(fxToPx(x), fyToPx(y));
+    };
+
+    // L-system итеративно через стек: A и B — нетерминалы
+    // Используем функцию с двумя режимами вместо expansion строки (память)
+    const A = (level) => {
+      if (level === 0) return;
+      turnLeft();
+      B(level - 1);
+      forward();
+      turnRight();
+      A(level - 1);
+      forward();
+      A(level - 1);
+      turnRight();
+      forward();
+      B(level - 1);
+      turnLeft();
+    };
+    const B = (level) => {
+      if (level === 0) return;
+      turnRight();
+      A(level - 1);
+      forward();
+      turnLeft();
+      B(level - 1);
+      forward();
+      B(level - 1);
+      turnLeft();
+      forward();
+      A(level - 1);
+      turnRight();
+    };
+
+    A(depth);
+    ctx.stroke();
+  }
+}
+
+
+// ============================================================================
+// APOLLONIAN GASKET RENDERER — упаковка кругов через формулу Декарта
+// ============================================================================
+// Стартуем с трёх взаимно касающихся кругов внутри большого внешнего.
+// Стандартная симметричная конфигурация: внешний R=1 кривизна -1,
+// три внутренних r=2√3-3 ≈ 0.464 в углах правильного треугольника.
+// Каждый просвет рекурсивно заполняется новыми кругами через формулу Декарта.
+class ApollonianRenderer {
+  constructor({ maxDepth = 7, minRadius = 0.0015 } = {}) {
+    this.maxDepth = maxDepth;
+    this.minRadius = minRadius;
+    // Pre-compute базовые круги (на комплексной плоскости через {x, y, r, k}, k = ±1/r)
+    // R = 1, центр в (0, 0). Внутренние: r2 = 2√3 - 3 ≈ 0.464, расстояние от центра
+    // до их центров = 1 - r2.
+    const r2 = 2 * Math.sqrt(3) - 3;
+    const d = 1 - r2;
+    this.outer = { x: 0, y: 0, r: 1, k: -1 };
+    this.inner = [
+      { x: d * Math.cos(Math.PI / 2),                  y: d * Math.sin(Math.PI / 2),                  r: r2, k: 1/r2 },
+      { x: d * Math.cos(Math.PI / 2 + 2 * Math.PI / 3), y: d * Math.sin(Math.PI / 2 + 2 * Math.PI / 3), r: r2, k: 1/r2 },
+      { x: d * Math.cos(Math.PI / 2 - 2 * Math.PI / 3), y: d * Math.sin(Math.PI / 2 - 2 * Math.PI / 3), r: r2, k: 1/r2 }
+    ];
+  }
+
+  // По формуле Декарта + Виета: если в просвете между кругами c1, c2, c3 есть
+  // круг c4, то можно построить второй круг c4' такой что
+  //   k4' = 2(k1 + k2 + k3) - k4
+  //   k4' * z4' = 2(k1*z1 + k2*z2 + k3*z3) - k4 * z4
+  // (где z = x + iy). Возвращаем его как новый круг {x, y, r, k}.
+  reflect(c1, c2, c3, c4) {
+    const k = 2 * (c1.k + c2.k + c3.k) - c4.k;
+    if (Math.abs(k) < 1e-9) return null;  // прямая, не круг
+    const zx = (2 * (c1.k * c1.x + c2.k * c2.x + c3.k * c3.x) - c4.k * c4.x) / k;
+    const zy = (2 * (c1.k * c1.y + c2.k * c2.y + c3.k * c3.y) - c4.k * c4.y) / k;
+    return { x: zx, y: zy, r: 1 / Math.abs(k), k: k };
+  }
+
+  drawN(ctx, _n, viewport, cssW, cssH, opts) {
+    const { color, size = 1, alpha = 1, margin = 16 } = opts;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(0.5, size * 0.7);
+    ctx.globalAlpha = alpha;
+
+    const innerW = cssW - 2 * margin;
+    const innerH = cssH - 2 * margin;
+    const vxMin = viewport.xMin;
+    const vxSpan = viewport.xMax - vxMin;
+    const vyMin = viewport.yMin;
+    const vySpan = viewport.yMax - vyMin;
+
+    const drawCircle = (c) => {
+      // Радиус в пикселях — выбираем минимальный из x/y масштабов
+      const rPx = Math.min((c.r / vxSpan) * innerW, (c.r / vySpan) * innerH);
+      if (rPx < 0.4) return false;
+      const cxPx = ((c.x - vxMin) / vxSpan) * innerW + margin;
+      const cyPx = cssH - margin - ((c.y - vyMin) / vySpan) * innerH;
+      // Bounding box check — пропустить если совсем за viewport
+      if (cxPx + rPx < -10 || cxPx - rPx > cssW + 10) return true;
+      if (cyPx + rPx < -10 || cyPx - rPx > cssH + 10) return true;
+      ctx.beginPath();
+      ctx.arc(cxPx, cyPx, rPx, 0, Math.PI * 2);
+      ctx.stroke();
+      return true;
+    };
+
+    // Рисуем стартовые круги
+    drawCircle(this.outer);
+    for (const c of this.inner) drawCircle(c);
+
+    // Рекурсивный обход просветов. Просвет — четвёрка взаимно касающихся
+    // кругов, в которой мы знаем три и хотим найти четвёртый.
+    // Для стартовой троицы есть два возможных четвёртых: внутренний (in)
+    // и внешний (out). Внутренний = маленький круг между тремя инкрустированный
+    // в просвете; внешний = большой охватывающий. Стартуем с внутреннего.
+    const adaptiveMin = Math.max(this.minRadius, 0.7 / Math.min(innerW, innerH) * Math.max(vxSpan, vySpan));
+
+    const recurse = (c1, c2, c3, c4, depth) => {
+      if (depth >= this.maxDepth) return;
+      // Заменяем по очереди c1, c2, c3 на отражённый круг
+      for (const [a, b, c, replaced] of [[c2, c3, c4, c1], [c1, c3, c4, c2], [c1, c2, c4, c3]]) {
+        const next = this.reflect(a, b, c, replaced);
+        if (!next || next.r < adaptiveMin || next.r > 5) continue;
+        const drew = drawCircle(next);
+        if (drew && next.r > adaptiveMin * 1.5) {
+          recurse(a, b, c, next, depth + 1);
+        }
+      }
+    };
+
+    // Внутренний круг между тремя стартовыми (в центре)
+    const c1 = this.inner[0], c2 = this.inner[1], c3 = this.inner[2];
+    const sumK = c1.k + c2.k + c3.k;
+    const sqrtTerm = Math.sqrt(Math.max(0, c1.k*c2.k + c2.k*c3.k + c3.k*c1.k));
+    const k4inner = sumK + 2 * sqrtTerm;
+    const innerCenter = { x: 0, y: 0, r: 1/k4inner, k: k4inner };
+    drawCircle(innerCenter);
+
+    // Запускаем рекурсию. Каждый recurse(c1,c2,c3,c4) отражает три первых
+    // круга, не трогая c4 — поэтому одного запуска не хватает для покрытия
+    // всех трёх боковых просветов outer-(пара inner). Делаем два запуска с
+    // разным "фиксированным" параметром: вместе они покрывают все три
+    // боковых просвета + центральный + развитие в трёх лопастях вглубь.
+    recurse(this.outer, c1, c2, c3, 0);
+    recurse(this.outer, c2, c3, c1, 0);
+    recurse(c1, c2, c3, innerCenter, 0);
+  }
+}
+
+
+// ============================================================================
+// УТИЛИТЫ
+// ============================================================================
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+}
+
+
+// ============================================================================
+// ПЛАШКИ — общая логика для всех «Детали» и «Формулы»
+// ============================================================================
+function setupGlobalPanels() {
+  const backdrop = document.getElementById('deeper-backdrop');
+  const panels = document.querySelectorAll('.deeper-panel');
+  const triggers = document.querySelectorAll('[data-opens]');
+  const PANEL_RIGHT_PAD = 40;
+
+  function syncPanel(panel) {
+    if (window.innerWidth <= 720) {
+      panel.style.left = '';
+      panel.style.width = '';
+      panel.style.removeProperty('--panel-x');
+      panel.style.removeProperty('--panel-pad-right');
+      return;
+    }
+    // По id плашки находим её "хост"-секцию и текстовый элемент:
+    //   deeper-intro       → секция #intro,  область .intro-grid (шире, 2 колонки)
+    //   deeper-X / formulas-X → секция #exhibit-X,   текст .gala-text
+    let textEl = null;
+    let isIntro = false;
+    if (panel.id === 'deeper-intro') {
+      const sec = document.getElementById('intro');
+      if (sec) textEl = sec.querySelector('.intro-text');
+      isIntro = true;
+    } else {
+      const m = panel.id.match(/^(?:deeper|formulas)-(.+)$/);
+      if (!m) return;
+      const sec = document.getElementById('exhibit-' + m[1]);
+      if (sec) textEl = sec.querySelector('.gala-text');
+    }
+    if (!textEl) return;
+    const r = textEl.getBoundingClientRect();
+    panel.style.left  = r.left + 'px';
+    panel.style.width = (r.width + (isIntro ? 0 : PANEL_RIGHT_PAD)) + 'px';
+    panel.style.setProperty('--panel-x', r.left + 'px');
+    panel.style.setProperty('--panel-pad-right', (isIntro ? 0 : PANEL_RIGHT_PAD) + 'px');
+
+    // Для intro-плашки ограничиваем высоту, чтобы не наезжать на timeline
+    if (isIntro) {
+      const intro = document.getElementById('intro');
+      const timeline = intro && intro.querySelector('.timeline');
+      const tlRect = timeline ? timeline.getBoundingClientRect() : null;
+      const bottom = tlRect ? tlRect.top : window.innerHeight;
+      panel.style.top = '0px';
+      panel.style.height = Math.max(200, bottom - 12) + 'px';
+    } else {
+      panel.style.top = '';
+      panel.style.height = '';
+    }
+  }
+
+  function updateBackdrop() {
+    const anyOpen = Array.from(panels).some(p => p.dataset.open === 'true');
+    backdrop.dataset.open = anyOpen ? 'true' : 'false';
+  }
+
+  function closeAllExcept(keepId) {
+    panels.forEach(p => {
+      if (p.id !== keepId && p.dataset.open === 'true') {
+        p.dataset.open = 'false';
+        p.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
+  function closeAll() {
+    panels.forEach(p => {
+      p.dataset.open = 'false';
+      p.setAttribute('aria-hidden', 'true');
+    });
+    updateBackdrop();
+  }
+
+  triggers.forEach(trigger => {
+    const targetId = trigger.dataset.opens;
+    trigger.addEventListener('click', () => {
+      const panel = document.getElementById(targetId);
+      if (!panel) return;
+      closeAllExcept(targetId);
+      syncPanel(panel);
+      panel.dataset.open = 'true';
+      panel.setAttribute('aria-hidden', 'false');
+      updateBackdrop();
+      const closeBtn = panel.querySelector('.deeper-close');
+      if (closeBtn) closeBtn.focus({ preventScroll: true });
+    });
+  });
+
+  panels.forEach(panel => {
+    const closeBtn = panel.querySelector('.deeper-close');
+    if (!closeBtn) return;
+    closeBtn.addEventListener('click', () => {
+      panel.dataset.open = 'false';
+      panel.setAttribute('aria-hidden', 'true');
+      updateBackdrop();
+    });
+  });
+
+  backdrop.addEventListener('click', closeAll);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const anyOpen = Array.from(panels).some(p => p.dataset.open === 'true');
+    if (anyOpen) {
+      closeAll();
+    } else {
+      // Если плашек нет открытых — Esc сбрасывает viewport активного по
+      // позиции скролла слайда. Доступ к slides через глобальный реестр.
+      if (window.__gallerySlides) {
+        const center = window.innerHeight / 2;
+        for (const s of window.__gallerySlides) {
+          const r = s.root.getBoundingClientRect();
+          if (r.top < center && r.bottom > center) {
+            if (!s.isAtDefault()) s.doReset();
+            break;
+          }
+        }
+      }
+    }
+  });
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      panels.forEach(p => {
+        if (p.dataset.open === 'true') syncPanel(p);
+      });
+    }, 200);
+  });
+}
+
+// ============================================================================
+// КЛАВИАТУРА — отправляет команды в ТОТ слайд, который сейчас в viewport
+// ============================================================================
+// ============================================================================
+// КЛАВИАТУРА — стрелки управляют фракталом ТОЛЬКО при фокусе на canvas
+// иначе ↑/↓ плавно листают сайт между слайдами; +/− работают всегда
+// если в зоне видимости есть активный слайд
+// ============================================================================
+function setupGlobalKeyboard(slides, getOrderedIds, scrollAPI) {
+  function activeSlideForZoom() {
+    const center = window.innerHeight / 2;
+    for (const s of slides) {
+      const r = s.root.getBoundingClientRect();
+      if (r.top < center && r.bottom > center) return s;
+    }
+    return null;
+  }
+
+  function isFractalFocused() {
+    const ae = document.activeElement;
+    if (!ae) return false;
+    return ae.classList && ae.classList.contains('fractal-canvas');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    if (e.key === '+' || e.key === '=') {
+      const slide = activeSlideForZoom();
+      if (slide) { e.preventDefault(); slide.doZoomIn(); }
+      return;
+    }
+    if (e.key === '-' || e.key === '_') {
+      const slide = activeSlideForZoom();
+      if (slide && !slide.isAtDefault()) { e.preventDefault(); slide.doZoomOut(); }
+      return;
+    }
+
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight'
+        || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+
+      if (isFractalFocused()) {
+        const slide = activeSlideForZoom();
+        if (!slide) return;
+        if (e.key === 'ArrowLeft' && slide.canPanX(-1/3)) {
+          e.preventDefault(); slide.doPanX(-1/3);
+        } else if (e.key === 'ArrowRight' && slide.canPanX(+1/3)) {
+          e.preventDefault(); slide.doPanX(+1/3);
+        } else if (e.key === 'ArrowUp' && slide.canPanY(+1/3)) {
+          e.preventDefault(); slide.doPanY(+1/3);
+        } else if (e.key === 'ArrowDown' && slide.canPanY(-1/3)) {
+          e.preventDefault(); slide.doPanY(-1/3);
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        // Игнорируем стрелки пока идёт уже запущенный переход — иначе
+        // пользователь может нажать второй раз и уехать "обратно" (баг
+        // когда слайд начинал уезжать вверх и резко возвращался).
+        if (scrollAPI.isAnimating()) {
+          e.preventDefault();
+          return;
+        }
+        const ids = getOrderedIds();
+        // Определяем текущий слайд как тот, чей offsetTop ближе всего к
+        // текущему scrollY. Это надёжнее чем "та секция, чей rect перекрывает
+        // центр экрана" — особенно когда секции имеют ровно одинаковую
+        // высоту и rect.top может прыгать на пиксели туда-сюда.
+        const scrollY = window.pageYOffset;
+        let currentIdx = 0;
+        let bestDist = Infinity;
+        for (let i = 0; i < ids.length; i++) {
+          const el = document.getElementById(ids[i]);
+          if (!el) continue;
+          const dist = Math.abs(el.offsetTop - scrollY);
+          if (dist < bestDist) { bestDist = dist; currentIdx = i; }
+        }
+        const newIdx = e.key === 'ArrowDown'
+          ? Math.min(currentIdx + 1, ids.length - 1)
+          : Math.max(currentIdx - 1, 0);
+        if (newIdx !== currentIdx) {
+          e.preventDefault();
+          const target = document.getElementById(ids[newIdx]);
+          if (target) scrollAPI.animateScrollTo(target.offsetTop);
+        }
+      }
+    }
+  });
+
+  for (const s of slides) {
+    const canvas = s.canvas;
+    if (canvas) {
+      canvas.tabIndex = 0;
+      canvas.style.outline = 'none';
+    }
+  }
+}
+
+
+// ============================================================================
+// SNAP — при остановке скролла плавно довозим до ближайшего слайда.
+// Реализация по принципу из references/navigation.md: debounce → выбор
+// ближайшей секции → анимация скролла через RAF с easeOutQuart 1.2s.
+// (Без Lenis: вместо неё используем нашу собственную анимацию RAF, чтобы
+// иметь контроль над easing и длительностью, и чтобы не подключать ещё одну
+// библиотеку в проект ради одной фичи.)
+// ============================================================================
+function setupSnapScroll(allSectionIds) {
+  let snapTimer = null;
+  let isAnimating = false;
+  let suppressUntil = 0;
+  const SNAP_DELAY = 200;       // ждём пока пользователь закончит флик колесом
+  const TOLERANCE = 30;          // если ближе TOLERANCE к секции — не двигаем
+  const ANIM_DURATION = 1200;    // длительность плавного перехода
+
+  function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+
+  function animateScrollTo(targetY) {
+    isAnimating = true;
+    const startY = window.pageYOffset;
+    const delta = targetY - startY;
+    const startTime = performance.now();
+
+    function frame(now) {
+      const t = Math.min(1, (now - startTime) / ANIM_DURATION);
+      const e = easeOutQuart(t);
+      window.scrollTo(0, startY + delta * e);
+      if (t < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        isAnimating = false;
+        // Подавляем дальнейшие snap-проверки на ~100мс, чтобы scroll-события
+        // от завершения нашей же анимации не вызвали снова snap
+        suppressUntil = performance.now() + 100;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function scheduleSnap() {
+    if (isAnimating || performance.now() < suppressUntil) return;
+    clearTimeout(snapTimer);
+    snapTimer = setTimeout(() => {
+      const scrollY = window.pageYOffset;
+      let closestId = null;
+      let closestDist = Infinity;
+      for (const id of allSectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const dist = Math.abs(el.offsetTop - scrollY);
+        if (dist < closestDist) { closestDist = dist; closestId = id; }
+      }
+      if (closestId && closestDist > TOLERANCE) {
+        animateScrollTo(document.getElementById(closestId).offsetTop);
+      }
+    }, SNAP_DELAY);
+  }
+
+  window.addEventListener('scroll', scheduleSnap, { passive: true });
+
+  // Экспортируем animateScrollTo + getter isAnimating, чтобы клавиатурный
+  // handler мог игнорировать стрелки во время уже идущего перехода.
+  return {
+    animateScrollTo,
+    isAnimating: () => isAnimating
+  };
+}
+
+
+// ============================================================================
+// DOT-NAV — точки справа по центру
+// ============================================================================
+function setupDotNav(slidesInOrder, allSectionIds, allLabels, scrollAPI) {
+  const nav = document.getElementById('dot-nav');
+  if (!nav) return;
+
+  for (let i = 0; i < allSectionIds.length; i++) {
+    const id = allSectionIds[i];
+    const label = allLabels[i];
+    const dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.dataset.target = id;
+    dot.setAttribute('aria-label', `Перейти: ${label}`);
+
+    const lbl = document.createElement('span');
+    lbl.className = 'dot-label';
+    lbl.textContent = label;
+    dot.appendChild(lbl);
+
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(id);
+      if (target) scrollAPI.animateScrollTo(target.offsetTop);
+    });
+    nav.appendChild(dot);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        nav.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+        const dot = nav.querySelector(`[data-target="${entry.target.id}"]`);
+        if (dot) dot.classList.add('active');
+      }
+    });
+  }, { threshold: [0.5] });
+
+  for (const id of allSectionIds) {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  }
+}
+
+
+// ============================================================================
+// HERO BUTTON
+// ============================================================================
+function setupHeroButton(scrollAPI) {
+  document.querySelectorAll('[data-scroll-to]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.scrollTo;
+      const target = document.getElementById(targetId);
+      if (target) scrollAPI.animateScrollTo(target.offsetTop);
+    });
+  });
+  const heroBtn = document.querySelector('.hero-enter');
+  if (heroBtn) {
+    heroBtn.addEventListener('click', () => {
+      const target = document.getElementById(heroBtn.dataset.target);
+      if (target) scrollAPI.animateScrollTo(target.offsetTop);
+    });
+  }
+}
+
+
+// ============================================================================
+// КОНФИГИ ФРАКТАЛОВ
+// ============================================================================
+
+// Серпинский треугольник: 3 подобия с коэф 1/2, неподвижные точки = вершины
+// треугольника с A=(0,0), B=(1,0), C=(1/2, √3/2)
+const SQRT3_2 = Math.sqrt(3) / 2;
+const SQRT3_6 = Math.sqrt(3) / 6;
+
+// Применяет к преобразованию T поворот на угол theta вокруг origin (0,0),
+// потом сдвиг на (vx, vy). Полезно для генерации множества "повёрнутых
+// вариантов" одного базового IFS — например, трёх сторон снежинки Коха.
+function transformIFS(t, theta, vx, vy) {
+  const co = Math.cos(theta), si = Math.sin(theta);
+  return {
+    a: co * t.a - si * t.c,
+    b: co * t.b - si * t.d,
+    c: si * t.a + co * t.c,
+    d: si * t.b + co * t.d,
+    e: co * t.e - si * t.f + vx,
+    f: si * t.e + co * t.f + vy
+  };
+}
+
+const sierpinskiConfig = {
+  accent: '#A088B8',
+  displayName: 'треугольник Серпинского',
+  defaultViewport: { xMin: -0.05, xMax: 1.05, yMin: -0.05, yMax: SQRT3_2 + 0.05 },
+  baseIterations: 200000,
+  renderer: new IFSRenderer({
+    // Треугольник перевёрнут вершиной вниз: основание сверху, вершина снизу.
+    // Это освобождает правый нижний угол под минимап.
+    // Вершины: A=(0, √3/2), B=(1, √3/2), C=(0.5, 0)
+    transforms: [
+      { a: 0.5, b: 0, c: 0, d: 0.5, e: 0,    f: SQRT3_2/2 },  // → A (верх левый)
+      { a: 0.5, b: 0, c: 0, d: 0.5, e: 0.5,  f: SQRT3_2/2 },  // → B (верх правый)
+      { a: 0.5, b: 0, c: 0, d: 0.5, e: 0.25, f: 0          }   // → C (низ)
+    ],
+    probabilities: [1/3, 1/3, 1/3]
+  })
+};
+
+// Барнсли — те же параметры что в текущем работающем прототипе
+const barnsleyConfig = {
+  accent: '#7A9B6E',
+  displayName: 'папоротник Барнсли',
+  defaultViewport: { xMin: -2.182, xMax: 2.658, yMin: 0, yMax: 9.998 },
+  baseIterations: 250000,
+  renderer: new IFSRenderer({
+    transforms: [
+      { a: 0,     b: 0,     c: 0,     d: 0.16, e: 0, f: 0    },
+      { a: 0.85,  b: 0.04,  c: -0.04, d: 0.85, e: 0, f: 1.6  },
+      { a: 0.20,  b: -0.26, c: 0.23,  d: 0.22, e: 0, f: 1.6  },
+      { a: -0.15, b: 0.28,  c: 0.26,  d: 0.24, e: 0, f: 0.44 }
+    ],
+    probabilities: [0.01, 0.85, 0.07, 0.07]
+  })
+};
+
+
+// Снежинка Коха — 12 преобразований: базовая кривая Коха (4 преобразования
+// от (0,0) до (1,0) с выступом ВВЕРХ) применяется три раза с поворотами
+// на 0°, -120°, +120° вокруг вершин треугольника A=(0,0), B=(1,0),
+// C=(0.5, -√3/2). Треугольник "вершиной вниз" — выступы Коха идут наружу.
+const baseKochSide = [
+  { a: 1/3, b: 0,        c: 0,        d: 1/3, e: 0,   f: 0       },
+  { a: 1/6, b: -SQRT3_6, c: SQRT3_6,  d: 1/6, e: 1/3, f: 0       },
+  { a: 1/6, b: SQRT3_6,  c: -SQRT3_6, d: 1/6, e: 0.5, f: SQRT3_6 },
+  { a: 1/3, b: 0,        c: 0,        d: 1/3, e: 2/3, f: 0       }
+];
+
+function makeSnowflakeIFS() {
+  const TWO_PI_3 = 2 * Math.PI / 3;
+  const all = [];
+  // сторона A→B: theta=0, vertex=(0,0)
+  for (const t of baseKochSide) all.push(transformIFS(t, 0, 0, 0));
+  // сторона B→C: theta=-120°, vertex=(1,0)
+  for (const t of baseKochSide) all.push(transformIFS(t, -TWO_PI_3, 1, 0));
+  // сторона C→A: theta=+120°, vertex=(0.5, -√3/2)
+  for (const t of baseKochSide) all.push(transformIFS(t, +TWO_PI_3, 0.5, -SQRT3_2));
+  return all;
+}
+
+const kochConfig = {
+  accent: '#A8C5DA',
+  displayName: 'снежинка Коха',
+  // Снежинка вписана KochSnowflakeRenderer'ом в [0,1]×[0,1].
+  defaultViewport: { xMin: 0, xMax: 1, yMin: 0, yMax: 1 },
+  baseIterations: 1,        // не используется — детерминированный рендер
+  minimapIterations: 1,
+  renderer: new KochSnowflakeRenderer()
+};
+
+
+// Ковёр Серпинского — 8 подобий с коэф 1/3, по 8 клеткам сетки 3×3,
+// кроме центральной (i=1, j=1)
+function makeCarpetIFS() {
+  const result = [];
+  for (let j = 0; j < 3; j++) {
+    for (let i = 0; i < 3; i++) {
+      if (i === 1 && j === 1) continue;
+      result.push({ a: 1/3, b: 0, c: 0, d: 1/3, e: i/3, f: j/3 });
+    }
+  }
+  return result;
+}
+
+const carpetConfig = {
+  accent: '#B89568',
+  displayName: 'ковёр Серпинского',
+  defaultViewport: { xMin: -0.05, xMax: 1.05, yMin: -0.05, yMax: 1.05 },
+  baseIterations: 280000,
+  minimapIterations: 5000,
+  renderer: new IFSRenderer({
+    transforms: makeCarpetIFS(),
+    probabilities: new Array(8).fill(1/8)
+  })
+};
+
+
+// Дракон Хейтуэя — 2 преобразования на комплексной плоскости.
+// f1(z) = (1+i)/2 · z  →  x' = (x-y)/2, y' = (x+y)/2
+// f2(z) = 1 - (1-i)/2 · z  →  x' = -(x+y)/2 + 1, y' = (x-y)/2
+const dragonConfig = {
+  accent: '#B85A55',
+  displayName: 'дракон Хартера — Хейтуэя',
+  defaultViewport: { xMin: -0.30, xMax: 1.30, yMin: -0.50, yMax: 1.10 },
+  baseIterations: 250000,
+  minimapIterations: 5000,
+  renderer: new IFSRenderer({
+    transforms: [
+      { a:  0.5, b: -0.5, c:  0.5, d:  0.5, e: 0, f: 0 },
+      { a: -0.5, b: -0.5, c:  0.5, d: -0.5, e: 1, f: 0 }
+    ],
+    probabilities: [0.5, 0.5]
+  })
+};
+
+
+// Кантор — 8 уровней горизонтальных полос; viewport: x=[0,1] и y=[0,1] —
+// мы используем y только как индекс уровня (0=верх, 1=низ).
+// Особенность: только горизонтальный пан, без вертикального.
+const cantorConfig = {
+  accent: '#8B95A1',
+  displayName: 'множество Кантора',
+  defaultViewport: { xMin: -0.05, xMax: 1.05, yMin: -0.05, yMax: 1.05 },
+  pointSize: 1.0,
+  pointAlpha: 1.0,
+  baseIterations: 1,
+  minimapIterations: 1,
+  renderer: new CantorRenderer({ levels: 8 })
+};
+
+
+// Дерево Пифагора — рекурсивные квадраты при угле 45°.
+// Базовый квадрат [0,1]×[0,1]; крона занимает прямоугольник примерно 6×4.
+const pythagorasConfig = {
+  accent: '#7DAA68',  // зелёная крона
+  displayName: 'дерево Пифагора',
+  defaultViewport: { xMin: -2.5, xMax: 3.5, yMin: -1.0, yMax: 5.0 },
+  pointSize: 1.0,
+  pointAlpha: 1.0,
+  baseIterations: 1,
+  minimapIterations: 1,
+  renderer: new PythagorasRenderer({ maxDepth: 12, angleDeg: 45, strokeOnly: true })
+};
+
+
+const hilbertConfig = {
+  accent: '#C57B5B',
+  displayName: 'кривая Гильберта',
+  defaultViewport: { xMin: -0.05, xMax: 1.05, yMin: -0.05, yMax: 1.05 },
+  pointSize: 1.6,
+  pointAlpha: 1.0,
+  baseIterations: 1,
+  minimapIterations: 1,
+  renderer: new HilbertCurveRenderer({ depth: 6 })
+};
+
+
+const apollonianConfig = {
+  accent: '#C9A961',
+  displayName: 'аполлоновы упаковки',
+  defaultViewport: { xMin: -1.1, xMax: 1.1, yMin: -1.1, yMax: 1.1 },
+  pointSize: 1.4,
+  pointAlpha: 1.0,
+  baseIterations: 1,
+  minimapIterations: 1,
+  renderer: new ApollonianRenderer({ maxDepth: 9 })
+};
+
+
+// Кнопка "Дальше" — связывает соседние слайды по массиву (хронологический порядок).
+// Каждая кнопка получает target и текст автоматически из displayName следующего конфига.
+function setupNextSlideButtons(slidesInOrder, scrollAPI) {
+  for (let i = 0; i < slidesInOrder.length; i++) {
+    const { slide } = slidesInOrder[i];
+    const btn = slide.root.querySelector('.next-slide');
+    if (!btn) continue;
+
+    if (i === slidesInOrder.length - 1) {
+      btn.dataset.target = 'outro';
+      const labelSpan = btn.querySelector('span:not(.next-slide-arrow)');
+      if (labelSpan) labelSpan.textContent = 'дальше';
+      btn.addEventListener('click', () => {
+        const target = document.getElementById('outro');
+        if (target) scrollAPI.animateScrollTo(target.offsetTop);
+      });
+      continue;
+    }
+
+    const nextEntry = slidesInOrder[i + 1];
+    btn.dataset.target = nextEntry.slide.root.id;
+    const labelSpan = btn.querySelector('span:not(.next-slide-arrow)');
+    if (labelSpan) labelSpan.textContent = `дальше · ${nextEntry.displayName}`;
+
+    btn.addEventListener('click', () => {
+      scrollAPI.animateScrollTo(nextEntry.slide.root.offsetTop);
+    });
+  }
+}
+
+
+// ============================================================================
+// INIT
+// ============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Хронологический порядок выставки. ИСТОЧНИК ИСТИНЫ.
+  // year — для timeline; displayName уже в config.
+  const order = [
+    { id: 'exhibit-cantor',     year: '1883',      config: cantorConfig     },
+    { id: 'exhibit-hilbert',    year: '1890',      config: hilbertConfig    },
+    { id: 'exhibit-koch',       year: '1904',      config: kochConfig       },
+    { id: 'exhibit-sierpinski', year: '1915',      config: sierpinskiConfig },
+    { id: 'exhibit-carpet',     year: '1916',      config: carpetConfig     },
+    { id: 'exhibit-apollonian', year: '1936',      config: apollonianConfig },
+    { id: 'exhibit-pythagoras', year: '1942',      config: pythagorasConfig },
+    { id: 'exhibit-dragon',     year: '1967',      config: dragonConfig     },
+    { id: 'exhibit-barnsley',   year: '1988',      config: barnsleyConfig   },
+  ];
+
+  const slides = [];
+  const slidesInOrder = [];
+
+  const body = document.body;
+  const backdrop = document.getElementById('deeper-backdrop');
+  const dotNav = document.getElementById('dot-nav');
+  const outroEl = document.getElementById('outro');
+
+  for (const { id } of order) {
+    const slug = id.replace(/^exhibit-/, '');
+    const section = document.getElementById(id);
+    if (section) body.appendChild(section);
+    const deeper = document.getElementById('deeper-' + slug);
+    if (deeper) body.appendChild(deeper);
+    const formulas = document.getElementById('formulas-' + slug);
+    if (formulas) body.appendChild(formulas);
+  }
+  if (outroEl) body.appendChild(outroEl);
+  if (dotNav) body.appendChild(dotNav);
+  if (backdrop) body.appendChild(backdrop);
+
+  for (const { id, config } of order) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const slide = new FractalSlide({ rootElement: el, ...config });
+    slides.push(slide);
+    slidesInOrder.push({ slide, displayName: config.displayName });
+  }
+  // Глобальный реестр для Esc-обработчика setupGlobalPanels
+  window.__gallerySlides = slides;
+
+  // ID и метки всех секций для dot-nav и keyboard navigation:
+  // hero → intro → экспонаты → outro
+  const allSectionIds = ['hero', 'intro', ...order.map(o => o.id), 'outro'];
+  const allLabels = [
+    'начало',
+    'введение',
+    ...order.map(o => o.config.displayName),
+    'конец'
+  ];
+
+  // Сначала snap (возвращает scrollAPI) — нужен для остальных функций
+  const scrollAPI = setupSnapScroll(allSectionIds);
+
+  setupGlobalPanels();
+  setupGlobalKeyboard(slides, () => allSectionIds, scrollAPI);
+  setupNextSlideButtons(slidesInOrder, scrollAPI);
+  setupHeroButton(scrollAPI);
+  setupDotNav(slidesInOrder, allSectionIds, allLabels, scrollAPI);
+  setupTimeline(order, scrollAPI);
+  setupHeroCanvas();
+});
+
+
+// ============================================================================
+// HERO CANVAS — фрактальная картинка на заглавной странице.
+// Папоротник Барнсли в красном цвете и большом размере, как декоративный
+// фон. Использует существующий IFSRenderer + конфиг папоротника.
+// ============================================================================
+function setupHeroCanvas() {
+  const cv = document.getElementById('hero-canvas');
+  if (!cv) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rect = cv.getBoundingClientRect();
+  cv.width = rect.width * dpr;
+  cv.height = rect.height * dpr;
+  const ctx = cv.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  // используем существующий конфиг папоротника, но с красным цветом
+  barnsleyConfig.renderer.drawN(
+    ctx, 200000, barnsleyConfig.defaultViewport, rect.width, rect.height,
+    {
+      alpha: 0.45,
+      size: 1.0,
+      color: '#C24A4A',  // багряно-красный
+      margin: 20
+    }
+  );
+
+  // на ресайз — перерисовываем
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const r = cv.getBoundingClientRect();
+      cv.width = r.width * dpr;
+      cv.height = r.height * dpr;
+      const ctx2 = cv.getContext('2d');
+      ctx2.scale(dpr, dpr);
+      barnsleyConfig.renderer.drawN(
+        ctx2, 200000, barnsleyConfig.defaultViewport, r.width, r.height,
+        { alpha: 0.45, size: 1.0, color: '#C24A4A', margin: 20 }
+      );
+    }, 200);
+  });
+}
+
+
+// ============================================================================
+// TIMELINE — горизонтальная шкала с миниатюрами фракталов на intro слайде
+// ============================================================================
+function setupTimeline(order, scrollAPI) {
+  const container = document.querySelector('#exhibit-timeline .timeline-items');
+  if (!container) return;
+
+  for (const { id, year, config } of order) {
+    const item = document.createElement('button');
+    item.className = 'timeline-item';
+    item.setAttribute('aria-label', `Перейти: ${config.displayName} (${year})`);
+
+    const thumb = document.createElement('div');
+    thumb.className = 'timeline-thumb';
+    const cv = document.createElement('canvas');
+    cv.width = 152;  // 2x для retina (76px CSS)
+    cv.height = 152;
+    thumb.appendChild(cv);
+    item.appendChild(thumb);
+
+    const yr = document.createElement('span');
+    yr.className = 'timeline-year';
+    yr.textContent = year;
+    item.appendChild(yr);
+
+    item.addEventListener('click', () => {
+      const target = document.getElementById(id);
+      if (target) scrollAPI.animateScrollTo(target.offsetTop);
+    });
+
+    container.appendChild(item);
+
+    // Рисуем миниатюру с тем же рендерером — он умеет в любой viewport
+    const ctx = cv.getContext('2d');
+    ctx.scale(2, 2);  // retina
+    config.renderer.drawN(ctx, (config.minimapIterations || 4000) * 2, config.defaultViewport, 76, 76, {
+      alpha:  0.85,
+      size:   1.4,
+      color:  config.accent,
+      margin: 6
+    });
+  }
+}
+
+</script>
+</body>
+</html>
