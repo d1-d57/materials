@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;--shadow:0 10px 30px -20px rgba(42,37,32,.5);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 90px;}
+  header.mast{padding:58px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
+  .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
+  li:last-child{border-bottom:none;}
+  li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
+  .cond,.hint,details{grid-column:2;}
+  .cond{margin:0;}
+  .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
+  details{margin:10px 0 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;display:inline-block;border:1px solid var(--rule);border-radius:3px;padding:3px 10px;}
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details[open] summary{margin-bottom:8px;}
+  .spoiler{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;padding-left:14px;border-left:2px solid var(--rubric);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Математика</p>
+    <h1>Домашнее задание</h1>
+    <p class="date">24 июня 2026</p>
+  </header>
+
+  <ol>
+    <li>
+      <p class="cond">За круглым столом сидят двенадцать человек; каждый — рыцарь (всегда говорит правду) или лжец (всегда лжёт). Каждый сказал: «Ровно один из двух моих соседей — лжец». Сколько лжецов может сидеть за столом?</p>
+    </li>
+
+    <li>
+      <p class="cond">В компании каждый юноша знаком ровно с тремя девушками, каждая девушка — ровно с двумя юношами, и любые два юноши имеют ровно одну общую знакомую. Сколько в компании юношей?</p>
+    </li>
+
+    <li>
+      <p class="cond">Клетки квадрата n×n постепенно заражаются: незаражённая клетка становится заражённой, как только среди её соседей по стороне оказывается не менее двух заражённых. В некоторый момент изначально заражённые клетки заразили весь квадрат. Докажите, что изначально было заражено не менее n клеток.</p>
+      <p class="hint">Ищите полуинвариант — величину, которая при каждом заражении не возрастает.</p>
+      <details><summary>ещё подсказка</summary><p class="spoiler">В конце эта величина равна 4n.</p></details>
+    </li>
+
+    <li>
+      <p class="cond">В компании из шести человек каждый знаком ровно с тремя другими. Сколько существует по существу различных таких компаний? (Две компании считаются одинаковыми, если знакомства одной получаются из другой переименованием людей.)</p>
+    </li>
+
+    <li>
+      <p class="cond">Из чисел от 1 до 100 выбрали 51 число. Докажите, что среди выбранных найдутся два, одно из которых делится на другое.</p>
+      <details><summary>подсказка</summary><p class="spoiler">Разбейте числа от 1 до 100 на 50 групп так, чтобы в каждой группе любые два числа были сравнимы по делимости (одно делило другое).</p></details>
+    </li>
+
+    <li>
+      <p class="cond">Найдите все тройки простых чисел p, q, r, для которых четвёртая степень каждого, уменьшенная на единицу, делится на произведение двух остальных.</p>
+    </li>
+  </ol>
+</div>
+</body>
+</html>

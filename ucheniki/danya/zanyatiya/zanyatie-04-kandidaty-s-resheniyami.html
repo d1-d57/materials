@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие №4 — задачи с решениями</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;--shadow:0 10px 30px -20px rgba(42,37,32,.5);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+  header.mast{padding:54px 0 16px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 10px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:44px;line-height:1.02;margin:0;}
+  .state{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin:12px 0 0;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--rubric);font-weight:700;margin:34px 0 2px;}
+  article{padding:16px 0 8px;border-bottom:1px solid var(--rule);}
+  article:last-of-type{border-bottom:none;}
+  .head{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap;}
+  .num{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:21px;color:var(--rubric);}
+  .tag{font-family:"PT Sans",sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--rule);border-radius:3px;padding:2px 7px;}
+  .cond{margin:2px 0 0;}
+  details{margin:9px 0 2px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--rubric);}
+  details[open] summary::before{content:"▾ ";}
+  .sol{font-size:15.5px;color:var(--ink-soft);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:11px 15px;margin-top:8px;}
+  @media print{body::before{display:none;}details{display:block;}details>summary{display:none;}.sol{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Даня · занятие №4 · кандидаты</p>
+    <h1>Задачи с решениями</h1>
+    <p class="state">доступная красивая комбинаторика: перебор и оценка, конструкции, процессы и инварианты, Дирихле. Бери на занятие по ходу, нерешённое — на дом.</p>
+  </header>
+
+  <h2>Перебор и оценка</h2>
+  <article>
+    <div class="head"><span class="num">1</span><span class="tag">принцип крайнего</span><span class="tag">средняя</span></div>
+    <p class="cond">В клетках доски 8×8 расставлены различные натуральные числа. Докажите, что найдутся две соседние по стороне клетки, числа в которых отличаются не меньше чем на 5.</p>
+    <details><summary>решение</summary><div class="sol">Кратчайший путь по соседним клеткам от клетки с числом 1 до клетки с числом 64 не длиннее 14 шагов. Вдоль него число вырастает на 63; если бы каждый шаг давал прирост ≤ 4, всего вышло бы ≤ 56 &lt; 63 — значит на каком-то шаге скачок ≥ 5.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">2</span><span class="tag">графы · Дирихле</span><span class="tag">средняя</span></div>
+    <p class="cond">Каждые два из шести человек либо знакомы, либо незнакомы. Докажите, что среди них найдутся трое попарно знакомых или трое попарно незнакомых.</p>
+    <details><summary>решение</summary><div class="sol">Возьмём человека A. С остальными пятью он либо знаком, либо нет; по принципу Дирихле найдутся трое в одном отношении с A — пусть знакомы. Если какие-то двое из этой тройки знакомы между собой, то вместе с A это трое попарно знакомых. Если же никакие двое из тройки не знакомы — они сами трое попарно незнакомых.</div></details>
+  </article>
+
+  <h2>Конструкции</h2>
+  <article>
+    <div class="head"><span class="num">3</span><span class="tag">конструктив · самоописание</span><span class="tag">средняя</span></div>
+    <p class="cond">Существует ли десятизначное число, у которого первая цифра равна количеству нулей в его записи, вторая цифра — количеству единиц, третья — количеству двоек, и так далее, а десятая — количеству девяток?</p>
+    <details><summary>решение</summary><div class="sol">Да: <b>6210001000</b>. Проверка: нулей в нём шесть, единиц две, двойка одна, шестёрка одна, остальных цифр нет — ровно то, что записано. (Как искать: сумма всех десяти цифр равна общему числу знаков, то есть 10; значит больших цифр почти нет, и аккуратный подбор быстро приводит к ответу. Такое десятизначное число единственно.)</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">4</span><span class="tag">конструктив · «шаг и повтор»</span><span class="tag">средняя</span></div>
+    <p class="cond">На окружности отмечены 2n точек. Докажите, что их можно разбить на n пар и соединить пары хордами так, чтобы никакие две хорды не пересекались.</p>
+    <details><summary>решение</summary><div class="sol">Возьмём две соседние точки (между ними по дуге нет других). Соединим их хордой — она не отделяет ни одной точки от остальных, поэтому никому не помешает. Уберём эту пару; осталось 2(n−1) точек на окружности — повторим тот же шаг. Так за n шагов соединим все, и пересечений не возникнет. (Это «живая индукция»: описали один шаг и повторяем.)</div></details>
+  </article>
+
+  <h2>Процессы и инварианты</h2>
+  <article>
+    <div class="head"><span class="num">5</span><span class="tag">монотонная величина</span><span class="tag">средняя</span></div>
+    <p class="cond">На доске написаны несколько натуральных чисел. Разрешается стереть два числа a и b и вместо них написать их наибольший общий делитель и наименьшее общее кратное. Докажите, что в какой-то момент числа перестанут изменяться.</p>
+    <details><summary>решение</summary><div class="sol">Произведение пары не меняется: НОД·НОК = ab, поэтому произведение всех чисел постоянно — каждое число не превосходит этого произведения, все ограничены. При этом сумма всех чисел строго растёт при каждом нетривиальном ходе: НОД(a,b) + НОК(a,b) ≥ a + b, причём равенство только если одно из чисел делит другое (для a = dx, b = dy при взаимно простых x, y: НОД + НОК = d(1+xy) ≥ d(x+y), так как (x−1)(y−1) ≥ 0). Ограниченная строго растущая сумма целых не может расти бесконечно — процесс остановится.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">6</span><span class="tag">инвариант</span><span class="tag">лёгкая-средняя</span></div>
+    <p class="cond">На доске написаны числа 1, 2, …, 20. За один ход стирают любые два числа и пишут вместо них их сумму, уменьшенную на единицу. После 19 ходов на доске остаётся одно число. Какое?</p>
+    <details><summary>решение</summary><div class="sol">191. За каждый ход сумма всех чисел на доске уменьшается ровно на 1 (вместо a и b появляется a + b − 1). Вначале сумма равна 1 + 2 + … + 20 = 210; за 19 ходов она уменьшится на 19, значит останется 210 − 19 = 191.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">7</span><span class="tag">раскраска</span><span class="tag">средняя</span></div>
+    <p class="cond">В каждой клетке доски 5×5 сидит жук. По сигналу каждый жук переползает на соседнюю по стороне клетку. Докажите, что после этого какая-то клетка окажется пустой.</p>
+    <details><summary>решение</summary><div class="sol">Раскрасим доску в шахматном порядке так, чтобы углы были чёрными: тогда чёрных клеток 13, белых 12. Сосед клетки всегда другого цвета, поэтому каждый жук переходит на клетку противоположного цвета. С 13 чёрных клеток жуки переходят на белые — но белых всего 12, а на 13 чёрных клеток приходят жуки лишь с 12 белых. Значит хотя бы одна чёрная клетка останется пустой.</div></details>
+  </article>
+
+  <h2>Дирихле</h2>
+  <article>
+    <div class="head"><span class="num">8</span><span class="tag">подмножества · 2ᵐ</span><span class="tag">средняя</span></div>
+    <p class="cond">Даны 10 различных двузначных чисел. Докажите, что из них можно выбрать два непересекающихся набора с одинаковой суммой.</p>
+    <details><summary>решение</summary><div class="sol">У набора из 10 чисел всего 2¹⁰ = 1024 подмножества, а сумма любого из них не превосходит 10·99 = 990 &lt; 1024. Значит по принципу Дирихле найдутся два разных подмножества с равной суммой. Выбросив из обоих их общие элементы, получим два непересекающихся набора — суммы у них по-прежнему равны (и оба непусты).</div></details>
+  </article>
+
+  <h2>Многочлены</h2>
+  <article>
+    <div class="head"><span class="num">9</span><span class="tag">разность квадратов</span><span class="tag">средняя</span></div>
+    <p class="cond">Докажите, что при любом натуральном n &gt; 1 число n⁴ + 4 составное.</p>
+    <details><summary>решение</summary><div class="sol">Добавим и вычтем 4n²: n⁴ + 4 = n⁴ + 4n² + 4 − 4n² = (n² + 2)² − (2n)² = (n² − 2n + 2)(n² + 2n + 2). Меньший множитель n² − 2n + 2 = (n−1)² + 1 при n &gt; 1 не меньше 2, значит оба множителя больше 1 — число составное. <i>(Приём тот же, что в снятой задаче про x⁴+x²+1 — добавить и вычесть, чтобы выделить разность квадратов, — но здесь у него ясная цель: доказать составность.)</i></div></details>
+  </article>
+
+</div>
+</body>
+</html>

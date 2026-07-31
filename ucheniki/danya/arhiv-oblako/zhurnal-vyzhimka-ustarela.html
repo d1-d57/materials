@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Журнал — Даня (выжимка)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;--rule:#d8cdb4;--rubric:#9e2b25;--shadow:0 10px 30px -20px rgba(42,37,32,.5);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 70px;}
+  header.mast{padding:54px 0 16px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 10px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1;margin:0;}
+  .state{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin:12px 0 0;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12.5px;color:var(--rubric);font-weight:700;margin:34px 0 12px;}
+  .now{background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:16px 20px;margin-top:18px;box-shadow:var(--shadow);}
+  .now p{margin:5px 0;font-size:15.5px;}
+  .now b{font-family:"PT Sans",sans-serif;font-size:12.5px;letter-spacing:.04em;color:var(--ink-faint);text-transform:uppercase;margin-right:6px;}
+  ul{list-style:none;}
+  .chron li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:15px;}
+  .chron li:last-child{border-bottom:none;}
+  .chron .n{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;color:var(--rubric);margin-right:8px;}
+  .chron .d{color:var(--ink-faint);font-size:13px;}
+  .hw li{padding:6px 0;font-size:15.5px;}
+  .hw .num{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;color:var(--rubric);margin-right:10px;}
+  .hw .ans{color:var(--ink-faint);}
+  .hw .ok{color:#3a6b5f;font-weight:700;margin-right:7px;}
+  .hw .lo{color:#9e7a1e;font-weight:700;margin-right:7px;}
+  .hw .no{color:var(--rubric);font-weight:700;margin-right:7px;}
+  .next{font-size:15.5px;}
+  .next li{padding:4px 0 4px 18px;position:relative;}
+  .next li::before{content:"→";position:absolute;left:0;color:var(--rubric);}
+  .small{font-size:14px;color:var(--ink-faint);}
+  @media print{body::before{display:none;}.now{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Журнал · выжимка</p>
+    <h1>Даня</h1>
+    <p class="state">6→7 класс · очень сильный · NT, графы, инварианты · фронт — перебор/экономия и строгость · только не баяны</p>
+  </header>
+
+  <div class="now">
+    <p><b>Сейчас</b> ДЗ после №2 проверено; правим план занятия №3</p>
+    <p><b>Прошлое</b> №2 — разобрали ДЗ; перебор буксует. «Прогулку» в ДЗ взял сам</p>
+    <p><b>Следующее</b> №3 — разбор ДЗ (периметр, короткие ходы) + графы и перебор/оценка</p>
+  </div>
+
+  <h2>Главное про него</h2>
+  <ul class="next">
+    <li>Знает почти всё («баян»), но сходу не решает — нужны <i>незнакомые</i> качественные задачи</li>
+    <li>Ответ находит, а короткий и строгий ход — нет: берёт первую тяжёлую идею, не закрывает строго</li>
+    <li>Графы через рукопожатия — уже сам; дырка — полуинвариант по периметру; теряет случаи в переборе</li>
+  </ul>
+
+  <h2>Хроника</h2>
+  <ul class="chron">
+    <li><span class="n">1</span><span class="d">10.06</span> · диагностика; домино — лучший калибратор. Уровень выше подборки.</li>
+    <li><span class="n">2</span><span class="d">17.06</span> · разобрали ДЗ; в классе 6/5/2, хамелеоны, шахматисты. Перебор — слабое место; −10 мин на связь.</li>
+  </ul>
+
+  <h2>ДЗ после занятия №2 — проверено 24.06</h2>
+  <ul class="hw">
+    <li><span class="ok">✓</span>Граф (города 25/1/6) — <span class="ans">рукопожатия на компоненты, взял сам (бывшая «Прогулка»)</span></li>
+    <li><span class="ok">✓</span>Ряд 1…9 простые суммы; куб (чётность) — <span class="ans">чисто</span></li>
+    <li><span class="lo">~</span>27|N; 2p+1=куб → p=13; 99→S≥18 — <span class="ans">ответ верный, доводы рыхлые (нет короткого хода)</span></li>
+    <li><span class="no">✗</span>Заражение n×n — <span class="ans">неверно; нужен полуинвариант по периметру</span></li>
+    <li><span class="lo">~</span>Прямые с параметром — <span class="ans">потерял случай a = −1</span></li>
+    <li class="small">Не видно: 51 из 100 (одно делит другое).</li>
+  </ul>
+
+  <h2>Куда дальше</h2>
+  <ul class="next">
+    <li>Графы — маленькие концретные переборные конфигурации (конкретное число вершин), не общие теоремы</li>
+    <li>Перебор-экономия и строгость — короткий ход вместо первой тяжёлой идеи; не терять случаи</li>
+    <li>Полуинвариант по периметру / монотонные величины — закрыть дырку (заражение)</li>
+    <li>Источники — ЦПМ Хамовники 7 + наш банк (мамин набор, отложенное); счёт — пауза</li>
+  </ul>
+
+</div>
+</body>
+</html>

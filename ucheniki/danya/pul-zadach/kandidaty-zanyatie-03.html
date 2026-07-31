@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кандидаты — занятие №3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;--shadow:0 10px 30px -20px rgba(42,37,32,.5);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+  header.mast{padding:54px 0 16px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 10px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:42px;line-height:1.02;margin:0;}
+  .state{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin:12px 0 0;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12.5px;color:var(--rubric);font-weight:700;margin:38px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+  article{padding:16px 0 6px;border-bottom:1px solid var(--rule);}
+  article:last-of-type{border-bottom:none;}
+  .head{display:flex;align-items:center;gap:9px;margin-bottom:5px;flex-wrap:wrap;}
+  .num{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:21px;color:var(--rubric);}
+  .tag{font-family:"PT Sans",sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--rule);border-radius:3px;padding:2px 7px;}
+  .src{font-family:"PT Sans",sans-serif;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:3px;padding:2px 7px;}
+  .cond{margin:2px 0 0;}
+  .why{font-family:"PT Serif";font-style:italic;color:var(--ink-faint);font-size:14.5px;margin:7px 0 0;}
+  details{margin:9px 0 2px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--rubric);}
+  details[open] summary::before{content:"▾ ";}
+  .key{font-size:15px;color:var(--ink-soft);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:11px 15px;margin-top:8px;}
+  @media print{body::before{display:none;}details{display:block;}details>summary{display:none;}.key{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Занятие №3 · расширенный пул</p>
+    <h1>Отобрать ~5</h1>
+    <p class="state">ЦПМ Хамовники 7 + наш старый банк. Раскраску 5×5 снял, вместо неё — любимое-но-не-данное из маминого набора. Источник помечен, ключи проверены.</p>
+  </header>
+
+  <h2>Графы</h2>
+  <article>
+    <div class="head"><span class="num">1</span><span class="src">ЦПМ</span><span class="tag">двойной подсчёт</span><span class="tag">средняя</span></div>
+    <p class="cond">В классе не более 37 учеников. Каждый знаком ровно с тремя мальчиками и семью девочками из этого же класса (знакомство взаимно). Сколько учеников может быть в классе?</p>
+    <p class="why">Его любимый тип — граф через двойной подсчёт, на ступень выше «мальчиков и девочек».</p>
+    <details><summary>ключ</summary><div class="key">20 или 30. Пары «человек — знакомый мальчик» двумя способами: 3<i>n</i> = сумма степеней мальчиков = 10<i>m</i>; аналогично 10<i>d</i> = 7<i>n</i>, значит <i>n</i> кратно 10. Так как мальчик знаком с тремя другими мальчиками (<i>m</i> ≥ 4) и учеников ≤ 37: <i>n</i> = 20 (6 и 14) или 30 (9 и 21).</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">2</span><span class="src">ЦПМ</span><span class="tag">перебор конфигураций</span><span class="tag">средняя</span></div>
+    <p class="cond">В компании из шести человек каждый знаком ровно с тремя другими. Сколько существует по существу различных таких компаний? (Две одинаковы, если знакомства одной получаются из другой переименованием людей.)</p>
+    <p class="why">Его жанр в графах: конкретное число вершин, маленький честный разбор — вместо общей теоремы.</p>
+    <details><summary>ключ</summary><div class="key">Ровно две. Возьмите A и его знакомых B, C, D; с A не знакомы ещё двое — E и F. Если внутри {B,C,D} знакомств нет — выходит K<sub>3,3</sub> (части {B,C,D} и {A,E,F}); если есть хотя бы одно — «треугольная призма». Других вариантов условие «ровно три» не оставляет.</div></details>
+  </article>
+
+  <h2>Перебор и оценка <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-faint)">— его фронт</span></h2>
+  <article>
+    <div class="head"><span class="num">3</span><span class="src">ЦПМ</span><span class="tag">конструкция + оценка</span><span class="tag">средняя</span></div>
+    <p class="cond">Какое наибольшее количество натуральных чисел, не превосходящих 1000, можно выбрать так, чтобы ни для каких двух их сумма не делилась на их разность?</p>
+    <p class="why">Короткий ход: запрет на разности 1 и 2 сразу даёт оценку — без лобового перебора.</p>
+    <details><summary>ключ</summary><div class="key">334. Разность 1 делит любую сумму; при разности 2 числа одной чётности, сумма чётна. Значит любые два отличаются ≥ 3, поэтому их ≤ 334. Пример: 1, 4, 7, …, 1000 (≡ 1 mod 3): разность кратна 3, сумма ≡ 2 — не делится.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">4</span><span class="src">ЦПМ</span><span class="tag">принцип крайнего</span><span class="tag">средняя</span></div>
+    <p class="cond">В клетках доски 8×8 расставлены различные натуральные числа. Докажите, что найдутся две соседние по стороне клетки, числа в которых отличаются не меньше чем на 5.</p>
+    <details><summary>ключ</summary><div class="key">Кратчайший путь по соседним клеткам от числа 1 до числа 64 не длиннее 14 шагов. Вдоль него рост 63; будь каждый шаг ≤ 4, вышло бы ≤ 56 &lt; 63 — значит где-то скачок ≥ 5.</div></details>
+  </article>
+
+  <h2>Теория чисел</h2>
+  <article>
+    <div class="head"><span class="num">5</span><span class="src">ЦПМ</span><span class="tag">разложение p⁴−1</span><span class="tag">трудная</span></div>
+    <p class="cond">Найдите все тройки простых чисел <i>p</i>, <i>q</i>, <i>r</i>, для которых четвёртая степень каждого, уменьшенная на единицу, делится на произведение двух остальных.</p>
+    <details><summary>ключ</summary><div class="key">Только (2, 3, 5): 2⁴−1 = 15 = 3·5; 3⁴−1 = 80 ⋮ 2·5; 5⁴−1 = 624 ⋮ 2·3. Ни одно из простых не делит свою четвёртую степень минус 1, поэтому они различны; перебор по малым (с учётом разложения) других не даёт.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">6</span><span class="src">наш банк · мамин набор</span><span class="tag">сумма цифр</span><span class="tag">средняя-трудная</span></div>
+    <p class="cond">Сумма цифр числа <i>N</i> равна 2222, а сумма цифр числа <i>N</i> + 1 равна 990. Чему может быть равна сумма цифр числа <i>N</i> + 1000?</p>
+    <p class="why">Чистое «подумать про переносы», без вычислений — то, что ему полезно вместо тяжёлого инструмента.</p>
+    <details><summary>ключ</summary><div class="key">1017. Из S(N+1) = S(N) − 9k + 1 (k девяток на конце): 990 = 2222 − 9k + 1, значит k = 137. Прибавление 1000 превращает 134 девятки (позиции 4–137) в нули и добавляет 1 к 138-й цифре: 2222 − 9·134 + 1 = 1017.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">7</span><span class="src">наш банк · мамин набор</span><span class="tag">остатки · взаимная простота</span><span class="tag">средняя-трудная</span></div>
+    <p class="cond">Решите в натуральных числах уравнение <i>x</i><sup>4</sup> + <i>x</i><sup>2</sup> = 7<sup><i>y</i></sup> · <i>z</i><sup>2</sup>.</p>
+    <p class="why">Из твоего любимого маминого набора, мы её не давали: красивый короткий довод через остаток по модулю 7.</p>
+    <details><summary>ключ</summary><div class="key">Решений нет. Запишем <i>x</i>²(<i>x</i>² + 1) = 7<sup><i>y</i></sup><i>z</i>². Соседние числа <i>x</i>² и <i>x</i>² + 1 взаимно просты. Квадрат по модулю 7 даёт остатки 0, 1, 2, 4, поэтому <i>x</i>² + 1 на 7 не делится — значит вся степень семёрки сидит в <i>x</i>². Тогда <i>x</i>² + 1 (взаимно простое и с 7, и с <i>x</i>²) обязано само быть точным квадратом; но между <i>x</i>² и (<i>x</i>+1)² квадратов нет, а <i>x</i>² + 1 = квадрат даёт лишь <i>x</i> = 0. В натуральных решений нет.</div></details>
+  </article>
+
+  <h2>Инвариант</h2>
+  <article>
+    <div class="head"><span class="num">8</span><span class="src">ЦПМ</span><span class="tag">баланс / инвариант</span><span class="tag">трудная</span></div>
+    <p class="cond">В вершинах <i>n</i>-угольника (<i>n</i> &gt; 2) лежат фишки. За ход выбирают вершину, где не меньше двух фишек, убирают две и кладут по одной в соседние. Докажите: если фишки вернулись к исходному расположению, то число ходов делится на <i>n</i>.</p>
+    <details><summary>ключ</summary><div class="key">Пусть <i>f<sub>v</sub></i> — число ходов в вершине <i>v</i>. Возврат фишек даёт −2<i>f<sub>v</sub></i> + <i>f</i><sub><i>v</i>−1</sub> + <i>f</i><sub><i>v</i>+1</sub> = 0, поэтому разности <i>f</i><sub><i>v</i>+1</sub> − <i>f<sub>v</sub></i> одинаковы по кругу; их сумма по циклу равна нулю, значит все <i>f<sub>v</sub></i> равны, и ходов <i>n·f</i>.</div></details>
+  </article>
+
+</div>
+</body>
+</html>

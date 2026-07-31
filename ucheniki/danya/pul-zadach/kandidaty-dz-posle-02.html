@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кандидаты — ДЗ после №2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;--rule:#d8cdb4;--rubric:#9e2b25;--shadow:0 10px 30px -20px rgba(42,37,32,.5);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+  header.mast{padding:54px 0 16px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 10px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:42px;line-height:1.02;margin:0;}
+  .state{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin:12px 0 0;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12.5px;color:var(--rubric);font-weight:700;margin:38px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+  article{padding:16px 0 6px;border-bottom:1px solid var(--rule);}
+  article:last-of-type{border-bottom:none;}
+  .head{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap;}
+  .num{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:21px;color:var(--rubric);}
+  .tag{font-family:"PT Sans",sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--rule);border-radius:3px;padding:2px 7px;}
+  .must{color:var(--rubric);border-color:var(--rubric);}
+  .cond{margin:2px 0 0;}
+  details{margin:10px 0 2px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--rubric);}
+  details[open] summary::before{content:"▾ ";}
+  .key{font-size:15px;color:var(--ink-soft);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:11px 15px;margin-top:8px;}
+  @media print{body::before{display:none;}details{display:block;}details>summary{display:none;}.key{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">ДЗ после №2 · кандидаты</p>
+    <h1>Выбрать 8 из 10</h1>
+    <p class="state">разные интересные задачи; есть простые и сложные. Ключи скрыты. №1 рекомендую обязательно — точка входа в графы.</p>
+  </header>
+
+  <h2>Графы</h2>
+  <article>
+    <div class="head"><span class="num">1</span><span class="tag must">точка входа</span><span class="tag">лемма о рукопожатиях</span></div>
+    <p class="cond">В стране несколько городов, некоторые пары соединены дорогами. Оказалось, что ровно из двух городов выходит нечётное число дорог. Докажите, что из одного из этих городов можно добраться до другого.</p>
+    <details><summary>ключ</summary><div class="key">В каждой компоненте связности сумма степеней чётна (она вдвое больше числа дорог), значит вершин нечётной степени в компоненте чётное число. Если бы две наши нечётные вершины лежали в разных компонентах, в каждой была бы ровно одна — нечётно, противоречие. Значит, они в одной компоненте, и между ними есть путь.</div></details>
+  </article>
+
+  <h2>Прямые с параметром</h2>
+  <article>
+    <div class="head"><span class="num">2</span><span class="tag">параметр</span><span class="tag">разбор случаев</span></div>
+    <p class="cond">При каких значениях <i>a</i> прямые <i>x</i> + <i>y</i> = 2, <i>x</i> − <i>y</i> = 0 и <i>a·x</i> + <i>y</i> = 1 не образуют треугольника?</p>
+    <details><summary>ключ</summary><div class="key">Треугольника нет, если какие-то две прямые параллельны либо все три проходят через одну точку. Наклоны первых двух равны −1 и 1, у третьей −<i>a</i>. Параллельность: −<i>a</i> = −1 (<i>a</i> = 1) или −<i>a</i> = 1 (<i>a</i> = −1). Первые две пересекаются в точке (1, 1); третья проходит через неё при <i>a</i> + 1 = 1, то есть <i>a</i> = 0. Ответ: <i>a</i> ∈ {−1, 0, 1}.</div></details>
+  </article>
+
+  <h2>Теория чисел</h2>
+  <article>
+    <div class="head"><span class="num">3</span><span class="tag">лёгкая алгебра</span><span class="tag">перебор множителей</span></div>
+    <p class="cond">Найдите все простые числа <i>p</i>, для которых <i>2p</i> + 1 является точным кубом.</p>
+    <details><summary>ключ</summary><div class="key"><i>p</i> = 13 (2·13 + 1 = 27 = 3³). Если 2<i>p</i> + 1 = <i>k</i>³, то 2<i>p</i> = <i>k</i>³ − 1 = (<i>k</i> − 1)(<i>k</i>² + <i>k</i> + 1). Множитель <i>k</i>² + <i>k</i> + 1 нечётен и больше 1; разобрав, как 2<i>p</i> распадается на эти два множителя (<i>k</i> − 1 = 2, <i>k</i>² + <i>k</i> + 1 = <i>p</i>), получаем <i>k</i> = 3, <i>p</i> = 13.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">4</span><span class="tag">остатки</span></div>
+    <p class="cond">Цифры некоторого числа переставили, и число уменьшилось ровно в три раза. Докажите, что исходное число делится на 27.</p>
+    <details><summary>ключ</summary><div class="key">У исходного числа <i>N</i> и у полученного <i>N</i>/3 один набор цифр, значит одинаковая сумма цифр и 9 | (<i>N</i> − <i>N</i>/3) = 2<i>N</i>/3. Тогда 27 | 2<i>N</i>, а так как 2 и 27 взаимно просты, 27 | <i>N</i>.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">5</span><span class="tag">сумма цифр</span></div>
+    <p class="cond">Число <i>N</i> делится на 99. Докажите, что сумма его цифр не меньше 18.</p>
+    <details><summary>ключ</summary><div class="key">Число делится на 9, поэтому сумма цифр кратна 9 и не меньше 9. Остаётся исключить сумму цифр 9: при ней число не может одновременно делиться на 11 (разбор знакочередующейся суммы цифр). Значит, сумма цифр кратна 9 и больше 9 — не меньше 18.</div></details>
+  </article>
+
+  <h2>Инварианты и процессы</h2>
+  <article>
+    <div class="head"><span class="num">6</span><span class="tag">инвариант</span></div>
+    <p class="cond">В семи вершинах куба стоят нули, в восьмой — единица. За ход разрешается прибавить по единице к двум числам, стоящим на концах одного ребра. Можно ли добиться, чтобы все восемь чисел стали равны?</p>
+    <details><summary>ключ</summary><div class="key">Раскрасьте вершины куба в два цвета в шахматном порядке (по 4); каждое ребро соединяет вершины разного цвета. Любой ход добавляет по единице к сумме каждого цвета, поэтому разность «сумма по чёрным минус сумма по белым» не меняется. Вначале она равна ±1, а у равной расстановки — нулю.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">7</span><span class="tag">полуинвариант</span></div>
+    <p class="cond">Клетки доски <i>n</i>×<i>n</i> заражаются по правилу: каждую минуту заражается любая клетка, у которой не меньше двух уже заражённых соседей по стороне. Изначально заражены несколько клеток. Докажите, что если со временем заразилась вся доска, то изначально было заражено не меньше <i>n</i> клеток.</p>
+    <details><summary>ключ</summary><div class="key">Следите за суммарным периметром заражённой области. Когда заражается клетка с двумя или более заражёнными соседями, периметр не растёт (убирается не меньше двух общих сторон, добавляется не больше двух). У <i>k</i> начальных клеток периметр не больше 4<i>k</i>, у всей доски он равен 4<i>n</i>. Значит 4<i>n</i> ≤ 4<i>k</i>, то есть <i>k</i> ≥ <i>n</i>.</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">8</span><span class="tag">раскраска</span></div>
+    <p class="cond">Квадрат 5×5 разрезали на двенадцать косточек домино 1×2 и одну клетку 1×1. На каких клетках может стоять одиночная клетка?</p>
+    <details><summary>ключ</summary><div class="key">Раскрасьте доску в шахматный цвет: клеток цвета углов 13, другого цвета 12. Каждая косточка накрывает по одной клетке каждого цвета, поэтому двенадцать косточек закрывают 12 и 12. Оставшаяся клетка 1×1 стоит на клетке цвета углов (таких 13).</div></details>
+  </article>
+
+  <h2>Перебор</h2>
+  <article>
+    <div class="head"><span class="num">9</span><span class="tag">красивый перебор</span></div>
+    <p class="cond">Можно ли выписать в ряд числа 1, 2, …, 9, каждое по одному разу, так, чтобы сумма любых двух соседних оказалась простым числом?</p>
+    <details><summary>ключ</summary><div class="key">Можно. Сумма двух чисел одной чётности чётна и больше двух, значит не простая, — поэтому чётные и нечётные обязаны чередоваться (нечётных пять, чётных четыре — чередование возможно). Подходит, например, 1, 2, 3, 4, 7, 6, 5, 8, 9 (суммы 3, 5, 7, 11, 13, 11, 13, 17).</div></details>
+  </article>
+  <article>
+    <div class="head"><span class="num">10</span><span class="tag">принцип Дирихле</span></div>
+    <p class="cond">Среди чисел 1, 2, …, 100 выбрали 51 число. Докажите, что среди выбранных обязательно найдутся два, одно из которых делит другое.</p>
+    <details><summary>ключ</summary><div class="key">Запишите каждое число как (нечётное)·2<sup>k</sup>. Различных нечётных множителей среди 1…100 ровно 50. По принципу Дирихле у каких-то двух из 51 числа нечётная часть совпадает — тогда меньшее делит большее.</div></details>
+  </article>
+
+</div>
+</body>
+</html>

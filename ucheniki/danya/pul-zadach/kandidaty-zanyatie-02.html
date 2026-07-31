@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кандидаты — занятие №2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+    --rule:#d8cdb4;--rubric:#9e2b25;--shadow:0 10px 30px -20px rgba(42,37,32,.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+  header.mast{padding:54px 0 16px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 10px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:44px;line-height:1.02;margin:0;}
+  .state{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin:12px 0 0;}
+  h2{font-family:"PT Sans",sans-serif;text-transform:uppercase;letter-spacing:.16em;font-size:12.5px;color:var(--rubric);font-weight:700;margin:40px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--rule);}
+  article{padding:16px 0 6px;border-bottom:1px solid var(--rule);}
+  article:last-of-type{border-bottom:none;}
+  .head{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;}
+  .num{font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:21px;color:var(--rubric);flex:none;}
+  .tier{font-family:"PT Sans",sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);border:1px solid var(--rule);border-radius:3px;padding:2px 7px;align-self:center;}
+  .cond{margin:2px 0 0;}
+  .cond b{font-weight:700;}
+  details{margin:10px 0 2px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"▸ ";color:var(--rubric);}
+  details[open] summary::before{content:"▾ ";}
+  .key{font-size:15px;color:var(--ink-soft);background:var(--panel);border:1px solid var(--rule);border-radius:4px;padding:11px 15px;margin-top:8px;}
+  .lead{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15.5px;margin:18px 0 0;}
+  @media print{body::before{display:none;}details{display:block;}details>summary{display:none;}.key{box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Подборка · кандидаты</p>
+    <h1>Занятие №2 — кандидаты</h1>
+    <p class="state">микс: инварианты · графы · двойной подсчёт · комбинаторика · теория чисел — сложнее первого занятия. Ключи скрыты, раскрываются по клику.</p>
+  </header>
+
+  <h2>Инварианты и чётность</h2>
+
+  <article>
+    <div class="head"><span class="num">1</span><span class="tier">ядро</span></div>
+    <p class="cond">Из шахматной доски 8×8 вырезали две противоположные угловые клетки. Можно ли оставшиеся 62 клетки замостить 31 косточкой домино так, чтобы каждая косточка накрывала ровно две соседние клетки?</p>
+    <details><summary>ключ</summary><div class="key">Нельзя. Противоположные углы одного цвета, и каждая косточка накрывает одну белую и одну чёрную клетку. После выреза осталось 32 клетки одного цвета и 30 другого — поровну закрыть не выйдет.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">2</span><span class="tier">ядро</span></div>
+    <p class="cond">На доске выписаны числа 1, 2, …, 20. За один ход стирают любые два числа и записывают вместо них модуль их разности. Так продолжают, пока не останется одно число. Какой чётности может оказаться это число?</p>
+    <details><summary>ключ</summary><div class="key">Только чётным. Замена пары <i>a, b</i> на |<i>a−b</i>| не меняет чётности суммы всех чисел на доске. Сумма 1+2+…+20 = 210 чётна, поэтому и последнее число чётно.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">3</span><span class="tier">трудная</span></div>
+    <p class="cond">В семи вершинах куба стоят нули, в одной — единица. За ход разрешается прибавить по единице к двум числам, стоящим на концах одного ребра. Можно ли добиться, чтобы все восемь чисел стали равны?</p>
+    <details><summary>ключ</summary><div class="key">Нельзя. Раскрасьте вершины куба в два цвета в шахматном порядке (по 4 каждого); любое ребро соединяет вершины разного цвета. Каждый ход добавляет по единице к сумме каждого цвета, поэтому разность «сумма по чёрным минус сумма по белым» не меняется. Вначале она равна ±1, а у равной расстановки — нулю.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">4</span><span class="tier">ядро</span></div>
+    <p class="cond">В стране живут 13 красных, 15 зелёных и 17 синих хамелеонов. При встрече двух хамелеонов разного цвета оба перекрашиваются в третий цвет. Может ли наступить момент, когда все хамелеоны окажутся одного цвета?</p>
+    <details><summary>ключ</summary><div class="key">Не может. Остатки количеств по модулю 3 равны 1, 0, 2 — попарно различны. Любая встреча сохраняет попарные разности этих остатков. Чтобы все стали одного цвета, два количества должны обратиться в ноль, то есть их остатки совпасть, — а это невозможно.</div></details>
+  </article>
+
+  <h2>Графы</h2>
+
+  <article>
+    <div class="head"><span class="num">5</span><span class="tier">трудная</span></div>
+    <p class="cond">В компании шесть человек; любые двое либо знакомы, либо незнакомы. Докажите, что найдутся либо трое попарно знакомых, либо трое попарно незнакомых.</p>
+    <details><summary>ключ</summary><div class="key">Возьмите одного человека. Из пяти остальных по принципу Дирихле хотя бы трое находятся с ним в одном отношении — пусть знакомы. Если среди этих троих есть хоть одна знакомая пара, она вместе с выбранным даёт тройку попарно знакомых. Если знакомых пар среди них нет — эти трое попарно незнакомы.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">6</span><span class="tier">ядро</span></div>
+    <p class="cond">Девять шахматистов играют турнир в один круг — каждый с каждым по одной партии. Докажите, что в любой момент турнира найдутся двое, сыгравших к этому моменту поровну партий.</p>
+    <details><summary>ключ</summary><div class="key">Число сыгранных партий у каждого из девяти лежит между 0 и 8. Значения 0 и 8 не могут встретиться одновременно: если кто-то уже сыграл со всеми восемью, то ни у кого нет нуля. Значит, девять чисел принимают не более восьми разных значений — какие-то два совпадают.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">7</span><span class="tier">ядро</span></div>
+    <p class="cond">На встрече некоторые пары людей обменялись рукопожатиями. Докажите, что число людей, сделавших нечётное число рукопожатий, чётно.</p>
+    <details><summary>ключ</summary><div class="key">Сумма числа рукопожатий по всем людям равна удвоенному числу рукопожатий — она чётна. Сумма нескольких чисел чётна только тогда, когда нечётных среди них чётное число.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">8</span><span class="tier">ядро</span></div>
+    <p class="cond">Несколько городов соединены дорогами так, что из любого города можно доехать до любого другого, а всего дорог ровно на одну меньше, чем городов. Докажите, что найдётся город, из которого выходит ровно одна дорога.</p>
+    <details><summary>ключ</summary><div class="key">Сумма числа дорог по всем городам равна удвоенному числу дорог, то есть строго меньше удвоенного числа городов. Значит, какой-то город имеет не более одной дороги; а так как из него можно куда-то доехать, ровно одну. (Это лист дерева: связный граф с числом рёбер на единицу меньше числа вершин — дерево.)</div></details>
+  </article>
+
+  <h2>Двойной подсчёт</h2>
+
+  <article>
+    <div class="head"><span class="num">9</span><span class="tier">ядро</span></div>
+    <p class="cond">В школе сорок кружков. Каждый ученик ходит ровно в два кружка, и любые два кружка имеют ровно одного общего ученика. Сколько учеников в школе?</p>
+    <details><summary>ключ</summary><div class="key">780. Сопоставьте каждому ученику пару кружков, в которые он ходит. Условие «любые два кружка имеют ровно одного общего ученика» означает, что это соответствие — взаимно однозначное между учениками и парами кружков. Пар кружков ровно C(40,2) = 780.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">10</span><span class="tier">ядро</span></div>
+    <p class="cond">На окружности отметили 20 точек и провели все хорды с концами в этих точках. Никакие три хорды не проходят через одну внутреннюю точку. Сколько точек пересечения хорд получилось внутри круга?</p>
+    <details><summary>ключ</summary><div class="key">4845. Каждой внутренней точке пересечения отвечают ровно четыре отмеченные точки — концы двух пересекающихся хорд; и наоборот, любые четыре точки задают ровно одну такую точку пересечения. Значит, их столько же, сколько четвёрок: C(20,4) = 4845.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">11</span><span class="tier">трудная</span></div>
+    <p class="cond">Полный набор костяшек домино — от 0:0 до 6:6 — нужно выложить в одну замкнутую цепочку по кругу так, чтобы соприкасающиеся половинки соседних костяшек несли одинаковые числа. Докажите, что это возможно.</p>
+    <details><summary>ключ</summary><div class="key">Возьмите граф с семью вершинами 0, 1, …, 6, в котором каждой костяшке без дубля отвечает ребро между её числами (дубли отложим). Из каждой вершины выходит ровно шесть рёбер — чётно, и граф связен, поэтому в нём есть замкнутый маршрут, проходящий по каждому ребру ровно раз. Этот маршрут и есть кольцо из костяшек; дубли вставляются к соответствующим числам.</div></details>
+  </article>
+
+  <h2>Комбинаторика и перебор</h2>
+
+  <article>
+    <div class="head"><span class="num">12</span><span class="tier">ядро</span></div>
+    <p class="cond">Среди 1, 2, …, 100 выбрали 51 число. Докажите, что среди выбранных обязательно найдутся два, одно из которых делит другое.</p>
+    <details><summary>ключ</summary><div class="key">Запишите каждое число в виде (нечётное)·2<sup>k</sup>. Различных нечётных множителей среди чисел от 1 до 100 ровно 50. По принципу Дирихле у каких-то двух из 51 числа нечётная часть одинакова — тогда меньшее из них делит большее.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">13</span><span class="tier">ядро</span></div>
+    <p class="cond">Можно ли выписать в ряд числа 1, 2, …, 9, каждое по одному разу, так, чтобы сумма любых двух соседних оказалась простым числом?</p>
+    <details><summary>ключ</summary><div class="key">Можно. Сумма двух чисел одной чётности чётна и больше двух, значит не простая, — поэтому в ряду чётные и нечётные обязаны чередоваться (нечётных пять, чётных четыре, чередование возможно). Подходит, например, 1, 2, 3, 4, 7, 6, 5, 8, 9 — суммы 3, 5, 7, 11, 13, 11, 13, 17.</div></details>
+  </article>
+
+  <h2>Теория чисел</h2>
+
+  <article>
+    <div class="head"><span class="num">14</span><span class="tier">ядро</span></div>
+    <p class="cond">Число состоит из десяти шестёрок, тридцати пятёрок и шестидесяти двоек (в каком-то порядке). Докажите, что оно не является точным квадратом.</p>
+    <details><summary>ключ</summary><div class="key">Сумма цифр равна 10·6 + 30·5 + 60·2 = 330, а 330 даёт остаток 6 при делении на 9. Точный квадрат может давать по модулю 9 только остатки 0, 1, 4 или 7. Значит, квадратом число быть не может.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">15</span><span class="tier">ядро</span></div>
+    <p class="cond">Число <i>N</i> делится на 99. Докажите, что сумма его цифр не меньше 18.</p>
+    <details><summary>ключ</summary><div class="key">Число делится на 9, поэтому сумма цифр кратна 9 и не меньше 9. Остаётся показать, что сумма цифр не равна 9: при сумме цифр 9 число не может одновременно делиться на 11 (разбор знакочередующейся суммы цифр). Значит, сумма цифр кратна 9 и больше 9, то есть не меньше 18.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">16</span><span class="tier">ядро</span></div>
+    <p class="cond">Цифры некоторого числа переставили, и число уменьшилось ровно в три раза. Докажите, что исходное число делится на 27.</p>
+    <details><summary>ключ</summary><div class="key">Пусть исходное число <i>N</i>, после перестановки получилось <i>N</i>/3. У них одинаковый набор цифр, значит одинаковая сумма цифр, и их разность делится на 9: 9 | (<i>N</i> − <i>N</i>/3) = 2<i>N</i>/3. Тогда 27 | 2<i>N</i>, а так как 2 и 27 взаимно просты, 27 | <i>N</i>.</div></details>
+  </article>
+
+  <article>
+    <div class="head"><span class="num">17</span><span class="tier">трудная</span></div>
+    <p class="cond">Найдите все натуральные <i>n</i>, при которых число <i>n</i><sup>4</sup> + 4 является простым.</p>
+    <details><summary>ключ</summary><div class="key">Только <i>n</i> = 1 (тогда число равно 5). При <i>n</i> > 1 работает разложение <i>n</i><sup>4</sup> + 4 = (<i>n</i><sup>2</sup> − 2<i>n</i> + 2)(<i>n</i><sup>2</sup> + 2<i>n</i> + 2), и оба множителя больше единицы.</div></details>
+  </article>
+
+  <p class="lead">Если хочется ещё злее в ДЗ — три задачи из присланного маминого набора (про сумму цифр и про простое <i>p</i>) идут сюда же как растяжки.</p>
+
+</div>
+</body>
+</html>
