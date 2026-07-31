@@ -1,0 +1,39 @@
+<svg viewBox="0 0 560 300" width="560" role="img" aria-label="Слева видно звено, идущее из чёрной вершины в новую: уголок продолжится вверх или вниз, и строка голубая, значит вверх. Справа видно звено, идущее из новой вершины в чёрную: уголок начался слева или справа, и та же голубая строка выбирает слева">
+<rect class="s-fillsh" x="0" y="118" width="560" height="76"/>
+<line class="s-thin" x1="26" y1="232" x2="26" y2="80"/>
+<line class="s-thin" x1="102" y1="232" x2="102" y2="80"/>
+<line class="s-thin" x1="178" y1="232" x2="178" y2="80"/>
+<line class="s-thin" x1="254" y1="232" x2="254" y2="80"/>
+<line class="s-thin" x1="26" y1="232" x2="254" y2="232"/>
+<line class="s-thin" x1="26" y1="156" x2="254" y2="156"/>
+<line class="s-thin" x1="26" y1="80" x2="254" y2="80"/>
+<line class="s-dash" x1="178" y1="156" x2="178" y2="80"/>
+<line class="s-dash" x1="178" y1="156" x2="178" y2="232"/>
+<circle class="s-node-r" cx="178" cy="80" r="2.6"/>
+<circle class="s-node-r" cx="178" cy="232" r="2.6"/>
+<line class="s-accent" stroke-width="3" x1="102" y1="156" x2="178" y2="156"/>
+<line class="s-thin" x1="102" y1="156" x2="169" y2="156"/><polygon class="s-ar-a" points="178,156 169,160 169,152"/>
+<circle class="s-node-r" cx="102" cy="156" r="2.6"/>
+<circle class="s-node" cx="178" cy="156" r="3"/>
+<line class="s-line" x1="167" y1="183" x2="189" y2="205"/>
+<line class="s-line" x1="167" y1="205" x2="189" y2="183"/>
+<text class="s-txt-m" x="140" y="18" text-anchor="middle">видим первую половину</text>
+<line class="s-thin" x1="306" y1="232" x2="306" y2="80"/>
+<line class="s-thin" x1="382" y1="232" x2="382" y2="80"/>
+<line class="s-thin" x1="458" y1="232" x2="458" y2="80"/>
+<line class="s-thin" x1="534" y1="232" x2="534" y2="80"/>
+<line class="s-thin" x1="306" y1="232" x2="534" y2="232"/>
+<line class="s-thin" x1="306" y1="156" x2="534" y2="156"/>
+<line class="s-thin" x1="306" y1="80" x2="534" y2="80"/>
+<line class="s-dash" x1="458" y1="156" x2="382" y2="156"/>
+<line class="s-dash" x1="458" y1="156" x2="534" y2="156"/>
+<circle class="s-node-r" cx="382" cy="156" r="2.6"/>
+<circle class="s-node-r" cx="534" cy="156" r="2.6"/>
+<line class="s-accent" stroke-width="3" x1="458" y1="156" x2="458" y2="80"/>
+<line class="s-thin" x1="458" y1="156" x2="458" y2="89"/><polygon class="s-ar-a" points="458,80 462,89 454,89"/>
+<circle class="s-node-r" cx="458" cy="80" r="2.6"/>
+<circle class="s-node" cx="458" cy="156" r="3"/>
+<line class="s-line" x1="485" y1="145" x2="507" y2="167"/>
+<line class="s-line" x1="485" y1="167" x2="507" y2="145"/>
+<text class="s-txt-m" x="420" y="18" text-anchor="middle">видим вторую половину</text>
+</svg>

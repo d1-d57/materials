@@ -1,0 +1,56 @@
+<svg viewBox="0 0 620 250" width="620" role="img" aria-label="Слева кривая после трёх складываний, рёбра покрашены через одно. В середине она же после четвёртого складывания: каждое ребро стало парой рёбер своего цвета. Справа пары соединены обратно — получилась левая кривая, только крупнее и повёрнутая">
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="126" y1="180" x2="178" y2="180"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="178" y1="180" x2="178" y2="128"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="178" y1="128" x2="126" y2="128"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="126" y1="128" x2="126" y2="76"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="126" y1="76" x2="74" y2="76"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="74" y1="76" x2="74" y2="128"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="74" y1="128" x2="22" y2="128"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="22" y1="128" x2="22" y2="76"/>
+<circle class="s-node" cx="126" cy="180" r="3"/>
+<circle class="s-node" cx="178" cy="180" r="3"/>
+<circle class="s-node" cx="178" cy="128" r="3"/>
+<circle class="s-node" cx="126" cy="128" r="3"/>
+<circle class="s-node" cx="126" cy="76" r="3"/>
+<circle class="s-node" cx="74" cy="76" r="3"/>
+<circle class="s-node" cx="74" cy="128" r="3"/>
+<circle class="s-node" cx="22" cy="128" r="3"/>
+<circle class="s-node" cx="22" cy="76" r="3"/>
+<text class="s-txt-m" x="100" y="20" text-anchor="middle">3 складывания</text>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="346.8" y1="143.6" x2="378" y2="143.6"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="378" y1="143.6" x2="378" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="378" y1="112.4" x2="346.8" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="346.8" y1="112.4" x2="346.8" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="346.8" y1="81.2" x2="315.6" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="315.6" y1="81.2" x2="315.6" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="315.6" y1="112.4" x2="284.4" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="284.4" y1="112.4" x2="284.4" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="284.4" y1="81.2" x2="253.2" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="253.2" y1="81.2" x2="253.2" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="253.2" y1="112.4" x2="284.4" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="284.4" y1="112.4" x2="284.4" y2="143.6"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="284.4" y1="143.6" x2="253.2" y2="143.6"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="253.2" y1="143.6" x2="253.2" y2="174.8"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="253.2" y1="174.8" x2="222" y2="174.8"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="222" y1="174.8" x2="222" y2="143.6"/>
+<circle class="s-node" cx="346.8" cy="143.6" r="3"/>
+<circle class="s-node" cx="378" cy="112.4" r="3"/>
+<circle class="s-node" cx="346.8" cy="81.2" r="3"/>
+<circle class="s-node" cx="315.6" cy="112.4" r="3"/>
+<circle class="s-node" cx="284.4" cy="81.2" r="3"/>
+<circle class="s-node" cx="253.2" cy="112.4" r="3"/>
+<circle class="s-node" cx="284.4" cy="143.6" r="3"/>
+<circle class="s-node" cx="253.2" cy="174.8" r="3"/>
+<circle class="s-node" cx="222" cy="143.6" r="3"/>
+<text class="s-txt-m" x="300" y="20" text-anchor="middle">4 складывания</text>
+<path class="s-thin" fill="none" stroke-width="1.4" d="M 546.80,143.60 L 568.64,143.60 Q 578.00,143.60 578.00,134.24 L 578.00,121.76 Q 578.00,112.40 568.64,112.40 L 556.16,112.40 Q 546.80,112.40 546.80,103.04 L 546.80,90.56 Q 546.80,81.20 537.44,81.20 L 524.96,81.20 Q 515.60,81.20 515.60,90.56 L 515.60,103.04 Q 515.60,112.40 506.24,112.40 L 493.76,112.40 Q 484.40,112.40 484.40,103.04 L 484.40,90.56 Q 484.40,81.20 475.04,81.20 L 462.56,81.20 Q 453.20,81.20 453.20,90.56 L 453.20,103.04 Q 453.20,112.40 462.56,112.40 L 475.04,112.40 Q 484.40,112.40 484.40,121.76 L 484.40,134.24 Q 484.40,143.60 475.04,143.60 L 462.56,143.60 Q 453.20,143.60 453.20,152.96 L 453.20,165.44 Q 453.20,174.80 443.84,174.80 L 431.36,174.80 Q 422.00,174.80 422.00,165.44 L 422.00,143.60"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="546.8" y1="143.6" x2="578" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="578" y1="112.4" x2="546.8" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="546.8" y1="81.2" x2="515.6" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="515.6" y1="112.4" x2="484.4" y2="81.2"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="484.4" y1="81.2" x2="453.2" y2="112.4"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="453.2" y1="112.4" x2="484.4" y2="143.6"/>
+<line class="s-line" stroke-linecap="round" stroke-width="4.2" x1="484.4" y1="143.6" x2="453.2" y2="174.8"/>
+<line class="s-accent" stroke-linecap="round" stroke-width="4.2" x1="453.2" y1="174.8" x2="422" y2="143.6"/>
+<text class="s-txt-m" x="500" y="20" text-anchor="middle">соединили пары</text>
+</svg>

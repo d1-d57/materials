@@ -1,0 +1,27 @@
+<svg viewBox="0 0 560 330" width="560" role="img" aria-label="Видно только жирное звено: оно ведёт из старой вершины в новую. Уголок продолжится в одну из двух старых вершин сверху или снизу. Старая вершина стоит в закрашенной строке, значит уголок сворачивает налево, и нижний вариант отпадает">
+<rect class="s-fillsh" x="0" y="266.25" width="560" height="67.5"/>
+<rect class="s-fillsh" x="0" y="131.25" width="560" height="67.5"/>
+<rect class="s-fillsh" x="0" y="-3.75" width="560" height="67.5"/>
+<line class="s-thin" x1="145" y1="300" x2="145" y2="30"/>
+<line class="s-thin" x1="212.5" y1="300" x2="212.5" y2="30"/>
+<line class="s-thin" x1="280" y1="300" x2="280" y2="30"/>
+<line class="s-thin" x1="347.5" y1="300" x2="347.5" y2="30"/>
+<line class="s-thin" x1="415" y1="300" x2="415" y2="30"/>
+<line class="s-thin" x1="145" y1="300" x2="415" y2="300"/>
+<line class="s-thin" x1="145" y1="232.5" x2="415" y2="232.5"/>
+<line class="s-thin" x1="145" y1="165" x2="415" y2="165"/>
+<line class="s-thin" x1="145" y1="97.5" x2="415" y2="97.5"/>
+<line class="s-thin" x1="145" y1="30" x2="415" y2="30"/>
+<line class="s-dash" x1="280" y1="165" x2="280" y2="97.5"/>
+<circle class="s-node-r" cx="280" cy="97.5" r="3"/>
+<line class="s-dash" x1="280" y1="165" x2="280" y2="232.5"/>
+<circle class="s-node-r" cx="280" cy="232.5" r="3"/>
+<line class="s-thin" x1="212.5" y1="165" x2="271" y2="165"/><polygon class="s-ar-a" points="280,165 271,169 271,161"/>
+<line class="s-accent" x1="212.5" y1="165" x2="280" y2="165"/>
+<circle class="s-node-r" cx="212.5" cy="165" r="3.4"/>
+<circle class="s-node" cx="280" cy="165" r="3.4"/>
+<text class="s-txt" x="207.1" y="144.75" text-anchor="end">старая</text>
+<text class="s-txt" x="280" y="143.4" text-anchor="middle">новая</text>
+<line class="s-line" x1="268" y1="186.75" x2="292" y2="210.75"/>
+<line class="s-line" x1="268" y1="210.75" x2="292" y2="186.75"/>
+</svg>

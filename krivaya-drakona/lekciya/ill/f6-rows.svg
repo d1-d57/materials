@@ -1,0 +1,105 @@
+<svg viewBox="0 0 560 400" width="560" role="img" aria-label="Ломаная ранга 6, разбитая на уголки. Голубые уголки поворачивают налево, чёрные направо. Строки покрашены через одну, и все голубые уголки ломаются в голубых строках, все чёрные — в белых">
+<rect class="s-fillsh" x="0" y="326.55" width="560" height="31.63"/>
+<rect class="s-fillsh" x="0" y="263.27" width="560" height="31.64"/>
+<rect class="s-fillsh" x="0" y="200" width="560" height="31.64"/>
+<rect class="s-fillsh" x="0" y="136.73" width="560" height="31.63"/>
+<rect class="s-fillsh" x="0" y="73.45" width="560" height="31.64"/>
+<rect class="s-fillsh" x="0" y="10.18" width="560" height="31.64"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 327.45,89.27 L 349.60,89.27 Q 359.09,89.27 359.09,79.78 L 359.09,57.64"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 359.09,57.64 L 336.94,57.64 Q 327.45,57.64 327.45,48.15 L 327.45,26.00"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 327.45,26.00 L 305.31,26.00 Q 295.82,26.00 295.82,35.49 L 295.82,57.64"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 295.82,57.64 L 273.67,57.64 Q 264.18,57.64 264.18,48.15 L 264.18,26.00"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,26.00 L 242.04,26.00 Q 232.55,26.00 232.55,35.49 L 232.55,57.64"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,57.64 L 254.69,57.64 Q 264.18,57.64 264.18,67.13 L 264.18,89.27"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,89.27 L 242.04,89.27 Q 232.55,89.27 232.55,98.76 L 232.55,120.91"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,120.91 L 210.40,120.91 Q 200.91,120.91 200.91,111.42 L 200.91,89.27"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 200.91,89.27 L 178.76,89.27 Q 169.27,89.27 169.27,98.76 L 169.27,120.91"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 169.27,120.91 L 191.42,120.91 Q 200.91,120.91 200.91,130.40 L 200.91,152.55"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 200.91,152.55 L 223.06,152.55 Q 232.55,152.55 232.55,143.06 L 232.55,120.91"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,120.91 L 254.69,120.91 Q 264.18,120.91 264.18,130.40 L 264.18,152.55"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,152.55 L 242.04,152.55 Q 232.55,152.55 232.55,162.04 L 232.55,184.18"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,184.18 L 254.69,184.18 Q 264.18,184.18 264.18,193.67 L 264.18,215.82"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,215.82 L 242.04,215.82 Q 232.55,215.82 232.55,225.31 L 232.55,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,247.45 L 210.40,247.45 Q 200.91,247.45 200.91,237.96 L 200.91,215.82"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 200.91,215.82 L 178.76,215.82 Q 169.27,215.82 169.27,225.31 L 169.27,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 169.27,247.45 L 191.42,247.45 Q 200.91,247.45 200.91,256.94 L 200.91,279.09"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 200.91,279.09 L 223.06,279.09 Q 232.55,279.09 232.55,269.60 L 232.55,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 232.55,247.45 L 254.69,247.45 Q 264.18,247.45 264.18,256.94 L 264.18,279.09"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,279.09 L 286.33,279.09 Q 295.82,279.09 295.82,269.60 L 295.82,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 295.82,247.45 L 273.67,247.45 Q 264.18,247.45 264.18,237.96 L 264.18,215.82"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 264.18,215.82 L 286.33,215.82 Q 295.82,215.82 295.82,206.33 L 295.82,184.18"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 295.82,184.18 L 317.96,184.18 Q 327.45,184.18 327.45,193.67 L 327.45,215.82"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 327.45,215.82 L 305.31,215.82 Q 295.82,215.82 295.82,225.31 L 295.82,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 295.82,247.45 L 317.96,247.45 Q 327.45,247.45 327.45,256.94 L 327.45,279.09"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 327.45,279.09 L 349.60,279.09 Q 359.09,279.09 359.09,269.60 L 359.09,247.45"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 359.09,247.45 L 381.24,247.45 Q 390.73,247.45 390.73,256.94 L 390.73,279.09"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 390.73,279.09 L 368.58,279.09 Q 359.09,279.09 359.09,288.58 L 359.09,310.73"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 359.09,310.73 L 381.24,310.73 Q 390.73,310.73 390.73,320.22 L 390.73,342.36"/>
+<path class="s-accent" fill="none" stroke-width="2.4" d="M 390.73,342.36 L 368.58,342.36 Q 359.09,342.36 359.09,351.85 L 359.09,374.00"/>
+<path class="s-line" fill="none" stroke-width="2.4" d="M 359.09,374.00 L 336.94,374.00 Q 327.45,374.00 327.45,364.51 L 327.45,342.36"/>
+<circle class="s-node-r" cx="327.45" cy="89.27" r="2.6"/>
+<circle class="s-node-r" cx="359.09" cy="57.64" r="2.6"/>
+<circle class="s-node-r" cx="327.45" cy="26" r="2.6"/>
+<circle class="s-node-r" cx="295.82" cy="57.64" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="26" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="57.64" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="89.27" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="120.91" r="2.6"/>
+<circle class="s-node-r" cx="200.91" cy="89.27" r="2.6"/>
+<circle class="s-node-r" cx="169.27" cy="120.91" r="2.6"/>
+<circle class="s-node-r" cx="200.91" cy="152.55" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="120.91" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="152.55" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="184.18" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="215.82" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="200.91" cy="215.82" r="2.6"/>
+<circle class="s-node-r" cx="169.27" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="200.91" cy="279.09" r="2.6"/>
+<circle class="s-node-r" cx="232.55" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="279.09" r="2.6"/>
+<circle class="s-node-r" cx="295.82" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="264.18" cy="215.82" r="2.6"/>
+<circle class="s-node-r" cx="295.82" cy="184.18" r="2.6"/>
+<circle class="s-node-r" cx="327.45" cy="215.82" r="2.6"/>
+<circle class="s-node-r" cx="295.82" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="327.45" cy="279.09" r="2.6"/>
+<circle class="s-node-r" cx="359.09" cy="247.45" r="2.6"/>
+<circle class="s-node-r" cx="390.73" cy="279.09" r="2.6"/>
+<circle class="s-node-r" cx="359.09" cy="310.73" r="2.6"/>
+<circle class="s-node-r" cx="390.73" cy="342.36" r="2.6"/>
+<circle class="s-node-r" cx="359.09" cy="374" r="2.6"/>
+<circle class="s-node-r" cx="327.45" cy="342.36" r="2.6"/>
+<circle class="s-node" cx="359.09" cy="89.27" r="2.6"/>
+<circle class="s-node" cx="327.45" cy="57.64" r="2.6"/>
+<circle class="s-node" cx="295.82" cy="26" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="57.64" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="26" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="57.64" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="89.27" r="2.6"/>
+<circle class="s-node" cx="200.91" cy="120.91" r="2.6"/>
+<circle class="s-node" cx="169.27" cy="89.27" r="2.6"/>
+<circle class="s-node" cx="200.91" cy="120.91" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="152.55" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="120.91" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="152.55" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="184.18" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="215.82" r="2.6"/>
+<circle class="s-node" cx="200.91" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="169.27" cy="215.82" r="2.6"/>
+<circle class="s-node" cx="200.91" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="232.55" cy="279.09" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="295.82" cy="279.09" r="2.6"/>
+<circle class="s-node" cx="264.18" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="295.82" cy="215.82" r="2.6"/>
+<circle class="s-node" cx="327.45" cy="184.18" r="2.6"/>
+<circle class="s-node" cx="295.82" cy="215.82" r="2.6"/>
+<circle class="s-node" cx="327.45" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="359.09" cy="279.09" r="2.6"/>
+<circle class="s-node" cx="390.73" cy="247.45" r="2.6"/>
+<circle class="s-node" cx="359.09" cy="279.09" r="2.6"/>
+<circle class="s-node" cx="390.73" cy="310.73" r="2.6"/>
+<circle class="s-node" cx="359.09" cy="342.36" r="2.6"/>
+<circle class="s-node" cx="327.45" cy="374" r="2.6"/>
+</svg>
