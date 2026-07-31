@@ -103,27 +103,82 @@ ref = len(visible_text(open(REF, encoding='utf-8').read())) if os.path.exists(RE
 check(6, 'текста %d знаков против %d у референса' % (vis, ref),
       ref > 0 and vis <= ref)
 
-# 7. Пункт составной: ДВЕ фотографии вшиты И «Парка Юрского периода» нет.
-#    Гейт обязан краснеть, пока выполнена только половина: зелёная галочка на
-#    половине пункта — то самое молчаливое усечение, от которого гейт и нужен.
+# 7. Фотографии. Д6 захода переписал этот пункт: «Не нашёл за десять минут —
+#    не вставляй вообще, блок 12/11 всё равно удалён». Поэтому законных
+#    состояний два — ноль фотографий И удалённый блок записей, либо обе. Одна
+#    из двух — брак: полупункт с зелёной галочкой и есть то молчаливое усечение,
+#    от которого гейт нужен. «Парка Юрского периода» не должно быть никогда.
 photos = len(re.findall(r'class="photo__wrap"', html))
 no_jp = not re.search(r'юрск', html, re.I)
-check(7, 'фотографий на сцене 1: %d из 2 · «Парка Юрского периода» нет: %s'
-      % (photos, 'да' if no_jp else 'НЕТ'),
-      photos == 2 and no_jp,
-      'свободнолицензированных снимков Галливан и «Разрушителей легенд» '
-      'не найдено; на их месте типографская пара .records — см. ОТЧЁТ')
+no_records = 'class="records"' not in html
+check(7, 'фотографий: %d (законно 0 или 2) · блок 12/11 удалён: %s · '
+      '«Парка Юрского периода» нет: %s'
+      % (photos, 'да' if no_records else 'НЕТ', 'да' if no_jp else 'НЕТ'),
+      no_jp and ((photos == 0 and no_records) or photos == 2),
+      'свободнолицензированных снимков Галливан и «Разрушителей легенд» нет '
+      'ни на Wikimedia Commons, ни в Openverse — см. ОТЧЁТ')
 
-# 8-9. снимки на двух ширинах
+# 8-9. снимки на двух ширинах: одиннадцать кадров (восемь сцен, из них у
+#      сцены 5 четыре шага листалки) плюс кадры наведения на широкой
 if os.path.isdir(SNIMKI):
     shots = os.listdir(SNIMKI)
 else:
     shots = []
 wide = [s for s in shots if '1440x900' in s]
 narrow = [s for s in shots if '390x844' in s]
-check(8, 'снимки 1440×900: %d файлов' % len(wide), len(wide) >= 12)
-check(9, 'снимки 390×844: %d файлов' % len(narrow), len(narrow) >= 12)
+check(8, 'снимки 1440×900: %d файлов' % len(wide), len(wide) >= 11)
+check(9, 'снимки 390×844: %d файлов' % len(narrow), len(narrow) >= 11)
 
-print('\n' + ('✅ гейт пройден: %d из %d' % (9 - len(bad), 9) if not bad
-              else '❌ провалены пункты: %s' % ', '.join(map(str, bad))))
+# ══════════════════ ДОЧИСТКА: пункты Д1–Д5 файла захода ══════════════════
+
+vis = visible_text(html)
+
+# 10. надзаголовки сцен вырезаны — у обложки остаётся ровно один
+eyebrows = len(re.findall(r'class="eyebrow"', html))
+check(10, 'надзаголовков .eyebrow: %d (только обложка)' % eyebrows, eyebrows == 1)
+
+# 11. заголовки сцен — РОВНО те семь, что в таблице Д3, дословно
+WANT = ['Сгибаем полоску', 'Как её нарисовать', 'Второй способ нарисовать',
+        'Пересекает ли она себя?', 'Доказательство',
+        'Четыре дракона покрывают решётку', 'У линии есть площадь']
+got = [re.sub(r'\s+', ' ', t).strip()
+       for t in re.findall(r'<h2 class="scene__title">(.*?)</h2>', html, re.S)]
+check(11, 'заголовки сцен: %s' % (' · '.join(got) if got != WANT else 'все семь по Д3'),
+      got == WANT)
+
+# 12. вырезанное вырезано: подписи в холстах, блок записей, подвал, снап-скролл
+left = {
+    'подпись <text> в SVG': bool(re.search(r"mk\('text'", html)),
+    'блок .records': 'class="records"' in html,
+    'подвал .foot': 'class="foot"' in html,
+    'снап-скролл': 'setupSnapScroll' in html or 'animateScrollTo' in html,
+    '.scene--tall': 'scene--tall' in html,
+}
+check(12, 'вырезано: ' + (', '.join(k for k, v in left.items() if v) or 'всё'),
+      not any(left.values()))
+
+# 13. Д2: стрелка вниз у сцен 1–6 (у последней её нет — идти некуда),
+#     листалка из четырёх точек на сцене 5, клавиши ↓/↑ и ←/→ подключены
+downs = len(re.findall(r'class="godown"', html))
+dots = len(re.findall(r'class="pager__dot(?: on)?"', html))
+keys = all(k in html for k in ('ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'))
+check(13, 'стрелок вниз %d из 6 · точек листалки %d из 4 · клавиши: %s'
+      % (downs, dots, 'да' if keys else 'НЕТ'),
+      downs == 6 and dots == 4 and keys)
+
+# 14. Д1: слов-инструкций и метаразговора в ВИДИМОМ тексте нет.
+#     Мерим по видимому тексту, а не по всему файлу: сборка вшивает src вместе
+#     с комментариями кода, и голый grep считает слово в комментарии за
+#     надзаголовок на экране.
+BANNED = [r'сцена\s*\d', r'наведите', r'коснитесь', r'в руках ранг',
+          r'углы скруглены', r'дальше они значения не меняют',
+          r'как мы увидим ниже', r'руки кончаются']
+found = [p for p in BANNED if re.search(p, vis, re.I)]
+check(14, 'вырезанного в видимом тексте: %d из %d запретов'
+      % (len(found), len(BANNED)), not found, ', '.join(found))
+
+TOTAL = 14
+print('\n' + ('✅ гейт пройден: %d из %d' % (TOTAL - len(bad), TOTAL) if not bad
+              else '❌ провалены пункты: %s (из %d)'
+              % (', '.join(map(str, bad)), TOTAL)))
 sys.exit(1 if bad else 0)

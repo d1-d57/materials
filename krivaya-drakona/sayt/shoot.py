@@ -18,21 +18,20 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 PAGE = os.path.join(ROOT, 'build', 'index.html')
 OUT = os.path.join(ROOT, 'build', '_snimki')
 
-# (id секции, имя файла, селектор внутри секции или None).
-# У сцены 5 четыре шага, каждый со своим холстом, и каждый снимается отдельно:
-# критерий 8 требует увидеть КАЖДУЮ сцену, а «доскроллил до секции» показывает
-# только её первый экран.
+# (id секции, имя файла, шаг листалки или None).
+# Сцена 5 теперь одна на экран, а четыре шага — слайды листалки: снять их
+# «доскроллом» нельзя, скрытый шаг физически display:none. Поэтому шаг
+# выбирается кликом по точке-индикатору — ровно так, как это делает читатель.
 SCENES = [
     ('s0', 'oblozhka', None),
     ('s1', 'poloska', None),
-    ('s1', 'poloska-zapisi', '.records'),
     ('s2', 'dve-poloviny', None),
     ('s3', 'zvenya-parami', None),
     ('s4', 'plotnost', None),
-    ('s5', 'dokazatelstvo-5a', '[data-step="a"]'),
-    ('s5', 'dokazatelstvo-5b', '[data-step="b"]'),
-    ('s5', 'dokazatelstvo-5v', '[data-step="v"]'),
-    ('s5', 'dokazatelstvo-5g', '[data-step="g"]'),
+    ('s5', 'dokazatelstvo-5a', 0),
+    ('s5', 'dokazatelstvo-5b', 1),
+    ('s5', 'dokazatelstvo-5v', 2),
+    ('s5', 'dokazatelstvo-5g', 3),
     ('s6', 'chetyre-drakona', None),
     ('s7', 'ploshchad', None),
 ]
@@ -72,22 +71,15 @@ def main():
         pg.wait_for_function("document.documentElement.dataset.ready === '1'", timeout=15000)
         pg.wait_for_timeout(500)
 
-        for sid, name, sel in SCENES:
-            pg.evaluate("""([id, sel]) => {
-                const sec = document.getElementById(id);
-                const el = sel ? sec.querySelector(sel) : null;
-                if (el) {
-                    const r = el.getBoundingClientRect();
-                    const top = r.top + window.pageYOffset;
-                    window.scrollTo(0, Math.max(0, top - (window.innerHeight - r.height) / 2));
-                } else {
-                    window.scrollTo(0, sec.offsetTop);
-                }
-            }""", [sid, sel])
+        for sid, name, step in SCENES:
+            pg.evaluate("(id) => window.scrollTo(0, document.getElementById(id).offsetTop)", sid)
+            if step is not None:
+                pg.locator('#%s .pager__dot' % sid).nth(step).click()
             # ждём, пока сцена доиграет ДО СОСТОЯНИЯ ПОКОЯ, а не первый кадр:
             # у сцены 2 вся последовательность (лента → гармошка → две кривые)
             # идёт около 6,4 с, и на 4,2 с кадр ловил гармошку, а не результат.
-            wait = {'s1': 4200, 's2': 8600, 's3': 5000, 's6': 5200, 's7': 4200}
+            # У сцены 1 въездное складывание с передачей такта — около 6,3 с.
+            wait = {'s1': 7200, 's2': 8600, 's3': 5000, 's6': 5200, 's7': 4200}
             pg.wait_for_timeout(wait.get(sid, 2600))
             path = os.path.join(OUT, '%s-%s-%s.png' % (sid, name, tag))
             pg.screenshot(path=path)
@@ -98,27 +90,34 @@ def main():
             # зоны: .d-hit прозрачен, и hover() по селектору его не видит, а
             # dispatchEvent проверял бы обработчик в обход попадания мыши —
             # то есть не то, что делает читатель.
-            for sid, sel, idx, name in (
-                    ('s5', '[data-step="v"] svg .d-hit', 5,  '5v-hover-A'),
-                    ('s5', '[data-step="v"] svg .d-hit', 12, '5v-hover-B'),
-                    ('s5', '[data-step="g"] svg .d-hit', 9,  '5g-hover'),
-                    ('s5', '[data-step="a"] svg circle[fill="transparent"]', 6, '5a-hover'),
-                    ('s2', 'svg .d-hit', 0, '2-hover')):
-                # крутим к САМОМУ ШАГУ, а не к началу секции: сцена 5 высокая,
-                # и её третий шаг лежит на два экрана ниже её offsetTop —
-                # первый прогон снял шаг 1 вместо наведения на шаг 3.
-                pg.evaluate("""([id, sel]) => {
-                    const sec = document.getElementById(id);
-                    const el = sec.querySelector(sel.replace(/ svg .*$/, '')) || sec;
-                    const r = el.getBoundingClientRect();
-                    const top = r.top + window.pageYOffset;
-                    window.scrollTo(0, Math.max(0, top - (window.innerHeight - r.height) / 2));
-                }""", [sid, sel])
-                pg.wait_for_timeout(1500)
+            # (id секции, шаг листалки или None, селектор зоны, номер, имя кадра)
+            for sid, step, sel, idx, name in (
+                    ('s5', 2, '[data-step="v"] svg .d-hit', 5,  '5v-hover-A'),
+                    ('s5', 2, '[data-step="v"] svg .d-hit', 12, '5v-hover-B'),
+                    ('s5', 3, '[data-step="g"] svg .d-hit', 9,  '5g-hover'),
+                    ('s5', 0, '[data-step="a"] svg .d-hit-dot', 6, '5a-hover'),
+                    ('s2', None, 'svg .d-hit', 0, '2-hover')):
+                pg.evaluate("(id) => window.scrollTo(0, document.getElementById(id).offsetTop)", sid)
+                if step is not None:
+                    pg.locator('#%s .pager__dot' % sid).nth(step).click()
+                # сцене 2 нужно дать досчитать её последовательность целиком:
+                # зоны наведения на половины создаются только при угле ≥ 88°,
+                # и на 1,5 с их ещё физически нет — кадр ловил гармошку
+                pg.wait_for_timeout(8800 if sid == 's2' else 1500)
+                # ⚠ ТОЧКА БЕРЁТСЯ НА САМОЙ ЛИНИИ, а не в центре рамки. У зоны-path
+                # (половины кривой на сцене 2) центр рамки — пустое место между
+                # звеньями, мышь там ни во что не попадает, и проверка «наведение
+                # не работает» была ЛОЖНОЙ: обработчик исправен, промах был у пробы.
                 box = pg.evaluate("""([sel, i]) => {
                     const els = document.querySelectorAll(sel);
                     if (!els.length) return null;
-                    const r = els[Math.min(i, els.length - 1)].getBoundingClientRect();
+                    const e = els[Math.min(i, els.length - 1)];
+                    if (e.getTotalLength && e.getTotalLength() > 0) {
+                        const p = e.getPointAtLength(e.getTotalLength() * 0.4);
+                        const q = new DOMPoint(p.x, p.y).matrixTransform(e.getScreenCTM());
+                        return {x: q.x, y: q.y};
+                    }
+                    const r = e.getBoundingClientRect();
                     return {x: r.x + r.width / 2, y: r.y + r.height / 2};
                 }""", [sel, idx])
                 if not box:

@@ -14,9 +14,29 @@
 
 const NS = 'http://www.w3.org/2000/svg';
 
+/* ⚠ ГРАФИЧЕСКИЕ СВОЙСТВА КЛАДУТСЯ В style, А НЕ В АТРИБУТ, И ЭТО НЕ ВКУСОВЩИНА.
+   Презентационный атрибут SVG проигрывает ЛЮБОМУ правилу CSS, поэтому
+   `stroke-width: 2` в классе .d-acc молча съедал ВСЕ толщины, посчитанные в
+   коде: ширину бумажной ленты, утолщение подсвеченного звена, хайрлайн ранга 10.
+   Атрибут в разметке стоял, код «выглядел правильно» — а getComputedStyle
+   возвращал 2px при атрибуте 33.18. Поймано измерением, не чтением. */
+const STYLED = {'stroke-width':1, 'stroke':1, 'fill':1, 'opacity':1,
+                'stroke-dasharray':1, 'stroke-linecap':1, 'stroke-linejoin':1};
 function mk(name, attrs, parent){
   const e = document.createElementNS(NS, name);
-  if(attrs) for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(attrs){
+    /* ⚠ `style` — ПЕРВЫМ. setAttribute('style', …) переписывает объявление
+       целиком и стирает всё, что уже положено через style.setProperty. Порядок
+       наоборот стоил зон наведения сцены 5а: `{fill:'transparent',
+       style:'cursor:pointer'}` терял fill, круг радиусом 17 получал fill по
+       умолчанию (чёрный) и накрывал вершину чёрной кляксой. */
+    if(attrs.style) e.setAttribute('style', attrs.style);
+    for(const k in attrs){
+      if(k==='style') continue;
+      if(STYLED[k]) e.style.setProperty(k, String(attrs[k]));
+      else e.setAttribute(k, attrs[k]);
+    }
+  }
   if(parent) parent.appendChild(e);
   return e;
 }
@@ -32,12 +52,12 @@ function angs(v, n){ const o={}; for(let p=1;p<=n;p++) o[p]=v; return o; }
 /* ⚠ СКРУГЛЕНИЕ — ЭТО НАСТРОЙКА СЦЕНЫ, А НЕ ГЛОБАЛЬНАЯ КРАСОТА.
    Первая версия ставила 0.42–0.5 везде, и это провалилось на глазах: при
    скруглении в пол-звена прямых участков не остаётся вовсе, ломаная читается
-   как гладкая волна — а сцена 5а утверждает «первое звено горизонтальное,
+   как гладкая волна — а сцена №5а утверждает «первое звено горизонтальное,
    второе вертикальное». Утверждение стало невидимым, то есть сцена перестала
    доказывать то, ради чего она есть. Это ровно решение владельца, записанное
    в L4:176 — «по умолчанию ПРЯМЫЕ, круглые только когда нужно показать, что
    самопересечений нет». Поэтому крупное скругление осталось ровно там, где
-   оно и есть предмет: сцена 4 (две дуги вместо перекрёстка). */
+   оно и есть предмет: сцена №4 (две дуги вместо перекрёстка). */
 const ROUND = {
   strip: 0.16, halves: 0.16, pairs: 0.20,
   dense: 0.50,                       // предмет сцены: в касании читаются две дуги
@@ -169,65 +189,192 @@ function sceneCover(sec){
   };
 }
 
-/* ═══════════════════════ 1 · ПОЛОСКА ═══════════════════════
+/* ═══════════════════════ 1 · СГИБАЕМ ПОЛОСКУ ═══════════════════════
    Основа — T17 (L4:671–714). Полоска и ломаная — ОДНА линия при угле 0° и 90°,
-   а не два рисунка. Ширина ленты падает вместе с ростом угла: это и есть
-   «камера встаёт сверху» — ширина уходит из плоскости картинки (урок T4).
-   Рамка считается по объединению «текущее положение + итог», иначе кадр
-   прыгает и прямая полоска торчит за сцену. */
+   а не два рисунка: этим и показано, что форму задали сгибы.
+
+   Сцена идёт в два такта.
+
+   ТАКТ 1, ВЪЕЗД — модель происходящего на одной полоске ранга 3 (почему именно
+   третьего — у объявления IN ниже). Складывание честное, «по поколениям сгибов»,
+   а не общим углом: сгиб номер p рождается на складывании birthStep(3,p) =
+   3 − v2(p) (dragon.js), поэтому «сложить пополам» — это довести до упора ровно
+   сгибы ОДНОГО поколения, а остальные оставить там, где стояли. Общий угол
+   этого не выражает: он сгибает всё сразу, и «пополам, ещё раз, ещё» не читается.
+   ⚠ УПОР — FOLD_MAX = 152°, А НЕ 180°. При 180° слои совпадают ТОЧНО, и пачка
+   бумаги рисуется как один отрезок: складывания не видно вообще. При 152° видны
+   кромки слоёв, то есть видно, что слоёв стало вдвое больше.
+   ⚠ МАСШТАБ НА ВРЕМЯ СКЛАДЫВАНИЯ ФИКСИРОВАН масштабом прямой полоски. Кадровый
+   fit() тут неверен принципиально: он подгонял бы пачку под рамку, полоска
+   держала бы длину — и вышло бы, что бумага при складывании не укорачивается.
+   Камера переезжает на масштаб кривой только на последнем движении, когда сгибы
+   раскрываются до прямого угла.
+
+   ТАКТ 2, ПОКОЙ — десять рангов разом, 1…10, и ОДИН ползунок на все десять.
+   Каждый ранг живёт в своей клетке и подогнан по ней кадровым fit(): рамка
+   зависит от углов непрерывно, поэтому кадр не прыгает, а каждая фигура
+   остаётся крупной и на прямой полоске, и на готовой кривой. Сверху на fit()
+   надет общий потолок масштаба — почему, у объявления CAP_AT. */
 
 function sceneStrip(sec){
   const svg = sec.querySelector('svg');
-  const W=1000, H=1000;
+  const W=1000, H=1000, PAD=26;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  const inFolds = sec.querySelector('[data-in="folds"]');
   const inAngle = sec.querySelector('[data-in="angle"]');
-  const outFolds = sec.querySelector('[data-out="folds"]');
   const outAngle = sec.querySelector('[data-out="angle"]');
-  let n=+inFolds.value, a=+inAngle.value;
+  let a=+inAngle.value;
+
+  /* Десять клеток: строки 4 · 3 · 3. Строка становится шире по ходу роста —
+     старшим рангам, где важна частота, достаётся больше места, и квадрат
+     заполняется ровно, без дыры в углу (первая раскладка 4·4·2 оставляла
+     полпустой строки — видно на скриншоте). */
+  const RANKS=[1,2,3,4,5,6,7,8,9,10];
+  const WORDS=RANKS.map(n=>word(n));
+  const ROWS=[4,3,3];
+  const CELL=(function(){
+    const out=[]; const ch=H/ROWS.length; let i=0;
+    ROWS.forEach((cols,row)=>{
+      const cw=W/cols;
+      for(let c=0;c<cols;c++, i++) out.push({x:c*cw, y:row*ch, w:cw, h:ch});
+    });
+    return out;
+  })();
+
+  /* ⚠ ВЪЕЗДНАЯ ПОЛОСКА — РАНГ 3, И ЭТО НЕ ЛЕНЬ. На ранге 5 складывание честно
+     укорачивает бумагу вдвое пять раз, то есть до 1/32 кадра, — и на скриншоте
+     третий, четвёртый и пятый сгибы оказались нечитаемой закорючкой в три
+     пикселя: анимация показывала не «сложили», а «исчезло». Три складывания —
+     ровно то, что говорит текст сцены («пополам. Ещё раз. Ещё»), и пачка
+     остаётся 1/8 кадра, то есть видимой. */
+  const IN=3, IW=word(IN);
+  const FOLD_MAX=152;         // упор сгиба: при 180° слои совпадают и складывания не видно
+  const S_FLAT=(W-2*PAD)/Math.pow(2,IN);                // масштаб прямой полоски
+  const S_CURVE=(function(){
+    const b=bounds(poly(IW));
+    return Math.min((W-2*PAD)/(b.x1-b.x0), (H-2*PAD)/(b.y1-b.y0));
+  })();
+
+  /** ширина бумажной ленты: полоса при малом угле, тонкая линия у кривой */
+  function bandOf(s, ang){
+    const k = Math.min(1, Math.max(0, ang/90));
+    return Math.max(1, Math.min(s*lerp(0.34,0.15,k), lerp(9,2.6,k)));
+  }
+
+  /** одна полоска: центр bbox — в центре бокса, масштаб и ширина заданы извне */
+  function paintStrip(par, o, s, box, bw){
+    const P=polyAngles(IW,o), b=bounds(P);
+    const cx=(b.x0+b.x1)/2, cy=(b.y0+b.y1)/2;
+    const g=p=>[box.x+box.w/2+(p[0]-cx)*s, box.y+box.h/2-(p[1]-cy)*s];
+    const S=P.map(g);
+    mk('path',{d: roundPath(S,ROUND.strip), class:'d-acc','stroke-width':bw,
+               'stroke-linecap':'butt','stroke-linejoin':'round'},par);
+    node(par, S[0], 'd-node-a', Math.max(1.6, Math.min(5, s*0.05)));
+  }
+
+  /** уложить ломаную в клетку, но не крупнее заданного потолка масштаба */
+  function place(P, box, pad, sMax){
+    const g=fit(P,{x:box.x,y:box.y,w:box.w,h:box.h,pad:pad});
+    if(!(sMax>0) || g.s<=sMax) return g;
+    const b=g.box, cx=(b.x0+b.x1)/2, cy=(b.y0+b.y1)/2;
+    const f=p=>[box.x+box.w/2+(p[0]-cx)*sMax, box.y+box.h/2-(p[1]-cy)*sMax];
+    f.s=sMax; f.box=b; return f;
+  }
+
+  /* ⚠ ОБЩИЙ ПОТОЛОК МАСШТАБА, И ОН НЕ КОСМЕТИКА. Кадровый fit() по своей клетке
+     раздувал ранг 1 — две палочки — до размеров ранга 10: десять фигур одного
+     размера читались как десять случайных загогулин, а не как одна кривая,
+     которая растёт (поймано скриншотом, не рассуждением). Потолок берётся с
+     ранга 4 и дальше не меняется: ранги 1–3 выходят мелкими, то есть ровно
+     такими, какие они и есть, а с четвёртого размер держится, и растёт одна
+     только частота — это и есть то, что сцена показывает. */
+  const CAP_AT=3;                                       // индекс ранга 4
+  const CELL_PAD=18;
+
+  /** потолок масштаба при текущем угле */
+  function capScale(ang){
+    const P=polyAngles(WORDS[CAP_AT], angs(ang, WORDS[CAP_AT].length));
+    return fit(P,{x:0,y:0,w:CELL[CAP_AT].w,h:CELL[CAP_AT].h,pad:CELL_PAD}).s;
+  }
+
+  /** десять рангов разом; skip — клетка, которую рисует не сетка (перелёт) */
+  function paintGrid(par, skip){
+    const sMax=capScale(a);
+    RANKS.forEach((n,i)=>{
+      if(i===skip) return;
+      const P=polyAngles(WORDS[i], angs(a, WORDS[i].length));
+      const g=place(P, CELL[i], CELL_PAD, sMax);
+      const S=P.map(g);
+      mk('path',{d: a<45 ? sharpD(S) : roundPath(S,ROUND.strip),
+                 class:'d-acc','stroke-width':bandOf(g.s,a),
+                 'stroke-linecap':'butt','stroke-linejoin':'round'},par);
+      node(par, S[0], 'd-node-a', Math.max(1.6, Math.min(3, g.s*0.16)));
+    });
+  }
 
   function draw(){
     wipe(svg);
-    const w = word(n);
-    const P = polyAngles(w, angs(a, w.length));
-    const F = poly(w);                                  // итог: тот же при 90°
-    const g = fit(P.concat(F), {x:0,y:0,w:W,h:H,pad:88});
-    const S = P.map(g);
-    // ширина ленты: бумага сверху при 0°, край ленты при 90°
-    const band = lerp(Math.max(10, g.s*0.34), 2.4, a/90);
-    const d = a<45 ? sharpD(S) : roundPath(S, ROUND.strip);
-    mk('path',{d, class:'d-acc', 'stroke-width':band, 'stroke-linecap':'butt',
-               'stroke-linejoin':'round', opacity: 0.95},svg);
-    // засечки на сгибах, пока полоска ещё читается как полоска
-    if(a<58){
-      const fade = 1 - a/58;
-      for(let k=1;k<=w.length;k++){
-        const u=S[k-1], v=S[k];
-        const dx=v[0]-u[0], dy=v[1]-u[1], l=Math.hypot(dx,dy)||1;
-        const s=(w[k-1]==='L')?-1:1;
-        const nx=-dy/l*s, ny=dx/l*s, t=band*0.5+9;
-        mk('line',{x1:v[0],y1:v[1],x2:v[0]+nx*t,y2:v[1]+ny*t,
-                   class:'d-dim', opacity:(0.75*fade).toFixed(2)},svg);
-      }
-    }
-    node(svg, S[0], 'd-node-a', 5);
-    node(svg, S[S.length-1], 'd-node-b', 4);
-    outFolds.textContent = n;
+    paintGrid(svg);
     outAngle.textContent = a + '°';
   }
-  inFolds.addEventListener('input', ()=>{ n=+inFolds.value; draw(); });
-  inAngle.addEventListener('input', ()=>{ a=+inAngle.value; draw(); });
-  onResize(draw);
+
+  const FULL={x:0,y:0,w:W,h:H};
+  /* Ширина бумажной ленты — 0,28 клетки, то есть примерно 1:28 к длине полоски.
+     Первая версия ставила потолок в 14 единиц viewBox: на экране это 9 пикселей
+     на 600, полоска читалась как ЛИНИЯ, и «сложить бумагу» не читалось вовсе. */
+  const PAPER=S_FLAT*0.28;
 
   let tok={v:0};
+  async function intro(){
+    tok.v++; const my=tok;
+    const o={}; for(let p=1;p<=IW.length;p++) o[p]=0;
+    wipe(svg); paintStrip(svg,o,S_FLAT,FULL,PAPER);
+    if(!await pause(520,my)) return;
+
+    // СЛОЖИТЬ ПОПОЛАМ, ЕЩЁ РАЗ, ЕЩЁ: за раз доезжают до упора сгибы ОДНОГО
+    // поколения (birthStep), масштаб держится — бумага честно укорачивается вдвое
+    for(let k=1;k<=IN;k++){
+      const born=[]; for(let p=1;p<=IW.length;p++) if(birthStep(IN,p)===k) born.push(p);
+      if(!await anim(0,FOLD_MAX,520,v=>{ born.forEach(p=>o[p]=v);
+        wipe(svg); paintStrip(svg,o,S_FLAT,FULL,PAPER); },my)) return;
+      if(!await pause(230,my)) return;
+    }
+    if(!await pause(380,my)) return;
+
+    // РАЗВЕРНУТЬ: сгибы раскрываются до прямого угла, камера едет за фигурой
+    if(!await anim(0,1,1700,u=>{
+      const ang=lerp(FOLD_MAX,90,u);
+      for(let p=1;p<=IW.length;p++) o[p]=ang;
+      wipe(svg); paintStrip(svg,o,lerp(S_FLAT,S_CURVE,u),FULL,
+                            lerp(PAPER, bandOf(S_CURVE,90), u));
+    },my)) return;
+    if(!await pause(620,my)) return;
+
+    /* ПЕРЕДАЧА ТАКТА. Не перекрёстное затухание, а перелёт: кривая уезжает в
+       свою клетку сетки (ранг 3 — третья из десяти), и ровно на месте её
+       догоняют остальные девять. Кросс-фейд из полного кадра в сетку читался
+       как две картинки поверх друг друга; перелёт говорит «вот эта самая
+       кривая — одна из десяти». */
+    const sCell=Math.min(capScale(90), place(poly(IW),CELL[IN-1],CELL_PAD,0).s);
+    if(!await anim(0,1,900,u=>{
+      for(let p=1;p<=IW.length;p++) o[p]=90;
+      wipe(svg);
+      const gG=mk('g',{opacity:u.toFixed(3)},svg); paintGrid(gG, IN-1);
+      paintStrip(svg, o, lerp(S_CURVE,sCell,u), {
+        x:lerp(FULL.x,CELL[IN-1].x,u), y:lerp(FULL.y,CELL[IN-1].y,u),
+        w:lerp(FULL.w,CELL[IN-1].w,u), h:lerp(FULL.h,CELL[IN-1].h,u)},
+        lerp(bandOf(S_CURVE,90), bandOf(sCell,90), u));
+    },my)) return;
+    a=90; inAngle.value=90; draw();
+  }
+
+  inAngle.addEventListener('input', ()=>{
+    tok.v++;                                            // ползунок обрывает въездной такт
+    a=+inAngle.value; draw();
+  });
+  onResize(draw);
+
   return {
-    enter(){
-      draw();
-      if(REDUCED) return;
-      tok.v++;                                          // разогнуть один раз при въезде
-      a=0; inAngle.value=0; draw();
-      anim(0, 90, 2200, v=>{ a=Math.round(v); inAngle.value=a; draw(); }, tok);
-    },
+    enter(){ if(REDUCED){ draw(); return; } intro(); },
     leave(){ tok.v++; }
   };
 }
@@ -371,7 +518,7 @@ function scenePairs(sec){
     }
     node(svg, S[0], 'd-node-a', 4.5);
     if(out) out.innerHTML='ранг <b>'+n+'</b> · звеньев <b>'+Math.pow(2,n)
-      +'</b> · одноцветный кусок — <b>'+blk+'</b> звеньев';
+      +'</b> · подряд одного цвета <b>'+blk+'</b>';
   }
   async function loop(){
     tok.v++; const my=tok;
@@ -462,16 +609,22 @@ function step5a(sec){
       const on = sort!==null && sort===black;
       const el=node(svg, S[i], black ? 'd-node-b':'d-node', on?8:5.4);
       if(on) el.setAttribute('class', black?'d-node-a':'d-node');
-      if(on && !black) el.setAttribute('stroke', cssVar('--acc'));
-      const hit=mk('circle',{cx:S[i][0],cy:S[i][1],r:17,fill:'transparent',
-                             style:'cursor:pointer'},svg);
+      if(on && !black) el.style.setProperty('stroke', cssVar('--acc'));
+      const hit=mk('circle',{cx:S[i][0],cy:S[i][1],r:17,class:'d-hit-dot'},svg);
       onHover(hit, ()=>{ sort=black; draw(); });
       hit.addEventListener('mouseleave',()=>{ sort=null; draw(); });
     });
-    out.innerHTML = sort===null
-      ? 'наведите или коснитесь вершины'
-      : (sort ? '<span class="hi">чёрные вершины</span> — были на кривой раньше, лежат на пунктире'
-              : '<span class="hi">новые вершины</span> — появились при последнем складывании');
+    /* Праздная строка состояния — ЧИСЛА, а не приглашение навести мышь: подписи-инструкции
+       с сайта убраны, но строка обязана оставаться живой и меняться, иначе
+       читатель не поймёт, что вершины вообще откликаются. */
+    if(sort===null){
+      const seen2=new Set(); let nb=0, nn=0;
+      for(const p of P){ const k=p[0]+','+p[1]; if(seen2.has(k)) continue;
+        seen2.add(k); if(isBlack(p)) nb++; else nn++; }
+      out.innerHTML='старых вершин <b>'+nb+'</b> · новых <b>'+nn+'</b>';
+    } else out.innerHTML = sort
+      ? '<span class="hi">старые вершины</span> — были на кривой раньше, лежат на пунктире'
+      : '<span class="hi">новые вершины</span> — появились при последнем складывании';
   }
   onResize(draw);
   return { enter(){ draw(); }, leave(){} };
@@ -512,7 +665,7 @@ function step5b(sec){
       hit.addEventListener('mouseleave',()=>{ hi=null; draw(); });
     });
     node(svg,g(P[P.length-1]),'d-node-b',3.4);
-    if(hi===null) out.innerHTML='уголков '+C.length+' · наведите или коснитесь любого';
+    if(hi===null) out.innerHTML='уголков <b>'+C.length+'</b>';
     else {
       const [a,b,c]=C[hi];
       out.innerHTML='излом в <b>'+(rowBlue(b[1])?'крашеной':'чистой')+'</b> строке · поворот '
@@ -536,7 +689,6 @@ function step5v(sec){
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const N=6, P=rank(N);
   const CASES=[['гориз',true],['гориз',false],['вертик',true],['вертик',false]];
-  const LABEL={'гориз':'вдоль','вертик':'поперёк'};
   const seen=new Set();
   let pick=null, fade=1, tok={v:0};
 
@@ -549,8 +701,8 @@ function step5v(sec){
     lattice(svg,g,g.box,0);
     const S=P.map(g);
     // базовая кривая ЯРЧЕ разметки: иначе не видно, на что наводить
-    mk('path',{d:roundPath(S,ROUND.v),class:'d-line','stroke-width':2,
-               opacity:0.62},svg);
+    mk('path',{d:roundPath(S,ROUND.v),class:'d-line','stroke-width':2.4,
+               opacity:0.92},svg);
 
     if(pick!==null){
       const r = corner(P[pick], P[pick+1]);
@@ -589,7 +741,7 @@ function step5v(sec){
   }
 
   function report(){
-    if(pick===null){ out.innerHTML='наведите или коснитесь любого звена'; }
+    if(pick===null){ out.innerHTML='звеньев <b>'+(P.length-1)+'</b>'; }
     else {
       const r=corner(P[pick],P[pick+1]);
       /* ⚠ СНАЧАЛА ПОВОРОТ, ПОТОМ НАПРАВЛЕНИЕ. Строка задаёт поворот НАЛЕВО или
@@ -606,12 +758,11 @@ function step5v(sec){
         +'<span class="hi">'+(r.blue?'налево':'направо')+'</span> · '
         +corDir(r);
     }
-    out4.innerHTML = 'случаи: ' + CASES.map(([h,b])=>{
-      const k=h+(b?'1':'0'), on=seen.has(k);
-      return (on?'<b>':'<span style="opacity:.4">')
-        + LABEL[h]+'·'+(b?'крашеная':'чистая')
-        + (on?' ✓</b>':'</span>');
-    }).join(' · ') + ' — ' + seen.size + ' из 4';
+    /* Счётчик прогресса остался (все четыре случая должны быть достижимы и
+       читатель должен видеть, что прошёл их), а перечисление случаев словами
+       и слово-инструкция — убраны. */
+    out4.innerHTML = 'пройдено <b'+(seen.size===4?' class="hi"':'')+'>'
+      + seen.size + ' из ' + CASES.length + '</b>';
   }
   function corDir(r){
     const c=r.corner;
@@ -635,13 +786,16 @@ function step5g(sec){
 
   function draw(){
     wipe(svg);
+    /* Подписей «ранг 6» / «ранг 7» внутри холста НЕТ сознательно: справа не
+       бывает текста (Д2), и какая картинка какая — сказано в левой колонке. */
     const gA=fit(A,{x:0,y:0,w:W/2,h:H,pad:46});
     const gB=fit(B,{x:W/2,y:0,w:W/2,h:H,pad:46});
-    mk('text',{x:W*0.25,y:24,class:'d-cap','text-anchor':'middle'},svg).textContent='ранг 6';
-    mk('text',{x:W*0.75,y:24,class:'d-cap','text-anchor':'middle'},svg).textContent='ранг 7';
     const SA=A.map(gA), SB=B.map(gB);
-    mk('path',{d:roundPath(SA,ROUND.g),class:'d-dim','stroke-width':2},svg);
-    mk('path',{d:roundPath(SB,ROUND.g),class:'d-dim','stroke-width':1.7},svg);
+    /* d-mute, а не d-dim: цвет границ (--rule #2A2A30) на фоне #0E0E10 почти
+       не виден, и оба ранга читались как пустая панель — шаг не показывал
+       ничего. Поймано скриншотом. Приглушение — прозрачностью, не цветом. */
+    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:0.62},svg);
+    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:0.62},svg);
     if(pick!==null){
       mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':6},svg);
       mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':5},svg);
@@ -664,10 +818,30 @@ function step5g(sec){
   return { enter(){ draw(); }, leave(){} };
 }
 
+/* Четыре шага — слайды ОДНОЙ листалки внутри сцены: виден один, ← → листают
+   шаги, ↓ уходит на следующую сцену, внизу четыре точки.
+   Скрытый шаг снят из потока (display:none), но перерисовать его при показе
+   всё равно можно без обмеров: все холсты сцены 5 — SVG с viewBox, и fit()
+   считает по константам 1000×1000, а не по getBoundingClientRect. Если бы тут
+   был canvas, он бы получил нулевой размер и остался пустым. */
 function sceneProof(sec){
   const parts=[step5a(sec), step5b(sec), step5v(sec), step5g(sec)];
-  return { enter(){ parts.forEach(p=>p.enter()); },
-           leave(){ parts.forEach(p=>p.leave()); } };
+  const bodies=[...sec.querySelectorAll('.steps > .scene__body')];
+  const dots=[...sec.querySelectorAll('.pager__dot')];
+  let cur=0;
+
+  function show(i){
+    cur = Math.min(bodies.length-1, Math.max(0, i));
+    bodies.forEach((b,k)=>b.classList.toggle('on', k===cur));
+    dots.forEach((d,k)=>d.classList.toggle('on', k===cur));
+    parts[cur].enter();
+  }
+  sec.querySelectorAll('[data-page]').forEach(b=>
+    b.addEventListener('click', ()=>show(cur + (+b.dataset.page))));
+  dots.forEach((d,k)=>d.addEventListener('click', ()=>show(k)));
+  PAGERS.set(sec, { go(d){ show(cur+d); } });
+
+  return { enter(){ show(cur); }, leave(){ parts.forEach(p=>p.leave()); } };
 }
 
 /* ═══════════════════════ 6 · ЧЕТЫРЕ ДРАКОНА ═══════════════════════
@@ -1036,37 +1210,50 @@ function sceneArea(sec){
 const FACTORY = { cover:sceneCover, strip:sceneStrip, halves:sceneHalves,
   pairs:scenePairs, dense:sceneDense, proof:sceneProof, four:sceneFour, area:sceneArea };
 
-/** снап-скролл и scrollAPI — порт из референса */
-function setupSnapScroll(ids){
-  let timer=null, animating=false, hush=0;
-  const DELAY=200, TOL=30, DUR=1000;
-  function animateScrollTo(y){
-    animating=true;
-    const y0=window.pageYOffset, dy=y-y0, t0=performance.now();
-    (function fr(now){
-      const t=Math.min(1,(now-t0)/DUR);
-      window.scrollTo(0, y0+dy*easeOutQuart(t));
-      if(t<1) requestAnimationFrame(fr);
-      else { animating=false; hush=performance.now()+120; }
-    })(t0);
+/** сцена → её листалка шагов; заполняет sceneProof, читает клавиатура */
+const PAGERS = new Map();
+
+/* ПЕРЕХОД МЕЖДУ СЦЕНАМИ — МГНОВЕННЫЙ. Плавного снап-скролла из референса тут
+   больше нет сознательно (Д2): прокат в секунду на каждый шаг читался как
+   задержка, а сам снап ловил читателя посреди сцены и утаскивал.
+   Осталось три входа, и все три дают один и тот же мгновенный прыжок:
+   стрелка-кнопка внизу сцены, клавиши ↓/↑, точки навигации справа. */
+function setupJump(sections){
+  function jumpTo(id){
+    const el=document.getElementById(id); if(!el) return;
+    window.scrollTo(0, el.offsetTop);            // behavior по умолчанию 'auto' — без анимации
   }
-  function schedule(){
-    if(animating || performance.now()<hush) return;
-    clearTimeout(timer);
-    timer=setTimeout(()=>{
-      const y=window.pageYOffset;
-      let best=null, dist=Infinity;
-      for(const id of ids){
-        const el=document.getElementById(id); if(!el) continue;
-        if(el.offsetHeight > window.innerHeight*1.4) continue;   // высокие сцены не снапим
-        const d=Math.abs(el.offsetTop-y);
-        if(d<dist){ dist=d; best=el; }
-      }
-      if(best && dist>TOL && dist<window.innerHeight*0.6) animateScrollTo(best.offsetTop);
-    }, DELAY);
+  /** текущая сцена: та, чей верх последним прошёл треть экрана */
+  function current(){
+    const y=window.pageYOffset + window.innerHeight*0.35;
+    let cur=sections[0];
+    for(const s of sections) if(s.offsetTop<=y) cur=s;
+    return cur;
   }
-  window.addEventListener('scroll', schedule, {passive:true});
-  return { animateScrollTo, isAnimating:()=>animating };
+  function step(d){
+    const i=sections.indexOf(current());
+    jumpTo(sections[Math.min(sections.length-1, Math.max(0, i+d))].id);
+  }
+  document.querySelectorAll('[data-goto]').forEach(b=>
+    b.addEventListener('click', ()=>jumpTo(b.dataset.goto)));
+  return { jumpTo, step, current };
+}
+
+/* Клавиатура: ↓/↑ — сцена вперёд/назад, ←/→ — шаг внутри сцены, если у неё
+   есть листалка. Ползунки не отбираем: пока фокус на range, стрелки его. */
+function setupKeys(api){
+  document.addEventListener('keydown', e=>{
+    if(e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+    const t=e.target, tag=(t && t.tagName || '').toLowerCase();
+    if(tag==='input' || tag==='textarea' || tag==='select') return;
+    if(document.querySelector('.deeper[data-open="true"]')) return;
+    if(e.key==='ArrowDown' || e.key==='PageDown'){ e.preventDefault(); api.step(1); }
+    else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); api.step(-1); }
+    else if(e.key==='ArrowRight' || e.key==='ArrowLeft'){
+      const p=PAGERS.get(api.current()); if(!p) return;
+      e.preventDefault(); p.go(e.key==='ArrowRight' ? 1 : -1);
+    }
+  });
 }
 
 function setupPanels(){
@@ -1117,7 +1304,7 @@ function setupNav(sections, api){
     const sp=document.createElement('span');
     sp.textContent=s.dataset.nav || 'Начало';
     b.appendChild(sp);
-    b.addEventListener('click',()=>api.animateScrollTo(s.offsetTop));
+    b.addEventListener('click',()=>api.jumpTo(s.id));
     nav.appendChild(b);
   });
   function mark(){
@@ -1133,14 +1320,10 @@ function setupNav(sections, api){
 
 function boot(){
   const sections=[...document.querySelectorAll('[data-scene]')];
-  const api=setupSnapScroll(sections.map(s=>s.id));
+  const api=setupJump(sections);
   setupPanels();
   setupNav(sections, api);
-  document.querySelectorAll('[data-goto]').forEach(b=>
-    b.addEventListener('click',()=>{
-      const t=document.getElementById(b.dataset.goto);
-      if(t) api.animateScrollTo(t.offsetTop);
-    }));
+  setupKeys(api);
 
   /* Анимация стартует по въезду и ГЛОХНЕТ при уходе: иначе восемь холстов
      молотят одновременно. Это же и требование §2.5. */
