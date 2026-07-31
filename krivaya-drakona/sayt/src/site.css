@@ -481,7 +481,7 @@ input[type=range]:focus-visible { outline: none; }
 
 /* ═════════ НИЗКИЙ ЭКРАН: проектор и ноутбук ═════════
    1440×900 сцены держат ровно, но 1366×768 и 1280×720 на лекции встречаются
-   чаще, и на них САМАЯ ДЛИННАЯ колонка (сцена 7: два абзаца, ползунок, два
+   чаще, и на них САМАЯ ДЛИННАЯ колонка (сцена №7: два абзаца, ползунок, два
    переключателя, две строки состояния и кнопка) вылезала за экран на 8 и 53 px
    соответственно — измерено сравнением offsetHeight с высотой окна, не
    предположено. Ужимаем ритм текста, а НЕ картинку: заход прямо говорит
@@ -505,18 +505,32 @@ input[type=range]:focus-visible { outline: none; }
 /* ═════════ адаптив: одна точка, 720px ═════════ */
 
 @media (max-width: 720px) {
+  /* ⚠ КАРТИНКА НА ТЕЛЕФОНЕ НЕ ВО ВСЮ ШИРИНУ. Была `--fig-cap: 100vw`, и
+     квадрат съедал экран целиком: ползунок сцены 1, отсчёты сцен 5–7 и листалка
+     шагов оказывались ПОД СГИБОМ — читатель тапал по картинке, а ответ на тап
+     был за краем экрана (нашёл верификатор, замер: видно 0 % от этих
+     элементов). ⚠ Ограничивать надо ОБЕ стороны: на 390-пиксельном телефоне
+     `min(100vw, 52svh)` = min(390, 439) — связывает ширина, и потолок по высоте
+     не срабатывает вовсе (замерил после первой попытки). 84vw и 42svh вместе
+     дают картинку около 300 px: она остаётся крупной, а управление попадает
+     на тот же экран, что и она. */
   :root { --fs-body: 17px; --fs-small: 15px; --pad-x: 18px;
-          --fig-cap: 100vw; }        /* на телефоне высоту ограничивает ширина */
-  .scene__body { grid-template-columns: 1fr; gap: 26px; }
+          --fig-cap: min(84vw, 42svh); }
+  .scene__body { grid-template-columns: 1fr; gap: 20px; }
   .figure { order: -1; }          /* картинка уходит НАД текстом */
   .col    { order: 0; max-width: none; }
   .scene__title { font-size: clamp(23px, 6vw, 34px); }
   #nav { display: none; }
   /* Стрелка вниз прячется: на телефоне сцена ДЛИННЕЕ экрана, и прыжок к
      следующей увёз бы читателя мимо текста. Листалка шагов остаётся — без неё
-     три шага доказательства недостижимы; .scene__nav по-прежнему absolute,
-     то есть сидит у нижнего края самой секции, а не экрана. */
+     три шага доказательства недостижимы, и она встаёт В ПОТОК сразу под
+     содержимым, а не absolute у нижнего края секции: у нижнего края её не
+     видели одновременно с картинкой ни при какой прокрутке. */
+  .scene { flex-direction: column; align-items: stretch; justify-content: center;
+           padding-bottom: clamp(28px, 4vh, 44px); }
   .godown { display: none; }
+  .scene__nav { position: static; transform: none; left: auto; bottom: auto;
+                margin: 18px auto 0; }
   .photos { grid-template-columns: 1fr; gap: 26px; }
   .deeper {
     top: auto; bottom: 0; left: 0 !important; width: 100vw !important;
@@ -526,7 +540,14 @@ input[type=range]:focus-visible { outline: none; }
     padding: 56px 20px 32px;
   }
   .deeper[data-open="true"] { transform: translateY(0); }
-  .cover__canvas canvas { width: 96vw; height: 60vh; }
+  /* Обложка на телефоне: фрактал проходил прямо сквозь подзаголовок, и
+     надзаголовок читался хуже всего на сайте (нашёл верификатор). Полотно
+     меньше, тише, а скрим под текстом плотнее — фигура по-прежнему
+     растворяется, но текст поверх неё не рябит. */
+  .cover__canvas canvas { width: 92vw; height: 46vh; }
+  .cover__canvas { opacity: .4; }
+  .cover__scrim { background: radial-gradient(ellipse 78% 46% at 50% 50%,
+    var(--bg) 0%, color-mix(in srgb, var(--bg) 84%, transparent) 58%, transparent 82%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

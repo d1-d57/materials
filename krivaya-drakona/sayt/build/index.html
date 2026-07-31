@@ -488,7 +488,7 @@ input[type=range]:focus-visible { outline: none; }
 
 /* ═════════ НИЗКИЙ ЭКРАН: проектор и ноутбук ═════════
    1440×900 сцены держат ровно, но 1366×768 и 1280×720 на лекции встречаются
-   чаще, и на них САМАЯ ДЛИННАЯ колонка (сцена 7: два абзаца, ползунок, два
+   чаще, и на них САМАЯ ДЛИННАЯ колонка (сцена №7: два абзаца, ползунок, два
    переключателя, две строки состояния и кнопка) вылезала за экран на 8 и 53 px
    соответственно — измерено сравнением offsetHeight с высотой окна, не
    предположено. Ужимаем ритм текста, а НЕ картинку: заход прямо говорит
@@ -512,18 +512,32 @@ input[type=range]:focus-visible { outline: none; }
 /* ═════════ адаптив: одна точка, 720px ═════════ */
 
 @media (max-width: 720px) {
+  /* ⚠ КАРТИНКА НА ТЕЛЕФОНЕ НЕ ВО ВСЮ ШИРИНУ. Была `--fig-cap: 100vw`, и
+     квадрат съедал экран целиком: ползунок сцены 1, отсчёты сцен 5–7 и листалка
+     шагов оказывались ПОД СГИБОМ — читатель тапал по картинке, а ответ на тап
+     был за краем экрана (нашёл верификатор, замер: видно 0 % от этих
+     элементов). ⚠ Ограничивать надо ОБЕ стороны: на 390-пиксельном телефоне
+     `min(100vw, 52svh)` = min(390, 439) — связывает ширина, и потолок по высоте
+     не срабатывает вовсе (замерил после первой попытки). 84vw и 42svh вместе
+     дают картинку около 300 px: она остаётся крупной, а управление попадает
+     на тот же экран, что и она. */
   :root { --fs-body: 17px; --fs-small: 15px; --pad-x: 18px;
-          --fig-cap: 100vw; }        /* на телефоне высоту ограничивает ширина */
-  .scene__body { grid-template-columns: 1fr; gap: 26px; }
+          --fig-cap: min(84vw, 42svh); }
+  .scene__body { grid-template-columns: 1fr; gap: 20px; }
   .figure { order: -1; }          /* картинка уходит НАД текстом */
   .col    { order: 0; max-width: none; }
   .scene__title { font-size: clamp(23px, 6vw, 34px); }
   #nav { display: none; }
   /* Стрелка вниз прячется: на телефоне сцена ДЛИННЕЕ экрана, и прыжок к
      следующей увёз бы читателя мимо текста. Листалка шагов остаётся — без неё
-     три шага доказательства недостижимы; .scene__nav по-прежнему absolute,
-     то есть сидит у нижнего края самой секции, а не экрана. */
+     три шага доказательства недостижимы, и она встаёт В ПОТОК сразу под
+     содержимым, а не absolute у нижнего края секции: у нижнего края её не
+     видели одновременно с картинкой ни при какой прокрутке. */
+  .scene { flex-direction: column; align-items: stretch; justify-content: center;
+           padding-bottom: clamp(28px, 4vh, 44px); }
   .godown { display: none; }
+  .scene__nav { position: static; transform: none; left: auto; bottom: auto;
+                margin: 18px auto 0; }
   .photos { grid-template-columns: 1fr; gap: 26px; }
   .deeper {
     top: auto; bottom: 0; left: 0 !important; width: 100vw !important;
@@ -533,7 +547,14 @@ input[type=range]:focus-visible { outline: none; }
     padding: 56px 20px 32px;
   }
   .deeper[data-open="true"] { transform: translateY(0); }
-  .cover__canvas canvas { width: 96vw; height: 60vh; }
+  /* Обложка на телефоне: фрактал проходил прямо сквозь подзаголовок, и
+     надзаголовок читался хуже всего на сайте (нашёл верификатор). Полотно
+     меньше, тише, а скрим под текстом плотнее — фигура по-прежнему
+     растворяется, но текст поверх неё не рябит. */
+  .cover__canvas canvas { width: 92vw; height: 46vh; }
+  .cover__canvas { opacity: .4; }
+  .cover__scrim { background: radial-gradient(ellipse 78% 46% at 50% 50%,
+    var(--bg) 0%, color-mix(in srgb, var(--bg) 84%, transparent) 58%, transparent 82%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -628,9 +649,9 @@ input[type=range]:focus-visible { outline: none; }
       <div class="col">
         <p>Есть и второй способ: соедините вершины готовой кривой через одну.
           Выйдет кривая на ранг младше.</p>
-        <p>Значит наоборот каждое звено сгибается пополам, и из него выходят два —
-          оба остаются его цвета, ни одно не меняет сторону. Ход работает в обе
-          стороны, поэтому ранг&nbsp;12 берётся счётом.</p>
+        <p>Обратный ход виден рядом: каждое звено сгибается пополам и даёт два
+          звена своего цвета, ни одно не меняет сторону, — поэтому цвета и идут
+          парами. Ход работает в обе стороны, значит ранг&nbsp;12 берётся счётом.</p>
         <div class="readout" data-out="pairs"></div>
       </div>
       <figure class="figure figure--veil"><svg></svg></figure>
@@ -704,6 +725,8 @@ input[type=range]:focus-visible { outline: none; }
             через одну.</p>
           <p>Уголок, чей излом попал в крашеную строку, поворачивает налево;
             в чистую — направо. По всей кривой, без единого исключения.</p>
+          <p>Повернувшие налево уголки покрашены тем же цветом, что и строки:
+            цвет уголка всегда совпадает с цветом строки, в которой он сломался.</p>
           <div class="readout" data-out="b"></div>
         </div>
         <figure class="figure"><svg></svg></figure>
@@ -1295,6 +1318,12 @@ function arrowOn(par, p, q, cls){
 /** число по-русски: запятая, а не точка. В тексте сцены 7 уже стоит «1,5236»,
     и точка в строке состояния рядом читается как другое число. */
 function num(x, d){ return x.toFixed(d).replace('.', ','); }
+
+/** площадь: целое печатаем целым. «площадь 0,0 клеток» выглядит как измерение
+    с точностью до десятой там, где ответ ровно ноль. */
+function area(x){
+  return Math.abs(x-Math.round(x))<1e-9 ? String(Math.round(x)) : num(x,1);
+}
 
 function node(par, p, cls, r){
   return mk('circle',{cx:p[0],cy:p[1],r:r||5,class:cls||'d-node'},par);
@@ -1978,13 +2007,24 @@ function step5g(sec){
     const SA=A.map(gA), SB=B.map(gB);
     /* d-mute, а не d-dim: цвет границ (--rule #2A2A30) на фоне #0E0E10 почти
        не виден, и оба ранга читались как пустая панель — шаг не показывал
-       ничего. Поймано скриншотом. Приглушение — прозрачностью, не цветом. */
-    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:0.62},svg);
-    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:0.62},svg);
+       ничего. Поймано скриншотом. Приглушение — прозрачностью, не цветом.
+       ⚠ ПРИ НАВЕДЕНИИ ОБЕ КРИВЫЕ ГАСНУТ ДО 0,22. Иначе подсветка — короткий
+       отрезок слева и мелкий уголок справа, разнесённые по разным концам
+       панели, — тонула в двух полных кривых, и заявленное «звено k слева = это
+       уголок k справа» глазом не подтверждалось (нашёл верификатор). Когда
+       гаснет всё остальное, светятся ровно два предмета — и связь видна без
+       единой подписи, которых тут и нельзя. */
+    const base = pick===null ? 0.8 : 0.22;
+    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:base},svg);
+    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:base},svg);
     if(pick!==null){
-      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':6},svg);
-      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':5},svg);
-      node(svg, gB(CB[pick][1]), 'd-node', 5.5);
+      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':7},svg);
+      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':6},svg);
+      node(svg, gA(A[pick]),   'd-node-a', 5);        // концы звена слева…
+      node(svg, gA(A[pick+1]), 'd-node-a', 5);
+      node(svg, gB(CB[pick][0]),'d-node-a', 5);       // …и концы уголка справа: те же две
+      node(svg, gB(CB[pick][2]),'d-node-a', 5);
+      node(svg, gB(CB[pick][1]),'d-node', 5.5);       // излом — новая вершина
     }
     for(let i=0;i<A.length-1;i++){
       const h=mk('line',{x1:SA[i][0],y1:SA[i][1],x2:SA[i+1][0],y2:SA[i+1][1],class:'d-hit'},svg);
@@ -2059,10 +2099,17 @@ function sceneFour(sec){
     wipe(svg);
     const P=cache[n];
     const g=fit(P,{x:0,y:0,w:W,h:H,pad:44},frame);
-    const lw = n>=10 ? 1.15 : (n>=8 ? 1.7 : (n>=6 ? 2.4 : 3.2));
+    /* ⚠ ТОЛЩИНА И ПРОЗРАЧНОСТЬ РАЗВОДЯТ БЕЛОГО И СЕРОГО ДРАКОНА. На ранге 10
+       при 1,15 px белый (--text #ECECEC) и приглушённый серый (--text-muted
+       #9A9AA0) сливались в одно пятно, и утверждение сцены «цвета ни разу не
+       налезают» глазом проверить было нельзя (нашёл верификатор). Толщина
+       поднята, а серому добавлена прозрачность: разница в светлоте на хайрлайне
+       не читается, разница в плотности читается. */
+    const lw = n>=10 ? 1.45 : (n>=8 ? 1.9 : (n>=6 ? 2.4 : 3.2));
     for(let r=0;r<4;r++){
       const S=rotAbout(P,[0,0],r*90).map(g);
-      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw},svg);
+      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw,
+                 opacity: CLS[r]==='d-mute' ? 0.72 : 1},svg);
     }
     node(svg,g([0,0]),'d-node-b',4.5);
     // общих отрезков — СЧИТАЕМ, а не утверждаем: это и есть предмет сцены
@@ -2278,8 +2325,14 @@ function sceneArea(sec){
     out.innerHTML = blend>0.5
       ? 'складываем дальше · ранг <b>→ ∞</b> · увеличение <span class="hi">×'
         + num(shown,1) + '</span>'
+      /* ⚠ ПЛОЩАДЬ СЧИТАЕТСЯ ПО ТЕКУЩЕЙ ТОЛЩИНЕ, А НЕ ПО КОНЕЧНОЙ. Строка
+         печатала «площадь 2048 клеток» рядом с надписью «толщина звена: линия»,
+         то есть утверждала площадь у того, что ещё линия, — сцена опровергала
+         сама себя. Нашёл верификатор. Клетка-ромб имеет диагонали 1 и t
+         (cellQuad), поэтому её площадь t/2 и по t она линейна: при t=1 выходит
+         ровно ½ на звено, при t=0 — ноль. */
       : 'ранг <b>'+n+'</b> · клеток <b>'+cells+'</b> · площадь <b>'
-        + (cells/2) + '</b> клеток';
+        + area(cells*t/2) + '</b> клеток';
     const b=dragBoundary(n).length, pb=dragBoundary(n-1).length;
     const r=b/pb, d=Math.log(r)/Math.log(Math.SQRT2);
     outD.innerHTML='сторон края <b>'+b+'</b> · длиннее прежнего в <b>'+num(r,3)
@@ -2380,8 +2433,16 @@ function sceneArea(sec){
   onResize(()=>paint());
   return {
     enter(){
+      /* ⚠ ПРИ REDUCED НАДО ДОВЕСТИ ДО КОНЕЧНОГО КАДРА, А НЕ ПРОСТО НЕ АНИМИРОВАТЬ.
+         Раньше здесь был выход до отрисовки, и сцена оставалась на t=0 — то есть
+         линией, тогда как весь её смысл в том, что линия становится заливкой.
+         Читатель с выключенной анимацией видел ровно противоположное тому, что
+         утверждает заголовок «У линии есть площадь». §2.5 захода требует именно
+         «мгновенно доводит анимации до конечного кадра». Поймано прогоном под
+         reduced_motion, которого верификатор не делал. */
+      if(REDUCED){ if(t<0.02){ t=1; inT.value=100; } paint(); return; }
       paint();
-      if(REDUCED || t>0.02) return;
+      if(t>0.02) return;
       tok.v++; const my=tok;
       pause(500,my).then(ok=>{ if(!ok) return;
         anim(0,1,2000,v=>{ t=v; inT.value=Math.round(v*100); paint(); }, my); });

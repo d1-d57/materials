@@ -111,6 +111,12 @@ function arrowOn(par, p, q, cls){
     и точка в строке состояния рядом читается как другое число. */
 function num(x, d){ return x.toFixed(d).replace('.', ','); }
 
+/** площадь: целое печатаем целым. «площадь 0,0 клеток» выглядит как измерение
+    с точностью до десятой там, где ответ ровно ноль. */
+function area(x){
+  return Math.abs(x-Math.round(x))<1e-9 ? String(Math.round(x)) : num(x,1);
+}
+
 function node(par, p, cls, r){
   return mk('circle',{cx:p[0],cy:p[1],r:r||5,class:cls||'d-node'},par);
 }
@@ -793,13 +799,24 @@ function step5g(sec){
     const SA=A.map(gA), SB=B.map(gB);
     /* d-mute, а не d-dim: цвет границ (--rule #2A2A30) на фоне #0E0E10 почти
        не виден, и оба ранга читались как пустая панель — шаг не показывал
-       ничего. Поймано скриншотом. Приглушение — прозрачностью, не цветом. */
-    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:0.62},svg);
-    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:0.62},svg);
+       ничего. Поймано скриншотом. Приглушение — прозрачностью, не цветом.
+       ⚠ ПРИ НАВЕДЕНИИ ОБЕ КРИВЫЕ ГАСНУТ ДО 0,22. Иначе подсветка — короткий
+       отрезок слева и мелкий уголок справа, разнесённые по разным концам
+       панели, — тонула в двух полных кривых, и заявленное «звено k слева = это
+       уголок k справа» глазом не подтверждалось (нашёл верификатор). Когда
+       гаснет всё остальное, светятся ровно два предмета — и связь видна без
+       единой подписи, которых тут и нельзя. */
+    const base = pick===null ? 0.8 : 0.22;
+    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:base},svg);
+    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:base},svg);
     if(pick!==null){
-      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':6},svg);
-      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':5},svg);
-      node(svg, gB(CB[pick][1]), 'd-node', 5.5);
+      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':7},svg);
+      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':6},svg);
+      node(svg, gA(A[pick]),   'd-node-a', 5);        // концы звена слева…
+      node(svg, gA(A[pick+1]), 'd-node-a', 5);
+      node(svg, gB(CB[pick][0]),'d-node-a', 5);       // …и концы уголка справа: те же две
+      node(svg, gB(CB[pick][2]),'d-node-a', 5);
+      node(svg, gB(CB[pick][1]),'d-node', 5.5);       // излом — новая вершина
     }
     for(let i=0;i<A.length-1;i++){
       const h=mk('line',{x1:SA[i][0],y1:SA[i][1],x2:SA[i+1][0],y2:SA[i+1][1],class:'d-hit'},svg);
@@ -874,10 +891,17 @@ function sceneFour(sec){
     wipe(svg);
     const P=cache[n];
     const g=fit(P,{x:0,y:0,w:W,h:H,pad:44},frame);
-    const lw = n>=10 ? 1.15 : (n>=8 ? 1.7 : (n>=6 ? 2.4 : 3.2));
+    /* ⚠ ТОЛЩИНА И ПРОЗРАЧНОСТЬ РАЗВОДЯТ БЕЛОГО И СЕРОГО ДРАКОНА. На ранге 10
+       при 1,15 px белый (--text #ECECEC) и приглушённый серый (--text-muted
+       #9A9AA0) сливались в одно пятно, и утверждение сцены «цвета ни разу не
+       налезают» глазом проверить было нельзя (нашёл верификатор). Толщина
+       поднята, а серому добавлена прозрачность: разница в светлоте на хайрлайне
+       не читается, разница в плотности читается. */
+    const lw = n>=10 ? 1.45 : (n>=8 ? 1.9 : (n>=6 ? 2.4 : 3.2));
     for(let r=0;r<4;r++){
       const S=rotAbout(P,[0,0],r*90).map(g);
-      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw},svg);
+      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw,
+                 opacity: CLS[r]==='d-mute' ? 0.72 : 1},svg);
     }
     node(svg,g([0,0]),'d-node-b',4.5);
     // общих отрезков — СЧИТАЕМ, а не утверждаем: это и есть предмет сцены
@@ -1093,8 +1117,14 @@ function sceneArea(sec){
     out.innerHTML = blend>0.5
       ? 'складываем дальше · ранг <b>→ ∞</b> · увеличение <span class="hi">×'
         + num(shown,1) + '</span>'
+      /* ⚠ ПЛОЩАДЬ СЧИТАЕТСЯ ПО ТЕКУЩЕЙ ТОЛЩИНЕ, А НЕ ПО КОНЕЧНОЙ. Строка
+         печатала «площадь 2048 клеток» рядом с надписью «толщина звена: линия»,
+         то есть утверждала площадь у того, что ещё линия, — сцена опровергала
+         сама себя. Нашёл верификатор. Клетка-ромб имеет диагонали 1 и t
+         (cellQuad), поэтому её площадь t/2 и по t она линейна: при t=1 выходит
+         ровно ½ на звено, при t=0 — ноль. */
       : 'ранг <b>'+n+'</b> · клеток <b>'+cells+'</b> · площадь <b>'
-        + (cells/2) + '</b> клеток';
+        + area(cells*t/2) + '</b> клеток';
     const b=dragBoundary(n).length, pb=dragBoundary(n-1).length;
     const r=b/pb, d=Math.log(r)/Math.log(Math.SQRT2);
     outD.innerHTML='сторон края <b>'+b+'</b> · длиннее прежнего в <b>'+num(r,3)
@@ -1195,8 +1225,16 @@ function sceneArea(sec){
   onResize(()=>paint());
   return {
     enter(){
+      /* ⚠ ПРИ REDUCED НАДО ДОВЕСТИ ДО КОНЕЧНОГО КАДРА, А НЕ ПРОСТО НЕ АНИМИРОВАТЬ.
+         Раньше здесь был выход до отрисовки, и сцена оставалась на t=0 — то есть
+         линией, тогда как весь её смысл в том, что линия становится заливкой.
+         Читатель с выключенной анимацией видел ровно противоположное тому, что
+         утверждает заголовок «У линии есть площадь». §2.5 захода требует именно
+         «мгновенно доводит анимации до конечного кадра». Поймано прогоном под
+         reduced_motion, которого верификатор не делал. */
+      if(REDUCED){ if(t<0.02){ t=1; inT.value=100; } paint(); return; }
       paint();
-      if(REDUCED || t>0.02) return;
+      if(t>0.02) return;
       tok.v++; const my=tok;
       pause(500,my).then(ok=>{ if(!ok) return;
         anim(0,1,2000,v=>{ t=v; inT.value=Math.round(v*100); paint(); }, my); });
