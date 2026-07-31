@@ -266,9 +266,17 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
    ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
    нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
 .s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-thin-a{fill:none;stroke:var(--accent);stroke-width:1.4}
+/* .s-thin-a / .s-txt-a — тонкая акцентная линия и акцентная метка. Заведены 2026-07-31 (записки Л1):
+   цветовое кодирование роли стрелки (акцент = переименование/перестановка, нейтральный = сама
+   конструкция) требовало ТОНКОЙ акцентной линии, а .s-accent 2.4px для 9 стрелок в ряд слишком
+   жирна. ЦЕНА пропуска: аналитик выдумал классы на месте, в движке их не было, и в разделе
+   «Почему это красиво» не нарисовалась НИ ОДНА из 9 стрелок σ и обе горизонтали квадрата —
+   `<line>` без своего stroke по SVG не рисуется вовсе. Все три гейта остались зелёными. */
 .s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
 .s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
 .s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-txt-a{font-family:var(--sans);font-size:12px;fill:var(--accent)}
 .s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
 
 /* ── мета-строка потока ── */
