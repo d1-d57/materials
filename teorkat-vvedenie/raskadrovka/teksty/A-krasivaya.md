@@ -89,6 +89,33 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 {@2} $f(x)$ **определяется** одним признаком: в каком из трёх множеств лежит $x$
 
 <figure>
+<svg viewBox="0 0 436 178" width="436" role="img" aria-label="Два одинаковых ряда по семь точек один под другим: в верхнем залиты две, в нижнем остальные пять, на тех же местах.">
+<rect class="s-line" x="88" y="22" width="332" height="52" rx="8"/>
+<circle class="s-node" cx="116" cy="48" r="7"/>
+<circle class="s-node-r" cx="160" cy="48" r="7"/>
+<circle class="s-node" cx="204" cy="48" r="7"/>
+<circle class="s-node" cx="248" cy="48" r="7"/>
+<circle class="s-node-r" cx="292" cy="48" r="7"/>
+<circle class="s-node" cx="336" cy="48" r="7"/>
+<circle class="s-node" cx="380" cy="48" r="7"/>
+<text class="s-txt" x="66" y="54" text-anchor="end" style="font-size:17px">2</text>
+<rect class="s-line" x="88" y="114" width="332" height="52" rx="8"/>
+<circle class="s-node-r" cx="116" cy="140" r="7"/>
+<circle class="s-node" cx="160" cy="140" r="7"/>
+<circle class="s-node-r" cx="204" cy="140" r="7"/>
+<circle class="s-node-r" cx="248" cy="140" r="7"/>
+<circle class="s-node" cx="292" cy="140" r="7"/>
+<circle class="s-node-r" cx="336" cy="140" r="7"/>
+<circle class="s-node-r" cx="380" cy="140" r="7"/>
+<text class="s-txt" x="66" y="146" text-anchor="end" style="font-size:17px">5</text>
+<line class="s-thin" x1="254" y1="84" x2="254" y2="104"/>
+<path class="s-ar-m" d="M250,95 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="264" y="100" style="font-size:14px">φ</text>
+</svg>
+<figcaption>Выбрать двоих из семи — то же самое, что выбрать пятерых оставшихся: каждому выбору отвечает его дополнение, и наоборот.</figcaption>
+</figure>
+
+<figure>
 <svg viewBox="0 0 232 208" width="232" role="img" aria-label="Наверху три вложенные рамки: внутренняя T с двумя залитыми точками, средняя S с двумя акцентными, внешняя U с двумя белыми. Внизу те же шесть точек в ряд, под каждой стоит её значение: два, два, один, один, ноль, ноль">
 <rect class="s-line" x="14" y="24" width="204" height="66" rx="8"/>
 <rect class="s-line" x="26" y="34" width="132" height="46" rx="7"/>
@@ -131,7 +158,69 @@ $$\sum_{0\le l\le k\le n}\binom nk\binom kl=3^{\,n}$$
 
 {@2} **Какие свойства этой биекции хорошие? Почему она красивая?**
 
-<figure class="mn"><svg viewBox="0 0 250 224" width="250" role="img" aria-label="Квадрат на четырёх элементах: верхний ряд помечен E, нижний E со штрихом; переименование проходит насквозь через взятие дополнения. Под квадратом подпись: биекция между числом двухэлементных подмножеств и числом их дополнений"><text class="s-txt-m" x="8" y="34" font-size="17">E</text><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">{a, b}</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">{a′, b′}</text><text class="s-txt-m" x="8" y="178" font-size="17">E′</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">{c, d}</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">{c′, d′}</text><line class="s-thin" x1="92" y1="29" x2="152" y2="29"></line><path class="s-ar-m" d="M143,25 l9,4 -9,4 z"></path><line class="s-thin" x1="92" y1="173" x2="152" y2="173"></line><path class="s-ar-m" d="M143,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="122" y="18" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="122" y="196" text-anchor="middle" font-size="15">σ</text><text class="s-txt-m" x="125" y="219" text-anchor="middle" font-size="13">биекция C(n,2) ↔ C(n,n−2)</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">φ</text><text class="s-txt-m" x="206" y="105" font-size="15">φ</text></svg><figcaption>Биекция между $\binom n2$ и $\binom n{n-2}$: вид $E$ — двухэлементные подмножества, вид $E'$ — их дополнения. Требование целиком: $\varphi$ — дополнение, $\sigma$ — переименование $a,b,c,d$ в $a',b',c',d'$. Оба пути из левого верхнего угла в правый нижний дают один результат.</figcaption></figure>
+<figure>
+<svg viewBox="0 0 600 290" width="600" role="img" aria-label="Сверху переименование семи элементов, снизу квадрат: конкретная пара и её дополнение, по горизонтали переименование, по вертикали переход к дополнению.">
+<text class="s-txt-m" x="134" y="41" text-anchor="end" style="font-size:14px">U</text>
+<text class="s-txt-m" x="134" y="97" text-anchor="end" style="font-size:14px">V</text>
+<text class="s-txt" x="158" y="22" text-anchor="middle" style="font-size:14px">a</text>
+<circle class="s-node" cx="158" cy="36" r="6"/>
+<line class="s-thin-a" x1="158" y1="46" x2="158" y2="82"/>
+<path class="s-ar-a" d="M154,73 l4,9 4,-9 z"/>
+<circle class="s-node" cx="158" cy="92" r="6"/>
+<text class="s-txt" x="158" y="115" text-anchor="middle" style="font-size:14px">a′</text>
+<text class="s-txt" x="202" y="22" text-anchor="middle" style="font-size:14px">b</text>
+<circle class="s-node-r" cx="202" cy="36" r="6"/>
+<line class="s-thin-a" x1="202" y1="46" x2="202" y2="82"/>
+<path class="s-ar-a" d="M198,73 l4,9 4,-9 z"/>
+<circle class="s-node-r" cx="202" cy="92" r="6"/>
+<text class="s-txt" x="202" y="115" text-anchor="middle" style="font-size:14px">b′</text>
+<text class="s-txt" x="246" y="22" text-anchor="middle" style="font-size:14px">c</text>
+<circle class="s-node" cx="246" cy="36" r="6"/>
+<line class="s-thin-a" x1="246" y1="46" x2="246" y2="82"/>
+<path class="s-ar-a" d="M242,73 l4,9 4,-9 z"/>
+<circle class="s-node" cx="246" cy="92" r="6"/>
+<text class="s-txt" x="246" y="115" text-anchor="middle" style="font-size:14px">c′</text>
+<text class="s-txt" x="290" y="22" text-anchor="middle" style="font-size:14px">d</text>
+<circle class="s-node" cx="290" cy="36" r="6"/>
+<line class="s-thin-a" x1="290" y1="46" x2="290" y2="82"/>
+<path class="s-ar-a" d="M286,73 l4,9 4,-9 z"/>
+<circle class="s-node" cx="290" cy="92" r="6"/>
+<text class="s-txt" x="290" y="115" text-anchor="middle" style="font-size:14px">d′</text>
+<text class="s-txt" x="334" y="22" text-anchor="middle" style="font-size:14px">e</text>
+<circle class="s-node-r" cx="334" cy="36" r="6"/>
+<line class="s-thin-a" x1="334" y1="46" x2="334" y2="82"/>
+<path class="s-ar-a" d="M330,73 l4,9 4,-9 z"/>
+<circle class="s-node-r" cx="334" cy="92" r="6"/>
+<text class="s-txt" x="334" y="115" text-anchor="middle" style="font-size:14px">e′</text>
+<text class="s-txt" x="378" y="22" text-anchor="middle" style="font-size:14px">f</text>
+<circle class="s-node" cx="378" cy="36" r="6"/>
+<line class="s-thin-a" x1="378" y1="46" x2="378" y2="82"/>
+<path class="s-ar-a" d="M374,73 l4,9 4,-9 z"/>
+<circle class="s-node" cx="378" cy="92" r="6"/>
+<text class="s-txt" x="378" y="115" text-anchor="middle" style="font-size:14px">f′</text>
+<text class="s-txt" x="422" y="22" text-anchor="middle" style="font-size:14px">g</text>
+<circle class="s-node" cx="422" cy="36" r="6"/>
+<line class="s-thin-a" x1="422" y1="46" x2="422" y2="82"/>
+<path class="s-ar-a" d="M418,73 l4,9 4,-9 z"/>
+<circle class="s-node" cx="422" cy="92" r="6"/>
+<text class="s-txt" x="422" y="115" text-anchor="middle" style="font-size:14px">g′</text>
+<text class="s-txt-a" x="432" y="68" style="font-size:15px">σ</text>
+<text class="s-txt" x="110" y="170" text-anchor="middle" style="font-size:16px">{b, e}</text>
+<text class="s-txt" x="470" y="170" text-anchor="middle" style="font-size:16px">{b′, e′}</text>
+<text class="s-txt" x="110" y="256" text-anchor="middle" style="font-size:16px">{a, c, d, f, g}</text>
+<text class="s-txt" x="470" y="256" text-anchor="middle" style="font-size:16px">{a′, c′, d′, f′, g′}</text>
+<line class="s-thin-a" x1="150" y1="165" x2="425" y2="165"/>
+<path class="s-ar-a" d="M416,161 l9,4 -9,4 z"/>
+<line class="s-thin-a" x1="180" y1="251" x2="395" y2="251"/>
+<path class="s-ar-a" d="M386,247 l9,4 -9,4 z"/>
+<line class="s-thin" x1="110" y1="182" x2="110" y2="234"/>
+<path class="s-ar-m" d="M106,225 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="102" y="212" text-anchor="end" style="font-size:15px">φ</text>
+<line class="s-thin" x1="470" y1="182" x2="470" y2="234"/>
+<path class="s-ar-m" d="M466,225 l4,9 4,-9 z"/>
+</svg>
+<figcaption>Переименование $\sigma$ переводит носитель $U$ в $V$. Двухэлементное подмножество едет вместе с именами, его дополнение — тоже; оба пути из левого верхнего угла в правый нижний дают один результат.</figcaption>
+</figure>
 
 ## Комбинаторные виды
 
