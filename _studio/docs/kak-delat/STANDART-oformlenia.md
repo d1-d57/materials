@@ -185,6 +185,7 @@ M = {
  's-line':'fill="none" stroke="#211f1b" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"',
  's-thin':'fill="none" stroke="#726c60" stroke-width="1.2"',
  's-dash':'fill="none" stroke="#2f6e8e" stroke-width="1.3" stroke-dasharray="4 4"',
+ 's-thin-a':'fill="none" stroke="#2f6e8e" stroke-width="1.4"',
  's-accent':'fill="none" stroke="#2f6e8e" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"',
  's-node':'fill="#fbfaf6" stroke="#211f1b" stroke-width="1.5"',
  's-node-r':'fill="#211f1b" stroke="#211f1b" stroke-width="1.5"',
@@ -193,6 +194,7 @@ M = {
  's-fillw':'fill="#f6ece2" stroke="#211f1b" stroke-width="1.5"',
  's-txt':'font-family="sans-serif" font-size="13" fill="#211f1b"',
  's-txt-m':'font-family="sans-serif" font-size="12" fill="#726c60"',
+ 's-txt-a':'font-family="sans-serif" font-size="12" fill="#2f6e8e"',
  's-txt-w':'font-family="sans-serif" font-size="13" fill="#fbfaf6"',
  # ⚠ стрелка — ЗАЛИВКА наконечника, а не обводка (так она определена в build_doc.py)
  's-ar-m':'fill="#726c60" stroke="#726c60" stroke-width="1.2"',
