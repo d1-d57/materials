@@ -9,6 +9,7 @@
 <circle class="s-node-a" cx="140" cy="57" r="5"/>
 <circle class="s-node" cx="178" cy="57" r="5"/>
 <circle class="s-node" cx="202" cy="57" r="5"/>
+<line class="s-thin" x1="107" y1="106" x2="125" y2="106"/>
 <line class="s-thin" x1="116" y1="106" x2="116" y2="140"/>
 <path class="s-ar-m" d="M112,131 l4,9 4,-9 z"/>
 <circle class="s-node-r" cx="55" cy="160" r="5"/>

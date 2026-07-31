@@ -18,7 +18,6 @@
 <path class="s-accent" d="M760,37 C776,17 824,17 840,37"/>
 <path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(760,37) rotate(128.7)"/>
 <path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(840,37) rotate(51.3)"/>
-<line class="s-dash" x1="60" y1="62" x2="920" y2="62"/>
 <text class="s-txt" x="150" y="90" text-anchor="middle" style="font-size:22px">∅</text>
 <text class="s-txt" x="790" y="90" text-anchor="middle" style="font-size:22px">∅</text>
 <text class="s-txt" x="150" y="222" text-anchor="middle" style="font-size:22px">{1}</text>
@@ -36,9 +35,7 @@
 <line class="s-thin" x1="790" y1="100" x2="790" y2="204"/>
 <path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(790,204) rotate(90)"/>
 <text class="s-txt" x="440" y="72" text-anchor="middle" style="font-size:20px">τ</text>
-<text class="s-txt" x="440" y="230" text-anchor="middle" style="font-size:20px">τ</text>
 <text class="s-txt" x="140" y="158" text-anchor="end" style="font-size:20px">φ</text>
-<text class="s-txt" x="800" y="158" style="font-size:20px">φ</text>
 <text class="s-txt" x="380" y="130" text-anchor="middle" style="font-size:22px">E<tspan dy="-7" style="font-size:14px">+</tspan></text>
 <text class="s-txt" x="560" y="130" text-anchor="middle" style="font-size:22px">E<tspan dy="-7" style="font-size:14px">+</tspan></text>
 <text class="s-txt" x="380" y="182" text-anchor="middle" style="font-size:22px">E<tspan dy="-7" style="font-size:14px">−</tspan></text>
@@ -51,6 +48,4 @@
 <path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(380,166) rotate(90)"/>
 <line class="s-thin" x1="560" y1="140" x2="560" y2="166"/>
 <path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(560,166) rotate(90)"/>
-<text class="s-txt" x="470" y="113" text-anchor="middle" style="font-size:20px">τ</text>
-<text class="s-txt" x="370" y="160" text-anchor="end" style="font-size:20px">φ</text>
 </svg>

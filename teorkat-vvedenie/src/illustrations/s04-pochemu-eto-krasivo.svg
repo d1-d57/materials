@@ -53,7 +53,6 @@
 <path class="s-ar-a" d="M538,79 l4,9 4,-9 z"/>
 <circle class="s-node" cx="542" cy="98" r="6"/>
 <text class="s-txt" x="542" y="122" text-anchor="middle" style="font-size:15px">g′</text>
-<line class="s-dash" x1="30" y1="140" x2="570" y2="140"/>
 <text class="s-txt" x="110" y="178" text-anchor="middle" style="font-size:17px">{b, e}</text>
 <text class="s-txt" x="470" y="178" text-anchor="middle" style="font-size:17px">{b′, e′}</text>
 <text class="s-txt" x="110" y="272" text-anchor="middle" style="font-size:17px">{a, c, d, f, g}</text>

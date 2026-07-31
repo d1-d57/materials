@@ -15,6 +15,7 @@
 <circle class="s-node" cx="292" cy="140" r="7"/>
 <circle class="s-node-r" cx="336" cy="140" r="7"/>
 <circle class="s-node-r" cx="380" cy="140" r="7"/>
+<line class="s-thin" x1="245" y1="84" x2="263" y2="84"/>
 <line class="s-thin" x1="254" y1="84" x2="254" y2="104"/>
 <path class="s-ar-m" d="M250,95 l4,9 4,-9 z"/>
 </svg>
