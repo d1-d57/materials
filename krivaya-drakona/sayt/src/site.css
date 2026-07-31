@@ -40,10 +40,19 @@
   --pad-x:     24px;
   --halo:      0.18;
 
-  /* ПОТОЛОК ФИГУРЫ. 215px — это верхнее поле сцены + заголовок + gap грида +
-     нижнее поле под .scene__nav. Фигура квадратная, поэтому ограничивать надо
-     ШИРИНУ: max-height при aspect-ratio ломает пропорции, max-width — нет. */
-  --fig-cap:   calc(100svh - 215px);
+  /* ВЫСОТА ТЕЛА СЦЕНЫ — ФИКСИРОВАННАЯ, И ЭТО ТРЕБОВАНИЕ Ф3, А НЕ ВКУС.
+     215px — верхнее поле сцены + слот заголовка + gap грида + нижнее поле под
+     .scene__nav. Раньше высота тела зависела от длины текста, сцена целилась
+     по центру — и на четвёртом шаге доказательства, где текста больше, весь
+     грид разъезжался, а заголовок уезжал относительно первых трёх шагов.
+     Теперь тело — слот постоянной высоты на ВСЕХ сценах и всех шагах, поэтому
+     getBoundingClientRect().top заголовка совпадает везде. */
+  --fig-h:     calc(100svh - 215px);
+
+  /* Полоса под управление у нижнего края правой колонки (Ф4). Место под неё
+     ВЫБИТО всегда, даже на сценах без управления: иначе фигура была бы разной
+     высоты от сцены к сцене, а кнопки стояли бы на разном уровне. */
+  --tools-h:   54px;
 }
 
 * { box-sizing: border-box; }
@@ -97,8 +106,11 @@ button { font-family: inherit; background: none; border: none; color: inherit;
   display: flex; flex-direction: column; gap: 26px;
 }
 
-/* заголовок сцены — НАД гридом, на всю ширину */
-.scene__head { display: flex; flex-direction: column; gap: 10px; }
+/* Заголовок сцены — НАД гридом, на всю ширину. Слот фиксированной высоты (Ф3):
+   иначе однострочный и двустрочный заголовок дают гриды разной высоты, и при
+   вертикальной центровке сцены заголовок стоит на разной высоте у разных глав. */
+.scene__head { display: flex; flex-direction: column; justify-content: flex-start;
+               gap: 10px; min-height: calc(var(--fs-title) * 1.2); }
 
 .eyebrow {
   font-family: var(--font-mono);
@@ -116,16 +128,40 @@ button { font-family: inherit; background: none; border: none; color: inherit;
   margin: 0;
 }
 
-/* тело: узкая колонка текста слева, квадратная фигура справа */
+/* Тело: узкая колонка текста слева, фигура справа. Высота слота ПОСТОЯННА и
+   от длины текста не зависит (Ф3), содержимое обеих колонок прижато к верху —
+   тогда «слот заголовка» и «слот текста» ведут себя как сцены в презентации. */
 .scene__body {
   display: grid;
   grid-template-columns: 0.4fr 0.6fr;
   gap: clamp(32px, 4vw, 56px);
-  align-items: center;
+  align-items: start;
+  height: var(--fig-h);
 }
 
+/* Сцена «Пересекает ли она себя?»: текста нет вообще, холст занимает всю
+   оставшуюся площадь (Ф2). Одна колонка, фигура не квадратная.
+   ⚠ Полосу под управление здесь НЕ выбиваем (--tools-h: 0), а кладём кнопки
+   поверх холста в пустой угол: 54 пикселя высоты — это 8 % картинки, а на этой
+   сцене картинка и есть содержание. Уровень кнопок при этом тот же, что на
+   остальных сценах: они всё так же прижаты к низу правой колонки.
+   ⚠ Маски-виньетки здесь тоже нет. Она рассчитана на КВАДРАТНУЮ фигуру, а тут
+   холст широкий, а кривая стоячая — эллипс гасил ей верх и низ. И на зуме маска
+   срезала бы ровно то, ради чего в сцену пришли. */
+.scene--full { --tools-h: 0px; }
+.scene--full .scene__body { grid-template-columns: 1fr; }
+.scene--full .figure { aspect-ratio: auto; width: 100%; max-width: none; }
+.scene--full .figure > canvas { -webkit-mask-image: none; mask-image: none; }
+
+/* ⚠ min-width: 0 У ОБОИХ СТОЛБЦОВ — ИНАЧЕ ШИРОКАЯ ФИГУРА РАЗДВИГАЕТ СЕТКУ.
+   У grid-дорожки min-width по умолчанию auto, поэтому фигура 4/3, посчитанная
+   от высоты слота (841 px), растягивала правую дорожку и сжимала левую до
+   четырёх слов в строке: на четвёртом шаге доказательства текст уезжал за
+   нижний край экрана. Поймано скриншотом, не рассуждением. */
+.col, .fig-wrap { min-width: 0; }
+
 .col {
-  display: flex; flex-direction: column; gap: 20px;
+  display: flex; flex-direction: column; justify-content: flex-start; gap: 20px;
   max-width: var(--measure);
 }
 .col p { margin: 0; }
@@ -142,14 +178,41 @@ button { font-family: inherit; background: none; border: none; color: inherit;
 
 /* ═════════ фигура ═════════ */
 
+/* ПРАВАЯ КОЛОНКА ЦЕЛИКОМ: сверху фигура, у нижнего края — полоса управления.
+   Фигура задаётся ВЫСОТОЙ слота, ширина выводится из пропорции: так фигура
+   занимает большую часть экрана (Ф3) и не зависит от того, сколько текста
+   слева. Место под .tools выбито всегда — см. --tools-h. */
+.fig-wrap { position: relative; height: 100%; }
+.fig-wrap > .figure, .fig-wrap > .cards { height: calc(100% - var(--tools-h)); }
+
 .figure {
   position: relative; z-index: 2; margin: 0;
-  width: 100%; margin-inline: auto;
+  height: 100%; width: auto; margin-inline: auto;
   aspect-ratio: 1 / 1;
-  max-width: min(100%, var(--fig-cap));
+  max-width: 100%;
 }
-.figure--wide { aspect-ratio: 4 / 3;
-                max-width: min(100%, calc(var(--fig-cap) * 4 / 3)); }
+.figure--wide { aspect-ratio: 4 / 3; }
+
+/* две карточки одного холста (сцена «Как её нарисовать»): видна одна */
+.cards { position: relative; }
+.cards > .figure { height: 100%; }
+.card { display: none; }
+.card.on { display: block; }
+
+/* ═════════ Ф4 · УПРАВЛЕНИЕ — ПРАВЫЙ НИЖНИЙ УГОЛ ПРАВОЙ КОЛОНКИ ═════════
+   Все ползунки, переключатели и листалки стоят в одном месте на всех сценах,
+   поэтому на любом экране они оказываются на одном уровне. Подписей минимум,
+   строк-показаний нет вовсе (Ф5). */
+.tools {
+  position: absolute; right: 0; bottom: 0; z-index: 3;
+  height: var(--tools-h);
+  display: flex; align-items: flex-end; justify-content: flex-end;
+  gap: clamp(14px, 1.6vw, 24px);
+}
+.tools .ctrl { gap: 5px; }
+.tools .ctrl--w { width: clamp(150px, 15vw, 210px); }
+.tool { display: none; }
+.tool.on { display: block; }
 
 /* ореол — фигура не обрывается краем, а живёт в свечении */
 .figure::before {
@@ -215,9 +278,21 @@ button { font-family: inherit; background: none; border: none; color: inherit;
 .d-rib    { fill: none; stroke: var(--text-secondary); stroke-linecap: butt; }
 .d-rib-a  { fill: none; stroke: var(--acc);            stroke-linecap: butt; }
 
-/* ═════════ управление ═════════ */
+/* ЗАЛИВКА КЛЕТОК четырёх драконов (предельное заполнение, сцена «Четыре
+   дракона»). Четыре цвета те же, что у линий, — иначе непонятно, чья плитка;
+   stroke: none обязателен, потому что обводка каждой из 4096 плиток съела бы
+   ровно тот стык, ради которого кадр и есть. Плотность задаётся кодом
+   (opacity), а не здесь: на разных рангах плиток на порядок больше. */
+/* Подложка врезки на холсте доказательства: глухая, чтобы разметка основной
+   картинки (полосы строк) не проходила сквозь схему. */
+.d-panel   { fill: var(--bg); stroke: var(--rule); }
 
-.ctrls { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+.d-fill    { stroke: none; fill: var(--text); }
+.d-fill-a  { stroke: none; fill: var(--acc); }
+.d-fill-a2 { stroke: none; fill: var(--acc2); }
+.d-fill-m  { stroke: none; fill: var(--text-muted); }
+
+/* ═════════ управление ═════════ */
 
 .ctrl { display: flex; flex-direction: column; gap: 7px; }
 .ctrl__lbl {
@@ -264,6 +339,8 @@ input[type=range]:focus-visible { outline: none; }
   background: color-mix(in srgb, var(--acc) 6%, transparent);
   outline: none;
 }
+/* кнопка в полосе управления: тот же контур, но по высоте как .seg */
+.btn--sm { padding: 8px 14px; letter-spacing: .1em; }
 
 .seg { display: flex; gap: 0; border: 1px solid var(--rule); border-radius: 2px;
        align-self: flex-start; overflow: hidden; }
@@ -279,13 +356,9 @@ input[type=range]:focus-visible { outline: none; }
 .seg button.on { color: var(--acc);
   background: color-mix(in srgb, var(--acc) 12%, transparent); }
 
-/* строка состояния под фигурой — только mono, только служебное */
-.readout {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em;
-  color: var(--text-muted); min-height: 1.5em;
-}
-.readout b { color: var(--text); font-weight: 400; }
-.readout .hi { color: var(--acc); }
+/* Строк-показаний на сайте НЕТ (Ф5): ни «ранг 6 · звеньев 64», ни «пройдено
+   N из 4», ни отсчёта площади. Класс .readout удалён вместе с разметкой и
+   кодом, который его заполнял, — счётчики не нужны нигде. */
 
 /* ═════════ обложка ═════════ */
 
@@ -491,13 +564,12 @@ input[type=range]:focus-visible { outline: none; }
   :root {
     --fs-body: 16.5px; --fs-small: 14px; --lh-body: 1.46;
     --fs-title: clamp(24px, 2.6vw, 34px);
-    --fig-cap: calc(100svh - 175px);
+    --fig-h: calc(100svh - 175px);
+    --tools-h: 46px;
   }
   .scene { padding: clamp(24px, 3vh, 36px) var(--pad-x) clamp(60px, 8vh, 74px); }
   .scene__grid { gap: 16px; }
   .col { gap: 12px; }
-  .ctrls { gap: 10px; }
-  .readout { min-height: 1.3em; }
   .btn { padding: 9px 16px; }
   .seg button { padding: 6px 11px; }
 }
@@ -514,10 +586,19 @@ input[type=range]:focus-visible { outline: none; }
      не срабатывает вовсе (замерил после первой попытки). 84vw и 42svh вместе
      дают картинку около 300 px: она остаётся крупной, а управление попадает
      на тот же экран, что и она. */
+  /* Ф9: мобильную вёрстку в этот прогон НЕ трогаем — лекция идёт с проектора.
+     Правки Ф3/Ф4 (фиксированный слот тела и полоса управления у нижнего края
+     правой колонки) на телефоне распускаются обратно в поток: слот высоты
+     снимается, управление встаёт под картинкой. */
   :root { --fs-body: 17px; --fs-small: 15px; --pad-x: 18px;
-          --fig-cap: min(84vw, 42svh); }
-  .scene__body { grid-template-columns: 1fr; gap: 20px; }
-  .figure { order: -1; }          /* картинка уходит НАД текстом */
+          --fig-h: min(84vw, 42svh); --tools-h: 0px; }
+  .scene__body { grid-template-columns: 1fr; gap: 20px; height: auto; }
+  .fig-wrap { order: -1; height: auto; }   /* картинка уходит НАД текстом */
+  .fig-wrap > .figure, .fig-wrap > .cards { height: auto; }
+  .figure { height: auto; width: 100%; max-width: var(--fig-h); }
+  .cards > .figure { height: auto; }
+  .tools { position: static; height: auto; justify-content: flex-start;
+           flex-wrap: wrap; margin-top: 16px; }
   .col    { order: 0; max-width: none; }
   .scene__title { font-size: clamp(23px, 6vw, 34px); }
   #nav { display: none; }

@@ -59,10 +59,13 @@ function angs(v, n){ const o={}; for(let p=1;p<=n;p++) o[p]=v; return o; }
    самопересечений нет». Поэтому крупное скругление осталось ровно там, где
    оно и есть предмет: сцена №4 (две дуги вместо перекрёстка). */
 const ROUND = {
-  strip: 0.16, halves: 0.16, pairs: 0.20,
+  strip: 0.16, halves: 0.16, vert: 0.15,
   dense: 0.50,                       // предмет сцены: в касании читаются две дуги
-  a: 0.13,                           // должно быть видно, что звенья вдоль и поперёк
-  b: 0.26, v: 0.20, g: 0.24,
+  /* Скругления на картинках доказательства подняты (владелец, 31.07): при 0,13–0,24
+     угол на СТЫКЕ двух соседних уголков читался как перекрёсток, и кривая выглядела
+     самопересекающейся — ровно то, что сцена опровергает. Ниже 0,5 держим намеренно:
+     при большем скруглении перестаёт быть видно, какое звено вдоль, а какое поперёк. */
+  a: 0.30, b: 0.32, v: 0.32, g: 0.32,
   four: 0.20
 };
 
@@ -85,9 +88,10 @@ function lattice(par, g, box, pad){
     рамки: получались шесть широких коричневых баров, которые перекрикивали
     саму кривую, и на скриншоте сцена читалась как полосатый фон с еле
     заметной линией. Полоса — это разметка решётки под фигурой, а не фон. */
-function rowBands(par, g, box){
-  const x0=g([box.x0-0.6, 0])[0], x1=g([box.x1+0.6, 0])[0];
-  for(let y=Math.floor(box.y0); y<=Math.ceil(box.y1); y++){
+function rowBands(par, g, box, pad){
+  const p = pad===undefined ? 0 : pad;
+  const x0=g([box.x0-p-0.6, 0])[0], x1=g([box.x1+p+0.6, 0])[0];
+  for(let y=Math.floor(box.y0)-p; y<=Math.ceil(box.y1)+p; y++){
     if(!rowBlue(y)) continue;
     const top=g([0,y+0.5])[1], bot=g([0,y-0.5])[1];
     mk('rect',{x:Math.min(x0,x1), y:Math.min(top,bot),
@@ -95,12 +99,36 @@ function rowBands(par, g, box){
   }
 }
 
-/** стрелка хода в середине звена — без неё «налево» не имеет смысла */
-function arrowOn(par, p, q, cls){
+/** ШАХМАТНАЯ РАСКРАСКА ВСЕЙ РЕШЁТКИ, а не только вершин кривой.
+    Правка владельца: пока красились одни вершины, через которые прошла кривая,
+    чередование читалось как свойство картинки. Плоскость покрыта шахматной
+    раскраской независимо от кривой — и уже потом видно, что кривая ходит по ней
+    определённым образом. Узлы решётки идут тише вершин кривой (opacity),
+    иначе разметка перекрикивает предмет — тот же урок, что у полос .d-row. */
+function latticeNodes(par, g, box, pad){
+  const p = pad===undefined ? 0 : pad;
+  for(let x=Math.floor(box.x0)-p; x<=Math.ceil(box.x1)+p; x++)
+    for(let y=Math.floor(box.y0)-p; y<=Math.ceil(box.y1)+p; y++){
+      const el=node(par, g([x,y]), isBlack([x,y]) ? 'd-node-b':'d-node', 3);
+      el.style.setProperty('opacity','0.38');
+    }
+}
+
+/** стрелка хода в середине звена — без неё «налево» не имеет смысла.
+    ⚠ РАЗМЕР — ПАРАМЕТР, И ЭТО НЕ ВКУСОВЩИНА. Потолок 7 единиц viewBox (при
+    холсте 1000×1000 это 3,5 пикселя на экране) владелец увидел как «непонятно,
+    в какую сторону мы идём», и из-за этого терялось, где «направо», а где
+    «налево» — то есть само правило строк. Крупная стрелка — требование
+    читаемости с проектора, а не украшение. */
+function arrowOn(par, p, q, cls, size){
   const mx=(p[0]+q[0])/2, my=(p[1]+q[1])/2;
   const l=Math.hypot(q[0]-p[0], q[1]-p[1]) || 1;
   const ux=(q[0]-p[0])/l, uy=(q[1]-p[1])/l, nx=-uy, ny=ux;
-  const t=Math.min(7, l*0.3), b=t*0.62;
+  /* ⚠ ПОТОЛОК ОТ ДЛИНЫ ЗВЕНА — 0,28, А НЕ 0,44. Наконечник длиной 1,6·t, и при
+     0,44 он накрывал звено ЦЕЛИКОМ: на снимке подсвеченное ребро исчезало под
+     своей же стрелкой, то есть шаг «по одному ребру» показывал стрелку вместо
+     ребра. Поймано снимком, не чтением. */
+  const t=Math.min(size===undefined?7:size, l*0.28), b=t*0.66;
   mk('polygon',{class:cls||'d-arrow', points:
     (mx+ux*t)+','+(my+uy*t)+' '+
     (mx-ux*t*0.6+nx*b)+','+(my-uy*t*0.6+ny*b)+' '+
@@ -147,6 +175,25 @@ function onResize(fn, ms){
   const h=()=>{ clearTimeout(t); t=setTimeout(fn, ms||200); };
   window.addEventListener('resize', h);
   return h;
+}
+
+/** ЛИСТАЛКА — ОДНА НА ВЕСЬ САЙТ, второй не пишем: её держат и четыре шага
+    доказательства, и две карточки способов рисования. Стрелки ← → и точки, плюс
+    регистрация в PAGERS, чтобы клавиатура нашла листалку текущей сцены. */
+function pagerOf(sec, onShow, count){
+  const dots=[...sec.querySelectorAll('.pager__dot')];
+  const n=count || dots.length;
+  let cur=0;
+  function show(i){
+    cur=Math.min(n-1, Math.max(0, i));
+    dots.forEach((d,k)=>d.classList.toggle('on', k===cur));
+    onShow(cur);
+  }
+  sec.querySelectorAll('[data-page]').forEach(b=>
+    b.addEventListener('click', ()=>show(cur + (+b.dataset.page))));
+  dots.forEach((d,k)=>d.addEventListener('click', ()=>show(k)));
+  PAGERS.set(sec, { go(d){ show(cur+d); } });
+  return { show, cur:()=>cur };
 }
 
 /* ═══════════════════════ 0 · ОБЛОЖКА ═══════════════════════
@@ -227,7 +274,6 @@ function sceneStrip(sec){
   const W=1000, H=1000, PAD=26;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const inAngle = sec.querySelector('[data-in="angle"]');
-  const outAngle = sec.querySelector('[data-out="angle"]');
   let a=+inAngle.value;
 
   /* Десять клеток: строки 4 · 3 · 3. Строка становится шире по ходу роста —
@@ -320,7 +366,6 @@ function sceneStrip(sec){
   function draw(){
     wipe(svg);
     paintGrid(svg);
-    outAngle.textContent = a + '°';
   }
 
   const FULL={x:0,y:0,w:W,h:H};
@@ -392,7 +437,7 @@ function sceneStrip(sec){
    повёрнутая на 90° вокруг стыка (проверенное правило T8). */
 
 function sceneHalves(sec){
-  const svg = sec.querySelector('svg');
+  const svg = sec.querySelector('[data-card="halves"] svg');
   const W=1000, H=1000;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const N=5, MID=Math.pow(2,N-1);                       // стык — середина ломаной
@@ -483,200 +528,473 @@ function sceneHalves(sec){
   return { enter(){ playSeq(); }, leave(){ tok.v++; } };
 }
 
-/* ═══════════════════════ 3 · ЗВЕНЬЯ ПАРАМИ ═══════════════════════
-   Основа — T20 (845–900). Красим через одно на ранге 4; при складывании из
-   одного звена выходят два звена ЕГО цвета, поэтому цвет звена k ранга n —
-   это цвет его прапрародителя: floor(k / 2^(n−4)) mod 2. Отсюда «цвета идут
-   парами» — не факт, который надо принять, а след построения.
-   Размер держим постоянным (seg = 2^(−n/2)): тогда видно, что звено СГИБАЕТСЯ
-   ПОПОЛАМ, а не что фигура растёт. */
+/* ═══════════════════════ 2б · ВТОРОЙ СПОСОБ: ПО ВЕРШИНАМ ═══════════════════════
+   ⚠ КАРТИНКА ВЗЯТА ГОТОВОЙ — ЭТО РЕШЕНИЕ ВЛАДЕЛЬЦА, А НЕ ЭКОНОМИЯ. Дословно:
+   «вот этот рисунок — буквально то, что нужно показать на сцене со вторым
+   способом; это красиво, а там непонятно ничего». Рисунок — прежний шаг
+   доказательства «вершины двух сортов» в увеличенном виде: кривая, а поверх неё
+   пунктиром диагонали через одну вершину, и пунктир — это кривая рангом ниже.
+   Прежняя карточка вместо этого крутила три кривые с пересчётом рамки, и второй
+   способ владелец не понимал.
 
-function scenePairs(sec){
-  const svg = sec.querySelector('svg');
-  const out = sec.querySelector('[data-out="pairs"]');
+   ОДНА КАРТИНКА, ЧИТАЕМАЯ В ДВЕ СТОРОНЫ, и это буквально требование правки:
+     · «через одну»    — кривая ранга N гаснет, пунктир загорается: РАНГ МЛАДШЕ;
+     · «треугольники»  — та же пара, прочитанная наоборот: пунктир становится
+       основанием, и на каждой диагонали вырастает треугольник, вершина которого
+       и есть новая вершина ранга N. При u=1 картинка совпадает с рангом N ТОЧНО.
+
+   ⚠ ОБЕ КРИВЫЕ ДЕЛЯТ ОДНИ И ТЕ ЖЕ ВЕРШИНЫ, И ЭТО НЕ ПОДГОНКА. Вершины ранга N
+   с чётными номерами — это в точности вершины ранга N−1, умноженные на (1+i)
+   (mul1pi, проверено гейтом ядра до ранга 14): растяжение в √2 и поворот на 45°.
+   Поэтому «через одну» ничего не пересчитывает — это ПОДМНОЖЕСТВО вершин,
+   а треугольники достраиваются ровно до пропущенных.
+   Рамка считается по кривой ранга N и держится на всех кадрах: LOW ⊂ BASE,
+   поэтому одна рамка вмещает обе и камера не прыгает. */
+
+function sceneVert(sec){
+  const svg = sec.querySelector('[data-card="vert"] svg');
+  const seg = sec.querySelector('[data-seg="vert"]');
   const W=1000, H=1000;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  const LO=4, HI=10;
-  const cache={}, frames=[];
-  for(let n=LO;n<=HI;n++){
-    cache[n]=poly(word(n), 90, Math.pow(2,-n/2));
-    frames.push(...cache[n]);
+
+  /* Ранг 6, а не 8: на 8 диагоналей 128, пунктир сливается в серую вату и
+     «соединили вершины через одну» разглядеть нельзя. На 6 дракон узнаётся,
+     а каждая диагональ ещё видна отдельно — а её видимость и есть предмет. */
+  const N=6;
+  const BASE = rank(N);
+  const LOW  = BASE.filter((_,i)=>i%2===0);        // вершины через одну = ранг N−1
+  const FRAME = bounds(BASE);
+  const PAD = 62;
+
+  let st=0, u=1, m=0, tok={v:0};
+
+  function geom(){ return fit(BASE,{x:0,y:0,w:W,h:H,pad:PAD},FRAME); }
+
+  /** треугольники на ДИАГОНАЛЯХ: при u=0 они лежат в диагонали, при u=1 их
+      вершины — это пропущенные (новые) вершины ранга N */
+  function triPath(g, u){
+    let d='';
+    for(let k=0;k+1<LOW.length;k++){
+      const a=LOW[k], b=LOW[k+1], apex=BASE[2*k+1];
+      const mid=[(a[0]+b[0])/2, (a[1]+b[1])/2];
+      const t=[lerp(mid[0],apex[0],u), lerp(mid[1],apex[1],u)];
+      const A=g(a), T=g(t), B=g(b);
+      d += ' M '+A[0].toFixed(2)+' '+A[1].toFixed(2)
+         + ' L '+T[0].toFixed(2)+' '+T[1].toFixed(2)
+         + ' L '+B[0].toFixed(2)+' '+B[1].toFixed(2);
+    }
+    return d.trim();
   }
-  const frame = bounds(frames);
-  let n=LO, tok={v:0};
+
+  /** вершины двух сортов: через одну закрашенные (они же концы диагоналей),
+      между ними пустые — те, что «через одну» пропускает */
+  function sorts(g, rb, rw){
+    for(let i=1;i<BASE.length-1;i+=2) node(svg,g(BASE[i]),'d-node',rw);
+    for(let i=0;i<BASE.length;i+=2)   node(svg,g(BASE[i]),'d-node-b',rb);
+  }
 
   function draw(){
     wipe(svg);
-    const P=cache[n];
-    const g=fit(P,{x:0,y:0,w:W,h:H,pad:64},frame);
-    const S=P.map(g);
-    const blk = Math.pow(2, n-LO);                    // длина одноцветного куска
-    const lw = n>=9 ? 2 : (n>=7 ? 2.8 : 4);
-    let i=0;
-    while(i < S.length-1){
-      const c = Math.floor(i/blk) % 2;
-      let j=i;
-      while(j < S.length-1 && Math.floor(j/blk)%2 === c) j++;
-      const run = S.slice(i, j+1);
-      mk('path',{d:roundPath(run,ROUND.pairs), class: c? 'd-acc':'d-line',
-                 'stroke-width':lw},svg);
-      i=j;
+    const g=geom();
+    const S=BASE.map(g), L=LOW.map(g);
+
+    if(st===0){                     // ПОКОЙ: кривая + пунктир через одну вершину
+      mk('path',{d:roundPath(L,0.18),class:'d-dash','stroke-width':2.2},svg);
+      mk('path',{d:roundPath(S,ROUND.vert),class:'d-acc','stroke-width':3},svg);
+      sorts(g,4.6,4);
+      return;
     }
-    node(svg, S[0], 'd-node-a', 4.5);
-    if(out) out.innerHTML='ранг <b>'+n+'</b> · звеньев <b>'+Math.pow(2,n)
-      +'</b> · подряд одного цвета <b>'+blk+'</b>';
+
+    if(st<0){
+      // исходная гаснет, пунктир достраивается в кривую ранга младше на глазах
+      mk('path',{d:roundPath(S,ROUND.vert),class:'d-mute','stroke-width':2,
+                 opacity:0.28},svg);
+      for(let i=1;i<S.length-1;i+=2) node(svg,S[i],'d-node',3.4);
+      const upto=Math.max(1, Math.min(L.length-1, m));
+      mk('path',{d:roundPath(L.slice(0,upto+1),0.18),class:'d-acc',
+                 'stroke-width':4.6},svg);
+      for(let i=0;i<=upto;i++) node(svg,L[i],'d-node-a',4.6);
+      return;
+    }
+
+    // та же картинка наоборот: диагонали — основание, треугольники растут
+    mk('path',{d:roundPath(L,0.18),class:'d-line','stroke-width':2.6,
+               opacity:0.5},svg);
+    mk('path',{d:triPath(g,u),class:'d-acc','stroke-width':3.4,
+               'stroke-linejoin':'round'},svg);
+    for(let i=0;i<L.length;i++) node(svg,L[i],'d-node-b',4.6);
+    if(u>0.15) for(let i=1;i<BASE.length-1;i+=2) node(svg,g(BASE[i]),'d-node',4);
   }
-  async function loop(){
+
+  /* Переход играется ОДИН раз и замирает на результате. Прогрессивная отрисовка
+     кривой ранга младше — это и есть «соединяем вершины через одну»: рука идёт
+     по вершинам на глазах, а не подменяет картинку готовой. */
+  async function go(next){
     tok.v++; const my=tok;
-    if(REDUCED){ n=HI; draw(); return; }
-    for(;;){
-      for(n=LO;n<=HI;n++){ draw(); if(!await pause(n===LO?900:620, my)) return; }
-      if(!await pause(500, my)) return;
-      for(n=HI;n>=LO;n--){ draw(); if(!await pause(n===HI?900:620, my)) return; }
-      if(!await pause(500, my)) return;
+    st=next;
+    if(st===0){ u=1; m=LOW.length-1; draw(); return; }
+    if(REDUCED){ u=1; m=LOW.length-1; draw(); return; }
+    if(st<0){ m=0; draw();
+      await anim(0, LOW.length-1, 1100, v=>{ m=Math.round(v); draw(); }, my);
+      m=LOW.length-1; if(my.v===tok.v) draw();
+      return;
     }
+    u=0; draw();
+    await anim(0, 1, 1000, v=>{ u=v; draw(); }, my);
+    u=1; if(my.v===tok.v) draw();
   }
-  onResize(draw);
-  return { enter(){ loop(); }, leave(){ tok.v++; } };
-}
 
-/* ═══════════════════════ 4 · ПЛОТНОСТЬ ═══════════════════════
-   Ранг 12 крупно, углы скруглены ЗАМЕТНО: в местах касания должны читаться две
-   отдельные дуги, а не перекрёсток. Число касаний считается по ЛОМАНОЙ (целые
-   вершины) — по скруглённому виду считать нельзя (урок touches в L4). */
-
-function sceneDense(sec){
-  const cv = sec.querySelector('canvas');
-  const out = sec.querySelector('[data-out="dense"]');
-  const seg = sec.querySelector('[data-seg="rank"]');
-  let n=12, ctx, W, H, raf=null;
-  const cache={};
-  function pts(k){ return cache[k] || (cache[k]=rank(k)); }
-
-  function paint(progressive){
-    if(raf){ cancelAnimationFrame(raf); raf=null; }
-    const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
-    const P=pts(n);
-    const g=fit(P,{x:0,y:0,w:W,h:H,pad:Math.min(W,H)*0.05});
-    const S=P.map(g);
-    const lw = n>=13 ? 1.05 : (n>=12 ? 1.5 : (n>=10 ? 2.2 : 3.2));
-    ctx.clearRect(0,0,W,H);
-    ctx.strokeStyle=cssVar('--acc'); ctx.lineWidth=lw; ctx.lineCap='round';
-    const total=S.length-1;
-    const run=(upto)=>{
-      ctx.clearRect(0,0,W,H);
-      strokeRounded(ctx, S.slice(0, upto+1), 0.5);      // скругление = половина звена
-    };
-    if(!progressive || REDUCED){ run(total); }
-    else {
-      let done=0; const B=Math.max(120, Math.round(total/120));
-      const step=()=>{ done=Math.min(total, done+B); run(done);
-        if(done<total) raf=requestAnimationFrame(step); else raf=null; };
-      raf=requestAnimationFrame(step);
-    }
-    const t=touches(word(n)).length;
-    out.innerHTML='ранг <b>'+n+'</b> · звеньев <b>'+Math.pow(2,n)
-      +'</b> · вершин, где линия подходит к себе: <b>'+t+'</b>';
-  }
-  seg.addEventListener('click',e=>{
+  seg.addEventListener('click', e=>{
     const b=e.target.closest('button'); if(!b) return;
     seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
-    n=+b.dataset.v; paint(true);
+    go(+b.dataset.v);
   });
-  onResize(()=>paint(false));
-  return { enter(){ paint(true); }, leave(){ if(raf){cancelAnimationFrame(raf); raf=null;} } };
+  onResize(draw);
+  return { enter(){ go(st); }, leave(){ tok.v++; } };
+}
+
+/* ═══════════════════════ 2 · КАК ЕЁ НАРИСОВАТЬ ═══════════════════════
+   Две прежние главы слиты в одну (Ф1 + Ф6: глав ровно шесть). Слева общий текст
+   на оба способа, справа листалка из двух карточек — механика та же, что у
+   листалки доказательства, второй не пишем. Меняется только холст: текст один
+   на обе карточки, поэтому он не мигает при листании. */
+
+function sceneDraw(sec){
+  const parts=[sceneHalves(sec), sceneVert(sec)];
+  const cards=[...sec.querySelectorAll('.card')];
+  const tools=[...sec.querySelectorAll('.tool')];
+  const pager=pagerOf(sec, i=>{
+    cards.forEach((c,k)=>c.classList.toggle('on', k===i));
+    tools.forEach((t,k)=>t.classList.toggle('on', k===i));
+    parts[i].enter();
+  }, parts.length);
+  return { enter(){ pager.show(pager.cur()); },
+           leave(){ parts.forEach(p=>p.leave()); } };
+}
+
+/* ═══════════════════════ 3 · ПЕРЕСЕКАЕТ ЛИ ОНА СЕБЯ? ═══════════════════════
+   Ф2. Текста на сцене нет вообще, холст занимает всю оставшуюся площадь, ранг
+   фиксирован на 14, и есть зум: приблизить и увидеть, что линия НЕ сплошная.
+
+   ⚠ ПОЧЕМУ ЗДЕСЬ НЕ CHAOS GAME, ХОТЯ Ф2 НАЗЫВАЕТ IFSRenderer. Chaos game сыплет
+   точки по ЗАЛИТОЙ области дракона, а вся эта сцена — про ЛИНИЮ: спрашивается,
+   не прошла ли она дважды по одному отрезку, и владелец хочет приблизить и
+   увидеть, что она не сплошная. В облаке точек звеньев и зазоров между ними нет,
+   на увеличении видна пыль или тело — то есть картинка опровергала бы вопрос
+   сцены. Тот же дефект прошлый прогон уже поймал скриншотом на финальной сцене.
+   Поэтому взята вся МЕХАНИКА, названную в Ф2, а рисуется ею наша ломаная:
+     · прогрессивная отрисовка батчами по requestAnimationFrame;
+     · renderToken — устаревшие кадры отменяются, а не досчитываются;
+     · лог-интерполяция зума на полёте (как animateViewport в FractalSlide);
+     · компенсация толщины штриха и alpha при увеличении (currentSize/currentAlpha);
+     · зум-курсор рамкой и зум по клику в точку.
+   Это и лечит зависание: работа в кадре ОГРАНИЧЕНА — батч, а не «вся кривая
+   заново», — и на увеличении почти всё отсекается по окну, поэтому кадр на
+   ранге 14 стоит тем меньше, чем глубже зум. */
+
+function sceneCross(sec){
+  const cv  = sec.querySelector('canvas');
+  const fig = cv.parentNode;
+  const segZ= sec.querySelector('[data-seg="zoom"]');
+  const N=14, ZF=2.6, MARGIN=10;
+
+  let P=null;                        // ломаная ранга 14 считается ОДИН раз, лениво
+  let ctx, W, H;
+  /* renderToken живёт объектом, а не числом, чтобы его понимал и anim(): один и
+     тот же счётчик отменяет и батчи отрисовки, и кадры полёта зума. */
+  const TK={v:0};
+  let raf=null;
+  let home=null, vp=null, zoom=1, shown=1;
+
+  function pts(){ return P || (P=rank(N)); }
+
+  /** окно задаётся центром и ПОЛУШИРИНОЙ; полувысота выводится из пропорций
+      холста, поэтому пиксель квадратный при любом размере окна */
+  function halfH(hw){ return hw*H/W; }
+
+  function homeVp(){
+    const b=bounds(pts());
+    const cx=(b.x0+b.x1)/2, cy=(b.y0+b.y1)/2;
+    const need=Math.max((b.x1-b.x0)/2, ((b.y1-b.y0)/2)*W/H);
+    const pad=1 + (2*MARGIN)/Math.min(W,H);
+    return {cx, cy, hw:need*pad*1.02};
+  }
+
+  /* Компенсация из FractalSlide: чем глубже зум, тем толще штрих и плотнее
+     цвет — иначе на увеличении кривая бледнеет и «не сплошная» читается как
+     «плохо нарисована». */
+  function step(){ return Math.max(0, Math.log(shown)/Math.log(ZF)); }
+  function lineW(){ return Math.min(0.85 + 0.34*step(), 2.6); }
+  function alphaOf(){ return Math.min(0.72 + 0.07*step(), 1); }
+
+  function mapper(){
+    const s=(W/2)/vp.hw;
+    return p=>[W/2+(p[0]-vp.cx)*s, H/2-(p[1]-vp.cy)*s];
+  }
+
+  /** Один проход по ломаной с шагом stride: звенья вне окна отбрасываются,
+      остальные копятся в ОДИН путь и обводятся разом. Возвращает,
+      сколько звеньев обработано. */
+  function strokeRange(g, i0, i1, stride){
+    const Q=pts(), total=Q.length-1;
+    ctx.beginPath();
+    let pen=false, prev=null;
+    for(let i=i0;i<i1;i+=stride){
+      const j=Math.min(total, i+stride);
+      const a=prev || g(Q[i]), b=g(Q[j]);
+      prev=b;
+      if((a[0]<-8 && b[0]<-8) || (a[0]>W+8 && b[0]>W+8) ||
+         (a[1]<-8 && b[1]<-8) || (a[1]>H+8 && b[1]>H+8)){ pen=false; continue; }
+      if(!pen){ ctx.moveTo(a[0],a[1]); pen=true; }
+      ctx.lineTo(b[0],b[1]);
+    }
+    ctx.stroke();
+    return i1-i0;
+  }
+
+  function prep(){
+    const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+    ctx.strokeStyle=cssVar('--acc');
+    ctx.lineWidth=lineW(); ctx.lineJoin='round'; ctx.lineCap='round';
+    ctx.globalAlpha=alphaOf();
+  }
+
+  /** ГРУБЫЙ КАДР ПОЛЁТА. Бюджет звеньев фиксирован, поэтому кадр стоит одинаково
+      при любом зуме. Прореживание идёт степенями двойки — и это не небрежность:
+      каждая вторая вершина кривой ранга n даёт ровно кривую ранга n−1, то есть
+      силуэт остаётся тем же, только звено крупнее. */
+  function paintQuick(budget){
+    const total=pts().length-1;
+    let stride=1;
+    while(total/stride > budget) stride*=2;
+    prep();
+    ctx.clearRect(0,0,W,H);
+    strokeRange(mapper(), 0, total, stride);
+    ctx.globalAlpha=1;
+  }
+
+  /** ПОЛНЫЙ КАДР, батчами по rAF и с отменой по токену. Холст не чистится между
+      батчами — плотность копится, как в renderProgressive референса. */
+  function paintFull(progressive){
+    const my=++TK.v;
+    if(raf){ cancelAnimationFrame(raf); raf=null; }
+    const total=pts().length-1;
+    prep();
+    ctx.clearRect(0,0,W,H);
+    const g=mapper();
+    if(!progressive || REDUCED){
+      strokeRange(g, 0, total, 1); ctx.globalAlpha=1; return;
+    }
+    const B=Math.max(400, Math.ceil(total/56));
+    let done=0;
+    const frame=()=>{
+      if(my!==TK.v) return;                        // кадр устарел — не досчитываем
+      strokeRange(g, done, Math.min(total, done+B), 1);
+      done+=B;
+      if(done<total) raf=requestAnimationFrame(frame);
+      else { raf=null; ctx.globalAlpha=1; }
+    };
+    raf=requestAnimationFrame(frame);
+  }
+
+  /** полёт: viewport интерполируется линейно, увеличение — по логарифму */
+  async function fly(target, targetZoom){
+    const my=++TK.v;
+    const from={...vp}, fromZ=shown;
+    if(REDUCED){ vp=target; zoom=shown=targetZoom; paintFull(false); return; }
+    await anim(0,1,700,e=>{
+      vp={ cx:lerp(from.cx,target.cx,e), cy:lerp(from.cy,target.cy,e),
+           hw:Math.exp(lerp(Math.log(from.hw),Math.log(target.hw),e)) };
+      shown=Math.exp(lerp(Math.log(fromZ),Math.log(targetZoom),e));
+      paintQuick(2200);
+    }, TK);
+    if(my!==TK.v) return;                          // полёт перебит новым — уходим
+    vp=target; zoom=shown=targetZoom;
+    paintFull(true);
+  }
+
+  function zoomTo(fx, fy){
+    const hh=halfH(vp.hw);
+    return { cx: vp.cx + (fx-0.5)*2*vp.hw,
+             cy: vp.cy - (fy-0.5)*2*hh,
+             hw: vp.hw/ZF };
+  }
+
+  segZ.addEventListener('click', async e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    const v=b.dataset.v;
+    if(v==='reset'){ zoom=shown=1; vp={...home}; paintFull(true); return; }
+    if(v==='out'){
+      if(zoom<=1.01) return;
+      const z=Math.max(1, zoom/ZF);
+      if(z<=1.01){ await fly({...home},1); return; }
+      await fly({cx:vp.cx, cy:vp.cy, hw:vp.hw*ZF}, z);
+      return;
+    }
+    await fly(zoomTo(0.5,0.5), zoom*ZF);
+  });
+
+  /* зум-курсор и зум по клику — прямо из референса */
+  const cur=document.createElement('div');
+  cur.style.cssText='position:absolute;pointer-events:none;display:none;z-index:5;'+
+    'border:1px solid color-mix(in srgb, var(--acc) 80%, white);'+
+    'background:color-mix(in srgb, var(--acc) 10%, transparent);';
+  fig.style.position='relative'; fig.appendChild(cur);
+  cv.addEventListener('mousemove',ev=>{
+    const r=cv.getBoundingClientRect();
+    const w=r.width/ZF, h=r.height/ZF;
+    const x=Math.max(w/2,Math.min(r.width-w/2, ev.clientX-r.left));
+    const y=Math.max(h/2,Math.min(r.height-h/2, ev.clientY-r.top));
+    cur.style.width=w+'px'; cur.style.height=h+'px';
+    cur.style.left=(x-w/2)+'px'; cur.style.top=(y-h/2)+'px';
+    cur.style.display='block'; cv.style.cursor='none';
+  });
+  cv.addEventListener('mouseleave',()=>{ cur.style.display='none'; cv.style.cursor=''; });
+  cv.addEventListener('click',async ev=>{
+    const r=cv.getBoundingClientRect();
+    await fly(zoomTo((ev.clientX-r.left)/r.width, (ev.clientY-r.top)/r.height), zoom*ZF);
+  });
+
+  onResize(()=>{
+    const c=setupCanvas(cv); W=c.w; H=c.h;
+    if(zoom<=1.01){ home=homeVp(); vp={...home}; }
+    paintFull(false);
+  });
+
+  return {
+    enter(){
+      const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
+      if(!home){ home=homeVp(); vp={...home}; }
+      paintFull(true);
+    },
+    leave(){ TK.v++; if(raf){ cancelAnimationFrame(raf); raf=null; } }
+  };
 }
 
 /* ═══════════════════════ 5 · ДОКАЗАТЕЛЬСТВО ═══════════════════════ */
 
-/* 5а. Вершины двух сортов. Наведение на вершину зажигает ВСЕ вершины её сорта.
-       Пунктиром — прежняя кривая, и скруглён он тоже (правка по f5). */
-function step5a(sec){
-  const svg = sec.querySelector('[data-step="a"] svg');
-  const out = sec.querySelector('[data-out="a"]');
-  const W=1000, H=1000;
-  svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  const N=4;
-  const P=rank(N), Q=mul1pi(rank(N-1));
-  let sort=null;
+/* ═══ ВРЕЗКА: ОТКУДА БЕРЁТСЯ ПРАВИЛО СТРОК ═══
+   Главное содержательное замечание владельца. Он держит разницу между двумя
+   фактами доказательства, и на сайте её не было:
+     · «у уголка одно звено вбок, другое вверх-вниз» — к дракону отношения не
+       имеет, следует из одних прямых поворотов. Факт бесплатный.
+     · ПРАВИЛО СТРОК — уже про дракона. Оно держится на том, что диагонали
+       прежней кривой сами поворачивают на 90°: две соседние не могут смотреть
+       одинаково. А раз соседние диагонали повёрнуты друг относительно друга,
+       то и уголки, надетые на них, получаются один из другого поворотом —
+       отсюда чередование.
 
-  function draw(){
-    wipe(svg);
-    const g=fit(P,{x:0,y:0,w:W,h:H,pad:64});
-    lattice(svg,g,g.box,1);
-    const S=P.map(g), T=Q.map(g);
-    mk('path',{d:roundPath(T,ROUND.a),class:'d-dash'},svg);   // прежняя кривая, скруглена так же
-    mk('path',{d:roundPath(S,ROUND.a),class:'d-line','stroke-width':2.6},svg);
-    for(let i=0;i<S.length-1;i++) arrowOn(svg,S[i],S[i+1],'d-arrow');
-    const seen=new Set();
-    P.forEach((p,i)=>{
-      const k=p[0]+','+p[1]; if(seen.has(k)) return; seen.add(k);
-      const black=isBlack(p);
-      const on = sort!==null && sort===black;
-      const el=node(svg, S[i], black ? 'd-node-b':'d-node', on?8:5.4);
-      if(on) el.setAttribute('class', black?'d-node-a':'d-node');
-      if(on && !black) el.style.setProperty('stroke', cssVar('--acc'));
-      const hit=mk('circle',{cx:S[i][0],cy:S[i][1],r:17,class:'d-hit-dot'},svg);
-      onHover(hit, ()=>{ sort=black; draw(); });
-      hit.addEventListener('mouseleave',()=>{ sort=null; draw(); });
-    });
-    /* Праздная строка состояния — ЧИСЛА, а не приглашение навести мышь: подписи-инструкции
-       с сайта убраны, но строка обязана оставаться живой и меняться, иначе
-       читатель не поймёт, что вершины вообще откликаются. */
-    if(sort===null){
-      const seen2=new Set(); let nb=0, nn=0;
-      for(const p of P){ const k=p[0]+','+p[1]; if(seen2.has(k)) continue;
-        seen2.add(k); if(isBlack(p)) nb++; else nn++; }
-      out.innerHTML='старых вершин <b>'+nb+'</b> · новых <b>'+nn+'</b>';
-    } else out.innerHTML = sort
-      ? '<span class="hi">старые вершины</span> — были на кривой раньше, лежат на пунктире'
-      : '<span class="hi">новые вершины</span> — появились при последнем складывании';
-  }
-  onResize(draw);
-  return { enter(){ draw(); }, leave(){} };
+   ⚠ ЧИСЛА ЗДЕСЬ НЕ ВЫДУМАНЫ, А ПРОВЕРЕНЫ (гейт, пункт 19, на рангах 5–7):
+     · у уголка первое звено ГОРИЗОНТАЛЬНО всегда — значит уголок на диагонали
+       (dx,dy) определён однозначно: старт → старт+(dx,0) → старт+(dx,dy);
+     · сторона поворота = знак dx·dy, то есть свойство ОДНОЙ диагонали;
+     · соседние диагонали повёрнуты на ±90°, а поворот меняет знак dx·dy —
+       поэтому сторона чередуется, и излом соседней уходит в соседнюю строку.
+   Схема поэтому абстрактная и маленькая: две соседние диагонали под прямым
+   углом и два уголка на них. Подписей внутри нет (их на холстах нет вообще),
+   объяснение — одной фразой в левой колонке. */
+function insetRule(par, b){
+  /* Окно врезки задано ЯВНО и шире разметки: полосы .d-row тянутся на полклетки
+     за рамку содержимого, и при окне «точно по фигуре» они вылезали за рамку
+     врезки — разметка обязана оставаться внутри своей врезки. */
+  const g=fit([[-0.85,-0.78],[2.85,1.72]], {x:b.x,y:b.y,w:b.w,h:b.h,pad:12});
+  const box={x0:0,x1:2,y0:0,y1:1};
+  const G=mk('g',{},par);
+  /* ⚠ ПОДЛОЖКА ГЛУХАЯ, А НЕ ОДНА РАМКА. Полосы .d-row основной картинки тянутся
+     на клетку за охват кривой и проходили СКВОЗЬ врезку: у врезки своя строка 0,
+     и чужая полоса поперёк неё делала схему нечитаемой. Поймано снимком. */
+  mk('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:8,class:'d-panel',
+             'stroke-width':1},G);
+  /* полоса крашеной строки — РОВНО по ширине решётки врезки: rowBands тянет её
+     на полклетки в стороны, и на схеме из двух клеток этот запас читался как
+     отдельный серый прямоугольник, а не как строка */
+  const bl=g([box.x0, 0.5]), br=g([box.x1, -0.5]);
+  mk('rect',{x:Math.min(bl[0],br[0]), y:Math.min(bl[1],br[1]),
+             width:Math.abs(br[0]-bl[0]), height:Math.abs(br[1]-bl[1]),
+             class:'d-row'},G);
+  lattice(G,g,box,0);
+  /* две СОСЕДНИЕ диагонали прежней кривой: (0,0)→(1,1) и (1,1)→(2,0).
+     Направления (1,1) и (1,−1) — ровно поворот на 90°, иначе быть не может. */
+  const D=[[[0,0],[1,1]],[[1,1],[2,0]]];
+  const K=[[[0,0],[1,0],[1,1]],[[1,1],[2,1],[2,0]]];
+  D.forEach(([p,q])=>mk('path',{d:sharpD([p,q].map(g)),class:'d-dash',
+                                'stroke-width':1.8},G));
+  K.forEach(k=>{
+    const left=turnsLeft(k[0],k[1],k[2]);
+    mk('path',{d:roundPath(k.map(g),ROUND.b),class:left?'d-acc2':'d-line',
+               'stroke-width':3.4},G);
+    for(let i=0;i<2;i++) arrowOn(G,g(k[i]),g(k[i+1]),'d-arrow',11);
+  });
+  /* метка прямого угла в общей вершине: квадратик между двумя диагоналями */
+  const c=[1,1], r=0.18, s2=Math.SQRT1_2;   // 0,18: на 0,28 метка налезала на стрелку хода
+  const u=[-s2*r,-s2*r], v=[s2*r,-s2*r];
+  mk('path',{d:sharpD([[c[0]+u[0],c[1]+u[1]],
+                       [c[0]+u[0]+v[0],c[1]+u[1]+v[1]],
+                       [c[0]+v[0],c[1]+v[1]]].map(g)),
+             class:'d-dim','stroke-width':1.4},G);
+  [[0,0],[1,1],[2,0]].forEach(p=>node(G,g(p),'d-node-b',4.4));
+  [[1,0],[2,1]].forEach(p=>node(G,g(p),'d-node',4.4));
+  return G;
 }
 
-/* 5б. Строки двух цветов. Уголок красится по направлению поворота, и цвет
-       уголка совпадает с цветом его строки. Стрелки хода обязательны:
-       без них «налево» не имеет смысла (правка по f6). */
-function step5b(sec){
-  const svg = sec.querySelector('[data-step="b"] svg');
-  const out = sec.querySelector('[data-out="b"]');
+/* 5а. ВЕРШИНЫ ДВУХ СОРТОВ И СТРОКИ — ОДИН ШАГ.
+       Прежде это были два шага. Владелец слил их: «взять картинку шага про
+       строки и покрасить на ней уголки в два цвета — тогда и сорта вершин,
+       и правило строк видны на одной картинке, и отдельный шаг не нужен».
+       Уголок красится по СТОРОНЕ ПОВОРОТА, и цвет совпадает с цветом его
+       строки — то есть правило строк читается прямо с картинки.
+
+       Три вещи, которых на этой картинке раньше не было:
+         · шахматная раскраска идёт по ВСЕЙ решётке, а не по вершинам кривой:
+           так чередование выглядит свойством плоскости, а не картинки;
+         · стрелки хода КРУПНЫЕ — без направления обхода «налево» бессмысленно,
+           и владелец именно это и не мог прочитать;
+         · внизу врезка: откуда берётся само правило строк (insetRule). */
+function stepRows(sec){
+  const svg = sec.querySelector('[data-step="a"] svg');
   const W=1000, H=1000;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
-  const N=6, P=rank(N), C=corners(P);
+  /* Ранг 5, а не 6. На 64 звеньях стрелка хода выходит мельче самого звена, и
+     требование «направление видно с расстояния» не выполняется ни при каком
+     размере наконечника. На 32 звеньях дракон узнаётся, а звено крупное. */
+  const N=5, P=rank(N), C=corners(P);
   let hi=null;
+
+  /* Холст поделён: кривая сверху, врезка — узкой полосой снизу. Делить именно
+     здесь, а не CSS-слоем поверх фигуры: врезка обязана не налезать на кривую,
+     а положение кривой считает fit() по её собственной рамке. */
+  const TOP={x:0,y:0,w:W,h:742,pad:40};
+  const INSET={x:330,y:756,w:340,h:230};
 
   function draw(){
     wipe(svg);
-    const g=fit(P,{x:0,y:0,w:W,h:H,pad:56});
-    rowBands(svg,g,g.box);
-    lattice(svg,g,g.box,0);
+    const g=fit(P,TOP);
+    /* ⚠ КРУЖОЧКИ ВМЕСТО ПОЛОС ПРОБОВАЛИ И ОТКАЗАЛИСЬ — снимок в отчёте.
+       Владелец предлагал обвести кружочком вершины в крашеных строках и полосы
+       убрать. Обводка сама по себе чище полос, но ломается ровно там, где нужна:
+       правило решает ИЗЛОМ, а излом — всегда НОВАЯ вершина, то есть уже пустой
+       кружок. Обводка вокруг пустого кружка даёт ⊚, и «сорт вершины» с «строкой»
+       перестают различаться глазом — то самое, от чего кружочки должны были
+       избавить. Полосы остались; правило и без них видно по цвету уголка. */
+    rowBands(svg,g,g.box,1);
+    lattice(svg,g,g.box,1);
+    latticeNodes(svg,g,g.box,1);
     C.forEach(([a,b,c],k)=>{
-      const tri=[a,b,c].map(g);
       const left=turnsLeft(a,b,c);
-      const on = hi===k;
-      mk('path',{d:roundPath(tri,ROUND.b), class: left?'d-acc2':'d-line',
-                 'stroke-width': on?5:2.6},svg);
+      mk('path',{d:roundPath([a,b,c].map(g),ROUND.b),
+                 class: left?'d-acc2':'d-line',
+                 'stroke-width': hi===k?6.5:3.2},svg);
     });
-    for(let i=0;i<P.length-1;i++){
-      const a=g(P[i]), b=g(P[i+1]);
-      if(g.s>18) arrowOn(svg,a,b,'d-arrow');
-    }
+    for(let i=0;i<P.length-1;i++) arrowOn(svg,g(P[i]),g(P[i+1]),'d-arrow',17);
     C.forEach(([a,b,c],k)=>{
-      node(svg,g(a),'d-node-b',3.4);
-      node(svg,g(b),'d-node',3.4);
+      node(svg,g(a),'d-node-b',5.2);
+      node(svg,g(b),'d-node',5.2);
       const hit=mk('path',{d:sharpD([a,b,c].map(g)),class:'d-hit'},svg);
       onHover(hit, ()=>{ hi=k; draw(); });
       hit.addEventListener('mouseleave',()=>{ hi=null; draw(); });
     });
-    node(svg,g(P[P.length-1]),'d-node-b',3.4);
-    if(hi===null) out.innerHTML='уголков <b>'+C.length+'</b>';
-    else {
-      const [a,b,c]=C[hi];
-      out.innerHTML='излом в <b>'+(rowBlue(b[1])?'крашеной':'чистой')+'</b> строке · поворот '
-        +'<span class="hi">'+(turnsLeft(a,b,c)?'налево':'направо')+'</span>';
-    }
+    node(svg,g(P[P.length-1]),'d-node-b',5.2);
+    insetRule(svg, INSET);
   }
   onResize(draw);
   return { enter(){ draw(); }, leave(){} };
@@ -689,16 +1007,10 @@ function step5b(sec){
        по мере прохождения: читателю видно, что правило работает во всех. */
 function step5v(sec){
   const svg = sec.querySelector('[data-step="v"] svg');
-  const out = sec.querySelector('[data-out="v"]');
-  const out4 = sec.querySelector('[data-out="v4"]');
   const W=1000, H=1000;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const N=6, P=rank(N);
-  const CASES=[['гориз',true],['гориз',false],['вертик',true],['вертик',false]];
-  const seen=new Set();
   let pick=null, fade=1, tok={v:0};
-
-  function caseKey(r){ return (r.horiz?'гориз':'вертик')+(r.blue?'1':'0'); }
 
   function draw(){
     wipe(svg);
@@ -721,6 +1033,10 @@ function step5v(sec){
       mk('path',{d:roundPath(r.corner.map(g),ROUND.v), class:'d-acc','stroke-width':4.4,
                  opacity:(0.35+0.65*(1-fade)).toFixed(3)},svg);
       mk('path',{d:sharpD(known), class:'d-hot','stroke-width':6},svg);
+      /* Стрелка на самом подсвеченном ребре. Шаг утверждает «по ОДНОМУ ребру
+         уголок восстановлен целиком», а восстановление читает направление хода:
+         без стрелки на этом ребре утверждение проверить нечем. */
+      arrowOn(svg, known[0], known[1], 'd-arrow-a', 22);
       node(svg, g(r.izlom), 'd-node', 6.5);
       node(svg, g(r.corner[0]), 'd-node-b', 5);
       node(svg, g(r.corner[2]), 'd-node-b', 5);
@@ -732,49 +1048,23 @@ function step5v(sec){
       onHover(hit, ()=>show(i));
     }
     svg.addEventListener('mouseleave',()=>{ pick=null; fade=1; draw(); }, {once:true});
-    report();
   }
 
   async function show(i){
     if(pick===i) return;
     pick=i; fade=1;
-    const r=corner(P[i],P[i+1]);
-    seen.add(caseKey(r));
     draw();
     tok.v++; const my=tok;
     if(REDUCED){ fade=0; draw(); return; }
     await anim(1,0,420,v=>{ fade=v; draw(); }, my);
   }
 
-  function report(){
-    if(pick===null){ out.innerHTML='звеньев <b>'+(P.length-1)+'</b>'; }
-    else {
-      const r=corner(P[pick],P[pick+1]);
-      /* ⚠ СНАЧАЛА ПОВОРОТ, ПОТОМ НАПРАВЛЕНИЕ. Строка задаёт поворот НАЛЕВО или
-         НАПРАВО — величину, не зависящую от того, куда едем. «Вверх» или
-         «вниз» получается из поворота ВМЕСТЕ с направлением хода, поэтому в
-         одном и том же случае (скажем, звено вдоль в крашеной строке) уголок
-         честно идёт то вверх, то вниз. Проверено проходом по всем 64 звеньям.
-         Первая версия печатала только «пошёл вверх / пошёл вниз», и читатель
-         видел у одного случая два разных ответа — правило выглядело
-         неработающим ровно там, где оно работает. */
-      out.innerHTML='звено <b>'+(r.horiz?'вдоль':'поперёк')+'</b> — '
-        +(r.half===0?'первая':'вторая')+' половина · строка <b>'
-        +(r.blue?'крашеная':'чистая')+'</b> ⇒ поворот '
-        +'<span class="hi">'+(r.blue?'налево':'направо')+'</span> · '
-        +corDir(r);
-    }
-    /* Счётчик прогресса остался (все четыре случая должны быть достижимы и
-       читатель должен видеть, что прошёл их), а перечисление случаев словами
-       и слово-инструкция — убраны. */
-    out4.innerHTML = 'пройдено <b'+(seen.size===4?' class="hi"':'')+'>'
-      + seen.size + ' из ' + CASES.length + '</b>';
-  }
-  function corDir(r){
-    const c=r.corner;
-    if(r.half===0) return c[2][1] > c[1][1] ? 'пошёл вверх' : 'пошёл вниз';
-    return c[0][0] < c[1][0] ? 'начался слева' : 'начался справа';
-  }
+  /* Строки «звено вдоль · строка крашеная ⇒ налево» и счётчика «пройдено N из 4»
+     больше нет: Ф5 убирает все показания. Требование «все четыре случая
+     достижимы» этим не отменяется — оно проверяется гейтом по самой геометрии
+     (check_sayt.py, пункт 4: corner() на ранге 6 даёт h0,h1,v0,v1), а не
+     надписью на экране. */
+
   onResize(draw);
   return { enter(){ draw(); }, leave(){ tok.v++; } };
 }
@@ -784,10 +1074,13 @@ function step5v(sec){
        Связь двусторонняя: наводишь слева — горит справа, и наоборот. */
 function step5g(sec){
   const svg = sec.querySelector('[data-step="g"] svg');
-  const out = sec.querySelector('[data-out="g"]');
   const W=1000, H=750;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const A=rank(6), B=rank(7), CB=corners(B);
+  /* pick — не индекс, а {k, half}: k — номер уголка (он же номер звена ранга 6),
+     half — какая из двух половин уголка под мышью. Половина нужна потому, что
+     шаг обязан говорить «по ОДНОМУ РЕБРУ восстанавливается его уголок»: зона
+     наведения — ребро, а не уголок целиком, иначе утверждение подменяется. */
   let pick=null;
 
   function draw(){
@@ -806,30 +1099,66 @@ function step5g(sec){
        уголок k справа» глазом не подтверждалось (нашёл верификатор). Когда
        гаснет всё остальное, светятся ровно два предмета — и связь видна без
        единой подписи, которых тут и нельзя. */
-    const base = pick===null ? 0.8 : 0.22;
-    mk('path',{d:roundPath(SA,ROUND.g),class:'d-mute','stroke-width':2.2,opacity:base},svg);
-    mk('path',{d:roundPath(SB,ROUND.g),class:'d-mute','stroke-width':1.8,opacity:base},svg);
+    /* ⚠ КОНТРАСТ В ПОКОЕ ПОДНЯТ ДО ОСНОВНОГО ЦВЕТА ТЕКСТА (Ф8). Приглушённый
+       серый на 0,8 читался на снимке как бледная плашка: верификатор назвал шаг
+       «почти пустой панелью», и на проекторе это было бы хуже, чем на снимке.
+       Теперь в покое обе кривые идут цветом текста и полной толщиной, а гаснут
+       ТОЛЬКО при наведении — тогда светятся ровно два предмета. */
+    /* 0,3 при наведении, а не 0,2: на 0,2 обе кривые на снимке уходили в фон
+       почти целиком, и «вот это звено внутри вот этой кривой» проверить было
+       нельзя — тот самый дефект «почти пустая панель», за который шаг уже
+       правили. Гасить надо ровно настолько, чтобы подсветка выигрывала. */
+    const base = pick===null ? 0.95 : 0.3;
+    const cls  = pick===null ? 'd-line' : 'd-mute';
+    /* ⚠ СПРАВА — ПОЛОСЫ И ДВУХЦВЕТНЫЕ УГОЛКИ, А НЕ ОДНА РОВНАЯ КРИВАЯ. Шаг
+       говорит: «по одному ребру — вместе с цветом его строки и цветами его
+       вершин — восстанавливается направление и поворот». Пока правая кривая шла
+       одним цветом по чистому полю, ни строки, ни цвета вершин на ней не было
+       видно, и цепочка доказательства опиралась на то, чего на картинке нет. */
+    rowBands(svg,gB,gB.box,0);
+    mk('path',{d:roundPath(SA,ROUND.g),class:cls,'stroke-width':2.6,opacity:base},svg);
+    if(pick===null)
+      CB.forEach(c=>mk('path',{d:roundPath(c.map(gB),ROUND.g),
+        class: turnsLeft(c[0],c[1],c[2])?'d-acc2':'d-line','stroke-width':2.1},svg));
+    else
+      mk('path',{d:roundPath(SB,ROUND.g),class:cls,'stroke-width':2.1,opacity:base},svg);
     if(pick!==null){
-      mk('path',{d:sharpD([SA[pick],SA[pick+1]]),class:'d-hot','stroke-width':7},svg);
-      mk('path',{d:roundPath(CB[pick].map(gB),ROUND.g),class:'d-acc','stroke-width':6},svg);
-      node(svg, gA(A[pick]),   'd-node-a', 5);        // концы звена слева…
-      node(svg, gA(A[pick+1]), 'd-node-a', 5);
-      node(svg, gB(CB[pick][0]),'d-node-a', 5);       // …и концы уголка справа: те же две
-      node(svg, gB(CB[pick][2]),'d-node-a', 5);
-      node(svg, gB(CB[pick][1]),'d-node', 5.5);       // излом — новая вершина
+      const k=pick.k, c=CB[k];
+      const e0=c[pick.half], e1=c[pick.half+1];       // само ребро ранга 7
+      // уголок целиком — то, во что ребро достраивается…
+      /* ⚠ ПОД УГОЛКОМ — ШИРОКАЯ АКЦЕНТНАЯ ПОДЛОЖКА. Уголок ранга 7 в половине
+         панели занимает десяток пикселей, и подсветка «той же толщиной, но
+         ярче» на снимке терялась среди полос строк: глазом было не найти, ЧТО
+         подсветилось. Подложка — единственное, что видно с расстояния; цвет
+         самого уголка при этом не меняется (он несёт цвет своей строки, и
+         подменять его при наведении значило бы стирать предмет шага). */
+      mk('path',{d:roundPath(c.map(gB),ROUND.g),class:'d-acc',
+                 'stroke-width':13,opacity:0.3},svg);
+      mk('path',{d:roundPath(c.map(gB),ROUND.g),
+                 class: turnsLeft(c[0],c[1],c[2])?'d-acc2':'d-line','stroke-width':6.5},svg);
+      // …и ребро поверх него: направление хода стрелкой, поворот — формой уголка
+      mk('path',{d:sharpD([gB(e0),gB(e1)]),class:'d-hot','stroke-width':6.5},svg);
+      arrowOn(svg, gB(e0), gB(e1), 'd-arrow-a', 13);
+      node(svg, gB(c[0]),'d-node-b', 5);              // концы уголка — старые вершины
+      node(svg, gB(c[2]),'d-node-b', 5);
+      node(svg, gB(c[1]),'d-node', 5.5);              // излом — новая вершина
+      // и то, во что уголок превращается рангом ниже: одно звено ранга 6
+      mk('path',{d:sharpD([SA[k],SA[k+1]]),class:'d-hot','stroke-width':7},svg);
+      arrowOn(svg, SA[k], SA[k+1], 'd-arrow-a', 16);
+      node(svg, gA(A[k]),   'd-node-a', 5);
+      node(svg, gA(A[k+1]), 'd-node-a', 5);
     }
     for(let i=0;i<A.length-1;i++){
       const h=mk('line',{x1:SA[i][0],y1:SA[i][1],x2:SA[i+1][0],y2:SA[i+1][1],class:'d-hit'},svg);
-      onHover(h, ()=>{ pick=i; draw(); });
+      onHover(h, ()=>{ pick={k:i, half:0}; draw(); });
     }
-    CB.forEach((c,k)=>{
-      const h=mk('path',{d:sharpD(c.map(gB)),class:'d-hit'},svg);
-      onHover(h, ()=>{ pick=k; draw(); });
+    CB.forEach((c,k)=>{                               // зона на КАЖДОЕ ребро уголка
+      for(let h=0;h<2;h++){
+        const z=mk('path',{d:sharpD([c[h],c[h+1]].map(gB)),class:'d-hit'},svg);
+        onHover(z, ()=>{ pick={k, half:h}; draw(); });
+      }
     });
     svg.addEventListener('mouseleave',()=>{ pick=null; draw(); },{once:true});
-    out.innerHTML = pick===null
-      ? 'звеньев слева '+(A.length-1)+' · уголков справа '+CB.length+' — их ровно столько же'
-      : 'звено <b>'+(pick+1)+'</b> ранга 6 — это уголок <b>'+(pick+1)+'</b> ранга 7';
   }
   onResize(draw);
   return { enter(){ draw(); }, leave(){} };
@@ -842,23 +1171,17 @@ function step5g(sec){
    считает по константам 1000×1000, а не по getBoundingClientRect. Если бы тут
    был canvas, он бы получил нулевой размер и остался пустым. */
 function sceneProof(sec){
-  const parts=[step5a(sec), step5b(sec), step5v(sec), step5g(sec)];
+  /* Шагов ТРИ, а не четыре: «вершины двух сортов» и «строки» слиты в один
+     (stepRows) по правке владельца. Точек листалки поэтому пять на весь сайт
+     (2 карточки способов + 3 шага), и это проверяет гейт, пункт 13. */
+  const parts=[stepRows(sec), step5v(sec), step5g(sec)];
   const bodies=[...sec.querySelectorAll('.steps > .scene__body')];
-  const dots=[...sec.querySelectorAll('.pager__dot')];
-  let cur=0;
-
-  function show(i){
-    cur = Math.min(bodies.length-1, Math.max(0, i));
-    bodies.forEach((b,k)=>b.classList.toggle('on', k===cur));
-    dots.forEach((d,k)=>d.classList.toggle('on', k===cur));
-    parts[cur].enter();
-  }
-  sec.querySelectorAll('[data-page]').forEach(b=>
-    b.addEventListener('click', ()=>show(cur + (+b.dataset.page))));
-  dots.forEach((d,k)=>d.addEventListener('click', ()=>show(k)));
-  PAGERS.set(sec, { go(d){ show(cur+d); } });
-
-  return { enter(){ show(cur); }, leave(){ parts.forEach(p=>p.leave()); } };
+  const pager=pagerOf(sec, i=>{
+    bodies.forEach((b,k)=>b.classList.toggle('on', k===i));
+    parts[i].enter();
+  }, parts.length);
+  return { enter(){ pager.show(pager.cur()); },
+           leave(){ parts.forEach(p=>p.leave()); } };
 }
 
 /* ═══════════════════════ 6 · ЧЕТЫРЕ ДРАКОНА ═══════════════════════
@@ -868,8 +1191,8 @@ function sceneProof(sec){
 
 function sceneFour(sec){
   const svg = sec.querySelector('svg');
-  const out = sec.querySelector('[data-out="four"]');
   const seg = sec.querySelector('[data-seg="rank"]');
+  const segF= sec.querySelector('[data-seg="fill"]');
   const W=1000, H=1000;
   svg.setAttribute('viewBox','0 0 '+W+' '+H);
   const LO=4, MAX=10;
@@ -880,6 +1203,51 @@ function sceneFour(sec){
     for(let r=0;r<4;r++) all.push(...rotAbout(P,[0,0],r*90));
   }
   const frame=bounds(all);
+
+  /* ═══ ПРЕДЕЛЬНОЕ ЗАПОЛНЕНИЕ ═══
+     Владелец: «видно только, что они не налезают друг на друга; не видно, что
+     в пределе не остаётся дырок». Заполнение и есть это «не остаётся».
+
+     Клетка звена — квадрат на нём как на диагонали (dragCells): у него обе
+     диагонали по звену, значит это ромб, и он ОДИНАКОВ для горизонтального и
+     вертикального звена. Поэтому поворот всей картины на 90° — это поворот
+     одного лишь ключа клетки: (p,q) → (−q,p), а форму ромба крутить не надо.
+
+     ⚠ ЧИСЛО ПРОВЕРЕНО, А НЕ ЗАЯВЛЕНО. На рангах 4, 6, 8, 10 у четырёх драконов
+     ровно 4·2ⁿ клеток и столько же РАЗНЫХ ключей — наложений нуль; и ни одной
+     пустой клетки, у которой все четыре соседа по стороне заняты, — дырок нуль.
+     Считается это гейтом (пункт 20), а не подписью на экране. */
+  const fcache={};
+  /** центры клеток всех четырёх драконов ранга n, уже в масштабе кривой */
+  function cellsOf(n){
+    if(fcache[n]) return fcache[n];
+    const s=Math.pow(2,-n/2), K=dragCells(n), out=[];
+    for(let r=0;r<4;r++){
+      const C=[];
+      for(const k of K){
+        let cx=k[0]/2*s, cy=k[1]/2*s;
+        for(let i=0;i<r;i++){ const t=cx; cx=-cy; cy=t; }
+        C.push([cx,cy]);
+      }
+      out.push(C);
+    }
+    return (fcache[n]=[out, s/2]);
+  }
+  /** все ромбы одного дракона ОДНИМ путём: 4096 отдельных path браузер рисует
+      заметно дороже, а ромбы не пересекаются, поэтому подпути независимы */
+  function quadsPath(C, h, g){
+    let d='';
+    for(const [cx,cy] of C){
+      const l=g([cx-h,cy]), t=g([cx,cy+h]), r=g([cx+h,cy]), b=g([cx,cy-h]);
+      d += ' M '+l[0].toFixed(2)+' '+l[1].toFixed(2)
+         + ' L '+t[0].toFixed(2)+' '+t[1].toFixed(2)
+         + ' L '+r[0].toFixed(2)+' '+r[1].toFixed(2)
+         + ' L '+b[0].toFixed(2)+' '+b[1].toFixed(2)+' Z';
+    }
+    return d.trim();
+  }
+  const FILL=['d-fill','d-fill-a','d-fill-a2','d-fill-m'];
+  let fill=false;
   /* Четыре цвета: белый, акцент, второй акцент, серый. Второй акцент здесь
      нужен по той же причине, что и в схемах доказательства — различить
      объекты; на двух серых ранг 10 хайрлайнами уже не читается, а
@@ -898,16 +1266,27 @@ function sceneFour(sec){
        поднята, а серому добавлена прозрачность: разница в светлоте на хайрлайне
        не читается, разница в плотности читается. */
     const lw = n>=10 ? 1.45 : (n>=8 ? 1.9 : (n>=6 ? 2.4 : 3.2));
+    if(fill){
+      const [CC,h]=cellsOf(n);
+      for(let r=0;r<4;r++)
+        mk('path',{d:quadsPath(CC[r],h,g), class:FILL[r], opacity:0.66},svg);
+    }
     for(let r=0;r<4;r++){
       const S=rotAbout(P,[0,0],r*90).map(g);
-      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r], 'stroke-width':lw,
-                 opacity: CLS[r]==='d-mute' ? 0.72 : 1},svg);
+      /* при заполнении линия становится хайрлайном и уходит вниз по плотности:
+         предмет кадра — стык плиток, а не сама кривая, и толстая линия закрывала
+         бы именно стык, то есть то место, где и видно «дырок нет» */
+      mk('path',{d:roundPath(S,ROUND.four), class:CLS[r],
+                 'stroke-width': fill ? Math.min(1.1, lw) : lw,
+                 // на ранге 8 и выше линия внутри заливки превращается в
+                 // клетчатую текстуру и плитку читать мешает — гасим сильнее
+                 opacity: fill ? (n>=8 ? 0.22 : 0.5)
+                               : (CLS[r]==='d-mute' ? 0.72 : 1)},svg);
     }
     node(svg,g([0,0]),'d-node-b',4.5);
-    // общих отрезков — СЧИТАЕМ, а не утверждаем: это и есть предмет сцены
-    const dup=sharedEdges(n);
-    out.innerHTML='ранг <b>'+n+'</b> · звеньев у каждого <b>'+Math.pow(2,n)
-      +'</b> · отрезков, взятых дважды: <b'+(dup?' class="hi"':'')+'>'+dup+'</b>';
+    /* Отсчёт «отрезков, взятых дважды: 0» убран по Ф5 вместе со всеми
+       остальными показаниями. Само утверждение по-прежнему проверяется — но
+       гейтом ядра (sharedEdges в check_dragon.js), а не строкой на экране. */
   }
   async function grow(){
     tok.v++; const my=tok;
@@ -919,6 +1298,12 @@ function sceneFour(sec){
     const b=e.target.closest('button'); if(!b) return;
     seg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
     target=+b.dataset.v; grow();
+  });
+  segF.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    fill=!fill; b.classList.toggle('on', fill);
+    if(n!==target){ tok.v++; n=target; }        // рост перебиваем, кадр не ждём
+    draw();
   });
   onResize(draw);
   return { enter(){ grow(); }, leave(){ tok.v++; } };
@@ -965,53 +1350,67 @@ const IFS_BOX = {x0:-1/3, x1:7/6, y0:-1/3, y1:2/3};
    же двумя преобразованиями (совпадение с нашей ломаной проверено, Жаккар
    0,966). Зум-курсор, зум по клику и лог-интерполяция взяты из FractalSlide
    как есть — заменена только заливка. */
-function drawDeep(ctx, vp, W, H, o){
+/* ⚠ ОБХОД ИДЁТ СТЕКОМ И ПОРЦИЯМИ, И ЭТО ЛЕЧЕНИЕ ЗАВИСАНИЯ (Ф2).
+   Прежняя версия шла УРОВНЯМИ: держала массив кусков (страховка стояла на
+   900 000 элементов) и досчитывала весь кадр СИНХРОННО — а вызывалась она из
+   каждого кадра полёта зума. То есть браузер получал десятки полных отрисовок
+   подряд, каждая на сотни тысяч кусков, и на живом железе это встаёт колом:
+   владелец поймал зависание дважды, верификатор на своей машине не поймал —
+   ровно та разница в нагрузке, о которой говорит оговорка захода.
+
+   Теперь: обход в глубину стеком (память O(глубины), а не O(числа кусков)) и
+   метод step(budget), который обрабатывает не больше budget кусков за вызов.
+   Кто вызывает — решает, сколько платить за кадр: на полёте зума бюджет мелкий
+   и куски крупные, на финальном кадре обход добивается батчами по rAF с
+   отменой по renderToken. Работа в кадре стала ОГРАНИЧЕННОЙ — это и есть
+   механика прогрессивной отрисовки из референса, приложенная к нашей заливке. */
+const IFS_CORNERS = [[IFS_BOX.x0,IFS_BOX.y0],[IFS_BOX.x1,IFS_BOX.y0],
+                     [IFS_BOX.x1,IFS_BOX.y1],[IFS_BOX.x0,IFS_BOX.y1]];
+
+function deepWalk(ctx, vp, W, H, o){
   const m=o.margin, iw=W-2*m, ih=H-2*m;
   const sx=iw/(vp.xMax-vp.xMin), sy=ih/(vp.yMax-vp.yMin);
   const PX = o.px || 1.15;
-  ctx.globalAlpha = o.alpha===undefined ? 1 : o.alpha;
-  ctx.fillStyle = o.color;
-  // кусок = аффинное преобразование (a,b,c,d,e,f), приложенное к охвату
-  let cur=[[1,0,0,1,0,0]], next=[], depth=0;
   const MAXD = o.maxDepth || 44;
-  let drawn=0;
-  while(cur.length && depth<MAXD){
-    next.length=0;
-    for(const T of cur){
-      const [a,b,c,d,e,f]=T;
-      // экранная рамка куска: образы четырёх углов охвата
-      let X0=Infinity,X1=-Infinity,Y0=Infinity,Y1=-Infinity;
-      for(const [ux,uy] of [[IFS_BOX.x0,IFS_BOX.y0],[IFS_BOX.x1,IFS_BOX.y0],
-                            [IFS_BOX.x1,IFS_BOX.y1],[IFS_BOX.x0,IFS_BOX.y1]]){
-        const wx=a*ux+b*uy+e, wy=c*ux+d*uy+f;
-        const px=(wx-vp.xMin)*sx+m, py=H-m-(wy-vp.yMin)*sy;
-        if(px<X0)X0=px; if(px>X1)X1=px; if(py<Y0)Y0=py; if(py>Y1)Y1=py;
-      }
-      if(X1<0||X0>W||Y1<0||Y0>H) continue;                 // вне окна — выбросить
-      if(X1-X0<=PX && Y1-Y0<=PX){                          // мельче пикселя — залить
-        ctx.fillRect(X0, Y0, Math.max(PX,X1-X0), Math.max(PX,Y1-Y0));
-        drawn++;
-        continue;
-      }
-      for(const t of IFS_DRAGON){                          // иначе — делить дальше
-        next.push([ a*t.a+b*t.c, a*t.b+b*t.d,
+  const alpha = o.alpha===undefined ? 1 : o.alpha;
+  // кусок = аффинное преобразование (a,b,c,d,e,f) плюс глубина
+  const st=[[1,0,0,1,0,0,0]];
+  return {
+    /** обработать не больше budget кусков; true — обход закончен */
+    step(budget){
+      ctx.globalAlpha=alpha; ctx.fillStyle=o.color;
+      let used=0;
+      while(st.length && used<budget){
+        const T=st.pop(); used++;
+        const a=T[0],b=T[1],c=T[2],d=T[3],e=T[4],f=T[5],dep=T[6];
+        // экранная рамка куска: образы четырёх углов охвата
+        let X0=Infinity,X1=-Infinity,Y0=Infinity,Y1=-Infinity;
+        for(let q=0;q<4;q++){
+          const ux=IFS_CORNERS[q][0], uy=IFS_CORNERS[q][1];
+          const wx=a*ux+b*uy+e, wy=c*ux+d*uy+f;
+          const px=(wx-vp.xMin)*sx+m, py=H-m-(wy-vp.yMin)*sy;
+          if(px<X0)X0=px; if(px>X1)X1=px; if(py<Y0)Y0=py; if(py>Y1)Y1=py;
+        }
+        if(X1<0||X0>W||Y1<0||Y0>H) continue;                 // вне окна — выбросить
+        if((X1-X0<=PX && Y1-Y0<=PX) || dep>=MAXD){           // мельче пикселя — залить
+          ctx.fillRect(X0, Y0, Math.max(PX,X1-X0), Math.max(PX,Y1-Y0));
+          continue;
+        }
+        for(const t of IFS_DRAGON){                          // иначе — делить дальше
+          st.push([ a*t.a+b*t.c, a*t.b+b*t.d,
                     c*t.a+d*t.c, c*t.b+d*t.d,
-                    a*t.e+b*t.f+e, c*t.e+d*t.f+f ]);
+                    a*t.e+b*t.f+e, c*t.e+d*t.f+f, dep+1 ]);
+        }
       }
+      ctx.globalAlpha=1;
+      return st.length===0;
     }
-    const tmp=cur; cur=next.slice(); next=tmp; depth++;
-    if(cur.length > 900000) break;                         // страховка от разрастания
-  }
-  ctx.globalAlpha=1;
-  return drawn;
+  };
 }
 
 function sceneArea(sec){
   const cv  = sec.querySelector('canvas');
   const fig = cv.parentNode;
-  const out = sec.querySelector('[data-out="area"]');
-  const outD= sec.querySelector('[data-out="dim"]');
-  const outT= sec.querySelector('[data-out="thick"]');
   const inT = sec.querySelector('[data-in="thick"]');
   const segR= sec.querySelector('[data-seg="rank"]');
   const segZ= sec.querySelector('[data-seg="zoom"]');
@@ -1023,6 +1422,13 @@ function sceneArea(sec){
   const HOME={xMin:-0.35, xMax:1.18, yMin:-0.60, yMax:0.93};
   const MARGIN=14, ZF=2.6;
   let n=12, t=0, ctx, W, H, raf=null, tok={v:0};
+  /* ⚠ У ЗАЛИВКИ СВОЙ ТОКЕН, ОТДЕЛЬНО ОТ ТОКЕНА АНИМАЦИЙ. Сначала батчи заливки
+     считали тем же tok, что и anim() — и получилось так: анимация толщины на
+     каждом кадре зовёт paint(), paint() бьёт tok, а anim() видит, что её метка
+     устарела, и глохнет после ПЕРВОГО кадра. Ползунок оставался на нуле, сцена
+     показывала линию вместо заливки — то самое, что сцена и опровергает.
+     Поймано скриншотом (ползунок стоял в нуле), а не чтением кода. */
+  const rtok={v:0};
   let vp={...HOME}, zoom=1, shown=1, blend=0;      // blend: 0 — клетки, 1 — облако точек
   const cache={};
 
@@ -1099,45 +1505,40 @@ function sceneArea(sec){
     ctx.globalAlpha=1;
   }
 
-  function paint(){
+  /* ЗАЛИВКА ДОБИВАЕТСЯ БАТЧАМИ, А НЕ ЗА ОДИН КАДР. Бюджет кусков на кадр
+     ограничен, устаревшие кадры отменяются токеном — та же дисциплина, что в
+     renderProgressive/renderToken референса, и именно она снимает зависание:
+     раньше один вызов досчитывал сотни тысяч кусков синхронно. */
+  function paint(progressive){
+    const my=++rtok.v;
     if(raf){ cancelAnimationFrame(raf); raf=null; }
     const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
     ctx.clearRect(0,0,W,H);
     if(blend<1) paintCells(1-blend);
-    if(blend>0) drawDeep(ctx,vp,W,H,
-      {alpha:blend, color:cssVar('--acc'), margin:MARGIN});
-    readout();
-  }
-
-  function readout(){
-    outT.textContent = t<0.02 ? 'линия' : (t>=0.995 ? 'полклетки' : Math.round(t*100)+'%');
-    const cells=Math.pow(2,n);
-    /* В облаке ранг уже не тот, что на ползунке: измельчение идёт до пикселя,
-       то есть «складываем дальше». Врать про ранг 12 здесь нельзя. */
-    out.innerHTML = blend>0.5
-      ? 'складываем дальше · ранг <b>→ ∞</b> · увеличение <span class="hi">×'
-        + num(shown,1) + '</span>'
-      /* ⚠ ПЛОЩАДЬ СЧИТАЕТСЯ ПО ТЕКУЩЕЙ ТОЛЩИНЕ, А НЕ ПО КОНЕЧНОЙ. Строка
-         печатала «площадь 2048 клеток» рядом с надписью «толщина звена: линия»,
-         то есть утверждала площадь у того, что ещё линия, — сцена опровергала
-         сама себя. Нашёл верификатор. Клетка-ромб имеет диагонали 1 и t
-         (cellQuad), поэтому её площадь t/2 и по t она линейна: при t=1 выходит
-         ровно ½ на звено, при t=0 — ноль. */
-      : 'ранг <b>'+n+'</b> · клеток <b>'+cells+'</b> · площадь <b>'
-        + area(cells*t/2) + '</b> клеток';
-    const b=dragBoundary(n).length, pb=dragBoundary(n-1).length;
-    const r=b/pb, d=Math.log(r)/Math.log(Math.SQRT2);
-    outD.innerHTML='сторон края <b>'+b+'</b> · длиннее прежнего в <b>'+num(r,3)
-      +'</b> раза ⇒ изрезанность <span class="hi">'+num(d,4)+'</span>';
+    if(blend<=0) return;
+    const w=deepWalk(ctx,vp,W,H,
+      {alpha:blend, color:cssVar('--acc'), margin:MARGIN, px:1.5});
+    if(!progressive || REDUCED){
+      // без анимации: бюджет всё равно ограничен, но крупнее — кадр один
+      for(let k=0;k<24 && !w.step(20000);k++);
+      return;
+    }
+    const frame=()=>{
+      if(my!==rtok.v) return;                    // кадр устарел — не досчитываем
+      if(w.step(28000)){ raf=null; return; }
+      raf=requestAnimationFrame(frame);
+    };
+    raf=requestAnimationFrame(frame);
   }
 
   /* ── зум: лог-интерполяция viewport, как в FractalSlide ── */
   async function goto(target, targetZoom){
     tok.v++; const my=tok;
     const from={...vp}, fromZ=shown;
-    if(REDUCED){ vp=target; zoom=targetZoom; shown=targetZoom; paint(); return; }
-    /* На кадрах полёта измельчаем грубее (px 3), на финальном — до пикселя:
-       иначе каждый кадр стоит как готовая картинка и полёт дёргается. */
+    if(REDUCED){ vp=target; zoom=targetZoom; shown=targetZoom; paint(false); return; }
+    /* ⚠ КАДР ПОЛЁТА СТОИТ ФИКСИРОВАННО. Куски крупные (px 6) И бюджет жёсткий
+       (9 000 кусков на кадр): раньше здесь стоял полный синхронный обход на
+       каждом кадре полёта, и это — вторая половина зависания. */
     await anim(0,1,760,e=>{
       vp={ xMin:lerp(from.xMin,target.xMin,e), xMax:lerp(from.xMax,target.xMax,e),
            yMin:lerp(from.yMin,target.yMin,e), yMax:lerp(from.yMax,target.yMax,e) };
@@ -1145,21 +1546,20 @@ function sceneArea(sec){
       const c=setupCanvas(cv); ctx=c.ctx; W=c.w; H=c.h;
       ctx.clearRect(0,0,W,H);
       if(blend<1) paintCells(1-blend);
-      if(blend>0) drawDeep(ctx,vp,W,H,
-        {alpha:blend, color:cssVar('--acc'), margin:MARGIN, px:3});
-      readout();
+      if(blend>0) deepWalk(ctx,vp,W,H,
+        {alpha:blend, color:cssVar('--acc'), margin:MARGIN, px:6}).step(9000);
     }, my);
     if(my.v!==tok.v) return;
-    vp=target; zoom=targetZoom; shown=targetZoom; paint();
+    vp=target; zoom=targetZoom; shown=targetZoom; paint(true);
   }
 
   async function toCloud(){
     if(blend>=1) return;
     t=1; inT.value=100;
     tok.v++; const my=tok;
-    if(REDUCED){ blend=1; paint(); return; }
-    await anim(0,1,520,v=>{ blend=v; paint(); }, my);
-    blend=1; paint();
+    if(REDUCED){ blend=1; paint(false); return; }
+    await anim(0,1,520,v=>{ blend=v; paint(false); }, my);
+    blend=1; paint(true);
   }
 
   function zoomAt(fx, fy){                  // fx,fy — доля холста, куда целимся
@@ -1172,17 +1572,17 @@ function sceneArea(sec){
   inT.addEventListener('input',()=>{
     t=+inT.value/100;
     if(blend>0){ blend=0; zoom=1; shown=1; vp={...HOME}; }
-    paint();
+    paint(false);
   });
   segR.addEventListener('click',e=>{
     const b=e.target.closest('button'); if(!b) return;
     segR.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
-    n=+b.dataset.v; paint();
+    n=+b.dataset.v; paint(false);
   });
   segZ.addEventListener('click',async e=>{
     const b=e.target.closest('button'); if(!b) return;
     if(b.dataset.v==='reset'){ blend=0; t=+inT.value/100; vp={...HOME}; zoom=1; shown=1;
-      paint(); return; }
+      paint(false); return; }
     if(b.dataset.v==='out'){
       if(zoom<=1.01) return;
       const xs=vp.xMax-vp.xMin, ys=vp.yMax-vp.yMin;
@@ -1222,7 +1622,7 @@ function sceneArea(sec){
     await goto(zoomAt((ev.clientX-r.left)/r.width, (ev.clientY-r.top)/r.height), zoom*ZF);
   });
 
-  onResize(()=>paint());
+  onResize(()=>paint(false));
   return {
     enter(){
       /* ⚠ ПРИ REDUCED НАДО ДОВЕСТИ ДО КОНЕЧНОГО КАДРА, А НЕ ПРОСТО НЕ АНИМИРОВАТЬ.
@@ -1232,21 +1632,21 @@ function sceneArea(sec){
          утверждает заголовок «У линии есть площадь». §2.5 захода требует именно
          «мгновенно доводит анимации до конечного кадра». Поймано прогоном под
          reduced_motion, которого верификатор не делал. */
-      if(REDUCED){ if(t<0.02){ t=1; inT.value=100; } paint(); return; }
-      paint();
+      if(REDUCED){ if(t<0.02){ t=1; inT.value=100; } paint(false); return; }
+      paint(true);
       if(t>0.02) return;
       tok.v++; const my=tok;
       pause(500,my).then(ok=>{ if(!ok) return;
-        anim(0,1,2000,v=>{ t=v; inT.value=Math.round(v*100); paint(); }, my); });
+        anim(0,1,2000,v=>{ t=v; inT.value=Math.round(v*100); paint(false); }, my); });
     },
-    leave(){ tok.v++; if(raf){ cancelAnimationFrame(raf); raf=null; } }
+    leave(){ tok.v++; rtok.v++; if(raf){ cancelAnimationFrame(raf); raf=null; } }
   };
 }
 
 /* ═══════════════════════ каркас страницы ═══════════════════════ */
 
-const FACTORY = { cover:sceneCover, strip:sceneStrip, halves:sceneHalves,
-  pairs:scenePairs, dense:sceneDense, proof:sceneProof, four:sceneFour, area:sceneArea };
+const FACTORY = { cover:sceneCover, strip:sceneStrip, draw:sceneDraw,
+  cross:sceneCross, proof:sceneProof, four:sceneFour, area:sceneArea };
 
 /** сцена → её листалка шагов; заполняет sceneProof, читает клавиатура */
 const PAGERS = new Map();

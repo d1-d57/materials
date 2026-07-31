@@ -18,22 +18,32 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 PAGE = os.path.join(ROOT, 'build', 'index.html')
 OUT = os.path.join(ROOT, 'build', '_snimki')
 
-# (id секции, имя файла, шаг листалки или None).
-# Сцена 5 теперь одна на экран, а четыре шага — слайды листалки: снять их
-# «доскроллом» нельзя, скрытый шаг физически display:none. Поэтому шаг
-# выбирается кликом по точке-индикатору — ровно так, как это делает читатель.
+# (id секции, имя файла, шаг листалки или None, лишний клик или None).
+# Листалок две: две карточки способов рисования (s2) и ТРИ шага доказательства
+# (s4 — прежние «вершины двух сортов» и «строки» слиты в один по правке
+# владельца). Снять их «доскроллом» нельзя — скрытая карточка физически
+# display:none, поэтому шаг выбирается кликом по точке-индикатору, ровно так,
+# как это делает читатель.
+# Четвёртое поле — кнопки, которые надо нажать перед кадром (по порядку):
+# предельное заполнение четырёх драконов иначе выключено, а посмотреть на него
+# надо именно глазами (владелец: «не видно, что в пределе не остаётся дырок»).
+# Ранг 10 снимается отдельным кадром: 4096 плиток на дракона — это и есть то
+# «в пределе», и если браузер на них ляжет, увидеть это надо здесь, а не у
+# владельца.
 SCENES = [
-    ('s0', 'oblozhka', None),
-    ('s1', 'poloska', None),
-    ('s2', 'dve-poloviny', None),
-    ('s3', 'zvenya-parami', None),
-    ('s4', 'plotnost', None),
-    ('s5', 'dokazatelstvo-5a', 0),
-    ('s5', 'dokazatelstvo-5b', 1),
-    ('s5', 'dokazatelstvo-5v', 2),
-    ('s5', 'dokazatelstvo-5g', 3),
-    ('s6', 'chetyre-drakona', None),
-    ('s7', 'ploshchad', None),
+    ('s0', 'oblozhka', None, None),
+    ('s1', 'poloska', None, None),
+    ('s2', 'narisovat-1-kopiya', 0, None),
+    ('s2', 'narisovat-2-vershiny', 1, None),
+    ('s3', 'peresekaet', None, None),
+    ('s4', 'pochemu-net-a', 0, None),
+    ('s4', 'pochemu-net-v', 1, None),
+    ('s4', 'pochemu-net-g', 2, None),
+    ('s5', 'chetyre-drakona', None, None),
+    ('s5', 'chetyre-drakona-predel', None, ('#s5 [data-seg="fill"] button',)),
+    ('s5', 'chetyre-drakona-predel-10', None,
+     ('#s5 [data-seg="rank"] button[data-v="10"]',)),
+    ('s6', 'razmernost', None, None),
 ]
 
 
@@ -71,15 +81,25 @@ def main():
         pg.wait_for_function("document.documentElement.dataset.ready === '1'", timeout=15000)
         pg.wait_for_timeout(500)
 
-        for sid, name, step in SCENES:
+        for sid, name, step, extra in SCENES:
             pg.evaluate("(id) => window.scrollTo(0, document.getElementById(id).offsetTop)", sid)
             if step is not None:
                 pg.locator('#%s .pager__dot' % sid).nth(step).click()
+            for sel in (extra or ()):
+                pg.click(sel)
+            # ⚠ ПОВТОРНЫЙ ДОСКРОЛЛ ПОСЛЕ КЛИКОВ. Playwright перед click() сам
+            # прокручивает элемент в поле зрения, а листалка стоит у НИЖНЕГО края
+            # сцены: на 390 px секция выше экрана, и кадр ловил листалку вместе с
+            # началом следующей сцены, а сама картинка оставалась выше кадра.
+            # Проверять «сцена снята» такими кадрами нельзя.
+            if step is not None or extra:
+                pg.evaluate("(id) => window.scrollTo(0, "
+                            "document.getElementById(id).offsetTop)", sid)
             # ждём, пока сцена доиграет ДО СОСТОЯНИЯ ПОКОЯ, а не первый кадр:
             # у сцены 2 вся последовательность (лента → гармошка → две кривые)
             # идёт около 6,4 с, и на 4,2 с кадр ловил гармошку, а не результат.
             # У сцены 1 въездное складывание с передачей такта — около 6,3 с.
-            wait = {'s1': 7200, 's2': 8600, 's3': 5000, 's6': 5200, 's7': 4200}
+            wait = {'s1': 7200, 's2': 8600, 's5': 5200, 's6': 4200}
             pg.wait_for_timeout(wait.get(sid, 2600))
             path = os.path.join(OUT, '%s-%s-%s.png' % (sid, name, tag))
             pg.screenshot(path=path)
@@ -91,12 +111,17 @@ def main():
             # dispatchEvent проверял бы обработчик в обход попадания мыши —
             # то есть не то, что делает читатель.
             # (id секции, шаг листалки или None, селектор зоны, номер, имя кадра)
+            # Шагов теперь три, и номера сдвинулись: 0 — слитый шаг про вершины
+            # и строки, 1 — достройка уголка, 2 — отсутствие повторов. У слитого
+            # шага зона наведения — уголок (.d-hit), а не вершина: точечных зон
+            # .d-hit-dot на нём больше нет.
             for sid, step, sel, idx, name in (
-                    ('s5', 2, '[data-step="v"] svg .d-hit', 5,  '5v-hover-A'),
-                    ('s5', 2, '[data-step="v"] svg .d-hit', 12, '5v-hover-B'),
-                    ('s5', 3, '[data-step="g"] svg .d-hit', 9,  '5g-hover'),
-                    ('s5', 0, '[data-step="a"] svg .d-hit-dot', 6, '5a-hover'),
-                    ('s2', None, 'svg .d-hit', 0, '2-hover')):
+                    ('s4', 1, '[data-step="v"] svg .d-hit', 5,  'proof-v-hover-A'),
+                    ('s4', 1, '[data-step="v"] svg .d-hit', 12, 'proof-v-hover-B'),
+                    ('s4', 2, '[data-step="g"] svg .d-hit', 9,  'proof-g-hover'),
+                    ('s4', 2, '[data-step="g"] svg .d-hit', 80, 'proof-g-hover-rebro'),
+                    ('s4', 0, '[data-step="a"] svg .d-hit', 6, 'proof-a-hover'),
+                    ('s2', 0, '[data-card="halves"] svg .d-hit', 0, 'narisovat-hover')):
                 pg.evaluate("(id) => window.scrollTo(0, document.getElementById(id).offsetTop)", sid)
                 if step is not None:
                     pg.locator('#%s .pager__dot' % sid).nth(step).click()
@@ -129,13 +154,24 @@ def main():
                 pg.screenshot(path=path)
                 print('  %s' % os.path.basename(path))
 
-            # зум сцены 7: кликаем «Зум в край» трижды и смотрим, что край тот же
-            pg.evaluate("()=>window.scrollTo(0,document.getElementById('s7').offsetTop)")
+            # зум сцены «Пересекает ли она себя?»: приближаемся трижды и смотрим,
+            # видно ли, что линия не сплошная
+            pg.evaluate("()=>window.scrollTo(0,document.getElementById('s3').offsetTop)")
+            pg.wait_for_timeout(1800)
+            for k in (1, 2, 3):
+                pg.click('#s3 [data-seg="zoom"] button[data-v="in"]')
+                pg.wait_for_timeout(2200)
+                path = os.path.join(OUT, 'peresekaet-zoom%d-%s.png' % (k, tag))
+                pg.screenshot(path=path)
+                print('  %s' % os.path.basename(path))
+
+            # зум финальной сцены: край на каждом увеличении выглядит так же
+            pg.evaluate("()=>window.scrollTo(0,document.getElementById('s6').offsetTop)")
             pg.wait_for_timeout(1500)
             for k in (1, 2, 3):
-                pg.click('#s7 [data-seg="zoom"] button[data-v="in"]')
-                pg.wait_for_timeout(2000)
-                path = os.path.join(OUT, '7-zoom%d-%s.png' % (k, tag))
+                pg.click('#s6 [data-seg="zoom"] button[data-v="in"]')
+                pg.wait_for_timeout(2200)
+                path = os.path.join(OUT, 'razmernost-zoom%d-%s.png' % (k, tag))
                 pg.screenshot(path=path)
                 print('  %s' % os.path.basename(path))
 
