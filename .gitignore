@@ -96,3 +96,8 @@ krivaya-drakona/kartoteka/*-print.pdf
 # машинно-локальное, не в git
 .claude/settings.local.json
 .claude/hook-test.log
+
+# ── QA-рендеры дека Бюффона — порождаемое, не публикуются.
+# Правило пришло из ветки `main` (коммит 66dcf53) и сохранено при слиянии 01.08:
+# нашими шаблонами `**/src/_render/` эта папка НЕ покрывалась.
+buffon/_render-zahod04/
