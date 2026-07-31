@@ -102,3 +102,6 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-01 00:30 · arka/mat-kostyak · commit без плана при грязном дереве · → одной командой commit --zone -m, либо plan → commit · статус: открыт
 - 2026-08-01 02:16 · arka/mat-kostyak · merge main не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-01 02:21 · arka/mat-kostyak · merge zahod/sayt-drakon: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
+- 2026-08-01 02:23 · arka/mat-kostyak · merge zahod/sayt-drakon не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-01 02:24 · arka/mat-kostyak · commit без плана при грязном дереве · → одной командой commit --zone -m, либо plan → commit · статус: открыт
+- 2026-08-01 02:54 · arka/mat-kostyak · merge main: конфликт в 3 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
