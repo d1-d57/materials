@@ -28,15 +28,15 @@
 #s01 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
 #s01 .p1{position:absolute;left:412px;top:12px;width:615px;height:250px}
 #s01 .zagolovok{grid-area:1/2}
-#s01 .copy{--blok:16px}
+#s01 .copy{--blok:8px}
 #s02{--t-body:35px;--lh:1.24}
 #s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:72px minmax(0,1fr) 14px}
 #s02 .copy{grid-area:2/2}
 #s02 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s02 .copy ul.tlist{column-count:2;column-gap:56px}
+#s02 .copy ul.tlist,#s02 .copy p.lestnica{column-count:2;column-gap:56px}
 #s02 .zagolovok{grid-area:1/2}
 #s02 .copy{--blok:18px}
-#s02 .tlist li + li{margin-top:4px}
+#s02 .copy p.lestnica{font-size:.82em;line-height:1.9;opacity:.78}
 #s03{--t-body:40px;--lh:1.44}
 #s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:88px minmax(0,1fr) 22px 500px 28px}
 #s03 .copy{grid-area:2/2}
@@ -45,6 +45,7 @@
 #s03 .p2{position:absolute;left:102px;top:12px;width:1235px;height:504px}
 #s03 .p3{position:absolute;left:102px;top:12px;width:1235px;height:504px}
 #s03 .zagolovok{grid-area:1/2}
+#s03 .formula .katex{font-size:1.5em}
 #s04{--t-body:38px;--lh:1.38}
 #s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:84px minmax(0,1fr) 22px 350px 24px}
 #s04 .copy{grid-area:2/2}
@@ -84,7 +85,7 @@
 #s09 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s09 .zagolovok{grid-area:1/2}
 #s09 .copy{--blok:8px}
-#s09 .tlist li + li{margin-top:0}
+#s09 .formula .katex{font-size:.82em}
 #s10{--t-body:35px;--lh:1.26}
 #s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:76px minmax(0,1fr) 22px 300px 18px}
 #s10 .copy{grid-area:2/2}
@@ -92,11 +93,9 @@
 #s10 .p1{position:absolute;left:318px;top:12px;width:804px;height:294px}
 #s10 .zagolovok{grid-area:1/2}
 #s11{--t-body:35px;--lh:1.24}
-#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:72px minmax(0,1fr) 12px}
+#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:72px minmax(0,1fr) 12px}
 #s11 .copy{grid-area:2/2}
-#s11 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s11 .p1{position:absolute;left:10px;top:120px;width:224px;height:179px}
-#s11 .p2{position:absolute;left:10px;top:460px;width:224px;height:280px}
+#s11 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s11 .zagolovok{grid-area:1/2}
 #s11 .copy{--blok:14px}
 #s12{--t-body:40px}
@@ -167,8 +166,6 @@
 <template id="ill-s07-estestvennyj-izomorfizm">{{ILL:s07-estestvennyj-izomorfizm}}</template>
 <template id="ill-s08-chetnye-i-nechetnye-podmnozhestva">{{ILL:s08-chetnye-i-nechetnye-podmnozhestva}}</template>
 <template id="ill-s10-pokrashennye-vidy">{{ILL:s10-pokrashennye-vidy}}</template>
-<template id="ill-s11-kategorii-1">{{ILL:s11-kategorii-1}}</template>
-<template id="ill-s11-kategorii-2">{{ILL:s11-kategorii-2}}</template>
 <!-- ===== конец реестра иллюстраций ===== -->
 
 <script>{{ENGINE_JS}}</script>

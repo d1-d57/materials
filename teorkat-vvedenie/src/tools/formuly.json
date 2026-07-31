@@ -16,7 +16,19 @@
 "display": false
 },
 {
-"tex": "A,B",
+"tex": "2^{\\,n}",
+"display": false
+},
+{
+"tex": "3^{\\,n}",
+"display": false
+},
+{
+"tex": "A",
+"display": false
+},
+{
+"tex": "B",
 "display": false
 },
 {
@@ -104,10 +116,6 @@
 "display": false
 },
 {
-"tex": "Y\\text{.}",
-"display": false
-},
-{
 "tex": "Y\\text{,}",
 "display": false
 },
@@ -116,39 +124,7 @@
 "display": false
 },
 {
-"tex": "\\binom nk=\\binom n{n-k}\\qquad\\sum_k\\binom nk=2^{\\,n}\\qquad\\sum_{0\\le l\\le k\\le n}\\binom nk\\binom kl=3^{\\,n}",
-"display": false
-},
-{
-"tex": "\\sum_k\\binom nk=",
-"display": false
-},
-{
-"tex": "2^{\\,n}",
-"display": false
-},
-{
-"tex": "\\sum_{0\\le l\\le k\\le n}\\binom nk\\binom kl=",
-"display": false
-},
-{
-"tex": "3^{\\,n}",
-"display": false
-},
-{
 "tex": "\\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k",
-"display": false
-},
-{
-"tex": "\\displaystyle \\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k",
-"display": false
-},
-{
-"tex": "\\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k\\text{;}",
-"display": false
-},
-{
-"tex": "\\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}{k}\\text{.}",
 "display": false
 },
 {
@@ -160,11 +136,19 @@
 "display": false
 },
 {
-"tex": "\\binom{m+n}k=\\sum_{j=0}^{k}\\binom mj\\binom n{k-j}\\text{;}",
+"tex": "\\binom{n-1}k",
 "display": false
 },
 {
-"tex": "\\circ\\colon\\mathcal C(B,C)\\times\\mathcal C(A,B)\\to\\mathcal C(A,C)\\text{;}",
+"tex": "\\binom{n-1}{k-1}\\text{,}",
+"display": false
+},
+{
+"tex": "\\circ\\colon\\mathcal C(B,C)\\times\\mathcal C(A,B)\\to\\mathcal C(A,C)",
+"display": false
+},
+{
+"tex": "\\displaystyle \\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k",
 "display": false
 },
 {
@@ -184,7 +168,11 @@
 "display": false
 },
 {
-"tex": "\\mathcal C(A,B)\\text{;}",
+"tex": "\\mathcal C",
+"display": false
+},
+{
+"tex": "\\mathcal C(A,B)",
 "display": false
 },
 {
@@ -192,7 +180,7 @@
 "display": false
 },
 {
-"tex": "\\mathcal C\\text{:}",
+"tex": "\\mathrm{Ob}\\,\\mathcal C\\text{:}",
 "display": false
 },
 {
@@ -220,6 +208,14 @@
 "display": false
 },
 {
+"tex": "\\sum_k\\binom nk=",
+"display": false
+},
+{
+"tex": "\\sum_{0\\le l\\le k\\le n}\\binom nk\\binom kl=",
+"display": false
+},
+{
 "tex": "\\sum_{0\\le l\\le k\\le n}\\binom nk\\binom kl=3^{\\,n}",
 "display": false
 },
@@ -241,10 +237,6 @@
 },
 {
 "tex": "\\varphi_U\\colon F(U)\\to G(U)\\text{,}",
-"display": false
-},
-{
-"tex": "f\\in\\mathcal C(A,B)",
 "display": false
 },
 {
