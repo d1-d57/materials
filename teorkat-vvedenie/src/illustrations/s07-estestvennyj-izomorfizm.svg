@@ -1,0 +1,18 @@
+<svg viewBox="0 0 300 280" width="300" role="img" aria-label="Квадрат естественности: сверху F от U и F от V, снизу G от U и G от V; горизонтальные стрелки F от сигмы и G от сигмы ведут слева направо, вертикальные компоненты фи с индексом U и фи с индексом V ведут сверху вниз, и оба пути из левого верхнего угла в правый нижний дают одно и то же">
+<text class="s-txt" style="font-size:17px" x="56" y="66" text-anchor="middle">F(U)</text>
+<text class="s-txt" style="font-size:17px" x="240" y="66" text-anchor="middle">F(V)</text>
+<text class="s-txt" style="font-size:17px" x="56" y="234" text-anchor="middle">G(U)</text>
+<text class="s-txt" style="font-size:17px" x="240" y="234" text-anchor="middle">G(V)</text>
+<path class="s-accent" d="M79,60 L208,60"/>
+<path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(208,60)"/>
+<path class="s-accent" d="M79,228 L208,228"/>
+<path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(208,228)"/>
+<path class="s-thin" d="M56,78 L56,207"/>
+<path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(56,207) rotate(90)"/>
+<path class="s-thin" d="M240,78 L240,207"/>
+<path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(240,207) rotate(90)"/>
+<text class="s-txt" style="font-size:15px" x="147" y="50" text-anchor="middle">F[σ]</text>
+<text class="s-txt" style="font-size:15px" x="147" y="248" text-anchor="middle">G[σ]</text>
+<text class="s-txt" style="font-size:15px" x="48" y="150" text-anchor="end">φ<tspan dy="3" style="font-size:11px">U</tspan></text>
+<text class="s-txt" style="font-size:15px" x="248" y="150">φ<tspan dy="3" style="font-size:11px">V</tspan></text>
+</svg>

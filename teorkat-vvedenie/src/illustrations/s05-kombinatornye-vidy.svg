@@ -1,0 +1,18 @@
+<svg viewBox="0 0 300 280" width="300" role="img" aria-label="Квадрат функториальности: сверху множества U и V, соединённые стрелкой сигма, снизу множества F от U и F от V, соединённые стрелкой F от сигмы; вниз от U к F от U и от V к F от V идут стрелки F">
+<path class="s-accent" d="M88,52 L212,52"/>
+<path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(205,52)"/>
+<path class="s-accent" d="M88,228 L212,228"/>
+<path class="s-ar-a" d="M0,-3 L7,0 L0,3 z" transform="translate(205,228)"/>
+<path class="s-thin" d="M62,78 L62,202"/>
+<path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(62,195) rotate(90)"/>
+<path class="s-thin" d="M238,78 L238,202"/>
+<path class="s-ar-m" d="M0,-3 L7,0 L0,3 z" transform="translate(238,195) rotate(90)"/>
+<text class="s-txt" style="font-size:17px" x="62" y="58" text-anchor="middle">U</text>
+<text class="s-txt" style="font-size:17px" x="238" y="58" text-anchor="middle">V</text>
+<text class="s-txt" style="font-size:17px" x="62" y="234" text-anchor="middle">F(U)</text>
+<text class="s-txt" style="font-size:17px" x="238" y="234" text-anchor="middle">F(V)</text>
+<text class="s-txt" style="font-size:15px" x="150" y="42" text-anchor="middle">σ</text>
+<text class="s-txt" style="font-size:15px" x="150" y="247" text-anchor="middle">F[σ]</text>
+<text class="s-txt-m" style="font-size:14px" x="52" y="145" text-anchor="end">F</text>
+<text class="s-txt-m" style="font-size:14px" x="248" y="145">F</text>
+</svg>

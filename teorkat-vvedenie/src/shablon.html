@@ -22,120 +22,75 @@
 {{OVERLAY_CSS}}
 
 /* ---------- ПОРОЖДЁННЫЕ пер-слайдовые гриды (sverstat.py) ---------- */
-#s01{--t-body:35px}
-#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 34px}
+#s01{--t-body:35px;--lh:1.24}
+#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 260px 14px}
 #s01 .copy{grid-area:2/2}
-#s01 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s01 .copy ul.tlist{column-count:2;column-gap:56px}
-#s02{--t-body:35px;--lh:1.26}
-#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:20px minmax(0,1fr) 16px}
+#s01 .board{grid-area:4/2;background:var(--board);position:relative}
+#s01 .p1{position:absolute;left:419px;top:24px;width:522px;height:212px}
+#s02{--t-body:35px;--lh:1.24}
+#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:16px minmax(0,1fr) 14px}
 #s02 .copy{grid-area:2/2}
-#s02 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s02 .p1{position:absolute;left:22px;top:290px;width:256px;height:230px}
-#s03{--t-body:35px;--lh:1.44}
-#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:32px minmax(0,1fr) 26px}
+#s02 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s02 .copy ul.tlist{column-count:2;column-gap:56px}
+#s02 .copy{--blok:18px}
+#s02 .tlist li + li{margin-top:4px}
+#s03{--t-body:40px;--lh:1.44}
+#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:32px minmax(0,1fr) 22px 500px 28px}
 #s03 .copy{grid-area:2/2}
-#s03 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s03 .p1{position:absolute;left:22px;top:270px;width:300px;height:269px}
-#s04{--t-body:40px}
-#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s03 .board{grid-area:4/2;background:var(--board);position:relative}
+#s03 .p1{position:absolute;left:110px;top:24px;width:1107px;height:452px}
+#s03 .p2{position:absolute;left:110px;top:24px;width:1107px;height:452px}
+#s03 .p3{position:absolute;left:110px;top:24px;width:1107px;height:452px}
+#s04{--t-body:38px;--lh:1.38}
+#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:28px minmax(0,1fr) 22px 400px 24px}
 #s04 .copy{grid-area:2/2}
-#s04 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s04 .copy ul{column-count:2;column-gap:56px}
-#s04 .copy{--blok:22px}
-#s04 .rail{display:none}
-#s04 .grid{grid-template-columns:40px 1fr 40px}
-#s04 .copy{grid-area:2/2;align-content:center}
-#s05{--t-body:35px;--lh:1.44}
-#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:32px minmax(0,1fr) 26px}
+#s04 .board{grid-area:4/2;background:var(--board);position:relative}
+#s04 .p1{position:absolute;left:304px;top:24px;width:728px;height:352px}
+#s05{--t-body:38px;--lh:1.44}
+#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:32px minmax(0,1fr) 26px}
 #s05 .copy{grid-area:2/2}
-#s05 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s05 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
+#s05 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
 #s05 .copy{--blok:22px}
-#s06{--t-body:35px;--lh:1.38}
-#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1036px 24px 328px;grid-template-rows:28px minmax(0,1fr) 22px}
+#s06{--t-body:35px;--lh:1.26}
+#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:20px minmax(0,1fr) 16px}
 #s06 .copy{grid-area:2/2}
 #s06 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s06 .p1{position:absolute;left:22px;top:214px;width:284px;height:381px}
-#s07{--t-body:38px}
-#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s06 .p1{position:absolute;left:22px;top:302px;width:256px;height:205px}
+#s07{--t-body:40px}
+#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s07 .copy{grid-area:2/2}
-#s07 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s08{--t-body:35px;--lh:1.32}
-#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:48px 1056px 24px 312px;grid-template-rows:24px minmax(0,1fr) 20px}
+#s07 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
+#s07 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
+#s08{--t-body:35px;--lh:1.24}
+#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 248px 14px}
 #s08 .copy{grid-area:2/2}
-#s08 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s08 .p1{position:absolute;left:22px;top:103px;width:268px;height:214px}
-#s08 .p2{position:absolute;left:22px;top:493px;width:268px;height:214px}
-#s09{--t-body:38px}
-#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s08 .board{grid-area:4/2;background:var(--board);position:relative}
+#s08 .p1{position:absolute;left:254px;top:24px;width:852px;height:200px}
+#s08 .copy{--blok:14px}
+#s09{--t-body:35px;--lh:1.24}
+#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1198px 24px 178px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s09 .copy{grid-area:2/2}
-#s10{--t-body:40px}
-#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s09 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
+#s09 .p1{position:absolute;left:22px;top:374px;width:134px;height:62px}
+#s09 .copy{--blok:8px}
+#s09 .tlist li + li{margin-top:0}
+#s10{--t-body:35px;--lh:1.26}
+#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:20px minmax(0,1fr) 22px 300px 18px}
 #s10 .copy{grid-area:2/2}
-#s11{--t-body:35px;--lh:1.32}
-#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:48px 1056px 24px 312px;grid-template-rows:24px minmax(0,1fr) 20px}
+#s10 .board{grid-area:4/2;background:var(--board);position:relative}
+#s10 .p1{position:absolute;left:332px;top:24px;width:689px;height:252px}
+#s11{--t-body:35px;--lh:1.24}
+#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:16px minmax(0,1fr) 12px}
 #s11 .copy{grid-area:2/2}
 #s11 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s11 .p1{position:absolute;left:22px;top:298px;width:268px;height:214px}
-#s12{--t-body:35px}
+#s11 .p1{position:absolute;left:22px;top:130px;width:200px;height:160px}
+#s11 .p2{position:absolute;left:22px;top:475px;width:200px;height:250px}
+#s11 .copy{--blok:20px}
+#s12{--t-body:40px}
 #s12 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s12 .copy{grid-area:2/2}
 #s12 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s13{--t-body:40px}
-#s13 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s13 .copy{grid-area:2/2}
-#s13 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s14{--t-body:35px}
-#s14 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s14 .copy{grid-area:2/2}
-#s14 .rail{grid-area:1/4/4/5;background:var(--board)}
-#s15{--t-body:40px;--lh:1.44}
-#s15 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:32px minmax(0,1fr) 22px 400px 28px}
-#s15 .copy{grid-area:2/2}
-#s15 .board{grid-area:4/2;background:var(--board);position:relative}
-#s15 .p1{position:absolute;left:400px;top:24px;width:528px;height:352px}
-#s16{--t-body:40px}
-#s16 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s16 .copy{grid-area:2/2}
-#s16 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s16 .p1{position:absolute;left:30px;top:48px;width:285px;height:324px}
-#s16 .p2{position:absolute;left:22px;top:454px;width:300px;height:292px}
-#s16 .copy{--blok:22px}
-#s17{--t-body:35px}
-#s17 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s17 .copy{grid-area:2/2}
-#s17 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s17 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
-#s18{--t-body:40px}
-#s18 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s18 .copy{grid-area:2/2}
-#s18 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s18 .p1{position:absolute;left:22px;top:285px;width:300px;height:240px}
-#s19{--t-body:35px}
-#s19 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s19 .copy{grid-area:2/2}
-#s20{--t-body:35px;--lh:1.24}
-#s20 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 12px}
-#s20 .copy{grid-area:2/2}
-#s20 .copy{--blok:20px}
-#s21{--t-body:35px;--lh:1.44}
-#s21 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:32px minmax(0,1fr) 26px}
-#s21 .copy{grid-area:2/2}
-#s22{--t-body:40px}
-#s22 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s22 .copy{grid-area:2/2}
-#s23{--t-body:35px;--lh:1.24}
-#s23 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 12px}
-#s23 .copy{grid-area:2/2}
-#s24{--t-body:40px}
-#s24 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s24 .copy{grid-area:2/2}
-#s25{--t-body:38px}
-#s25 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s25 .copy{grid-area:2/2}
-#s26{--t-body:38px}
-#s26 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:38px minmax(0,1fr) 32px}
-#s26 .copy{grid-area:2/2}
 #sl-title .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 28px auto 12px auto 1fr}
 #sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}
 #sl-title .sub{grid-area:4/2;font-family:'Forum',serif;text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}
@@ -153,15 +108,6 @@
 #sl-vizitka .bullets li{position:relative}
 #sl-vizitka .bullets li::before{content:'';position:absolute;left:-30px;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--ink)}
 #sl-vizitka .tg-link{color:inherit;text-decoration:none}
-#sl-divider1{background:var(--board)}
-#sl-divider1 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
-#sl-divider1 .head{grid-area:2/2;font-size:72px;line-height:1.14}
-#sl-divider2{background:var(--board)}
-#sl-divider2 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
-#sl-divider2 .head{grid-area:2/2;font-size:72px;line-height:1.14}
-#sl-divider3{background:var(--board)}
-#sl-divider3 .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 1fr}
-#sl-divider3 .head{grid-area:2/2;font-size:72px;line-height:1.14}
 #sl-thanks{background:var(--board)}
 #sl-thanks .grid{position:absolute;inset:0;display:grid;place-items:center}
 #sl-thanks .head{font-size:72px}
@@ -182,28 +128,11 @@
 {{SLIDE:s05}}
 {{SLIDE:s06}}
 {{SLIDE:s07}}
-{{SLIDE:sl-divider1}}
 {{SLIDE:s08}}
 {{SLIDE:s09}}
 {{SLIDE:s10}}
 {{SLIDE:s11}}
 {{SLIDE:s12}}
-{{SLIDE:sl-divider2}}
-{{SLIDE:s13}}
-{{SLIDE:s14}}
-{{SLIDE:s15}}
-{{SLIDE:s16}}
-{{SLIDE:s17}}
-{{SLIDE:s18}}
-{{SLIDE:s19}}
-{{SLIDE:sl-divider3}}
-{{SLIDE:s20}}
-{{SLIDE:s21}}
-{{SLIDE:s22}}
-{{SLIDE:s23}}
-{{SLIDE:s24}}
-{{SLIDE:s25}}
-{{SLIDE:s26}}
 {{SLIDE:sl-thanks}}
 <!-- ===== конец потока слайдов ===== -->
 
@@ -215,17 +144,19 @@
 
 <!-- ===== [3] ASSETS REGISTRY ===== -->
 <!-- ===== ПОРОЖДЁННЫЙ реестр иллюстраций (sverstat.py) ===== -->
-<template id="ill-s02-tri-sostoyaniya-elementa">{{ILL:s02-tri-sostoyaniya-elementa}}</template>
-<template id="ill-s03-trebovanie-krasoty">{{ILL:s03-trebovanie-krasoty}}</template>
-<template id="ill-s06-menyat-nado-ne-biekciyu-a-arenu">{{ILL:s06-menyat-nado-ne-biekciyu-a-arenu}}</template>
-<template id="ill-s08-kategoriya-funktor-estestvennoe-pr-1">{{ILL:s08-kategoriya-funktor-estestvennoe-pr-1}}</template>
-<template id="ill-s08-kategoriya-funktor-estestvennoe-pr-2">{{ILL:s08-kategoriya-funktor-estestvennoe-pr-2}}</template>
-<template id="ill-s11-strelka-kak-sledovanie-i-kak-shag">{{ILL:s11-strelka-kak-sledovanie-i-kak-shag}}</template>
-<template id="ill-s15-kak-dokazyvayut-chto-funktora-net">{{ILL:s15-kak-dokazyvayut-chto-funktora-net}}</template>
-<template id="ill-s16-brauer-v-rabote-1">{{ILL:s16-brauer-v-rabote-1}}</template>
-<template id="ill-s16-brauer-v-rabote-2">{{ILL:s16-brauer-v-rabote-2}}</template>
-<template id="ill-s17-otvet-snova-ni-odnogo">{{ILL:s17-otvet-snova-ni-odnogo}}</template>
-<template id="ill-s18-otvet-ne-nul-centr-i-stepeni">{{ILL:s18-otvet-ne-nul-centr-i-stepeni}}</template>
+<template id="ill-s01-sootvetstvie-zadach">{{ILL:s01-sootvetstvie-zadach}}</template>
+<template id="ill-s03-tri-biekcii-1">{{ILL:s03-tri-biekcii-1}}</template>
+<template id="ill-s03-tri-biekcii-2">{{ILL:s03-tri-biekcii-2}}</template>
+<template id="ill-s03-tri-biekcii-3">{{ILL:s03-tri-biekcii-3}}</template>
+<template id="ill-s04-pochemu-eto-krasivo">{{ILL:s04-pochemu-eto-krasivo}}</template>
+<template id="ill-s05-kombinatornye-vidy">{{ILL:s05-kombinatornye-vidy}}</template>
+<template id="ill-s06-primery">{{ILL:s06-primery}}</template>
+<template id="ill-s07-estestvennyj-izomorfizm">{{ILL:s07-estestvennyj-izomorfizm}}</template>
+<template id="ill-s08-chetnye-i-nechetnye-podmnozhestva">{{ILL:s08-chetnye-i-nechetnye-podmnozhestva}}</template>
+<template id="ill-s09-otmechennye-vidy">{{ILL:s09-otmechennye-vidy}}</template>
+<template id="ill-s10-pokrashennye-vidy">{{ILL:s10-pokrashennye-vidy}}</template>
+<template id="ill-s11-kategorii-1">{{ILL:s11-kategorii-1}}</template>
+<template id="ill-s11-kategorii-2">{{ILL:s11-kategorii-2}}</template>
 <!-- ===== конец реестра иллюстраций ===== -->
 
 <script>{{ENGINE_JS}}</script>

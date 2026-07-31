@@ -1,0 +1,13 @@
+<svg viewBox="0 0 436 178" width="436" role="img" aria-label="Ряд из четырёх точек в рамке, две средние залиты; ниже стрелка вниз, под ней ряд из четырёх цифр: ноль, один, один, ноль — каждая под своей точкой.">
+<rect class="s-line" x="88" y="22" width="332" height="52" rx="8"/>
+<circle class="s-node" cx="130" cy="48" r="7"/>
+<circle class="s-node-r" cx="213" cy="48" r="7"/>
+<circle class="s-node-r" cx="296" cy="48" r="7"/>
+<circle class="s-node" cx="379" cy="48" r="7"/>
+<line class="s-thin" x1="254" y1="84" x2="254" y2="104"/>
+<path class="s-ar-m" d="M250,95 l4,9 4,-9 z"/>
+<text class="s-txt" x="130" y="152" text-anchor="middle" style="font-size:17px">0</text>
+<text class="s-txt" x="213" y="152" text-anchor="middle" style="font-size:17px">1</text>
+<text class="s-txt" x="296" y="152" text-anchor="middle" style="font-size:17px">1</text>
+<text class="s-txt" x="379" y="152" text-anchor="middle" style="font-size:17px">0</text>
+</svg>

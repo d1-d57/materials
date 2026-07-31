@@ -25,8 +25,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 LENTA = ROOT / "teorkat-vvedenie" / "raskadrovka" / "teksty"
 SRC = ROOT / "teorkat-vvedenie" / "src"
-BLOCKS = ["A-krasivaya.md", "B-yazyk.md", "C-zapret-retrakt.md",
-          "D-zapret-estestvennost.md", "E-dva-mira.md"]
+# 🔴 В КОЛОДУ ИДЁТ ТОЛЬКО ЛЕКЦИЯ — решение владельца 31.07: «Выделить надо, конечно,
+# только то, что нужно для лекции», то есть блоки A и B. Блоки C, D, E (Брауэр,
+# естественность, два мира) из колоды выведены; файлы ленты при этом целы и НЕ удалены —
+# вернуть их в дек значит вернуть строку, а не восстанавливать текст.
+# Цена прежнего состава: 27 содержательных слайдов вместо 12.
+BLOCKS = ["A-krasivaya.md", "B-yazyk.md"]
 
 TRANS = {
     "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh",
