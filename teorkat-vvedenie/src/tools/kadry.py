@@ -78,8 +78,14 @@ def main():
         old.unlink()
     with sync_playwright() as pw:
         b = pw.chromium.launch()
+        # Масштаб съёмки: 1 по умолчанию (зрительная петля — смотрим в натуральную
+        # величину), 2 для PDF (`pdf_po_scenam.py` ставит `KADRY_SCALE=2`). Меняется
+        # только плотность пикселей: viewport остаётся 1440×810, то есть переносы
+        # строк и раскладка ТЕ ЖЕ — кадр PDF обязан быть тем же кадром, который
+        # смотрели глазами, а не пересобранным в другой ширине.
+        import os
         pg = b.new_page(viewport={"width": 1440, "height": 810},
-                        device_scale_factor=1)
+                        device_scale_factor=float(os.environ.get("KADRY_SCALE", "1")))
         pg.goto("file://" + str(DECK))
         pg.wait_for_load_state("networkidle")
         pg.evaluate("document.fonts && document.fonts.ready")
