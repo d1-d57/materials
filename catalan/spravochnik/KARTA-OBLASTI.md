@@ -19,6 +19,11 @@
 ### Биекции между моделями
 - `{hub}` биекции через хаб (все модели ↔ пути Дика) → `_seed-kb.md` §8
 
+### Мосты ↔ неотрицательные пути — шесть биекций и два канона
+`stati/mir1-nit-mosty-nonneg.md` (заведена 2026-07-25, привезена из проекта открытой лекции про треугольник Паскаля). Ручки: `bij-razryv` · `bij-razrez-min` · `bij-pravilo-dna` · `bij-nelson` · `bij-otrazhenie-rekordy` · `bij-arochnaya` · `bij-andre` · `perefоrmulirovka-rol-hoda` · `perefоrmulirovka-reshetka`.
+**Главное:** канонов ровно два, и они в РАЗНЫХ классах — `bij-razrez-min` единственна среди «один разрез + одно крупное движение» (1 из 322), `bij-pravilo-dna` единственна среди пооходовых автоматов (1 из 16); между классами пусто. Всё перебором, с числами. Развёрнутый разбор с иллюстрациями — `../../lsh-2026-perechislitelnaya/otkrytaya-lekcia-paskal/razbor-bijekcii/view.html`.
+⚠ Открытый долг: имя «биекция Нельсона» не сверено по бумажному Феллеру; красивой подачи перехода «пара путей → пара путей» не найдено.
+
 ### Вероятностные сюжеты — наполнить в ресёрч-арке
 - `{ballot}` задача о голосовании · `{vozvrat}` возвращения · `{arcsine}` закон арксинуса · `{ruin}` разорение игрока → пока `2-idei/catalan-dyck-ideas.md` (часть B)
 - `{vetvyashchiesya}` ветвящийся процесс Гальтона–Ватсона: полное потомство = первое попадание блуждания в −1 (Оттер–Дуасс через цикл-лемму) → `spravochnik/stati/mir1-nahodki.md` §VII (`gem-vetvyashchiesya-cikllemma`, `most-vetvyashchiesya-put`)
