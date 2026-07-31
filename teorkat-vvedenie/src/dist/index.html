@@ -66,13 +66,27 @@ html, body { height: 100%; background: #2b3038; }
          opacity: .35; z-index: 50; pointer-events: none; }
 .fit   { max-width: 100%; max-height: 100%; }
 
-/* ЗАГОЛОВОК РАЗДЕЛА НА СЛАЙДЕ (владелец 31.07, круг 2): выводится по умолчанию,
-   выключатель — пометка ленты `> поле:zagolovok net` (porodit.py). Своя строка
-   грида над текстом (sverstat.py: `grid-area:1/2`, верхнее поле увеличено на
-   ZAG_H) — не участвует ни в промере (`.zone`), ни в гейте сцен. */
-.zagolovok { font: 700 19px/1.05 'Forum', serif; text-transform: uppercase;
-             letter-spacing: .02em; color: var(--ink); opacity: .8;
-             display: flex; align-items: flex-end; padding-bottom: 4px; }
+/* ЗАГОЛОВОК РАЗДЕЛА НА СЛАЙДЕ. Своя строка грида над текстом (sverstat.py:
+   `grid-area:1/2`, верхнее поле увеличено на ZAG_H) — не участвует ни в промере
+   (`.zone`), ни в гейте сцен. Место под него резервируется на ВСЕХ слайдах,
+   даже там, где заголовка нет: «где нет заголовка — на этом месте пустота»,
+   слайды не прыгают (r_top += ZAG_H в sverstat.py стоит безусловно).
+   🔴 ДИЗАЙН-СИСТЕМА, ВАРИАНТ «Б», УТВЕРЖДЁН ВЛАДЕЛЬЦЕМ ПОКАЗОМ 31.07 (свод З1/З2).
+   Было `700 19px/1.05` цветом `--ink` при `opacity:.8` — то есть ВДВОЕ МЕЛЬЧЕ тела
+   (35–40px) и вдобавок приглушённый; владелец назвал это прямо: «золотым выделены
+   часто вещи не очень важные, а заголовок никак не выделен» и, отдельно, «опять
+   очень маленький заголовок». Стало: крупный Forum поверх бумаги, ЗОЛОТОЙ.
+   · 50px, а не 19: рамка владельца — «должен выделяться, но не обязан занимать
+     много места». Верхняя граница здесь не вкус, а бюджет: строка тела стоит
+     43–61px, и ZAG_H=56 её не превышает, то есть заголовок стоит РОВНО одну
+     строку текста и ни строкой больше.
+   · КАПС и 400, а не 700: Forum вшит одним начертанием (`fonts/faces.css` — один
+     `@font-face` без `font-weight`), и `700` давал синтетическую жирность, то есть
+     размазанный контур на 50px. Крупность несёт кегль, а не поддельный вес.
+   · `opacity` снята совсем: приглушать то, что обязано выделяться, — и был дефект. */
+.zagolovok { font: 400 50px/1 'Forum', serif; text-transform: uppercase;
+             letter-spacing: .04em; color: var(--mustard);
+             display: flex; align-items: flex-end; padding-bottom: 6px; }
 
 .t-body { font-family: 'Noto Sans', sans-serif; font-size: var(--t-body); text-wrap: pretty;
           line-height: var(--lh); color: var(--ink); }
@@ -218,10 +232,17 @@ body.blanked #stage { visibility: hidden; }
    [3] РОЛИ, КОТОРЫХ НЕТ В КАНОН-БАЗЕ
    ============================================================================ */
 /* акцент: accent_tag=span, то есть **x** → <span class="acc">x</span>.
-   Канон — «Bold + один охряный .acc»; охра берётся токеном --mustard,
-   нового цвета не заводится. */
-.acc{font-weight:700;color:var(--mustard)}
-.acc .katex,.acc .katex *{color:var(--mustard)}
+   🔴 ЧЁРНЫЙ ЖИРНЫЙ, НЕ ОХРА (свод З1/З2, владелец 31.07). Было
+   `color:var(--mustard)`, и золото несло КАЖДЫЙ инлайн-акцент ленты — то есть
+   попутные слова «сопоставляет» и «красиво» выделялись ровно так же сильно, как
+   вводимый термин, а сам заголовок не выделялся никак: «золотым выделены часто
+   вещи не очень важные, а заголовок никак не выделен». Золото теперь редкое и
+   значит важность: заголовок раздела и слова-ярлыки (`.op-utv`). Термин держит
+   вес, но не цвет — жирность на бумаге и так читается.
+   Снимать `**` со «сопоставляет»/«красиво» отдельными правками ленты не нужно и
+   не следует: цвет с них уходит этим же правилом, а жирность там уместна. */
+.acc{font-weight:700;color:var(--ink)}
+.acc .katex,.acc .katex *{color:var(--ink)}
 
 /* ── БЛОЧНЫЙ РИТМ: ОДИН промежуток между блоками, ноль внутри ──
    База даёт `p + p{margin-top:calc(1em*var(--lh))}`, то есть промежуток = ПОЛНАЯ
@@ -268,7 +289,15 @@ body.blanked #stage { visibility: hidden; }
 .t-body p.op-def,.t-body p.op-utv,.t-body p.op-task{margin-top:var(--blok)}
 .t-body p.op-def + p,.t-body p.op-utv + p,.t-body p.op-task + p{margin-top:4px}
 .op-def{color:var(--cgreen)}
-.op-utv{color:var(--steel)}
+/* 🔴 ЗОЛОТО (свод З2): «Утверждение» и «Упражнение» — единственные слова-ярлыки,
+   которым владелец золото оставил, и оформлены они обязаны быть ОДИНАКОВО. Было
+   врозь: «Утверждение» шло сталью через этот класс, а «Упражнение» — золотом, но
+   инлайн-акцентом (`.acc`), потому что в `OP_CLS` его не было; на слайде «Чётные и
+   нечётные» два ярлыка стояли в шести строках друг от друга и выглядели как разные
+   сущности. Теперь оба идут `op-utv` (porodit.py, OP_CLS) и оба золотые.
+   `--steel` тут больше не при чём, но сам токен жив: им крашены `.tlist li::before`
+   и приглушённые подписи фигур. */
+.op-utv{color:var(--mustard)}
 .op-task{color:var(--brick)}
 /* первая опорная точка слайда не отбивается сверху — она и есть начало */
 .t-body > p.op-def:first-child,.t-body > p.op-utv:first-child,
@@ -615,14 +644,14 @@ body.blanked #stage { visibility: hidden; }
 
 /* ---------- ПОРОЖДЁННЫЕ пер-слайдовые гриды (sverstat.py) ---------- */
 #s01{--t-body:35px;--lh:1.24}
-#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 260px 14px}
+#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:72px minmax(0,1fr) 22px 260px 14px}
 #s01 .copy{grid-area:2/2}
 #s01 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
 #s01 .p1{position:absolute;left:412px;top:12px;width:615px;height:250px}
 #s01 .zagolovok{grid-area:1/2}
 #s01 .copy{--blok:16px}
 #s02{--t-body:35px;--lh:1.24}
-#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:44px minmax(0,1fr) 14px}
+#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:72px minmax(0,1fr) 14px}
 #s02 .copy{grid-area:2/2}
 #s02 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s02 .copy ul.tlist{column-count:2;column-gap:56px}
@@ -630,7 +659,7 @@ body.blanked #stage { visibility: hidden; }
 #s02 .copy{--blok:18px}
 #s02 .tlist li + li{margin-top:4px}
 #s03{--t-body:40px;--lh:1.44}
-#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:60px minmax(0,1fr) 22px 500px 28px}
+#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:88px minmax(0,1fr) 22px 500px 28px}
 #s03 .copy{grid-area:2/2}
 #s03 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
 #s03 .p1{position:absolute;left:102px;top:12px;width:1235px;height:504px}
@@ -638,52 +667,53 @@ body.blanked #stage { visibility: hidden; }
 #s03 .p3{position:absolute;left:102px;top:12px;width:1235px;height:504px}
 #s03 .zagolovok{grid-area:1/2}
 #s04{--t-body:38px;--lh:1.38}
-#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:56px minmax(0,1fr) 22px 375px 24px}
+#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:84px minmax(0,1fr) 22px 350px 24px}
 #s04 .copy{grid-area:2/2}
 #s04 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
-#s04 .p1{position:absolute;left:332px;top:12px;width:776px;height:375px}
+#s04 .p1{position:absolute;left:358px;top:12px;width:724px;height:350px}
 #s04 .zagolovok{grid-area:1/2}
 #s05{--t-body:38px;--lh:1.44}
-#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:60px minmax(0,1fr) 26px}
+#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:88px minmax(0,1fr) 26px}
 #s05 .copy{grid-area:2/2}
 #s05 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s05 .p1{position:absolute;left:10px;top:254px;width:324px;height:302px}
 #s05 .zagolovok{grid-area:1/2}
-#s05 .copy{--blok:22px}
+#s05 .copy{--blok:16px}
 #s06{--t-body:35px;--lh:1.26}
-#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:48px minmax(0,1fr) 16px}
+#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:76px minmax(0,1fr) 16px}
 #s06 .copy{grid-area:2/2}
 #s06 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s06 .p1{position:absolute;left:10px;top:293px;width:280px;height:224px}
 #s06 .zagolovok{grid-area:1/2}
+#s06 .copy{--blok:20px}
 #s07{--t-body:40px}
-#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:66px minmax(0,1fr) 32px}
+#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:94px minmax(0,1fr) 32px}
 #s07 .copy{grid-area:2/2}
 #s07 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s07 .p1{position:absolute;left:10px;top:254px;width:324px;height:302px}
 #s07 .zagolovok{grid-area:1/2}
 #s08{--t-body:35px;--lh:1.24}
-#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 240px 14px}
+#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:72px minmax(0,1fr) 22px 240px 14px}
 #s08 .copy{grid-area:2/2}
 #s08 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
 #s08 .p1{position:absolute;left:230px;top:12px;width:980px;height:230px}
 #s08 .zagolovok{grid-area:1/2}
 #s08 .copy{--blok:8px}
 #s09{--t-body:35px;--lh:1.24}
-#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:44px minmax(0,1fr) 12px}
+#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:72px minmax(0,1fr) 12px}
 #s09 .copy{grid-area:2/2}
 #s09 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s09 .zagolovok{grid-area:1/2}
 #s09 .copy{--blok:8px}
 #s09 .tlist li + li{margin-top:0}
 #s10{--t-body:35px;--lh:1.26}
-#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:48px minmax(0,1fr) 22px 300px 18px}
+#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:76px minmax(0,1fr) 22px 300px 18px}
 #s10 .copy{grid-area:2/2}
 #s10 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
 #s10 .p1{position:absolute;left:318px;top:12px;width:804px;height:294px}
 #s10 .zagolovok{grid-area:1/2}
 #s11{--t-body:35px;--lh:1.24}
-#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:44px minmax(0,1fr) 12px}
+#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:72px minmax(0,1fr) 12px}
 #s11 .copy{grid-area:2/2}
 #s11 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s11 .p1{position:absolute;left:10px;top:120px;width:224px;height:179px}
@@ -691,9 +721,10 @@ body.blanked #stage { visibility: hidden; }
 #s11 .zagolovok{grid-area:1/2}
 #s11 .copy{--blok:14px}
 #s12{--t-body:40px}
-#s12 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s12 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:94px minmax(0,1fr) 32px}
 #s12 .copy{grid-area:2/2}
 #s12 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s12 .zagolovok{grid-area:1/2}
 #sl-title .grid{position:absolute;inset:0;display:grid;grid-template-columns:96px 1fr 96px;grid-template-rows:1fr auto 28px auto 12px auto 1fr}
 #sl-title .head{grid-area:2/2;font-size:76px;line-height:1.12;text-align:left}
 #sl-title .sub{grid-area:4/2;font-family:'Forum',serif;text-transform:uppercase;letter-spacing:.12em;font-size:30px;color:var(--steel)}
@@ -858,7 +889,8 @@ body.blanked #stage { visibility: hidden; }
 <p data-scene-from="2">Но эта биекция не является изоморфизмом видов: выбор <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">x_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> переименование не сохраняет</p>
 <p data-scene-from="3" class="op-utv">Утверждение</p>
 <p data-scene-from="3"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>E</mi><mo lspace="0em" rspace="0em">+</mo></msup></mrow><annotation encoding="application/x-tex">E^{+}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span></span></span></span></span></span></span></span></span></span></span></span> и <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>E</mi><mo lspace="0em" rspace="0em">−</mo></msup></mrow><annotation encoding="application/x-tex">E^{-}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7713em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span></span></span></span></span></span></span></span></span></span></span></span> не изоморфны</p>
-<p data-scene-from="4"><span class="acc">Упражнение.</span> При нечётном числе элементов изоморфизм есть и единствен</p></div>
+<p data-scene-from="4" class="op-utv">Упражнение</p>
+<p data-scene-from="4">При нечётном числе элементов изоморфизм есть и единствен</p></div>
     <div class="board">
       <div class="panel p1 ill-box" data-ill="s08-chetnye-i-nechetnye-podmnozhestva"></div>
     </div>
@@ -914,6 +946,7 @@ body.blanked #stage { visibility: hidden; }
 <section class="slide" id="s12" data-scenes="1">
   <div class="nomer">14</div>
   <div class="grid">
+    <div class="zagolovok">Итог</div>
     <div class="zone copy t-body"><ul class="tlist"><li>понятие комбинаторного доказательства получило точную формулировку — <span class="acc">изоморфизм комбинаторных видов</span>;</li><li>при этом понятие комбинаторного вида пришлось трактовать в разных ситуациях по-разному;</li><li>тождества можно искать, не только проверять: изоморфизм видов — это такое сильное условие, которое помогает находить объект;</li><li>невозможность и единственность стали теоремами; дальше — классификация самих видов</li></ul></div>
     <div class="rail"></div>
   </div>
