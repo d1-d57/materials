@@ -26,6 +26,14 @@
   --paper: #e6e5e1; --board: #a7c2cb; --card: #ffffff; --ink: #333333;
   --brick: #bf5b4f; --steel: #8195ad; --mustard: #c9a23c; --rule: #c3cedd;
   --blush: #f0e2de;   /* пастель «опасной зоны» (бледный кирпич) */
+  /* ДВЕ ПРАВКИ ПАЛИТРЫ ПОД ДОСКУ (владелец 31.07; словарь примитивов, §ФОН РИСУНКА).
+     Паспарту снято, рисунок лежит на `--board`, и два примитива на нём поплыли:
+     --hollow: полый узел был чистым `--card`, и на доске белое пятно читалось как
+               наклейка сверху — то есть возвращало снятый слой размером с точку;
+     --steel-d: `--steel` на доске почти растворяется (на белом его хватало), поэтому
+               служебная линия и служебная стрелка темнеют. Сам `--steel` НЕ тронут:
+               им крашены `.s-txt-m` и приглушённые подписи, а они на месте. */
+  --hollow: #e7f0f4; --steel-d: #566b86;
   --p1: #b18ec0; --p2: #7b9bd1; --p3: #8fae72; --p4: #d9b349; --p5: #c96a55; /* пары SIM-6 */
   --cgreen: #7ea474; --corange: #d98e4a; /* тройка «частей иглы»: горчица+зелёный+оранжевый */
   --t-body: 38px;          /* тело НИКОГДА не автофитится; на слайде может быть свой кегль (промер) */
@@ -104,8 +112,16 @@ body.blanked #stage { visibility: hidden; }
         opacity: 0; transition: opacity .35s ease; pointer-events: none; }
 #hint.is-shown { opacity: 1; }
 
-/* белая панель-паспарту */
-.panel { background: var(--card); }
+/* БОКС ИЛЛЮСТРАЦИИ — БЕЗ ПОДЛОЖКИ (владелец 31.07: «раз и навсегда никаких белых
+   прямоугольников не вставлять»). Рисунок ложится прямо на доску `--board`.
+   Класс сохраняет имя `.panel`: его пишет `sverstat.py` и читают `audit.py` и
+   `sceny_gejt.py` (`.zone p, .zone ul, .panel`) — переименование увело бы панели
+   из гейта сцен молча. Ушла ровно заливка, и это не косметика: экран делится на
+   ДВЕ зоны, бумага и доска, а белое паспарту заводило третью, ничего не значащую,
+   и платило за неё третью ширины полосы (канон — `_studio/konvejer/09-illustracii/
+   SLOVAR-primitivov.md §ФОН РИСУНКА`). Греп `background:\s*var\(--card\)` по этому
+   файлу — единственное, что тут краснеет; подобранный цвет узла он не проверяет. */
+.panel { background: none; }
 .panel > img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .panel > svg, .ill-box > svg { width: 100%; height: 100%; display: block; }
 .panel > canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -162,19 +178,36 @@ body.blanked #stage { visibility: hidden; }
    Ни одного произвольного цвета: всё через var() из tokens.css (гейт G8/G10).
    ============================================================================ */
 .s-line{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.s-thin{fill:none;stroke:var(--steel);stroke-width:1.2}
+.s-thin{fill:none;stroke:var(--steel-d);stroke-width:1.2}
 .s-dash{fill:none;stroke:var(--brick);stroke-width:1.3;stroke-dasharray:4 4}
 .s-accent{fill:none;stroke:var(--brick);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
 .s-fillw{fill:var(--mustard)}
 .s-fillsh{fill:var(--board)}
-.s-node{fill:var(--card);stroke:var(--ink);stroke-width:1.8}
+/* полый узел — НЕ чистый белый: рисунок лежит на доске, и `--card` там читался
+   наклейкой (словарь примитивов, §ФОН РИСУНКА, две правки палитры) */
+.s-node{fill:var(--hollow);stroke:var(--ink);stroke-width:1.8}
 .s-node-r{fill:var(--ink)}
 .s-node-a{fill:var(--brick);stroke:var(--brick)}
+/* ЦВЕТНОЙ УЗЕЛ — три цвета, которыми различаются ЭЛЕМЕНТЫ (не состояние узла).
+   Заведён 31.07 под заказ владельца на «Примерах»: «просто три цвета, слева три
+   элемента и справа такие же, и показывать, как мы переставляем объекты». Цвет
+   несёт тождество элемента, поэтому это НЕ `.s-node-r/-a` (те про роль: «о нём
+   речь» / «акцент»).
+   🔴 В ФИГУРЕ ПИСАТЬ ПАРОЙ: `class="s-node s-node-c1"`. Причина ровно та ловушка
+   словаря, что уже стоила девяти ненарисованных стрелок: doc-вид красится
+   `_generator/build_doc.py`, где этих классов нет и завести их нельзя (файл вне
+   зоны лекции). Базовый `.s-node` даёт fill/stroke в ОБОИХ носителях, а `.s-node-cN`
+   в деке перебивает заливку позже по каскаду при равной специфичности — значит
+   худшее, что бывает при отсутствии класса, это полый узел, а не тихая чернота. */
+.s-node-c1{fill:var(--p1);stroke:var(--p1)}
+.s-node-c2{fill:var(--p2);stroke:var(--p2)}
+.s-node-c3{fill:var(--p3);stroke:var(--p3)}
 .s-txt{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--ink)}
 .s-txt-w{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--card);font-weight:600}
 .s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel)}
 .s-ar-a{fill:var(--brick)}
-.s-ar-m{fill:var(--steel)}
+/* наконечник служебной стрелки темнеет вместе с `.s-thin` — та же правка палитры */
+.s-ar-m{fill:var(--steel-d)}
 /* SVG обязан вписаться в бокс, иначе audit.py: «inline SVG fits its box» = FAIL.
    Атрибут width="250" у фигур ленты бьётся правилом .ill-box>svg из base.css;
    здесь добавлено только preserveAspectRatio-поведение через object-fit-аналог. */
@@ -584,8 +617,8 @@ body.blanked #stage { visibility: hidden; }
 #s01{--t-body:35px;--lh:1.24}
 #s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 260px 14px}
 #s01 .copy{grid-area:2/2}
-#s01 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
-#s01 .p1{position:absolute;left:459px;top:24px;width:522px;height:212px}
+#s01 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
+#s01 .p1{position:absolute;left:412px;top:12px;width:615px;height:250px}
 #s01 .zagolovok{grid-area:1/2}
 #s01 .copy{--blok:16px}
 #s02{--t-body:35px;--lh:1.24}
@@ -599,41 +632,41 @@ body.blanked #stage { visibility: hidden; }
 #s03{--t-body:40px;--lh:1.44}
 #s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:60px minmax(0,1fr) 22px 500px 28px}
 #s03 .copy{grid-area:2/2}
-#s03 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
-#s03 .p1{position:absolute;left:166px;top:24px;width:1107px;height:452px}
-#s03 .p2{position:absolute;left:166px;top:24px;width:1107px;height:452px}
-#s03 .p3{position:absolute;left:166px;top:24px;width:1107px;height:452px}
+#s03 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
+#s03 .p1{position:absolute;left:102px;top:12px;width:1235px;height:504px}
+#s03 .p2{position:absolute;left:102px;top:12px;width:1235px;height:504px}
+#s03 .p3{position:absolute;left:102px;top:12px;width:1235px;height:504px}
 #s03 .zagolovok{grid-area:1/2}
 #s04{--t-body:38px;--lh:1.38}
 #s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:56px minmax(0,1fr) 22px 375px 24px}
 #s04 .copy{grid-area:2/2}
-#s04 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
-#s04 .p1{position:absolute;left:382px;top:24px;width:677px;height:327px}
+#s04 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
+#s04 .p1{position:absolute;left:332px;top:12px;width:776px;height:375px}
 #s04 .zagolovok{grid-area:1/2}
 #s05{--t-body:38px;--lh:1.44}
 #s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:60px minmax(0,1fr) 26px}
 #s05 .copy{grid-area:2/2}
 #s05 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s05 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
+#s05 .p1{position:absolute;left:10px;top:254px;width:324px;height:302px}
 #s05 .zagolovok{grid-area:1/2}
 #s05 .copy{--blok:22px}
 #s06{--t-body:35px;--lh:1.26}
 #s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:48px minmax(0,1fr) 16px}
 #s06 .copy{grid-area:2/2}
 #s06 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s06 .p1{position:absolute;left:22px;top:302px;width:256px;height:205px}
+#s06 .p1{position:absolute;left:10px;top:293px;width:280px;height:224px}
 #s06 .zagolovok{grid-area:1/2}
 #s07{--t-body:40px}
 #s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:66px minmax(0,1fr) 32px}
 #s07 .copy{grid-area:2/2}
 #s07 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s07 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
+#s07 .p1{position:absolute;left:10px;top:254px;width:324px;height:302px}
 #s07 .zagolovok{grid-area:1/2}
 #s08{--t-body:35px;--lh:1.24}
 #s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 240px 14px}
 #s08 .copy{grid-area:2/2}
-#s08 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
-#s08 .p1{position:absolute;left:311px;top:24px;width:818px;height:192px}
+#s08 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
+#s08 .p1{position:absolute;left:230px;top:12px;width:980px;height:230px}
 #s08 .zagolovok{grid-area:1/2}
 #s08 .copy{--blok:8px}
 #s09{--t-body:35px;--lh:1.24}
@@ -646,15 +679,15 @@ body.blanked #stage { visibility: hidden; }
 #s10{--t-body:35px;--lh:1.26}
 #s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:48px minmax(0,1fr) 22px 300px 18px}
 #s10 .copy{grid-area:2/2}
-#s10 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
-#s10 .p1{position:absolute;left:376px;top:24px;width:689px;height:252px}
+#s10 .board{grid-area:4/1/6/4;background:var(--board);position:relative}
+#s10 .p1{position:absolute;left:318px;top:12px;width:804px;height:294px}
 #s10 .zagolovok{grid-area:1/2}
 #s11{--t-body:35px;--lh:1.24}
 #s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:44px minmax(0,1fr) 12px}
 #s11 .copy{grid-area:2/2}
 #s11 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s11 .p1{position:absolute;left:22px;top:130px;width:200px;height:160px}
-#s11 .p2{position:absolute;left:22px;top:475px;width:200px;height:250px}
+#s11 .p1{position:absolute;left:10px;top:120px;width:224px;height:179px}
+#s11 .p2{position:absolute;left:10px;top:460px;width:224px;height:280px}
 #s11 .zagolovok{grid-area:1/2}
 #s11 .copy{--blok:14px}
 #s12{--t-body:40px}

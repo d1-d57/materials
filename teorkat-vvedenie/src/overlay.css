@@ -30,19 +30,36 @@
    Ни одного произвольного цвета: всё через var() из tokens.css (гейт G8/G10).
    ============================================================================ */
 .s-line{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
-.s-thin{fill:none;stroke:var(--steel);stroke-width:1.2}
+.s-thin{fill:none;stroke:var(--steel-d);stroke-width:1.2}
 .s-dash{fill:none;stroke:var(--brick);stroke-width:1.3;stroke-dasharray:4 4}
 .s-accent{fill:none;stroke:var(--brick);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
 .s-fillw{fill:var(--mustard)}
 .s-fillsh{fill:var(--board)}
-.s-node{fill:var(--card);stroke:var(--ink);stroke-width:1.8}
+/* полый узел — НЕ чистый белый: рисунок лежит на доске, и `--card` там читался
+   наклейкой (словарь примитивов, §ФОН РИСУНКА, две правки палитры) */
+.s-node{fill:var(--hollow);stroke:var(--ink);stroke-width:1.8}
 .s-node-r{fill:var(--ink)}
 .s-node-a{fill:var(--brick);stroke:var(--brick)}
+/* ЦВЕТНОЙ УЗЕЛ — три цвета, которыми различаются ЭЛЕМЕНТЫ (не состояние узла).
+   Заведён 31.07 под заказ владельца на «Примерах»: «просто три цвета, слева три
+   элемента и справа такие же, и показывать, как мы переставляем объекты». Цвет
+   несёт тождество элемента, поэтому это НЕ `.s-node-r/-a` (те про роль: «о нём
+   речь» / «акцент»).
+   🔴 В ФИГУРЕ ПИСАТЬ ПАРОЙ: `class="s-node s-node-c1"`. Причина ровно та ловушка
+   словаря, что уже стоила девяти ненарисованных стрелок: doc-вид красится
+   `_generator/build_doc.py`, где этих классов нет и завести их нельзя (файл вне
+   зоны лекции). Базовый `.s-node` даёт fill/stroke в ОБОИХ носителях, а `.s-node-cN`
+   в деке перебивает заливку позже по каскаду при равной специфичности — значит
+   худшее, что бывает при отсутствии класса, это полый узел, а не тихая чернота. */
+.s-node-c1{fill:var(--p1);stroke:var(--p1)}
+.s-node-c2{fill:var(--p2);stroke:var(--p2)}
+.s-node-c3{fill:var(--p3);stroke:var(--p3)}
 .s-txt{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--ink)}
 .s-txt-w{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--card);font-weight:600}
 .s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel)}
 .s-ar-a{fill:var(--brick)}
-.s-ar-m{fill:var(--steel)}
+/* наконечник служебной стрелки темнеет вместе с `.s-thin` — та же правка палитры */
+.s-ar-m{fill:var(--steel-d)}
 /* SVG обязан вписаться в бокс, иначе audit.py: «inline SVG fits its box» = FAIL.
    Атрибут width="250" у фигур ленты бьётся правилом .ill-box>svg из base.css;
    здесь добавлено только preserveAspectRatio-поведение через object-fit-аналог. */

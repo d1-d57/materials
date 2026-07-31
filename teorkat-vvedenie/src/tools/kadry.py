@@ -89,6 +89,14 @@ def main():
         # середину анимации (на этом же попался гейт сцен)
         pg.add_style_tag(content="*,*::before,*::after{transition:none!important;"
                                  "animation:none!important}")
+        # 🔴 ХРОМ ДВИЖКА С КАДРА СНИМАЕТСЯ. `#hint` («← → листать · P — экран · …»)
+        # показывается на загрузке классом `.is-shown` и лежит `position:fixed` над
+        # слайдом, поэтому попадал на ВСЕ 23 кадра — поверх нижней полосы, ровно там,
+        # где у половины слайдов стоит иллюстрация. `_generator/render.py` его гасит
+        # (`exportFrame`), а эта петля — нет, и глазная проверка месяц смотрела на
+        # надпись, которой в показе на этом месте не бывает. Гейты такого не видят:
+        # хром не часть слайда, промер и `sceny_gejt` его не мерят.
+        pg.add_style_tag(content="#hint{display:none!important}")
         n = 0
         for sid, scenes in plan:
             for k in range(1, scenes + 1):
