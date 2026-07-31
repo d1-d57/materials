@@ -23,70 +23,81 @@
 
 /* ---------- ПОРОЖДЁННЫЕ пер-слайдовые гриды (sverstat.py) ---------- */
 #s01{--t-body:35px;--lh:1.24}
-#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 260px 14px}
+#s01 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 260px 14px}
 #s01 .copy{grid-area:2/2}
-#s01 .board{grid-area:4/2;background:var(--board);position:relative}
-#s01 .p1{position:absolute;left:419px;top:24px;width:522px;height:212px}
+#s01 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
+#s01 .p1{position:absolute;left:459px;top:24px;width:522px;height:212px}
+#s01 .zagolovok{grid-area:1/2}
+#s01 .copy{--blok:16px}
 #s02{--t-body:35px;--lh:1.24}
-#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:16px minmax(0,1fr) 14px}
+#s02 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:44px minmax(0,1fr) 14px}
 #s02 .copy{grid-area:2/2}
 #s02 .rail{grid-area:1/4/4/5;background:var(--board)}
 #s02 .copy ul.tlist{column-count:2;column-gap:56px}
+#s02 .zagolovok{grid-area:1/2}
 #s02 .copy{--blok:18px}
 #s02 .tlist li + li{margin-top:4px}
 #s03{--t-body:40px;--lh:1.44}
-#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:32px minmax(0,1fr) 22px 500px 28px}
+#s03 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1328px 56px;grid-template-rows:60px minmax(0,1fr) 22px 500px 28px}
 #s03 .copy{grid-area:2/2}
-#s03 .board{grid-area:4/2;background:var(--board);position:relative}
-#s03 .p1{position:absolute;left:110px;top:24px;width:1107px;height:452px}
-#s03 .p2{position:absolute;left:110px;top:24px;width:1107px;height:452px}
-#s03 .p3{position:absolute;left:110px;top:24px;width:1107px;height:452px}
+#s03 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
+#s03 .p1{position:absolute;left:166px;top:24px;width:1107px;height:452px}
+#s03 .p2{position:absolute;left:166px;top:24px;width:1107px;height:452px}
+#s03 .p3{position:absolute;left:166px;top:24px;width:1107px;height:452px}
+#s03 .zagolovok{grid-area:1/2}
 #s04{--t-body:38px;--lh:1.38}
-#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:28px minmax(0,1fr) 22px 400px 24px}
+#s04 .grid{position:absolute;inset:0;display:grid;grid-template-columns:52px 1336px 52px;grid-template-rows:56px minmax(0,1fr) 22px 375px 24px}
 #s04 .copy{grid-area:2/2}
-#s04 .board{grid-area:4/2;background:var(--board);position:relative}
-#s04 .p1{position:absolute;left:304px;top:24px;width:728px;height:352px}
+#s04 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
+#s04 .p1{position:absolute;left:382px;top:24px;width:677px;height:327px}
+#s04 .zagolovok{grid-area:1/2}
 #s05{--t-body:38px;--lh:1.44}
-#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:32px minmax(0,1fr) 26px}
+#s05 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:60px minmax(0,1fr) 26px}
 #s05 .copy{grid-area:2/2}
 #s05 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s05 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
+#s05 .zagolovok{grid-area:1/2}
 #s05 .copy{--blok:22px}
 #s06{--t-body:35px;--lh:1.26}
-#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:20px minmax(0,1fr) 16px}
+#s06 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1072px 24px 300px;grid-template-rows:48px minmax(0,1fr) 16px}
 #s06 .copy{grid-area:2/2}
 #s06 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s06 .p1{position:absolute;left:22px;top:302px;width:256px;height:205px}
+#s06 .zagolovok{grid-area:1/2}
 #s07{--t-body:40px}
-#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:38px minmax(0,1fr) 32px}
+#s07 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1016px 24px 344px;grid-template-rows:66px minmax(0,1fr) 32px}
 #s07 .copy{grid-area:2/2}
 #s07 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s07 .p1{position:absolute;left:22px;top:265px;width:300px;height:280px}
+#s07 .zagolovok{grid-area:1/2}
 #s08{--t-body:35px;--lh:1.24}
-#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:16px minmax(0,1fr) 22px 248px 14px}
+#s08 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1360px 40px;grid-template-rows:44px minmax(0,1fr) 22px 240px 14px}
 #s08 .copy{grid-area:2/2}
-#s08 .board{grid-area:4/2;background:var(--board);position:relative}
-#s08 .p1{position:absolute;left:254px;top:24px;width:852px;height:200px}
-#s08 .copy{--blok:14px}
+#s08 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
+#s08 .p1{position:absolute;left:311px;top:24px;width:818px;height:192px}
+#s08 .zagolovok{grid-area:1/2}
+#s08 .copy{--blok:8px}
 #s09{--t-body:35px;--lh:1.24}
-#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1198px 24px 178px;grid-template-rows:16px minmax(0,1fr) 12px}
+#s09 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1256px 28px 116px;grid-template-rows:44px minmax(0,1fr) 12px}
 #s09 .copy{grid-area:2/2}
-#s09 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
-#s09 .p1{position:absolute;left:22px;top:374px;width:134px;height:62px}
+#s09 .rail{grid-area:1/4/4/5;background:var(--board)}
+#s09 .zagolovok{grid-area:1/2}
 #s09 .copy{--blok:8px}
 #s09 .tlist li + li{margin-top:0}
 #s10{--t-body:35px;--lh:1.26}
-#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:20px minmax(0,1fr) 22px 300px 18px}
+#s10 .grid{position:absolute;inset:0;display:grid;grid-template-columns:44px 1352px 44px;grid-template-rows:48px minmax(0,1fr) 22px 300px 18px}
 #s10 .copy{grid-area:2/2}
-#s10 .board{grid-area:4/2;background:var(--board);position:relative}
-#s10 .p1{position:absolute;left:332px;top:24px;width:689px;height:252px}
+#s10 .board{grid-area:4/1/5/4;background:var(--board);position:relative}
+#s10 .p1{position:absolute;left:376px;top:24px;width:689px;height:252px}
+#s10 .zagolovok{grid-area:1/2}
 #s11{--t-body:35px;--lh:1.24}
-#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:16px minmax(0,1fr) 12px}
+#s11 .grid{position:absolute;inset:0;display:grid;grid-template-columns:40px 1132px 24px 244px;grid-template-rows:44px minmax(0,1fr) 12px}
 #s11 .copy{grid-area:2/2}
 #s11 .rail{grid-area:1/4/4/5;background:var(--board);position:relative}
 #s11 .p1{position:absolute;left:22px;top:130px;width:200px;height:160px}
 #s11 .p2{position:absolute;left:22px;top:475px;width:200px;height:250px}
-#s11 .copy{--blok:20px}
+#s11 .zagolovok{grid-area:1/2}
+#s11 .copy{--blok:14px}
 #s12{--t-body:40px}
 #s12 .grid{position:absolute;inset:0;display:grid;grid-template-columns:56px 1240px 28px 116px;grid-template-rows:38px minmax(0,1fr) 32px}
 #s12 .copy{grid-area:2/2}
@@ -153,7 +164,6 @@
 <template id="ill-s06-primery">{{ILL:s06-primery}}</template>
 <template id="ill-s07-estestvennyj-izomorfizm">{{ILL:s07-estestvennyj-izomorfizm}}</template>
 <template id="ill-s08-chetnye-i-nechetnye-podmnozhestva">{{ILL:s08-chetnye-i-nechetnye-podmnozhestva}}</template>
-<template id="ill-s09-otmechennye-vidy">{{ILL:s09-otmechennye-vidy}}</template>
 <template id="ill-s10-pokrashennye-vidy">{{ILL:s10-pokrashennye-vidy}}</template>
 <template id="ill-s11-kategorii-1">{{ILL:s11-kategorii-1}}</template>
 <template id="ill-s11-kategorii-2">{{ILL:s11-kategorii-2}}</template>

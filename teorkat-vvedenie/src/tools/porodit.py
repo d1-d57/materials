@@ -287,6 +287,12 @@ def parse_section(title, body):
     m = re.search(r"^> поле:mn \*\*Раскладка\.\*\* (.*)$", body, re.M)
     if m:
         layout = m.group(1).strip()
+    # 🔴 Заголовок раздела на слайде — с выключателем (владелец 31.07, круг 2, §6:
+    # «в других местах мы выводим заголовок на слайд, а здесь можно не выводить»).
+    # По умолчанию выводится; пометка `> поле:zagolovok net` в теле раздела гасит
+    # его на КОНКРЕТНОМ слайде («Итог» — единственный названный случай). Читается
+    # ДО того, как POLE_RE сотрёт все `> поле:` строки ниже.
+    zagolovok = not re.search(r"^> поле:zagolovok\s+net\s*$", body, re.M)
 
     figures = []
     for fm in FIGURE_RE.finditer(body):
@@ -393,7 +399,8 @@ def parse_section(title, body):
 
     return {"title": title, "layout": layout, "figures": figures,
             "portraits": portraits, "text": text, "scenes": scenes,
-            "kadry": kadry, "tyazh": max(kadry) if kadry else 0}
+            "kadry": kadry, "tyazh": max(kadry) if kadry else 0,
+            "zagolovok": zagolovok}
 
 
 # ── ЗАМЕНА, КОТОРАЯ НЕ ВЫНУЖДЕНА, СНИМАЕТСЯ ────────────────────────────────────

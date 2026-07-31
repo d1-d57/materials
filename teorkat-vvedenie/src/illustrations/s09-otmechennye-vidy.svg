@@ -1,8 +1,0 @@
-<svg viewBox="0 0 200 92" width="200" role="img" aria-label="Четыре точки в рамке, одна из них залита и помечена звёздочкой: множество с фиксированным элементом.">
-<rect class="s-line" x="30" y="16" width="140" height="42" rx="8"/>
-<circle class="s-node-r" cx="60" cy="37" r="5.4"/>
-<circle class="s-node" cx="92" cy="37" r="5.4"/>
-<circle class="s-node" cx="124" cy="37" r="5.4"/>
-<circle class="s-node" cx="152" cy="37" r="5.4"/>
-<text class="s-txt" x="60" y="76" text-anchor="middle">∗</text>
-</svg>

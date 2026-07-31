@@ -108,6 +108,10 @@
 "display": false
 },
 {
+"tex": "Y\\text{,}",
+"display": false
+},
+{
 "tex": "\\binom nk=\\binom n{n-k}",
 "display": false
 },
@@ -116,7 +120,27 @@
 "display": false
 },
 {
+"tex": "\\sum_k\\binom nk=",
+"display": false
+},
+{
+"tex": "2^{\\,n}",
+"display": false
+},
+{
+"tex": "\\sum_{0\\le l\\le k\\le n}\\binom nk\\binom kl=",
+"display": false
+},
+{
+"tex": "3^{\\,n}",
+"display": false
+},
+{
 "tex": "\\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k",
+"display": false
+},
+{
+"tex": "\\displaystyle \\binom nk=\\binom{n-1}{k-1}+\\binom{n-1}k",
 "display": false
 },
 {
