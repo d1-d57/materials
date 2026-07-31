@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кривая дракона</title>
+<meta name="description" content="Складываем полоску пополам, разворачиваем — получается ломаная. Она не пересекает себя, четыре таких кривые покрывают всю клетчатую решётку, а у линии оказывается площадь.">
+<style>/*__CSS__*/</style>
+</head>
+<body>
+
+<!-- ═════════ 0 · ОБЛОЖКА ═════════
+     Надзаголовка нет: «Одна полоска бумаги» убрано по Ф6 — странный он. -->
+<section class="cover" id="s0" data-scene="cover">
+  <div class="cover__bg"></div>
+  <div class="cover__canvas"><canvas></canvas></div>
+  <div class="cover__scrim"></div>
+  <div class="cover__inner">
+    <h1 class="cover__title">Кривая дракона</h1>
+    <p class="cover__sub">Складываем полоску пополам, разворачиваем — получается ломаная.
+      Она не пересекает себя, четыре таких кривые покрывают всю клетчатую
+      решётку, а у линии оказывается площадь.</p>
+    <button class="btn" data-goto="s1">Смотреть ↓</button>
+  </div>
+</section>
+
+<!-- ═════════ 1 · СГИБАЕМ ПОЛОСКУ ═════════
+     Управление (Ф4) стоит в .tools — правый нижний угол ПРАВОЙ колонки, на той
+     же высоте, что и на всех остальных сценах. -->
+<section class="scene" id="s1" data-scene="strip" data-nav="Полоска">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Сгибаем полоску</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Сложите полоску пополам. Ещё раз. Ещё. Разверните, расправьте каждый
+          сгиб в прямой угол — и посмотрите сверху.</p>
+        <p>Отрезок между двумя поворотами — <strong>звено</strong>, число
+          складываний — <strong>ранг</strong>. Рядом ранги от одного до десяти.</p>
+        <p>Руками дальше седьмого не пройти: восьмое складывание — это 256 слоёв
+          сразу.</p>
+        <button class="btn" data-open="d1">Кто открыл кривую →</button>
+      </div>
+      <!-- Виньетки тут нет сознательно: маска-растворение сделана под ОДНУ
+           крупную фигуру, а на сетке из десяти она гасит угловые клетки —
+           ранг 1 и ранг 10 просто исчезали по краям. -->
+      <div class="fig-wrap">
+        <figure class="figure"><svg></svg></figure>
+        <div class="tools">
+          <label class="ctrl ctrl--w">
+            <span class="ctrl__lbl">Угол сгиба</span>
+            <input type="range" min="0" max="90" value="90" step="1" data-in="angle">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scene__nav"><button class="godown" data-goto="s2" aria-label="Дальше">↓</button></div>
+</section>
+
+<!-- ═════════ 2 · КАК ЕЁ НАРИСОВАТЬ ═════════
+     Две главы слиты в одну (Ф1 + Ф6: глав ровно шесть). Слева — общий текст на
+     оба способа, справа — листалка из двух карточек:
+       карточка 1 — приклеить копию, повёрнутую на 90°;
+       карточка 2 — вершины через одну (ранг младше) и треугольники (ранг старше).
+     Текст один на обе карточки, поэтому листается только холст. -->
+<section class="scene" id="s2" data-scene="draw" data-nav="Как нарисовать">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Как её нарисовать</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Приклейте к готовой кривой её же копию, повёрнутую на прямой угол, —
+          выйдет кривая на ранг старше. Бумага больше не нужна.</p>
+        <p>Второй способ — по вершинам. Соедините вершины через одну: получится
+          ранг младше. Достройте на каждом звене треугольник нужной стороной —
+          получится ранг старше.</p>
+        <p>Ход работает в обе стороны, значит ранг двенадцать берётся счётом.</p>
+      </div>
+      <div class="fig-wrap">
+        <div class="cards">
+          <figure class="figure figure--veil card on" data-card="halves"><svg></svg></figure>
+          <figure class="figure card" data-card="vert"><svg></svg></figure>
+        </div>
+        <div class="tools">
+          <div class="tool on" data-tool="0">
+            <button class="btn btn--sm" data-act="play">Сложить</button>
+          </div>
+          <div class="tool" data-tool="1">
+            <!-- Подписи по ОПЕРАЦИИ, а не по рангу: обе операции ходят между
+                 одной и той же парой рангов — «через одну» вниз, «треугольники»
+                 обратно. Кнопка «ранг 9» обещала бы третью кривую, которой на
+                 холсте нет. -->
+            <div class="seg" data-seg="vert">
+              <button data-v="-1">через одну</button><button class="on" data-v="0">кривая</button
+              ><button data-v="1">треугольники</button>
+            </div>
+          </div>
+          <div class="pager" data-pager="2">
+            <button data-page="-1" aria-label="Назад">←</button>
+            <button class="pager__dot on" aria-label="Способ 1"></button
+            ><button class="pager__dot" aria-label="Способ 2"></button>
+            <button data-page="1" aria-label="Вперёд">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scene__nav"><button class="godown" data-goto="s3" aria-label="Дальше">↓</button></div>
+</section>
+
+<!-- ═════════ 3 · ПЕРЕСЕКАЕТ ЛИ ОНА СЕБЯ? ═════════
+     Ф2: текста нет ВООБЩЕ, только заголовок и холст на всю оставшуюся площадь.
+     Ранг 14 и зум: приблизить и увидеть, что линия не сплошная. Рисование —
+     механикой референса (батчи по rAF, renderToken, лог-интерполяция зума,
+     компенсация толщины и alpha), поэтому кадр стоит ограниченно и не виснет. -->
+<section class="scene scene--full" id="s3" data-scene="cross" data-nav="Пересекает?">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Пересекает ли она себя?</h2>
+    </header>
+    <div class="scene__body">
+      <div class="fig-wrap">
+        <figure class="figure"><canvas></canvas></figure>
+        <div class="tools">
+          <div class="seg" data-seg="zoom">
+            <button data-v="in" aria-label="Приблизить">+</button><button data-v="out" aria-label="Отдалить">−</button
+            ><button data-v="reset">Сброс</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scene__nav"><button class="godown" data-goto="s4" aria-label="Дальше">↓</button></div>
+</section>
+
+<!-- ═════════ 4 · ПОЧЕМУ НЕТ САМОПЕРЕСЕЧЕНИЙ ═════════
+     Четыре шага — слайды одной листалки: виден один, ← → листают внутри сцены,
+     ↓ уходит на следующую сцену. Слоты слева фиксированы (Ф3): заголовок шага
+     всегда на одной высоте, меняется только текст под ним. -->
+<section class="scene" id="s4" data-scene="proof" data-nav="Почему нет">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Почему нет самопересечений</h2>
+    </header>
+
+    <div class="steps">
+
+      <!-- Два прежних шага («вершины двух сортов» и «строки») слиты в один по
+           правке владельца: на одной картинке уголок покрашен по стороне
+           поворота, и цвет совпадает с цветом его строки — отдельный шаг под
+           правило строк не нужен. Последний абзац — откуда это правило берётся;
+           его поддерживает врезка внизу холста. -->
+      <div class="scene__body on" data-step="a">
+        <div class="col">
+          <h3 class="step__title">Вершины двух сортов и строки</h3>
+          <p><dfn>Старая вершина</dfn> (закрашенная) была на кривой до последнего
+            складывания, <dfn>новая</dfn> (пустая) появилась при нём.
+            <dfn>Уголок</dfn> — кусок кривой между двумя соседними старыми
+            вершинами, его излом — новая вершина.</p>
+          <p>Из старой вершины кривая уходит вбок, из новой — вверх или вниз:
+            первое звено уголка горизонтальное, второе вертикальное. Это следует
+            из одних прямых поворотов.</p>
+          <p><strong>Правило строк</strong> — уже про дракона. Покрасим строки
+            через одну: уголок с изломом в крашеной строке поворачивает налево,
+            в чистой — направо. Цвет уголка — цвет его строки.</p>
+          <p>Откуда оно: соседние диагонали прежней кривой повёрнуты друг
+            к другу на прямой угол, поэтому и уголки на них получаются один
+            из другого поворотом — сторона поворота меняется от строки к строке.</p>
+        </div>
+        <div class="fig-wrap"><figure class="figure"><svg></svg></figure></div>
+      </div>
+
+      <div class="scene__body" data-step="v">
+        <div class="col">
+          <h3 class="step__title">Уголок достраивается по одному звену</h3>
+          <p><strong>Благодаря раскраске по одному звену восстанавливается его
+            уголок целиком.</strong> Горизонтальное звено — первая половина
+            уголка, вертикальное — вторая; цвет строки, в которой стоит излом,
+            говорит, в какую сторону уголок повернёт. Второй кандидат отпадает.</p>
+          <p>Ради этого и вводились сорта вершин и строки: одного звена хватает,
+            чтобы назвать уголок, — а уголок это одно звено прежней кривой.</p>
+        </div>
+        <div class="fig-wrap"><figure class="figure"><svg></svg></figure></div>
+      </div>
+
+      <div class="scene__body" data-step="g">
+        <div class="col">
+          <h3 class="step__title">Складывание не создаёт повторов</h3>
+          <p>Слева ранг&nbsp;6, справа ранг&nbsp;7. Пусть на ранге&nbsp;6
+            повторов нет.</p>
+          <p>По одному ребру — вместе с цветом его строки и цветами его вершин —
+            восстанавливается, в каком направлении мы по нему идём и куда
+            поворачиваем после него. Значит ребро называет свой уголок,
+            а уголок — это одно ребро ранга&nbsp;6.</p>
+          <p>Значит, если бы мы прошли по ребру дважды, то и на кривой меньшего
+            ранга нашлось бы самопересечение. Там его нет — нет и здесь. Звеньев
+            вдвое больше, и все по-прежнему разные: начинаем с одного
+            складывания и повторяем до двенадцатого.</p>
+          <button class="btn" data-open="d5">Почему сорта вершин именно такие →</button>
+        </div>
+        <div class="fig-wrap"><figure class="figure figure--wide"><svg></svg></figure></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="scene__nav">
+    <div class="pager pager--nav" data-pager="3">
+      <button data-page="-1" aria-label="Шаг назад">←</button>
+      <button class="pager__dot on" aria-label="Шаг 1"></button
+      ><button class="pager__dot" aria-label="Шаг 2"></button
+      ><button class="pager__dot" aria-label="Шаг 3"></button>
+      <button data-page="1" aria-label="Шаг вперёд">→</button>
+    </div>
+    <button class="godown" data-goto="s5" aria-label="Дальше">↓</button>
+  </div>
+</section>
+
+<!-- ═════════ 5 · ЧЕТЫРЕ ДРАКОНА ═════════ -->
+<section class="scene" id="s5" data-scene="four" data-nav="Четыре дракона">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Четыре дракона</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Одна кривая покрывает не всё. Выпустим четырёх драконов из одной
+          точки, по одному в каждую сторону.</p>
+        <p>По каждому отрезку решётки пройдёт ровно один из них и ровно один
+          раз: ни повтора, ни дырки. Это теорема Кнута 1970&nbsp;года.</p>
+        <p>Нарисуем звено не линией, а клеткой — квадратом на нём как на
+          диагонали. Клетки смыкаются без зазора: с каждым рангом четыре дракона
+          заполняют всё больше плоскости, и в пределе не остаётся дырок.</p>
+      </div>
+      <div class="fig-wrap">
+        <figure class="figure figure--veil"><svg></svg></figure>
+        <div class="tools">
+          <div class="seg" data-seg="fill">
+            <button data-v="fill">Заполнение</button>
+          </div>
+          <div class="ctrl">
+            <span class="ctrl__lbl">Ранг</span>
+            <div class="seg" data-seg="rank">
+              <button data-v="4">4</button><button data-v="5">5</button
+              ><button class="on" data-v="6">6</button><button data-v="8">8</button
+              ><button data-v="10">10</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scene__nav"><button class="godown" data-goto="s6" aria-label="Дальше">↓</button></div>
+</section>
+
+<!-- ═════════ 6 · ФРАКТАЛЬНАЯ РАЗМЕРНОСТЬ ═════════ -->
+<section class="scene" id="s6" data-scene="area" data-nav="Размерность">
+  <div class="scene__bg"></div>
+  <div class="scene__grid">
+    <header class="scene__head">
+      <h2 class="scene__title">Фрактальная размерность</h2>
+    </header>
+    <div class="scene__body">
+      <div class="col">
+        <p>Нарисуем звено не линией, а полосой шириной в полклетки. Полосы
+          смыкаются без зазора и без наложения: линия становится заливкой,
+          и у неё есть площадь.</p>
+        <p>Загляните в край. На каждом увеличении он выглядит так же: масштаба,
+          на котором край стал бы гладким, нет.</p>
+        <p>Край удлиняется в 1,69 раза, когда сама фигура растёт в 1,41. Отсюда
+          и размерность края — 1,5236: не целое число ни при каком масштабе.</p>
+        <button class="btn" data-open="d7">Откуда берётся 1,5236 →</button>
+      </div>
+      <div class="fig-wrap">
+        <figure class="figure"><canvas></canvas></figure>
+        <div class="tools">
+          <label class="ctrl ctrl--w">
+            <span class="ctrl__lbl">Толщина звена</span>
+            <input type="range" min="0" max="100" value="0" step="1" data-in="thick">
+          </label>
+          <div class="ctrl">
+            <span class="ctrl__lbl">Ранг</span>
+            <div class="seg" data-seg="rank">
+              <button data-v="8">8</button><button data-v="10">10</button
+              ><button class="on" data-v="12">12</button><button data-v="14">14</button>
+            </div>
+          </div>
+          <div class="seg" data-seg="zoom">
+            <button data-v="in">Зум в край</button><button data-v="out" aria-label="Отдалить">−</button
+            ><button data-v="reset">Сброс</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ плашки «глубже» ═════════ -->
+<div class="backdrop" id="backdrop"></div>
+
+<aside class="deeper" id="d1" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Кто открыл кривую</h3>
+    <p>Её нашли в 1960-х физики NASA Джон Хейтуэй, Уильям Хартер и Брюс Бэнкс —
+      складывая бумагу за работой. Мартин Гарднер напечатал кривую в 1967 году
+      в <em>Scientific American</em>, в колонке «Математические игры»,
+      и с тех пор она называется драконом.</p>
+    <p>Про предел складываний: Бритни Галливан в 2002 году сложила пополам
+      двенадцать раз полосу тонкой бумаги длиной 1219 метров — и вывела, какая
+      длина для этого нужна. Расход растёт как <em>4<sup>n</sup></em>, поэтому
+      восьмое складывание в руках и не выходит: дело не в силе, а в длине.</p>
+  </div>
+</aside>
+
+<aside class="deeper" id="d5" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Почему сорта вершин именно такие</h3>
+    <p><em>Почему шаги чередуются.</em> Все повороты прямые, поэтому ход идёт вбок,
+      вверх, вбок, вверх. Первый шаг от начала — вбок, и дальше сорт вершины и тип
+      шага идут в ногу.</p>
+    <p><em>Почему старые вершины — это в точности прежние.</em> Увеличение картинки
+      переводит узел <em>(a, b)</em> в узел <em>(a−b, a+b)</em>, у которого сумма
+      координат чётна. Новая вершина стоит с ним рядом, и её сумма чётной быть
+      не может. Поэтому «была раньше» и «чётная сумма координат» — одно и то же.</p>
+    <p><em>Почему работает правило строк.</em> Уголок поворачивает налево ровно тогда,
+      когда его звено-родитель шло вбок. А цвет строки, где стоит излом, — это в
+      точности сорт вершины, из которой родитель выходил: то же увеличение переводит
+      узел <em>(a, b)</em> в узел с ординатой <em>a+b</em>. Дальше работает первый
+      шаг, применённый к прежней картинке.</p>
+    <p><em>Чего доказательство не использовало.</em> Ни один шаг не опирался на то,
+      что складывали всегда в одну сторону. Значит вывод верен для любого способа
+      складывания — всех 4096 вариантов ранга 12.</p>
+  </div>
+</aside>
+
+<aside class="deeper" id="d7" data-open="false" aria-hidden="true">
+  <button class="deeper__close" aria-label="Закрыть">×</button>
+  <div class="deeper__in">
+    <h3>Откуда берётся 1,5236</h3>
+    <p><em>Почему у фигуры площадь есть.</em> Четыре кривые проходят по каждому отрезку
+      решётки ровно один раз, а на клетку приходится два отрезка. Значит полосы шириной
+      в полклетки заполняют плоскость нацело. Складываем дальше, звено стремится
+      к нулю — а фигура не меняется. У линии остаётся площадь.</p>
+    <p><em>Почему это то же самое, что размерность 2.</em> Одно складывание удваивает
+      длину кривой, а размер фигуры увеличивает всего в 1,41 раза. Значит при удвоении
+      размера длина растёт вчетверо — как площадь, а не как линия. Такую линию
+      и называют двумерной.</p>
+    <p><em>А край устроен страннее тела.</em> С каждым рангом край удлиняется в одно
+      и то же число раз, около 1,69, а размер растёт в 1,41 раза. Логарифм одного
+      по другому и даёт&nbsp;1,5236… — число, которое не является целым ни при каком
+      масштабе.</p>
+    <p>Площадь ½ на звено и само число 1,5236 взяты из литературы: Дэвис и Кнут
+      (1970), изрезанность края — Чанг и Чжан (1999). Всё остальное на этой
+      странице считается на месте.</p>
+  </div>
+</aside>
+
+<nav id="nav"></nav>
+
+<script>/*__JS__*/</script>
+</body>
+</html>
