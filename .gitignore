@@ -3,3 +3,7 @@ buffon/_render-zahod04/
 
 # macOS
 .DS_Store
+
+# Собранный сайт — его делает hugo, в git его нет
+public/
+.hugo_build.lock
