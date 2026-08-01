@@ -3,9 +3,18 @@
 
     python3 _generator/tools/check_ves.py            # отчёт + код возврата
     python3 _generator/tools/check_ves.py --tiho     # только код возврата
+    python3 _generator/tools/check_ves.py --staged   # ворота: что заезжает в git
 
-Код возврата: 0 — чисто, 1 — есть НОВЫЙ тяжёлый файл вне git. Годится в ворота.
+Код возврата: 0 — чисто, 1 — нашли тяжёлое, 2 — гейт не отработал. В воротах.
 Запускать из корня репо. stdlib, без сети, детерминизм (сортировка по весу).
+
+ДВА РЕЖИМА СТЕРЕГУТ РАЗНОЕ, И ПУТАТЬ ИХ НЕЛЬЗЯ.
+  · без флага — **место на диске**: что лежит в папке мимо git;
+  · `--staged` — **историю**: что заезжает в коммит. Это лечится только
+    запретом на входе. Файл, попавший в git, остаётся в нём навсегда: удалишь
+    следующим ходом — вес не вернётся, история уже написана.
+Первый режим нужен, потому что 5,2 ГБ папки оказались мусором вне git. Второй —
+потому что 1,0 ГБ `.git` оказались тем, что в git когда-то ВПУСТИЛИ.
 
 ЗАЧЕМ. К 01.08 папка `materials/` весила 5,2 ГБ при 226 МБ реальной работы.
 Разница — не история и не книги, а три кучи, которые никто не заводил решением:
@@ -38,7 +47,8 @@ from pathlib import Path
 
 KOREN = Path(__file__).resolve().parents[2]
 IZVESTNOE = Path(__file__).resolve().parent / "ves_izvestnoe.txt"
-POROG = 10 * (1 << 20)          # 10 МБ — обоснование в шапке
+POROG = 10 * (1 << 20)          # 10 МБ на диске — обоснование в шапке
+POROG_INDEKS = 5 * (1 << 20)    # 5 МБ в индекс — обоснование в proverit_indeks
 ISTOCHNIKI = ("istochniki", "biblioteka")   # законно растущие места
 
 
@@ -101,7 +111,7 @@ def istochnik(otn):
     return any(chast in ISTOCHNIKI for chast in Path(otn).parts)
 
 
-FLAGI = {"--tiho"}
+FLAGI = {"--tiho", "--staged"}
 
 
 def razobrat_vhod(argv):
@@ -117,13 +127,78 @@ def razobrat_vhod(argv):
     if lishnee:
         print(f"❌ не понимаю аргумент: {' '.join(lishnee)}")
         print(f"   допустимо: {' '.join(sorted(FLAGI))} — и больше ничего")
-        print("   python3 _generator/tools/check_ves.py [--tiho]")
+        print("   python3 _generator/tools/check_ves.py [--tiho] [--staged]")
         sys.exit(2)
-    return "--tiho" in argv[1:]
+    return "--tiho" in argv[1:], "--staged" in argv[1:]
+
+
+def proverit_indeks(tiho):
+    """Режим ворот: тяжёлое НЕ ВПУСКАЕТСЯ в git. Возврат — код для хука.
+
+    ЗАЧЕМ ОТДЕЛЬНО ОТ ОСНОВНОГО РЕЖИМА. Основной смотрит на диск и стережёт
+    место. Этот стережёт ИСТОРИЮ — а она не лечится уборкой: файл, попавший в
+    коммит, остаётся в `.git` навсегда, даже если удалить его следующим ходом.
+    Замер 01.08: из 1026 МБ `.git` — 286 МБ PDF и 258 МБ tar-снапшотов, то есть
+    больше половины репозитория составляет то, что когда-то впустили сюда.
+
+    ПОЧЕМУ ПО ВЕСУ, А НЕ ПО РАСШИРЕНИЮ. `.gitignore` уже ловит `*.pdf` в
+    `istochniki/`, `*/snapshots/` и `/*.zip` — и всё равно в индексе лежат
+    `genkin-itenberg-fomin_len-kruzhki.djvu` (7,5 МБ: книга, но расширение
+    другое), `_studio/zhurnal/…/_backup_infra_20260710-043240.zip` (7,4 МБ: zip,
+    но не в корне, а правило было `/*.zip`) и `noch-logi/H1-razmetka-osej.jsonl`
+    (4,1 МБ: лог прогона). Список расширений всегда отстаёт от жизни на один
+    формат — вес не отстаёт никогда.
+
+    ПОЧЕМУ ИСТОЧНИКАМ ЗДЕСЬ ПОБЛАЖКИ НЕТ, в отличие от основного режима. На
+    диске книги накапливаются законно; в ИСТОРИИ им делать нечего — это ровно
+    те 286 МБ. Книга лежит на диске и живёт в реестре, а не в коммите.
+    """
+    vyvod = subprocess.run(
+        ["git", "--no-optional-locks", "diff", "--cached", "--name-only",
+         "-z", "--diff-filter=ACM"],
+        cwd=KOREN, capture_output=True, text=True)
+    if vyvod.returncode != 0:
+        print(f"❌ git diff --cached упал (rc={vyvod.returncode}) — гейт не отработал")
+        return 2
+    znakomye = izvestnye()
+    tyazhelye = []
+    for otn in (s for s in vyvod.stdout.split("\0") if s):
+        if otn in znakomye:
+            continue
+        try:
+            razmer = (KOREN / otn).stat().st_size
+        except OSError:
+            continue                      # файл удаляется этим же коммитом
+        if razmer >= POROG_INDEKS:
+            tyazhelye.append((razmer, otn))
+    tyazhelye.sort(reverse=True)
+
+    if not tyazhelye:
+        if not tiho:
+            print(f"✅ вес: в индекс не лезет ничего тяжелее "
+                  f"{chelovecheski(POROG_INDEKS)}")
+        return 0
+    print(f"🔴 ВЕС: в git заезжает тяжёлое — {len(tyazhelye)} файлов "
+          f"(порог {chelovecheski(POROG_INDEKS)}):")
+    for razmer, otn in tyazhelye:
+        print(f"    {chelovecheski(razmer):>10}  {otn}")
+    print()
+    print("  Файл, попавший в коммит, остаётся в .git НАВСЕГДА — удаление")
+    print("  следующим ходом вес уже не вернёт. Поэтому гейт стоит ЗДЕСЬ.")
+    print("  Что делать:")
+    print(f"    · книга или статья → ей место на диске и в реестре, а не в git:")
+    print(f"      `git restore --staged <путь>` + строка в .gitignore;")
+    print(f"    · снапшот/архив/бэкап → его работу уже делает сам git;")
+    print(f"    · лог прогона → в git идёт вывод, а не сырой поток;")
+    print(f"    · файл правда нужен в истории → впиши строкой С ПРИЧИНОЙ")
+    print(f"      в {IZVESTNOE}.")
+    return 1
 
 
 def main():
-    tiho = razobrat_vhod(sys.argv)
+    tiho, staged = razobrat_vhod(sys.argv)
+    if staged:
+        return proverit_indeks(tiho)
     treki = trekaemye()
     znakomye = izvestnye()
 
