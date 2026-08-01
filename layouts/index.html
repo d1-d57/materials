@@ -1,7 +1,7 @@
 {{ define "main" }}
   <header>
     <h1>{{ .Title }}</h1>
-    {{ with .Content }}<div class="sub">{{ . }}</div>{{ end }}
+    <div class="sub">{{ .Params.podvodka }}</div>
   </header>
 
   <nav class="list">
