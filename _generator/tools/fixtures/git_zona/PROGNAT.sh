@@ -474,51 +474,18 @@ then echo "  ✅ bootstrap_* отвергают имя-флаг/кривой с�
 else echo "  ❌ BOOTSTRAP ПРОГЛОТИЛ КРИВОЕ ИМЯ (см. выше) — validate_slug мёртв"; FAIL=1
 fi
 
-# ── ЛОВУШКА 16: СТОРОЖ СОСЕДНИХ ВЕТОК в `doctor` (инцидент 2026-07-28) ──
-# Воспроизводит инцидент дословно: коммит в зону на ветке A, переключение на B,
-# `doctor`. Пока он не краснеет — гейта нет (так и написано в самом инциденте,
-# раздел «Как проверить, что починка работает»).
-# ЦЕНА: 19 коммитов двух арок остались на покинутой ветке, файл показывал 159
-# строк вместо 574, и это выглядело как удаление данных. Автоматика молчала —
-# все коммиты прошли успешно, каждый на своей ветке.
-#
-# ОБЕ половины обязательны, и вторая не менее первой:
-#   · краснеет на НЕвлитом — иначе сторожа нет;
-#   · МОЛЧИТ про влитую целиком — иначе гейт шумит на здоровом, его отключают,
-#     и пропадает вся защита (`RESHENIYA Р31`).
-# Плюс ОХВАТ на ЗЕЛЁНОМ исходе: зелёное без охвата читается как «всё в порядке»,
-# а означает «в порядке то, что я смотрел» — общий урок того же дня.
-# Плюс DETACHED HEAD: там терять работу проще всего, и исключать «текущую ветку»
-# нечего — сторож обязан смотреть ВСЕ.
-T2=$(mktemp -d)
-trap 'rm -rf "$T" "$T2"' EXIT
+# 🔴 ЛОВУШКА 16 (СТОРОЖ СОСЕДНИХ ВЕТОК по коммитам, инцидент 2026-07-28) —
+# СНЯТА частью B захода `kod_dobivka-vetok.md` ВМЕСТЕ с самим счётным сторожем
+# (`print_branch_watch`): на живом репозитории 03.08 сравнение поимённо
+# показало, что сторож по СОДЕРЖИМОМУ (ловушка 18 ниже) называет ВСЕ те же
+# ветки явно — как потерю или как безопасную с причиной — а счётный давал 43 %
+# шума. Правка существующего пути исполнения, названа отдельной строкой в
+# отчёте захода. Читать про доказательство инцидента 28.07 — в истории git
+# этого файла (коммит, снявший ловушку) и в `_INFRA-git/INCIDENT-2026-07-28…`.
 
-# Вырезать РОВНО блок сторожа из вывода doctor. Нужно потому, что doctor и без
-# сторожа печатает внизу строку «Ветки: …» со ВСЕМИ именами — грепом по целому
-# выводу проверка «про влитую ветку промолчал» ложно краснеет на этой строке
-# (поймано первым же прогоном). Слайс python'ом, а не `sed`: альтернация `\|`
-# в BRE у BSD-sed на macOS владельца работает не так, как в GNU (ловушка 7).
-# ⚠ Терминатор — И «ЧТО ПРОПАДЁТ»: ниже сторожа по коммитам doctor печатает
-# второй блок (сторож по СОДЕРЖИМОМУ, ловушка 18), и он законно называет ветки,
-# про которые первый обязан молчать. Без этой строки проверка «про влитую ветку
-# промолчал» ложно краснела бы на чужом блоке — ровно тот класс, что уже дважды
-# оплачен: ловушка судит подстроку в выводе, а не результат проверяемого куска.
-slice_watch() {
-    python3 - "$1" <<'PY'
-import sys
-out, on = [], False
-for line in open(sys.argv[1], encoding="utf-8").read().splitlines():
-    if "ЗОНА ОТСТАЁТ" in line or "Соседние ветки" in line:
-        on = True
-    elif "Последние коммиты" in line or "ЧТО ПРОПАДЁТ" in line:
-        on = False
-    if on:
-        out.append(line)
-print("\n".join(out))
-PY
-}
-
-# Слайс ВТОРОГО блока doctor — сторожа по содержимому (ловушка 18).
+# Слайс блока doctor — сторожа по содержимому (ловушка 18). Нужен потому, что
+# doctor печатает внизу строку «Ветки: …» со ВСЕМИ именами — грепом по целому
+# выводу проверка «про влитую ветку промолчал» ложно краснела бы на этой строке.
 slice_poteri() {
     python3 - "$1" <<'PY'
 import sys
@@ -534,120 +501,6 @@ print("\n".join(out))
 PY
 }
 
-git init -q "$T2"
-git -C "$T2" config user.email fixture@test
-git -C "$T2" config user.name fixture
-mkdir -p "$T2/_studio/zhurnal/2026-07-28_zona"
-echo "первая версия" > "$T2/_studio/zhurnal/2026-07-28_zona/KARTA-KUSKOV.md"
-git -C "$T2" add -A >/dev/null 2>&1
-git -C "$T2" commit -qm "база: зона арки"
-# имя ветки по умолчанию у git разное (master/main) — фиксируем, иначе охват
-# «проверено N из N» зависел бы от версии git у того, кто гоняет фикстуру
-git -C "$T2" branch -M osnova
-
-# ветка A — на ней делают работу и УХОДЯТ, не забрав (ровно инцидент)
-git -C "$T2" checkout -q -b vetka-a
-echo "двухдневная работа арки" >> "$T2/_studio/zhurnal/2026-07-28_zona/KARTA-KUSKOV.md"
-git -C "$T2" add -A >/dev/null 2>&1
-git -C "$T2" commit -qm "арка Л1: 7 разделов плана"
-# ветка «влитая целиком» — стоит на базе, то есть предок B ⇒ шуметь НЕ должна
-git -C "$T2" branch vetka-vlitaya osnova
-# ветка B — сюда переключились ночью 28.07
-git -C "$T2" checkout -q -b vetka-b osnova
-
-GIT_ZONA_REPO="$T2" python3 "$TOOLS/git_zona.py" doctor > "$T2/doctor-red.txt" 2>&1 || true
-slice_watch "$T2/doctor-red.txt" > "$T2/watch-red.txt"
-
-V=$(grep -c 'ЗОНА ОТСТАЁТ ОТ СОСЕДНЕЙ ВЕТКИ' "$T2/watch-red.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ сторож КРАСНЕЕТ: зона на соседней ветке свежее" \
-               || { echo "  ❌ СТОРОЖА НЕТ — работа ушла на соседнюю ветку, doctor молчит (инцидент 28.07)"; FAIL=1; }
-
-V=$(grep -c 'vetka-a' "$T2/watch-red.txt" || true)
-[ "$V" -ge 1 ] && echo "  ✅ сторож НАЗЫВАЕТ ветку с невлитым по имени" \
-               || { echo "  ❌ сторож не назвал ветку — «посмотрите внимательно» лечением не является"; FAIL=1; }
-
-V=$(grep -c 'vetka-vlitaya' "$T2/watch-red.txt" || true)
-[ "$V" = "0" ] && echo "  ✅ сторож МОЛЧИТ про влитую целиком (не шумит на здоровом, Р31)" \
-               || { echo "  ❌ ШУМ НА ЗДОРОВОМ: влитая ветка объявлена находкой — такой гейт отключат"; FAIL=1; }
-
-V=$(grep -c '2026-07-28_zona' "$T2/watch-red.txt" || true)
-[ "$V" -ge 1 ] && echo "  ✅ сторож называет ЗОНУ, а не только ветку" \
-               || { echo "  ❌ зона не названа — непонятно, что именно отстало"; FAIL=1; }
-
-V=$(grep -c 'git_zona.py adopt --branch vetka-a --zone' "$T2/watch-red.txt" || true)
-[ "$V" -ge 1 ] && echo "  ✅ сторож даёт ГОТОВУЮ команду лечения (adopt с веткой и зоной)" \
-               || { echo "  ❌ команды лечения нет — красное без лечения обучают игнорировать"; FAIL=1; }
-
-V=$(grep -c 'Охват: проверено 3 из 3' "$T2/watch-red.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ сторож объявляет ОХВАТ на КРАСНОМ (3 из 3)" \
-               || { echo "  ❌ охват на красном не объявлен — «нашёл на одной» и «смотрел одну» неразличимы"; FAIL=1; }
-
-# ── вторая половина: ЗЕЛЁНЫЙ исход обязан НЕСТИ ОХВАТ В СЕБЕ ──
-# На vetka-a невлитого нет ни на одной соседней (все три — её предки).
-git -C "$T2" checkout -q vetka-a
-GIT_ZONA_REPO="$T2" python3 "$TOOLS/git_zona.py" doctor > "$T2/doctor-green.txt" 2>&1 || true
-slice_watch "$T2/doctor-green.txt" > "$T2/watch-green.txt"
-
-V=$(grep -c 'ЗОНА ОТСТАЁТ' "$T2/watch-green.txt" || true)
-[ "$V" = "0" ] && echo "  ✅ на здоровом дереве сторож не краснеет вовсе" \
-               || { echo "  ❌ ЛОЖНОЕ СРАБАТЫВАНИЕ: краснеет, когда всё влито"; FAIL=1; }
-
-V=$(grep -c 'Соседние ветки: ✅ невлитого нет — проверено 3 из 3' "$T2/watch-green.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ ЗЕЛЁНОЕ несёт охват в себе («проверено 3 из 3»)" \
-               || { echo "  ❌ ЗЕЛЁНОЕ БЕЗ ОХВАТА — читается как «всё в порядке», а значит «в порядке то, что смотрел»"; FAIL=1; }
-
-# ── detached HEAD: исключать нечего, смотрим ВСЕ 4 ветки ──
-git -C "$T2" checkout -q --detach osnova
-GIT_ZONA_REPO="$T2" python3 "$TOOLS/git_zona.py" doctor > "$T2/doctor-det.txt" 2>&1 || true
-slice_watch "$T2/doctor-det.txt" > "$T2/watch-det.txt"
-V=$(grep -c 'vetka-a' "$T2/watch-det.txt" || true)
-[ "$V" -ge 1 ] && echo "  ✅ detached HEAD: сторож жив и назвал невлитую ветку" \
-               || { echo "  ❌ В DETACHED СТОРОЖ МОЛЧИТ — а терять работу там проще всего"; FAIL=1; }
-V=$(grep -c 'проверено 4 из 4' "$T2/watch-det.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ detached HEAD: охват полный (4 из 4, текущей ветки нет — исключать нечего)" \
-               || { echo "  ❌ detached: охват объявлен неверно (обязано быть 4 из 4)"; FAIL=1; }
-
-# ── подмена ветки ТЕГОМ-ОМОНИМОМ: короткое имя разрешается неоднозначно ──
-# `HEAD..vetka-a` с существующим тегом `vetka-a` git разрешает в ТЕГ (refs/tags
-# раньше refs/heads в порядке разрешения), а тег стоит на базе ⇒ невлитого «ноль»,
-# и сторож промолчал бы про ветку с живой работой. Ровно тот способ заставить его
-# молчать, который выписан в заходе как атака. Держится только полным
-# `refs/heads/<имя>` в коде — замени на короткое имя, и эта ловушка краснеет
-# (проверено мутацией: с коротким именем фикстура была зелёной, пока ловушки не было).
-git -C "$T2" checkout -q vetka-b
-git -C "$T2" tag vetka-a osnova
-GIT_ZONA_REPO="$T2" python3 "$TOOLS/git_zona.py" doctor > "$T2/doctor-tag.txt" 2>&1 || true
-slice_watch "$T2/doctor-tag.txt" > "$T2/watch-tag.txt"
-# Проверять НАХОДКУ, а не подстроку: имя `vetka-a` встречается и в строке
-# «⚠ охват НЕПОЛОН: heads/vetka-a», поэтому грубый grep по имени давал ЛОЖНОЕ
-# ЗЕЛЁНОЕ ровно на том дефекте, который эта ловушка и должна ловить (так и
-# случилось при первой постановке). Судим по трём признакам разом.
-V=$(grep -c '· vetka-a — не влито коммитов: 1' "$T2/watch-tag.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ тег-омоним не заглушил сторожа: ветка названа находкой, имя точное" \
-               || { echo "  ❌ ТЕГ-ОМОНИМ ЗАГЛУШИЛ СТОРОЖА — короткое имя ветки разрешается неоднозначно"; FAIL=1; }
-V=$(grep -c 'НЕПОЛОН' "$T2/watch-tag.txt" || true)
-[ "$V" = "0" ] && echo "  ✅ тег-омоним не съел охват (ветка прочитана, не пропущена)" \
-               || { echo "  ❌ ОХВАТ УПАЛ ИЗ-ЗА ТЕГА — ветка не прочитана, а вердикт всё равно печатается"; FAIL=1; }
-V=$(grep -c 'adopt --branch vetka-a --zone' "$T2/watch-tag.txt" || true)
-[ "$V" = "1" ] && echo "  ✅ команда лечения называет ВЕТКУ 'vetka-a', а не 'heads/vetka-a'" \
-               || { echo "  ❌ В КОМАНДЕ ЛЕЧЕНИЯ НЕ ТО ИМЯ — скопированная команда не найдёт ветку"; FAIL=1; }
-git -C "$T2" tag -d vetka-a > /dev/null 2>&1 || true
-
-# ── сторож READ-ONLY: не создаёт index.lock и не двигает индекс ──
-# Требование 2 спецификации. Гейт, отбирающий лок у живого коммита, повторил бы
-# ровно тот дефект, который он лечит (ARKA §6 гонял `git status` и ронял коммиты).
-git -C "$T2" checkout -q vetka-b
-BEFORE=$(git -C "$T2" rev-parse HEAD)
-IDX_BEFORE=$(python3 -c "import os,sys; print(os.stat(sys.argv[1]).st_mtime)" "$T2/.git/index")
-GIT_ZONA_REPO="$T2" python3 "$TOOLS/git_zona.py" doctor > /dev/null 2>&1 || true
-IDX_AFTER=$(python3 -c "import os,sys; print(os.stat(sys.argv[1]).st_mtime)" "$T2/.git/index")
-[ ! -f "$T2/.git/index.lock" ] && echo "  ✅ сторож не оставил index.lock (read-only)" \
-               || { echo "  ❌ СТОРОЖ ВЗЯЛ index.lock — уронит чужой коммит, как гейт из ARKA §6"; FAIL=1; }
-[ "$IDX_BEFORE" = "$IDX_AFTER" ] && echo "  ✅ сторож НЕ переписал индекс" \
-               || { echo "  ❌ сторож переписал индекс — обычный git status вместо --no-optional-locks"; FAIL=1; }
-[ "$BEFORE" = "$(git -C "$T2" rev-parse HEAD)" ] && echo "  ✅ сторож не двинул HEAD" \
-               || { echo "  ❌ сторож двинул HEAD — диагност не смеет менять состояние"; FAIL=1; }
-
 # ── ЛОВУШКА 17: 🔴 сгенерированный заход НЕСЁТ формат очереди ДОМ/ДОСТАВЛЕНО ──
 # Ф1/тираж (kod_tirazh-ocheredi.md часть A): формат вшивается ГЕНЕРАТОРОМ поверх
 # РЕАЛЬНОГО `_TEMPLATE-zahod.md` (файл шаблона вне зоны, не трогается) — без
@@ -656,7 +509,7 @@ IDX_AFTER=$(python3 -c "import os,sys; print(os.stat(sys.argv[1]).st_mtime)" "$T
 # генератор и РЕАЛЬНЫЙ шаблон (тот же приём, что fixtures/register_doc/), не
 # синтетику — иначе ловушка проверяла бы не то, что реально штампуется.
 T17=$(mktemp -d)
-trap 'rm -rf "$T" "$T2" "$T17"' EXIT
+trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
 cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$T17/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
@@ -696,7 +549,7 @@ T3=$(mktemp -d)
 # закоммитит их в проверяемую ветку, и `adopt` честно назовёт их
 # несобранным — ловушка покраснеет на собственном мусоре (поймано сразу).
 O3=$(mktemp -d)
-trap 'rm -rf "$T" "$T2" "$T3" "$O3"' EXIT
+trap 'rm -rf "$T" "$T3" "$O3"' EXIT
 
 git init -q "$T3"
 git -C "$T3" config user.email fixture@test
@@ -805,7 +658,7 @@ V=$(grep -c 'zona-b' "$O3/adopt.txt" || true)
 #        вопрос задаётся из третьего worktree — сравнение только с HEAD красило
 #        безопасную ветку. Красный, который врёт, отключают вместе с настоящим.
 T4=$(mktemp -d); O4=$(mktemp -d)
-trap 'rm -rf "$T" "$T2" "$T3" "$O3" "$T4" "$O4"' EXIT
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4"' EXIT
 git init -q "$T4"
 git -C "$T4" config user.email fixture@test
 git -C "$T4" config user.name fixture
@@ -871,5 +724,89 @@ slice_poteri "$O4/doctor-det.txt" > "$O4/poteri-det.txt"
 V=$(grep -c 'содержимое ДОЕХАЛО, хотя история не влита: .*vetka-posle-adopt' "$O4/poteri-det.txt" || true)
 [ "$V" = "1" ] && echo "  ✅ 20в: в detached HEAD доехавшее в ДЕРЕВО признано доехавшим (уровень 2 жив)" \
                || { echo "  ❌ УРОВЕНЬ 2 МЁРТВ: работа доехала в текущее дерево, а сторож красит"; FAIL=1; }
+
+# ── ЛОВУШКА 21: лок в ЛИЧНОМ каталоге worktree — `doctor` из этой папки ВИДИТ ──
+# Часть A захода `kod_dobivka-vetok.md`. `.git` рабочей папки worktree — ФАЙЛ-
+# указатель на `<основной>/.git/worktrees/<имя>`, и старый код читал `REPO/".git"`
+# как каталог — там локи не находились НИКОГДА. ЦЕНА: настоящий лок, положенный
+# туда живым прогоном 03.08, дал «Локи в .git: ✅ свободно» — защита от гонки
+# отсутствовала ровно там, где заведён параллелизм (`GIT-disciplina §4`).
+T5=$(mktemp -d); O5=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5"' EXIT
+git init -q "$T5"
+git -C "$T5" config user.email fixture@test
+git -C "$T5" config user.name fixture
+echo "база" > "$T5/f.txt"
+git -C "$T5" add -A >/dev/null 2>&1; git -C "$T5" commit -qm "база"
+git -C "$T5" branch -M osnova
+WT5="$T5-wt"
+git -C "$T5" worktree add -q -b feature-x "$WT5" >/dev/null 2>&1
+GD5=$(git -C "$WT5" rev-parse --git-dir)
+touch "$GD5/proba.lock"
+GIT_ZONA_REPO="$WT5" python3 "$TOOLS/git_zona.py" doctor > "$O5/doctor.txt" 2>&1 || true
+V=$(grep -c 'ЛОКИ в .git' "$O5/doctor.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ часть A: doctor ИЗ РАБОЧЕЙ ПАПКИ worktree видит лок в её личном каталоге" \
+               || { echo "  ❌ ЧАСТЬ A СЛОМАНА: лок в .git/worktrees/<имя>/ не найден — гонка снова невидима"; FAIL=1; }
+V=$(grep -c 'proba.lock' "$O5/doctor.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ часть A: лок назван ПОЛНЫМ путём (personal git-dir вне рабочей папки)" \
+               || { echo "  ❌ путь лока не назван — печать сломана на personal git-dir"; FAIL=1; }
+rm -f "$GD5/proba.lock"
+git -C "$T5" worktree remove --force "$WT5" >/dev/null 2>&1 || true
+
+# ── ЛОВУШКА 22: `bootstrap_zahod.py --worktree` кладёт файл-заход В ОСНОВНУЮ
+# папку, В ОДНОМ ЭКЗЕМПЛЯРЕ, а worktree заводит ТОЛЬКО для кода ──
+# Часть D захода `kod_dobivka-vetok.md`, регрессия на урок 23. ЦЕНА (до починки):
+# файл рождался ТОЛЬКО в рабочей папке — исполнитель, отправленный контрактом в
+# основную (там ПЛАН/ВОПРОСЫ/ОТЧЁТ), не находил там ничего.
+T22=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
+mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$T22/_generator/tools/"
+cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T22/_studio/zhurnal/"
+cd "$T22"
+git init -q .
+git config user.email fixture@test
+git config user.name fixture
+git add -A >/dev/null; git commit -qm baseline >/dev/null
+cd - >/dev/null
+python3 "$T22/_generator/tools/bootstrap_zahod.py" _studio/zhurnal/proba22 proba22t \
+    --branch fixture-branch22 --zone "_studio/zhurnal/proba22/" --worktree proba22wt \
+    --opisanie "фикстура: файл в основной, worktree для кода" > /dev/null 2>&1 || true
+[ -f "$T22/_studio/zhurnal/proba22/kod_proba22t.md" ] \
+    && echo "  ✅ часть D: файл-заход создан В ОСНОВНОЙ папке (--worktree задан)" \
+    || { echo "  ❌ ЧАСТЬ D СЛОМАНА: файла-захода в основной папке нет — урок 23 вернулся"; FAIL=1; }
+[ ! -f "$T22-wt/proba22wt/_studio/zhurnal/proba22/kod_proba22t.md" ] \
+    && echo "  ✅ часть D: файла НЕТ в рабочей папке (одна копия, не тень)" \
+    || { echo "  ❌ ДВОЙНАЯ КОПИЯ: файл рождается ещё и в worktree — та самая тень из урока 2026-07-23"; FAIL=1; }
+[ -d "$T22-wt/proba22wt" ] \
+    && echo "  ✅ часть D: рабочая папка для КОДА всё равно заведена" \
+    || { echo "  ❌ worktree не заведён — --worktree перестал заводить папку для кода"; FAIL=1; }
+
+# ── ЛОВУШКА 23: `poteri` — read-only подкоманда, печатает ОХВАТ ──
+# Часть C захода `kod_dobivka-vetok.md`. Держится тем же прогоном, что T3 выше
+# (ловушка 18: uniq/doehala/otstala), только через отдельную подкоманду, а не
+# через `doctor` — это и есть разница между «блок в doctor» и «команда poteri».
+RC_POTERI=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" poteri > "$O3/poteri-cmd.txt" 2>&1 || RC_POTERI=$?
+V=$(grep -c 'Охват: проверено 4 из 4' "$O3/poteri-cmd.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ часть C: poteri (без --branch) печатает охват (4 из 4, после ловушки 19)" \
+               || { echo "  ❌ ОХВАТ НЕ ОБЪЯВЛЕН — poteri не несёт гарантию «смотрел всё»"; FAIL=1; }
+V=$(grep -c '· vetka-uniq — пропадёт файлов: 1' "$O3/poteri-cmd.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ часть C: poteri находит ту же уникальную работу, что и блок в doctor" \
+               || { echo "  ❌ poteri разъехался с doctor — два входа судят по-разному"; FAIL=1; }
+[ "$RC_POTERI" = "1" ] && echo "  ✅ часть C: poteri вернул rc=1 — реальная потеря есть" \
+               || { echo "  ❌ КОД ВОЗВРАТА poteri НЕ СИГНАЛИТ О ПОТЕРЕ (rc=$RC_POTERI, ожидался 1)"; FAIL=1; }
+# read-only и по одной ветке — доехавшая ветка, вызов с --branch
+RC_BRANCH=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" poteri --branch vetka-doehala > "$O3/poteri-branch.txt" 2>&1 || RC_BRANCH=$?
+V=$(grep -c 'проверено 1 из 1' "$O3/poteri-branch.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ часть C: poteri --branch судит РОВНО одну ветку (охват 1 из 1)" \
+               || { echo "  ❌ poteri --branch не сузил проверку до одной ветки"; FAIL=1; }
+[ "$RC_BRANCH" = "0" ] && echo "  ✅ часть C: poteri --branch на безопасной ветке — rc=0" \
+               || { echo "  ❌ poteri --branch на безопасной ветке дал rc=$RC_BRANCH, ожидался 0"; FAIL=1; }
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" poteri --branch net-takoj-vetki > "$O3/poteri-bad.txt" 2>&1 && G=bad || G=ok
+{ [ "$G" = "ok" ]; } && grep -q 'нет среди' "$O3/poteri-bad.txt" \
+    && echo "  ✅ часть C: poteri --branch на несуществующей ветке отказывает громко" \
+    || { echo "  ❌ poteri --branch молча проглотил несуществующую ветку"; FAIL=1; }
 
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
