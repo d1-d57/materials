@@ -127,11 +127,52 @@ def refuse_write(action, suggest="commit"):
     return 3
 
 
+_LOCAL_ENV_VARS = None
+
+
+def _git_env():
+    """Окружение процесса БЕЗ унаследованных GIT_* (`GIT_DIR`, `GIT_INDEX_FILE`
+    и т.п.) — иначе `git()` подчиняется чужому репозиторию МОЛЧА.
+
+    🔴 НАЙДЕНО ВЕРИФИКАТОРОМ части A (заход 2026-08-03): `git rev-parse
+    --git-dir` следует `GIT_DIR` из окружения БЕЗУСЛОВНО — `cwd=REPO`
+    игнорируется целиком. Если процесс, которым запущен `git_zona.py`,
+    унаследовал `GIT_DIR` (типичная утечка из git-хука, обёртки-скрипта,
+    который сам когда-то был хуком, или забытого `export` в сессии терминала),
+    `git_dir()` тихо укажет на ЧУЖУЮ рабочую копию — и `find_locks()` честно
+    отчитается «свободно», проверив не тот каталог. Ровно тот класс риска, что
+    уже назван в докстроке модуля («Внутри хука git экспортирует GIT_DIR…») и
+    в `fixtures/git_zona/PROGNAT.sh` («ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить
+    окружение git») — но там чистится окружение ФИКСТУРЫ, а не каждого
+    вызова `git()` внутри самого инструмента.
+
+    Список — `git rev-parse --local-env-vars`: то же самое, чем чистится
+    фикстура. Кэш модульный: список имён переменных не зависит от репозитория
+    и не меняется между вызовами — спрашивать его у git на каждый вызов было
+    бы лишним процессом ради константы. `GIT_ZONA_REPO` — НЕ git-нативная
+    переменная (это собственный переключатель инструмента, читается в Python
+    ДО спуска в subprocess), в список `--local-env-vars` не попадает и не
+    трогается.
+    """
+    global _LOCAL_ENV_VARS
+    if _LOCAL_ENV_VARS is None:
+        r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--local-env-vars"],
+                           capture_output=True, text=True)
+        _LOCAL_ENV_VARS = [v for v in r.stdout.split() if v]
+    env = os.environ.copy()
+    for v in _LOCAL_ENV_VARS:
+        env.pop(v, None)
+    return env
+
+
 def git(*args, check=True):
-    """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок."""
+    """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок.
+
+    Окружение — `_git_env()`, без унаследованных `GIT_*`: см. её докстроку.
+    """
     r = subprocess.run(
         ["git", "--no-optional-locks", *args],
-        cwd=REPO, capture_output=True, text=True,
+        cwd=REPO, capture_output=True, text=True, env=_git_env(),
     )
     if check and r.returncode != 0:
         sys.exit(f"❌ git {' '.join(args)} упал:\n{r.stderr.strip()}")

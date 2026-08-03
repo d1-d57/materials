@@ -809,4 +809,38 @@ GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" poteri --branch net-takoj-vetki
     && echo "  ✅ часть C: poteri --branch на несуществующей ветке отказывает громко" \
     || { echo "  ❌ poteri --branch молча проглотил несуществующую ветку"; FAIL=1; }
 
+# ── ЛОВУШКА 24: унаследованный GIT_DIR НЕ уводит `doctor` на чужой worktree ──
+# Найдено ВЕРИФИКАТОРОМ части A (заход 2026-08-03): `git rev-parse --git-dir`
+# следует переменной `GIT_DIR` из окружения БЕЗУСЛОВНО, `cwd` игнорируется
+# целиком. Если процесс, которым запущен `git_zona.py`, унаследовал `GIT_DIR`
+# (утечка из git-хука, обёртки, забытый `export`) — `git_dir()` без чистки
+# окружения тихо указал бы на ЧУЖУЮ рабочую копию, и `find_locks()` отчитался
+# бы «свободно», проверив не тот каталог. Ровно тот класс, что уже назван в
+# докстроке `git_zona.py` и в ловушке-первом-ходе этой самой фикстуры выше
+# («ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить окружение git») — но там чистится
+# окружение ФИКСТУРЫ, а не каждого вызова `git()` внутри инструмента.
+T6=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6"' EXIT
+git init -q "$T6"
+git -C "$T6" config user.email fixture@test
+git -C "$T6" config user.name fixture
+echo "база" > "$T6/f.txt"
+git -C "$T6" add -A >/dev/null 2>&1; git -C "$T6" commit -qm "база"
+git -C "$T6" branch -M osnova
+git -C "$T6" worktree add -q -b wtA "$T6-wtA" >/dev/null 2>&1
+git -C "$T6" worktree add -q -b wtB "$T6-wtB" >/dev/null 2>&1
+GDA=$(git -C "$T6-wtA" rev-parse --git-dir)
+GDB=$(git -C "$T6-wtB" rev-parse --git-dir)
+touch "$GDA/svoj.lock"
+# GIT_DIR подделан на СОСЕДНИЙ worktree — doctor должен ИГНОРИРОВАТЬ подделку
+# и всё равно проверить СВОЙ (wtA) каталог, потому что запущен GIT_ZONA_REPO=wtA.
+GIT_DIR="$GDB" GIT_ZONA_REPO="$T6-wtA" python3 "$TOOLS/git_zona.py" doctor \
+    > "$T6/doctor-git-dir.txt" 2>&1 || true
+V=$(grep -c 'svoj.lock' "$T6/doctor-git-dir.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ часть A: унаследованный GIT_DIR НЕ уводит doctor от своего лока" \
+               || { echo "  ❌ ПОДДЕЛКА GIT_DIR СРАБОТАЛА — doctor проверил чужой worktree, свой лок не видит"; FAIL=1; }
+V=$(grep -c "$GDB" "$T6/doctor-git-dir.txt" || true)
+[ "$V" = "0" ] && echo "  ✅ часть A: doctor не смотрит на подделанный (чужой) git-dir вовсе" \
+               || { echo "  ❌ doctor смотрит на путь из подделанного GIT_DIR, а не на свой"; FAIL=1; }
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
