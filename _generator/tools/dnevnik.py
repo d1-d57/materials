@@ -93,6 +93,45 @@ def repliki_vladelca(yavnyj_transcript):
     return tr, vladelec
 
 
+def sostoyanie(arka_arg, transcript_arg=None):
+    """Состояние дневника арки БЕЗ `sys.exit` — для встраивания в другие инструменты.
+
+    `cmd_proverit` ниже — отдельный, самостоятельный CLI-гейт (`dnevnik.py
+    proverit`), его наблюдаемое поведение (молчание при полном покрытии,
+    отказ кодом на кривом входе) не меняется этой функцией и НЕ использует её.
+    `sostoyanie()` — для приёмки (`priyomka.py`), которой отказ транскрипта
+    или неполной арки должен вернуться СТРОКОЙ ПРИЧИНЫ, а не уронить весь
+    прогон: посреди сессии дневник законно неполон, транскрипт может лежать
+    на чужой машине — оба исхода печатаются честно, а не молчат.
+
+    Возвращает dict:
+        {"dostupno": False, "prichina": "..."}                         — сверка невозможна
+        {"dostupno": True, "pokryto": N, "vsego": M, "nepokrytye": [...],
+         "transcript": str, "dnevnik": str}                             — сверка прошла
+    """
+    arka = Path(arka_arg).resolve()
+    if not arka.is_dir():
+        return {"dostupno": False, "prichina": "нет папки арки: {}".format(arka)}
+    d = arka / DNEVNIK
+    if not d.is_file():
+        return {"dostupno": False, "prichina": "в арке нет дневника {}: {}".format(DNEVNIK, d)}
+    try:
+        tr = najti_transcript(transcript_arg)
+    except SystemExit as e:
+        return {"dostupno": False, "prichina": "транскрипт недоступен: {}".format(e)}
+    vladelec, _analitik, vsego, neponyatnyh = razobrat(tr)
+    if not vladelec:
+        return {"dostupno": False,
+                "prichina": ("в транскрипте {} не найдено ни одной реплики владельца "
+                             "({} записей, нераспознано {})".format(tr.name, vsego, neponyatnyh))}
+    sid = id_sessii(tr)
+    tekst = d.read_text(encoding="utf-8", errors="ignore")
+    nepokrytye = [(nomer(sid, i), t) for i, t in enumerate(vladelec, 1)
+                  if not pokryta(tekst, nomer(sid, i))]
+    return {"dostupno": True, "pokryto": len(vladelec) - len(nepokrytye), "vsego": len(vladelec),
+            "nepokrytye": nepokrytye, "transcript": str(tr), "dnevnik": str(d)}
+
+
 def cmd_proverit(args) -> int:
     d = put_dnevnika(args.arka)
     tr, vladelec = repliki_vladelca(args.transcript)

@@ -51,6 +51,11 @@ from pathlib import Path
 TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parent.parent
 
+# Тот же приём, что в dnevnik.py: гейт зовут и из корня репо, и из хука, и из
+# фикстуры — явная вставка пути надёжнее неявного sys.path[0].
+sys.path.insert(0, str(TOOLS))
+import dnevnik  # noqa: E402
+
 
 def read(p: Path) -> str:
     return p.read_text(encoding="utf-8", errors="ignore")
@@ -233,11 +238,27 @@ def gate_g5(tekst):
     return True, f"{len(zagolovki)} урок(ов), у каждого есть `ЦЕНА:`"
 
 
+def posle_otsechki(tekst: str) -> str:
+    """Текст SESSIYA.md ПОСЛЕ последней отсечки `<!-- РАЗНЕСЕНО ДО СЮДА: ... -->`.
+
+    Без отсечки Г6 перечитывает файл целиком на каждой приёмке и печатает одни
+    и те же старые совпадения «урок» из разнесённого прошлого — 49 строк на
+    каждый прогон в одной живой арке. Гейт, который печатает 49 строк, читать
+    перестанут (та же судьба, что у любого шумного гейта). Отсечку ставит
+    аналитик рукой после разноса; нет отсечки — компромисс в пользу «поймать
+    лишнее», как и раньше (терпимая сторона ошибки для Г6, см. докстринг файла).
+    """
+    sovpadeniya_otsechek = list(re.finditer(r'<!--\s*РАЗНЕСЕНО ДО СЮДА:.*?-->', tekst))
+    if not sovpadeniya_otsechek:
+        return tekst
+    return tekst[sovpadeniya_otsechek[-1].end():]
+
+
 def gate_g6(arka: Path):
     sessiya = arka / "SESSIYA.md"
     if not sessiya.is_file():
         return True, "в арке нет SESSIYA.md — Г6 неприменим", []
-    tekst = read(sessiya)
+    tekst = posle_otsechki(read(sessiya))
     sovpadeniya = [ln.strip() for ln in tekst.splitlines() if re.search(r'урок', ln, re.I)]
     if not sovpadeniya:
         return True, "упоминаний «урок» в SESSIYA.md нет", []
@@ -248,6 +269,113 @@ def gate_g6(arka: Path):
                 f"в UROKI-FABRIKE.md записей `### `: {zapisej}"
                 + ("" if ok else " — дома уроков нет или он пуст, пары быть не может"))
     return ok, soobshch, sovpadeniya
+
+
+def parse_ochered(voprosy_tekst: str):
+    """Пункты `## ВОПРОСЫ` с полями `ДОМ:`/`ДОСТАВЛЕНО:` (Ф1 этого захода).
+
+    Формат пункта (шапка секции документирует его для исполнителя):
+        N. <текст находки>
+           ДОМ: <путь от корня репо | владелец>
+           ДОСТАВЛЕНО: нет | <метка>
+
+    Пункт без `ДОМ:` — обычный вопрос без чужого дома, очередь его не касается.
+    Возвращает список dict: {"n": int, "tekst": str, "dom": str, "dostavleno": str}.
+    """
+    if not voprosy_tekst:
+        return []
+    punkty = re.split(r'^(\d+)\.\s+', voprosy_tekst, flags=re.M)
+    # re.split с группой отдаёт [преамбула, num1, telo1, num2, telo2, ...]
+    ochered = []
+    for i in range(1, len(punkty), 2):
+        n = int(punkty[i])
+        telo = punkty[i + 1]
+        # тело пункта — до следующего пронумерованного пункта (уже отрезано split)
+        m_dom = re.search(r'^\s*ДОМ:\s*(.+)$', telo, re.M)
+        if not m_dom:
+            continue  # обычный вопрос без адреса — не пункт очереди
+        m_dost = re.search(r'^\s*ДОСТАВЛЕНО:\s*(.+)$', telo, re.M)
+        tekst_nahodki = telo.split('\n', 1)[0].strip()
+        ochered.append({
+            "n": n,
+            "tekst": tekst_nahodki,
+            "dom": m_dom.group(1).strip(),
+            "dostavleno": m_dost.group(1).strip() if m_dost else "нет",
+        })
+    return ochered
+
+
+def gate_g7(ochered):
+    """Красный ТОЛЬКО когда пункт помечен доставленным, а по адресу нет метки.
+
+    Ложное «сделано» опаснее честного «не сделано» (Ф1, часть B): недоставленный
+    пункт (`ДОСТАВЛЕНО: нет`) не гейт вообще — он в печати для рук ниже. Дом
+    «владелец» — не файл, факт передачи механически не проверить (Ф1 вопрос 2:
+    у этого типа находки адрес — человек, а не путь) — вне гейта принципиально,
+    тоже только печать.
+    """
+    problemy = []
+    for p in ochered:
+        if p["dostavleno"].strip().lower() == "нет":
+            continue
+        if p["dom"].strip().lower() == "владелец":
+            continue
+        put_doma = (REPO / p["dom"]).resolve() if not Path(p["dom"]).is_absolute() else Path(p["dom"])
+        if not put_doma.is_file():
+            problemy.append(f"пункт {p['n']} помечен доставленным (`{p['dostavleno']}`), "
+                             f"а дом `{p['dom']}` не найден на диске")
+            continue
+        if p["dostavleno"] not in read(put_doma):
+            problemy.append(f"пункт {p['n']} помечен доставленным (`{p['dostavleno']}`), "
+                             f"а метки в доме `{p['dom']}` нет")
+    if problemy:
+        return False, "; ".join(problemy)
+    if not ochered:
+        return True, "пунктов очереди (ДОМ/ДОСТАВЛЕНО) нет"
+    return True, f"{len(ochered)} пункт(ов) очереди, ложной доставки не найдено"
+
+
+KONTRAKTNAYA_ZONA_RE = re.compile(r'^-\s*\*?\*?ЗОНА[^:]*:\*?\*?\s*(.+)$', re.M)
+
+
+def granicy_zony(tekst: str, khash: str):
+    """Печать (НЕ гейт): пути коммита за пределами `## КОНТРАКТ ЗОНЫ`.
+
+    Формат контракта неоднороден (Ф1/часть C1) — ложное красное здесь дороже
+    пропуска, поэтому только печать для рук, не гейт.
+    """
+    m = KONTRAKTNAYA_ZONA_RE.search(tekst)
+    if not m:
+        return "строка «ЗОНА» в контракте не найдена — сверка границ пропущена"
+    prefiksy = [p.strip('`').strip() for p in re.findall(r'`([^`]+)`', m.group(1))]
+    if not prefiksy:
+        return "в строке «ЗОНА» нет путей в backticks — сверка границ пропущена"
+    r = subprocess.run(["git", "--no-optional-locks", "show", "--stat", "--format=", khash],
+                        cwd=REPO, capture_output=True, text=True)
+    if r.returncode != 0:
+        return f"git show --stat {khash} упал — сверка границ пропущена"
+    puti = [ln.split('|')[0].strip() for ln in r.stdout.splitlines() if '|' in ln]
+    za_predelami = [p for p in puti if not any(p == pref or p.startswith(pref.rstrip('/') + '/')
+                                                for pref in prefiksy)]
+    if not za_predelami:
+        return f"все пути коммита внутри зоны ({len(puti)} из {len(puti)})"
+    return (f"ВНЕ зоны контракта: {', '.join(za_predelami)} "
+            f"(зона по контракту: {', '.join(prefiksy)})")
+
+
+def tihij_nedobor(otchet_tekst):
+    """Печать (НЕ гейт): формы «не успел/частично/осталось/не сделал» в ## ОТЧЁТ."""
+    if not otchet_tekst:
+        return []
+    return [ln.strip() for ln in otchet_tekst.splitlines()
+            if re.search(r'не успел|частично|осталось|не сделал', ln, re.I) and ln.strip()]
+
+
+def ohvat_polozhitelnogo(otchet_tekst):
+    """True, если среди числовых строк отчёта есть форма «X из Y» (охват)."""
+    if not otchet_tekst:
+        return False
+    return re.search(r'\d+\s+из\s+\d+', otchet_tekst) is not None
 
 
 # ────────────────────────── ПЕЧАТЬ ДЛЯ РУК ──────────────────────────
@@ -299,6 +427,9 @@ def main() -> int:
     gates.append(("Г5 уроки исполнителя имеют ЦЕНА:", *gate_g5(tekst)))
     g6_ok, g6_msg, g6_sovpadeniya = gate_g6(arka)
     gates.append(("Г6 урок в дневнике без пары в доме уроков", g6_ok, g6_msg))
+    voprosy_dlya_ocheredi = sekciya(tekst, "ВОПРОСЫ")
+    ochered = parse_ochered(voprosy_dlya_ocheredi or "")
+    gates.append(("Г7 пункт очереди отмечен доставленным, а следа нет", *gate_g7(ochered)))
 
     print("═══ МАШИННЫЕ ГЕЙТЫ ═══")
     krasnyh = 0
@@ -318,9 +449,31 @@ def main() -> int:
 
     print("\n═══ ПЕЧАТЬ ДЛЯ РУК — не гейт, список к разнесению ═══")
 
+    # Часть A: отставание дневника — ВСЕГДА печатается, включая полный зелёный
+    # прогон и случай недоступного транскрипта (молчание неотличимо от «всё
+    # разнесено» — ровно тот класс потерь, против которого механизм строится).
+    print("\n-- Дневник арки: отставание от транскрипта (печать всегда, не гейт) --")
+    sost = dnevnik.sostoyanie(str(arka))
+    if not sost["dostupno"]:
+        print(f"   сверка недоступна: {sost['prichina']}")
+    elif not sost["nepokrytye"]:
+        print(f"   дневник полон: покрыто {sost['pokryto']} из {sost['vsego']} реплик владельца")
+    else:
+        print(f"   дневник неполон: покрыто {sost['pokryto']} из {sost['vsego']} реплик владельца")
+        for nom, t in sost["nepokrytye"]:
+            print(f"   · {nom}: {t[:200]}")
+
     voprosy = sekciya(tekst, "ВОПРОСЫ")
     print("\n-- ВОПРОСЫ исполнителя --")
     print(voprosy if voprosy else "(пусто)")
+
+    nedostavlennye = [p for p in ochered if p["dostavleno"].strip().lower() == "нет"]
+    print(f"\n-- Пункты очереди (ДОМ/ДОСТАВЛЕНО), недоставленные ({len(nedostavlennye)}) --")
+    if nedostavlennye:
+        for p in nedostavlennye:
+            print(f"   · {p['n']}. {p['tekst']} — ДОМ: {p['dom']}")
+    else:
+        print("   (пунктов очереди без доставки не найдено)")
 
     uroki = sekciya(tekst, "УРОКИ ФАБРИКЕ")
     print("\n-- УРОКИ ФАБРИКЕ исполнителя (переносить не надо — прочитать обязан) --")
@@ -334,6 +487,23 @@ def main() -> int:
             print(f"   · {s}")
     else:
         print("   (числовых утверждений не найдено)")
+
+    print("\n-- Охват у вердикта (часть C3, печать) --")
+    if ohvat_polozhitelnogo(otchet):
+        print("   форма «X из Y» в ## ОТЧЁТ найдена")
+    else:
+        print("   ⚠ в ## ОТЧЁТ нет ни одной формы «X из Y» — напомнить: и положительный вердикт несёт охват в себе")
+
+    tihoe = tihij_nedobor(otchet)
+    print(f"\n-- Тихий недобор (часть C2, печать) — слов «не успел/частично/осталось/не сделал»: {len(tihoe)} --")
+    for s in tihoe:
+        print(f"   · {s}")
+
+    if stroka_kommit:
+        m_khash = re.search(r'\b[0-9a-f]{6,40}\b', stroka_kommit)
+        if m_khash:
+            print("\n-- Соблюдение границ зоны (часть C1, печать) --")
+            print(f"   {granicy_zony(tekst, m_khash.group(0))}")
 
     print("\n-- Чек-лист оставшихся шагов канона --")
     print(CHEKLIST)
