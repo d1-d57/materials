@@ -230,7 +230,108 @@ def metki(t: str) -> list[str]:
     return [imya for imya, rx in MARKERY.items() if re.search(rx, t, re.I)]
 
 
-def main():
+# Порог свежести транскрипта для сторожа `origin`, в часах. 🔴 СВЕЖЕСТЬ, А НЕ
+# КАЛЕНДАРНАЯ ГРАНИЦА ФОРМАТА: у роли `user` поля `origin` НЕТ ВООБЩЕ в 733
+# записях старых транскриптов (см. `dnevnik.py razobrat` — старый формат
+# поддержан нарочно), так что проверка «доля без origin» на архивном
+# транскрипте будет ложно тревожной ПОСТОЯННО. На СВЕЖЕМ (только что
+# записанном текущим хостом) транскрипте поле обязано быть у каждой записи —
+# отсутствие там и есть сигнал деградации разбора. 24 часа — эмпирический
+# выбор под цикл этого проекта («второе закрытие в тот же день» — обычный
+# случай); окончательный порог и то, когда предупреждение обязано стать
+# ошибкой, — решение аналитика, см. `## ВОПРОСЫ`/отчёт.
+SVEZHEST_CHASOV = 24
+
+
+def dolya_bez_origin(tr: Path):
+    """Доля записей-КАНДИДАТОВ в реплику владельца без поля `origin`.
+
+    Возвращает (без_origin, всего_kandidatov). 🔴 СЧИТАЕТ НЕ ВСЕ ЗАПИСИ РОЛИ
+    user — ЖИВОЙ прогон на настоящем транскрипте этой сессии показал, почему:
+    первая редакция считала буквально все, и дала 53 из 54 — ложная тревога,
+    потому что записи роли `user`, целиком состоящие из `tool_result`
+    (обёртка результата инструмента), НИКОГДА не несут `origin` и не должны:
+    это не реплика, а синтетика хоста. Кандидат — запись, где `content`
+    строка ИЛИ список с хотя бы одним блоком, который НЕ `tool_result»
+    (тот же структурный признак, что делит содержимое в `razobrat`, но здесь
+    не копируется её разбор — только черновая структурная фильтрация, чтобы
+    сторож считал то же множество, где отсутствие `origin` вообще что-то значит.
+    """
+    bez, vsego_kandidatov = 0, 0
+    for line in tr.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            d = json.loads(line)
+        except Exception:
+            continue
+        rol = d.get("type") or (d.get("message") or {}).get("role")
+        if rol not in ("user", "human"):
+            continue
+        soderzhimoe = (d.get("message") or {}).get("content")
+        kandidat = isinstance(soderzhimoe, str) or (
+            isinstance(soderzhimoe, list)
+            and any(isinstance(b, dict) and b.get("type") != "tool_result" for b in soderzhimoe)
+        )
+        if not kandidat:
+            continue
+        vsego_kandidatov += 1
+        if "origin" not in d:
+            bez += 1
+    return bez, vsego_kandidatov
+
+
+def storozh_formata_origin(tr: Path):
+    """Печатает предупреждение, если СВЕЖИЙ транскрипт теряет поле `origin`.
+
+    Ожидание — ноль: у свежего транскрипта хост обязан класть `origin` в
+    каждую запись. Молчит, когда чисто (Р31) — печатает только при находке.
+    """
+    vozrast_chasov = (datetime.now().timestamp() - tr.stat().st_mtime) / 3600
+    if vozrast_chasov > SVEZHEST_CHASOV:
+        return
+    bez, vsego_kandidatov = dolya_bez_origin(tr)
+    if bez:
+        print(f"⚠ сторож формата: {bez} из {vsego_kandidatov} записей-кандидатов "
+              f"в реплику владельца БЕЗ поля origin в свежем транскрипте "
+              f"(младше {SVEZHEST_CHASOV}ч) — хостовый формат мог измениться молча, "
+              f"проверить разбор в tekst_bloka/razobrat вручную")
+
+
+def zaregistrirovat_dokument(put_dokumenta: Path, opisanie: str):
+    """Зовёт `register_doc.py` — единственную дверь для нового `.md` в `_studio/`.
+
+    🔴 БЕЗ ЭТОГО ВЫГРУЗКА — ДОКУМЕНТ-СИРОТА. `zakryt_sessiyu.py` пишет
+    `VYGRUZKA-<дата>.md` и раньше не звал дверь регистрации: ворота 5
+    (`KONSTITUCIYA §9`) на это красили НЕ саму выгрузку, а СЛЕДУЮЩИЙ коммит —
+    вместе с ним падала вся чужая зона в нём. Живая цена 03.08: коммит
+    дневника арки упал с `rc=1` на `VYGRUZKA-2026-08-03.md:1 — документ-сирота`,
+    и вместе с ним не доехали пять путей. Лечение то же, что у
+    `bootstrap_arka.py`: инструмент, создающий `.md`, зовёт дверь тем же ходом.
+    Ошибку регистрации НЕ делаем фатальной для самой выгрузки — файл уже
+    записан и содержит знание независимо от исхода регистрации; печатаем
+    результат, чтобы аналитик увидел и, если нужно, зарегистрировал вручную.
+    """
+    tools_dir = Path(__file__).resolve().parent
+    repo = tools_dir.parent.parent
+    r = subprocess.run(
+        ["python3", str(tools_dir / "register_doc.py"), str(put_dokumenta), opisanie],
+        cwd=repo, capture_output=True, text=True,
+    )
+    if r.returncode == 0:
+        print(f"✅ документ зарегистрирован дверью: {put_dokumenta.name}")
+    else:
+        print(f"⚠ register_doc.py НЕ зарегистрировал {put_dokumenta.name} "
+              f"(код {r.returncode}) — зарегистрируй вручную:")
+        print(f"   python3 {tools_dir / 'register_doc.py'} {put_dokumenta} \"{opisanie}\"")
+        if r.stdout.strip():
+            print("   " + r.stdout.strip().replace("\n", "\n   "))
+        if r.stderr.strip():
+            print("   " + r.stderr.strip().replace("\n", "\n   "))
+
+
+def main() -> int:
     ap = argparse.ArgumentParser(description="Выгрузить знание из транскрипта сессии")
     ap.add_argument("arka", help="папка арки, куда положить выгрузку")
     ap.add_argument("--transcript", help="путь к .jsonl (иначе ищется самый свежий)")
@@ -242,13 +343,14 @@ def main():
                         "ls -1t ~/.claude/projects/*/*.jsonl "
                         "/var/folders/*/*/T/claude-hostloop-plugins/*/projects/*/*.jsonl "
                         "2>/dev/null | head -20"])
-        return
+        return 0
 
     arka = Path(args.arka).resolve()
     if not arka.is_dir():
         sys.exit(f"❌ нет папки арки: {arka}")
 
     tr = najti_transcript(args.transcript)
+    storozh_formata_origin(tr)
     vladelec, analitik, vsego, neponyatnyh = razobrat(tr)
 
     if not vladelec:
@@ -286,7 +388,10 @@ def main():
 
     for i, t in enumerate(vladelec, 1):
         m = metki(t)
-        L += [f"### В{i:02d}" + (f" · метки: {' · '.join(m)}" if m else ""), "", t, ""]
+        # Три знака — тот же номер, что уходит в `dnevnik.py nomer()`; ширина
+        # обязана совпадать, иначе человек, сверяющий выгрузку с дневником
+        # глазами, увидит два разных номера для одной реплики.
+        L += [f"### В{i:03d}" + (f" · метки: {' · '.join(m)}" if m else ""), "", t, ""]
 
     # Обещания аналитика — отдельным списком, это самый частый вид потери.
     ob = [t for t in analitik if re.search(OBESHCHANIYA, t, re.I)]
@@ -302,7 +407,7 @@ def main():
     for i, t in enumerate(vladelec, 1):
         for f in re.split(r"(?<=[.!?])\s+", t):
             if "?" in f and len(f) > 30:
-                voprosy.append(f"- **В{i:02d}:** {f.strip()[:300]}")
+                voprosy.append(f"- **В{i:03d}:** {f.strip()[:300]}")
     L += ["", "---", "", f"## ВОПРОСЫ ВЛАДЕЛЬЦА — {len(voprosy)} штук, на каждый нужен ответ", ""] + voprosy
 
     out.write_text("\n".join(L) + "\n", encoding="utf-8")
@@ -313,6 +418,25 @@ def main():
     print(f"\n🔴 Дальше — РУКАМИ: разнести по дневнику и домам, ответить на вопросы, "
           f"поставить отсечку. Выгрузка сама ничего не закрывает.")
 
+    zaregistrirovat_dokument(out, f"Выгрузка сессии {data} — сырьё для дневника арки {arka.name}")
+
+    # Часть A.1: `proverit` зовётся ПОСЛЕДНИМ ходом закрытия сессии, а не в
+    # pre-commit — коммит и сессия не совпадают, посреди сессии дневник
+    # законно неполон, и хук, повешенный на коммит, шумел бы зря (Р31: гейт,
+    # который шумит зря, отключат). Закрытие сессии — единственный момент,
+    # когда «дневник полон» вообще имеет смысл проверять. Код возврата этой
+    # сверки СТАНОВИТСЯ кодом возврата всего инструмента: выгрузка удалась,
+    # но дневник неполон → ненулевой выход и внятная строка, что делать.
+    from dnevnik import cmd_proverit  # отложенный импорт: dnevnik.py импортирует ЭТОТ модуль
+    print("\n── сверка полноты дневника арки (dnevnik.py proverit) ──")
+    rc = cmd_proverit(argparse.Namespace(arka=str(arka), transcript=str(tr)))
+    if rc == 0:
+        print("✅ дневник арки полон — все реплики владельца разнесены")
+    else:
+        print("\n🔴 Выгрузка сделана, но дневник арки НЕПОЛОН — закрыть сессию нельзя, "
+              "пока не разнесены реплики выше.")
+    return rc
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

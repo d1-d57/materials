@@ -55,7 +55,10 @@ def id_sessii(tr: Path) -> str:
 
 
 def nomer(sid: str, i: int) -> str:
-    return "S{}-В{:02d}".format(sid, i)
+    # Три знака НАРОЧНО: на сотне реплик `В{:02d}` перестаёт быть фиксированной
+    # шириной (В01..В99, но В100), а сессии такого размера уже рядом. Старых
+    # номеров в дневниках нет (проверено, их там ноль) — миграция не нужна.
+    return "S{}-В{:03d}".format(sid, i)
 
 
 def pokryta(tekst_dnevnika: str, nom: str) -> bool:
