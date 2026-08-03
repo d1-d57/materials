@@ -144,6 +144,10 @@ const Q = new URLSearchParams(location.search);
 const only = Q.get('only');
 function exportFrame() {
   document.getElementById('hint').style.display = 'none';
+  // подстрочник — слой для читателя, а не для зала: в снятый кадр (а значит и в PDF,
+  // который собирается ровно из этих кадров) он не идёт. Гасится здесь, рядом с
+  // подсказкой, потому что это то же самое действие: убрать экранную обвязку.
+  document.querySelectorAll('.pd').forEach(function (d) { d.style.display = 'none'; });
   document.getElementById('stage').style.placeItems = 'start';
   const n = +only;
   const k = Q.get('scene') !== null ? +Q.get('scene') : scenesOf(slides[n]);

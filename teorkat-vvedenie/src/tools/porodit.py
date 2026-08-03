@@ -390,6 +390,19 @@ def parse_section(title, body):
     # ДО того, как POLE_RE сотрёт все `> поле:` строки ниже.
     zagolovok = not re.search(r"^> поле:zagolovok\s+net\s*$", body, re.M)
 
+    # 🔴 ПОДСТРОЧНИК — письменный комментарий «что здесь на самом деле происходит»,
+    # раскрываемый кнопкой в углу слайда (ТЗ `PODSTROCHNIK-TZ.md`). Живёт В ЛЕНТЕ,
+    # рядом со своим разделом, а не отдельным файлом: два представления одного текста
+    # расходятся молча — за прошлую арку так разошлись все пять полей «что на картинке».
+    # Читается ДО того, как POLE_RE сотрёт `> поле:` строки, ровно как `zagolovok`.
+    #
+    # ОДНА строка на слайд — намеренно: критерий готовности ТЗ считает слайды
+    # (`grep -c "поле:podstrochnik"` = 4–5), а не абзацы. Абзацы внутри строки
+    # разделяются знаком ¶ и разворачиваются в пустые строки при записи content.
+    # Кнопка появляется ТОЛЬКО там, где поле есть: пустая строка = нет кнопки.
+    pd = re.search(r"^> поле:podstrochnik (.+)$", body, re.M)
+    podstrochnik = pd.group(1).strip() if pd else ""
+
     figures = []
     for fm in FIGURE_RE.finditer(body):
         attrs, inner = fm.group(1), fm.group(2)
@@ -496,6 +509,7 @@ def parse_section(title, body):
 
     return {"title": title, "layout": layout, "figures": figures,
             "portraits": portraits, "text": text, "scenes": scenes,
+            "podstrochnik": podstrochnik,
             "kadry": kadry, "tyazh": max(kadry) if kadry else 0,
             "zagolovok": zagolovok}
 
@@ -625,6 +639,14 @@ def main():
             s["tyazh"] = max(s["kadry"])
         if not only_inv:
             (SRC / "content" / (sid + ".md")).write_text(s["text"] + "\n", encoding="utf-8")
+            # Подстрочник — ОТДЕЛЬНЫЙ content-файл `<sid>-pd.md`, а не часть текста слайда:
+            # иначе он попал бы и в промер зоны, и в счёт знаков на кадр, и в PDF.
+            # Файл порождается только у слайдов с заполненным полем — по его наличию
+            # `sverstat.py` и решает, рисовать ли кнопку.
+            if s["podstrochnik"]:
+                (SRC / "content" / (sid + "-pd.md")).write_text(
+                    "\n\n".join(p.strip() for p in s["podstrochnik"].split("¶") if p.strip())
+                    + "\n", encoding="utf-8")
         rows.append((sid, s["block"], s["title"], visible_chars(s["text"]),
                      archetype(s), len(s["figures"]), len(names) - len(s["figures"]),
                      [(f["w"], f["h"]) for f in s["figures"]],
@@ -656,6 +678,10 @@ def main():
           % (len(kadry), kadry[len(kadry) // 2], kadry[-1],
              sum(1 for k in kadry if k > 650)))
     print("кадров всего (сумма сцен по деку): %d" % sum(r[8] for r in rows))
+    pd_rows = [(sid, len(s["podstrochnik"])) for sid, s in zip(ids, content) if s["podstrochnik"]]
+    print("подстрочник: слайдов с комментарием %d из %d — %s"
+          % (len(pd_rows), len(content),
+             ", ".join("%s(%d зн.)" % r for r in pd_rows) if pd_rows else "нет"))
     from collections import Counter
     print("архетипы (исполняемые):", dict(Counter(r[4] for r in rows)))
     print("архетипы (как назначила лента):", dict(Counter(archetype_lenty(s) for s in content)))

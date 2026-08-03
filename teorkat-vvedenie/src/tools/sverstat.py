@@ -700,10 +700,23 @@ def build(slides):
         for extra in PRAVKI.get(sid, {}).get("css", []):
             css.append("#%s %s" % (sid, extra))
 
+        # ── ПОДСТРОЧНИК: кнопка в углу + раскрываемый комментарий ──
+        # Кладётся ВНУТРЬ `.slide`, но СНАРУЖИ `.grid` и без класса `.zone` — точно как
+        # `.nomer`: промер мерит `.zone` (`promer.ZONA`), гейт сцен собирает
+        # `.zone p, .zone ul, .panel`, поэтому комментарий не может ни переполнить зону,
+        # ни сойти за пропавший текст, ни сдвинуть кегль слайда.
+        # `<details>` — а не свой обработчик клика: движок не правится, а клавиши
+        # кликера (Space/Enter → следующая сцена) с кнопкой не спорят, потому что
+        # раскрывают её мышью. Закрыта по умолчанию ⇒ на слайде видна только кнопка.
+        pd_html = ('  <details class="pd">\n'
+                   '    <summary class="pd-knopka" title="комментарий к слайду">?</summary>\n'
+                   '    <div class="pd-tekst">{{MD:%s-pd}}</div>\n'
+                   '  </details>\n' % sid) if s.get("podstrochnik") else ""
+
         flow_attr = ' data-flow="reflow"' if potok(sid) else ""
         html_files[sid] = ('<section class="slide" id="%s" data-scenes="%d"%s>\n'
-                           '  <div class="grid">\n%s\n  </div>\n</section>\n'
-                           % (sid, nsc, flow_attr, "\n".join(zones)))
+                           '  <div class="grid">\n%s\n  </div>\n%s</section>\n'
+                           % (sid, nsc, flow_attr, "\n".join(zones), pd_html))
         css_parts.append("\n".join(css))
         if arch != "илл-полосой-снизу":
             stats.append((sid, arch, chars, tb, None))
