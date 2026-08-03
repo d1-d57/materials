@@ -43,13 +43,20 @@
 Только stdlib.
 """
 import argparse
+import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
-REPO = TOOLS.parent.parent
+# PRIYOMKA_REPO — ТОЛЬКО для фикстур (тот же приём, что GIT_ZONA_REPO в
+# git_zona.py): направляет Г3 на одноразовый репо в /tmp. Без этого ветку
+# «артефакт внутри зоны» (часть B, сверка «тот же коммит») нечем проверить —
+# `git log`/`git show` в Г3 читают ИМЕННО `REPO`, а фикстуры кладут артефакты
+# вне боевого репозитория; тестировать «тот же коммит» на боевом дереве —
+# писать в него тестовые коммиты, чего гейт делать не смеет.
+REPO = Path(os.environ.get("PRIYOMKA_REPO") or (TOOLS.parent.parent))
 
 # Тот же приём, что в dnevnik.py: гейт зовут и из корня репо, и из хука, и из
 # фикстуры — явная вставка пути надёжнее неявного sys.path[0].
@@ -166,7 +173,44 @@ def git_commit_time(put_otnositelnyj: str):
     return int(stroka) if stroka else None
 
 
-def gate_g3(put_str, zahod_path: Path):
+def otnositelno_repo(put: Path):
+    try:
+        return str(put.relative_to(REPO))
+    except ValueError:
+        return None  # путь вне репозитория (например, фикстура во /tmp)
+
+
+def artefakt_v_zone(put_otn: str, zona: str) -> bool:
+    """True — путь артефакта попадает в зону захода (тот же префикс, что `--zone`)."""
+    if not zona or put_otn is None:
+        return False
+    return any(put_otn == pref or put_otn.startswith(pref.rstrip('/') + '/')
+               for pref in zona.split())
+
+
+def v_kommite(put_otn: str, khash: str) -> bool:
+    """True — путь входил в дерево, изменённое коммитом `khash`."""
+    r = subprocess.run(["git", "--no-optional-locks", "show", "--stat", "--format=",
+                        khash, "--", put_otn], cwd=REPO, capture_output=True, text=True)
+    return r.returncode == 0 and bool(r.stdout.strip())
+
+
+def gate_g3(put_str, zahod_path: Path, zona: str, khash):
+    """Свежесть/консистентность артефакта — ДВЕ РАЗНЫЕ ветки (часть B тиража).
+
+    🔴 ПОЧЕМУ ВЕТВЛЕНИЕ. Артефакт внутри ЗОНЫ ЭТОГО ЖЕ захода (кодовый файл вроде
+    `priyomka.py`) обычно едет ОДНИМ коммитом с самим файлом-заходом (§4), а файл-
+    заход почти всегда дописывается ОТЧЁТОМ последним ходом — сравнение по ВРЕМЕНИ
+    в этом случае гарантированно даёт ложное красное на полностью здоровой работе,
+    если после основного коммита понадобился точечный коммит-самоссылка (вписать
+    свежепосчитанный хэш в саму строку КОММИТ — живой прецедент в `kod_ochered-
+    domov.md`, где Г3 остаётся красным «по конструкции, не по регрессии»). Для
+    такого артефакта ВРЕМЯ — не тот вопрос; правильный вопрос — «доехал ли он в
+    коммит, названный в §4», и это НЕ зависит от того, сколько ходов правили сам
+    .md ПОСЛЕ. Артефакт ВНЕ зоны (собранный дек/документ/PDF — порождение
+    источника, не часть кода захода) такой гарантии не имеет — там сравнение по
+    времени остаётся осмысленным, как и было.
+    """
     if put_str is None:
         return False, "Г2 не дал пути — сверка свежести пропущена"
     p = Path(put_str).expanduser()
@@ -177,19 +221,26 @@ def gate_g3(put_str, zahod_path: Path):
     if not p.is_file():
         return True, f"артефакт {p} — не обычный файл (папка/ссылка), свежесть не сверяется"
 
+    put_otn_art = otnositelno_repo(p)
+
+    if put_otn_art and artefakt_v_zone(put_otn_art, zona):
+        if not khash:
+            return False, (f"артефакт {p} внутри зоны захода, но хэш коммита неизвестен "
+                            f"(Г1 не дал хэша) — сверка «тот же коммит» невозможна "
+                            f"[ветка: внутри зоны]")
+        if not v_kommite(put_otn_art, khash):
+            return False, (f"артефакт {p} внутри зоны захода, но НЕ входит в коммит {khash} "
+                            f"из §4 КОММИТ — либо не доехал в этот коммит, либо путь разошёлся "
+                            f"[ветка: внутри зоны]")
+        return True, (f"артефакт {p} внутри зоны и входит в коммит {khash} из §4 КОММИТ "
+                       f"[ветка: внутри зоны — сверка по коммиту, не по времени]")
+
+    # ── ветка «вне зоны» — прежняя логика по коммит-времени/mtime ──────────
     # 🔴 СРАВНИВАЕМ ВРЕМЯ ПОСЛЕДНЕГО КОММИТА, А НЕ mtime ФАЙЛА НАПРЯМУЮ.
     # Живой прогон на `kod_dnevnik-gejt.md` поймал это вживую: у файлов чужой
     # арки оказался ОДИН общий mtime от постороннего checkout/merge, никак не
     # связанный с реальным временем сборки — сравнение mtime было бы систематически
-    # неверным. Коммит-время устойчиво: артефакт и файл-заход обычно едут ОДНИМ
-    # и тем же коммитом зоны (§4 «КОММИТ»), и тогда время равно — гейт зелёный.
-    def otnositelno_repo(put: Path):
-        try:
-            return str(put.relative_to(REPO))
-        except ValueError:
-            return None  # путь вне репозитория (например, фикстура во /tmp)
-
-    put_otn_art = otnositelno_repo(p)
+    # неверным.
     put_otn_src = otnositelno_repo(zahod_path)
     art_t = git_commit_time(put_otn_art) if put_otn_art else None
     src_t = git_commit_time(put_otn_src) if put_otn_src else None
@@ -200,15 +251,19 @@ def gate_g3(put_str, zahod_path: Path):
         if art_m < src_m:
             return False, (f"артефакт {p} СТАРШЕ файла-захода по mtime "
                             f"(коммит-время недоступно: артефакт вне git или не закоммичен) — "
-                            f"(артефакт: {fmt_time(art_m)}, файл-заход: {fmt_time(src_m)})")
+                            f"(артефакт: {fmt_time(art_m)}, файл-заход: {fmt_time(src_m)}) "
+                            f"[ветка: вне зоны, mtime]")
         return True, (f"артефакт не старше файла-захода по mtime "
-                       f"(коммит-время недоступно: артефакт вне git или не закоммичен)")
+                       f"(коммит-время недоступно: артефакт вне git или не закоммичен) "
+                       f"[ветка: вне зоны, mtime]")
     if art_t < src_t:
         return False, (f"артефакт {p} СТАРШЕ файла-захода по коммит-времени — сборка молча "
                         f"не запускалась или артефакт не доехал в тот же коммит "
-                        f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)})")
+                        f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)}) "
+                        f"[ветка: вне зоны, коммит-время]")
     return True, (f"артефакт не старше файла-захода по коммит-времени "
-                   f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)})")
+                   f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)}) "
+                   f"[ветка: вне зоны, коммит-время]")
 
 
 def gate_g4(tekst):
@@ -418,11 +473,14 @@ def main() -> int:
     stroka_artefakt = pole_otcheta(otchet_dlya_polej, "АРТЕФАКТ")
 
     gates = []
+    m_khash_glob = re.search(r'\b[0-9a-f]{6,40}\b', stroka_kommit) if stroka_kommit else None
+    khash = m_khash_glob.group(0) if m_khash_glob else None
+
     gates.append(("Г0 зона доехала в git", *gate_g0(zona)))
     gates.append(("Г1 хэш коммита существует", *gate_g1(stroka_kommit)))
     g2_ok, g2_msg, g2_put = gate_g2(stroka_artefakt)
     gates.append(("Г2 строка АРТЕФАКТ заполнена", g2_ok, g2_msg))
-    gates.append(("Г3 артефакт не старше источника", *gate_g3(g2_put if g2_ok else None, zahod_path)))
+    gates.append(("Г3 артефакт не старше источника", *gate_g3(g2_put if g2_ok else None, zahod_path, zona, khash)))
     gates.append(("Г4 секции отчёта заполнены", *gate_g4(tekst)))
     gates.append(("Г5 уроки исполнителя имеют ЦЕНА:", *gate_g5(tekst)))
     g6_ok, g6_msg, g6_sovpadeniya = gate_g6(arka)
@@ -474,6 +532,25 @@ def main() -> int:
             print(f"   · {p['n']}. {p['tekst']} — ДОМ: {p['dom']}")
     else:
         print("   (пунктов очереди без доставки не найдено)")
+
+    # Часть C (Ф1/тираж, легальный обход Г7): «ДОМ: владелец» гейту недоступен
+    # принципиально — классификацию «термин/источник» vs «вопрос владельцу»
+    # делает тот же, кто заполняет пункт, и неверная (или удобная) классификация
+    # выводит находку из-под контроля без единой аномалии в протоколе. Гейтом
+    # это не закрыть (верификатор предыдущего захода); закрываем ПЕЧАТЬЮ доли —
+    # растущая доля видна без чтения, даже когда каждый отдельный пункт по себе
+    # выглядит обоснованным.
+    vladelec = [p for p in ochered if p["dom"].strip().lower() == "владелец"]
+    print(f"\n-- Доля пунктов очереди «ДОМ: владелец» (часть C, печать, не гейт) --")
+    if not ochered:
+        print("   0 из 0 — пунктов очереди нет")
+    else:
+        print(f"   {len(vladelec)} из {len(ochered)} "
+              f"({100 * len(vladelec) / len(ochered):.0f}%)")
+    if vladelec:
+        print("   Пункты «ДОМ: владелец» целиком (нет машинной проверки доставки):")
+        for p in vladelec:
+            print(f"   · {p['n']}. {p['tekst']}")
 
     uroki = sekciya(tekst, "УРОКИ ФАБРИКЕ")
     print("\n-- УРОКИ ФАБРИКЕ исполнителя (переносить не надо — прочитать обязан) --")

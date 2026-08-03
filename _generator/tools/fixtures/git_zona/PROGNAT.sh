@@ -627,4 +627,36 @@ IDX_AFTER=$(python3 -c "import os,sys; print(os.stat(sys.argv[1]).st_mtime)" "$T
 [ "$BEFORE" = "$(git -C "$T2" rev-parse HEAD)" ] && echo "  ✅ сторож не двинул HEAD" \
                || { echo "  ❌ сторож двинул HEAD — диагност не смеет менять состояние"; FAIL=1; }
 
+# ── ЛОВУШКА 17: 🔴 сгенерированный заход НЕСЁТ формат очереди ДОМ/ДОСТАВЛЕНО ──
+# Ф1/тираж (kod_tirazh-ocheredi.md часть A): формат вшивается ГЕНЕРАТОРОМ поверх
+# РЕАЛЬНОГО `_TEMPLATE-zahod.md` (файл шаблона вне зоны, не трогается) — без
+# этой ловушки следующая правка `bootstrap_zahod.py` может тихо вымыть анкор, и
+# формат снова перестанет тиражироваться незамеченным. Копируем РЕАЛЬНЫЙ
+# генератор и РЕАЛЬНЫЙ шаблон (тот же приём, что fixtures/register_doc/), не
+# синтетику — иначе ловушка проверяла бы не то, что реально штампуется.
+T17=$(mktemp -d)
+trap 'rm -rf "$T" "$T2" "$T17"' EXIT
+mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$T17/_generator/tools/"
+cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
+cd "$T17"
+git init -q .
+git config user.email fixture@test
+git config user.name fixture
+git add -A >/dev/null
+git commit -qm baseline >/dev/null
+cd - >/dev/null
+python3 "$T17/_generator/tools/bootstrap_zahod.py" arka proba17 \
+    --branch fixture-branch --zone "moya-zona/" \
+    --opisanie "фикстура: заход несёт формат очереди" > /dev/null 2>&1 || true
+if [ -f "$T17/arka/kod_proba17.md" ]; then
+    V=$(grep -c 'ДОМ:.*ДОСТАВЛЕНО:\|ДОСТАВЛЕНО: нет' "$T17/arka/kod_proba17.md" || true)
+    V2=$(grep -c 'ДОСТАВЛЕНО: нет' "$T17/arka/kod_proba17.md" || true)
+    [ "$V2" != "0" ] && echo "  ✅ сгенерированный заход несёт формат очереди (ДОМ:/ДОСТАВЛЕНО: на месте)" \
+                     || { echo "  ❌ ФОРМАТ ОЧЕРЕДИ ВЫМЫЛСЯ ИЗ ГЕНЕРАЦИИ — тираж снова одноразовый"; FAIL=1; }
+else
+    echo "  ❌ bootstrap_zahod.py не создал заход — проверить формат очереди нечем"; FAIL=1
+fi
+rm -rf "$T17"
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
