@@ -52,6 +52,45 @@ def zhivoe_chislo(arka: Path) -> str:
         return "*(состояние снять не удалось — снять руками командой)*"
 
 
+def sostoyanie_vetok() -> str:
+    """Строка состояния веток для хэндоффа — снятая КОМАНДОЙ, не памятью.
+
+    🔴 ЗАЧЕМ (часть B захода `zhizn-vetki`). Без неё следующая сессия начинает
+    вслепую: ветки заводятся заходом и не закрываются никогда (замер 04.08 —
+    18 веток при пяти живых), а хэндофф — единственный вход, который она
+    читает целиком. Число в файле — это снимок (`KONSTITUCIYA §10`), поэтому
+    рядом с ним печатается и команда, которой оно пересчитывается, и дата
+    данных (её ставит вызывающий, тем же абзацем, что у `zhivoe_chislo`).
+    """
+    tools = Path(__file__).resolve().parent
+    gz = tools / "git_zona.py"
+    if not gz.is_file():
+        return "*(состояние веток снять не удалось: `git_zona.py` не найден)*"
+    try:
+        r = subprocess.run(["python3", str(gz), "poteri"], cwd=tools.parent.parent,
+                           capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError):
+        return "*(состояние веток снять не удалось — снять руками: `git_zona.py poteri`)*"
+    vyvod = (r.stdout or "") + (r.stderr or "")
+    ohvat = [l.strip() for l in vyvod.splitlines() if l.strip().startswith("Охват: проверено")]
+    poteri = [l.strip().lstrip("· ") for l in vyvod.splitlines()
+              if l.strip().startswith("· ") and "пропадёт файлов" in l]
+    vsego = "?"
+    if ohvat:
+        chasti = ohvat[0].split()
+        if len(chasti) > 4:
+            vsego = chasti[4]
+    stroki = [f"веток открыто **{vsego}**, из них с НЕПЕРЕНЕСЁННОЙ работой "
+              f"**{len(poteri)}**"]
+    for p in poteri:
+        stroki.append(f"- 🔴 {p.split(';')[0].strip()}")
+    stroki.append("")
+    stroki.append("Пересчитать: `python3 _generator/tools/git_zona.py poteri` · "
+                  "подмести отработавшие: "
+                  "`python3 _generator/tools/git_zona.py zakryt-vetku --vse-zelenye`")
+    return "\n".join(stroki)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Собрать хэндофф из параметров")
     ap.add_argument("arka")
@@ -139,6 +178,7 @@ def main():
 
     L += ["## СОСТОЯНИЕ АРКИ — снято командой в момент сборки", "",
           zhivoe_chislo(arka), "",
+          "**Ветки:** " + sostoyanie_vetok(), "",
           f"*Дата данных: {segodnya}. Числа в этом файле — снимок; живое состояние "
           f"снимается командами из `KARTA-ZNANIYA.md §1`.*", ""]
 

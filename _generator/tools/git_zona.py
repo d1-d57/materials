@@ -481,6 +481,41 @@ def batch_oids(queries):
     return res
 
 
+def blobs_v_istorii(pairs, refs):
+    """Пути из `pairs` [(путь, оид)], чей блоб лежит в ИСТОРИИ `refs`, а не
+    только на их вершинах.
+
+    🔴 ЗАЧЕМ (заход `zhizn-vetki`, Ф0 — возражение к части A). Проверка по
+    вершинам объявляет потерей работу, которая ДОЕХАЛА приёмкой и была развита
+    дальше: на вершине лежит уже следующая версия файла, а версия ветки ушла
+    в историю. Замер 03.08 на живом репозитории: из 16 «пропадающих» путей
+    10 лежали в истории, три ветки были ложно-красными ЦЕЛИКОМ
+    (`zahod/ochered-domov`, `zahod/priyomka-mehanizm`, `zahod/storozh-vetok`).
+    Цена этой ошибки — не косметика: правило «уникальное есть ⇒ отказ»
+    (`zakryt-vetku`) не закрыло бы 3 ветки из 5, то есть ровно те, ради
+    которых механизм уборки и заведён.
+
+    Вопрос метрики — «ЧТО ПРОПАДЁТ при удалении ветки», и достижимость из
+    другой ссылки отвечает на него буквально: объект, достижимый из чужой
+    истории, удаление этой ветки не удалит. Дороже вершинной проверки (по
+    `rev-list` на путь), поэтому зовётся ВТОРЫМ шагом — только для тех путей,
+    которые вершинная проверка не закрыла.
+    """
+    if not pairs or not refs:
+        return set()
+    found = set()
+    for p, oid in pairs:
+        r = git("rev-list", *refs, "--", p, check=False)
+        if r.returncode != 0:
+            continue
+        commits = [l.strip() for l in r.stdout.splitlines() if l.strip()]
+        if not commits:
+            continue
+        if oid in batch_oids([f"{c}:{p}" for c in commits]):
+            found.add(p)
+    return found
+
+
 def blobs_elsewhere(pairs, refs):
     """Пути из `pairs` [(путь, оид)], чей ТОТ ЖЕ блоб лежит по ТОМУ ЖЕ пути
     хотя бы в одной из `refs`.
@@ -572,6 +607,13 @@ def branch_loss(name, head="HEAD"):
         gde = [x for x in others
                if x.startswith("refs/heads/") or x.startswith("refs/remotes/")]
         doehalo = blobs_elsewhere(pairs, gde)
+        # 🔴 ВТОРОЙ ШАГ — ИСТОРИЯ, а не только вершины (см. `blobs_v_istorii`).
+        # Дороже, поэтому спрашивается только про то, что не закрыл первый.
+        ostalos = [(p, o) for p, o in pairs if p not in doehalo]
+        v_istorii = blobs_v_istorii(ostalos, gde)
+        doehalo = doehalo | v_istorii
+        if v_istorii:
+            res["doehalo_istoriya"] = sorted(v_istorii)
         if doehalo:
             res["doehalo_sosed"] = sorted(doehalo)
             res["propadet"] = [p for p in res["propadet"] if p not in doehalo]
@@ -691,8 +733,11 @@ def print_loss_watch(only=None, title=True):
                 print_paths(r["rashozhdenie"], "⚠")
             if r.get("doehalo_sosed"):
                 print(f"      ✅ и ещё {len(r['doehalo_sosed'])} файл(ов) ветки уже "
-                      "лежат на СОСЕДНИХ ветках — не потеря:")
+                      "лежат в других ссылках — не потеря:")
                 print_paths(r["doehalo_sosed"], "✅", limit=6)
+            if r.get("doehalo_istoriya"):
+                print(f"         из них {len(r['doehalo_istoriya'])} — в ИСТОРИИ "
+                      "(доехали и были развиты дальше), а не на вершине.")
             lechenie(r)
     if not loss:
         # 🔴 ОТРИЦАТЕЛЬНЫЙ ВЕРДИКТ НЕСЁТ ОХВАТ В СЕБЕ: не «потерь нет», а
@@ -748,6 +793,385 @@ def cmd_poteri(args):
     уроке 23 (`bootstrap_zahod.py --worktree`).
     """
     return print_loss_watch(only=args.branch)
+
+
+# ──── ЖИЗНЬ ВЕТКИ: надгробие, закрытие, воскрешение (заход `zhizn-vetki`) ────
+#
+# Все числа ниже — живые замеры этого захода, дата данных 2026-08-04.
+#
+# ЗАЧЕМ. Защита от потери ловит редкое событие, но не убирает то, что его
+# порождает: ветки заводятся заходом и не закрываются НИКОГДА. Замер:
+# 18 веток при пяти живых, 13 из них при удалении не теряют ничего. Через месяц
+# их полсотни, и любой сторож на такой куче становится шумом ПО ПОСТРОЕНИЮ —
+# сторожить дюжину мёртвых объектов бессмысленно (`RESHENIYA Р31`).
+#
+# 🔴 ГЛАВНЫЙ ПРИЁМ — НЕ СПОРИТЬ, КАКАЯ ПРОВЕРКА НАДЁЖНЕЕ, А СДЕЛАТЬ ЦЕНУ ОШИБКИ
+# НУЛЕВОЙ. Перед удалением на вершину ветки ставится тег `mogila/<имя>`. Тег —
+# ссылка: она держит коммиты вечно и весит ничего (замер: уникальные объекты
+# ВСЕХ 19 веток вместе — 0.79 МБ при `.git` = 1.0 ГБ, у 11 веток из 19 их ноль).
+# После этого удаление перестаёт быть необратимым В ПРИНЦИПЕ, а не «пока reflog
+# не протух», и воскрешение — одна команда.
+#
+# 🔴 ЧЕГО НАДГРОБИЕ НЕ ДЕРЖИТ (Ф0 захода, каждый случай закрыт кодом ниже):
+#   1. НЕЗАКОММИЧЕННОЕ в рабочей папке — тег держит КОММИТЫ, а файл, который
+#      никогда не коммитили, не держит ничто. Это единственный по-настоящему
+#      необратимый канал во всей конструкции, и он открыт ровно тем шагом, что
+#      сносит рабочую папку вместе с веткой. Замер 03.08: грязных рабочих папок
+#      3 из 7. ⇒ грязная папка = ОТКАЗ, и его НЕЛЬЗЯ перебить `--vsyo-ravno`.
+#   2. ОСКОЛКИ `reset`/`amend`: коммиты в стороне от вершины тегом не
+#      достижимы, а `branch -D` сносит и reflog ветки — они умирают НЕМЕДЛЕННО,
+#      не «когда протухнет». Замер: такие осколки есть сейчас на 2 ветках из 19
+#      (`arka/mat-kostyak` — 5, `teorkat-istochniki` — 1 «rollback point»).
+#      ⇒ печатается предупреждением перед закрытием, найденное — поимённо.
+#   3. КОЛЛИЗИЯ ИМЕНИ — тот самый корень «доверились ИМЕНИ, а не объекту».
+#      Слаг захода повторяем; `tag -f` затёр бы ПЕРВОЕ надгробие, и работа
+#      первой ветки стала бы недостижимой ровно тем механизмом, который её
+#      страховал. ⇒ существующее надгробие = ОТКАЗ, `-f` не используется НИГДЕ.
+#   4. ПАДЕНИЕ ПОСЕРЕДИНЕ: тег стоит, удаление не прошло (штатный случай —
+#      ветка занята рабочей папкой, `branch -D` → rc=1). Ветка жива с
+#      надгробием, и УРОВЕНЬ 1 метрики видит её историю в теге ⇒ объявляет
+#      вечно-безопасной. Сторож слепнет ровно на той ветке, которую не закрыли.
+#      ⇒ тег СНИМАЕТСЯ обратно при любой неудаче удаления.
+#   5. Надгробие живёт на ОДНОМ ДИСКЕ: теги не уезжают обычным `push`.
+#      «Вечно» = «пока цел диск» — печатается строкой, а не умалчивается.
+
+MOGILA = "mogila/"
+# `main` — ветка публикации сайта, у неё другая роль. Запрет в КОДЕ, а не в
+# просьбе: правило, которое можно нарушить молча, будет нарушено (§11).
+NELZYA_ZAKRYVAT = ("main",)
+
+
+def mogila_ref(name):
+    return "refs/tags/" + MOGILA + name
+
+
+def worktree_gryaz(path):
+    """(число путей вне git, доступна ли папка) для рабочей папки по пути.
+
+    Спрашиваем git ИЗ ЭТОЙ папки, а не по общему индексу: у каждой рабочей
+    папки свой индекс, и «чисто у меня» ничего не говорит про соседнюю.
+    """
+    p = Path(path)
+    if not p.is_dir():
+        return 0, False
+    r = subprocess.run(["git", "--no-optional-locks", "-C", str(p), "status",
+                        "--porcelain", "--untracked-files=all"],
+                       capture_output=True, text=True, env=_git_env())
+    if r.returncode != 0:
+        return 0, False
+    return len([l for l in r.stdout.splitlines() if l.strip()]), True
+
+
+def glavnaya_rabochaya():
+    """Путь ГЛАВНОЙ рабочей копии репозитория (не worktree-ответвления).
+
+    🔴 ЗАЧЕМ ОТДЕЛЬНО ОТ `REPO`. Инструмент, запущенный ИЗ рабочей папки
+    захода, считает своим корнем именно её — и тогда главная папка для него
+    просто «соседняя», то есть попадает в `worktree_branches()` наравне с
+    остальными и становится кандидатом на снос. Живой случай 04.08:
+    `--vse-zelenye`, запущенный из рабочей папки, дошёл до `arka/mat-kostyak`
+    (она зелёная по метрике и стоит в главной папке) и остановился только
+    потому, что там СЛУЧАЙНО было 57 путей вне git. Была бы главная папка
+    чиста — инструмент попытался бы снести рабочую копию всего репозитория.
+    Общий каталог `.git` лежит внутри главной копии всегда — от него и
+    считаем, а не от `REPO`.
+    """
+    gcd = git_common_dir()
+    return gcd.parent if gcd.name == ".git" else REPO
+
+
+def vetka_vychekauchena(name):
+    """Стоит ли ветка в КАКОЙ-ЛИБО рабочей папке, включая основную.
+
+    `worktree_branches()` про основную папку молчит нарочно (её лечение —
+    другое), а здесь важен именно факт занятости: занятую ветку git удалить
+    не даст, и узнать это надо ДО постановки надгробия.
+    """
+    for line in git("worktree", "list", "--porcelain", check=False).stdout.splitlines():
+        if line.startswith("branch ") and \
+                line[len("branch "):].strip() == "refs/heads/" + name:
+            return True
+    return False
+
+
+def oskolki_vetki(name):
+    """Коммиты из reflog ветки, недостижимые НИ ИЗ ОДНОЙ ссылки (случай 2).
+
+    Именно они умрут вместе с reflog при удалении ветки — надгробие на вершине
+    их не держит. Возвращает [(короткий хэш, строка reflog)].
+    """
+    r = git("reflog", "show", "--format=%H %gs", name, check=False)
+    if r.returncode != 0:
+        return []
+    refs = all_refs()
+    lost, vidano = [], set()
+    for line in r.stdout.splitlines():
+        parts = line.split(" ", 1)
+        if not parts or not parts[0].strip():
+            continue
+        h = parts[0].strip()
+        if h in vidano:
+            continue
+        vidano.add(h)
+        if any(git("merge-base", "--is-ancestor", h, x, check=False).returncode == 0
+               for x in refs):
+            continue
+        lost.append((h[:8], (parts[1] if len(parts) > 1 else "")[:60]))
+    return lost
+
+
+def stroka_voskresheniya(name):
+    return f"python3 _generator/tools/git_zona.py voskresit --branch {name}"
+
+
+def zakryt_odnu(name, head, wt, vsyo_ravno=None):
+    """Закрыть ОДНУ ветку: метрика → надгробие → снос папки → снос ветки.
+
+    Возвращает 0 при успехе, 1 при отказе. Печатает всё сама — вызывающему
+    остаётся считать. Порядок шагов НЕ переставлять: каждый закрывает свой
+    случай из шапки раздела.
+    """
+    full = "refs/heads/" + name
+    if name in NELZYA_ZAKRYVAT:
+        print(f"⛔ `{name}` не закрывается никогда — это ветка публикации сайта.")
+        return 1
+    if name == head:
+        print(f"⛔ `{name}` — текущая ветка, её нельзя удалить, пока ты на ней.")
+        return 1
+    if git("rev-parse", "--verify", "--quiet", full, check=False).returncode != 0:
+        print(f"⛔ Ветки нет: {name}")
+        return 1
+
+    # ── 1. МЕТРИКА: что пропадёт (та же `branch_loss`, что у `poteri`) ──
+    res = branch_loss(name, head)
+    if res.get("verdict") == "skip":
+        print(f"⛔ `{name}` не читается — не трогаю, охват неполон.")
+        return 1
+    if res["verdict"] == "loss":
+        n = len(res["propadet"]) + len(res["rashozhdenie"])
+        print(f"🔴 `{name}` — НЕ закрываю: пропадёт файлов {n}, этого текста здесь нет.")
+        if res["propadet"]:
+            print("   мы этот файл с развилки не трогали — заберётся целиком:")
+            print_paths(res["propadet"], "🔴")
+        if res["rashozhdenie"]:
+            print("   писали обе стороны — версия ветки здесь отсутствует:")
+            print_paths(res["rashozhdenie"], "⚠")
+        if not vsyo_ravno:
+            print(f"   → сперва перенести: python3 _generator/tools/git_zona.py "
+                  f"merge {name}\n"
+                  f"   → либо, если это осознанный отказ от работы ветки, повтори с\n"
+                  f"     `--vsyo-ravno \"<причина>\"` — надгробие всё равно ставится,\n"
+                  f"     и воскрешение остаётся одной командой.")
+            return 1
+        print(f"   ⚠ --vsyo-ravno: закрываю несмотря на потерю. Причина: {vsyo_ravno}")
+        log_incident(f"zakryt-vetku --vsyo-ravno: {name} — {vsyo_ravno}",
+                     "работа ветки не перенесена; вернуть — voskresit --branch " + name)
+
+    # ── 2. РАБОЧАЯ ПАПКА: незакоммиченное надгробие НЕ держит (случай 1) ──
+    # Отказ неперебиваемый: это единственная реально необратимая потеря.
+    put_wt = wt.get(name)
+    # 🔴 ОСНОВНАЯ рабочая папка в `wt` НЕ значится нарочно (`worktree_branches`
+    # отдаёт только соседние), и без этой проверки ветка основной папки пошла
+    # бы прямо на `branch -D` — то есть надгробие ставилось бы, git отказывал
+    # «used by worktree», и тег откатывался. Работает, но диагноз человеку
+    # приходит от git, а не от инструмента. Живой случай: `arka/mat-kostyak`
+    # стоит в основной папке и при этом зелёная по метрике, то есть попадает
+    # в `--vse-zelenye` каждый раз.
+    glavnaya = glavnaya_rabochaya()
+    v_glavnoj = (put_wt is not None
+                 and Path(put_wt).resolve() == Path(glavnaya).resolve())
+    if v_glavnoj or (put_wt is None and vetka_vychekauchena(name)):
+        print(f"⛔ `{name}` стоит в ГЛАВНОЙ рабочей папке — не закрываю.\n"
+              f"   {glavnaya}\n"
+              "   Её снести нельзя: это рабочая копия всего репозитория, а не\n"
+              "   папка захода. Ветку, занятую рабочей папкой, git удалить не даст.\n"
+              "   Сперва переведи главную папку на другую ветку.")
+        return 1
+    if put_wt:
+        gryazno, dostupna = worktree_gryaz(put_wt)
+        if gryazno:
+            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {gryazno} путей вне git.\n"
+                  f"   {put_wt}\n"
+                  "   Надгробие держит КОММИТЫ; файл, который никогда не коммитили,\n"
+                  "   не держит ничто — это единственная необратимая потеря здесь,\n"
+                  "   и `--vsyo-ravno` её НЕ перебивает.\n"
+                  "   Посмотреть:  python3 _generator/tools/git_zona.py check   "
+                  f"(запусти из {put_wt})")
+            return 1
+
+    # ── 3. НАДГРОБИЕ: имя занято ⇒ отказ, `-f` не используем НИКОГДА (случай 3) ──
+    if git("rev-parse", "--verify", "--quiet", mogila_ref(name),
+           check=False).returncode == 0:
+        stoit = git("rev-parse", "--short", mogila_ref(name), check=False).stdout.strip()
+        print(f"⛔ `{name}` — надгробие `{MOGILA}{name}` УЖЕ есть (на {stoit}).\n"
+              "   Не перезаписываю: под этим именем уже похоронена другая ветка,\n"
+              "   и `-f` сделал бы ЕЁ работу недостижимой. Сперва разбери старое:\n"
+              f"   {stroka_voskresheniya(name)}")
+        return 1
+
+    vershina = git("rev-parse", full, check=False).stdout.strip()
+    oskolki = oskolki_vetki(name)
+    r = git("tag", MOGILA + name, full, check=False)
+    if r.returncode != 0:
+        print(f"❌ `{name}` — надгробие не поставилось (rc={r.returncode}): "
+              f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}\n"
+              "   Ветку НЕ трогаю: без надгробия удаление необратимо.")
+        return 1
+
+    def snyat_nadgrobie(pochemu):
+        git("tag", "-d", MOGILA + name, check=False)
+        print(f"❌ `{name}` — {pochemu}. Надгробие СНЯТО обратно: ветка жива, и\n"
+              "   оставленный тег объявил бы её вечно-безопасной для сторожа.")
+
+    # ── 4. РАБОЧАЯ ПАПКА СНОСИТСЯ ДО ВЕТКИ: занятую ветку git удалить не даст ──
+    if put_wt:
+        if Path(put_wt).is_dir():
+            r = git("worktree", "remove", put_wt, check=False)
+            if r.returncode != 0:
+                snyat_nadgrobie(f"рабочая папка не снялась: "
+                                f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}")
+                return 1
+        else:
+            # Папки нет, а запись есть — та самая осиротевшая служебная запись.
+            git("worktree", "prune", check=False)
+
+    # ── 5. ВЕТКА: `-D`, НИКОГДА `-d` ──
+    # `-d` судит по ИСТОРИИ и откажет там, где терять нечего: работа доезжает
+    # копированием содержимого (`adopt`), а не слиянием, и формально невлитой
+    # ветка остаётся навсегда. Безопасность здесь держит метрика выше и
+    # надгробие, а не мнение git о графе коммитов.
+    r = git("branch", "-D", name, check=False)
+    if r.returncode != 0:
+        snyat_nadgrobie(f"ветка не удалилась (rc={r.returncode}): "
+                        f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}")
+        return 1
+
+    print(f"✅ `{name}` закрыта. Надгробие: {MOGILA}{name} → {vershina[:8]}")
+    if put_wt:
+        print(f"   Рабочая папка снята: {put_wt}")
+    if oskolki:
+        print(f"   ⚠ Осколков вне всех ссылок было {len(oskolki)} (reset/amend) — "
+              "их держал reflog ветки,\n     и он удалён вместе с ней. "
+              "Надгробие держит только вершину:")
+        for h, s in oskolki[:5]:
+            print(f"        {h}  {s}")
+    print(f"   Воскресить одной командой:\n     {stroka_voskresheniya(name)}")
+    return 0
+
+
+def cmd_zakryt_vetku(args):
+    """Закрыть ветку(и) безопасно: надгробие + удаление + строка воскрешения."""
+    if in_sandbox():
+        rest = ("zakryt-vetku --vse-zelenye" if args.vse_zelenye
+                else f"zakryt-vetku --branch {args.branch or '<ветка>'}")
+        return refuse_write("Закрытие ветки", suggest=rest)
+    if not args.branch and not args.vse_zelenye:
+        print("⛔ Нужна ветка: `zakryt-vetku --branch <имя>` — либо "
+              "`--vse-zelenye`\n   (подмести все, у кого метрика зелёная).")
+        return 1
+    if args.branch and args.vse_zelenye:
+        print("⛔ `--branch` и `--vse-zelenye` вместе не имеют смысла: либо одна "
+              "названная,\n   либо все зелёные.")
+        return 1
+
+    head = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip()
+    wt = worktree_branches()
+    names = [l.strip()[len("refs/heads/"):]
+             for l in git("for-each-ref", "--format=%(refname)",
+                          "refs/heads/", check=False).stdout.splitlines()
+             if l.strip().startswith("refs/heads/")]
+    bylo = len(names)
+
+    if args.branch:
+        celi = [args.branch]
+    else:
+        # 🔴 Отбор ТОЙ ЖЕ функцией, что печатает `poteri`: два входа в один
+        # вопрос обязаны иметь одну реализацию, иначе разъедутся (урок 23).
+        celi = [n for n in names
+                if n != head and n not in NELZYA_ZAKRYVAT
+                and branch_loss(n, head).get("verdict") == "safe"]
+        if not celi:
+            print(f"✅ Подметать нечего: зелёных веток нет — проверено "
+                  f"{len([n for n in names if n != head])} из {bylo - 1}.")
+            return 0
+        print(f"═══ подметание: {len(celi)} зелёных ветк(и/ок) из {bylo} ═══\n")
+
+    zakryto, otkazano = [], []
+    for n in celi:
+        rc = zakryt_odnu(n, head, wt, vsyo_ravno=args.vsyo_ravno)
+        (zakryto if rc == 0 else otkazano).append(n)
+        print()
+
+    stalo = len([l for l in git("for-each-ref", "--format=%(refname)",
+                                "refs/heads/", check=False).stdout.splitlines() if l.strip()])
+    print(f"── итог: закрыто {len(zakryto)}, отказано {len(otkazano)}. "
+          f"Веток было {bylo}, стало {stalo}.")
+    if otkazano:
+        print("   не закрыты: " + ", ".join(otkazano))
+    if zakryto:
+        print("   ⚠ Надгробия живут на ЭТОМ диске: обычный `push` теги не вывозит.\n"
+              "     «Держит вечно» здесь значит «пока цел диск».")
+    return 1 if otkazano else 0
+
+
+def cmd_voskresit(args):
+    """Вернуть ветку из надгробия и снять надгробие — обратная сторона закрытия.
+
+    Она же печатается как «команда воскрешения»: голый `git branch X mogila/X`
+    в чат владельцу выдавать нельзя (`GIT-disciplina §0` — весь git через этот
+    инструмент), а обратимость, ради которой вся конструкция, обязана быть
+    ОДНОЙ командой, а не инструкцией из трёх шагов.
+    """
+    if in_sandbox():
+        return refuse_write("Воскрешение ветки",
+                            suggest=f"voskresit --branch {args.branch}")
+    name = args.branch
+    ref = mogila_ref(name)
+    if git("rev-parse", "--verify", "--quiet", ref, check=False).returncode != 0:
+        print(f"⛔ Надгробия `{MOGILA}{name}` нет — воскрешать нечего.\n"
+              "   Что похоронено: python3 _generator/tools/git_zona.py mogily")
+        return 1
+    if git("rev-parse", "--verify", "--quiet", "refs/heads/" + name,
+           check=False).returncode == 0:
+        print(f"⛔ Ветка `{name}` уже существует — не перезаписываю её могилой.\n"
+              "   Сравнить руками: работа под тем же именем идёт прямо сейчас.")
+        return 1
+    vershina = git("rev-parse", ref + "^{commit}", check=False).stdout.strip()
+    r = git("branch", name, ref, check=False)
+    if r.returncode != 0:
+        print(f"❌ Ветка не создалась (rc={r.returncode}): {r.stderr.strip()}")
+        return 1
+    # 🔴 СВЕРКА ПО ХЭШУ, А НЕ ПО «команда прошла»: вершина обязана совпасть
+    # с той, что держало надгробие, — иначе воскрешение вернуло не то.
+    stalo = git("rev-parse", "refs/heads/" + name, check=False).stdout.strip()
+    if stalo != vershina:
+        print(f"❌ Вершина не совпала: надгробие держало {vershina[:8]}, "
+              f"ветка встала на {stalo[:8]}. Надгробие НЕ снимаю.")
+        return 1
+    git("tag", "-d", MOGILA + name, check=False)
+    print(f"✅ `{name}` воскрешена: вершина {stalo[:8]} (совпала с надгробием).\n"
+          f"   Надгробие `{MOGILA}{name}` снято — ветка снова живая и снова "
+          "видна сторожу.\n"
+          f"   Рабочая папка НЕ восстанавливается: `git_zona.py worktree add "
+          f"<имя> --branch {name}`")
+    return 0
+
+
+def cmd_mogily(args):
+    """Что похоронено — read-only список надгробий."""
+    rows = [l.strip() for l in git("for-each-ref",
+            "--format=%(refname:short) %(objectname:short) %(creatordate:short)",
+            "refs/tags/" + MOGILA + "*", check=False).stdout.splitlines() if l.strip()]
+    if not rows:
+        print("✅ Надгробий нет — закрытых веток в репозитории не числится.")
+        return 0
+    print(f"Надгробий: {len(rows)}")
+    for r in rows:
+        parts = r.split()
+        imya = parts[0][len(MOGILA):]
+        print(f"   · {parts[0]:<40} {' '.join(parts[1:])}")
+        print(f"     вернуть: {stroka_voskresheniya(imya)}")
+    return 0
 
 
 # ─────────────────────────────── doctor ───────────────────────────────
@@ -1858,6 +2282,25 @@ def main():
     po = sub.add_parser("poteri", help="что пропадёт при удалении ветки — файлами, read-only")
     po.add_argument("--branch", help="судить только эту ветку (без флага — все соседние)")
     po.set_defaults(func=cmd_poteri)
+
+    zv = sub.add_parser("zakryt-vetku",
+                        help="закрыть ветку безопасно: надгробие `mogila/<имя>`, "
+                             "снос рабочей папки и ветки, строка воскрешения")
+    zv.add_argument("--branch", help="имя ветки")
+    zv.add_argument("--vse-zelenye", dest="vse_zelenye", action="store_true",
+                    help="подмести ВСЕ ветки с зелёной метрикой одной командой")
+    zv.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
+                    help="закрыть, даже если метрика нашла потерю; ПРИЧИНА "
+                         "обязательна и пишется в INCIDENTY. Грязную рабочую "
+                         "папку НЕ перебивает — там потеря необратима")
+    zv.set_defaults(func=cmd_zakryt_vetku)
+
+    vs = sub.add_parser("voskresit", help="вернуть ветку из надгробия и снять надгробие")
+    vs.add_argument("--branch", required=True, help="имя закрытой ветки")
+    vs.set_defaults(func=cmd_voskresit)
+
+    mg2 = sub.add_parser("mogily", help="что похоронено: список надгробий (read-only)")
+    mg2.set_defaults(func=cmd_mogily)
 
     c = sub.add_parser("check", help="что вне git (read-only, краснеет)")
     c.add_argument("--zone", help="проверять только этот префикс пути")

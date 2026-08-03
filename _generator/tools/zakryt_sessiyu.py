@@ -299,6 +299,44 @@ def storozh_formata_origin(tr: Path):
               f"проверить разбор в tekst_bloka/razobrat вручную")
 
 
+def pechat_uborki_vetok():
+    """Печать (НЕ гейт): какие ветки можно подмести — и ОДНА команда на все.
+
+    🔴 ЗАЧЕМ ЗДЕСЬ. Закрытие сессии — единственный момент, когда уборка не
+    мешает живой работе: заходы дня уже приняты, а новые ещё не заведены.
+    Ветки заводятся заходом и не закрываются никогда (замер 04.08: 18 веток
+    при пяти живых, 16 из них при удалении не теряют ничего) — и любой сторож
+    на такой куче становится шумом ПО ПОСТРОЕНИЮ, сколько его ни чини.
+
+    🔴 НИЧЕГО НЕ УДАЛЯЕТ САМА, и это не осторожность ради осторожности:
+    закрытие сессии идёт под аналитиком, часто из песочницы, где запись в
+    `.git` запрещена вовсе. Печатается список и одна строка, которую владелец
+    исполняет сам (`GIT-disciplina §0`). Молчит, когда подметать нечего (Р31).
+    """
+    tools = Path(__file__).resolve().parent
+    r = subprocess.run(["python3", str(tools / "git_zona.py"), "poteri"],
+                       cwd=tools.parent.parent, capture_output=True, text=True)
+    vyvod = (r.stdout or "") + (r.stderr or "")
+    if "Безопасны" not in vyvod:
+        return
+    print("\n── ветки, которые можно закрыть (печать, ничего не удалено) ──")
+    pechataem = False
+    for stroka in vyvod.splitlines():
+        if stroka.strip().startswith("✅ Безопасны"):
+            pechataem = True
+        elif stroka.strip().startswith("Охват:"):
+            print("   " + stroka.strip())
+            break
+        if pechataem and stroka.strip():
+            print("   " + stroka.strip())
+    print("\n   Подмести ВСЕ безопасные разом — одна команда (обратимо: каждой\n"
+          "   ставится надгробие `mogila/<имя>`, воскрешение — одной командой):")
+    print("     python3 _generator/tools/git_zona.py zakryt-vetku --vse-zelenye")
+    if r.returncode != 0:
+        print("\n   ⚠ Есть ветки с НЕПЕРЕНЕСЁННОЙ работой (см. вывод `poteri` выше "
+              "по списку) —\n     они в подметание не войдут: их сперва переносят.")
+
+
 def zaregistrirovat_dokument(put_dokumenta: Path, opisanie: str):
     """Зовёт `register_doc.py` — единственную дверь для нового `.md` в `_studio/`.
 
@@ -419,6 +457,10 @@ def main() -> int:
           f"поставить отсечку. Выгрузка сама ничего не закрывает.")
 
     zaregistrirovat_dokument(out, f"Выгрузка сессии {data} — сырьё для дневника арки {arka.name}")
+
+    # Уборка веток — здесь, а не отдельной командой: у владельца не должно
+    # появиться ни одного нового хода (см. докстроку pechat_uborki_vetok).
+    pechat_uborki_vetok()
 
     # Часть A.1: `proverit` зовётся ПОСЛЕДНИМ ходом закрытия сессии, а не в
     # pre-commit — коммит и сессия не совпадают, посреди сессии дневник

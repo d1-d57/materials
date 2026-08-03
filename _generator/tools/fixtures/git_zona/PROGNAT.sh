@@ -843,4 +843,339 @@ V=$(grep -c "$GDB" "$T6/doctor-git-dir.txt" || true)
 [ "$V" = "0" ] && echo "  ✅ часть A: doctor не смотрит на подделанный (чужой) git-dir вовсе" \
                || { echo "  ❌ doctor смотрит на путь из подделанного GIT_DIR, а не на свой"; FAIL=1; }
 
+# ── ЛОВУШКА 25: метрика — блоб в ИСТОРИИ других ссылок НЕ потеря ──
+# Заход `zhizn-vetki`, Ф0/возражение к части A. `blobs_elsewhere` смотрела
+# только ВЕРШИНЫ ссылок, поэтому работа, которая ДОЕХАЛА приёмкой и была
+# развита дальше, объявлялась потерей: на вершине уже следующая версия файла.
+# ЦЕНА, замеренная на живом репозитории 04.08: из 16 «пропадающих» путей 10
+# лежали в истории; ТРИ ветки были ложно-красными целиком, и правило
+# «уникальное есть ⇒ отказ» не закрыло бы 3 ветки из 5 — то есть ровно те,
+# ради которых механизм уборки заведён. Убери `blobs_v_istorii` — здесь красное.
+T25=$(mktemp -d); O25=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25"' EXIT
+git init -q "$T25"
+git -C "$T25" config user.email fixture@test
+git -C "$T25" config user.name fixture
+mkdir -p "$T25/zona"
+echo "база" > "$T25/zona/tool.py"
+git -C "$T25" add -A >/dev/null 2>&1; git -C "$T25" commit -qm "база"
+git -C "$T25" branch -M osnova
+# ветка написала свою версию…
+git -C "$T25" checkout -q -b vetka-razvitaya
+echo "версия ветки" > "$T25/zona/tool.py"
+git -C "$T25" commit -qam "ветка: своя версия" >/dev/null
+# …приёмка её перенесла (adopt копирует файл), а потом работа поехала ДАЛЬШЕ
+git -C "$T25" checkout -q osnova
+git -C "$T25" checkout -q vetka-razvitaya -- zona/tool.py
+git -C "$T25" commit -qm "adopt: версия ветки доехала" >/dev/null
+echo "версия ветки + развитие" > "$T25/zona/tool.py"
+git -C "$T25" commit -qam "развили дальше — на вершине уже не версия ветки" >/dev/null
+GIT_ZONA_REPO="$T25" python3 "$TOOLS/git_zona.py" poteri > "$O25/poteri.txt" 2>&1 || true
+V=$(grep -c 'содержимое ДОЕХАЛО, хотя история не влита: .*vetka-razvitaya' "$O25/poteri.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ метрика: доехавшее и РАЗВИТОЕ дальше признано доехавшим (история, не вершина)" \
+               || { echo "  ❌ ЛОЖНОЕ КРАСНОЕ: работа доехала и была развита, а метрика зовёт это потерей — уборка встанет"; FAIL=1; }
+V=$(grep -c '· vetka-razvitaya — пропадёт файлов' "$O25/poteri.txt" || true)
+[ "$V" = "0" ] && echo "  ✅ метрика: развитой ветки нет в опасных" \
+               || { echo "  ❌ развитая ветка в опасных — сверка всё ещё только по вершинам"; FAIL=1; }
+
+# ── ЛОВУШКА 26: `zakryt-vetku` ОТКАЗЫВАЕТ ветке с уникальным содержимым ──
+# Часть A пункт 1. Отказ обязан быть rc=1, назвать ФАЙЛ, оставить ветку на
+# месте И не поставить надгробие: тег на живой ветке объявил бы её вечно-
+# безопасной для сторожа (случай 4 шапки раздела в git_zona.py).
+RC26=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-uniq \
+    > "$O3/zakryt-uniq.txt" 2>&1 || RC26=$?
+[ "$RC26" = "1" ] && echo "  ✅ zakryt-vetku: уникальная работа ⇒ rc=1" \
+               || { echo "  ❌ zakryt-vetku НЕ ОТКАЗАЛ на уникальной работе (rc=$RC26)"; FAIL=1; }
+V=$(grep -c 'zona-a/UNIQ.md' "$O3/zakryt-uniq.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ zakryt-vetku: назван ФАЙЛ, который пропал бы" \
+               || { echo "  ❌ отказ без имени файла — «что-то пропадёт» лечением не является"; FAIL=1; }
+V=$(git -C "$T3" for-each-ref --format='%(refname)' refs/heads/vetka-uniq | grep -c 'refs/heads/vetka-uniq' || true)
+[ "$V" = "1" ] && echo "  ✅ zakryt-vetku: ветка осталась на месте" \
+               || { echo "  ❌ ВЕТКА УДАЛЕНА ВОПРЕКИ ОТКАЗУ — работа потеряна"; FAIL=1; }
+V=$(git -C "$T3" for-each-ref --format='%(refname)' 'refs/tags/mogila/*' | grep -c 'vetka-uniq' || true)
+[ "$V" = "0" ] && echo "  ✅ zakryt-vetku: надгробие на живой ветке НЕ поставлено" \
+               || { echo "  ❌ НАДГРОБИЕ НА ЖИВОЙ ВЕТКЕ — сторож ослепнет на ней навсегда"; FAIL=1; }
+
+# ── ЛОВУШКА 27: доехавшая ветка закрывается, и ВОСКРЕШЕНИЕ возвращает её ПОБАЙТОВО ──
+# 🔴 Это единственная проверка, которая оправдывает автоматику: обратимость.
+# Сверяется ХЭШ вершины до и после — «команда прошла» здесь не доказательство.
+DO=$(git -C "$T3" rev-parse refs/heads/vetka-doehala)
+RC27=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-doehala \
+    > "$O3/zakryt-doehala.txt" 2>&1 || RC27=$?
+[ "$RC27" = "0" ] && echo "  ✅ zakryt-vetku: доехавшая ветка закрыта (rc=0)" \
+               || { echo "  ❌ доехавшая ветка НЕ закрылась (rc=$RC27) — уборка не работает"; FAIL=1; }
+V=$(git -C "$T3" for-each-ref --format='%(refname)' refs/heads/vetka-doehala | wc -l | tr -d ' ')
+[ "$V" = "0" ] && echo "  ✅ zakryt-vetku: ветка удалена" \
+               || { echo "  ❌ ветка не удалена — закрытие не состоялось"; FAIL=1; }
+V=$(git -C "$T3" rev-parse "refs/tags/mogila/vetka-doehala" 2>/dev/null || true)
+[ "$V" = "$DO" ] && echo "  ✅ zakryt-vetku: надгробие стоит на ТОЙ ЖЕ вершине" \
+               || { echo "  ❌ НАДГРОБИЕ НЕ НА ВЕРШИНЕ ВЕТКИ ($V vs $DO) — воскрешать нечего"; FAIL=1; }
+# воскрешение — РОВНО той командой, которую напечатал сам инструмент
+V=$(grep -c 'voskresit --branch vetka-doehala' "$O3/zakryt-doehala.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ zakryt-vetku: команда воскрешения напечатана строкой" \
+               || { echo "  ❌ команды воскрешения нет в выводе — обратимость на словах"; FAIL=1; }
+RC27B=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" voskresit --branch vetka-doehala \
+    > "$O3/voskr.txt" 2>&1 || RC27B=$?
+POSLE=$(git -C "$T3" rev-parse refs/heads/vetka-doehala 2>/dev/null || echo NET)
+{ [ "$RC27B" = "0" ] && [ "$POSLE" = "$DO" ]; } \
+    && echo "  ✅ voskresit: ветка вернулась ПОБАЙТОВО (вершина совпала по хэшу)" \
+    || { echo "  ❌ ВОСКРЕШЕНИЕ НЕ ВЕРНУЛО ВЕТКУ ($POSLE vs $DO, rc=$RC27B) — автоматика ничем не оправдана"; FAIL=1; }
+V=$(git -C "$T3" for-each-ref --format='%(refname)' 'refs/tags/mogila/*' | grep -c 'vetka-doehala' || true)
+[ "$V" = "0" ] && echo "  ✅ voskresit: надгробие снято — повторное закрытие не упрётся в занятое имя" \
+               || { echo "  ❌ надгробие осталось после воскрешения — второе закрытие откажет"; FAIL=1; }
+
+# ── ЛОВУШКА 28: надгробие УЖЕ занято ⇒ отказ, старое НЕ затирается ──
+# Корень «доверились ИМЕНИ, а не объекту»: слаг захода повторяем, и `tag -f`
+# сделал бы работу первой похороненной ветки недостижимой ровно тем
+# механизмом, который её страховал.
+git -C "$T3" tag "mogila/vetka-otstala" osnova
+STAROE=$(git -C "$T3" rev-parse "refs/tags/mogila/vetka-otstala")
+RC28=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-otstala \
+    > "$O3/zakryt-zanyato.txt" 2>&1 || RC28=$?
+[ "$RC28" = "1" ] && echo "  ✅ zakryt-vetku: занятое имя надгробия ⇒ отказ (rc=1)" \
+               || { echo "  ❌ ЗАНЯТОЕ НАДГРОБИЕ ПЕРЕЗАПИСАНО — чужая похороненная работа потеряна"; FAIL=1; }
+V=$(git -C "$T3" rev-parse "refs/tags/mogila/vetka-otstala")
+[ "$V" = "$STAROE" ] && echo "  ✅ zakryt-vetku: старое надгробие не сдвинулось" \
+               || { echo "  ❌ старое надгробие сдвинуто ($V vs $STAROE)"; FAIL=1; }
+V=$(git -C "$T3" for-each-ref --format='%(refname)' refs/heads/vetka-otstala | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ zakryt-vetku: ветка при занятом надгробии осталась жива" \
+               || { echo "  ❌ ветка удалена при занятом надгробии — воскрешать её нечем"; FAIL=1; }
+git -C "$T3" tag -d "mogila/vetka-otstala" >/dev/null 2>&1 || true
+
+# ── ЛОВУШКА 29: рабочая папка сносится ВМЕСТЕ с веткой, сироты не остаётся;
+#                а ГРЯЗНАЯ папка — неперебиваемый отказ ──
+# Случай 1 шапки раздела: надгробие держит КОММИТЫ, а незакоммиченный файл не
+# держит ничто — это единственная необратимая потеря во всей конструкции.
+# Замер 04.08: грязных рабочих папок было 3 из 7.
+T29=$(mktemp -d); O29=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29"' EXIT
+git init -q "$T29"
+git -C "$T29" config user.email fixture@test
+git -C "$T29" config user.name fixture
+echo "база" > "$T29/f.txt"
+git -C "$T29" add -A >/dev/null 2>&1; git -C "$T29" commit -qm "база"
+git -C "$T29" branch -M osnova
+git -C "$T29" worktree add -q -b vetka-gryaznaya "$T29-wtG" >/dev/null 2>&1
+git -C "$T29" worktree add -q -b vetka-chistaya "$T29-wtC" >/dev/null 2>&1
+echo "работа, которую никогда не коммитили" > "$T29-wtG/nikogda-ne-kommitili.md"
+RC29=0
+GIT_ZONA_REPO="$T29" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-gryaznaya \
+    > "$O29/gryaz.txt" 2>&1 || RC29=$?
+[ "$RC29" = "1" ] && echo "  ✅ zakryt-vetku: грязная рабочая папка ⇒ отказ (rc=1)" \
+               || { echo "  ❌ ЗАКРЫЛ ВЕТКУ С ГРЯЗНОЙ ПАПКОЙ — незакоммиченное надгробие не держит"; FAIL=1; }
+[ -f "$T29-wtG/nikogda-ne-kommitili.md" ] && echo "  ✅ zakryt-vetku: незакоммиченный файл цел" \
+               || { echo "  ❌ НЕЗАКОММИЧЕННАЯ РАБОТА УНИЧТОЖЕНА — необратимо"; FAIL=1; }
+# --vsyo-ravno НЕ перебивает грязную папку: перебивает только метрику
+RC29B=0
+GIT_ZONA_REPO="$T29" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-gryaznaya \
+    --vsyo-ravno "проба обхода" > "$O29/gryaz2.txt" 2>&1 || RC29B=$?
+{ [ "$RC29B" = "1" ] && [ -f "$T29-wtG/nikogda-ne-kommitili.md" ]; } \
+    && echo "  ✅ zakryt-vetku: --vsyo-ravno НЕ перебивает грязную папку" \
+    || { echo "  ❌ --vsyo-ravno ПРОВЁЗ СНОС ГРЯЗНОЙ ПАПКИ — единственная необратимая потеря открыта"; FAIL=1; }
+# чистая папка — сносится вместе с веткой, осиротевшей записи не остаётся
+RC29C=0
+GIT_ZONA_REPO="$T29" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-chistaya \
+    > "$O29/chist.txt" 2>&1 || RC29C=$?
+[ "$RC29C" = "0" ] && echo "  ✅ zakryt-vetku: ветка с ЧИСТОЙ рабочей папкой закрыта" \
+               || { echo "  ❌ ветка с чистой папкой не закрылась (rc=$RC29C)"; FAIL=1; }
+[ ! -d "$T29-wtC" ] && echo "  ✅ zakryt-vetku: рабочая папка снесена вместе с веткой" \
+               || { echo "  ❌ рабочая папка осталась — ветки нет, папка есть"; FAIL=1; }
+V=$(git -C "$T29" worktree list --porcelain | grep -c "$T29-wtC" || true)
+[ "$V" = "0" ] && echo "  ✅ zakryt-vetku: осиротевшей служебной записи не осталось (prunable)" \
+               || { echo "  ❌ ОСИРОТЕВШАЯ ЗАПИСЬ worktree — та самая prunable-запись"; FAIL=1; }
+
+# ── ЛОВУШКА 30: `--vse-zelenye` подметает зелёные и НЕ трогает красные ──
+RC30=0
+GIT_ZONA_REPO="$T25" python3 "$TOOLS/git_zona.py" zakryt-vetku --vse-zelenye \
+    > "$O25/vse.txt" 2>&1 || RC30=$?
+V=$(git -C "$T25" for-each-ref --format='%(refname)' refs/heads/vetka-razvitaya | wc -l | tr -d ' ')
+[ "$V" = "0" ] && echo "  ✅ --vse-zelenye: зелёная ветка подметена одной командой" \
+               || { echo "  ❌ --vse-zelenye не закрыл зелёную ветку — «кнопки уборки» нет"; FAIL=1; }
+V=$(grep -c 'Веток было 2, стало 1' "$O25/vse.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ --vse-zelenye: печатает до/после числом" \
+               || { echo "  ❌ до/после не напечатано — уборка без числа непроверяема"; FAIL=1; }
+# красная ветка тем же прогоном не трогается
+RC30B=0
+GIT_ZONA_REPO="$T3" python3 "$TOOLS/git_zona.py" zakryt-vetku --vse-zelenye \
+    > "$O3/vse.txt" 2>&1 || RC30B=$?
+V=$(git -C "$T3" for-each-ref --format='%(refname)' refs/heads/vetka-uniq | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ --vse-zelenye: ветка с уникальной работой НЕ тронута" \
+               || { echo "  ❌ --vse-zelenye СНЁС ВЕТКУ С РАБОТОЙ — подметание судит не по метрике"; FAIL=1; }
+
+# ── ЛОВУШКА 31: `main` не закрывается НИКОГДА ──
+# Ветка публикации сайта, у неё другая роль. Запрет в коде, а не в просьбе.
+git -C "$T29" branch main osnova 2>/dev/null || true
+RC31=0
+GIT_ZONA_REPO="$T29" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch main \
+    > "$O29/main.txt" 2>&1 || RC31=$?
+V=$(git -C "$T29" for-each-ref --format='%(refname)' refs/heads/main | wc -l | tr -d ' ')
+{ [ "$RC31" = "1" ] && [ "$V" = "1" ]; } \
+    && echo "  ✅ zakryt-vetku: main не закрывается (rc=1, ветка цела)" \
+    || { echo "  ❌ MAIN ЗАКРЫТ — снесена ветка публикации сайта"; FAIL=1; }
+# и подметание её тоже не берёт
+GIT_ZONA_REPO="$T29" python3 "$TOOLS/git_zona.py" zakryt-vetku --vse-zelenye >/dev/null 2>&1 || true
+V=$(git -C "$T29" for-each-ref --format='%(refname)' refs/heads/main | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ --vse-zelenye: main не подметается" \
+               || { echo "  ❌ --vse-zelenye СНЁС main"; FAIL=1; }
+
+# ── ЛОВУШКА 32: `priyomka.py` печатает вердикт по ветке и НЕ удаляет сама ──
+# Часть B. Приёмка идёт под аналитиком: удаление в середине чужого прогона —
+# не его дело. И вердикт печатается ПО МЕТРИКЕ, а не безусловной строкой:
+# в момент зелёных гейтов ветка захода ещё не перенесена (оплачено трижды).
+T32=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32"' EXIT
+mkdir -p "$T32/_generator/tools" "$T32/arka" "$T32/zona"
+cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/zakryt_sessiyu.py" "$T32/_generator/tools/"
+cd "$T32"
+git init -q .
+git config user.email fixture@test
+git config user.name fixture
+echo "код" > zona/tool.py
+cat > arka/kod_proba32.md <<'ZAHOD'
+# Заход-фикстура
+- **МЕСТО РАБОТЫ ДЛЯ КОДА:** `python3 _generator/tools/git_zona.py worktree add proba32 --branch vetka-zahoda`
+## ПЛАН
+план на месте
+## ВОПРОСЫ
+## ОТЧЁТ
+**АРТЕФАКТ:** `zona/tool.py` — питон
+**КОММИТ:** `HASH32` — фикстура · `git_zona.py check --zone zona` → ✅
+ZAHOD
+git add -A >/dev/null; git commit -qm "фикстура приёмки" >/dev/null
+git branch -M osnova
+git branch vetka-zahoda osnova
+H32=$(git rev-parse --short HEAD)
+python3 - "$T32/arka/kod_proba32.md" "$H32" <<'PY'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1]); p.write_text(p.read_text(encoding="utf-8").replace("HASH32", sys.argv[2]), encoding="utf-8")
+PY
+cd - >/dev/null
+PRIYOMKA_REPO="$T32" GIT_ZONA_REPO="$T32" python3 "$T32/_generator/tools/priyomka.py" \
+    "$T32/arka/kod_proba32.md" --zone zona > "$T32/priyomka.txt" 2>&1 || true
+V=$(grep -c 'zakryt-vetku --branch vetka-zahoda' "$T32/priyomka.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ priyomka: печатает готовую строку закрытия для ветки захода" \
+               || { echo "  ❌ ПРИЁМКА МОЛЧИТ ПРО ВЕТКУ ЗАХОДА — ветка останется навсегда"; FAIL=1; }
+V=$(git -C "$T32" for-each-ref --format='%(refname)' refs/heads/vetka-zahoda | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ priyomka: ветку НЕ удалила сама (только печать)" \
+               || { echo "  ❌ ПРИЁМКА УДАЛИЛА ВЕТКУ САМА — удаление в середине чужого прогона"; FAIL=1; }
+# красная ветка: печатается перенос, а НЕ строка закрытия
+git -C "$T32" checkout -q -b vetka-krasnaya osnova
+echo "работа, которой нет нигде" > "$T32/zona/tolko-zdes.py"
+git -C "$T32" add -A >/dev/null 2>&1; git -C "$T32" commit -qm "уникальное" >/dev/null
+git -C "$T32" checkout -q osnova
+python3 - "$T32/arka/kod_proba32.md" <<'PY'
+import sys, pathlib
+p = pathlib.Path(sys.argv[1]); p.write_text(p.read_text(encoding="utf-8").replace("--branch vetka-zahoda", "--branch vetka-krasnaya"), encoding="utf-8")
+PY
+PRIYOMKA_REPO="$T32" GIT_ZONA_REPO="$T32" python3 "$T32/_generator/tools/priyomka.py" \
+    "$T32/arka/kod_proba32.md" --zone zona > "$T32/priyomka2.txt" 2>&1 || true
+V=$(grep -c 'метрика КРАСНАЯ' "$T32/priyomka2.txt" || true)
+[ "$V" = "1" ] && echo "  ✅ priyomka: у ветки с неперенесённой работой печатает ПЕРЕНОС, не закрытие" \
+               || { echo "  ❌ ПРИЁМКА ЗОВЁТ ЗАКРЫТЬ НЕПЕРЕНЕСЁННОЕ — шум в 100% случаев, читать перестанут"; FAIL=1; }
+V=$(grep -c 'zakryt-vetku --branch vetka-krasnaya' "$T32/priyomka2.txt" || true)
+[ "$V" = "0" ] && echo "  ✅ priyomka: строки закрытия для красной ветки НЕТ" \
+               || { echo "  ❌ строка закрытия напечатана для красной ветки"; FAIL=1; }
+
+# ── ЛОВУШКА 33: `zakryt_sessiyu.py` печатает список и команду, НИЧЕГО не удаляя ──
+# Кнопка уборки — печать, а не действие: закрытие сессии идёт под аналитиком,
+# часто из песочницы, где запись в .git запрещена вовсе.
+if python3 - "$T32" >"$T32/uborka.txt" 2>&1 <<'PY'
+import sys, os, importlib.util, pathlib
+t = pathlib.Path(sys.argv[1])
+os.environ["GIT_ZONA_REPO"] = str(t)
+spec = importlib.util.spec_from_file_location("zs", t / "_generator/tools/zakryt_sessiyu.py")
+zs = importlib.util.module_from_spec(spec); spec.loader.exec_module(zs)
+zs.pechat_uborki_vetok()
+PY
+then :; fi
+V=$(grep -c 'zakryt-vetku --vse-zelenye' "$T32/uborka.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ zakryt_sessiyu: печатает ОДНУ команду на подметание всех разом" \
+               || { echo "  ❌ КНОПКИ УБОРКИ НЕТ — список без команды заставляет собирать её руками"; FAIL=1; }
+V=$(grep -c 'Безопасны' "$T32/uborka.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ zakryt_sessiyu: печатает СПИСОК безопасных веток" \
+               || { echo "  ❌ список безопасных не напечатан"; FAIL=1; }
+V=$(git -C "$T32" for-each-ref --format='%(refname)' refs/heads/ | wc -l | tr -d ' ')
+[ "$V" = "3" ] && echo "  ✅ zakryt_sessiyu: не удалил ни одной ветки (3 из 3 на месте)" \
+               || { echo "  ❌ ЗАКРЫТИЕ СЕССИИ УДАЛИЛО ВЕТКИ САМО ($V из 3)"; FAIL=1; }
+
+# ── ЛОВУШКА 34: удаление не прошло ⇒ надгробие СНЯТО обратно ──
+# Случай 4 шапки раздела в git_zona.py, найден в Ф0 захода. Тег на ЖИВОЙ ветке
+# страшнее отсутствия тега: УРОВЕНЬ 1 метрики видит историю ветки в теге и
+# объявляет её вечно-безопасной — сторож слепнет ровно на той ветке, которую
+# не смогли закрыть. Штатный повод неудачи реален: `branch -D` отказывает,
+# пока ветка занята рабочей папкой (проверено: rc=1, «used by worktree»).
+# Ловушка судит РЕЗУЛЬТАТ (тега нет, ветка жива), а не текст вывода.
+git -C "$T29" branch vetka-otstala-34 osnova >/dev/null 2>&1 || true
+if GIT_ZONA_REPO="$T29" python3 - "$TOOLS/git_zona.py" >/dev/null 2>&1 <<'PY'
+import sys, importlib.util
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+
+nastoyashchij = gz.git
+def slomannyj(*args, **kw):
+    # роняем ТОЛЬКО удаление ветки — всё остальное работает как обычно
+    if args[:2] == ("branch", "-D"):
+        class R:
+            returncode, stdout, stderr = 1, "", "error: cannot delete branch"
+        return R()
+    return nastoyashchij(*args, **kw)
+gz.git = slomannyj
+
+head = gz.git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+rc = gz.zakryt_odnu("vetka-otstala-34", head, {})
+# check=False обязателен: git() по умолчанию РОНЯЕТ процесс на ненулевом коде,
+# а «тега нет» — это ровно ожидаемый ненулевой код, то есть успех проверки.
+est_tag = gz.git("rev-parse", "--verify", "--quiet",
+                 "refs/tags/mogila/vetka-otstala-34", check=False).returncode == 0
+est_vetka = gz.git("rev-parse", "--verify", "--quiet",
+                   "refs/heads/vetka-otstala-34", check=False).returncode == 0
+# ждём: отказ, надгробия НЕТ, ветка ЖИВА
+sys.exit(0 if (rc == 1 and not est_tag and est_vetka) else 1)
+PY
+then echo "  ✅ zakryt-vetku: удаление не прошло ⇒ надгробие снято, ветка жива"
+else echo "  ❌ НАДГРОБИЕ ОСТАЛОСЬ НА ЖИВОЙ ВЕТКЕ — сторож объявит её вечно-безопасной"; FAIL=1
+fi
+
+# ── ЛОВУШКА 35: ГЛАВНАЯ рабочая копия не сносится, даже спрошенная ИЗ worktree ──
+# Инструмент, запущенный из рабочей папки захода, считает своим корнем ЕЁ —
+# и тогда главная папка репозитория для него просто «соседняя», то есть
+# кандидат на снос наравне с прочими. Живой случай 04.08: `--vse-zelenye` из
+# рабочей папки дошёл до ветки главной папки и остановился только потому, что
+# там СЛУЧАЙНО было 57 путей вне git. Ловушка проверяет ЧИСТУЮ главную папку —
+# то есть ровно тот случай, где случайности не будет.
+#
+# ⚠ ЧЕСТНО ПРО СИЛУ ЭТОЙ ЛОВУШКИ: под одиночной мутацией (снять проверку
+# `v_glavnoj` в `zakryt_odnu`) она НЕ краснеет, и это не дефект ловушки.
+# Проверено прогоном: `git worktree remove --force <главная копия>` отвечает
+# `fatal: … is a main working tree` (rc=128) — то есть снос главной копии
+# запрещает сам git, второй эшелон держит и без нашей проверки. Наша проверка
+# даёт ВНЯТНЫЙ диагноз и не даёт зря поставить-снять надгробие, а ловушка
+# стоит регрессией на инвариант: если однажды снос папок пойдёт мимо
+# `git worktree remove` (например, через `shutil.rmtree`), краснеть будет здесь.
+T35=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32" "$T35"' EXIT
+git init -q "$T35"
+git -C "$T35" config user.email fixture@test
+git -C "$T35" config user.name fixture
+echo "база" > "$T35/f.txt"
+git -C "$T35" add -A >/dev/null 2>&1; git -C "$T35" commit -qm "база"
+git -C "$T35" branch -M vetka-glavnoj          # ГЛАВНАЯ папка стоит на ней, и она ЧИСТА
+git -C "$T35" worktree add -q -b vetka-soseda "$T35-wtS" >/dev/null 2>&1
+RC35=0
+# спрашиваем ИЗ СОСЕДНЕЙ рабочей папки — для неё главная папка «просто соседняя»
+GIT_ZONA_REPO="$T35-wtS" python3 "$TOOLS/git_zona.py" zakryt-vetku \
+    --branch vetka-glavnoj > "$T35/out.txt" 2>&1 || RC35=$?
+V=$(git -C "$T35" for-each-ref --format='%(refname)' refs/heads/vetka-glavnoj | wc -l | tr -d ' ')
+{ [ "$RC35" = "1" ] && [ "$V" = "1" ] && [ -f "$T35/f.txt" ]; } \
+    && echo "  ✅ zakryt-vetku: ветка ГЛАВНОЙ рабочей копии не закрывается (rc=1, папка цела)" \
+    || { echo "  ❌ ПОКУШЕНИЕ НА ГЛАВНУЮ РАБОЧУЮ КОПИЮ — снесена рабочая копия всего репозитория"; FAIL=1; }
+V=$(git -C "$T35" for-each-ref --format='%(refname)' 'refs/tags/mogila/*' | wc -l | tr -d ' ')
+[ "$V" = "0" ] && echo "  ✅ zakryt-vetku: надгробие живой ветке главной папки не поставлено" \
+               || { echo "  ❌ надгробие поставлено ветке, которую не закрыли"; FAIL=1; }
+git -C "$T35" worktree remove --force "$T35-wtS" >/dev/null 2>&1 || true
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
