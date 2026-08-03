@@ -511,7 +511,7 @@ PY
 T17=$(mktemp -d)
 trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$T17/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$T17/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
 cd "$T17"
 git init -q .
@@ -520,8 +520,11 @@ git config user.name fixture
 git add -A >/dev/null
 git commit -qm baseline >/dev/null
 cd - >/dev/null
+# 🔴 `--kanal` теперь ОБЯЗАТЕЛЕН (linter-zahoda, часть B) и структурный линтер
+# входа (`STRUCTURAL_CHECKS`, тот же заход) уже требует ЗОНУ backtick-путями —
+# без обоих ловушка проверяла бы отказ бутстрапа, а не тираж формата очереди.
 python3 "$T17/_generator/tools/bootstrap_zahod.py" arka proba17 \
-    --branch fixture-branch --zone "moya-zona/" \
+    --branch fixture-branch --zone '`moya-zona/tool.py`' --kanal terminal \
     --opisanie "фикстура: заход несёт формат очереди" > /dev/null 2>&1 || true
 if [ -f "$T17/arka/kod_proba17.md" ]; then
     V=$(grep -c 'ДОМ:.*ДОСТАВЛЕНО:\|ДОСТАВЛЕНО: нет' "$T17/arka/kod_proba17.md" || true)
