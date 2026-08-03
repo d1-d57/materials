@@ -67,7 +67,6 @@ from pathlib import Path
 # В одноразовом репо git работает полностью — проверено.
 REPO = Path(os.environ.get("GIT_ZONA_REPO") or Path(__file__).resolve().parents[2])
 PLAN = REPO / "_studio" / ".commit-plan"
-LOCK = REPO / ".git" / "index.lock"
 LOCK_WAIT_SEC = 90
 INCIDENTY = REPO / "_studio" / "zhurnal" / "_INFRA-git" / "INCIDENTY.md"
 
@@ -128,15 +127,89 @@ def refuse_write(action, suggest="commit"):
     return 3
 
 
+_LOCAL_ENV_VARS = None
+
+
+def _git_env():
+    """Окружение процесса БЕЗ унаследованных GIT_* (`GIT_DIR`, `GIT_INDEX_FILE`
+    и т.п.) — иначе `git()` подчиняется чужому репозиторию МОЛЧА.
+
+    🔴 НАЙДЕНО ВЕРИФИКАТОРОМ части A (заход 2026-08-03): `git rev-parse
+    --git-dir` следует `GIT_DIR` из окружения БЕЗУСЛОВНО — `cwd=REPO`
+    игнорируется целиком. Если процесс, которым запущен `git_zona.py`,
+    унаследовал `GIT_DIR` (типичная утечка из git-хука, обёртки-скрипта,
+    который сам когда-то был хуком, или забытого `export` в сессии терминала),
+    `git_dir()` тихо укажет на ЧУЖУЮ рабочую копию — и `find_locks()` честно
+    отчитается «свободно», проверив не тот каталог. Ровно тот класс риска, что
+    уже назван в докстроке модуля («Внутри хука git экспортирует GIT_DIR…») и
+    в `fixtures/git_zona/PROGNAT.sh` («ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить
+    окружение git») — но там чистится окружение ФИКСТУРЫ, а не каждого
+    вызова `git()` внутри самого инструмента.
+
+    Список — `git rev-parse --local-env-vars`: то же самое, чем чистится
+    фикстура. Кэш модульный: список имён переменных не зависит от репозитория
+    и не меняется между вызовами — спрашивать его у git на каждый вызов было
+    бы лишним процессом ради константы. `GIT_ZONA_REPO` — НЕ git-нативная
+    переменная (это собственный переключатель инструмента, читается в Python
+    ДО спуска в subprocess), в список `--local-env-vars` не попадает и не
+    трогается.
+    """
+    global _LOCAL_ENV_VARS
+    if _LOCAL_ENV_VARS is None:
+        r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--local-env-vars"],
+                           capture_output=True, text=True)
+        _LOCAL_ENV_VARS = [v for v in r.stdout.split() if v]
+    env = os.environ.copy()
+    for v in _LOCAL_ENV_VARS:
+        env.pop(v, None)
+    return env
+
+
 def git(*args, check=True):
-    """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок."""
+    """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок.
+
+    Окружение — `_git_env()`, без унаследованных `GIT_*`: см. её докстроку.
+    """
     r = subprocess.run(
         ["git", "--no-optional-locks", *args],
-        cwd=REPO, capture_output=True, text=True,
+        cwd=REPO, capture_output=True, text=True, env=_git_env(),
     )
     if check and r.returncode != 0:
         sys.exit(f"❌ git {' '.join(args)} упал:\n{r.stderr.strip()}")
     return r
+
+
+# ───── КАТАЛОГИ .git — ЛИЧНЫЙ vs ОБЩИЙ (часть A захода 2026-08-03) ─────
+#
+# ЗАЧЕМ. В рабочей папке worktree `.git` — не каталог, а ФАЙЛ-указатель
+# (`gitdir: …/materials/.git/worktrees/<имя>`). Код, читавший `REPO / ".git"`
+# как каталог, там слеп: `glob("*.lock")` по файлу возвращает пусто. Проверено
+# прогоном: настоящий лок положен в `…/.git/worktrees/dobivka-vetok/`, `doctor`
+# из этой папки напечатал «Локи в .git: ✅ свободно» — защита от гонки
+# отсутствовала ровно там, где заведён параллелизм, и ровно в команде, которую
+# канон велит запускать первой.
+#
+# `git rev-parse --git-dir` и `--git-common-dir` дают РАЗНОЕ внутри worktree:
+#   · `--git-dir`        → …/worktrees/<имя> — ЛИЧНЫЙ: `index.lock`, `HEAD.lock`,
+#     `index` — у каждой рабочей папки свои, общий коммит одной НЕ трогает другую;
+#   · `--git-common-dir`  → …/materials/.git — ОБЩИЙ: `objects/`, упаковка — один
+#     на все worktree, и лок/мусор там бьёт по каждому писателю разом.
+# В основной папке (не-worktree) оба совпадают — код не различает случаи, просто
+# спрашивает git, а не гадает по структуре `.git`.
+def _resolve_git_path(rel_or_abs):
+    p = Path(rel_or_abs)
+    return p if p.is_absolute() else REPO / p
+
+
+def git_dir():
+    """Личный служебный каталог ЭТОЙ рабочей копии (локи, HEAD, index)."""
+    return _resolve_git_path(git("rev-parse", "--git-dir", check=False).stdout.strip() or ".git")
+
+
+def git_common_dir():
+    """Общий каталог хранилища (objects, refs) — один на все worktree."""
+    return _resolve_git_path(git("rev-parse", "--git-common-dir",
+                                 check=False).stdout.strip() or ".git")
 
 
 def wait_for_lock(limit=LOCK_WAIT_SEC):
@@ -145,15 +218,19 @@ def wait_for_lock(limit=LOCK_WAIT_SEC):
     Почему ждём, а не сносим: правило канона «pgrep пуст ⇒ лок стейл ⇒ удалить»
     в песочнице ЛОЖНО — она видит только свои процессы и хостовый git ей не
     виден. Условие, на котором стоит разрешение удалить лок, тут непроверяемо.
+
+    🔴 `index.lock` — ЛИЧНЫЙ (`git_dir()`), не общий: коммит в СОСЕДНЕЙ рабочей
+    папке НЕ держит лок здесь, и ждать его — значит стоять без причины.
     """
-    if not LOCK.exists():
+    lock = git_dir() / "index.lock"
+    if not lock.exists():
         return True
-    print(f"⏳ .git/index.lock занят — рядом кто-то коммитит. Жду до {limit} с…")
+    print(f"⏳ {lock} занят — рядом кто-то коммитит. Жду до {limit} с…")
     waited, step = 0, 2
     while waited < limit:
         time.sleep(step)
         waited += step
-        if not LOCK.exists():
+        if not lock.exists():
             print(f"   лок отпущен через {waited} с — продолжаю.")
             return True
     print(f"⛔ Лок держат дольше {limit} с. Ничего не делаю — файлы на диске целы.\n"
@@ -272,38 +349,24 @@ def log_incident(symptom, hint):
         pass
 
 
-# ───────────────── сторож соседних веток (инцидент 2026-07-28) ─────────────────
+# ───────────────── зона и worktree-карта соседних веток ─────────────────
 #
-# ЗАЧЕМ. Ночью 28.07 дерево переключили с `zahod/dek-paskal-v2` на
-# `arka/mat-kostyak`, и 19 коммитов двух арок остались на покинутой ветке. Файлы
-# не пропали — они молча стали своей двухдневной версией: `KARTA-KUSKOV.md` 159
-# строк вместо 574, пять файлов арки отсутствовали целиком. Владельца спас
-# РАЗМЕР расхождения; при разнице в один раздел он бы не заметил, а следующий
-# агент честно доложил бы по тому, что видит.
+# Инцидент 2026-07-28: дерево переключили с `zahod/dek-paskal-v2` на
+# `arka/mat-kostyak`, и 19 коммитов двух арок остались на покинутой ветке.
+# `doctor` показывал текущую ветку и молчал про соседние. Отсюда родился
+# СЧЁТНЫЙ сторож `print_branch_watch` («ветка впереди на N коммитов»).
 #
-# Ни один гейт не сработал, и это не случайность (INCIDENT-2026-07-28 §«Почему»):
-#   · `INCIDENTY.md` ведётся только по НЕудачным коммитам, а здесь все коммиты
-#     прошли успешно — каждый в своё время, на своей ветке. События «работа
-#     успешно закоммичена не туда, где её будут искать» не отслеживал никто;
-#   · `doctor` показывал текущую ветку и молчал про соседние — то есть не задавал
-#     единственный вопрос, который спас бы два дня: «нет ли моей зоны на другой
-#     ветке в более свежем виде».
-# ЦЕНА: два дня работы существовали в одной версии там, где их не искали, и
-# требование починки месяц лежало ненереализованным.
-#
-# ТРИ ТРЕБОВАНИЯ СПЕЦИФИКАЦИИ, каждое отражено в коде ниже:
-#   1. ОХВАТ ОБЪЯВЛЯЕТСЯ ВСЕГДА, включая зелёный исход. Зелёное без охвата
-#      читается как «всё в порядке», а означает «в порядке то, что я смотрел»:
-#      doctor честно смотрел одну ветку и молчал, что их девять.
-#   2. READ-ONLY и БЕЗ `.git/index.lock` — только `for-each-ref`/`rev-list`/`log`/
-#      `diff` через общий git() с `--no-optional-locks`. Сторож, отбирающий лок у
-#      живого коммита, повторил бы дефект гейта, который он лечит.
-#   3. САМО, внутри `doctor`, а не отдельной командой: вспоминают только то, что
-#      уже болело.
-#
-# ⚠ И НЕ ШУМИТ НА ЗДОРОВОМ (`RESHENIYA Р31`): ветка, целиком влитая в текущую
-# (`HEAD..<ветка>` = 0), находкой НЕ считается, сколько бы она ни отставала.
-# Гейт, шумящий на здоровом, отключают — и тогда пропадает вся защита.
+# 🔴 СЧЁТНЫЙ СТОРОЖ СНЯТ (часть B захода 2026-08-03) — заменён `print_loss_watch`
+# ниже, а не дополнен им. На живом репозитории 03.08 счётный дал 8 находок из
+# 17 веток; сравнение поимённо (см. отчёт захода) показало, что по содержимому
+# сторож называет ВСЕ ТЕ ЖЕ 8 веток явно — 4 как реальную потерю, 4 как
+# безопасные с названной причиной (`main`/`arka/vneshnie-istorii` — только на
+# `origin`; `zahod/storozh-vetok`/`zahod/tirazh-ocheredi` — содержимое доехало).
+# Пропажи находок нет; два сторожа рядом на одном выводе только путали (43 %
+# находок счётного были шумом — `RESHENIYA Р31`, гейт с таким процентом шума
+# отключают). `zone_of`/`worktree_branches` остаются: их использует
+# `print_loss_watch` для тех же целей (свёртка простыни путей, пометка «в
+# другой рабочей папке»).
 
 
 def zone_of(path):
@@ -338,96 +401,353 @@ def worktree_branches():
             path = None
     return res
 
+# ───── ЧТО ПРОПАДЁТ ПРИ УДАЛЕНИИ ВЕТКИ — по СОДЕРЖИМОМУ (заход 2026-08-03) ─────
+#
+# ЗАЧЕМ — ЕДИНСТВЕННЫЙ сторож веток (счётный `print_branch_watch` снят частью B
+# захода `kod_dobivka-vetok.md`, см. комментарий над `zone_of` выше). Считать
+# КОММИТЫ («ветка впереди») на живом репозитории 03.08 соврало В ОБЕ СТОРОНЫ:
+# 7 находок из 16 веток, из них ТРИ не теряют при удалении ничего —
+#   · `main` и `arka/vneshnie-istorii` целиком лежат на `origin/*`;
+#   · `zahod/tirazh-ocheredi` довезла содержимое через `adopt`, который копирует
+#     файлы, НЕ сливая историю: формально невлита навсегда, а терять нечего.
+# 43 % находок — шум, а шумящий гейт отключают (`RESHENIYA Р31`), и тогда
+# пропадает вся защита. Владелец спрашивает не «сколько коммитов не влито», а
+# «ЧТО ПРОПАДЁТ, если эту ветку удалить».
+#
+# 🔴 КОРЕНЬ, ОБЩИЙ С УРОКАМИ 23 И 25: там доверились ИМЕНИ вместо объекта — пути
+# вместо файла, короткому `%(refname:short)` вместо самой ссылки. Число коммитов —
+# тоже имя содержимого, а не оно само. Поэтому здесь судятся БЛОБЫ.
+#
+# ТРИ УРОВНЯ, каждый следующий дороже и считается, только если предыдущий не дал
+# зелёного (на 17 ветках уровень 1 закрывает 12 одним дешёвым вызовом):
+#   1. ИСТОРИЯ — коммиты ветки, недостижимые НИ ИЗ ОДНОЙ другой ссылки (включая
+#      теги и `origin/*`). Ноль ⇒ удаление не удаляет ни одного объекта. Это
+#      точный ответ, а не эвристика.
+#   2. СОДЕРЖИМОЕ — файлы, которые ветка САМА написала после развилки; их блобы
+#      совпали с нашими ⇒ содержимое доехало.
+#   3. ЧТО ИМЕННО — оставшиеся файлы делятся по ТРЕТЬЕЙ точке, базе развилки.
+#      🔴 Именно третья точка отличает «у них новее» от «у нас новее». Сравнение
+#      одних вершин (`diff HEAD <ветка>`) этого не умеет и 03.08 объявило бы у
+#      `zahod/tirazh-ocheredi` 2 расходящихся файла, которых она НЕ писала вовсе:
+#      разница ехала от нас, а не от неё.
 
-def print_branch_watch():
-    """🔴 Гейт `doctor`: нет ли моей зоны на соседней ветке в более свежем виде.
 
-    Ничего не пишет и не меняет — только читает ссылки и историю.
+def all_refs(exclude=None):
+    """Все ссылки репозитория ПОЛНЫМИ именами (ветки, теги, remotes), кроме одной.
+
+    Полные имена, а не короткие, — по уроку 25: короткое имя разрешается
+    неоднозначно при теге-омониме, и сравнение пошло бы не с тем объектом.
+    """
+    out = git("for-each-ref", "--format=%(refname)",
+              "refs/heads/", "refs/tags/", "refs/remotes/", check=False).stdout
+    return [l.strip() for l in out.splitlines()
+            if l.strip() and l.strip() != exclude]
+
+
+def diff_status(a, b):
+    """{путь: статус} между двумя деревьями (`A`/`M`/`D`).
+
+    `-z`, поэтому кириллица и пробелы в путях приезжают как есть — без
+    экранирования `core.quotepath` (в этом репо есть и то и другое, напр.
+    `kurs leto 2026/**`, и на расщеплении такого пути уже падал shell-вариант).
+    `--no-renames` — чтобы путь оставался буквальным: переименование, посчитанное
+    за один файл, спрятало бы от списка и старое имя, и новое.
+    """
+    out = git("diff", "--name-status", "--no-renames", "-z", a, b, check=False).stdout
+    parts = [p for p in out.split("\0") if p]
+    return {parts[i + 1]: parts[i] for i in range(0, len(parts) - 1, 2)}
+
+
+def batch_oids(queries):
+    """[oid | None] по списку `<ссылка>:<путь>` — ОДНИМ процессом git.
+
+    Поштучный `rev-parse` на каждую пару «ссылка × путь» дал бы сотни запусков
+    внутри `doctor`; `cat-file --batch-check` отвечает на все одним. Порядок
+    строк ответа совпадает с порядком запросов — по нему и сопоставляем
+    (у отсутствующего пути строка вида `<запрос> missing`, оид там не встанет).
+    """
+    if not queries:
+        return []
+    r = subprocess.run(
+        ["git", "--no-optional-locks", "cat-file", "--batch-check"],
+        cwd=REPO, input="".join(q + "\n" for q in queries),
+        capture_output=True, text=True)
+    out = r.stdout.splitlines() if r.returncode == 0 else []
+    res = []
+    for i in range(len(queries)):
+        line = out[i] if i < len(out) else ""
+        first = line.split(" ")[0] if line else ""
+        res.append(first if (" blob " in line and len(first) in (40, 64)) else None)
+    return res
+
+
+def blobs_elsewhere(pairs, refs):
+    """Пути из `pairs` [(путь, оид)], чей ТОТ ЖЕ блоб лежит по ТОМУ ЖЕ пути
+    хотя бы в одной из `refs`.
+
+    🔴 ЗАЧЕМ. Работу переносит `adopt`, и перенести её могли НЕ на текущую
+    ветку, а на соседнюю. Сравнение только с `HEAD` объявило бы такую ветку
+    красной — ложная тревога ровно того сорта, из-за которого гейты отключают.
+    Найдено верификатором захода 03.08 (случай «adopt был в main, а спрашиваем
+    из третьего worktree») и признано регулярным: у владельца рабочих папок
+    шесть, и ревизия запускается из того окна, которое открыто.
+    """
+    if not pairs or not refs:
+        return set()
+    got = batch_oids([f"{r}:{p}" for r in refs for p, _ in pairs])
+    found, i = set(), 0
+    for _ in refs:
+        for p, oid in pairs:
+            if i < len(got) and got[i] == oid:
+                found.add(p)
+            i += 1
+    return found
+
+
+def branch_loss(name, head="HEAD"):
+    """Что пропадёт при удалении ветки `name`. Только чтение.
+
+    Возвращает словарь с вердиктом (`safe` / `loss` / `skip`),
+    причиной зелёного и тремя списками путей. Ничего не печатает: печать — дело
+    вызывающего, а решение о вердикте обязано быть проверяемо отдельно от вида.
+    """
+    full = "refs/heads/" + name
+    others = all_refs(exclude=full)
+    # УРОВЕНЬ 1 — история.
+    r = (git("rev-list", "--count", full, "--not", *others, check=False) if others
+         else git("rev-list", "--count", full, check=False))
+    if r.returncode != 0:
+        return {"name": name, "verdict": "skip"}
+    only = int(r.stdout.strip() or "0")
+    res = {"name": name, "only": only, "propadet": [], "rashozhdenie": [],
+           "udalila": [], "pushed": False}
+    if only == 0:
+        # 🔴 ЧЕМ ИМЕННО держится — часть вердикта, а не деталь. «Держит соседняя
+        # ветка на этом же диске» и «держит только `origin/*`» — гарантии разного
+        # качества: remote-tracking ссылка переживает удаление самого удалённого
+        # репозитория и продолжает утверждать, что копия есть (случай верификатора
+        # 03.08: бэкап снесли при чистке диска, ссылка осталась).
+        loc = [x for x in others if not x.startswith("refs/remotes/")]
+        rl = git("rev-list", "--count", full, "--not", *loc, check=False) if loc else None
+        res["verdict"] = "safe"
+        res["why"] = ("история целиком есть в других ЛОКАЛЬНЫХ ссылках"
+                      if rl is not None and rl.returncode == 0 and rl.stdout.strip() == "0"
+                      else "история есть ТОЛЬКО в `origin/*` — держится удалённой копией")
+        return res
+
+    # УРОВЕНЬ 2/3 — содержимое. База развилки и есть третья точка.
+    mb = git("merge-base", head, full, check=False)
+    base = mb.stdout.strip() if mb.returncode == 0 else ""
+    if base:
+        wrote = diff_status(base, full)
+        ours = set(diff_status(base, head))
+    else:
+        # Общей истории нет вовсе — тогда «ветка написала» ВСЁ, что в ней лежит,
+        # и нашего вклада с развилки не существует. Молчать здесь нельзя: это
+        # самый тяжёлый случай, а не пограничный.
+        wrote = {p: "A" for p in git("ls-tree", "-r", "--name-only", full,
+                                     check=False).stdout.splitlines() if p}
+        ours = set()
+    differ = set(diff_status(head, full))
+
+    for p in sorted(wrote):
+        if wrote[p] == "D":
+            # Ветка УДАЛИЛА файл. При её удалении пропадает намерение, а не
+            # содержимое — в опасные не идёт, иначе чистка старья читалась бы
+            # как потеря работы.
+            res["udalila"].append(p)
+        elif p not in differ:
+            continue                      # блоб совпал с нашим ⇒ содержимое доехало
+        elif p in ours:
+            res["rashozhdenie"].append(p)  # писали обе стороны — сливать глазами
+        else:
+            res["propadet"].append(p)      # мы не трогали ⇒ этого текста здесь нет
+
+    # 🔴 ПРОВЕРКА ПО ВСЕМ ССЫЛКАМ, А НЕ ТОЛЬКО ПО HEAD — иначе ложная тревога на
+    # работе, которую `adopt` перенёс на СОСЕДНЮЮ ветку (случай верификатора 2.1).
+    kand = res["propadet"] + res["rashozhdenie"]
+    if kand:
+        oids = batch_oids([f"{full}:{p}" for p in kand])
+        pairs = [(p, o) for p, o in zip(kand, oids) if o]
+        gde = [x for x in others
+               if x.startswith("refs/heads/") or x.startswith("refs/remotes/")]
+        doehalo = blobs_elsewhere(pairs, gde)
+        if doehalo:
+            res["doehalo_sosed"] = sorted(doehalo)
+            res["propadet"] = [p for p in res["propadet"] if p not in doehalo]
+            res["rashozhdenie"] = [p for p in res["rashozhdenie"] if p not in doehalo]
+
+    # 🔴 РАСХОЖДЕНИЕ — ТОЖЕ ПОТЕРЯ, и это правка по верификатору (случай 1.1).
+    # Прежде «писали обе стороны» считалось «ничего не пропадёт». Но `adopt` сам
+    # кладёт файлы ветки в наш коммит, после чего путь навсегда числится «нашим»,
+    # и ЛЮБАЯ последующая работа ветки над этим файлом уходила в не-красное — то
+    # есть глохла ровно на тех ветках, с которыми работали активнее всего.
+    # Версия ветки здесь отсутствует ⇒ при удалении пропадёт именно она. Разница
+    # с `propadet` только в ЛЕЧЕНИИ (сливать глазами, а не забирать целиком), и
+    # она осталась — отдельным списком, а не отдельным вердиктом.
+    if res["propadet"] or res["rashozhdenie"]:
+        res["verdict"] = "loss"
+    else:
+        res["verdict"] = "safe"
+        res["why"] = "содержимое доехало (история не влита, а файлы совпадают)"
+        # 🔴 ОБЪЯВЛЕННАЯ СЛЕПАЯ ЗОНА, а не молчание: сверяются ВЕРШИНЫ. Работа,
+        # написанная в промежуточном коммите ветки и затёртая в её же вершине
+        # (штатный ход «подтянуть свежее из main в свою зону»), этой проверкой
+        # не видна. Печатается строкой, чтобы зелёное не читалось шире, чем оно есть.
+        res["vershiny"] = True
+        return res
+
+    # «Только на этой машине» — отдельная ось тяжести, а не то же самое.
+    rem = [x for x in all_refs() if x.startswith("refs/remotes/")]
+    if rem:
+        rr = git("rev-list", "--count", full, "--not", *rem, check=False)
+        res["pushed"] = rr.returncode == 0 and rr.stdout.strip() == "0"
+    return res
+
+
+def print_paths(paths, mark, limit=12):
+    """Список путей с ограничением: простыню не читают, а обрезанную молча —
+    принимают за полную. Поэтому остаток называется числом, а не съедается.
+    """
+    for p in paths[:limit]:
+        print(f"        {mark} {p}")
+    if len(paths) > limit:
+        print(f"        … ещё {len(paths) - limit}")
+
+
+def print_loss_watch(only=None, title=True):
+    """🔴 `doctor`/`poteri`: что ПРОПАДЁТ при удалении ветки — списком ФАЙЛОВ,
+    не числом.
+
+    READ-ONLY: только `for-each-ref` / `rev-list` / `merge-base` / `diff` /
+    `ls-tree` через общий git() с `--no-optional-locks`. Ничего не сливает, не
+    удаляет и не переключает — лечение печатается строкой, которую владелец
+    исполняет сам (`GIT-disciplina §0`).
+
+    `only` — судить РОВНО эту ветку, а не все соседние (подкоманда `poteri
+    --branch`); печать и вердикт — та же функция, чтобы `doctor` и `poteri` не
+    могли разъехаться в двух реализациях одного и того же вопроса. Возвращает
+    код: 0 — прогон состоялся (вне зависимости от того, есть потери), 1 — `only`
+    не нашлась среди веток (опечатка в имени, не молчим об этом).
     """
     head = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip()
-    # 🔴 `%(refname)`, а НЕ `%(refname:short)` — и префикс срезаем сами.
-    # `:short` укорачивает имя лишь настолько, чтобы оно осталось ОДНОЗНАЧНЫМ:
-    # при теге-омониме `vetka-a` он отдаёт `heads/vetka-a`, из чего собирался бы
-    # несуществующий `refs/heads/heads/vetka-a` — ветка уходила в «не прочитано»,
-    # и сторож печатал ЗЕЛЁНОЕ «невлитого нет» при живой невлитой работе.
-    # Найдено мутацией при постановке ловушки 16 (охват честно падал до «1 из 2»,
-    # но вердикт всё равно был зелёным — а зелёный вердикт и есть то, чему верят).
-    # Полное имя однозначно всегда; короткое нужно только для ПОКАЗА и для команды
-    # лечения, где `merge heads/vetka-a` вообще не разрешился бы в ветку.
     names = [l.strip()[len("refs/heads/"):]
              for l in git("for-each-ref", "--format=%(refname)",
                           "refs/heads/", check=False).stdout.splitlines()
              if l.strip().startswith("refs/heads/")]
-    # DETACHED HEAD: текущей ветки НЕТ, значит исключать нечего — смотрим ВСЕ.
-    # Иначе сторож молчал бы ровно в том состоянии, где потерять работу проще
-    # всего (`doctor` сам зовёт detached «коммит здесь потеряется»).
-    neighbours = [n for n in names if head == "HEAD" or n != head]
+    # Текущую ветку не рассматриваем: её нельзя удалить, пока она вычекаучена.
+    # В detached HEAD текущей ветки НЕТ ⇒ исключать нечего, смотрим все.
+    others = [n for n in names if head == "HEAD" or n != head]
+    if only is not None:
+        if only == head:
+            print(f"❌ `{only}` — это и есть текущая ветка, её нельзя удалить, "
+                  "пока ты на ней.")
+            return 1
+        if only not in others:
+            print(f"❌ Ветки `{only}` нет среди {len(others)} проверяемых.")
+            return 1
+        others = [only]
     where = "" if head == "HEAD" else f" (кроме текущей `{head}`)"
-    if not neighbours:
-        print(f"\nСоседние ветки: ✅ их нет — проверено 0 из 0{where}.")
-        return
+    if title:
+        print("\n─── ЧТО ПРОПАДЁТ, ЕСЛИ УДАЛИТЬ ВЕТКУ (по содержимому) ───")
+    if not others:
+        print(f"✅ Веток, которые можно удалить, нет — проверено 0 из 0{where}.")
+        return 0
 
     wt = worktree_branches()
-    behind, skipped = [], []
-    for n in neighbours:
-        # ПОЛНЫЙ ref, а не короткое имя: короткое разрешается неоднозначно, если
-        # рядом есть тег или ФАЙЛ с тем же именем, и сторож посчитал бы не ту
-        # историю. `refs/heads/<имя>` — точное совпадение, подстрока чужого
-        # имени сюда не проходит.
-        r = git("rev-list", "--count", f"HEAD..refs/heads/{n}", check=False)
-        if r.returncode != 0:
-            skipped.append(n)        # НЕ молча: уменьшает охват, и это видно
-            continue
-        ahead = int(r.stdout.strip() or "0")
-        if ahead:
-            behind.append((n, ahead))
+    rows = [branch_loss(n, head) for n in others]
+    skipped = [r["name"] for r in rows if r["verdict"] == "skip"]
+    checked = len(others) - len(skipped)
+    ohvat = f"проверено {checked} из {len(others)}{where}"
+    loss = [r for r in rows if r["verdict"] == "loss"]
+    safe = [r for r in rows if r["verdict"] == "safe"]
 
-    checked = len(neighbours) - len(skipped)
-    ohvat = f"проверено {checked} из {len(neighbours)}{where}"
+    def lechenie(r):
+        zones = sorted({zone_of(p) for p in r["propadet"] + r["rashozhdenie"]})
+        if r["name"] in wt:
+            print(f"      ⚠ ветка вычекаучена в рабочей папке: {wt[r['name']]}\n"
+                  "        там может идти живой заход — merge притащит недоделанное;\n"
+                  "        сперва спроси того, кто в ней работает.")
+        elif len(zones) == 1:
+            print(f"      → python3 _generator/tools/git_zona.py adopt "
+                  f"--branch {r['name']} --zone {zones[0]}\n"
+                  f"        либо целиком: … git_zona.py merge {r['name']}")
+        else:
+            print(f"      → python3 _generator/tools/git_zona.py merge {r['name']}")
 
-    if not behind:
-        # 🔴 ОХВАТ ПЕЧАТАЕТСЯ И НА ЗЕЛЁНОМ — требование 1 спецификации.
-        print(f"\nСоседние ветки: ✅ невлитого нет — {ohvat}.")
-    else:
-        print(f"\n🔴 ЗОНА ОТСТАЁТ ОТ СОСЕДНЕЙ ВЕТКИ — невлитое есть на "
-              f"{len(behind)} ветк(е/ах) из {checked}:")
-        for n, ahead in behind:
-            last = git("log", "-1", "--format=%h  %cd", "--date=format:%d.%m %H:%M",
-                       f"refs/heads/{n}", check=False).stdout.strip()
-            print(f"\n   · {n} — не влито коммитов: {ahead}, последний {last}")
-            paths = [p for p in git("diff", "--name-only", f"HEAD...refs/heads/{n}",
-                                    check=False).stdout.splitlines() if p]
-            zones = {}
-            for p in paths:
-                zones.setdefault(zone_of(p), 0)
-                zones[zone_of(p)] += 1
-            if zones:
-                top = sorted(zones.items(), key=lambda kv: -kv[1])
-                shown = " · ".join(f"{z} ({c})" for z, c in top[:4])
-                more = f" · … ещё зон: {len(top) - 4}" if len(top) > 4 else ""
-                print(f"       зоны: {shown}{more}")
-            else:
-                # Коммиты есть, а содержимое уже здесь (cherry-pick/дубль руками).
-                # Молчать нельзя — запись в истории живёт и разъедется дальше, —
-                # но и пугать нечем: работа не потеряется. Поэтому названо прямо.
-                print("       зоны: содержимое ветки уже в текущем дереве "
-                      "(хвост истории; работа не потеряется, но запись разъезжается)")
-            if n in wt:
-                print(f"       ⚠ ветка вычекаучена в другой рабочей папке: {wt[n]}\n"
-                      "         там может идти живой заход — merge притащит недоделанное;\n"
-                      "         сперва спроси того, кто в ней работает.")
-            elif len(zones) == 1:
-                z = next(iter(zones))
-                print(f"       → python3 _generator/tools/git_zona.py adopt "
-                      f"--branch {n} --zone {z}\n"
-                      f"         либо целиком: … git_zona.py merge {n}")
-            else:
-                print(f"       → python3 _generator/tools/git_zona.py merge {n}")
-        print(f"\n   Охват: {ohvat}. Ветки НЕ удалять — влитая ветка это решение владельца.")
+    if loss:
+        print(f"\n🔴 ПРОПАДЁТ РАБОТА — на {len(loss)} ветк(е/ах) из {checked} лежит "
+              "текст, которого здесь нет:")
+        for r in loss:
+            gde = "" if r["pushed"] else "; есть ТОЛЬКО на этой машине"
+            n = len(r["propadet"]) + len(r["rashozhdenie"])
+            print(f"\n   · {r['name']} — пропадёт файлов: {n}{gde}")
+            if r["propadet"]:
+                print("      мы этот файл с развилки не трогали — заберётся целиком:")
+                print_paths(r["propadet"], "🔴")
+            if r["rashozhdenie"]:
+                print("      писали обе стороны — версия ветки здесь отсутствует, "
+                      "сливать глазами:")
+                print_paths(r["rashozhdenie"], "⚠")
+            if r.get("doehalo_sosed"):
+                print(f"      ✅ и ещё {len(r['doehalo_sosed'])} файл(ов) ветки уже "
+                      "лежат на СОСЕДНИХ ветках — не потеря:")
+                print_paths(r["doehalo_sosed"], "✅", limit=6)
+            lechenie(r)
+    if not loss:
+        # 🔴 ОТРИЦАТЕЛЬНЫЙ ВЕРДИКТ НЕСЁТ ОХВАТ В СЕБЕ: не «потерь нет», а
+        # «потерь нет, проверено X из Y» — иначе «в порядке то, что я смотрел»
+        # читается как «в порядке всё» (тот же урок, что у сторожа выше).
+        print(f"✅ Потерь нет: удаление любой ветки не унесёт содержимого — {ohvat}.")
 
+    if safe:
+        # 🔴 БЕЗОПАСНЫЕ НАЗЫВАЮТСЯ ЯВНО, и отдельно — те, чьё содержимое доехало
+        # копией: без этого `zahod/tirazh-ocheredi` неотличима от опасной, и
+        # список опасных тонет в шуме — ровно то, из-за чего гейты отключают.
+        dovezli = [r["name"] for r in safe
+                   if r.get("why", "").startswith("содержимое доехало")]
+        lokal = [r["name"] for r in safe if "ЛОКАЛЬНЫХ" in r.get("why", "")]
+        tolko_origin = [r["name"] for r in safe
+                        if r["name"] not in dovezli and r["name"] not in lokal]
+        print(f"\n✅ Безопасны ({len(safe)} из {checked}):")
+        if dovezli:
+            print("   · содержимое ДОЕХАЛО, хотя история не влита: "
+                  + ", ".join(dovezli))
+            print("     ⚠ сверялись ВЕРШИНЫ веток: работа, затёртая внутри самой "
+                  "ветки, этой проверкой не видна.")
+        if lokal:
+            print("   · история целиком есть в других ЛОКАЛЬНЫХ ссылках: "
+                  + ", ".join(lokal))
+        if tolko_origin:
+            # Гарантия слабее локальной: remote-tracking ссылка переживает
+            # удаление самого удалённого репозитория и продолжает утверждать,
+            # что копия есть. Поэтому названо отдельной строкой, а не в общей куче.
+            print("   · история есть ТОЛЬКО в `origin/*` — держится удалённой копией "
+                  "(на диске её больше нет): " + ", ".join(tolko_origin))
+    print(f"\n   Охват: {ohvat}. Ветки НЕ удалять — это решение владельца; "
+          "здесь только названо, чем оно обойдётся.")
     if skipped:
         print(f"   ⚠ Не удалось прочитать {len(skipped)} ветк(у/и) — охват НЕПОЛОН: "
               + ", ".join(skipped))
+    # 🔴 Код возврата ОТЛИЧАЕТСЯ от `doctor`, и это НЕ противоречие: `doctor` —
+    # диагност, не гейт, ему нельзя печатать ❌ на здоровом исходе (урок арки
+    # `2026-07-28_konspekt-l1`, «плана нет» при чистом дереве обязано быть rc=0).
+    # `poteri` — целевая проверка вроде `check`: её зовут СПРОСИТЬ, и молчаливый
+    # rc=0 при реальной потере обесценил бы её как гейт в скрипте/хуке.
+    return 1 if loss else 0
+
+
+def cmd_poteri(args):
+    """🔴 Часть C захода `kod_dobivka-vetok.md`: то же, что блок в `doctor`, но
+    ОТДЕЛЬНОЙ командой (владелец приходит СПРОСИТЬ, не как побочный эффект
+    диагностики всего репо) и, по желанию, по ОДНОЙ ветке — `--branch <имя>`.
+
+    Переиспользует `print_loss_watch`, а не дублирует: вопрос один и тот же
+    («что пропадёт, если удалить ветку X»), и у двух путей входа обязана быть
+    ОДНА реализация — иначе они разъедутся, как разъехались канон и код в
+    уроке 23 (`bootstrap_zahod.py --worktree`).
+    """
+    return print_loss_watch(only=args.branch)
 
 
 # ─────────────────────────────── doctor ───────────────────────────────
@@ -444,8 +764,11 @@ def cmd_doctor(args):
         print(f"Ветка: {head}")
     print(f"HEAD:  {git('log', '-1', '--oneline').stdout.strip()}")
 
-    # незаконченные операции — частая причина «ничего не коммитится»
-    g = REPO / ".git"
+    # незаконченные операции — частая причина «ничего не коммитится».
+    # 🔴 ЛИЧНЫЙ каталог (`git_dir()`), не `REPO / ".git"`: в worktree это файл-
+    # указатель, а MERGE_HEAD/rebase-merge и т.п. — состояние ЭТОЙ рабочей копии,
+    # оно лежит в персональном `…/worktrees/<имя>/`, не в общем `.git`.
+    g = git_dir()
     stuck = [n for n, p in [
         ("MERGE — незаконченное слияние", g / "MERGE_HEAD"),
         ("REBASE — незаконченный ребейз", g / "rebase-merge"),
@@ -466,9 +789,7 @@ def cmd_doctor(args):
     # `HEAD.lock`, а doctor смотрел ровно один файл и молчал — два цикла
     # диагностики прошли вслепую. Диагност, не видящий самого частого
     # состояния-блокера, отправляет читателя искать причину не там.
-    g = REPO / ".git"
-    locks = sorted(g.glob("*.lock")) + sorted(g.glob("objects/*.lock"))
-    junk = sorted(g.glob("objects/*/tmp_obj_*"))
+    locks, junk = find_locks()
     def age_of(p):
         try:
             m = int((time.time() - p.stat().st_mtime) / 60)
@@ -480,7 +801,10 @@ def cmd_doctor(args):
     if locks:
         print("\n🔴 ЛОКИ в .git — репозиторий НЕ примет запись, ни от кого:")
         for p in locks:
-            print(f"   {p.relative_to(REPO)}   ({age_of(p)})")
+            # 🔴 Путь ПОЛНЫЙ, не `relative_to(REPO)`: личный `git_dir()` внутри
+            # worktree лежит ВНЕ рабочей папки (`…/materials/.git/worktrees/<имя>`),
+            # и `relative_to` там упал бы ValueError.
+            print(f"   {p}   ({age_of(p)})")
         print("   Свежий (секунды–минуты) — рядом РЕАЛЬНО идёт коммит: ЖДАТЬ, не трогать.\n"
               "   Старый — мёртвая мина от упавшего процесса.")
     else:
@@ -533,8 +857,12 @@ def cmd_doctor(args):
 
     # 🔴 Сторож соседних веток — САМ, без отдельной команды (требование 3
     # спецификации инцидента 2026-07-28). Стоит здесь, а не в конце: находка про
-    # потерянную ветку важнее списка последних коммитов.
-    print_branch_watch()
+    # потерянную ветку важнее списка последних коммитов. Раньше здесь стояли ДВА
+    # блока (счётный + по содержимому) — счётный снят частью B захода
+    # `kod_dobivka-vetok.md`: сравнение поимённо на живом репозитории показало,
+    # что он не находит ничего, чего не находит блок по содержимому, а 43 % его
+    # находок были шумом (см. отчёт захода).
+    print_loss_watch()
 
     print("\nПоследние коммиты:")
     for l in git("log", "-5", "--oneline").stdout.splitlines():
@@ -548,10 +876,16 @@ def cmd_doctor(args):
 # ─────────────────────────────── check ───────────────────────────────
 
 def find_locks():
-    """(локи, мусорные объекты) — то, что мешает записи или копится в .git."""
-    g = REPO / ".git"
-    return (sorted(g.glob("*.lock")) + sorted(g.glob("objects/*.lock")),
-            sorted(g.glob("objects/*/tmp_obj_*")))
+    """(локи, мусорные объекты) — то, что мешает записи или копится в .git.
+
+    🔴 ДВА каталога, не один (часть A захода 2026-08-03): верхнеуровневые локи
+    (`index.lock`, `HEAD.lock`) — ЛИЧНЫЕ (`git_dir()`), у каждой рабочей папки
+    свои; `objects/**` — ОБЩИЙ склад (`git_common_dir()`), один на все worktree.
+    В основной (не-worktree) папке они совпадают, разница не видна.
+    """
+    gd, gcd = git_dir(), git_common_dir()
+    return (sorted(gd.glob("*.lock")) + sorted(gcd.glob("objects/*.lock")),
+            sorted(gcd.glob("objects/*/tmp_obj_*")))
 
 
 DEAD_LOCK_SEC = 300
@@ -597,7 +931,8 @@ def cmd_clean(args):
               "   идти живой коммит. Снимать их опасно: испортишь индекс.\n"
               "   Подожди и повтори `clean`.")
         for p in alive:
-            print(f"   {p.relative_to(REPO)}")
+            # Полный путь, не `relative_to(REPO)` — см. find_locks().
+            print(f"   {p}")
 
     removed = 0
     for p in junk:
@@ -1207,6 +1542,28 @@ def cmd_adopt(args):
     diff = git("diff", "--stat", f"HEAD..{branch}", "--", zone, check=False)
     print(f"═══ adopt: зону `{zone}` берём с ветки `{branch}` на текущую ═══\n")
     print(diff.stdout.rstrip() or "(различий по зоне между ветками нет — брать нечего)")
+
+    # 🔴 ЧТО ОСТАЁТСЯ НА ВЕТКЕ — НАЗВАТЬ ВСЛУХ. adopt берёт РОВНО названную зону,
+    # и это его правильное поведение; беда в том, что «зону перенёс» читается как
+    # «работу перенёс». ЦЕНА (урок 20 арки 2026-07-30): перенос по путям привёз
+    # документацию без кода — четыре гейта и хук месяц числились существующими,
+    # потому что их описание доехало, а реализация осталась на ветке, и НИЧТО не
+    # покраснело: гейт «работа доехала в git» смотрит рабочее дерево, а файлы там
+    # на месте — просто версия чужая и старее.
+    # Печать, а не отказ: узкий adopt законен (соседний заход ещё пишет своё).
+    ostalos = sorted(p for p in diff_status("HEAD", f"refs/heads/{branch}")
+                     if not in_zone(p, zone))
+    if ostalos:
+        zony = {}
+        for p in ostalos:
+            zony[zone_of(p)] = zony.get(zone_of(p), 0) + 1
+        print(f"\n⚠ ВНЕ зоны `{zone}` ветка `{branch}` расходится ещё в "
+              f"{len(ostalos)} путях — они НЕ приедут:")
+        for z, c in sorted(zony.items(), key=lambda kv: (-kv[1], kv[0])):
+            print(f"   {c:>4}  {z}")
+        print("   Это норма, если чужое. Если это ТА ЖЕ работа (напр. описание "
+              "здесь,\n   а реализация там) — вторым ходом adopt по той зоне, "
+              "либо merge целиком.")
     if not args.yes:
         print("\n→ Это ПРЕДПРОСМОТР. Выполнить: повтори с `--yes`\n"
               "  (рабочая копия зоны заменится версией ветки и встанет в индекс; дальше `commit --zone`).")
@@ -1256,7 +1613,7 @@ def cmd_merge(args):
             return refuse_write("merge --abort/--continue",
                                 suggest=f"merge {args.branch or ''} "
                                         f"{'--abort' if args.abort else '--continue'}".strip())
-        if not (REPO / ".git" / "MERGE_HEAD").exists():
+        if not (git_dir() / "MERGE_HEAD").exists():
             print("⚠ Незаконченного слияния нет — отменять/продолжать нечего.\n"
                   "   Что с репо сейчас: `git_zona.py doctor`")
             return 1
@@ -1298,7 +1655,7 @@ def cmd_merge(args):
     head = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
     if head == branch:
         sys.exit(f"❌ `{branch}` — это и есть текущая ветка. Сливать нечего.")
-    if (REPO / ".git" / "MERGE_HEAD").exists():
+    if (git_dir() / "MERGE_HEAD").exists():
         print("⛔ В репозитории уже идёт незаконченное слияние — второе не начинаю.\n"
               "   Завершить: `git_zona.py merge --continue` · отменить: `merge --abort`")
         return 1
@@ -1497,6 +1854,10 @@ def main():
 
     d = sub.add_parser("doctor", help="что с репо прямо сейчас (начинай отсюда)")
     d.set_defaults(func=cmd_doctor)
+
+    po = sub.add_parser("poteri", help="что пропадёт при удалении ветки — файлами, read-only")
+    po.add_argument("--branch", help="судить только эту ветку (без флага — все соседние)")
+    po.set_defaults(func=cmd_poteri)
 
     c = sub.add_parser("check", help="что вне git (read-only, краснеет)")
     c.add_argument("--zone", help="проверять только этот префикс пути")
