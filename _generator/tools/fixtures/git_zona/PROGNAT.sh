@@ -1178,4 +1178,142 @@ V=$(git -C "$T35" for-each-ref --format='%(refname)' 'refs/tags/mogila/*' | wc -
                || { echo "  ❌ надгробие поставлено ветке, которую не закрыли"; FAIL=1; }
 git -C "$T35" worktree remove --force "$T35-wtS" >/dev/null 2>&1 || true
 
+# ══ ЛОВУШКИ 36-39: ЧЕТЫРЕ НАХОДКИ ВЕРИФИКАТОРА ЗАХОДА `zhizn-vetki` ══
+# Все четыре про одно: «удаление обратимо» верно ровно для ВЕРШИНЫ ветки, а
+# всё, что живёт рядом с ней — игнорируемые файлы рабочей папки, осколки в
+# reflog, чужой коммит в окне гонки, тёзка по регистру, — гибло молча.
+T36=$(mktemp -d); O36=$(mktemp -d)
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32" "$T35" "$T36" "$O36"' EXIT
+git init -q "$T36"
+git -C "$T36" config user.email fixture@test
+git -C "$T36" config user.name fixture
+printf 'istochniki/\n_snapshots/\n' > "$T36/.gitignore"
+echo "база" > "$T36/f.txt"
+git -C "$T36" add -A >/dev/null 2>&1; git -C "$T36" commit -qm "база"
+git -C "$T36" branch -M osnova
+
+# ── ЛОВУШКА 36: ИГНОРИРУЕМОЕ в рабочей папке не сносится молча ──
+# `status --porcelain --untracked-files=all` пути под .gitignore НЕ показывает,
+# а `worktree remove` БЕЗ --force сносит их вместе с папкой. В этом репозитории
+# под .gitignore намеренно лежат снапшоты дерева и pdf-источники («нужны НА
+# ДИСКЕ для поиска») — то есть страж пропускал ровно тот класс файлов, ради
+# которого написан. Найдено ВЕРИФИКАТОРОМ, воспроизведено на боевом CLI.
+git -C "$T36" worktree add -q -b vetka-s-ignorom "$T36-wtI" >/dev/null 2>&1
+mkdir -p "$T36-wtI/istochniki"
+echo "скачанная книга" > "$T36-wtI/istochniki/kniga.pdf"
+RC36=0
+GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-s-ignorom \
+    > "$O36/ignor.txt" 2>&1 || RC36=$?
+{ [ "$RC36" = "1" ] && [ -f "$T36-wtI/istochniki/kniga.pdf" ]; } \
+    && echo "  ✅ zakryt-vetku: игнорируемое (.gitignore) в папке ⇒ отказ, файл цел" \
+    || { echo "  ❌ ИГНОРИРУЕМОЕ СНЕСЕНО МОЛЧА — надгробие его не держит, источники потеряны"; FAIL=1; }
+V=$(grep -c 'istochniki/kniga.pdf' "$O36/ignor.txt" || true)
+[ "$V" -ge 1 ] && echo "  ✅ zakryt-vetku: игнорируемый файл НАЗВАН поимённо" \
+               || { echo "  ❌ отказ без имени файла — человек не поймёт, что спасает"; FAIL=1; }
+# осознанный снос мусора остаётся возможным — иначе уборка встанет на .DS_Store
+RC36B=0
+GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-s-ignorom \
+    --vsyo-ravno "мусор сборки" > "$O36/ignor2.txt" 2>&1 || RC36B=$?
+[ "$RC36B" = "0" ] && echo "  ✅ zakryt-vetku: --vsyo-ravno перебивает ИГНОРИРУЕМОЕ (мусор сносить можно)" \
+               || { echo "  ❌ уборка встала намертво на игнорируемом — на .DS_Store её отключат"; FAIL=1; }
+
+# ── ЛОВУШКА 37: ОСКОЛКИ amend/reset ХОРОНЯТСЯ, а не оплакиваются ──
+# Их держал reflog ветки; `branch -D` сносит его, `worktree remove` — личный
+# logs/HEAD рабочей папки. Оба держателя исчезают одним ходом, и объект умирает
+# при ближайшем `gc` (верификатор воспроизвёл: `could not get object info`).
+# Печать «осколков было N» ПОСЛЕ удаления — соболезнование, а не защита.
+git -C "$T36" checkout -q -b vetka-s-oskolkom
+echo "черновик, который потом переписали" > "$T36/oskolok.md"
+git -C "$T36" add -A >/dev/null 2>&1; git -C "$T36" commit -qm "черновик"
+C_OSK=$(git -C "$T36" rev-parse HEAD)
+echo "чистовик" > "$T36/oskolok.md"
+git -C "$T36" add -A >/dev/null 2>&1; git -C "$T36" commit -q --amend -m "чистовик"
+git -C "$T36" checkout -q osnova
+git -C "$T36" merge -q --no-edit vetka-s-oskolkom >/dev/null 2>&1
+GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch vetka-s-oskolkom \
+    > "$O36/oskolok.txt" 2>&1 || true
+# 🔴 reflog ВЫЧИЩАЕМ ПЕРЕД gc — иначе ловушка врёт зелёным. Работа здесь велась
+# в ГЛАВНОЙ папке, и её `logs/HEAD` держит осколок ещё 30 дней
+# (`gc.reflogExpireUnreachable`) даже без всякого надгробия: проверка выживания
+# после `gc` без этой строки проходила бы и на сломанном коде. Отложенная
+# смерть — та же смерть, просто её не видно в тот день, когда ломают.
+git -C "$T36" reflog expire --expire=now --expire-unreachable=now --all >/dev/null 2>&1 || true
+git -C "$T36" gc --prune=now -q >/dev/null 2>&1 || true
+V=$(git -C "$T36" cat-file -t "$C_OSK" 2>/dev/null || echo NET)
+[ "$V" = "commit" ] && echo "  ✅ zakryt-vetku: осколок amend ПЕРЕЖИЛ закрытие и gc (похоронен тегом)" \
+               || { echo "  ❌ ОСКОЛОК УМЕР ПРИ gc — надгробие держит только вершину, работа сгинула"; FAIL=1; }
+V=$(git -C "$T36" for-each-ref --format='%(refname:short)' refs/tags/mogila-oskolok/ | wc -l | tr -d ' ')
+[ "$V" -ge 1 ] && echo "  ✅ zakryt-vetku: надгробие-осколок заведено отдельным тегом" \
+               || { echo "  ❌ надгробия-осколка нет — коммит держится ничем"; FAIL=1; }
+# и его видно в каталоге могил — иначе вернуть его, забыв хэш, нельзя
+V=$(GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" mogily 2>&1 | grep -c 'mogila-oskolok/' || true)
+[ "$V" -ge 1 ] && echo "  ✅ mogily: надгробия-осколки перечислены" \
+               || { echo "  ❌ mogily молчит про осколки — вернуть их без точного хэша нельзя"; FAIL=1; }
+# и он воскрешается в новую ветку РОВНО напечатанной командой
+TEG_OSK=$(git -C "$T36" for-each-ref --format='%(refname:short)' refs/tags/mogila-oskolok/ | head -1)
+RC37=0
+GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" voskresit --tag "$TEG_OSK" \
+    --branch vernuli-oskolok > "$O36/vosk-osk.txt" 2>&1 || RC37=$?
+V=$(git -C "$T36" rev-parse refs/heads/vernuli-oskolok 2>/dev/null || echo NET)
+{ [ "$RC37" = "0" ] && [ "$V" = "$C_OSK" ]; } \
+    && echo "  ✅ voskresit --tag: осколок поднят в новую ветку, вершина совпала по хэшу" \
+    || { echo "  ❌ ОСКОЛОК НЕ ПОДНИМАЕТСЯ — похоронен, но недоступен, это не обратимость"; FAIL=1; }
+
+# ── ЛОВУШКА 38: ГОНКА — ветка уехала между надгробием и удалением ──
+# Между `git tag` и `branch -D` лежит целый `worktree remove`, а до них — весь
+# branch_loss с десятками git-вызовов. Всё, что второй писатель закоммитит в
+# это окно, надгробие НЕ держит: тег зафиксировал прежнюю вершину. Верификатор
+# воспроизвёл — `voskresit` бодро отчитался «вершина совпала», совпав с НЕ ТОЙ.
+if GIT_ZONA_REPO="$T36" python3 - "$TOOLS/git_zona.py" "$T36" >"$O36/gonka.txt" 2>&1 <<'PY'
+import sys, subprocess, importlib.util
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+repo = sys.argv[2]
+subprocess.run(["git", "-C", repo, "branch", "vetka-gonka", "osnova"], capture_output=True)
+
+nast = gz.git
+def s_vrezkoj(*a, **k):
+    r = nast(*a, **k)
+    # ВТОРОЙ ПИСАТЕЛЬ: коммитит в ветку сразу после постановки надгробия
+    if a[:1] == ("tag",) and len(a) > 1 and a[1] == gz.MOGILA + "vetka-gonka":
+        subprocess.run(["git", "-C", repo, "branch", "-f", "vetka-gonka", "osnova~0"],
+                       capture_output=True)
+        p = subprocess.run(["git", "-C", repo, "commit-tree", "-m", "чужой коммит",
+                            "-p", "osnova", "osnova^{tree}"], capture_output=True, text=True)
+        subprocess.run(["git", "-C", repo, "branch", "-f", "vetka-gonka",
+                        p.stdout.strip()], capture_output=True)
+    return r
+gz.git = s_vrezkoj
+head = nast("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+rc = gz.zakryt_odnu("vetka-gonka", head, {})
+est_vetka = nast("rev-parse", "--verify", "--quiet", "refs/heads/vetka-gonka",
+                 check=False).returncode == 0
+est_teg = nast("rev-parse", "--verify", "--quiet", "refs/tags/mogila/vetka-gonka",
+               check=False).returncode == 0
+# ждём: отказ, ветка ЖИВА (чужой коммит цел), надгробия нет
+sys.exit(0 if (rc == 1 and est_vetka and not est_teg) else 1)
+PY
+then echo "  ✅ zakryt-vetku: ветка уехала во время закрытия ⇒ отказ, чужой коммит цел"
+else echo "  ❌ ГОНКА: коммит второго писателя удалён — надгробие держало не ту вершину"; FAIL=1
+fi
+
+# ── ЛОВУШКА 39: ТЁЗКА ПО РЕГИСТРУ не затирает чужое надгробие ──
+# Диск владельца (APFS) и /tmp регистронезависимы, а git — нет: `rev-parse` по
+# точному имени не находит упакованный `mogila/Zametki`, loose-тег
+# `mogila/zametki` создаётся — и дальше ОБА имени разрешаются в ОДИН файл.
+# Тогда `voskresit` вернёт ветку на ЧУЖУЮ вершину (сверка по хэшу бесполезна:
+# обе стороны читают одну ссылку), а один `tag -d` снесёт оба надгробия.
+git -C "$T36" branch Zametki osnova
+git -C "$T36" tag "mogila/Zametki" osnova
+git -C "$T36" pack-refs --all >/dev/null 2>&1 || true
+STAROE39=$(git -C "$T36" rev-parse "refs/tags/mogila/Zametki")
+git -C "$T36" branch zametki osnova 2>/dev/null || true
+RC39=0
+GIT_ZONA_REPO="$T36" python3 "$TOOLS/git_zona.py" zakryt-vetku --branch zametki \
+    > "$O36/regist.txt" 2>&1 || RC39=$?
+V=$(git -C "$T36" rev-parse "refs/tags/mogila/Zametki" 2>/dev/null || echo NET)
+{ [ "$RC39" = "1" ] && [ "$V" = "$STAROE39" ]; } \
+    && echo "  ✅ zakryt-vetku: тёзка по РЕГИСТРУ отвергнут, старое надгробие цело" \
+    || { echo "  ❌ ТЁЗКА ПО РЕГИСТРУ ЗАТЁР ЧУЖОЕ НАДГРОБИЕ — на APFS обе ссылки схлопнутся в одну"; FAIL=1; }
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }

@@ -846,20 +846,41 @@ def mogila_ref(name):
 
 
 def worktree_gryaz(path):
-    """(число путей вне git, доступна ли папка) для рабочей папки по пути.
+    """(незакоммиченные пути, ИГНОРИРУЕМЫЕ пути) в рабочей папке.
 
     Спрашиваем git ИЗ ЭТОЙ папки, а не по общему индексу: у каждой рабочей
     папки свой индекс, и «чисто у меня» ничего не говорит про соседнюю.
+
+    🔴 ИГНОРИРУЕМОЕ СЧИТАЕТСЯ ОТДЕЛЬНО — НАЙДЕНО ВЕРИФИКАТОРОМ ЗАХОДА.
+    `status --porcelain --untracked-files=all` пути под `.gitignore` НЕ
+    показывает, а `git worktree remove` БЕЗ `--force` сносит их молча (оба
+    факта проверены прогоном). То есть проверка, чей смысл — «незакоммиченное
+    надгробие не держит», пропускала ровно тот класс файлов, который в этом
+    репозитории лежит вне git НАМЕРЕННО: `.gitignore` держит на диске
+    `*/_snapshots/` (тарболлы рабочего дерева), pdf в `istochniki/`,
+    `biblioteka/`, `literatura/` («нужны НА ДИСКЕ для поиска») и `carshering/`
+    целиком. Заход, скачавший источники в свою рабочую папку, терял бы их при
+    закрытии ветки — с печатью `✅` и без единого предупреждения.
+
+    Разница в лечении, поэтому и в возврате два числа: незакоммиченное — это
+    РАБОТА (отказ неперебиваемый), игнорируемое — чаще мусор (`__pycache__`,
+    `.DS_Store`), но иногда ценность, и решение про него принимает человек
+    (отказ перебивается `--vsyo-ravno`, список печатается).
     """
     p = Path(path)
     if not p.is_dir():
-        return 0, False
+        return [], []
     r = subprocess.run(["git", "--no-optional-locks", "-C", str(p), "status",
-                        "--porcelain", "--untracked-files=all"],
+                        "--porcelain", "--untracked-files=all", "--ignored"],
                        capture_output=True, text=True, env=_git_env())
     if r.returncode != 0:
-        return 0, False
-    return len([l for l in r.stdout.splitlines() if l.strip()]), True
+        return [], []
+    rabota, ignor = [], []
+    for line in r.stdout.splitlines():
+        if not line.strip():
+            continue
+        (ignor if line.startswith("!!") else rabota).append(line[3:].strip())
+    return rabota, ignor
 
 
 def glavnaya_rabochaya():
@@ -988,29 +1009,82 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
               "   Сперва переведи главную папку на другую ветку.")
         return 1
     if put_wt:
-        gryazno, dostupna = worktree_gryaz(put_wt)
+        gryazno, ignoriruemoe = worktree_gryaz(put_wt)
         if gryazno:
-            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {gryazno} путей вне git.\n"
-                  f"   {put_wt}\n"
+            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(gryazno)} "
+                  f"путей вне git.\n   {put_wt}\n"
                   "   Надгробие держит КОММИТЫ; файл, который никогда не коммитили,\n"
                   "   не держит ничто — это единственная необратимая потеря здесь,\n"
                   "   и `--vsyo-ravno` её НЕ перебивает.\n"
                   "   Посмотреть:  python3 _generator/tools/git_zona.py check   "
                   f"(запусти из {put_wt})")
+            print_paths(gryazno, "??", limit=8)
             return 1
+        # 🔴 ИГНОРИРУЕМОЕ (найдено верификатором): `worktree remove` сносит его
+        # молча, а `status` без `--ignored` о нём не говорит. В этом репозитории
+        # под `.gitignore` намеренно лежат снапшоты и pdf-источники, поэтому
+        # молчать нельзя. Но и запрещать намертво нельзя: тот же шаблон ловит
+        # `__pycache__` и `.DS_Store`, а уборка, встающая на каждом `.DS_Store`,
+        # не состоится вовсе. ⇒ отказ, перебиваемый названной причиной.
+        if ignoriruemoe and not vsyo_ravno:
+            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(ignoriruemoe)} "
+                  f"ИГНОРИРУЕМЫХ путей.\n   {put_wt}\n"
+                  "   Они вне git по `.gitignore` — значит надгробие их не держит,\n"
+                  "   а снос рабочей папки унесёт их молча. В этом репозитории так\n"
+                  "   лежат снапшоты и pdf-источники, а не только кэш:")
+            print_paths(ignoriruemoe, "!!", limit=8)
+            print("   Мусор (`__pycache__`, `.DS_Store`) — повтори с "
+                  "`--vsyo-ravno \"<причина>\"`.")
+            return 1
+        if ignoriruemoe:
+            print(f"   ⚠ Игнорируемых путей в папке: {len(ignoriruemoe)} — "
+                  "уйдут вместе с ней, надгробие их не держит.")
 
     # ── 3. НАДГРОБИЕ: имя занято ⇒ отказ, `-f` не используем НИКОГДА (случай 3) ──
-    if git("rev-parse", "--verify", "--quiet", mogila_ref(name),
-           check=False).returncode == 0:
-        stoit = git("rev-parse", "--short", mogila_ref(name), check=False).stdout.strip()
-        print(f"⛔ `{name}` — надгробие `{MOGILA}{name}` УЖЕ есть (на {stoit}).\n"
+    # 🔴 СРАВНЕНИЕ БЕЗ УЧЁТА РЕГИСТРА — НАЙДЕНО ВЕРИФИКАТОРОМ. Диск владельца
+    # (APFS) и `/tmp` регистронезависимы, а git — нет: `rev-parse` по точному
+    # имени НЕ найдёт упакованный `mogila/Zametki`, тег `mogila/zametki`
+    # создастся loose-файлом, и дальше ОБА имени разрешаются в ОДИН файл. Тогда
+    # `voskresit` вернёт ветку на ЧУЖУЮ вершину (сверка по хэшу бесполезна:
+    # обе её стороны читают одну ссылку), а один `tag -d` снесёт оба надгробия
+    # разом — работа старой ветки не держится больше ничем. Экзотика (в этом
+    # репозитории все имена в нижнем регистре), но цена — тихая необратимая
+    # потеря, поэтому сравниваем casefold по всему списку могил, а не точным
+    # именем через `rev-parse`.
+    zanyato = [l.strip() for l in git("for-each-ref", "--format=%(refname:short)",
+                                      "refs/tags/" + MOGILA, check=False).stdout.splitlines()
+               if l.strip().casefold() == (MOGILA + name).casefold()]
+    if zanyato:
+        stoit = git("rev-parse", "--short", "refs/tags/" + zanyato[0],
+                    check=False).stdout.strip()
+        print(f"⛔ `{name}` — надгробие `{zanyato[0]}` УЖЕ есть (на {stoit}).\n"
               "   Не перезаписываю: под этим именем уже похоронена другая ветка,\n"
               "   и `-f` сделал бы ЕЁ работу недостижимой. Сперва разбери старое:\n"
-              f"   {stroka_voskresheniya(name)}")
+              f"   {stroka_voskresheniya(zanyato[0][len(MOGILA):])}")
+        if zanyato[0] != MOGILA + name:
+            print(f"   ⚠ Имена различаются только РЕГИСТРОМ (`{zanyato[0]}` vs "
+                  f"`{MOGILA}{name}`).\n     На этом диске git разрешил бы оба "
+                  "в одну ссылку — и потерял бы одно из двух.")
         return 1
 
     vershina = git("rev-parse", full, check=False).stdout.strip()
+    # 🔴 ОСКОЛКИ ХОРОНИМ ТОЖЕ — ПРАВКА ПО ВЕРИФИКАТОРУ. Прежде они лишь
+    # печатались строкой ПОСЛЕ удаления, то есть соболезнованием: их держал
+    # reflog ветки, `branch -D` сносит `logs/refs/heads/<имя>`, а
+    # `worktree remove` — личный `logs/HEAD` рабочей папки; оба держателя
+    # исчезают одним ходом, и объект умирает при ближайшем `gc` (верификатор
+    # воспроизвёл: `gc --prune=now` → `could not get object info`). Хэши в
+    # выводе терминала после этого бесполезны. Тег стоит ничего и держит
+    # вечно — значит хоронить надо и их. Имя `mogila-oskolok/<ветка>/<хэш>`, а
+    # не `mogila/<ветка>/…`: `mogila/<ветка>` уже ТЕГ, и вложенное имя под ним
+    # git создать не даст (D/F-конфликт).
     oskolki = oskolki_vetki(name)
+    pohoronennye_oskolki = []
+    for h, _ in oskolki:
+        polnyj = git("rev-parse", h, check=False).stdout.strip() or h
+        imya = f"mogila-oskolok/{name}/{h}"
+        if git("tag", imya, polnyj, check=False).returncode == 0:
+            pohoronennye_oskolki.append(imya)
     r = git("tag", MOGILA + name, full, check=False)
     if r.returncode != 0:
         print(f"❌ `{name}` — надгробие не поставилось (rc={r.returncode}): "
@@ -1020,6 +1094,8 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
 
     def snyat_nadgrobie(pochemu):
         git("tag", "-d", MOGILA + name, check=False)
+        for t in pohoronennye_oskolki:
+            git("tag", "-d", t, check=False)
         print(f"❌ `{name}` — {pochemu}. Надгробие СНЯТО обратно: ветка жива, и\n"
               "   оставленный тег объявил бы её вечно-безопасной для сторожа.")
 
@@ -1034,6 +1110,23 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
         else:
             # Папки нет, а запись есть — та самая осиротевшая служебная запись.
             git("worktree", "prune", check=False)
+
+    # 🔴 СВЕРКА ВЕРШИНЫ ПЕРЕД УДАЛЕНИЕМ — НАЙДЕНО ВЕРИФИКАТОРОМ (гонка).
+    # Между `git tag` и `git branch -D` лежит целый `worktree remove`, а до них —
+    # весь `branch_loss` с десятками git-вызовов. Всё, что второй писатель
+    # закоммитит в это окно, надгробие НЕ держит: тег зафиксировал прежнюю
+    # вершину, а `-D` удаляет ветку не глядя. Верификатор воспроизвёл прогоном:
+    # коммит, врезанный сразу после `tag`, стал unreachable, и `voskresit`
+    # бодро отчитался «вершина совпала с надгробием» — с ней и совпала, только
+    # ветка успела уехать дальше. В этом монорепо параллельные рабочие папки —
+    # штатный режим, поэтому окно закрываем перечитыванием ссылки.
+    seychas = git("rev-parse", full, check=False).stdout.strip()
+    if seychas != vershina:
+        snyat_nadgrobie(f"ветка уехала во время закрытия ({vershina[:8]} → "
+                        f"{seychas[:8]}): рядом писал кто-то ещё, и надгробие "
+                        f"держало бы уже не ту вершину")
+        print("   Повтори команду — метрика пересчитается на новой вершине.")
+        return 1
 
     # ── 5. ВЕТКА: `-D`, НИКОГДА `-d` ──
     # `-d` судит по ИСТОРИИ и откажет там, где терять нечего: работа доезжает
@@ -1050,11 +1143,17 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
     if put_wt:
         print(f"   Рабочая папка снята: {put_wt}")
     if oskolki:
-        print(f"   ⚠ Осколков вне всех ссылок было {len(oskolki)} (reset/amend) — "
-              "их держал reflog ветки,\n     и он удалён вместе с ней. "
-              "Надгробие держит только вершину:")
-        for h, s in oskolki[:5]:
-            print(f"        {h}  {s}")
+        print(f"   Осколков вне всех ссылок было {len(oskolki)} (reset/amend) — "
+              f"их держал reflog ветки,\n   и он удалён вместе с ней; "
+              f"похоронено отдельными надгробиями: {len(pohoronennye_oskolki)}")
+        for (h, s), t in zip(oskolki, pohoronennye_oskolki):
+            print(f"        {h}  {s}\n          вернуть: python3 "
+                  f"_generator/tools/git_zona.py voskresit --tag {t} "
+                  f"--branch <имя новой ветки>")
+        if len(pohoronennye_oskolki) < len(oskolki):
+            print(f"   ⚠ {len(oskolki) - len(pohoronennye_oskolki)} осколк(ов) "
+                  "похоронить НЕ удалось — они держались только reflog'ом "
+                  "и умрут при ближайшем `gc`.")
     print(f"   Воскресить одной командой:\n     {stroka_voskresheniya(name)}")
     return 0
 
@@ -1126,9 +1225,13 @@ def cmd_voskresit(args):
         return refuse_write("Воскрешение ветки",
                             suggest=f"voskresit --branch {args.branch}")
     name = args.branch
-    ref = mogila_ref(name)
+    # `--tag` — воскрешение ОСКОЛКА (коммита, отвязанного `reset`/`amend`):
+    # у него нет своего имени ветки, поэтому имя задаёт человек. Тот же путь,
+    # та же сверка по хэшу, то же снятие тега после успеха.
+    ref = ("refs/tags/" + args.tag.lstrip("/")) if args.tag else mogila_ref(name)
+    snimaemyj_teg = args.tag if args.tag else (MOGILA + name)
     if git("rev-parse", "--verify", "--quiet", ref, check=False).returncode != 0:
-        print(f"⛔ Надгробия `{MOGILA}{name}` нет — воскрешать нечего.\n"
+        print(f"⛔ Надгробия `{snimaemyj_teg}` нет — воскрешать нечего.\n"
               "   Что похоронено: python3 _generator/tools/git_zona.py mogily")
         return 1
     if git("rev-parse", "--verify", "--quiet", "refs/heads/" + name,
@@ -1148,9 +1251,9 @@ def cmd_voskresit(args):
         print(f"❌ Вершина не совпала: надгробие держало {vershina[:8]}, "
               f"ветка встала на {stalo[:8]}. Надгробие НЕ снимаю.")
         return 1
-    git("tag", "-d", MOGILA + name, check=False)
+    git("tag", "-d", snimaemyj_teg, check=False)
     print(f"✅ `{name}` воскрешена: вершина {stalo[:8]} (совпала с надгробием).\n"
-          f"   Надгробие `{MOGILA}{name}` снято — ветка снова живая и снова "
+          f"   Надгробие `{snimaemyj_teg}` снято — ветка снова живая и снова "
           "видна сторожу.\n"
           f"   Рабочая папка НЕ восстанавливается: `git_zona.py worktree add "
           f"<имя> --branch {name}`")
@@ -1159,10 +1262,20 @@ def cmd_voskresit(args):
 
 def cmd_mogily(args):
     """Что похоронено — read-only список надгробий."""
+    # 🔴 ПРЕФИКС, А НЕ `mogila/*`. Поймано на живом прогоне 04.08: со звёздочкой
+    # `for-each-ref` матчит РОВНО ОДИН сегмент имени, и надгробия веток вида
+    # `zahod/<слаг>` (то есть почти всех) выпадали молча — команда печатала
+    # «Надгробий: 3» при двенадцати живых. Тихая потеря охвата в самой команде,
+    # которая существует, чтобы показывать, что похоронено: воскрешать пришли
+    # бы то, чего в списке нет. Тот же корень, что у всего механизма — доверие
+    # ИМЕНИ (здесь — шаблону имени) вместо самого набора объектов.
     rows = [l.strip() for l in git("for-each-ref",
             "--format=%(refname:short) %(objectname:short) %(creatordate:short)",
-            "refs/tags/" + MOGILA + "*", check=False).stdout.splitlines() if l.strip()]
-    if not rows:
+            "refs/tags/" + MOGILA, check=False).stdout.splitlines() if l.strip()]
+    oskolki = [l.strip() for l in git("for-each-ref",
+               "--format=%(refname:short) %(objectname:short) %(creatordate:short)",
+               "refs/tags/mogila-oskolok/", check=False).stdout.splitlines() if l.strip()]
+    if not rows and not oskolki:
         print("✅ Надгробий нет — закрытых веток в репозитории не числится.")
         return 0
     print(f"Надгробий: {len(rows)}")
@@ -1171,6 +1284,16 @@ def cmd_mogily(args):
         imya = parts[0][len(MOGILA):]
         print(f"   · {parts[0]:<40} {' '.join(parts[1:])}")
         print(f"     вернуть: {stroka_voskresheniya(imya)}")
+    if oskolki:
+        # Осколки — коммиты, отвязанные `reset`/`amend`: своего имени ветки у
+        # них нет, поэтому и возврат другой формой.
+        print(f"\nНадгробий-осколков: {len(oskolki)} (коммиты вне вершин, "
+              "reset/amend)")
+        for r in oskolki:
+            parts = r.split()
+            print(f"   · {parts[0]:<40} {' '.join(parts[1:])}")
+            print(f"     вернуть: python3 _generator/tools/git_zona.py voskresit "
+                  f"--tag {parts[0]} --branch <имя новой ветки>")
     return 0
 
 
@@ -2296,7 +2419,12 @@ def main():
     zv.set_defaults(func=cmd_zakryt_vetku)
 
     vs = sub.add_parser("voskresit", help="вернуть ветку из надгробия и снять надгробие")
-    vs.add_argument("--branch", required=True, help="имя закрытой ветки")
+    vs.add_argument("--branch", required=True,
+                    help="имя ветки: закрытой (из её надгробия) либо новой — "
+                         "когда поднимаешь осколок через --tag")
+    vs.add_argument("--tag", help="полное имя надгробия-осколка "
+                                  "(`mogila-oskolok/<ветка>/<хэш>`) — для коммитов, "
+                                  "отвязанных reset/amend: своего имени ветки у них нет")
     vs.set_defaults(func=cmd_voskresit)
 
     mg2 = sub.add_parser("mogily", help="что похоронено: список надгробий (read-only)")
