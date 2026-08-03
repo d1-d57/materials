@@ -143,6 +143,25 @@ H1=$(git hash-object "$T/_studio/docs/KARTA.md")
 [ "$H0" = "$H1" ] && echo "  ✅ при отказе KARTA.md не тронут ни байтом" \
                   || { echo "  ❌ ОТКАЗ ВСЁ РАВНО ПРАВИЛ KARTA.md — отказ лоссовый"; FAIL=1; }
 
+# ── ЛОВУШКА 4б: obzory/ ПРИНИМАЕТСЯ (второй судимый корень, 03.08.2026) ──
+# Пара к ловушке 4: та стережёт, чтобы дверь не пускала что попало, эта — чтобы
+# расширение не осталось словами. `obzory/README.md` шагом 5 велит регистрировать
+# обзор, и до 03.08 дверь этот путь отвергала: инструкция была невыполнима
+# штатно — тот же класс дефекта, ради которого дверь и заведена.
+mkdir -p "$T/obzory/proba-obzora/src"
+echo "обзор" > "$T/obzory/proba-obzora/src/obzor.md"
+if $DOOR "obzory/proba-obzora/src/obzor.md" "пробный обзор для фикстуры" > /dev/null 2>&1
+then echo "  ✅ путь в obzory/ принят (второй судимый корень жив)"
+else echo "  ❌ ДВЕРЬ ОТВЕРГЛА obzory/ — шаг 5 obzory/README.md снова невыполним"; FAIL=1
+fi
+V=$(grep -o 'obzory/proba-obzora/src/obzor.md' "$T/_studio/docs/KARTA.md" | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ обзор вписан ровно одной строкой, путём целиком" \
+               || { echo "  ❌ ОБЗОР ВПИСАН НЕВЕРНО (вхождений: $V)"; FAIL=1; }
+if $DOOR "obzory/proba-obzora/src/obzor.md" "тот же обзор ещё раз" > /dev/null 2>&1; then :; fi
+V=$(grep -o 'obzory/proba-obzora/src/obzor.md' "$T/_studio/docs/KARTA.md" | wc -l | tr -d ' ')
+[ "$V" = "1" ] && echo "  ✅ идемпотентность держится и на obzory/" \
+               || { echo "  ❌ ДУБЛЬ НА ПОВТОРЕ В obzory/ (вхождений: $V)"; FAIL=1; }
+
 # Те же две половины на пустом описании: строка без описания выглядит как
 # выполненная регистрация, а несёт ноль — это хуже отсутствия строки.
 if $DOOR "$ARKA/PUSTOE.md" "" > /dev/null 2>&1
