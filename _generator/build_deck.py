@@ -567,6 +567,11 @@ def lint(shablon, filemap, meta, names):
         if not msc or int(msc.group(1)) <= 1:
             continue
         body = re.sub(r"<(script|style|template)\b.*?</\1>", " ", shtml, flags=re.S)
+        # `<details>` раскрывает КНОПКА ЧИТАТЕЛЯ, а не кликер докладчика: в зале этот
+        # текст не появляется ни на одной сцене, и метрика «порция текста на клик»
+        # о нём не судит. Без этой строки комментарий-подстрочник считался бы текстом
+        # первой сцены и переводил слайд через порог 4 на ровном месте.
+        body = re.sub(r"<details\b.*?</details>", " ", body, flags=re.S)
         buckets = {}
         for m in re.finditer(r"<(p|li)\b([^>]*)>(.*?)</\1>", body, re.S):
             text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", m.group(3))).strip()
