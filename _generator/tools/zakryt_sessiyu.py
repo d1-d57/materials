@@ -462,6 +462,17 @@ def main() -> int:
     # появиться ни одного нового хода (см. докстроку pechat_uborki_vetok).
     pechat_uborki_vetok()
 
+    # Разбор инцидентов — ГЕЙТ, не печать (в отличие от уборки веток выше):
+    # неразобранный класс красит закрытие сессии красным, а не ждёт, пока
+    # кто-нибудь вспомнит (`kod_gejt-razbora.md`; было 90 строк за 10 дней,
+    # разобрана одна). Красный код здесь СТАНОВИТСЯ кодом возврата всей
+    # функции ниже — тем же приёмом, что и `dnevnik.cmd_proverit`.
+    tools_dir = Path(__file__).resolve().parent
+    print("\n── разбор инцидентов (check_incidenty.py) ──")
+    r_incidenty = subprocess.run(
+        ["python3", str(tools_dir / "check_incidenty.py")], cwd=tools_dir.parent.parent)
+    rc_incidenty = r_incidenty.returncode
+
     # Часть A.1: `proverit` зовётся ПОСЛЕДНИМ ходом закрытия сессии, а не в
     # pre-commit — коммит и сессия не совпадают, посреди сессии дневник
     # законно неполон, и хук, повешенный на коммит, шумел бы зря (Р31: гейт,
@@ -477,7 +488,10 @@ def main() -> int:
     else:
         print("\n🔴 Выгрузка сделана, но дневник арки НЕПОЛОН — закрыть сессию нельзя, "
               "пока не разнесены реплики выше.")
-    return rc
+    if rc_incidenty != 0:
+        print("\n🔴 Есть неразобранные классы инцидентов (см. вывод выше) — "
+              "закрыть сессию нельзя, пока не пополнен VERDIKTY.md.")
+    return rc or rc_incidenty
 
 
 if __name__ == "__main__":

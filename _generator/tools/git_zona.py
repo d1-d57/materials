@@ -1411,6 +1411,19 @@ def cmd_doctor(args):
     # находок были шумом (см. отчёт захода).
     print_loss_watch()
 
+    # Разбор инцидентов — ПЕЧАТЬ, не гейт (гейт стоит на закрытии сессии,
+    # `zakryt_sessiyu.py`). Видимость каждый день `doctor` не даёт забыть про
+    # разбор до самого закрытия (`kod_gejt-razbora.md`). Отложенный импорт —
+    # та же причина, что у `dnevnik` в `zakryt_sessiyu.py`: не тянуть лишний
+    # модуль в каждый вызов git_zona.py, только когда реально дошли до doctor.
+    try:
+        import check_incidenty
+        inc_text = (REPO / check_incidenty.INCIDENTY_REL).read_text(encoding="utf-8")
+        verd_text = (REPO / check_incidenty.VERDIKTY_REL).read_text(encoding="utf-8")
+        print(f"\n{check_incidenty.status_line(inc_text, verd_text)}")
+    except (ImportError, OSError):
+        pass  # doctor не обязан валиться из-за печати; гейт при закрытии сессии всё равно проверит
+
     print("\nПоследние коммиты:")
     for l in git("log", "-5", "--oneline").stdout.splitlines():
         print(f"   {l}")
