@@ -578,7 +578,7 @@ for TEMA in "fixt-a&b" "fixt-a;b" "fixt-a*b" "fixt-a\$b" "fixt-a|b" "fixt-it's" 
     rm -rf "$R4"; podgotovit "$R4" > /dev/null 2>&1
     GIT_ZONA_REPO="$R4" python3 "$T/zvat.py" "$GEN" "$R4" \
         _studio/zhurnal/arka "$TEMA" --branch osnova --zone "_generator/" \
-        --opisanie "проба метасимволов" > "$T/meta.txt" 2>&1 || true
+        --kanal terminal --opisanie "проба метасимволов" > "$T/meta.txt" 2>&1 || true
     S=$(sed -n '/^cd .*claude -p/,/^```$/p' "$T/meta.txt" | sed '$d')
     if [ -z "$S" ]; then
         # Генератор ОТКАЗАЛ на кривом имени — законный и даже лучший исход
@@ -623,7 +623,7 @@ for WTN in "../../pobeg" ".skrytaya" "s probelom" "-flag"; do
     cp "$T/gz-src.py" "$R5/_generator/tools/git_zona.py"
     GIT_ZONA_REPO="$R5" python3 "$T/zvat.py" "$GEN" "$R5" \
         _studio/zhurnal/arka wtn --branch zahod/wtn-proba --zone "_generator/" \
-        --worktree "$WTN" --opisanie "проба имени папки" > "$T/wtn.txt" 2>&1 && G=proshlo || G=otkaz
+        --worktree "$WTN" --kanal app --opisanie "проба имени папки" > "$T/wtn.txt" 2>&1 && G=proshlo || G=otkaz
     if [ "$G" = "otkaz" ]; then
         printf '  ✅ имя рабочей папки [%s] отвергнуто\n' "$WTN"
     else
@@ -647,11 +647,11 @@ podgotovit "$R6"
 cp "$T/gz-src.py" "$R6/_generator/tools/git_zona.py"
 GIT_ZONA_REPO="$R6" python3 "$T/zvat.py" "$GEN" "$R6" \
     _studio/zhurnal/arka pervyj --branch zahod/pervaya --zone "_generator/" \
-    --worktree obshaya --opisanie "первый заход" > /dev/null 2>&1 || true
+    --worktree obshaya --kanal app --opisanie "первый заход" > /dev/null 2>&1 || true
 if [ -d "$T/repo-vetka-wt/obshaya" ]; then
     if GIT_ZONA_REPO="$R6" python3 "$T/zvat.py" "$GEN" "$R6" \
         _studio/zhurnal/arka vtoroj --branch zahod/sovsem-drugaya --zone "_generator/" \
-        --worktree obshaya --opisanie "второй заход" > "$T/vetka.txt" 2>&1
+        --worktree obshaya --kanal app --opisanie "второй заход" > "$T/vetka.txt" 2>&1
     then
         echo "  ❌ ПАПКА НА ЧУЖОЙ ВЕТКЕ ВЗЯТА МОЛЧА — заход соврёт про ветку при зелёном выводе"
         FAIL=1
@@ -758,7 +758,7 @@ printf '%s\n' '{{ТЕМА}} {{МОДЕЛЬ}} {{ВЕТКА}}' 'ЗОНА: {{ЗОН
     > "$R3/_studio/zhurnal/_TEMPLATE-zahod.md"
 if GIT_ZONA_REPO="$R3" python3 "$T/zvat.py" "$GEN" "$R3" \
         _studio/zhurnal/arka net-yakorya --branch osnova --zone "_generator/" \
-        --opisanie "проба без якоря" > "$T/net-yak.txt" 2>&1
+        --kanal terminal --opisanie "проба без якоря" > "$T/net-yak.txt" 2>&1
 then
     echo "  ❌ ШАБЛОН БЕЗ ЯКОРЯ ПРОШЁЛ — заход уедет без строки про счётчик, молча"; FAIL=1
 else

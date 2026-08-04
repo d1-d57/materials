@@ -764,7 +764,7 @@ git -C "$T5" worktree remove --force "$WT5" >/dev/null 2>&1 || true
 T22=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
 mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$T22/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$T22/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T22/_studio/zhurnal/"
 cd "$T22"
 git init -q .
@@ -774,6 +774,7 @@ git add -A >/dev/null; git commit -qm baseline >/dev/null
 cd - >/dev/null
 python3 "$T22/_generator/tools/bootstrap_zahod.py" _studio/zhurnal/proba22 proba22t \
     --branch fixture-branch22 --zone "_studio/zhurnal/proba22/" --worktree proba22wt \
+    --kanal app \
     --opisanie "фикстура: файл в основной, worktree для кода" > /dev/null 2>&1 || true
 [ -f "$T22/_studio/zhurnal/proba22/kod_proba22t.md" ] \
     && echo "  ✅ часть D: файл-заход создан В ОСНОВНОЙ папке (--worktree задан)" \

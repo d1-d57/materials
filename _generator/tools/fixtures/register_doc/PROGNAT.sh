@@ -51,7 +51,7 @@ trap 'rm -rf "$T"' EXIT
 ARKA=_studio/zhurnal/2026-07-30_proba
 mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
          "$T/$ARKA" "$T/teoriya-kategoriy/kartoteka" "$T/proekt"
-cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
+cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" "$TOOLS/check_zahod.py" \
    "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$T/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
 cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
@@ -154,7 +154,7 @@ fi
 # Ворота 5 обязаны молчать про него СРАЗУ, без отдельного вызова двери. Это и
 # есть шаг A: регистрирует тот ход, у которого `docs/` открыт by construction.
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" proba \
-    --branch fixture-branch --zone "moya-zona/" \
+    --branch fixture-branch --zone "moya-zona/" --kanal terminal \
     --opisanie "фикстурный заход: проверка регистрации тем же ходом" \
     > /dev/null 2>&1 || true
 if [ -f "$T/$ARKA/kod_proba.md" ]; then
@@ -170,7 +170,7 @@ fi
 # Описание не задано — строка обязана уйти С ЯВНОЙ ПОМЕТКОЙ, а не тихой
 # заглушкой: тихая выглядит как выполненная регистрация (прямой запрет задания).
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" bezopisania \
-    --branch fixture-branch --zone "moya-zona/" > /dev/null 2>&1 || true
+    --branch fixture-branch --zone "moya-zona/" --kanal terminal > /dev/null 2>&1 || true
 V=$(grep -o 'описание не задано' "$T/_studio/docs/KARTA.md" | wc -l | tr -d ' ')
 [ "$V" = "1" ] && echo "  ✅ без --opisanie в индекс ушла ЯВНАЯ пометка, а не тишина" \
                || { echo "  ❌ ТИХАЯ ЗАГЛУШКА (вхождений пометки: $V) — пустая регистрация выглядит выполненной"; FAIL=1; }
@@ -303,7 +303,7 @@ fi
 # ровно так вчерашний исполнитель оставил свой отчёт вне git. Мутация «убрать
 # дописывание own_rel к a.zone» обязана красить ЭТУ ловушку.
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" svoya-zona \
-    --branch fixture-branch --zone "moya-zona/" \
+    --branch fixture-branch --zone "moya-zona/" --kanal terminal \
     --opisanie "фикстурный заход: своя зона содержит свой путь" \
     > /dev/null 2>&1 || true
 if [ -f "$T/$ARKA/kod_svoya-zona.md" ]; then
