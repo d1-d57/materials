@@ -81,6 +81,24 @@ cat > "$TMP/4-verdikty.md" <<EOF
 EOF
 pusk "4-shum" 0 "$TMP/4-incidenty.md" "$TMP/4-verdikty.md"
 
+# 5. Класс-корзина «шум» получил строку ПОЗЖЕ даты вердикта — красное с именем класса.
+cat > "$TMP/5-incidenty.md" <<EOF
+- $DATA_9D 10:00 · arka/mat-kostyak · коммит с --no-verify: старый чужой долг · → чинить · статус: открыт
+- $DATA_3D 10:00 · arka/mat-kostyak · коммит с --no-verify: новый чужой долг · → чинить · статус: открыт
+EOF
+cat > "$TMP/5-verdikty.md" <<EOF
+- C прочий чужой долг · вердикт: шум: разнородное, отдельного класса не образует · дата данных: $DATA_9D
+EOF
+python3 "$GATE" --incidenty "$TMP/5-incidenty.md" --verdikty "$TMP/5-verdikty.md" > "$TMP/5.out" 2>&1
+got=$?
+if [ "$got" = "1" ] && grep -q "C прочий чужой долг" "$TMP/5.out"; then
+  echo "  ✓ 5-korzina-vyroslo: код $got, класс в выводе"
+else
+  echo "  ✗ 5-korzina-vyroslo: код $got, или класса нет в выводе"
+  cat "$TMP/5.out"
+  OK=1
+fi
+
 echo
 [ "$OK" = 0 ] && echo "ВСЁ ЗЕЛЁНОЕ" || echo "ЕСТЬ ПРОВАЛЫ"
 exit "$OK"

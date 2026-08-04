@@ -155,6 +155,8 @@ def ocenit(incidenty_text, verdikty_text, segodnya=None):
     verdikty = parse_verdikty(verdikty_text)
     findings = []
 
+    segodnya_str = segodnya.isoformat()
+
     for klyuch, daty in klassy.items():
         starejshaya = min(daty)
         vozrast = dnej_nazad(starejshaya, segodnya)
@@ -167,6 +169,26 @@ def ocenit(incidenty_text, verdikty_text, segodnya=None):
                     f"{vozrast} дней назад, вердикта нет — строка для VERDIKTY.md:\n"
                     f"   - {klyuch} · вердикт: дефект → заход {NE_SOBRAN} · "
                     f"дата данных: {segodnya.isoformat()}"
+                )
+            continue
+
+        if v.tip == 'шум':
+            # «Шум» законен, пока класс не растёт. Строка датирована СТРОГО позже
+            # даты вердикта — новая, вердикт её не видел, точка. Строка датирована
+            # ТЕМ ЖЕ днём — доверяем только если вердикт не сегодняшний: внутри
+            # одного дня порядок «вердикт → строка» по датам не восстановить, а
+            # сегодняшний вердикт против сегодняшней строки — ровно тот случай,
+            # когда мы не знаем, что было раньше (см. `## ПЛАН` захода).
+            novye = [d for d in daty if d > v.data_dannyh
+                     or (d == v.data_dannyh and v.data_dannyh == segodnya_str)]
+            if novye:
+                findings.append(
+                    f"класс «{klyuch}»: вердикт «шум» (дата данных {v.data_dannyh}), "
+                    f"но в классе {len(novye)} строк(и) датированы не раньше этой "
+                    f"даты — «шум» не бывает вечным, нужен пересмотр. Строка для "
+                    f"VERDIKTY.md:\n"
+                    f"   - {klyuch} · вердикт: шум: <причина> · "
+                    f"дата данных: {segodnya_str}"
                 )
             continue
 
