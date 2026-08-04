@@ -73,11 +73,13 @@ else
 fi
 
 # 4. Вердикт «шум: конфликты — обычная жизнь ветвления» — законный выход, exit 0.
+#    Вердикт того же дня, что строка, но ПОЗЖЕ неё по часам — явное время,
+#    не угадывание формата (старый костыль same-day-если-сегодня отсюда убран).
 cat > "$TMP/4-incidenty.md" <<EOF
 - $DATA_9D 10:00 · arka/mat-kostyak · merge arka/x: конфликт в 1 путях · → разрешить конфликты · статус: открыт
 EOF
 cat > "$TMP/4-verdikty.md" <<EOF
-- E конфликт путей · вердикт: шум: конфликты — обычная жизнь ветвления · дата данных: $DATA_9D
+- E конфликт путей · вердикт: шум: конфликты — обычная жизнь ветвления · дата данных: $DATA_9D 12:00
 EOF
 pusk "4-shum" 0 "$TMP/4-incidenty.md" "$TMP/4-verdikty.md"
 
@@ -96,6 +98,37 @@ if [ "$got" = "1" ] && grep -q "C прочий чужой долг" "$TMP/5.out"
 else
   echo "  ✗ 5-korzina-vyroslo: код $got, или класса нет в выводе"
   cat "$TMP/5.out"
+  OK=1
+fi
+
+# 6. Вердикт «шум» со ВРЕМЕНЕМ, строка ТОГО ЖЕ дня РАНЬШЕ по часам — зелёный.
+#    Ровно живой случай класса C 04.08: вердикт написан ПОСЛЕ строки в тот же
+#    день; старый костыль («сегодняшний вердикт — всегда подозрительно»)
+#    красил бы это независимо от часов, правка 2 отличает по факту.
+SEGODNYA=$(python3 -c "from datetime import date; print(date.today().isoformat())")
+cat > "$TMP/6-incidenty.md" <<EOF
+- $SEGODNYA 08:00 · arka/mat-kostyak · коммит с --no-verify: чужой долг: тест раньше вердикта · → чинить · статус: открыт
+EOF
+cat > "$TMP/6-verdikty.md" <<EOF
+- C прочий чужой долг · вердикт: шум: тестовый вердикт с временем · дата данных: $SEGODNYA 09:00
+EOF
+pusk "6-shum-so-vremenem-ranshe" 0 "$TMP/6-incidenty.md" "$TMP/6-verdikty.md"
+
+# 7. Та же пара часов, но строка ПОЗЖЕ вердикта — по-прежнему красный:
+#    «шум» не бывает вечным даже внутри одного дня, когда порядок известен.
+cat > "$TMP/7-incidenty.md" <<EOF
+- $SEGODNYA 10:00 · arka/mat-kostyak · коммит с --no-verify: чужой долг: тест позже вердикта · → чинить · статус: открыт
+EOF
+cat > "$TMP/7-verdikty.md" <<EOF
+- C прочий чужой долг · вердикт: шум: тестовый вердикт с временем · дата данных: $SEGODNYA 09:00
+EOF
+python3 "$GATE" --incidenty "$TMP/7-incidenty.md" --verdikty "$TMP/7-verdikty.md" > "$TMP/7.out" 2>&1
+got=$?
+if [ "$got" = "1" ] && grep -q "C прочий чужой долг" "$TMP/7.out"; then
+  echo "  ✓ 7-shum-so-vremenem-pozhe: код $got, класс в выводе"
+else
+  echo "  ✗ 7-shum-so-vremenem-pozhe: код $got, или класса нет в выводе"
+  cat "$TMP/7.out"
   OK=1
 fi
 

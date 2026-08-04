@@ -836,9 +836,72 @@ def cmd_poteri(args):
 #      «Вечно» = «пока цел диск» — печатается строкой, а не умалчивается.
 
 MOGILA = "mogila/"
-# `main` — ветка публикации сайта, у неё другая роль. Запрет в КОДЕ, а не в
-# просьбе: правило, которое можно нарушить молча, будет нарушено (§11).
-NELZYA_ZAKRYVAT = ("main",)
+# Ветка публикации сайта — та, что названа в `on.push.branches` живого
+# workflow, а не вшитое имя: имя устаревает молча (было `main`, стало
+# `arka/mat-kostyak` — правило пережило факт и продолжало отказывать по
+# имени, которого уже нет). Запрет в КОДЕ, а не в просьбе: правило, которое
+# можно нарушить молча, будет нарушено (§11).
+HUGO_WORKFLOW_REL = ".github/workflows/hugo.yml"
+
+
+def vetka_publikacii():
+    """Ветка(и), с которой публикуется сайт — `on.push.branches` живого workflow.
+
+    Возвращает (кортеж_имён, источник) при успехе; (None, причина) — когда
+    файла нет, YAML не разбирается, PyYAML недоступен или поле пустое/битое.
+    Вызывающий обязан в случае None вести себя консервативно: гарантии нет
+    ни на одну ветку, значит проверить нельзя ни одну.
+
+    🔴 Ловушка PyYAML: голое `on:` в GitHub Actions — валидный YAML 1.1,
+    парсер читает его как булев `True`, а не строку `"on"` (проверено на
+    живом `hugo.yml`). Ключ ищем под обоими вариантами.
+    """
+    path = REPO / HUGO_WORKFLOW_REL
+    if not path.is_file():
+        return None, f"файла `{HUGO_WORKFLOW_REL}` нет"
+    try:
+        import yaml
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return None, f"`{HUGO_WORKFLOW_REL}` не разбирается как YAML: {e}"
+    if not isinstance(data, dict):
+        return None, f"`{HUGO_WORKFLOW_REL}` — не словарь верхнего уровня"
+    on = data.get("on", data.get(True))
+    push = on.get("push") if isinstance(on, dict) else None
+    branches = push.get("branches") if isinstance(push, dict) else None
+    if (not isinstance(branches, list) or not branches
+            or not all(isinstance(b, str) and b.strip() for b in branches)):
+        return None, f"`{HUGO_WORKFLOW_REL}`: `on.push.branches` пусто или битое"
+    return tuple(b.strip() for b in branches), HUGO_WORKFLOW_REL
+
+
+STARYJ_DEFOLT = "main"  # запасное имя, которым правило жило ДО этого захода
+
+
+def zapret_zakrytiya(name):
+    """Сообщение отказа, если `name` закрывать нельзя — иначе `None`.
+
+    Смотрит на СВОЙСТВО (кто публикует сайт по `vetka_publikacii()`), не на
+    имя. Не удалось убедиться (файла нет, YAML не разбирается, поле
+    пустое/битое) — «веди себя как раньше»: `main` остаётся под защитой по
+    умолчанию (ровно тем именем, что было вшито до этого захода), остальные
+    ветки закрытие не блокирует — как и раньше блокировалось только оно.
+    Блокировать вообще всё в этом случае было бы НОВЫМ, более широким
+    запретом, а не «как раньше» — и молча ломает закрытие в любом репозитории
+    без этого конкретного workflow-файла (проверено фикстурой `git_zona`).
+    """
+    branches, info = vetka_publikacii()
+    if branches is None:
+        if name == STARYJ_DEFOLT:
+            return (f"⛔ `{name}` не закрывается: не удалось убедиться, какая "
+                    f"ветка публикует сайт сейчас ({info}) — веду себя как "
+                    f"раньше, консервативно: `{STARYJ_DEFOLT}` по умолчанию "
+                    f"под защитой.")
+        return None
+    if name in branches:
+        return (f"⛔ `{name}` не закрывается никогда — ветка публикации "
+                f"сайта по `{info}` (`on.push.branches`).")
+    return None
 
 
 def mogila_ref(name):
@@ -953,8 +1016,9 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
     случай из шапки раздела.
     """
     full = "refs/heads/" + name
-    if name in NELZYA_ZAKRYVAT:
-        print(f"⛔ `{name}` не закрывается никогда — это ветка публикации сайта.")
+    otkaz = zapret_zakrytiya(name)
+    if otkaz:
+        print(otkaz)
         return 1
     if name == head:
         print(f"⛔ `{name}` — текущая ветка, её нельзя удалить, пока ты на ней.")
@@ -1187,7 +1251,7 @@ def cmd_zakryt_vetku(args):
         # 🔴 Отбор ТОЙ ЖЕ функцией, что печатает `poteri`: два входа в один
         # вопрос обязаны иметь одну реализацию, иначе разъедутся (урок 23).
         celi = [n for n in names
-                if n != head and n not in NELZYA_ZAKRYVAT
+                if n != head and zapret_zakrytiya(n) is None
                 and branch_loss(n, head).get("verdict") == "safe"]
         if not celi:
             print(f"✅ Подметать нечего: зелёных веток нет — проверено "

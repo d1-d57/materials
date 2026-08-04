@@ -58,18 +58,27 @@ def cls(s):
 
 
 def klassifikaciya(text):
-    """`{класс: [ГГГГ-ММ-ДД, ...]}` по всем строкам-инцидентам."""
+    """`{класс: [ГГГГ-ММ-ДД ЧЧ:ММ, ...]}` по всем строкам-инцидентам."""
     rows = [l for l in text.splitlines(keepends=True) if l.startswith('- 20')]
     d = {}
     for r in rows:
-        d.setdefault(cls(r), []).append(r[2:12])
+        d.setdefault(cls(r), []).append(r[2:18])
     return d
 
 
 VERDIKT_RE = re.compile(
     r"^-\s+(?P<klyuch>.+?)\s+·\s+вердикт:\s+(?P<verdikt>.+?)\s+·\s+"
-    r"дата данных:\s+(?P<data>\d{4}-\d{2}-\d{2})\s*$"
+    r"дата данных:\s+(?P<data>\d{4}-\d{2}-\d{2}(?:\s+\d{2}:\d{2})?)\s*$"
 )
+
+
+def data_polnaya(s):
+    """Нормализует `дата данных:` вердикта к полному штампу `ГГГГ-ММ-ДД ЧЧ:ММ`.
+
+    Старый формат (только дата, 10 символов) — обратная совместимость: читаем
+    как полночь. Тогда любая строка того же дня (у неё всегда есть время,
+    и оно позже полуночи) окажется «позже вердикта» — консервативно."""
+    return s if len(s) > 10 else s + " 00:00"
 
 
 class Verdikt:
@@ -145,7 +154,9 @@ def zahod_prinyat(put):
 
 
 def dnej_nazad(data_str, segodnya):
-    return (segodnya - datetime.strptime(data_str, "%Y-%m-%d").date()).days
+    """`data_str` может быть датой (10 симв.) или полным штампом с временем —
+    для возраста в днях время не нужно, режем на первые 10 символов."""
+    return (segodnya - datetime.strptime(data_str[:10], "%Y-%m-%d").date()).days
 
 
 def ocenit(incidenty_text, verdikty_text, segodnya=None):
@@ -154,8 +165,6 @@ def ocenit(incidenty_text, verdikty_text, segodnya=None):
     klassy = klassifikaciya(incidenty_text)
     verdikty = parse_verdikty(verdikty_text)
     findings = []
-
-    segodnya_str = segodnya.isoformat()
 
     for klyuch, daty in klassy.items():
         starejshaya = min(daty)
@@ -168,27 +177,27 @@ def ocenit(incidenty_text, verdikty_text, segodnya=None):
                     f"класс «{klyuch}»: {len(daty)} повтор(ов), старейшая строка "
                     f"{vozrast} дней назад, вердикта нет — строка для VERDIKTY.md:\n"
                     f"   - {klyuch} · вердикт: дефект → заход {NE_SOBRAN} · "
-                    f"дата данных: {segodnya.isoformat()}"
+                    f"дата данных: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
                 )
             continue
 
         if v.tip == 'шум':
-            # «Шум» законен, пока класс не растёт. Строка датирована СТРОГО позже
-            # даты вердикта — новая, вердикт её не видел, точка. Строка датирована
-            # ТЕМ ЖЕ днём — доверяем только если вердикт не сегодняшний: внутри
-            # одного дня порядок «вердикт → строка» по датам не восстановить, а
-            # сегодняшний вердикт против сегодняшней строки — ровно тот случай,
-            # когда мы не знаем, что было раньше (см. `## ПЛАН` захода).
-            novye = [d for d in daty if d > v.data_dannyh
-                     or (d == v.data_dannyh and v.data_dannyh == segodnya_str)]
+            # «Шум» законен, пока класс не растёт. Сравнение строгое, по ПОЛНОМУ
+            # штампу (дата+время): старый костыль «same-day, если вердикт
+            # сегодня» был нужен только затем, что вердикт хранил одну дату без
+            # времени и порядок «вердикт → строка» внутри дня было не
+            # восстановить. Теперь у обеих сторон полный штамп, и `>` решает
+            # однозначно даже в пределах одного календарного дня.
+            vd = data_polnaya(v.data_dannyh)
+            novye = [d for d in daty if d > vd]
             if novye:
                 findings.append(
                     f"класс «{klyuch}»: вердикт «шум» (дата данных {v.data_dannyh}), "
-                    f"но в классе {len(novye)} строк(и) датированы не раньше этой "
-                    f"даты — «шум» не бывает вечным, нужен пересмотр. Строка для "
+                    f"но в классе {len(novye)} строк(и) датированы позже — "
+                    f"«шум» не бывает вечным, нужен пересмотр. Строка для "
                     f"VERDIKTY.md:\n"
                     f"   - {klyuch} · вердикт: шум: <причина> · "
-                    f"дата данных: {segodnya_str}"
+                    f"дата данных: {datetime.now().strftime('%Y-%m-%d %H:%M')}"
                 )
             continue
 
