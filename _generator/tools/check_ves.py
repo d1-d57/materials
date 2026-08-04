@@ -132,6 +132,26 @@ def razobrat_vhod(argv):
     return "--tiho" in argv[1:], "--staged" in argv[1:]
 
 
+def blobi_v_istorii():
+    """Множество SHA объектов, reachable из существующих коммитов/веток/тегов.
+
+    НЕ `git cat-file -e $(git hash-object <файл>)` — проверено на этом самом
+    репо: `git add` сам пишет loose-объект для ЛЮБОГО застейдженного файла,
+    ДО коммита. К моменту, когда этот гейт запускается (после `add`, перед
+    `commit`), `cat-file -e` вернёт true для чего угодно, включая только что
+    добавленный НОВЫЙ файл — проверка станет бесполезной, гейт замолчит
+    на всём. `rev-list --objects --all` смотрит только на то, что reachable
+    из РЕАЛЬНЫХ коммитов, — блоб, созданный текущим `add`, туда не попадает,
+    пока не закоммичен.
+    """
+    vyvod = subprocess.run(
+        ["git", "--no-optional-locks", "rev-list", "--objects", "--all"],
+        cwd=KOREN, capture_output=True, text=True)
+    if vyvod.returncode != 0:
+        return None
+    return {stroka.split(" ", 1)[0] for stroka in vyvod.stdout.splitlines() if stroka}
+
+
 def proverit_indeks(tiho):
     """Режим ворот: тяжёлое НЕ ВПУСКАЕТСЯ в git. Возврат — код для хука.
 
@@ -152,25 +172,45 @@ def proverit_indeks(tiho):
     ПОЧЕМУ ИСТОЧНИКАМ ЗДЕСЬ ПОБЛАЖКИ НЕТ, в отличие от основного режима. На
     диске книги накапливаются законно; в ИСТОРИИ им делать нечего — это ровно
     те 286 МБ. Книга лежит на диске и живёт в реестре, а не в коммите.
+
+    ПОЧЕМУ ВТОРОЙ ПУТЬ К СУЩЕСТВУЮЩЕМУ БЛОБУ — НЕ РАЗДУВАНИЕ. Git хранит
+    объекты по содержимому: если такой блоб уже reachable из истории (лежит
+    там под ДРУГИМ путём), новый путь в дереве не копирует мегабайты — он
+    добавляет только запись дерева (десятки байт). Гейт защищает от РОСТА
+    `.git`, а не от вторых путей к уже оплаченному содержимому.
     """
     vyvod = subprocess.run(
-        ["git", "--no-optional-locks", "diff", "--cached", "--name-only",
+        ["git", "--no-optional-locks", "diff", "--cached", "--raw", "--no-abbrev",
          "-z", "--diff-filter=ACM"],
         cwd=KOREN, capture_output=True, text=True)
     if vyvod.returncode != 0:
         print(f"❌ git diff --cached упал (rc={vyvod.returncode}) — гейт не отработал")
         return 2
+    istoriya = blobi_v_istorii()
+    if istoriya is None:
+        print("❌ git rev-list --objects --all упал — гейт не отработал")
+        return 2
     znakomye = izvestnye()
+
+    # `-z --raw` чередует запись меты (":старый_режим новый_режим старый_sha
+    # новый_sha статус") и путь, обе части NUL-терминированы.
+    polya = [s for s in vyvod.stdout.split("\0") if s]
+    zapisi = list(zip(polya[0::2], polya[1::2]))
+
     tyazhelye = []
-    for otn in (s for s in vyvod.stdout.split("\0") if s):
+    for meta, otn in zapisi:
         if otn in znakomye:
             continue
         try:
             razmer = (KOREN / otn).stat().st_size
         except OSError:
             continue                      # файл удаляется этим же коммитом
-        if razmer >= POROG_INDEKS:
-            tyazhelye.append((razmer, otn))
+        if razmer < POROG_INDEKS:
+            continue
+        novyj_sha = meta.split(" ")[3]
+        if novyj_sha in istoriya:
+            continue                      # блоб уже в истории — второй путь, не рост
+        tyazhelye.append((razmer, otn))
     tyazhelye.sort(reverse=True)
 
     if not tyazhelye:
