@@ -145,3 +145,5 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-05 04:45 · arka/mat-kostyak · merge zahod/kartoteka-intervyu не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-05 04:47 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-05 04:48 · arka/mat-kostyak · merge zahod/kartoteka-intervyu не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-05 04:58 · arka/mat-kostyak · merge zahod/kartoteka-intervyu: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-05 05:00 · arka/mat-kostyak · merge zahod/razbros-po-fazam: конфликт в 3 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
