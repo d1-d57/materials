@@ -29,30 +29,63 @@
   --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
   --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
   --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
-  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
   /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
      DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
 }
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
-  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
 a{color:var(--link)}
-.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
 .doc-head{max-width:1240px;font-family:var(--sans)}
 .doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
 
 /* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
    оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
-.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
-.layout.solo{grid-template-columns:minmax(0,1240px)}
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
 main{min-width:0}
 
 /* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
-.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
-  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
 .toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
 .toc>summary::-webkit-details-marker{display:none}
@@ -62,7 +95,7 @@ main{min-width:0}
 .toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
   border-radius:3px;position:relative}
 .toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
-.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
   font-variant-numeric:tabular-nums}
 /* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
 .toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
@@ -72,7 +105,7 @@ main{min-width:0}
    клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
 .toc-grp>summary{list-style:none;cursor:pointer;position:relative}
 .toc-grp>summary::-webkit-details-marker{display:none}
-.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
 .toc-grp:not([open])>summary::after{content:"▸"}
 .toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
 .toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
@@ -96,7 +129,7 @@ main{min-width:0}
 #tab-1:checked ~ .tabbar label[for="tab-1"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
 
 /* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
-.stream{max-width:790px;counter-reset:sec}
+.stream{max-width:1090px;counter-reset:sec}
 .stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
 .stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
   margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
@@ -108,8 +141,14 @@ main{min-width:0}
 .stream a{border-bottom:1px solid #bcd2dd}
 .stream a:hover{border-bottom-color:var(--accent)}
 /* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
-.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
-  margin-left:.12em;text-decoration:none}
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
 .stream a.mn-ref:hover{color:var(--warm)}
 .mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
 .mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
@@ -134,26 +173,26 @@ main{min-width:0}
 .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
 .thm .lbl{color:var(--warm)}
 /* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
-.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
 .task .lbl{color:var(--defn)}
-.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
 .rem .lbl{color:var(--thread)}
-.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
-.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
-.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
 .example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
-div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
   padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
 div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
 .blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
-  font-size:.97rem;color:var(--muted);background:#faf8f3}
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
 .blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
   color:var(--text);display:block;margin-bottom:.3em}
-.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
   padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
 .tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
   color:var(--muted);display:block;margin-bottom:.25em}
@@ -165,7 +204,7 @@ div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-sp
 .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
 .katex{font-size:1.05em}
 blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
-code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
 
 /* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
 table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
@@ -186,12 +225,17 @@ table tbody td:first-child{color:var(--muted)}
 .mn b,.mn strong{color:var(--text)}
 /* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
 @media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
   .layout{grid-template-columns:1fr;gap:0}
   .stream{max-width:none}
   .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
     padding:0 0 1em;margin-bottom:1.5em}
   .toc>summary{cursor:pointer}
   .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
   .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
     margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
   .toc .toc-sub{padding-left:1em}
@@ -219,13 +263,13 @@ aside.note.thread{border-left-color:var(--thread)}
   font-family:var(--sans);font-size:.85rem;color:var(--muted)}
 
 /* ── cue-визуал ── */
-.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
   border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
 
 /* ── уровень-пилюля ── */
 .level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
 .level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
-  border-radius:11px;background:#e7e0d2;color:var(--text)}
+  border-radius:11px;background:var(--chip);color:var(--text)}
 
 /* ── мат-долг: бейджи ── */
 .flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
@@ -253,7 +297,7 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
 .s-fillw{fill:var(--warm)}
 .s-fillsh{fill:var(--shade)}
-.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
 .s-node-r{fill:var(--text)}
 /* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
    с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
@@ -277,19 +321,20 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 /* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
    на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
 details.d-proof{margin:.7em 0}
-details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
-  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
 details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
-details.d-proof>summary:hover{color:var(--accent)}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
 
 /* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
 details.sec>summary{list-style:none;cursor:pointer}
 details.sec>summary::-webkit-details-marker{display:none}
 details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
 details.sec>summary h2::after,details.sec>summary h3::after{
-  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
   font-size:.7em;transform:translateY(.1em)}
 details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
 details.sec>summary:hover h2,details.sec>summary:hover h3,
@@ -302,7 +347,7 @@ details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
 .stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
 .sec4>.sec-body{padding:.2em 0 .5em}
 .sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
-  color:#c3bbaa;font-weight:400;font-size:.7em}
+  color:var(--faint);font-weight:400;font-size:.7em}
 .sec4:not([open])>summary h4::after{content:"▸"}
 
 /* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
@@ -313,6 +358,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 </style>
 </head>
 <body>
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
 <div class="wrap">
 <div class="doc-head">
   <h1>Три соотношения, из которых растут пути Дика</h1>
@@ -327,7 +373,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <label class="tab-label" for="tab-1">Индекс подфактора</label>
 </nav>
 <section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">О чём это</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">Алгебра: определение без картинок</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">Почему это не делается голой алгеброй</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">Модель: диаграммы</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">Диаграммы — это пути Дика</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-6">Принцип отражения</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-7">Итог первого вопроса</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-8">Второй вопрос: то же отражение с подвинутым финишем</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-9">Третий вопрос: когда форма вырождается</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-10">Четвёртый вопрос: чему равен выделенный идемпотент</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-11">Что мы увидели</a></summary></details></li></ol></details><main><article class="stream"><h1>Три соотношения, из которых растут пути Дика</h1>
-<aside class="note">Текст целиком (4 вопроса), ~8 страниц. План — мастер §3.2–3.4. Соль: алгебра задана чисто алгебраически, без единой картинки, но каждый разумный вопрос про неё отвечается счётом путей — и по-другому не отвечается. Экономим на словаре, не на сюжете. Номера параграфов проставляет генератор — руками не писать; типизированные блоки пишутся СЛИТНО (пустая строка внутри разорвёт рамку), паузы — через <code>\</code>.</aside>
+<p id="s0-mn-1" class="mn">Текст целиком (4 вопроса), ~8 страниц. План — мастер §3.2–3.4. Соль: алгебра задана чисто алгебраически, без единой картинки, но каждый разумный вопрос про неё отвечается счётом путей — и по-другому не отвечается. Экономим на словаре, не на сюжете. Номера параграфов проставляет генератор — руками не писать; типизированные блоки пишутся СЛИТНО (пустая строка внутри разорвёт рамку), паузы — через <code>\</code>.</p>
 <details class="sec sec2" open><summary><h2 id="s0-h-1">О чём это</h2></summary><div class="sec-body">
 <p>Возьмём алгебру, заданную тремя соотношениями. Она пришла в математику дважды и независимо: в 1971 году Темперли и Либ вывели её, считая статистическую сумму модели Поттса через трансфер-матрицы; в начале 1980-х Джонс наткнулся на неё же, строя инвариант узлов. Ни та ни другая история дальше не понадобится: обе нужны здесь только чтобы объяснить, почему объект не выдуман ради красивого рассказа.</p>
 <p>Дальше мы забудем и физику, и узлы, и будем задавать про эту алгебру самые скучные вопросы, какие вообще задают про алгебру:</p>
@@ -353,8 +399,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <p>Пусть $E_i$ — диаграмма, в которой $i$-я и $(i{+}1)$-я точки сверху соединены дугой между собой, $i$-я и $(i{+}1)$-я точки снизу — тоже между собой, а все остальные точки соединены вертикальными отрезками сверху вниз.</p>
 <div class="stmt thm" id="s0-t-5"><span class="lbl">Утверждение 5.</span><p>Диаграммы $E_1,\dots,E_{n-1}$ удовлетворяют соотношениям $(\mathrm{TL}1)$–$(\mathrm{TL}3)$.</p><details class="d-proof"><summary>логика — (полная проверка, три склейки)</summary><div class="proof"><p>$E_i\cdot E_i$: верхняя дуга нижнего экземпляра склеивается с нижней дугой верхнего и даёт замкнутую петлю; всё остальное восстанавливает $E_i$. Стираем петлю, получаем множитель: $E_i^2=\delta E_i$. $E_i\cdot E_{i+1}\cdot E_i$: петель не возникает, а дуги после склейки дают ровно $E_i$. При $|i-j|\ge 2$ диаграммы $E_i$ и $E_j$ задевают непересекающиеся четвёрки точек и склеиваются независимо, поэтому коммутируют. $\square$</p></div></details></div>
 <p>Из <a class="xref" href="#s0-t-5">утверждения 5</a> сразу следует, что есть гомоморфизм алгебр $$\varphi\colon TL_n(\delta)\longrightarrow D_n(\delta),\qquad \varphi(e_i)=E_i.$$ Здесь работает то, ради чего <a class="xref" href="#s0-d-1">определение 1</a> давалось через фактор свободной алгебры: слово от $e_i$ отправляем в то же слово от $E_i$: это корректно на свободной алгебре, а идеал соотношений уходит в нуль ровно потому, что $E_i$ этим соотношениям удовлетворяют.</p>
-<div class="stmt thm" id="s0-t-6"><span class="lbl">Теорема 6 (Кауффман; Джонс).</span><p>$\varphi$ — изоморфизм.</p><a class="mn-ref" id="s0-mnr-1" href="#s0-mn-1">✳</a></div>
-<p id="s0-mn-1" class="mn"><a class="mn-back" href="#s0-mnr-1">✳</a> <b>Статус.</b> Сюръективность несложна: всякая диаграмма разлагается в произведение $E_i$ индукцией по числу дуг, задевающих границу. Инъективность — <strong>чёрный ящик</strong>: она доказывается приведением произвольного слова к нормальной форме Джонса и проверкой, что разные нормальные формы дают разные диаграммы; это техническая индукция, которая ничего не добавляет к нашему сюжету. См. Kauffman, <em>State models and the Jones polynomial</em> (1987); Jones, <em>Index for subfactors</em> (1983). $\square$</p>
+<div class="stmt thm" id="s0-t-6"><span class="lbl">Теорема 6 (Кауффман; Джонс).</span><p>$\varphi$ — изоморфизм.</p><a class="mn-ref" id="s0-mnr-2" href="#s0-mn-2">✳</a></div>
+<p id="s0-mn-2" class="mn"><a class="mn-back" href="#s0-mnr-2">✳</a> <b>Статус.</b> Сюръективность несложна: всякая диаграмма разлагается в произведение $E_i$ индукцией по числу дуг, задевающих границу. Инъективность — <strong>чёрный ящик</strong>: она доказывается приведением произвольного слова к нормальной форме Джонса и проверкой, что разные нормальные формы дают разные диаграммы; это техническая индукция, которая ничего не добавляет к нашему сюжету. См. Kauffman, <em>State models and the Jones polynomial</em> (1987); Jones, <em>Index for subfactors</em> (1983). $\square$</p>
 <p>Итог этого параграфа один: $$\dim TL_n(\delta)=\#\{n\text{-диаграмм}\}.$$ Заметим попутно, что правая часть от $\delta$ не зависит вовсе.</p>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-5">Диаграммы — это пути Дика</h2></summary><div class="sec-body">
@@ -401,8 +447,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <div class="stmt rem" id="s0-n-20"><span class="lbl">Замечание 20 (знак несуществен).</span><p>Отображение $e_i\mapsto -e_i$ задаёт изоморфизм $TL_n(\delta)\xrightarrow{\ \sim\ } TL_n(-\delta)$: проверим соотношения. Пусть $f_i=-e_i$. Тогда $f_i^2=e_i^2=\delta e_i=(-\delta)f_i$ — соотношение $(\mathrm{TL}1)$ с параметром $-\delta$. Далее $f_if_{i\pm1}f_i=-e_ie_{i\pm1}e_i=-e_i=f_i$, а коммутирование очевидно. Поэтому картина при $\delta$ и при $-\delta$ одна и та же, и корни $\pm1$ — это один корень, взятый с двумя знаками.</p></div>
 <p>Теперь посмотрим на найденные значения: $$1=2\cos\frac{\pi}{3},\qquad 0=2\cos\frac{\pi}{2}.$$</p>
 <p>Оба вырождения сели на числа вида $2\cos(\pi/\ell)$. Из одного примера это выглядит как совпадение. Оно им не является.</p>
-<div class="stmt thm" id="s0-t-21"><span class="lbl">Теорема 21 (определитель Грама; Ди Франческо, Уэстбери).</span><p>Определитель формы $\langle\cdot,\cdot\rangle$ на $V_N^d$ равен произведению <strong>квантовых целых</strong> — множителей вида</p><p class="eq">$$[k]_q=\frac{q^k-q^{-k}}{q-q^{-1}}=\frac{\sin k\theta}{\sin\theta},\qquad \delta=q+q^{-1}=2\cos\theta,$$</p><p>взятых в степенях, которые сами оказываются баллотными числами из <a class="xref" href="#s0-t-16">теоремы 16</a>. В частности, определитель обращается в нуль ровно тогда, когда $\delta=\pm2\cos(\pi/\ell)$ для некоторого целого $2\le \ell\le N$.</p><a class="mn-ref" id="s0-mnr-2" href="#s0-mn-2">✳</a></div>
-<p id="s0-mn-2" class="mn"><a class="mn-back" href="#s0-mnr-2">✳</a> <b>Статус: чёрный ящик</b> — точная формула с показателями и её вывод тяжелее всего остального текста вместе взятого, а нужного нам добавляет мало: механизм виден уже на <a class="xref" href="#s0-e-19">примере 19</a>. См. Di Francesco, <em>Meander determinants</em> (hep-th/9612026); Ridout, Saint-Aubin, <em>Standard modules, induction and the structure of the Temperley–Lieb algebra</em> (arXiv:1204.4505). $\square$</p>
+<div class="stmt thm" id="s0-t-21"><span class="lbl">Теорема 21 (определитель Грама; Ди Франческо, Уэстбери).</span><p>Определитель формы $\langle\cdot,\cdot\rangle$ на $V_N^d$ равен произведению <strong>квантовых целых</strong> — множителей вида</p><p class="eq">$$[k]_q=\frac{q^k-q^{-k}}{q-q^{-1}}=\frac{\sin k\theta}{\sin\theta},\qquad \delta=q+q^{-1}=2\cos\theta,$$</p><p>взятых в степенях, которые сами оказываются баллотными числами из <a class="xref" href="#s0-t-16">теоремы 16</a>. В частности, определитель обращается в нуль ровно тогда, когда $\delta=\pm2\cos(\pi/\ell)$ для некоторого целого $2\le \ell\le N$.</p><a class="mn-ref" id="s0-mnr-3" href="#s0-mn-3">✳</a></div>
+<p id="s0-mn-3" class="mn"><a class="mn-back" href="#s0-mnr-3">✳</a> <b>Статус: чёрный ящик</b> — точная формула с показателями и её вывод тяжелее всего остального текста вместе взятого, а нужного нам добавляет мало: механизм виден уже на <a class="xref" href="#s0-e-19">примере 19</a>. См. Di Francesco, <em>Meander determinants</em> (hep-th/9612026); Ridout, Saint-Aubin, <em>Standard modules, induction and the structure of the Temperley–Lieb algebra</em> (arXiv:1204.4505). $\square$</p>
 <p>Здесь стоит задержаться. Квантовое целое $[k]_q=\sin k\theta/\sin\theta$ выглядит как объект из анализа: синусы, непрерывный параметр. Но как функция от $\delta$ это многочлен. Из рекурсии $$[k+1]_q=\delta\,[k]_q-[k-1]_q$$ (проверяется подстановкой $\delta=q+q^{-1}$ в определение) получаем $[1]=1$, $[2]=\delta$, $[3]=\delta^2-1$, $[4]=\delta^3-2\delta$. Это в точности многочлены Чебышёва второго рода: $[k]_q=U_{k-1}(\delta/2)$.</p>
 <p>Заметим попутно, что $[3]=\delta^2-1$ — это наш определитель из <a class="xref" href="#s0-e-19">примера 19</a>, поделённый на $\delta^2$.</p>
 <div class="tech"><span class="lbl">Техфакт (со ссылкой, без вывода).</span> Многочлены Чебышёва второго рода — стандартный язык счёта путей Дика <strong>ограниченной высоты</strong>: производящие функции путей высоты меньше $h$ выражаются отношениями многочленов $U$. См. arXiv:2012.03878 (<em>Bounded Dyck paths, bounded alternating sequences, orthogonal polynomials, and reciprocity</em>). Так что ответ, записанный синусами, — снова про пути, просто в другой одежде; а ограничение высоты, которое в этой одежде спрятано, — это и есть то, что случается с алгеброй при $\delta=2\cos(\pi/\ell)$.</div>
@@ -411,8 +457,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <details class="sec sec2" open><summary><h2 id="s0-h-10">Четвёртый вопрос: чему равен выделенный идемпотент</h2></summary><div class="sec-body">
 <p>Последний вопрос — самый узкий и самый показательный.</p>
 <p>Среди $C_n$ базисных диаграмм алгебры $TL_n$ единица ничем не выделена. Но есть элемент, выделенный по-настоящему.</p>
-<div class="stmt thm" id="s0-t-22"><span class="lbl">Теорема 22 (существование и единственность; Джонс, Венцль).</span><p>Пусть $[k]_q\neq0$ при $k\le n$. Тогда в $TL_n(\delta)$ существует ровно один элемент $P^{(n)}$ со свойствами</p><p class="eq">$$P^{(n)}\neq0,\qquad \bigl(P^{(n)}\bigr)^2=P^{(n)},\qquad e_iP^{(n)}=P^{(n)}e_i=0 \ \ \text{для всех } i.$$</p><p>Коэффициент при тождественной диаграмме в нём всегда равен $1$. Его называют <strong>проектором Джонса — Венцля</strong>.</p><a class="mn-ref" id="s0-mnr-3" href="#s0-mn-3">✳</a></div>
-<p id="s0-mn-3" class="mn"><a class="mn-back" href="#s0-mnr-3">✳</a> <b>Статус: чёрный ящик</b> (существование и единственность) — Wenzl, <em>On sequences of projections</em> (1987). Ниже мы всё равно получим $P^{(n)}$ явной рекурсией, так что на веру берётся только единственность. $\square$</p>
+<div class="stmt thm" id="s0-t-22"><span class="lbl">Теорема 22 (существование и единственность; Джонс, Венцль).</span><p>Пусть $[k]_q\neq0$ при $k\le n$. Тогда в $TL_n(\delta)$ существует ровно один элемент $P^{(n)}$ со свойствами</p><p class="eq">$$P^{(n)}\neq0,\qquad \bigl(P^{(n)}\bigr)^2=P^{(n)},\qquad e_iP^{(n)}=P^{(n)}e_i=0 \ \ \text{для всех } i.$$</p><p>Коэффициент при тождественной диаграмме в нём всегда равен $1$. Его называют <strong>проектором Джонса — Венцля</strong>.</p><a class="mn-ref" id="s0-mnr-4" href="#s0-mn-4">✳</a></div>
+<p id="s0-mn-4" class="mn"><a class="mn-back" href="#s0-mnr-4">✳</a> <b>Статус: чёрный ящик</b> (существование и единственность) — Wenzl, <em>On sequences of projections</em> (1987). Ниже мы всё равно получим $P^{(n)}$ явной рекурсией, так что на веру берётся только единственность. $\square$</p>
 <p>Посмотрите на формулировку: идемпотент, убивающий все образующие. Ни диаграмм, ни путей, ни скобок — три равенства, как и в <a class="xref" href="#s0-d-1">определении 1</a>.</p>
 <div class="stmt thm" id="s0-t-23"><span class="lbl">Предложение 23 (рекурсия Венцля).</span><p>Проекторы связаны рекурсией</p><p class="eq">$$P^{(n+1)}=P^{(n)}-\frac{[n]}{[n+1]}\,P^{(n)}e_nP^{(n)},\qquad P^{(1)}=\mathbf{1}.$$</p></div>
 <p><em>Замечание о знаке.</em> У Венцля и в статьях, на которые мы ссылаемся, соглашение другое: там $e_i^2=-[2]e_i$, и в рекурсии стоит плюс. У нас $e_i^2=\delta e_i$ с $\delta=[2]$, поэтому минус. Это ровно изоморфизм $e_i\mapsto-e_i$ из <a class="xref" href="#s0-n-20">замечания 20</a>, и никакой математики за расхождением нет.</p>
@@ -423,8 +469,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <div class="stmt defn" id="s0-d-25"><span class="lbl">Определение 25 (замощение Дика).</span><p>Нарисуем пути Дика на решётке, повёрнутой на $45^\circ$, так что шаги идут по диагоналям единичных клеток. Верхний путь размера $n$ — это $\mu_{\mathrm{top}}=\nearrow^n\searrow^n$; он лежит выше всех остальных. Для пути $\mu\in\mathrm{Dyck}(n)$ обозначим через $R(\mu)$ область между $\mu$ снизу и $\mu_{\mathrm{top}}$ сверху; она состоит из единичных клеток. \</p><p><strong>Плитка Дика</strong> — связная фигура из единичных клеток, не содержащая квадрата $2\times2$, центры клеток которой сами образуют путь Дика. <strong>Размер</strong> плитки — размер этого пути. \ Замощение области $R(\mu)$ плитками Дика называется <strong>cover-inclusive</strong>, если при сдвиге любой плитки вниз на два уровня она оказывается либо строго ниже $\mu$, либо целиком внутри другой плитки. Проще говоря: размеры плиток слабо убывают снизу вверх. Множество таких замощений обозначим $\mathcal{D}(\mu)$. \ Для плитки $d$ положим $h(d)$ — наименьшая из высот центров её клеток. <strong>Производящая функция</strong> замощений:</p><p class="eq">$$Z(\mu):=\sum_{D\in\mathcal{D}(\mu)}\ \prod_{d\in D}\frac{[h(d)]}{[h(d)+1]}.$$</p></div>
 <figure> <svg viewBox="0 0 420 140" width="580" role="img" aria-label="Два замощения одной области: три отдельные плитки и одна плитка из тех же трёх клеток"> <g><polygon class="s-tile" points="74,68 96,90 74,112 52,90"/><polygon class="s-tile" points="118,68 140,90 118,112 96,90"/><polygon class="s-tile" points="96,46 118,68 96,90 74,68"/><polyline class="s-thin" points="30,112 52,90 74,68 96,46 118,68 140,90 162,112"/><polyline class="s-line" points="30,112 52,90 74,112 96,90 118,112 140,90 162,112"/></g> <g><polygon class="s-fill-plain" points="274,68 296,90 274,112 252,90"/><polygon class="s-fill-plain" points="318,68 340,90 318,112 296,90"/><polygon class="s-fill-plain" points="296,46 318,68 296,90 274,68"/><polygon class="s-tile-o" points="252,90 274,68 296,46 318,68 340,90 318,112 296,90 274,112"/><polyline class="s-thin" points="230,112 252,90 274,68 296,46 318,68 340,90 362,112"/><polyline class="s-line" points="230,112 252,90 274,112 296,90 318,112 340,90 362,112"/></g> </svg> <figcaption>Область между низким путём $\mu=\nearrow\searrow\nearrow\searrow\nearrow\searrow$ (тёмный) и верхним $\mu_{\mathrm{top}}$ (тонкий) состоит из трёх клеток — и замостить её можно ровно двумя способами: тремя отдельными плитками (слева) или одной плиткой из тех же трёх клеток (справа). Первому отвечает произведение $\frac{[2]}{[3]}\cdot\frac{[1]}{[2]}\cdot\frac{[1]}{[2]}$, второму — один множитель $\frac{[1]}{[2]}$.</figcaption> </figure>
 <p>Заметим, что $n$-диаграмму мы уже умеем считать путём Дика: это <a class="xref" href="#s0-t-8">утверждение 8</a> (сложить диаграмму вправо, левый конец дуги — $\nearrow$, правый — $\searrow$).</p>
-<div class="stmt thm" id="s0-t-26"><span class="lbl">Теорема 26 (Шигечи, 2024).</span><p>Пусть $D$ — диаграмма на $n$ нитях, $\mu$ — отвечающий ей путь Дика. Тогда</p><p class="eq">$$\operatorname{Coeff}^{(n)}(D)=Z(\mu).$$</p><a class="mn-ref" id="s0-mnr-4" href="#s0-mn-4">✳</a></div>
-<p id="s0-mn-4" class="mn"><a class="mn-back" href="#s0-mnr-4">✳</a> <b>Статус: чёрный ящик</b> — доказательство проверяет, что $Z(\mu)$ удовлетворяет рекурсии Морриссона: вставка подпути $\nearrow\searrow$ в позицию $i$ отвечает увеличению плитки на единицу, и обе операции обратимы. Это полторы страницы аккуратной работы с плитками, не добавляющей к сюжету ничего нового. Shigechi, <em>Jones–Wenzl projections and Dyck tilings: type A and B</em> (arXiv:2402.09887), теорема 3.6; для типа $D$ — arXiv:2412.16966. $\square$</p>
+<div class="stmt thm" id="s0-t-26"><span class="lbl">Теорема 26 (Шигечи, 2024).</span><p>Пусть $D$ — диаграмма на $n$ нитях, $\mu$ — отвечающий ей путь Дика. Тогда</p><p class="eq">$$\operatorname{Coeff}^{(n)}(D)=Z(\mu).$$</p><a class="mn-ref" id="s0-mnr-5" href="#s0-mn-5">✳</a></div>
+<p id="s0-mn-5" class="mn"><a class="mn-back" href="#s0-mnr-5">✳</a> <b>Статус: чёрный ящик</b> — доказательство проверяет, что $Z(\mu)$ удовлетворяет рекурсии Морриссона: вставка подпути $\nearrow\searrow$ в позицию $i$ отвечает увеличению плитки на единицу, и обе операции обратимы. Это полторы страницы аккуратной работы с плитками, не добавляющей к сюжету ничего нового. Shigechi, <em>Jones–Wenzl projections and Dyck tilings: type A and B</em> (arXiv:2402.09887), теорема 3.6; для типа $D$ — arXiv:2412.16966. $\square$</p>
 <div class="stmt task" id="s0-e-27"><span class="lbl">Пример 27 (сверка руками).</span><p>Возьмём $\mu=\nearrow\searrow\nearrow\searrow\nearrow\searrow$ — самый низкий путь размера $3$. Область под $\mu_{\mathrm{top}}$ допускает ровно два cover-inclusive замощения, и они дают</p><p class="eq">$$Z(\mu)=\frac{[2]}{[3]}\cdot\frac{[1]}{[2]}\cdot\frac{[1]}{[2]}+\frac{[1]}{[2]}=\frac{1}{[2][3]}+\frac{1}{[2]}=\frac{1+[3]}{[2][3]}=\frac{[2]}{[3]},$$</p><p>где в конце использовано $1+[3]=1+(\delta^2-1)=\delta^2=[2]^2$. А теперь посмотрим на <a class="xref" href="#s0-e-24">пример 24</a>: коэффициент при $e_1$ в $P^{(3)}$ равен $[2]/[3]$. Сошлось.</p></div>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-11">Что мы увидели</h2></summary><div class="sec-body">
@@ -437,7 +483,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <p><em>Текст закрыт. Не проверено пофайлово и подлежит сверке перед публикацией: точная формула Ди Франческо — Уэстбери с показателями (<a class="xref" href="#s0-t-21">теорема 21</a>). Иллюстрации нарисованы (4 из 4) по словарю примитивов <code>_studio/konvejer/09-illustracii/SLOVAR-primitivov.md</code>.</em></p>
 </div></details></article></main></div></section>
 <section class="panel" id="panel-1"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-1">1. Алгебра, проекция, след</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-2">2. Непрерывная размерность и факторы</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-3">3. Подфактор и индекс — где непрерывный след даёт нецелое число</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-4">4. Абстрактная задача и теорема Джонса</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-5">5. Мост: башня проекций</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-6">6. Что такое алгебра Темперли–Либа — и при чём пути Дика</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-7">7. Форма, определитель Грама — и в чём именно задача</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-8">8. Работа на путях Дика: отражение и квантовые целые</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-9">Итог</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-10">Точки входа</a></summary></details></li></ol></details><main><article class="stream"><h1>Индекс подфактора Джонса</h1>
-<aside class="note">Кандидат на сюжет «абстрактная математика → техника путей Дика». Объясняю от нуля, не предполагая ничего, кроме линейной алгебры. Цель — чтобы стало ясно, в чём задача: у неё абстрактное лицо («какие числа бывают индексом») и комбинаторное («при каких $\delta$ форма на путях Дика положительна»), и второе — работа руками.</aside>
+<p id="s1-mn-1" class="mn">Кандидат на сюжет «абстрактная математика → техника путей Дика». Объясняю от нуля, не предполагая ничего, кроме линейной алгебры. Цель — чтобы стало ясно, в чём задача: у неё абстрактное лицо («какие числа бывают индексом») и комбинаторное («при каких $\delta$ форма на путях Дика положительна»), и второе — работа руками.</p>
 <details class="sec sec2" open><summary><h2 id="s1-h-1">1. Алгебра, проекция, след</h2></summary><div class="sec-body">
 <p><strong>Алгебра</strong> $A$ — комплексное векторное пространство с ассоциативным умножением и единицей $1$. С сопряжением $*$ (как транспонирование-сопряжение матриц, $(ab)^*=b^*a^*$) это $*$-алгебра. Главный пример — матрицы $M_k(\mathbb{C})$.</p>
 <p><strong>Проекция</strong> — элемент $p$ с $p=p^*=p^2$. Геометрически это проектор на подпространство; «подпространства» алгебры — её проекции.</p>
@@ -454,8 +500,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <p>Такой проектор один и естественный. След задаёт на $M$ геометрию $\langle x,y\rangle=\operatorname{tr}(y^*x)$; в ней $N$ — замкнутое подпространство, и есть <strong>ортогональная проекция $e_N$ на $N$</strong>: она сжимает каждый элемент $M$ до наилучшего приближения в $N$ (усреднение $E_N\colon M\to N$). Существует она ровно потому, что ортопроекция на замкнутое подпространство гильбертова пространства всегда есть. Раз $e_N$ — честный проектор ($e_N=e_N^*=e_N^2$), у него есть след, и по §2 этот след — <strong>непрерывное</strong> число в $(0,1]$.</p>
 <p>Через него и определяем индекс:</p>
 <p>$$[M:N]\ :=\ \frac{1}{\operatorname{tr}(e_N)}.$$</p>
-<p>Смысл прямой. Если $N=M$, то $e_N=1$, $\operatorname{tr}(e_N)=1$ и индекс равен $1$. Чем «тоньше» $N$ сидит в $M$, тем меньше $\operatorname{tr}(e_N)$ и тем больше индекс — буквально «во сколько раз $N$ укладывается в $M$». И <strong>индекс нецелый ровно потому, что $\operatorname{tr}(e_N)$ непрерывен</strong> (§2), а не по какой-то новой причине.<a class="mn-ref" id="s1-mnr-1" href="#s1-mn-1">✳</a></p>
-<p id="s1-mn-1" class="mn"><a class="mn-back" href="#s1-mnr-1">✳</a> Сам $e_N$ лежит чуть снаружи $M$ — в алгебре $\langle M,e_N\rangle$, которая тоже несёт след; это первый камень башни из §5, $\operatorname{tr}(e_N)=\tau=1/[M:N]$. Формальное имя того же числа — непрерывная размерность $\dim_N L^2(M)$ (константа связи Мюррея–фон Неймана); нам удобнее $1/\operatorname{tr}(e_N)$.</p>
+<p>Смысл прямой. Если $N=M$, то $e_N=1$, $\operatorname{tr}(e_N)=1$ и индекс равен $1$. Чем «тоньше» $N$ сидит в $M$, тем меньше $\operatorname{tr}(e_N)$ и тем больше индекс — буквально «во сколько раз $N$ укладывается в $M$». И <strong>индекс нецелый ровно потому, что $\operatorname{tr}(e_N)$ непрерывен</strong> (§2), а не по какой-то новой причине.<a class="mn-ref" id="s1-mnr-2" href="#s1-mn-2">✳</a></p>
+<p id="s1-mn-2" class="mn"><a class="mn-back" href="#s1-mnr-2">✳</a> Сам $e_N$ лежит чуть снаружи $M$ — в алгебре $\langle M,e_N\rangle$, которая тоже несёт след; это первый камень башни из §5, $\operatorname{tr}(e_N)=\tau=1/[M:N]$. Формальное имя того же числа — непрерывная размерность $\dim_N L^2(M)$ (константа связи Мюррея–фон Неймана); нам удобнее $1/\operatorname{tr}(e_N)$.</p>
 <p>Про обозначение — оно и сбивает. Скобка $[M:N]$ взята из теории полей, где $[K:F]$ — размерность $K$ над $F$, всегда целая. Здесь запись та же, но число — след проектора, поэтому <strong>может быть нецелым</strong>: для матриц над подматрицами оно целое, для факторов типа $\mathrm{II}_1$ бывает, например, $2{.}618\dots$</p>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s1-h-4">4. Абстрактная задача и теорема Джонса</h2></summary><div class="sec-body">
@@ -614,6 +660,32 @@ window.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
   setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
 });
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
 </script>
 </body>
 </html>

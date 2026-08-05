@@ -29,30 +29,63 @@
   --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
   --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
   --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
-  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
   /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
      DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
 }
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
-  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
 a{color:var(--link)}
-.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
 .doc-head{max-width:1240px;font-family:var(--sans)}
 .doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
 
 /* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
    оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
-.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
-.layout.solo{grid-template-columns:minmax(0,1240px)}
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
 main{min-width:0}
 
 /* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
-.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
-  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
 .toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
 .toc>summary::-webkit-details-marker{display:none}
@@ -62,7 +95,7 @@ main{min-width:0}
 .toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
   border-radius:3px;position:relative}
 .toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
-.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
   font-variant-numeric:tabular-nums}
 /* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
 .toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
@@ -72,7 +105,7 @@ main{min-width:0}
    клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
 .toc-grp>summary{list-style:none;cursor:pointer;position:relative}
 .toc-grp>summary::-webkit-details-marker{display:none}
-.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
 .toc-grp:not([open])>summary::after{content:"▸"}
 .toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
 .toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
@@ -94,7 +127,7 @@ main{min-width:0}
 #tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
 
 /* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
-.stream{max-width:790px;counter-reset:sec}
+.stream{max-width:1090px;counter-reset:sec}
 .stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
 .stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
   margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
@@ -106,8 +139,14 @@ main{min-width:0}
 .stream a{border-bottom:1px solid #bcd2dd}
 .stream a:hover{border-bottom-color:var(--accent)}
 /* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
-.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
-  margin-left:.12em;text-decoration:none}
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
 .stream a.mn-ref:hover{color:var(--warm)}
 .mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
 .mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
@@ -132,26 +171,26 @@ main{min-width:0}
 .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
 .thm .lbl{color:var(--warm)}
 /* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
-.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
 .task .lbl{color:var(--defn)}
-.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
 .rem .lbl{color:var(--thread)}
-.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
-.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
-.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
 .example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
-div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
   padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
 div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
 .blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
-  font-size:.97rem;color:var(--muted);background:#faf8f3}
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
 .blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
   color:var(--text);display:block;margin-bottom:.3em}
-.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
   padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
 .tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
   color:var(--muted);display:block;margin-bottom:.25em}
@@ -163,7 +202,7 @@ div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-sp
 .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
 .katex{font-size:1.05em}
 blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
-code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
 
 /* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
 table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
@@ -184,12 +223,17 @@ table tbody td:first-child{color:var(--muted)}
 .mn b,.mn strong{color:var(--text)}
 /* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
 @media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
   .layout{grid-template-columns:1fr;gap:0}
   .stream{max-width:none}
   .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
     padding:0 0 1em;margin-bottom:1.5em}
   .toc>summary{cursor:pointer}
   .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
   .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
     margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
   .toc .toc-sub{padding-left:1em}
@@ -217,13 +261,13 @@ aside.note.thread{border-left-color:var(--thread)}
   font-family:var(--sans);font-size:.85rem;color:var(--muted)}
 
 /* ── cue-визуал ── */
-.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
   border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
 
 /* ── уровень-пилюля ── */
 .level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
 .level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
-  border-radius:11px;background:#e7e0d2;color:var(--text)}
+  border-radius:11px;background:var(--chip);color:var(--text)}
 
 /* ── мат-долг: бейджи ── */
 .flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
@@ -251,7 +295,7 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
 .s-fillw{fill:var(--warm)}
 .s-fillsh{fill:var(--shade)}
-.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
 .s-node-r{fill:var(--text)}
 /* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
    с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
@@ -275,19 +319,20 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 /* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
    на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
 details.d-proof{margin:.7em 0}
-details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
-  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
 details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
-details.d-proof>summary:hover{color:var(--accent)}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
 
 /* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
 details.sec>summary{list-style:none;cursor:pointer}
 details.sec>summary::-webkit-details-marker{display:none}
 details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
 details.sec>summary h2::after,details.sec>summary h3::after{
-  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
   font-size:.7em;transform:translateY(.1em)}
 details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
 details.sec>summary:hover h2,details.sec>summary:hover h3,
@@ -300,7 +345,7 @@ details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
 .stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
 .sec4>.sec-body{padding:.2em 0 .5em}
 .sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
-  color:#c3bbaa;font-weight:400;font-size:.7em}
+  color:var(--faint);font-weight:400;font-size:.7em}
 .sec4:not([open])>summary h4::after{content:"▸"}
 
 /* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
@@ -311,6 +356,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 </style>
 </head>
 <body>
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
 <div class="wrap">
 <div class="doc-head">
   <h1>Пути ограниченной высоты и тригонометрия</h1>
@@ -323,7 +369,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <label class="tab-label" for="tab-0">Пути ограниченной высоты и тригонометрия</label>
 </nav>
 <section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">Задача о высоте</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">Производящие функции</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">Характеристическое уравнение</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">Единичная окружность</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">Собственные числа</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-6">Числа Каталана как интеграл</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-7">Метод изображений</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-8">Куда это ведёт</a></summary></details></li></ol></details><main><article class="stream"><h1>Пути ограниченной высоты и тригонометрия</h1>
-<aside class="note">Одна задача про пути Дика, которая на языке биекций не решается, и три инструмента, которые её решают: производящие функции, характеристическое уравнение, собственные числа. Ответ — трансцендентное число $2\cos\frac{\pi}{m+2}$. Все числа посчитаны скриптом <code>../proverka.py</code>, каждое двумя независимыми способами. Провенанс и незакрытые места — <code>../ZAMETKI.md</code>.</aside>
+<p id="s0-mn-1" class="mn">Одна задача про пути Дика, которая на языке биекций не решается, и три инструмента, которые её решают: производящие функции, характеристическое уравнение, собственные числа. Ответ — трансцендентное число $2\cos\frac{\pi}{m+2}$. Все числа посчитаны скриптом <code>../proverka.py</code>, каждое двумя независимыми способами. Провенанс и незакрытые места — <code>../ZAMETKI.md</code>.</p>
 <details class="sec sec2" open><summary><h2 id="s0-h-1">Задача о высоте</h2></summary><div class="sec-body">
 <p>Считаем пути Дика: из нуля в нуль, шаги $\pm1$, ниже нуля не спускаемся. Добавим одно условие — <strong>высота не больше $m$</strong>. Полоса вместо полуплоскости. Вот сколько таких путей длины $2n$ (посчитано перебором):</p>
 <table><thead><tr><th>высота $\le m$</th><th>$2n=2$</th><th>$4$</th><th>$6$</th><th>$8$</th><th>$10$</th><th>$12$</th></tr></thead><tbody><tr><td>$1$</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr><tr><td>$2$</td><td>1</td><td>2</td><td>4</td><td>8</td><td>16</td><td>32</td></tr><tr><td>$3$</td><td>1</td><td>2</td><td>5</td><td>13</td><td>34</td><td>89</td></tr><tr><td>$4$</td><td>1</td><td>2</td><td>5</td><td>14</td><td>41</td><td>122</td></tr><tr><td>$5$</td><td>1</td><td>2</td><td>5</td><td>14</td><td>42</td><td>131</td></tr><tr><td>без ограничения</td><td>1</td><td>2</td><td>5</td><td>14</td><td>42</td><td>132</td></tr></tbody></table>
@@ -335,8 +381,8 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-2">Производящие функции</h2></summary><div class="sec-body">
 <div class="stmt defn" id="s0-d-1"><span class="lbl">Определение 1 (производящая функция по высоте).</span><p>Пусть $d_m(n)$ — число путей Дика длины $2n$ высоты не больше $m$. Положим</p><p class="eq">$$G_m(z)=\sum_{n\ge0}d_m(n)\,z^n.$$</p><p>Переменная $z$ считает <strong>пары шагов</strong>: коэффициент при $z^n$ — это число путей длины $2n$. Ряд формальный, вопрос сходимости пока не встаёт. Крайние случаи: $G_0(z)=1$ (единственный путь — пустой), и $G_\infty$ обозначает то же самое без ограничения по высоте.</p></div>
-<div class="stmt thm" id="s0-t-2"><span class="lbl">Теорема 2 (рекуррента по потолку).</span><p>При $m\ge1$</p><p class="eq">$$G_m(z)=\frac{1}{1-z\,G_{m-1}(z)}.$$</p><details class="d-proof"><summary>доказательство — разрез по первому возвращению</summary><div class="proof"><p>Непустой путь Дика однозначно разрезается в момент первого возвращения в нуль: он имеет вид «шаг вверх, затем кусок $U$, затем шаг вниз, затем остаток $W$», где $U$ и $W$ — снова пути Дика. Если исходный путь имел высоту $\le m$, то $U$ поднят на единицу и потому сам имеет высоту $\le m-1$, а $W$ — высоту $\le m$; обратно, любая такая пара даёт путь высоты $\le m$. Длины складываются, поэтому в производящих функциях получается $G_m=1+z\,G_{m-1}\,G_m$, откуда $G_m(1-zG_{m-1})=1$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-1" href="#s0-mn-1">✳</a></div>
-<p id="s0-mn-1" class="mn"><a class="mn-back" href="#s0-mnr-1">✳</a> <b>Статус.</b> Разрез по первому возвращению — стандартное разложение первой четверти курса; здесь к нему добавлено только слежение за высотой. Полное доказательство.</p>
+<div class="stmt thm" id="s0-t-2"><span class="lbl">Теорема 2 (рекуррента по потолку).</span><p>При $m\ge1$</p><p class="eq">$$G_m(z)=\frac{1}{1-z\,G_{m-1}(z)}.$$</p><details class="d-proof"><summary>доказательство — разрез по первому возвращению</summary><div class="proof"><p>Непустой путь Дика однозначно разрезается в момент первого возвращения в нуль: он имеет вид «шаг вверх, затем кусок $U$, затем шаг вниз, затем остаток $W$», где $U$ и $W$ — снова пути Дика. Если исходный путь имел высоту $\le m$, то $U$ поднят на единицу и потому сам имеет высоту $\le m-1$, а $W$ — высоту $\le m$; обратно, любая такая пара даёт путь высоты $\le m$. Длины складываются, поэтому в производящих функциях получается $G_m=1+z\,G_{m-1}\,G_m$, откуда $G_m(1-zG_{m-1})=1$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-2" href="#s0-mn-2">✳</a></div>
+<p id="s0-mn-2" class="mn"><a class="mn-back" href="#s0-mnr-2">✳</a> <b>Статус.</b> Разрез по первому возвращению — стандартное разложение первой четверти курса; здесь к нему добавлено только слежение за высотой. Полное доказательство.</p>
 <div class="stmt task" id="s0-e-3"><span class="lbl">Пример 3 (первые случаи руками).</span><p>$G_0=1$. Дальше по <a class="xref" href="#s0-t-2">теореме 2</a>:</p><p class="eq">$$G_1=\frac{1}{1-z},\qquad G_2=\frac{1}{1-\dfrac{z}{1-z}}=\frac{1-z}{1-2z},\qquad G_3=\frac{1}{1-\dfrac{z(1-z)}{1-2z}}=\frac{1-2z}{1-3z+z^2}.$$</p><p>Разложим в ряды: $G_1=1+z+z^2+\dots$ — строка единиц, сходится. $G_2=1+z+2z^2+4z^3+8z^4+\dots$ — степени двойки, сходится. $G_3=1+z+2z^2+5z^3+13z^4+34z^5+\dots$ — нечётные числа Фибоначчи, сходится.</p></div>
 <p>Развернув рекуррентy до конца, получаем <strong>цепную дробь</strong> $$G_m(z)=\cfrac{1}{1-\cfrac{z}{1-\cfrac{z}{\ddots\;1-z}}}\qquad (m\ \text{этажей}),$$ и видно, что $G_m$ — отношение двух многочленов. Зафиксируем это.</p>
 <div class="stmt defn" id="s0-d-4"><span class="lbl">Определение 4 (многочлены знаменателей).</span><p>Положим $P_0=P_1=1$ и</p><p class="eq">$$P_{m+1}=P_m-z\,P_{m-1}\qquad(m\ge1).$$</p><p>Первые: $P_2=1-z$, $P_3=1-2z$, $P_4=1-3z+z^2$, $P_5=1-4z+3z^2$.</p></div>
@@ -353,20 +399,20 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <p>Значит, чтобы описать все решения, достаточно предъявить два независимых. Где их взять — и почему именно геометрические прогрессии?</p>
 <div class="stmt defn" id="s0-d-9"><span class="lbl">Определение 9 (сдвиг).</span><p>Операция $S$ переводит последовательность $u$ в последовательность $(Su)_m=u_{m+1}$.</p></div>
 <div class="stmt thm" id="s0-t-10"><span class="lbl">Утверждение 10 (сдвиг сохраняет решения).</span><p>Если $u\in R_c$, то $Su\in R_c$. Тем самым $S$ — линейная операция на двумерном пространстве $R_c$.</p><details class="d-proof"><summary>доказательство — уравнение не зависит от номера</summary><div class="proof"><p>Условие на $Su$ при индексе $m$ — это $u_{m+2}=u_{m+1}-cu_m$, то есть условие на $u$ при индексе $m+1$, выполненное по предположению. Линейность видна из <a class="xref" href="#s0-d-9">определения 9</a>. $\square$</p></div></details></div>
-<div class="stmt thm" id="s0-t-11"><span class="lbl">Утверждение 11 (почему подставляют $t^m$).</span><p>У линейной операции на ненулевом конечномерном комплексном векторном пространстве есть собственный вектор. Собственные векторы сдвига — в точности геометрические прогрессии: условие $Su=t\,u$ означает $u_{m+1}=t\,u_m$ при всех $m$, то есть $u_m=u_0\,t^{\,m}$, причём $t\ne0$.</p><a class="mn-ref" id="s0-mnr-2" href="#s0-mn-2">✳</a></div>
-<p id="s0-mn-2" class="mn"><a class="mn-back" href="#s0-mnr-2">✳</a> <b>Статус.</b> Существование собственного вектора — стандартное следствие основной теоремы алгебры (характеристический многочлен над $\mathbb C$ имеет корень); берём чёрным ящиком, любой курс линейной алгебры. Вторая половина <a class="xref" href="#s0-t-11">утверждения 11</a> — переписывание определений.</p>
+<div class="stmt thm" id="s0-t-11"><span class="lbl">Утверждение 11 (почему подставляют $t^m$).</span><p>У линейной операции на ненулевом конечномерном комплексном векторном пространстве есть собственный вектор. Собственные векторы сдвига — в точности геометрические прогрессии: условие $Su=t\,u$ означает $u_{m+1}=t\,u_m$ при всех $m$, то есть $u_m=u_0\,t^{\,m}$, причём $t\ne0$.</p><a class="mn-ref" id="s0-mnr-3" href="#s0-mn-3">✳</a></div>
+<p id="s0-mn-3" class="mn"><a class="mn-back" href="#s0-mnr-3">✳</a> <b>Статус.</b> Существование собственного вектора — стандартное следствие основной теоремы алгебры (характеристический многочлен над $\mathbb C$ имеет корень); берём чёрным ящиком, любой курс линейной алгебры. Вторая половина <a class="xref" href="#s0-t-11">утверждения 11</a> — переписывание определений.</p>
 <div class="mn insight"><span class="tag">Откуда берётся подстановка \</span> «Подставим $t^m$» — не удача и не аналогия с рядами. У задачи есть симметрия: сдвиг номера. Она действует на пространстве решений, у неё есть собственные направления, и ими оказываются геометрические прогрессии. То есть подстановка означает «разложим по собственным направлениям симметрии». Ровно этот ход — «есть симметрия, разложим по её собственным направлениям» — в большой математике называется теорией представлений. Здесь симметрия самая простая, какая бывает.</div>
-<div class="stmt thm" id="s0-t-12"><span class="lbl">Теорема 12 (формула Бине для $P_m$).</span><p>Подстановка $u_m=t^m$ в уравнение <a class="xref" href="#s0-d-7">определения 7</a> после деления на $t^{m-1}$ даёт <strong>характеристическое уравнение</strong></p><p class="eq">$$t^2-t+c=0.$$</p><p>Пусть $t_1,t_2$ — его корни, и пусть $t_1\ne t_2$. Тогда всякое решение имеет вид $u_m=\alpha t_1^{\,m}+\beta t_2^{\,m}$, а для многочленов $P_m$ из <a class="xref" href="#s0-d-4">определения 4</a> (то есть при $c=z$ и начальных данных $P_0=P_1=1$)</p><p class="eq">$$P_m=\frac{t_1^{\,m+1}-t_2^{\,m+1}}{t_1-t_2},\qquad\text{где}\quad t_1+t_2=1,\quad t_1t_2=z.$$</p><details class="d-proof"><summary>доказательство — базис и проверка начальных данных</summary><div class="proof"><p>Что каждая прогрессия является решением, показывает подстановка. Независимость: из $\alpha+\beta=0$ и $\alpha t_1+\beta t_2=0$ следует $\alpha(t_1-t_2)=0$, то есть $\alpha=\beta=0$. Две независимые в двумерном пространстве — базис (<a class="xref" href="#s0-t-8">утверждение 8</a>). Соотношения $t_1+t_2=1$, $t_1t_2=z$ — теорема Виета. Осталось проверить начальные данные для выписанной формулы: при $m=0$ она даёт $\frac{t_1-t_2}{t_1-t_2}=1$, при $m=1$ даёт $\frac{t_1^2-t_2^2}{t_1-t_2}=t_1+t_2=1$ — совпадает с $P_0=P_1=1$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-3" href="#s0-mn-3">✳</a></div>
-<p id="s0-mn-3" class="mn"><a class="mn-back" href="#s0-mnr-3">✳</a> При $z=-1$ уравнение превращается в $t^2-t-1=0$, корни — золотое сечение и обратное к нему со знаком, а формула <a class="xref" href="#s0-t-12">теоремы 12</a> становится обычной формулой Бине для чисел Фибоначчи. То есть $P_m$ — это Фибоначчи с параметром, а строка $m=3$ из таблицы вступления не случайно оказалась фибоначчиевой.</p>
+<div class="stmt thm" id="s0-t-12"><span class="lbl">Теорема 12 (формула Бине для $P_m$).</span><p>Подстановка $u_m=t^m$ в уравнение <a class="xref" href="#s0-d-7">определения 7</a> после деления на $t^{m-1}$ даёт <strong>характеристическое уравнение</strong></p><p class="eq">$$t^2-t+c=0.$$</p><p>Пусть $t_1,t_2$ — его корни, и пусть $t_1\ne t_2$. Тогда всякое решение имеет вид $u_m=\alpha t_1^{\,m}+\beta t_2^{\,m}$, а для многочленов $P_m$ из <a class="xref" href="#s0-d-4">определения 4</a> (то есть при $c=z$ и начальных данных $P_0=P_1=1$)</p><p class="eq">$$P_m=\frac{t_1^{\,m+1}-t_2^{\,m+1}}{t_1-t_2},\qquad\text{где}\quad t_1+t_2=1,\quad t_1t_2=z.$$</p><details class="d-proof"><summary>доказательство — базис и проверка начальных данных</summary><div class="proof"><p>Что каждая прогрессия является решением, показывает подстановка. Независимость: из $\alpha+\beta=0$ и $\alpha t_1+\beta t_2=0$ следует $\alpha(t_1-t_2)=0$, то есть $\alpha=\beta=0$. Две независимые в двумерном пространстве — базис (<a class="xref" href="#s0-t-8">утверждение 8</a>). Соотношения $t_1+t_2=1$, $t_1t_2=z$ — теорема Виета. Осталось проверить начальные данные для выписанной формулы: при $m=0$ она даёт $\frac{t_1-t_2}{t_1-t_2}=1$, при $m=1$ даёт $\frac{t_1^2-t_2^2}{t_1-t_2}=t_1+t_2=1$ — совпадает с $P_0=P_1=1$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-4" href="#s0-mn-4">✳</a></div>
+<p id="s0-mn-4" class="mn"><a class="mn-back" href="#s0-mnr-4">✳</a> При $z=-1$ уравнение превращается в $t^2-t-1=0$, корни — золотое сечение и обратное к нему со знаком, а формула <a class="xref" href="#s0-t-12">теоремы 12</a> становится обычной формулой Бине для чисел Фибоначчи. То есть $P_m$ — это Фибоначчи с параметром, а строка $m=3$ из таблицы вступления не случайно оказалась фибоначчиевой.</p>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-4">Единичная окружность</h2></summary><div class="sec-body">
 <p>Теперь найдём корни $P_{m+1}$ — то, на чём остановились производящие функции. Здесь появляется тригонометрия, и появляется она из одного равенства.</p>
 <div class="stmt thm" id="s0-t-13"><span class="lbl">Теорема 13 (корни знаменателя).</span><p>Число $z$ является корнем $P_{m+1}$ тогда и только тогда, когда</p><p class="eq">$$z=\frac{1}{4\cos^2\dfrac{k\pi}{m+2}}\qquad\text{для некоторого целого }k,\ \ 1\le k\le m+1,\ \ k\ne\frac{m+2}{2}.$$</p><p>Значения $k$ и $m+2-k$ дают один и тот же корень; различных корней ровно $\bigl\lfloor\frac{m+1}{2}\bigr\rfloor$, что совпадает со степенью $P_{m+1}$.</p><details class="d-proof"><summary>доказательство — отношение корней есть корень из единицы</summary><div class="proof"><p>По <a class="xref" href="#s0-t-12">теореме 12</a> условие $P_{m+1}=0$ означает $t_1^{\,m+2}=t_2^{\,m+2}$ при $t_1\ne t_2$. Обозначим $q=t_1/t_2$; тогда $q^{m+2}=1$ и $q\ne1$, то есть $q=e^{2i\psi}$ с $\psi=\frac{k\pi}{m+2}$, $k=1,\dots,m+1$. Из $t_1+t_2=1$ и $t_1=qt_2$ получаем $t_2(1+q)=1$; значит $q\ne-1$, что и исключает $k=\frac{m+2}{2}$, и $t_2=\frac1{1+q}$, $t_1=\frac{q}{1+q}$. Отсюда</p><p class="eq">$$z=t_1t_2=\frac{q}{(1+q)^2},\qquad (1+q)^2=\bigl(e^{i\psi}(e^{-i\psi}+e^{i\psi})\bigr)^2=q\cdot4\cos^2\psi,$$</p><p>и после сокращения на $q$ остаётся $z=\dfrac{1}{4\cos^2\psi}$. Замена $k\mapsto m+2-k$ меняет $\psi$ на $\pi-\psi$ и не меняет $\cos^2\psi$. $\square$</p></div></details></div>
-<p>Вот и вся тригонометрия. Стоит увидеть, откуда она взялась, потому что причина ровно одна:<a class="mn-ref" id="s0-mnr-4" href="#s0-mn-4">✳</a></p>
+<p>Вот и вся тригонометрия. Стоит увидеть, откуда она взялась, потому что причина ровно одна:<a class="mn-ref" id="s0-mnr-5" href="#s0-mn-5">✳</a></p>
 <blockquote>Корни характеристического уравнения связаны соотношением $t_1+t_2=1$ — они <strong>не независимы</strong>. Отношение $q=t_1/t_2$ вынуждено быть корнем из единицы, а корни из единицы живут на окружности. Косинус — это просто способ записать точку окружности.</blockquote>
-<p id="s0-mn-4" class="mn"><a class="mn-back" href="#s0-mnr-4">✳</a> Соотношение $t_1+t_2=1$ идёт из того, что коэффициент при $u_m$ в рекурренте равен единице, а он равен единице потому, что шаг вверх и шаг вниз входят в задачу симметрично. Была бы ходьба несимметричной, окружность сменилась бы окружностью другого радиуса, и вместо косинуса появился бы гиперболический косинус. Тригонометрия здесь — прямое следствие симметрии задачи.</p>
-<div class="stmt thm" id="s0-t-14"><span class="lbl">Теорема 14 (ответ на вопрос вступления).</span><p>При фиксированном $m\ge1$ число путей Дика длины $2n$ высоты не больше $m$ растёт как</p><p class="eq">$$\text{const}\cdot\left(2\cos\frac{\pi}{m+2}\right)^{2n}.$$</p><details class="d-proof"><summary>доказательство — наименьший полюс</summary><div class="proof"><p>По <a class="xref" href="#s0-t-5">утверждению 5</a> функция $G_m$ рациональна со знаменателем $P_{m+1}$, по <a class="xref" href="#s0-t-13">теореме 13</a> её полюса суть $z_k=\bigl(2\cos\frac{k\pi}{m+2}\bigr)^{-2}$. Наименьший модуль — у наибольшего $\cos^2$, то есть при $k=1$. По техфакту 6 коэффициенты растут как $z_1^{-n}=\bigl(2\cos\frac{\pi}{m+2}\bigr)^{2n}$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-5" href="#s0-mn-5">✳</a></div>
-<p id="s0-mn-5" class="mn"><a class="mn-back" href="#s0-mnr-5">✳</a> <b>Статус.</b> Опущено: несократимость дроби $P_m/P_{m+1}$ (иначе полюс мог бы сократиться) и точный вид полиномиальной поправки. Первое верно, потому что соседние $P$ взаимно просты по той же рекурренте; второе не нужно для ответа. Численная сверка для $m\le5$, $n\le12$ — <code>../proverka.py</code>.</p>
+<p id="s0-mn-5" class="mn"><a class="mn-back" href="#s0-mnr-5">✳</a> Соотношение $t_1+t_2=1$ идёт из того, что коэффициент при $u_m$ в рекурренте равен единице, а он равен единице потому, что шаг вверх и шаг вниз входят в задачу симметрично. Была бы ходьба несимметричной, окружность сменилась бы окружностью другого радиуса, и вместо косинуса появился бы гиперболический косинус. Тригонометрия здесь — прямое следствие симметрии задачи.</p>
+<div class="stmt thm" id="s0-t-14"><span class="lbl">Теорема 14 (ответ на вопрос вступления).</span><p>При фиксированном $m\ge1$ число путей Дика длины $2n$ высоты не больше $m$ растёт как</p><p class="eq">$$\text{const}\cdot\left(2\cos\frac{\pi}{m+2}\right)^{2n}.$$</p><details class="d-proof"><summary>доказательство — наименьший полюс</summary><div class="proof"><p>По <a class="xref" href="#s0-t-5">утверждению 5</a> функция $G_m$ рациональна со знаменателем $P_{m+1}$, по <a class="xref" href="#s0-t-13">теореме 13</a> её полюса суть $z_k=\bigl(2\cos\frac{k\pi}{m+2}\bigr)^{-2}$. Наименьший модуль — у наибольшего $\cos^2$, то есть при $k=1$. По техфакту 6 коэффициенты растут как $z_1^{-n}=\bigl(2\cos\frac{\pi}{m+2}\bigr)^{2n}$. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-6" href="#s0-mn-6">✳</a></div>
+<p id="s0-mn-6" class="mn"><a class="mn-back" href="#s0-mnr-6">✳</a> <b>Статус.</b> Опущено: несократимость дроби $P_m/P_{m+1}$ (иначе полюс мог бы сократиться) и точный вид полиномиальной поправки. Первое верно, потому что соседние $P$ взаимно просты по той же рекурренте; второе не нужно для ответа. Численная сверка для $m\le5$, $n\le12$ — <code>../proverka.py</code>.</p>
 <div class="stmt task" id="s0-e-15"><span class="lbl">Пример 15 (сверка с таблицей вступления).</span></div>
 <table><thead><tr><th>$m$</th><th>$2\cos\frac{\pi}{m+2}$</th><th>квадрат</th><th>отношение соседних чисел из таблицы</th></tr></thead><tbody><tr><td>$1$</td><td>$2\cos60^\circ=1$</td><td>$1$</td><td>$1/1=1$</td></tr><tr><td>$2$</td><td>$2\cos45^\circ=\sqrt2$</td><td>$2$</td><td>$32/16=2$</td></tr><tr><td>$3$</td><td>$2\cos36^\circ=\varphi$</td><td>$\varphi^2\approx2{,}618$</td><td>$89/34\approx2{,}618$</td></tr><tr><td>$4$</td><td>$2\cos30^\circ=\sqrt3$</td><td>$3$</td><td>$122/41\approx2{,}98$</td></tr><tr><td>$5$</td><td>$2\cos\frac{\pi}{7}$</td><td>$\approx3{,}247$</td><td>$131/42\approx3{,}12$</td></tr><tr><td>$\infty$</td><td>$2\cos0=2$</td><td>$4$</td><td>$132/42\approx3{,}14$</td></tr></tbody></table>
 <p>Здесь $\varphi=\frac{1+\sqrt5}{2}$ — золотое сечение; равенство $2\cos36^\circ=\varphi$ проверяется из $\varphi^2=\varphi+1$. Последние две строки сходятся медленно, потому что при больших $m$ соседние полюса сближаются.</p>
@@ -379,21 +425,21 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 <p>Приём тот же, что в разделе про характеристическое уравнение: возводить в степень легко то, что операция растягивает.</p>
 <div class="stmt thm" id="s0-t-19"><span class="lbl">Теорема 19 (собственные таблицы и собственные числа).</span><p>У операции $A$ ровно $m+1$ собственных чисел, все вещественные и различные:</p><p class="eq">$$\lambda_k=2\cos\frac{k\pi}{m+2},\qquad k=1,\dots,m+1,$$</p><p>и отвечающие им собственные таблицы суть $v_k(x)=\sin\dfrac{(x+1)k\pi}{m+2}$.</p><details class="d-proof"><summary>доказательство — две стенки</summary><div class="proof"><p>Условие $Af=\lambda f$ — это $f(x-1)+f(x+1)=\lambda f(x)$, снова двучленная рекуррента с постоянными коэффициентами, но теперь по координате $x$. По <a class="xref" href="#s0-t-12">теореме 12</a> и её выводу корни характеристического уравнения $t^2-\lambda t+1=0$ удовлетворяют $t_1t_2=1$; при $|\lambda|\lt2$ они комплексно сопряжены и потому имеют модуль $1$, то есть $t_{1,2}=e^{\pm i\theta}$ и $\lambda=2\cos\theta$. Общее решение — комбинация $e^{ix\theta}$ и $e^{-ix\theta}$. Левая стенка $f(-1)=0$ оставляет из неё ровно $f(x)=c\sin\bigl((x+1)\theta\bigr)$. Правая стенка $f(m+1)=0$ добавляет $\sin\bigl((m+2)\theta\bigr)=0$, то есть $\theta=\frac{k\pi}{m+2}$. Значения $k=0$ и $k=m+2$ дают нулевую таблицу, остаются $k=1,\dots,m+1$ — ровно $m+1$ штук, столько же, сколько размерность пространства, значит других нет. $\square$</p></div></details></div>
 <div class="mn insight"><span class="tag">Один расчёт, три имени \</span> Операция $A$ отличается от дискретной второй производной $f(x-1)-2f(x)+f(x+1)$ прибавлением $2f(x)$, что на собственные таблицы не влияет вовсе. Дискретная вторая производная — это дискретный <strong>оператор Лапласа</strong> на отрезке, а его собственные функции физик называет <strong>стоячими волнами</strong> на закреплённой с двух концов струне. Тот же расчёт на окружности вместо отрезка (нет стенок, зато есть периодичность) даёт вместо синусов функции $e^{in\varphi}$, то есть <strong>ряд Фурье</strong>. Пути ограниченной высоты, колебания струны и ряд Фурье — одна и та же диагонализация, отличающаяся только тем, что стоит на краю.</div>
-<div class="stmt thm" id="s0-t-20"><span class="lbl">Теорема 20 (точная формула).</span><p>$\displaystyle d_m(n)=\frac{2}{m+2}\sum_{k=1}^{m+1}\left(2\cos\frac{k\pi}{m+2}\right)^{2n}\sin^2\frac{k\pi}{m+2}.$</p><details class="d-proof"><summary>доказательство — ортогональный базис</summary><div class="proof"><p>Матрица $A$ симметрична, поэтому собственные таблицы при различных собственных числах ортогональны относительно $\langle f,g\rangle=\sum_x f(x)g(x)$; их $m+1$ штука с различными числами (<a class="xref" href="#s0-t-19">теорема 19</a>), значит это ортогональный базис. Прямой подсчёт даёт $\langle v_k,v_k\rangle=\frac{m+2}{2}$. Коэффициент разложения $\delta$ по $v_k$ равен $\frac{\langle\delta,v_k\rangle}{\langle v_k,v_k\rangle}=\frac{2}{m+2}\sin\frac{k\pi}{m+2}$, поскольку $\langle\delta,v_k\rangle=v_k(0)$. Применяем $A^{2n}$ — каждое слагаемое умножается на $\lambda_k^{2n}$; берём нулевую координату — умножаем ещё раз на $v_k(0)$ и суммируем. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-6" href="#s0-mn-6">✳</a></div>
-<p id="s0-mn-6" class="mn"><a class="mn-back" href="#s0-mnr-6">✳</a> <b>Статус.</b> Опущено вычисление $\sum_{x=0}^{m}\sin^2\frac{(x+1)k\pi}{m+2}=\frac{m+2}{2}$: делается формулой понижения степени и суммой косинусов в геометрической прогрессии. Формула сверена с прямым перебором для $m\le5$, $N\le12$ — <code>../proverka.py</code>.</p>
+<div class="stmt thm" id="s0-t-20"><span class="lbl">Теорема 20 (точная формула).</span><p>$\displaystyle d_m(n)=\frac{2}{m+2}\sum_{k=1}^{m+1}\left(2\cos\frac{k\pi}{m+2}\right)^{2n}\sin^2\frac{k\pi}{m+2}.$</p><details class="d-proof"><summary>доказательство — ортогональный базис</summary><div class="proof"><p>Матрица $A$ симметрична, поэтому собственные таблицы при различных собственных числах ортогональны относительно $\langle f,g\rangle=\sum_x f(x)g(x)$; их $m+1$ штука с различными числами (<a class="xref" href="#s0-t-19">теорема 19</a>), значит это ортогональный базис. Прямой подсчёт даёт $\langle v_k,v_k\rangle=\frac{m+2}{2}$. Коэффициент разложения $\delta$ по $v_k$ равен $\frac{\langle\delta,v_k\rangle}{\langle v_k,v_k\rangle}=\frac{2}{m+2}\sin\frac{k\pi}{m+2}$, поскольку $\langle\delta,v_k\rangle=v_k(0)$. Применяем $A^{2n}$ — каждое слагаемое умножается на $\lambda_k^{2n}$; берём нулевую координату — умножаем ещё раз на $v_k(0)$ и суммируем. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-7" href="#s0-mn-7">✳</a></div>
+<p id="s0-mn-7" class="mn"><a class="mn-back" href="#s0-mnr-7">✳</a> <b>Статус.</b> Опущено вычисление $\sum_{x=0}^{m}\sin^2\frac{(x+1)k\pi}{m+2}=\frac{m+2}{2}$: делается формулой понижения степени и суммой косинусов в геометрической прогрессии. Формула сверена с прямым перебором для $m\le5$, $N\le12$ — <code>../proverka.py</code>.</p>
 <div class="stmt rem" id="s0-n-21"><span class="lbl">Замечание 21 (третий вывод скорости роста).</span><p>Из <a class="xref" href="#s0-t-20">теоремы 20</a> <a class="xref" href="#s0-t-14">теорема 14</a> следует ещё раз и совсем коротко: при чётной степени все слагаемые неотрицательны, наибольшее отвечает $k=1$ и $k=m+1$, остальные убывают геометрически. Это независимая проверка результата, полученного через полюса.</p></div>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-6">Числа Каталана как интеграл</h2></summary><div class="sec-body">
-<div class="stmt thm" id="s0-t-22"><span class="lbl">Теорема 22 (среднее вместо суммы).</span><p>Для всякого $n\ge0$</p><p class="eq">$$C_n=\frac2\pi\int_0^\pi\left(2\cos\theta\right)^{2n}\sin^2\theta\;d\theta.$$</p><details class="d-proof"><summary>доказательство — сумма Римана</summary><div class="proof"><p>Путь Дика длины $2n$ не поднимается выше $n$, поэтому при $m\ge n$ потолок ничего не запрещает и $d_m(n)=C_n$. Обозначим $M=m+2$, $\theta_k=\frac{k\pi}{M}$; шаг между соседними узлами равен $\Delta\theta=\frac{\pi}{M}$, и формула <a class="xref" href="#s0-t-20">теоремы 20</a> переписывается как</p><p class="eq">$$C_n=\frac{2}{\pi}\sum_{k=1}^{M-1}\left(2\cos\theta_k\right)^{2n}\sin^2\theta_k\cdot\Delta\theta.$$</p><p>Справа — интегральная сумма для непрерывной на $[0,\pi]$ функции. При $m\to\infty$ левая часть не меняется, правая стремится к интегралу. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-7" href="#s0-mn-7">✳</a></div>
-<p id="s0-mn-7" class="mn"><a class="mn-back" href="#s0-mnr-7">✳</a> <b>Статус.</b> Полное доказательство. Проверено численно для $n\le6$: интеграл даёт $1,2,5,14,42,132$ — <code>../proverka.py</code>.</p>
+<div class="stmt thm" id="s0-t-22"><span class="lbl">Теорема 22 (среднее вместо суммы).</span><p>Для всякого $n\ge0$</p><p class="eq">$$C_n=\frac2\pi\int_0^\pi\left(2\cos\theta\right)^{2n}\sin^2\theta\;d\theta.$$</p><details class="d-proof"><summary>доказательство — сумма Римана</summary><div class="proof"><p>Путь Дика длины $2n$ не поднимается выше $n$, поэтому при $m\ge n$ потолок ничего не запрещает и $d_m(n)=C_n$. Обозначим $M=m+2$, $\theta_k=\frac{k\pi}{M}$; шаг между соседними узлами равен $\Delta\theta=\frac{\pi}{M}$, и формула <a class="xref" href="#s0-t-20">теоремы 20</a> переписывается как</p><p class="eq">$$C_n=\frac{2}{\pi}\sum_{k=1}^{M-1}\left(2\cos\theta_k\right)^{2n}\sin^2\theta_k\cdot\Delta\theta.$$</p><p>Справа — интегральная сумма для непрерывной на $[0,\pi]$ функции. При $m\to\infty$ левая часть не меняется, правая стремится к интегралу. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-8" href="#s0-mn-8">✳</a></div>
+<p id="s0-mn-8" class="mn"><a class="mn-back" href="#s0-mnr-8">✳</a> <b>Статус.</b> Полное доказательство. Проверено численно для $n\le6$: интеграл даёт $1,2,5,14,42,132$ — <code>../proverka.py</code>.</p>
 <p>Слева стоит целое число, которое ты умеешь считать биекциями; справа — интеграл от тригонометрической функции. И <strong>вес $\sin^2\theta$ не выбран нами</strong>: он пришёл из <a class="xref" href="#s0-t-20">теоремы 20</a>, где возник как квадрат нулевой координаты собственной таблицы. Это единственный объект во всём тексте, оставшийся без объяснения.</p>
 <div class="stmt rem" id="s0-n-23"><span class="lbl">Замечание 23 (тот же интеграл и принцип отражения).</span><p>Теорему 22 можно доказать иначе — раскрыв $\left(2\cos\theta\right)^{2n}=\bigl(e^{i\theta}+e^{-i\theta}\bigr)^{2n}$ по биному, записав $\sin^2\theta=\frac{2-e^{2i\theta}-e^{-2i\theta}}{4}$ и заметив, что $\int_0^\pi e^{2ij\theta}d\theta$ равен нулю при целом $j\ne0$. Выживают три слагаемых, и ответ выходит в виде</p><p class="eq">$$\binom{2n}{n}-\binom{2n}{n+1},$$</p><p>то есть <strong>ровно в форме принципа отражения</strong>. Так получается потому, что вес $\sin^2\theta$ по своей записи есть «центральный член минус два соседних» — то же вычитание, которое в комбинаторике делает отражение относительно уровня $-1$. Отражение и вес $\sin^2\theta$ — одно и то же, записанное на двух языках.</p></div>
 </div></details>
 <details class="sec sec2" open><summary><h2 id="s0-h-7">Метод изображений</h2></summary><div class="sec-body">
 <p>Обе полученные формулы — сумма по собственным числам (<a class="xref" href="#s0-t-20">теорема 20</a>) и интеграл (<a class="xref" href="#s0-t-22">теорема 22</a>) — тригонометрические. Но у той же задачи есть <strong>третья точная формула, чисто комбинаторная</strong>, и она прямо продолжает приём первой четверти.</p>
 <p>Вспомним, как работало отражение при <strong>одной</strong> стенке: плохие пути отражались относительно уровня $-1$ и давали ровно $\binom{2n}{n}-\binom{2n}{n+1}$. Когда стенок <strong>две</strong>, путь может отскочить сначала от нижней, потом от верхней, потом снова от нижней — и отражать приходится бесконечно много раз, поочерёдно относительно двух уровней. Отражения порождают бесконечную цепочку «изображений» исходной точки, расставленных с шагом $2(m+2)$, и знак каждого слагаемого — чётность числа отражений.</p>
-<div class="stmt thm" id="s0-t-25"><span class="lbl">Теорема 25 (метод изображений). Статус: полное доказательство.</span><p class="eq">$$d_m(n)=\sum_{j\in\mathbb Z}\left[\binom{2n}{n-j(m+2)}-\binom{2n}{n+1-j(m+2)}\right].$$</p><p>Сумма конечна: слагаемые с $|j|$ больше $\frac{n}{m+2}$ обращаются в нуль, потому что нижний индекс выходит из диапазона $0..2n$.</p><details class="d-proof"><summary>доказательство — отражения в двух зеркалах</summary><div class="proof"><p>Продолжим соглашение из <a class="xref" href="#s0-t-13">утверждения 13</a>: путь запрещён, если коснулся уровня $-1$ или уровня $m+1$. Композиции отражений относительно этих двух уровней образуют группу, порождённую двумя симметриями прямой; её элементы — сдвиги на кратные $2(m+2)$ и такие же сдвиги, составленные с одним отражением. Стандартное включение-исключение по этой группе (каждому пути, нарушившему запрет, сопоставляется его образ, и вклады сокращаются попарно, кроме допустимых путей) даёт выписанную знакопеременную сумму. Слагаемые без штриха отвечают чётному числу отражений, со штрихом — нечётному. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-8" href="#s0-mn-8">✳</a></div>
-<p id="s0-mn-8" class="mn"><a class="mn-back" href="#s0-mnr-8">✳</a> <b>Статус.</b> Полное доказательство здесь — по схеме, дословно повторяющей одностенный случай. Формула сверена с прямым перебором для $m\le8$, $n\le8$ — <code>../proverka.py</code>.</p>
+<div class="stmt thm" id="s0-t-25"><span class="lbl">Теорема 25 (метод изображений).</span><p class="eq">$$d_m(n)=\sum_{j\in\mathbb Z}\left[\binom{2n}{n-j(m+2)}-\binom{2n}{n+1-j(m+2)}\right].$$</p><p>Сумма конечна: слагаемые с $|j|$ больше $\frac{n}{m+2}$ обращаются в нуль, потому что нижний индекс выходит из диапазона $0..2n$.</p><details class="d-proof"><summary>доказательство — отражения в двух зеркалах</summary><div class="proof"><p>Продолжим соглашение из <a class="xref" href="#s0-t-13">утверждения 13</a>: путь запрещён, если коснулся уровня $-1$ или уровня $m+1$. Композиции отражений относительно этих двух уровней образуют группу, порождённую двумя симметриями прямой; её элементы — сдвиги на кратные $2(m+2)$ и такие же сдвиги, составленные с одним отражением. Стандартное включение-исключение по этой группе (каждому пути, нарушившему запрет, сопоставляется его образ, и вклады сокращаются попарно, кроме допустимых путей) даёт выписанную знакопеременную сумму. Слагаемые без штриха отвечают чётному числу отражений, со штрихом — нечётному. $\square$</p></div></details><a class="mn-ref" id="s0-mnr-9" href="#s0-mn-9">✳</a></div>
+<p id="s0-mn-9" class="mn"><a class="mn-back" href="#s0-mnr-9">✳</a> <b>Статус.</b> Полное доказательство здесь — по схеме, дословно повторяющей одностенный случай. Формула сверена с прямым перебором для $m\le8$, $n\le8$ — <code>../proverka.py</code>.</p>
 <div class="stmt task" id="s0-e-26"><span class="lbl">Пример 26 (как это выглядит при $m=3$).</span><p>Шаг сдвига равен $m+2=5$:</p><p class="eq">$$n=3:\ \binom63-\binom64=5,\qquad n=4:\ \binom84-\binom85-\binom80=13,$$</p><p class="eq">$$n=5:\ \binom{10}{5}-\binom{10}{6}+\binom{10}{0}-\binom{10}{1}+\binom{10}{10}=34.$$</p><p>Пока $n$ мало, работает только «главное» отражение и формула совпадает с одностенной; при $n\ge4$ включается первое изображение верхней стенки, и появляются поправки.</p></div>
 <div class="mn insight"><span class="tag">Почему это правильный ответ \</span> При одной стенке отражение даёт разность <strong>двух</strong> биномиальных коэффициентов. При двух — знакопеременную сумму по <strong>всей</strong> цепочке изображений. Это тот же приём, доказанный тем же способом, только зеркал стало два. Тригонометрия из предыдущих разделов и эта формула — два ответа на один вопрос: первый удобен для асимптотики, второй — для точного счёта и для того, что будет дальше.</div>
 <div class="stmt rem" id="s0-n-27"><span class="lbl">Замечание 27 (спектральная формула — это формула Бине).</span><p>Стоит вернуться к <a class="xref" href="#s0-t-20">теореме 20</a> и посмотреть на неё под тем же углом. При $m=3$ собственные числа равны $\pm\varphi$ и $\pm1/\varphi$, где $\varphi$ — золотое сечение, и формула превращается в</p><p class="eq">$$d_3(n)=\frac{\varphi^{2n-1}-(-1/\varphi)^{2n-1}}{\sqrt5}=F_{2n-1},$$</p><p>то есть <strong>буквально в формулу Бине для чисел Фибоначчи</strong> (сверено численно до $n=7$). Так что «страшная сумма по собственным числам» — не костыль, а в точности то, чем формула Бине является в общем случае: ответ как комбинация степеней корней характеристического уравнения. Просто корней теперь не два, а $m+1$, и они тригонометрические.</p></div>
@@ -531,6 +577,32 @@ window.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
   setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
 });
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
 </script>
 </body>
 </html>

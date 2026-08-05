@@ -29,30 +29,63 @@
   --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
   --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
   --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
-  --flag-closed-bg:#e9f5e9; --link:#2f6e8e;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
   /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
      DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
 }
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
-  line-height:1.7;font-size:21px;font-optical-sizing:auto}
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
 a{color:var(--link)}
-.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
 .doc-head{max-width:1240px;font-family:var(--sans)}
 .doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
 
 /* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
    оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
-.layout{display:grid;grid-template-columns:400px minmax(0,1240px);gap:40px}
-.layout.solo{grid-template-columns:minmax(0,1240px)}
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
 main{min-width:0}
 
 /* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
-.toc{position:sticky;top:16px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;
-  font-family:var(--sans);font-size:18px;line-height:1.35;border-right:1px solid var(--rule);padding-right:20px}
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
 .toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
 .toc>summary::-webkit-details-marker{display:none}
@@ -62,7 +95,7 @@ main{min-width:0}
 .toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
   border-radius:3px;position:relative}
 .toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
-.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:#b7ae9c;
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
   font-variant-numeric:tabular-nums}
 /* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
 .toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
@@ -72,7 +105,7 @@ main{min-width:0}
    клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
 .toc-grp>summary{list-style:none;cursor:pointer;position:relative}
 .toc-grp>summary::-webkit-details-marker{display:none}
-.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:#c3bbaa;font-size:.7em}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
 .toc-grp:not([open])>summary::after{content:"▸"}
 .toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
 .toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
@@ -94,7 +127,7 @@ main{min-width:0}
 #tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
 
 /* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
-.stream{max-width:790px;counter-reset:sec}
+.stream{max-width:1090px;counter-reset:sec}
 .stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
 .stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
   margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
@@ -106,8 +139,14 @@ main{min-width:0}
 .stream a{border-bottom:1px solid #bcd2dd}
 .stream a:hover{border-bottom-color:var(--accent)}
 /* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
-.stream a.mn-ref{border:0;color:var(--accent);font-size:.62em;vertical-align:.55em;
-  margin-left:.12em;text-decoration:none}
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
 .stream a.mn-ref:hover{color:var(--warm)}
 .mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
 .mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
@@ -132,26 +171,26 @@ main{min-width:0}
 .thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
 .thm .lbl{color:var(--warm)}
 /* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
-.task{border-left-color:var(--defn);background:linear-gradient(90deg,#e9f2ec,transparent 78%)}
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
 .task .lbl{color:var(--defn)}
-.rem{border-left-color:var(--thread);background:linear-gradient(90deg,#e9eef3,transparent 78%)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
 .rem .lbl{color:var(--thread)}
-.proof{color:var(--muted);font-size:19px;border-left:2px dotted #cfc7b6;padding-left:1.05em;margin:1em 0}
-.proof .lbl{font-style:italic;font-weight:600;color:#8a8375}
-.example{background:#f4f1ea;border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:20px}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
 .example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
-div.note{background:#f4f1ea;border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
   padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
 div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
   display:block;margin-bottom:.25em;text-transform:uppercase}
 /* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
 .blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
-  font-size:.97rem;color:var(--muted);background:#faf8f3}
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
 .blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
   color:var(--text);display:block;margin-bottom:.3em}
-.tech{background:#f4f1ea;border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
   padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
 .tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
   color:var(--muted);display:block;margin-bottom:.25em}
@@ -163,7 +202,7 @@ div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-sp
 .katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
 .katex{font-size:1.05em}
 blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
-code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:#efe9dd;padding:0 .25em;border-radius:3px}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
 
 /* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
 table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
@@ -184,12 +223,17 @@ table tbody td:first-child{color:var(--muted)}
 .mn b,.mn strong{color:var(--text)}
 /* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
 @media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
   .layout{grid-template-columns:1fr;gap:0}
   .stream{max-width:none}
   .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
     padding:0 0 1em;margin-bottom:1.5em}
   .toc>summary{cursor:pointer}
   .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
   .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
     margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
   .toc .toc-sub{padding-left:1em}
@@ -217,13 +261,13 @@ aside.note.thread{border-left-color:var(--thread)}
   font-family:var(--sans);font-size:.85rem;color:var(--muted)}
 
 /* ── cue-визуал ── */
-.cue{font-family:var(--sans);font-size:.85rem;background:#eef3f0;
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
   border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
 
 /* ── уровень-пилюля ── */
 .level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
 .level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
-  border-radius:11px;background:#e7e0d2;color:var(--text)}
+  border-radius:11px;background:var(--chip);color:var(--text)}
 
 /* ── мат-долг: бейджи ── */
 .flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
@@ -251,7 +295,7 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 .s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
 .s-fillw{fill:var(--warm)}
 .s-fillsh{fill:var(--shade)}
-.s-node{fill:#fff;stroke:var(--text);stroke-width:1.8}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
 .s-node-r{fill:var(--text)}
 /* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
    с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
@@ -275,19 +319,20 @@ figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);marg
 /* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
    на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
 details.d-proof{margin:.7em 0}
-details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:16px;
-  font-style:italic;color:#8a8375;list-style:none}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
 details.d-proof>summary::-webkit-details-marker{display:none}
 details.d-proof>summary::before{content:"▸ "}
 details.d-proof[open]>summary::before{content:"▾ "}
-details.d-proof>summary:hover{color:var(--accent)}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
 
 /* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
 details.sec>summary{list-style:none;cursor:pointer}
 details.sec>summary::-webkit-details-marker{display:none}
 details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
 details.sec>summary h2::after,details.sec>summary h3::after{
-  content:"▾";position:absolute;right:100%;margin-right:.32em;color:#c3bbaa;font-weight:400;
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
   font-size:.7em;transform:translateY(.1em)}
 details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
 details.sec>summary:hover h2,details.sec>summary:hover h3,
@@ -300,7 +345,7 @@ details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
 .stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
 .sec4>.sec-body{padding:.2em 0 .5em}
 .sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
-  color:#c3bbaa;font-weight:400;font-size:.7em}
+  color:var(--faint);font-weight:400;font-size:.7em}
 .sec4:not([open])>summary h4::after{content:"▸"}
 
 /* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
@@ -311,6 +356,7 @@ figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
 </style>
 </head>
 <body>
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
 <div class="wrap">
 <div class="doc-head">
   <h1>Монады и лемма Йонеды: что такое умножение матриц на самом деле</h1>
@@ -478,6 +524,32 @@ window.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
   setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
 });
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
 </script>
 </body>
 </html>
