@@ -4,9 +4,21 @@
 # и сегодня, и через год. Обновлять — руками, отдельным решением.
 name: Сборка и публикация сайта
 
+# 🔴 ВЕТКА ЗДЕСЬ — ТОЛЬКО `main`, И МЕНЯТЬ ЕЁ НЕЛЬЗЯ В ОДИНОЧКУ.
+# Цена (04.08.2026, коммит 489bdf2): триггер перевели на рабочую ветку, чтобы
+# сайт собирался из `sayt/`. Сборка проходила, а GitHub отвергал ПУБЛИКАЦИЮ —
+# окружение `github-pages` разрешает деплой только с `main` и `gh-pages`
+# (настройка репозитория, в этом файле её не видно). Итог: каждый пуш в
+# рабочую ветку — красный прогон и письмо владельцу, тридцать за вечер, и
+# сломанный механизм публикации, который никто не заметил бы до правки сайта.
+# Одного этого файла мало: ветку публикации знают ДВА места, и второе живёт
+# в настройках GitHub. Меняешь здесь — меняй и там, иначе деплой отвергнут.
+# Витрину `main` наполняет `git_zona.py opublikovat` (переносит `sayt/`
+# рабочей ветки в корень `main`) — см. `_studio/docs/kak-delat/GIT-disciplina.md §4в`.
+# Отсюда же `git_zona.py` читает, какую ветку нельзя закрывать (`vetka_publikacii()`).
 on:
   push:
-    branches: ["arka/mat-kostyak"]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -37,11 +49,10 @@ jobs:
         env:
           HUGO_ENVIRONMENT: production
         run: hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
-        working-directory: ./sayt
       - name: Отдать собранное
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./sayt/public
+          path: ./public
 
   deploy:
     environment:
