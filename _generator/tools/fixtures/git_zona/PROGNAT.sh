@@ -1320,4 +1320,104 @@ V=$(git -C "$T36" rev-parse "refs/tags/mogila/Zametki" 2>/dev/null || echo NET)
     && echo "  ✅ zakryt-vetku: тёзка по РЕГИСТРУ отвергнут, старое надгробие цело" \
     || { echo "  ❌ ТЁЗКА ПО РЕГИСТРУ ЗАТЁР ЧУЖОЕ НАДГРОБИЕ — на APFS обе ссылки схлопнутся в одну"; FAIL=1; }
 
+# ── ЛОВУШКА 40: `opublikovat` — ПЕРЕНОС sayt/ на витрину, а не слияние ──
+# Инцидент 04.08.2026: витрину наполнять было нечем, и вместо переноса перевели
+# триггер workflow на рабочую ветку. Сборка проходила, ПУБЛИКАЦИЮ GitHub
+# отвергал (окружение `github-pages` пускает только витрину) — сутки писем
+# «сборка упала» о механизме, который молча перестал публиковать.
+# Здесь краснеет каждая из трёх половин переноса: содержимое подпапки уезжает
+# КОРНЕМ, удалённое из `sayt/` НЕ остаётся на сайте навсегда, а `.github/`
+# витрины перенос НЕ затирает (затёр бы — отключил бы сборку тем же коммитом,
+# которым её наполняет).
+T40=$(mktemp -d)
+B40=$(mktemp -d)      # bare-«origin»: push должен доехать до ветки, а не «пройти»
+trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32" "$T35" "$T36" "$O36" "$T40" "$B40" "${T40}-wt"' EXIT
+git init -q "$T40"
+git -C "$T40" config user.email fixture@test
+git -C "$T40" config user.name fixture
+mkdir -p "$T40/.github/workflows" "$T40/sayt/static"
+# Витрина названа НЕ `main`: имя не должно быть вшито в инструмент — он обязан
+# читать её из `on.push.branches`, как это делает `vetka_publikacii()`.
+cat > "$T40/.github/workflows/hugo.yml" <<'YML'
+name: Сборка и публикация сайта
+on:
+  push:
+    branches: ["vitrina"]
+YML
+echo "<html>новый</html>" > "$T40/sayt/index.html"
+echo "картинка" > "$T40/sayt/static/a.txt"
+git -C "$T40" add -A
+git -C "$T40" commit -qm "рабочая ветка: сайт в подпапке sayt/"
+git -C "$T40" branch -m rabochaya
+git -C "$T40" remote add origin "$B40"
+git init -q --bare "$B40"
+
+# Витрина: сайт КОРНЕМ + собственные `.github/` и `.gitignore` + файл, которого
+# в `sayt/` уже нет (его перенос обязан снести — иначе он живёт на сайте вечно).
+V40=$(mktemp -d)
+git init -q "$V40"
+git -C "$V40" config user.email fixture@test
+git -C "$V40" config user.name fixture
+mkdir -p "$V40/.github/workflows"
+echo "СВОЁ У ВИТРИНЫ" > "$V40/.github/workflows/hugo.yml"
+echo "public/" > "$V40/.gitignore"
+echo "<html>старый</html>" > "$V40/index.html"
+echo "удалённая страница" > "$V40/LISHNIJ.txt"
+git -C "$V40" add -A
+git -C "$V40" commit -qm "витрина: сайт корнем"
+git -C "$V40" push -q "$B40" HEAD:refs/heads/vitrina
+rm -rf "$V40"
+STARAYA40=$(git -C "$B40" rev-parse refs/heads/vitrina)
+
+# (а) БЕЗ --yes витрина не двигается — предпросмотр обязан быть предпросмотром
+GIT_ZONA_REPO="$T40" python3 "$TOOLS/git_zona.py" opublikovat > "$T40/predprosmotr.txt" 2>&1 || true
+V=$(git -C "$B40" rev-parse refs/heads/vitrina)
+[ "$V" = "$STARAYA40" ] && echo "  ✅ opublikovat: без --yes витрина не тронута" \
+    || { echo "  ❌ ПРЕДПРОСМОТР ОПУБЛИКОВАЛ — команда пишет там, где обещала показать"; FAIL=1; }
+
+# (б) ГРЯЗНЫЙ `sayt/` останавливает публикацию: уехавшее незакоммиченным не
+# лежит ни в одной ветке, и восстановить состояние сайта потом нечем.
+echo "не доехало в git" > "$T40/sayt/chernovik.html"
+RC40=0
+GIT_ZONA_REPO="$T40" python3 "$TOOLS/git_zona.py" opublikovat --yes > "$T40/gryaz.txt" 2>&1 || RC40=$?
+V=$(git -C "$B40" rev-parse refs/heads/vitrina)
+{ [ "$RC40" = "1" ] && [ "$V" = "$STARAYA40" ]; } \
+    && echo "  ✅ opublikovat: незакоммиченный sayt/ ⇒ отказ, витрина цела" \
+    || { echo "  ❌ НЕЗАКОММИЧЕННОЕ УЕХАЛО НА САЙТ — состояния сайта нет ни в одной ветке"; FAIL=1; }
+rm -f "$T40/sayt/chernovik.html"
+
+# (в) ПУБЛИКАЦИЯ: содержимое подпапки уезжает корнем, лишнее сносится,
+# собственное витрины — цело.
+GIT_ZONA_REPO="$T40" python3 "$TOOLS/git_zona.py" opublikovat --yes > "$T40/pub.txt" 2>&1 || true
+SPISOK40=$(git -C "$B40" ls-tree -r --name-only refs/heads/vitrina)
+proverit40() {
+    # $1 — путь, $2 — ждём (est/net), $3 — что означает провал
+    if echo "$SPISOK40" | grep -qx "$1"; then EST=est; else EST=net; fi
+    [ "$EST" = "$2" ] && echo "  ✅ opublikovat: $3 — как надо" \
+        || { echo "  ❌ opublikovat: $3 — НАРУШЕНО ($1: ждали $2, вышло $EST)"; FAIL=1; }
+}
+proverit40 "index.html" est "содержимое sayt/ уехало КОРНЕМ"
+proverit40 "static/a.txt" est "вложенные файлы сайта доехали"
+proverit40 "sayt/index.html" net "подпапка sayt/ на витрину НЕ копируется"
+proverit40 "LISHNIJ.txt" net "удалённое из sayt/ снято и с витрины"
+proverit40 ".github/workflows/hugo.yml" est "рабочий процесс витрины НЕ затёрт"
+proverit40 ".gitignore" est ".gitignore витрины НЕ затёрт"
+V=$(git -C "$B40" show refs/heads/vitrina:.github/workflows/hugo.yml)
+[ "$V" = "СВОЁ У ВИТРИНЫ" ] \
+    && echo "  ✅ opublikovat: .github витрины остался ЕЁ версией, не подменён рабочей" \
+    || { echo "  ❌ .GITHUB ВИТРИНЫ ПОДМЕНЁН — публикация отключает собственную сборку"; FAIL=1; }
+
+# (г) ПОВТОР без изменений — «публиковать нечего», а не пустой коммит
+POSLE40=$(git -C "$B40" rev-parse refs/heads/vitrina)
+GIT_ZONA_REPO="$T40" python3 "$TOOLS/git_zona.py" opublikovat --yes > "$T40/povtor.txt" 2>&1 || true
+V=$(git -C "$B40" rev-parse refs/heads/vitrina)
+[ "$V" = "$POSLE40" ] && echo "  ✅ opublikovat: повтор без изменений витрину не двигает" \
+    || { echo "  ❌ ПОВТОР СДЕЛАЛ ПУСТОЙ КОММИТ — история витрины растёт ни от чего"; FAIL=1; }
+
+# (д) РАБОЧАЯ ПАПКА ВИТРИНЫ СНЯТА при любом исходе: осталась бы — на диске
+# вторая копия сайта, которую однажды примут за рабочую и начнут править там.
+V=$(git -C "$T40" worktree list | grep -c 'vitrina' || true)
+[ "$V" = "0" ] && echo "  ✅ opublikovat: одноразовая папка витрины снята" \
+    || { echo "  ❌ ПАПКА ВИТРИНЫ ОСТАЛАСЬ — вторая копия сайта на диске"; FAIL=1; }
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }

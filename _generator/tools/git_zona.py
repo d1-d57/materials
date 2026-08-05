@@ -2369,6 +2369,277 @@ def cmd_merge(args):
     return 1
 
 
+# ══════ ПУБЛИКАЦИЯ САЙТА: витрина ← `sayt/` рабочей ветки ══════
+#
+# ЗАЧЕМ ПЕРЕНОС, А НЕ СЛИЯНИЕ ВЕТОК. Витрина и работа разошлись СТРУКТУРНО, и
+# это не беспорядок, а устройство: в витрине живёт ТОЛЬКО сайт и живёт КОРНЕМ
+# (`content/`, `layouts/`, `static/`, `hugo.yaml`) — так его собирает Hugo и так
+# отдаёт GitHub Pages; в рабочей ветке тот же сайт лежит подпапкой `sayt/`
+# внутри монорепо. Слить нельзя ни в какую сторону: пути разные, а обратное
+# слияние втащило бы в витрину всю фабрику — журналы, картотеки, инструменты.
+# Поэтому переносится СОДЕРЖИМОЕ подпапки, а история двух веток не смешивается.
+#
+# ЦЕНА, ИЗ КОТОРОЙ РОДИЛАСЬ КОМАНДА (04.08.2026). Переноса не было, и вместо
+# него перевели триггер workflow на рабочую ветку. Сборка проходила, а
+# ПУБЛИКАЦИЮ GitHub отвергал: окружение `github-pages` пускает только витрину,
+# и настройка эта живёт вне репозитория, в интерфейсе GitHub. Владелец сутки
+# получал письма «сборка упала» о механизме, который к тому же молча перестал
+# публиковать: заметить это можно было только правкой сайта. Полный разбор —
+# в шапке `.github/workflows/hugo.yml`.
+
+SAYT_ZONA = "sayt"
+
+# Что в витрине принадлежит ЕЙ, а не сайту, и переносом НЕ трогается.
+# `.github` — сам процесс публикации: в `sayt/` его нет вовсе, и снести его
+# значило бы отключить сборку витрины навсегда ТЕМ ЖЕ коммитом, который её
+# наполняет (отказ был бы необъясним: файлы на месте, а прогонов нет).
+# `.gitignore` — правила витрины, у монорепо он свой и в разы шире.
+VITRINA_SVOYO = (".github", ".gitignore")
+
+
+def git_tam(cwd, *args, **kw):
+    """git в ДРУГОЙ рабочей копии (папка витрины), а не в `REPO`.
+
+    Отдельная дверь нужна потому, что `git()` жёстко сидит в `REPO`: у витрины
+    свой рабочий каталог и свой индекс, и `-C` — единственный способ туда
+    попасть, не трогая индекс основной папки. Всё остальное как у `git()`:
+    `--no-optional-locks` и очищенное от `GIT_*` окружение (иначе унаследованный
+    `GIT_DIR` увёл бы запись в чужой репозиторий — см. `_git_env()`).
+    """
+    check = kw.pop("check", True)
+    r = subprocess.run(["git", "--no-optional-locks", "-C", str(cwd), *args],
+                       capture_output=True, text=True, env=_git_env())
+    if check and r.returncode != 0:
+        sys.exit(f"❌ git {' '.join(args)} в {cwd} упал:\n{r.stderr.strip()}")
+    return r
+
+
+def _ochistit_vitrinu(koren):
+    """Снять из рабочей копии витрины всё, кроме её собственного (`VITRINA_SVOYO`).
+
+    Снос, а не «поверх»: без него файл, УДАЛЁННЫЙ из `sayt/`, остался бы на
+    сайте навсегда — распаковка добавляет и заменяет, но не удаляет. Работает
+    по рабочей копии одноразовой папки; в основном дереве не удаляет ничего.
+    """
+    for p in sorted(koren.iterdir()):
+        if p.name == ".git" or p.name in VITRINA_SVOYO:
+            continue
+        if p.is_dir() and not p.is_symlink():
+            shutil.rmtree(p)
+        else:
+            p.unlink()
+
+
+def _razvernut_sayt(koren, ref):
+    """`<ref>:sayt` → корень витрины. Через `git archive` + tar, без shell-пайпа.
+
+    Берём дерево ИЗ КОММИТА, а не из рабочей копии: публикуется только то, что
+    доехало в git, — иначе на сайт уезжает состояние, которого нет ни в одной
+    ветке, и воспроизвести его потом нечем.
+    """
+    import io
+    import tarfile
+    r = subprocess.run(["git", "--no-optional-locks", "-C", str(REPO),
+                        "archive", "--format=tar", f"{ref}:{SAYT_ZONA}"],
+                       capture_output=True, env=_git_env())
+    if r.returncode != 0:
+        sys.exit(f"❌ Не выгрузилось дерево `{ref}:{SAYT_ZONA}`:\n"
+                 f"{r.stderr.decode('utf-8', 'replace').strip()}")
+    with tarfile.open(fileobj=io.BytesIO(r.stdout)) as t:
+        try:
+            # filter="data" — с python 3.12; у владельца 3.9.6, где параметра
+            # ещё нет. Источник архива — собственный `git archive`, не сеть.
+            t.extractall(koren, filter="data")
+        except TypeError:
+            t.extractall(koren)
+
+
+def cmd_opublikovat(args):
+    """Опубликовать сайт: `sayt/` рабочей ветки → корень витрины → GitHub Pages.
+
+    Тропа владельца — ОДНА команда, без переключения веток и без shell (§0):
+
+        python3 <корень>/_generator/tools/git_zona.py opublikovat          # предпросмотр
+        python3 <корень>/_generator/tools/git_zona.py opublikovat --yes    # публикация
+
+    Форма как у `purge`/`adopt`/`untrack`: без `--yes` — только показать, что
+    уедет. Витрина берётся в ОДНОРАЗОВУЮ рабочую папку с отцепленным HEAD и
+    сносится в конце при любом исходе: постоянная папка на витрине означала бы
+    вторую копию сайта на диске, которую однажды примут за рабочую.
+    """
+    vetki, istochnik = vetka_publikacii()
+    if vetki is None:
+        print(f"⛔ Не могу узнать, какая ветка публикует сайт: {istochnik}.\n"
+              "   Публиковать вслепую не буду — уедет не туда.\n"
+              "   Почини `.github/workflows/hugo.yml` и повтори.")
+        return 1
+    if len(vetki) > 1:
+        print(f"⛔ По `{istochnik}` веток публикации несколько: {', '.join(vetki)}.\n"
+              "   Какая из них витрина — из файла не следует, а выбрать за тебя\n"
+              "   значит однажды опубликовать не ту. Оставь в `on.push.branches`\n"
+              "   одну и повтори.")
+        return 1
+    vitrina = vetki[0]
+
+    tekushchaya = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    if tekushchaya == vitrina:
+        print(f"⛔ Основная папка сама стоит на витрине `{vitrina}` — переносить\n"
+              "   нечего и некуда. Эта команда возит сайт С рабочей ветки НА\n"
+              "   витрину; работай на своей ветке, тогда и публикуй.")
+        return 1
+    if git("rev-parse", "--verify", "--quiet", f"HEAD:{SAYT_ZONA}",
+           check=False).returncode != 0:
+        print(f"⛔ В коммите ветки `{tekushchaya}` нет папки `{SAYT_ZONA}/` — "
+              "публиковать нечего.")
+        return 1
+
+    # 🔴 Публикуем ТОЛЬКО закоммиченное. Незакоммиченная правка сайта, уехавшая
+    # на Pages, не лежит ни в одной ветке: сайт показывает состояние, которого
+    # в истории нет, и следующая же публикация с другой машины его затрёт.
+    gryaz = dirty(SAYT_ZONA)
+    if gryaz:
+        print(f"⛔ В `{SAYT_ZONA}/` есть {len(gryaz)} путей вне коммита — "
+              "публикация остановлена.")
+        print_paths([p for _, p in gryaz], "  ·")
+        print(f"\n   Сначала закоммить сайт, потом публикуй:\n"
+              f"     python3 {Path(__file__)} commit --zone {SAYT_ZONA} "
+              f"-m \"<что и зачем>\" --push")
+        return 1
+
+    # Отказ БЕЗУСЛОВНЫЙ, даже на предпросмотре: он тоже заводит рабочую папку,
+    # то есть пишет в `.git`, — а из песочницы такая запись оставляет мины
+    # (`refuse_write`). «Показать же только» здесь ложно.
+    if in_sandbox():
+        return refuse_write("публикация сайта",
+                            suggest="opublikovat" + (" --yes" if args.yes else ""))
+
+    sweep_dead_locks()
+    if not wait_for_lock():
+        log_incident("opublikovat: чужой лок держится дольше 90 с",
+                     "подождать и повторить ту же команду")
+        return 2
+
+    r = git("fetch", "origin", vitrina, check=False)
+    if r.returncode != 0:
+        print(f"⛔ Не удалось обновить витрину с origin (rc={r.returncode}):\n"
+              f"   {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else '(тихо)'}\n"
+              "   Публиковать поверх устаревшей витрины нельзя — так затираются\n"
+              "   чужие правки. Проверь сеть и повтори.")
+        return 1
+
+    golova = git("rev-parse", "--short", "HEAD").stdout.strip()
+    papka = WT_HOME / f".vitrina-{vitrina.replace('/', '-')}"
+    if papka.exists():
+        git("worktree", "remove", "--force", str(papka), check=False)
+    WT_HOME.mkdir(parents=True, exist_ok=True)
+    r = git("worktree", "add", "--detach", str(papka), f"origin/{vitrina}",
+            check=False)
+    if r.returncode != 0:
+        print(f"❌ Витрина не завелась в рабочей папке (rc={r.returncode}):\n"
+              f"{r.stderr.strip()}")
+        return 1
+    try:
+        _ochistit_vitrinu(papka)
+        _razvernut_sayt(papka, "HEAD")
+        git_tam(papka, "add", "-A")
+        if git_tam(papka, "diff", "--cached", "--quiet", check=False).returncode == 0:
+            print(f"✅ Витрина `{vitrina}` уже совпадает с `{SAYT_ZONA}/` ветки "
+                  f"`{tekushchaya}` ({golova}).\n"
+                  "   Публиковать нечего — сайт актуален.")
+            return 0
+        stat = git_tam(papka, "diff", "--cached", "--stat").stdout.rstrip()
+        print(f"═══ публикация: `{SAYT_ZONA}/` ветки `{tekushchaya}` ({golova}) "
+              f"→ витрина `{vitrina}` ═══\n")
+        print(stat)
+        if not args.yes:
+            print("\n→ Это ПРЕДПРОСМОТР, витрина не тронута. Опубликовать:\n"
+                  f"     python3 {Path(__file__)} opublikovat --yes")
+            return 0
+
+        soobshchenie = (f"публикация сайта: {SAYT_ZONA}/ ветки {tekushchaya} "
+                        f"({golova})")
+        r = git_tam(papka, "commit", "-m", soobshchenie, check=False)
+        if r.returncode != 0:
+            print(f"❌ Коммит в витрину не прошёл (rc={r.returncode}):\n"
+                  f"{(r.stderr + r.stdout).strip()}")
+            log_incident("opublikovat: коммит в витрину не прошёл",
+                         "смотреть вывод команды, витрина не изменена")
+            return 1
+        r = git_tam(papka, "push", "origin", f"HEAD:refs/heads/{vitrina}",
+                    check=False)
+        if r.returncode != 0:
+            print(f"❌ Витрина не вывезена на origin (rc={r.returncode}):\n"
+                  f"{(r.stderr + r.stdout).strip()}\n\n"
+                  f"   Частая причина — витрину подвинули с другой машины, пока\n"
+                  f"   шла публикация. Повтори ту же команду: она заново возьмёт\n"
+                  f"   свежую витрину. Ничего не потеряно.")
+            log_incident("opublikovat: push витрины отвергнут",
+                         "повторить ту же команду — она возьмёт свежую витрину")
+            return 1
+        sha = git_tam(papka, "rev-parse", "HEAD").stdout.strip()[:12]
+        print(f"\n✅ Витрина `{vitrina}` вывезена ({sha}). Сборку запустил push; "
+              "жду прогон…")
+    finally:
+        git("worktree", "remove", "--force", str(papka), check=False)
+
+    return _dolozhit_progon(vitrina, sha)
+
+
+def _dolozhit_progon(vitrina, sha):
+    """Дождаться прогона GitHub Actions по коммиту `sha` и сказать, ЧЕМ он кончился.
+
+    Иначе команда рапортует «вывезено» — а вывезено ещё не значит опубликовано:
+    ровно в этом зазоре и жил инцидент 04.08 (сборка зелёная, публикация
+    отвергнута). Нет `gh` или он не отвечает — честно говорим, что проверить не
+    смогли, и не выдаём «готово» за «отправлено».
+    """
+    import json
+    if not shutil.which("gh"):
+        print("   ⚠ `gh` не найден — исход прогона проверить нечем.\n"
+              "     Посмотри страницу Actions репозитория сам.")
+        return 0
+    # Спрашиваем ПЕРЕД сном, а не после: `gh` в репозитории без GitHub-удалёнки
+    # отказывает мгновенно, и держать на этом четверть минуты незачем.
+    predel, shag, zhdal = 300, 15, 0
+    while True:
+        r = subprocess.run(["gh", "run", "list", "--branch", vitrina, "--limit", "10",
+                            "--json", "status,conclusion,url,headSha"],
+                           cwd=REPO, capture_output=True, text=True)
+        if r.returncode != 0:
+            print("   ⚠ `gh` не отвечает — исход прогона проверить нечем.\n"
+                  "     Посмотри страницу Actions репозитория сам.")
+            return 0
+        try:
+            progony = json.loads(r.stdout)
+        except ValueError:
+            progony = []
+        # 🔴 Ищем прогон ИМЕННО НАШЕГО коммита, а не «последний по ветке».
+        # Последний — это ещё и ПРЕДЫДУЩИЙ, уже зелёный, прогон: пока новый не
+        # стартовал, по нему отрапортовали бы «опубликовано» ровно в тот момент,
+        # когда публикация ещё не начиналась. Тот же класс ошибки, что и весь
+        # инцидент 04.08: «вывезено» принято за «опубликовано».
+        nash = [p for p in progony if str(p.get("headSha", "")).startswith(sha)]
+        gotov = [p for p in nash if p.get("status") == "completed"]
+        if gotov:
+            p = gotov[0]
+            if p.get("conclusion") == "success":
+                print(f"   ✅ Прогон зелёный — сайт опубликован.\n"
+                      f"      {p.get('url', '')}")
+                return 0
+            print(f"   ❌ Прогон закончился как `{p.get('conclusion')}` — сайт НЕ "
+                  f"обновился.\n      {p.get('url', '')}")
+            log_incident("opublikovat: прогон публикации красный",
+                         "открыть ссылку на прогон и читать шаг, который упал")
+            return 1
+        if zhdal >= predel:
+            break
+        time.sleep(shag)
+        zhdal += shag
+    print(f"   ⚠ За {predel} с прогон коммита {sha} не завершился.\n"
+          "     Это НЕ «опубликовано»: исход смотри на странице Actions.")
+    return 0
+
+
 def cmd_purge(args):
     """Снять ПОДОЗРИТЕЛЬНЫЙ untracked-мусор (имя с ведущим `-`) без shell.
 
@@ -2562,6 +2833,13 @@ def main():
     mg.add_argument("--continue", dest="cont", action="store_true",
                     help="завершить слияние после разрешения конфликтов")
     mg.set_defaults(func=cmd_merge)
+
+    op = sub.add_parser("opublikovat",
+                        help="вывезти сайт из `sayt/` на витрину и в GitHub Pages; "
+                             "без --yes — предпросмотр")
+    op.add_argument("--yes", action="store_true",
+                    help="выполнить публикацию (без него — только показать, что уедет)")
+    op.set_defaults(func=cmd_opublikovat)
 
     pu = sub.add_parser("purge",
                         help="снять подозрительный untracked-мусор (имя с ведущим `-`); без --yes — предпросмотр")
