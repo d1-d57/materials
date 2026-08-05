@@ -25,7 +25,15 @@ import re, sys, pathlib
 
 # '<' — блок сырого HTML (figure/svg/table): он САМ разметка, сверять его хвост
 # с текстом выхода бессмысленно (в выходе тегов уже нет) — иначе ложное красное.
-SKIP = ('---', '#', '>', '🖼', '<', 'tab:', 'status:', 'poryadok:', 'registr:')
+# '|' — markdown-таблица: она тоже САМА разметка, в HTML пайпы заменяются тегами,
+# так что дословной сверки хвоста быть не может (та же причина, что у '<').
+SKIP = ('---', '#', '>', '🖼', '<', '|', 'tab:', 'status:', 'poryadok:', 'registr:')
+
+
+# «Статус: …» внутри метки врезки движок В ВИД НЕ ВЫВОДИТ (решение владельца
+# 2026-08-04: это параметр для автора). Снимаем его и здесь, иначе гейт краснеет
+# на честном поведении — ровно тот же случай, что ⚑ и `> поле:foot`.
+_STATUS_IN_HEAD = re.compile(r"\.?\s*Статус\s*:[^*]*?\.\*\*")
 
 
 def norm(s):
@@ -59,7 +67,7 @@ def check(srcdir):
                 continue
             if not blk or hidden or blk.startswith(SKIP):
                 continue
-            tail = norm(blk)[-35:]
+            tail = norm(_STATUS_IN_HEAD.sub('.**', blk))[-35:]
             if len(tail) > 12 and tail not in plain:
                 bad.append(("ХВОСТ БЛОКА НЕ ВИДЕН В HTML (%s)" % md.name, tail))
     return bad
