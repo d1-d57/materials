@@ -129,8 +129,8 @@ body.blanked #stage { visibility: hidden; }
    `sceny_gejt.py` (`.zone p, .zone ul, .panel`) — переименование увело бы панели
    из гейта сцен молча. Ушла ровно заливка, и это не косметика: экран делится на
    ДВЕ зоны, бумага и доска, а белое паспарту заводило третью, ничего не значащую,
-   и платило за неё третью ширины полосы (канон — `_studio/konvejer/09-illustracii/
-   SLOVAR-primitivov.md §ФОН РИСУНКА`). Греп `background:\s*var\(--card\)` по этому
+   и платило за неё третью ширины полосы (канон — `_illustracii/DISCIPLINA.md
+   §ФОН РИСУНКА`). Греп `background:\s*var\(--card\)` по этому
    файлу — единственное, что тут краснеет; подобранный цвет узла он не проверяет. */
 .panel { background: none; }
 .panel > img { width: 100%; height: 100%; object-fit: contain; display: block; }

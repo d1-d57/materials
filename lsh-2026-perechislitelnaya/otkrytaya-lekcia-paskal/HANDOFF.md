@@ -106,5 +106,5 @@
 Оба захода с отчётами — `zahod-bijekciya-para-katalan.md`, `zahod-para-para-krupnymi-hodami.md`.
 Находки — `kartoteka/obiekty.md` + `KARTA-OBLASTI.md`.
 Диалект doc-движка — `_generator/README.md`. Визуальный контракт — `_studio/docs/kak-delat/STANDART-oformlenia.md §3–4`.
-Правила рисунка — `_studio/konvejer/09-illustracii/SLOVAR-primitivov.md`.
+Правила рисунка — `_illustracii/DISCIPLINA.md`.
 Дневник хода — `SESSIYA.md`. Стандарт заходов — скилл `agentic-coding-session-brief`.

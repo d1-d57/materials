@@ -191,8 +191,8 @@ poryadok: 1
 ## ЧАСТЬ 1 · ЗАКОНЫ СБОРКИ
 
 > Сведено из `SVOD-po-slajdam.md §0` (законы З1–З9), `PRAVKI-2026-07-31-diktovka.md`,
-> `_studio/konvejer/06-tekst/DOK.md`, `07-verstka/DOK.md`, `08-sceny/DOK.md`, `09-illustracii/DOK.md`
-> + `SLOVAR-primitivov.md`, `_studio/docs/kak-delat/STANDART-teksta.md §З`.
+> `_studio/konvejer/06-tekst/DOK.md`, `07-verstka/DOK.md`, `08-sceny/DOK.md`, `_illustracii/fazy/DOK.md`
+> + `_illustracii/DISCIPLINA.md`, `_studio/docs/kak-delat/STANDART-teksta.md §З`.
 > Дата данных: 2026-08-05.
 
 ### 1.1 Заголовки
