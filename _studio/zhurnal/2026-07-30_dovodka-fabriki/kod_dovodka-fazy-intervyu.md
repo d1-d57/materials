@@ -541,7 +541,26 @@ zakryt-vetku --vsyo-ravno`, надгробие `mogila/zahod/dovodka-fazy-interv
 **КОММИТ:** `0792694` — «dovodka-fazy-intervyu: починены вакуумные G16.7/G16.8, добавлен черновик
 G16.9, долг check_g16() с устройством, сплошной проход 145 записей фазы (Часть B2), 3 исхода в
 ZAHOD.md» (зона `_studio/konvejer`) + `7e38a18` — «dovodka-fazy-intervyu: план/вопросы/отчёт захода»
-(зона `_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_dovodka-fazy-intervyu.md`) ·
-`git_zona.py check --zone _studio/konvejer` → ✅ · `git_zona.py check --zone
-_studio/zhurnal/2026-07-30_dovodka-fabriki` → ✅ (эта строка допишется третьим, финализирующим
-коммитом той же зоны — тот же приём, что применил заход `kartoteka-intervyu`)
++ `14b232a` — «строка КОММИТ отчёта финализирована» (оба — зона
+`_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_dovodka-fazy-intervyu.md`) · все три — на ветке
+`zahod/dovodka-fazy-intervyu` · `git_zona.py check --zone _studio/konvejer` → ✅ ·
+`git_zona.py check --zone _studio/zhurnal/2026-07-30_dovodka-fabriki` → ✅.
+
+🔴 **ШАГ 7 (влить себя обратно) — НЕ ЗАВЕРШЁН, причина ВНЕШНЯЯ, чужого не чиню.** Из основной папки
+`git_zona.py merge zahod/dovodka-fazy-intervyu --zone _studio/konvejer --zone
+"_studio/zhurnal/2026-07-30_dovodka-fabriki"` дважды упал (`rc=1`, тот же результат оба раза,
+интервал между попытками): `error: Your local changes to the following files would be overwritten
+by merge: _generator/build_doc.py _studio/konvejer/06-tekst/ETALON-png/01.png … (8 путей)`. Это
+**чужое незакоммиченное состояние основной папки** — живая работа фазы ленты (`_studio/konvejer/
+06-tekst/*`, `_generator/build_doc.py`), которую заход прямо запрещает трогать («не коммить и не
+трогать, обойти узкими путями»). Мои 6 путей (`_studio/konvejer/04.5-intervyu/*`, `GEJTY.md`, свой
+`kod_*.md`) — НЕ в списке конфликта, столкновение чисто со сторонними файлами: `git merge` отказывается
+переписать working tree, где есть чужие незакоммиченные правки, даже по путям, которых мои три
+коммита не касаются вовсе. Обе попытки завершились чисто, без побочных эффектов (`git status`
+идентичен до/после, `.git/MERGE_HEAD` не создан, ветка основной папки не менялась) — подтверждено
+командой. **Ничего не потеряно: три коммита целы на `zahod/dovodka-fazy-intervyu`, рабочая папка
+`materials-wt/dovodka-fazy-intervyu` не удалена** — слияние безопасно повторить одной той же командой,
+как только чужая правка `06-tekst/`/`build_doc.py` будет закоммичена (владельцем) или снята. Нужно
+ВАШЕ действие: либо закоммитить/отложить работу фазы ленты в основной папке, либо запустить то же
+слияние самостоятельно после этого. Работа фазы `04.5-intervyu` содержательно сделана и проверена —
+не сдана только последним техническим шагом, по причине, которую я создать не мог и чинить не вправе.
