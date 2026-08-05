@@ -48,9 +48,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import register_doc  # noqa: E402
 import check_zahod  # noqa: E402
+import korni  # noqa: E402
 
-REPO_ROOT = Path(__file__).resolve().parents[2]  # .../materials
-TEMPLATE = REPO_ROOT / "_studio" / "zhurnal" / "_TEMPLATE-zahod.md"
+REPO_ROOT = korni.REPO  # .../materials — единая формула на все инструменты
+# Шаблон захода — один на репозиторий, у ИНФРА-корня реестра. Папку арки
+# инструмент и раньше получал АРГУМЕНТОМ, поэтому заход во второй фабрике
+# упирался ровно в эту строку и больше ни во что.
+TEMPLATE = korni.шаблон("_TEMPLATE-zahod.md")
 GIT_ZONA = REPO_ROOT / "_generator" / "tools" / "git_zona.py"
 
 # ── Показ потока прогона владельцу + итог со стоимостью ────────────────────────

@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
-"""Scaffold — заводит папку АРКИ (процесс-память) копией _studio/zhurnal/_TEMPLATE-arka/.
+"""Scaffold — заводит папку АРКИ (процесс-память) копией `zhurnal/_TEMPLATE-arka/`.
 
 Использование:
     python3 bootstrap_arka.py <дата_тема> ["<концепция>"]
+    python3 bootstrap_arka.py --koren <корень> <дата_тема> ["<концепция>"]
+
+Корень по умолчанию — ИНФРА-корень реестра `korni.py` (сегодня `_studio`), то
+есть поведение без флага не изменилось ни на йоту. `--koren` называет ЛЮБОЙ
+корень реестра, у которого есть журнал: пока имя корня было вшито литералом,
+вынесенная фабрика не могла завести ни арки, ни захода вовсе.
 
 Операционализация правила «перекопировать начальное состояние с новыми задачами»
 (ARKA.md §10 C, RESHENIYA Р22). НЕ то же, что bootstrap_lekcia.py: тот генерит дерево
@@ -21,10 +27,17 @@ from pathlib import Path
 # одинаково, иначе строки разъедутся и разъезд обнаружится только через неделю.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import register_doc  # noqa: E402
+import korni  # noqa: E402
 
-REPO_ROOT = Path(__file__).resolve().parents[2]  # .../materials
-TEMPLATE_DIR = REPO_ROOT / "_studio" / "zhurnal" / "_TEMPLATE-arka"
-ZHURNAL_DIR = REPO_ROOT / "_studio" / "zhurnal"
+REPO_ROOT = korni.REPO  # .../materials — единая формула на все инструменты
+TEMPLATE_DIR = korni.шаблон("_TEMPLATE-arka")
+# 🔴 ЖУРНАЛ ПО УМОЛЧАНИЮ ОСТАЁТСЯ МОДУЛЬНЫМ АТРИБУТОМ, а не вычисляется внутри
+# `main()`. Это ШОВ, на котором держится ловушка 14 фикстуры `git_zona`: она
+# подменяет `ZHURNAL_DIR` временным каталогом, чтобы проверять `validate_slug`,
+# НИЧЕГО не записывая в боевой репозиторий. Спрячь его в локальную переменную —
+# и подмена перестанет действовать МОЛЧА: проверка кривого входа начнёт заводить
+# арки в живом `_studio/zhurnal/`. Поймано этой же ловушкой в этом заходе.
+ZHURNAL_DIR = korni.REPO / f"{korni.ИНФРА}/zhurnal"
 
 # Роль файла, а не выдумка: описание должно называть ЧТО это и КАКОЙ арки —
 # иначе пять строк в §6 неотличимы друг от друга и от соседних арок.
@@ -69,7 +82,38 @@ def substitute(text, name, today, concept):
     )
 
 
+def zhurnal_korny(имя):
+    """Папка журнала названного корня. Кривое имя → ГРОМКИЙ отказ, а не «сделал не то».
+
+    Тот же закон, что у `validate_slug`: инструмент, молча подставивший корень по
+    умолчанию вместо непонятого, завёл бы арку не там, где просили, и это
+    обнаружилось бы только когда её начнут искать.
+
+    Для ИНФРА-корня отдаём модульный `ZHURNAL_DIR` — тот самый шов, на котором
+    фикстура проверяет валидацию имени, не записывая в боевое дерево.
+    """
+    if имя == korni.ИНФРА:
+        return ZHURNAL_DIR
+    for к in korni.КОРНИ:
+        if к.имя == имя:
+            if not к.журнал:
+                raise SystemExit(
+                    f"❌ У корня «{имя}» нет журнала: арке негде лежать. "
+                    f"Журналы есть у: {', '.join(korni.все_журналы()) or '<ни у кого>'}")
+            return REPO_ROOT / к.журнал
+    известные = ", ".join(к.имя for к in korni.КОРНИ)
+    raise SystemExit(f"❌ Корень «{имя}» не назван в реестре _generator/tools/korni.py. "
+                     f"Известные: {известные}")
+
+
 def main(argv):
+    argv = list(argv)
+    корень = korni.ИНФРА
+    if argv and argv[0] == "--koren":
+        if len(argv) < 2:
+            raise SystemExit("❌ `--koren` требует имя корня из реестра korni.py")
+        корень = argv[1]
+        argv = argv[2:]
     if not (1 <= len(argv) <= 2):
         print(__doc__.strip(), file=sys.stderr)
         return 2
@@ -77,6 +121,8 @@ def main(argv):
     slug = argv[0]
     validate_slug(slug, "имя арки")  # флаг/кривой слаг → SystemExit ДО любой записи
     concept = argv[1] if len(argv) == 2 else "<концепция — заполнить на Ф0>"
+
+    ZHURNAL_DIR = zhurnal_korny(корень)   # неизвестный корень → SystemExit ДО записи
 
     if not TEMPLATE_DIR.is_dir():
         print(f"ОШИБКА: шаблон не найден — {TEMPLATE_DIR}", file=sys.stderr)

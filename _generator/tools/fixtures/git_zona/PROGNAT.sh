@@ -511,7 +511,7 @@ PY
 T17=$(mktemp -d)
 trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$T17/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$T17/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
 cd "$T17"
 git init -q .
@@ -764,7 +764,7 @@ git -C "$T5" worktree remove --force "$WT5" >/dev/null 2>&1 || true
 T22=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
 mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$T22/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$T22/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T22/_studio/zhurnal/"
 cd "$T22"
 git init -q .
@@ -1033,7 +1033,7 @@ V=$(git -C "$T29" for-each-ref --format='%(refname)' refs/heads/main | wc -l | t
 T32=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32"' EXIT
 mkdir -p "$T32/_generator/tools" "$T32/arka" "$T32/zona"
-cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/zakryt_sessiyu.py" "$T32/_generator/tools/"
+cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/zakryt_sessiyu.py" "$TOOLS/korni.py" "$T32/_generator/tools/"
 cd "$T32"
 git init -q .
 git config user.email fixture@test

@@ -27,10 +27,16 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
-REPO = Path(os.environ.get("GIT_ZONA_REPO") or Path(__file__).resolve().parents[2])
-INCIDENTY_REL = "_studio/zhurnal/_INFRA-git/INCIDENTY.md"
-VERDIKTY_REL = "_studio/zhurnal/_INFRA-git/VERDIKTY.md"
-ZAHODY_DOM = "_studio/zhurnal"          # где искать файлы заходов по имени
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import korni  # noqa: E402
+
+REPO = korni.REPO
+INCIDENTY_REL = korni.ИНЦИДЕНТЫ_REL
+VERDIKTY_REL = korni.ВЕРДИКТЫ_REL
+# Где искать файлы заходов по имени — ВСЕ журналы реестра, а не один вшитый.
+# Заход, лежащий в журнале второй фабрики, до расшивки просто не находился, и
+# разбор инцидентов молча считал его несуществующим.
+ZAHODY_DOMA = korni.все_журналы()
 NE_SOBRAN = "<не собран>"
 
 SVEZHEST_DNEJ = 7    # владелец: пять дней между разборами — нормальный ритм
@@ -128,12 +134,19 @@ def parse_verdikty(text):
 
 
 def najti_zahod(imya):
-    """Первый файл с таким именем под `_studio/zhurnal/` — заходы живут в разных арках."""
-    dom = REPO / ZAHODY_DOM
-    if not dom.exists():
-        return None
-    hits = sorted(dom.rglob(imya))
-    return hits[0] if hits else None
+    """Первый файл с таким именем в журналах реестра — заходы живут в разных арках.
+
+    Журналы обходятся в порядке реестра, внутри каждого — сортировкой: ответ
+    детерминирован, а не зависит от порядка обхода файловой системы.
+    """
+    for dom_rel in ZAHODY_DOMA:
+        dom = REPO / dom_rel
+        if not dom.exists():
+            continue
+        hits = sorted(dom.rglob(imya))
+        if hits:
+            return hits[0]
+    return None
 
 
 def zahod_prinyat(put):
@@ -211,7 +224,8 @@ def ocenit(incidenty_text, verdikty_text, segodnya=None):
         if put is None:
             findings.append(
                 f"класс «{klyuch}»: вердикт «дефект → заход {v.zahod}» — "
-                f"файла {v.zahod} нет на диске под {ZAHODY_DOM}/"
+                f"файла {v.zahod} нет на диске ни под одним журналом реестра "
+                f"({', '.join(ZAHODY_DOMA) or '<журналов нет>'})"
             )
             continue
 

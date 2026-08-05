@@ -1,0 +1,288 @@
+#!/bin/sh
+# TOOL-CONTRACT-COVERS: korni.py check_kartoteka.py register_doc.py bootstrap_arka.py bootstrap_zahod.py check_incidenty.py git_zona.py
+# ↑ ОХВАТ, а не список авторства. Семь имён, потому что механизм «инструменты
+# судят НЕСКОЛЬКО корней» размазан по реестру и шести его потребителям. Правка
+# ЛЮБОГО из них может вернуть одноместность — и вернуть её МОЛЧА: вынесенная
+# фабрика получит не отсутствующие ворота, а молчащие, а молчание читается как
+# «всё чисто».
+#
+# Запуск:  sh _generator/tools/fixtures/korni/PROGNAT.sh
+# Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
+#
+# ЗАЧЕМ. Путь `_studio` был вшит литералом в одиннадцать мест шести инструментов.
+# Пока это так, вынос любой фабрики даёт не «фабрику без гейтов», а фабрику с
+# гейтами, которые МОЛЧАТ (`KONSTITUCIYA §11а` — класс, оплаченный месяцем:
+# четыре гейта и хук числились существующими и не работали). Лечение — реестр
+# `korni.py`. Но реестр без того, что покраснеет при его поломке, — надежда, а
+# не правило (`KONSTITUCIYA §11`). Здесь краснеет.
+#
+# 🔴 ГЛАВНАЯ ЛОВУШКА ПРОВЕРЯЕТ МОЛЧАНИЕ, А НЕ КРАСНОТУ. Обычная фикстура ловит
+# «гейт не покраснел, где должен». Здесь опаснее обратное: гейт, который ПРОПАЛ.
+# Поэтому ловушка 1 мутацией СНИМАЕТ второй корень из реестра и требует, чтобы
+# гейт после этого замолчал: если он краснеет и без реестра — значит краснеет по
+# другой причине, и ловушка сторожит не то, что думает.
+#
+# ВОСЕМЬ ЛОВУШЕК, каждая проверена МУТАЦИЕЙ (гейт, который не умеет падать, — театр):
+#   1. незарегистрированный `.md` во ВТОРОМ корне → ворота 5 краснеют по нему;
+#      мутация: убрать корень из реестра → ворота МОЛЧАТ (это и есть покупаемое);
+#   2. `register_doc.py` пишет в индекс ЭТОГО корня, чужой не трогает ни байтом;
+#   3. старый корень `_studio/` краснеет ровно как раньше — регрессии нет;
+#   4. `bootstrap_arka.py --koren` заводит арку в журнале второго корня;
+#   5. `bootstrap_zahod.py` заводит заход в арке второго корня;
+#   6. `check_incidenty.py` находит заход по имени в ОБОИХ корнях;
+#   7. третий корень — ОДНА строка в реестре, ноль правок в инструментах;
+#   8. пункт Д: `poteri` печатает ДВА числа, `merge --zone` — готовую строку.
+#
+# ПОЧЕМУ ИНСТРУМЕНТЫ КОПИРУЮТСЯ, А НЕ ЗОВУТСЯ НА МЕСТЕ. Корень репозитория —
+# «на два уровня выше файла инструмента». Копия в `$T/_generator/tools/` делает
+# `parents[2]` честным адресом /tmp; символическая ссылка не годится —
+# `resolve()` развернёт её в боевой путь, и фикстура начнёт судить настоящий
+# репозиторий.
+
+set -e
+TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+
+# 🔴 ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить окружение git. Внутри хука git
+# экспортирует GIT_DIR/GIT_INDEX_FILE АБСОЛЮТНЫМИ путями на БОЕВОЙ репозиторий,
+# и без вычистки `git add` фикстуры уходит в боевой индекс. Цена 21.07:
+# фикстура, поднятая хуком, СОЗДАЛА КОММИТ В БОЕВОМ РЕПОЗИТОРИИ.
+unset $(git rev-parse --local-env-vars)
+
+T=$(mktemp -d)
+trap 'rm -rf "$T"' EXIT
+
+VTOROY=fabrika-lenty
+TRETIY=fabrika-illustracij
+
+mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
+         "$T/$VTOROY/docs" "$T/$VTOROY/zhurnal" \
+         "$T/$TRETIY/docs" "$T/$TRETIY/zhurnal" \
+         "$T/teoriya-kategoriy/kartoteka"
+cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
+   "$TOOLS/check_zahod.py" "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" \
+   "$TOOLS/check_incidenty.py" "$TOOLS/git_zona.py" "$T/_generator/tools/"
+cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
+cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
+
+REESTR="$T/_generator/tools/korni.py"
+
+# Вписать/убрать корень в реестре — ОДНОЙ строкой, ровно как это сделал бы
+# человек. `sed -i` не годится: GNU-изм, линтер инструментов его запрещает
+# (BSD sed на macOS требует аргумент у -i, и строка молча ломается).
+reestr_dobavit() {
+    python3 - "$REESTR" "$1" "$2" "$3" <<'PY'
+import sys, pathlib
+p, имя, карта, журнал = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3], sys.argv[4]
+t = p.read_text(encoding="utf-8")
+якорь = '    Корень("obzory",'
+assert t.count(якорь) == 1, f"якорь неоднозначен: {t.count(якорь)}"
+строка = f'    Корень("{имя}", "{карта}", "{журнал}", True, "обязательна"),\n'
+p.write_text(t.replace(якорь, строка + якорь, 1), encoding="utf-8")
+PY
+}
+reestr_ubrat() {
+    python3 - "$REESTR" "$1" <<'PY'
+import sys, pathlib
+p, имя = pathlib.Path(sys.argv[1]), sys.argv[2]
+t = p.read_text(encoding="utf-8")
+строки = [l for l in t.splitlines(keepends=True) if f'Корень("{имя}"' not in l]
+p.write_text("".join(строки), encoding="utf-8")
+PY
+}
+
+karta_zavesti() {
+    printf '%s\n' '# КАРТА (фикстурная)' '' \
+        '## §5. Раздел ДО — обязан остаться нетронутым' 'Соседний текст сверху.' '' \
+        '## §6. Карта документов (все `.md`)' \
+        '**`docs/`:** `KARTA.md` (этот индекс).' '' \
+        '## §7. Раздел ПОСЛЕ — обязан остаться нетронутым' 'Соседний текст снизу.' \
+        > "$1"
+}
+karta_zavesti "$T/_studio/docs/KARTA.md"
+karta_zavesti "$T/$VTOROY/docs/KARTA.md"
+karta_zavesti "$T/$TRETIY/docs/KARTA.md"
+
+printf '%s\n' '# Картотека (фикстурная)' '' '## Индекс по роду' '' '## Нити' \
+    > "$T/teoriya-kategoriy/kartoteka/KARTA-OBLASTI.md"
+
+cd "$T"
+git init -q .
+git config user.email fixture@test
+git config user.name fixture
+git add -A
+git commit -qm baseline
+
+GATE="python3 $T/_generator/tools/check_kartoteka.py teoriya-kategoriy/kartoteka/KARTA-OBLASTI.md --gates"
+DOOR="python3 $T/_generator/tools/register_doc.py"
+FAIL=0
+
+# ── ЛОВУШКА 1: незарегистрированный .md во ВТОРОМ корне → ворота 5 краснеют ──
+# Ровно то, что покупается заходом. До реестра гейт про такой файл МОЛЧАЛ, и
+# молчание читалось как «всё чисто».
+reestr_dobavit "$VTOROY" "$VTOROY/docs/KARTA.md" "$VTOROY/zhurnal"
+echo "лента: рабочий документ" > "$T/$VTOROY/docs/FORMA.md"
+if $GATE 2>&1 | grep -q "$VTOROY/docs/FORMA.md"
+then echo "  ✅ незарегистрированный .md во ВТОРОМ корне краснеет (ворота 5 его видят)"
+else echo "  ❌ ВОРОТА 5 НЕ ВИДЯТ ВТОРОЙ КОРЕНЬ — расшивка не сделана"; FAIL=1
+fi
+
+# ── ЛОВУШКА 1-мутация: убрать корень из реестра → ворота обязаны ЗАМОЛЧАТЬ ──
+# 🔴 Без этой половины ловушка 1 ничего не доказывает: гейт мог краснеть по
+# любой другой причине. Здесь проверяется, что краснота приходит ИМЕННО от
+# строки реестра, — и заодно воспроизводится ровно то состояние, которое было
+# до захода.
+reestr_ubrat "$VTOROY"
+if $GATE 2>&1 | grep -q "$VTOROY/docs/FORMA.md"
+then echo "  ❌ МУТАЦИЯ НЕ СРАБОТАЛА: корень убран из реестра, а гейт всё равно краснеет — ловушка сторожит не то"; FAIL=1
+else echo "  ✅ мутация: корень убран из реестра → ворота молчат (краснота идёт от реестра)"
+fi
+reestr_dobavit "$VTOROY" "$VTOROY/docs/KARTA.md" "$VTOROY/zhurnal"
+
+# ── ЛОВУШКА 2: дверь пишет в индекс СВОЕГО корня, чужой не трогает ──
+# Пока индекс был одной константой, дверь вписала бы документ второй фабрики в
+# индекс ПЕРВОЙ: он числился бы зарегистрированным там, где его нет.
+cp "$T/_studio/docs/KARTA.md" "$T/karta-studio.snapshot"
+$DOOR "$VTOROY/docs/FORMA.md" "форма ленты: фикстурная проба двери" > /dev/null 2>&1 || true
+if grep -q "FORMA.md" "$T/$VTOROY/docs/KARTA.md"
+then echo "  ✅ дверь вписала строку в индекс ВТОРОГО корня"
+else echo "  ❌ ДВЕРЬ НЕ ВПИСАЛА в индекс своего корня"; FAIL=1
+fi
+if cmp -s "$T/karta-studio.snapshot" "$T/_studio/docs/KARTA.md"
+then echo "  ✅ чужой индекс (_studio) не тронут ни байтом"
+else echo "  ❌ ДВЕРЬ ЗАПИСАЛА В ЧУЖОЙ ИНДЕКС — отображение «корень → индекс» сломано"; FAIL=1
+fi
+if $GATE 2>&1 | grep -q "$VTOROY/docs/FORMA.md"
+then echo "  ❌ ДВЕРЬ ВПИСАЛА, А ВОРОТА НЕ ЗАСЧИТАЛИ — предикаты разъехались"; FAIL=1
+else echo "  ✅ после двери ворота 5 по второму корню зелёные (дверь и гейт согласны)"
+fi
+
+# ── ЛОВУШКА 3: старый корень краснеет ровно как раньше — регрессии нет ──
+echo "старый корень: сирота" > "$T/_studio/docs/SIROTA.md"
+if $GATE 2>&1 | grep -q "_studio/docs/SIROTA.md"
+then echo "  ✅ старый корень _studio/ краснеет как раньше (регрессии нет)"
+else echo "  ❌ РЕГРЕССИЯ: ворота 5 перестали видеть _studio/"; FAIL=1
+fi
+rm "$T/_studio/docs/SIROTA.md"
+
+# ── ЛОВУШКА 4: bootstrap_arka --koren заводит арку в журнале второго корня ──
+python3 "$T/_generator/tools/bootstrap_arka.py" --koren "$VTOROY" 2026-08-06_proba \
+    "проба второго корня" > /dev/null 2>&1 || true
+if [ -f "$T/$VTOROY/zhurnal/2026-08-06_proba/PLAN.md" ]
+then echo "  ✅ bootstrap_arka --koren завёл арку в журнале второго корня"
+else echo "  ❌ АРКА ВО ВТОРОМ КОРНЕ НЕ ЗАВЕДЕНА"; FAIL=1
+fi
+if [ -d "$T/_studio/zhurnal/2026-08-06_proba" ]
+then echo "  ❌ АРКА УЕХАЛА В ПЕРВЫЙ КОРЕНЬ — --koren не действует"; FAIL=1
+else echo "  ✅ в первый корень арка не уехала"
+fi
+# мутация: неизвестный корень обязан упасть ГРОМКО и НИЧЕГО не создать
+if python3 "$T/_generator/tools/bootstrap_arka.py" --koren net-takogo 2026-08-06_mimo \
+        > /dev/null 2>&1
+then echo "  ❌ BOOTSTRAP ПРОГЛОТИЛ НЕИЗВЕСТНЫЙ КОРЕНЬ"; FAIL=1
+else
+    if [ -d "$T/_studio/zhurnal/2026-08-06_mimo" ] || [ -d "$T/$VTOROY/zhurnal/2026-08-06_mimo" ]
+    then echo "  ❌ неизвестный корень отвергнут, НО папка всё же создана"; FAIL=1
+    else echo "  ✅ мутация: неизвестный корень → отказ, ничего не создано"
+    fi
+fi
+
+# ── ЛОВУШКА 5: bootstrap_zahod заводит заход в арке второго корня ──
+python3 "$T/_generator/tools/bootstrap_zahod.py" "$VTOROY/zhurnal/2026-08-06_proba" \
+    proba --branch zahod/proba --zone "_generator/" --kanal terminal \
+    --opisanie "фикстурный заход второго корня" > "$T/zahod.log" 2>&1 || true
+if [ -f "$T/$VTOROY/zhurnal/2026-08-06_proba/kod_proba.md" ]
+then echo "  ✅ bootstrap_zahod завёл заход в арке второго корня"
+else
+    echo "  ❌ ЗАХОД ВО ВТОРОМ КОРНЕ НЕ ЗАВЕДЁН"; FAIL=1
+    cat "$T/zahod.log"
+fi
+
+# ── ЛОВУШКА 6: check_incidenty находит заход по имени в ОБОИХ корнях ──
+# Заход, лежащий в журнале второй фабрики, до расшивки просто не находился.
+mkdir -p "$T/_studio/zhurnal/2026-08-06_pervaya"
+echo "заход первого корня" > "$T/_studio/zhurnal/2026-08-06_pervaya/kod_pervyj.md"
+NASHEL=$(python3 - "$T" <<'PY'
+import sys, importlib.util, pathlib
+t = pathlib.Path(sys.argv[1])
+s = importlib.util.spec_from_file_location("ci", t / "_generator/tools/check_incidenty.py")
+m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+оба = [m.najti_zahod("kod_pervyj.md"), m.najti_zahod("kod_proba.md")]
+print("оба" if all(x is not None for x in оба) else "не-оба")
+PY
+)
+if [ "$NASHEL" = "оба" ]
+then echo "  ✅ check_incidenty находит заход по имени в ОБОИХ корнях"
+else echo "  ❌ CHECK_INCIDENTY ВИДИТ НЕ ВСЕ ЖУРНАЛЫ — заход второй фабрики не находится"; FAIL=1
+fi
+
+# ── ЛОВУШКА 7: третий корень — ОДНА строка в реестре, ноль правок в инструментах ──
+# 🔴 Проверка на себе, названная критерием захода: если ради нового корня надо
+# тронуть хоть один инструмент — расшивка не сделана, сделано переименование.
+cp "$T/_generator/tools/check_kartoteka.py" "$T/ck.snapshot"
+cp "$T/_generator/tools/register_doc.py" "$T/rd.snapshot"
+echo "иллюстрации: сирота" > "$T/$TRETIY/docs/SLOVAR.md"
+if $GATE 2>&1 | grep -q "$TRETIY/docs/SLOVAR.md"
+then echo "  ❌ третий корень судится ДО внесения в реестр — реестр ни при чём"; FAIL=1
+else echo "  ✅ до строки в реестре третий корень не судится (как и должно)"
+fi
+reestr_dobavit "$TRETIY" "$TRETIY/docs/KARTA.md" "$TRETIY/zhurnal"
+if $GATE 2>&1 | grep -q "$TRETIY/docs/SLOVAR.md"
+then echo "  ✅ третий корень судится после ОДНОЙ строки в реестре"
+else echo "  ❌ ОДНОЙ СТРОКИ НЕ ХВАТИЛО — реестр не является единственным домом"; FAIL=1
+fi
+if cmp -s "$T/ck.snapshot" "$T/_generator/tools/check_kartoteka.py" \
+   && cmp -s "$T/rd.snapshot" "$T/_generator/tools/register_doc.py"
+then echo "  ✅ инструменты не тронуты ни байтом (ноль правок на новый корень)"
+else echo "  ❌ ИНСТРУМЕНТЫ ИЗМЕНИЛИСЬ — значит корень добавляется не только реестром"; FAIL=1
+fi
+reestr_ubrat "$TRETIY"           # откат: третий корень был показом, а не состоянием
+
+# ── ЛОВУШКА 8 (пункт Д): poteri — ДВА числа, merge --zone — готовая строка ──
+# Ветка, где ОДИН файл писали обе стороны, а другой — только ветка: ровно тот
+# случай, на котором аналитик объявил заходу зону вдвое уже настоящей.
+GZ="python3 $T/_generator/tools/git_zona.py"
+mkdir -p "$T/zonaA" "$T/zonaB"
+echo "общий, база" > "$T/zonaA/oba.md"
+git add -A > /dev/null 2>&1; git commit -qm "база для Д"
+git checkout -q -b vetka-d
+echo "общий, версия ВЕТКИ" > "$T/zonaA/oba.md"
+echo "только ветка" > "$T/zonaB/tolko-vetka.md"
+git add -A > /dev/null 2>&1; git commit -qm "ветка написала оба"
+git checkout -q -
+echo "общий, версия HEAD" > "$T/zonaA/oba.md"
+git add -A > /dev/null 2>&1; git commit -qm "HEAD написал общий"
+
+$GZ poteri --branch vetka-d > "$T/poteri.txt" 2>&1 || true
+# Ждём ИТОГ + разбивку: 2 всего = 1 «нет здесь вовсе» + 1 «писали обе стороны».
+# Итог обязан остаться первым числом — см. комментарий в `print_loss_watch`:
+# заголовок `пропадёт файлов: 0` при живой потере есть молчание, а не точность.
+if grep -q "изменено с обеих сторон: 1" "$T/poteri.txt" \
+   && grep -q "нет здесь вовсе: 1" "$T/poteri.txt" \
+   && grep -q "пропадёт файлов: 2" "$T/poteri.txt"
+then echo "  ✅ poteri печатает ИТОГ 2 и разбивку: нет-здесь-вовсе=1, с-обеих-сторон=1"
+else
+    echo "  ❌ POTERI НЕ РАЗДЕЛЯЕТ ДВА КЛАССА — зона по его выводу занижается"; FAIL=1
+    cat "$T/poteri.txt"
+fi
+# мутация: файл, изменённый обеими сторонами, обязан влиять на второе число.
+# Уберём расхождение (вернём версию ветки) — второе число обязано стать 0.
+git checkout -q vetka-d -- zonaA/oba.md
+git add -A > /dev/null 2>&1; git commit -qm "снял расхождение"
+$GZ poteri --branch vetka-d > "$T/poteri2.txt" 2>&1 || true
+if grep -q "изменено с обеих сторон: 0" "$T/poteri2.txt"
+then echo "  ✅ мутация: расхождение снято → второе число стало 0 (оно живое, а не подпись)"
+else echo "  ❌ ВТОРОЕ ЧИСЛО НЕ РЕАГИРУЕТ на снятие расхождения — это подпись, а не счёт"; FAIL=1
+fi
+
+$GZ merge vetka-d --zone zonaA > "$T/merge.txt" 2>&1 || true
+if grep -q -- "--zone zonaA" "$T/merge.txt" && grep -q -- "--zone zonaB" "$T/merge.txt"
+then echo "  ✅ merge при отказе печатает готовую строку со ВСЕМИ зонами"
+else
+    echo "  ❌ MERGE НЕ ПЕЧАТАЕТ ГОТОВУЮ СТРОКУ — зону приходится собирать руками"; FAIL=1
+    cat "$T/merge.txt"
+fi
+
+if [ "$FAIL" = 0 ]
+then echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0
+else echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1
+fi
