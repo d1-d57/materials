@@ -575,4 +575,6 @@ cd _studio/zhurnal/2026-08-05_faza-lenty && python3 klassy_otkazov.py
 · `/Users/ivanyakovlev/Documents/GitHub/materials-wt/faza-lenty/_studio/zhurnal/2026-08-05_faza-lenty/vidy/DOKAZATELSTVA-L1--DO-pravki.html` и `…--POSLE-pravki.html` — **откройте оба рядом**: это и есть ответ на вопрос про генератор. Слева эталон плоской прозой, справа он же врезками с видимыми номерами `A1`, `A1′`, `A4`.
 · `/Users/ivanyakovlev/Documents/GitHub/materials-wt/faza-lenty/_studio/konvejer/06-tekst/ETALON-png/01.png` — иллюстрация эталона, отрисованная и просмотренная (диск, точка $x$, её образ $f(x)$, луч в $r(x)$ на границе).
 
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `f8b0c8f` — «фаза ленты: четыре носителя + машинный гейт формы» · ветка `zahod/faza-lenty`, **не влита** (влитие делает приёмка) · 20 файлов, `git show --stat` — только пути зоны · `git_zona.py check --zone _studio/konvejer/06-tekst` → ✅ · `--zone _generator` → ✅ · `check` по всему дереву → ✅ «вне git ничего нет».
+⚠ Хук `pre-commit` покраснел один раз и **на МОЁМ пути**: ворота 5, `kod_faza-lenty.md` не зарегистрирован в `KARTA.md §6`. Обхода не было — позвана дверь `register_doc.py`, `KARTA.md` доложен в оба хода. Заход при этом утверждает, что файл-заход «рождается зарегистрированным из `bootstrap_zahod.py`»; на живом файле это не так (см. `## ВОПРОСЫ`, п. 1).
+Второй, малый коммит `dcc3aef` — вписанный сюда хэш первого; иначе отчёт ссылался бы на коммит, которого в момент письма ещё не было.
