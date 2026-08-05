@@ -147,3 +147,8 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-05 04:48 · arka/mat-kostyak · merge zahod/kartoteka-intervyu не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-05 04:58 · arka/mat-kostyak · merge zahod/kartoteka-intervyu: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-05 05:00 · arka/mat-kostyak · merge zahod/razbros-po-fazam: конфликт в 3 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-05 13:16 · arka/mat-kostyak · запуск с мусорными аргументами · → лишнее в команде: zahod/dovodka-fazy-intervyu — убрать хвост и повторить · статус: открыт
+- 2026-08-05 13:28 · arka/mat-kostyak · zakryt-vetku --vsyo-ravno: zahod/dovodka-fazy-intervyu — ветка — незавершённая предыдущая попытка ЭТОГО ЖЕ захода (форк до консолидации kartoteka-intervyu+razbros-po-fazam, охват 74 записи вместо текущих 145); заход прямо предписывает пересобрать ветку от свежего arka/mat-kostyak (0.3), где 04.5-intervyu/ уже консолидирован; работа не теряется — надгробие mogila/ восстановимо voskresit · → работа ветки не перенесена; вернуть — voskresit --branch zahod/dovodka-fazy-intervyu · статус: открыт
+- 2026-08-05 14:01 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-05 14:04 · arka/mat-kostyak · merge zahod/dovodka-fazy-intervyu не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-05 14:07 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
