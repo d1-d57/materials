@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лекция 2. Функторы: как они работают</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
+
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:1090px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
+
+/* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
+table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
+table th,table td{border:1px solid var(--rule);padding:.45em .8em;text-align:left;vertical-align:top}
+table thead th{font-family:var(--sans);background:var(--shade);font-weight:600;color:var(--text)}
+table tbody tr:nth-child(even){background:var(--panel)}
+table tbody td:first-child{color:var(--muted)}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:var(--chip);color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (09-illustracii, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-thin-a{fill:none;stroke:var(--accent);stroke-width:1.4}
+/* .s-thin-a / .s-txt-a — тонкая акцентная линия и акцентная метка. Заведены 2026-07-31 (записки Л1):
+   цветовое кодирование роли стрелки (акцент = переименование/перестановка, нейтральный = сама
+   конструкция) требовало ТОНКОЙ акцентной линии, а .s-accent 2.4px для 9 стрелок в ряд слишком
+   жирна. ЦЕНА пропуска: аналитик выдумал классы на месте, в движке их не было, и в разделе
+   «Почему это красиво» не нарисовалась НИ ОДНА из 9 стрелок σ и обе горизонтали квадрата —
+   `<line>` без своего stroke по SVG не рисуется вовсе. Все три гейта остались зелёными. */
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-txt-a{font-family:var(--sans);font-size:12px;fill:var(--accent)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:var(--faint);font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
+</style>
+</head>
+<body>
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
+<div class="wrap">
+<div class="doc-head">
+  <h1>Лекция 2. Функторы: как они работают</h1>
+</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Лента лекции 2</label>
+</nav>
+<section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">Что мы делали в прошлый раз · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">Категория · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">Векторные пространства · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">Спаривание · ~8 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">Двойственный базис · ~8 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-6">Дважды двойственное · ~12 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-7">Для $V^*$ канонического нет · ~5 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-8">Инъекции в палитру · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-9">Центр группы · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-10">Ретракт · ~8 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-11">Фундаментальная группа · ~8 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-12">Теорема Брауэра · ~7 мин</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-13">Итог · ~5 мин</a></summary></details></li></ol></details><main><article class="stream"><h1>Лекция 2. Функторы: как они работают</h1>
+<p>Тринадцать слайдов, ~96 минут. По разделу на слайд, в порядке чтения. Здесь — математическое содержание: что происходит на единице, доказательства целиком, иллюстрации. Текст слайдов пишется следующим ходом.</p>
+<p>Процессный слой — решения, отмены, копилка упражнений, сверка — вынесен в <code>RABOCHIY-L2.md</code>.</p>
+<details class="sec sec2" open><summary><h2 id="s0-h-1">Что мы делали в прошлый раз · ~7 мин</h2></summary><div class="sec-body">
+<p>Слайд ставит вопрос лекции и заявляет слоган. Прошлую лекцию не пересказывает.</p>
+<ul><li>сегодня занимаемся <strong>функторами и их свойствами</strong>: функтор сохраняет морфизмы, изоморфизмы, ретракты, коммутативные диаграммы;</li><li>смотрим, <strong>как эти свойства работают и что они запрещают</strong>: какие функторы бывают, когда два можно считать одинаковыми, когда функтора не существует вовсе;</li><li>в прошлый раз мы занимались тем же: комбинаторный вид по определению есть функтор;</li><li>сегодня к этому не возвращаемся — говорим про функторы на примерах других категорий.</li></ul>
+<p>Отдельным тактом — слоган лекции. Он не выводится и не иллюстрируется: заявили и пошли смотреть, где оно проявляется.</p>
+<div class="stmt rem" id="s0-n-1"><span class="lbl">Замечание (слоган лекции).</span><p>В категории есть понятие диаграммы. <strong>Функтор переводит коммутативную диаграмму в коммутативную.</strong> Формально это очевидное утверждение; вся лекция — примеры того, как это конкретное явление проявляется в разных местах.</p><a class="mn-ref" id="s0-mnr-1" href="#s0-mn-1">✳</a></div>
+<p id="s0-mn-1" class="mn"><a class="mn-back" href="#s0-mnr-1">✳</a> Слоган — единственное место лекции, где что-то объявляется без опоры. Так и произносится. Владелец допускает, что он переедет вниз слайда, а не встанет наверху: решается на макете.<a class="mn-ref" id="s0-mnr-2" href="#s0-mn-2">✳</a></p>
+<p id="s0-mn-2" class="mn"><a class="mn-back" href="#s0-mnr-2">✳</a> Словосочетание «коммутативный квадрат» зал, скорее всего, знает — <em>«они такие айтишники, но что такое коммутативный квадрат, видимо, знают»</em>. Это не введение термина, а объявление темы.<a class="mn-ref" id="s0-mnr-3" href="#s0-mn-3">✳</a></p>
+<p id="s0-mn-3" class="mn"><a class="mn-back" href="#s0-mnr-3">✳</a> Слово «функтор» здесь только называется. Определение живёт ровно в одном месте — на следующем слайде. В остальных местах понятие только используется, в том числе до определения: <em>«определение мы напоминаем, материал не новый»</em>.<a class="mn-ref" id="s0-mnr-4" href="#s0-mn-4">✳</a></p>
+<p id="s0-mn-4" class="mn"><a class="mn-back" href="#s0-mnr-4">✳</a> Про естественное преобразование во входе не говорим вовсе (решение 05.08, вечер). Прежняя фраза про то, что оно само есть функтор, снята целиком.<a class="mn-ref" id="s0-mnr-5" href="#s0-mn-5">✳</a></p>
+<p id="s0-mn-5" class="mn"><a class="mn-back" href="#s0-mnr-5">✳</a> Слова «комбинаторный вид» законны только здесь — как отсылка одной строкой. Рабочим термином лекции они не становятся.<a class="mn-ref" id="s0-mnr-6" href="#s0-mn-6">✳</a></p>
+<figure id="s0-mn-6" class="mn"><a class="mn-back" href="#s0-mnr-6">✳</a>  <svg viewBox="0 0 250 214" width="250" role="img" aria-label="Пустой коммутативный квадрат: четыре узла без подписей и четыре стрелки, две вправо и две вниз"> <circle class="s-node" cx="52" cy="34" r="3.4"/><circle class="s-node" cx="198" cy="34" r="3.4"/> <circle class="s-node" cx="52" cy="180" r="3.4"/><circle class="s-node" cx="198" cy="180" r="3.4"/> <line class="s-thin" x1="62" y1="34" x2="180" y2="34"/><path class="s-ar-m" d="M180,30 l9,4 -9,4 z"/> <line class="s-thin" x1="62" y1="180" x2="180" y2="180"/><path class="s-ar-m" d="M180,176 l9,4 -9,4 z"/> <line class="s-thin" x1="52" y1="44" x2="52" y2="162"/><path class="s-ar-m" d="M48,162 l4,9 4,-9 z"/> <line class="s-thin" x1="198" y1="44" x2="198" y2="162"/><path class="s-ar-m" d="M194,162 l4,9 4,-9 z"/> </svg> <figcaption>Слоган лекции в чистом виде: из левого верхнего угла в правый нижний ведут две дороги, вправо-вниз и вниз-вправо. Коммутативность и есть утверждение, что они приходят в одну точку. Подписей нет нарочно — это заявление формы, а не пример.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-2">Категория · ~7 мин</h2></summary><div class="sec-body">
+<p>Вспоминаем язык на том, что уже видели. Три такта: определение категории, аксиомы, определение функтора.</p>
+<div class="stmt defn" id="s0-d-2"><span class="lbl">Определение (категория).</span><p>Категория $\mathcal C$ состоит из:</p></div>
+<ul><li>класса объектов $\mathrm{Ob}\,\mathcal C$;</li><li>множества морфизмов $\mathcal C(A,B)$ между парой объектов $A$ и $B$;</li><li>композиции $\circ\colon\mathcal C(B,C)\times\mathcal C(A,B)\to\mathcal C(A,C)$ и единицы $1_A\in\mathcal C(A,A)$</li></ul>
+<p>Аксиомы:</p>
+<p>$$h\circ(g\circ f)=(h\circ g)\circ f,\qquad 1_B\circ f=f=f\circ 1_A.$$</p>
+<div class="stmt defn" id="s0-d-3"><span class="lbl">Определение (функтор).</span><p>Функтор $F\colon\mathcal C\to\mathcal D$ состоит из:</p></div>
+<ul><li>отображения объектов $\mathrm{Ob}\,\mathcal C\to\mathrm{Ob}\,\mathcal D$;</li><li>отображений морфизмов $\mathcal C(A,B)\to\mathcal D(FA,FB)$, для которых $F(g\circ f)=Fg\circ Ff$ и $F1_A=1_{FA}$.</li></ul>
+<div class="stmt defn" id="s0-d-4"><span class="lbl">Определение (изоморфизм).</span><p>Морфизм $f\colon A\to B$ — изоморфизм, если найдётся $g\colon B\to A$ с $g\circ f=1_A$ и $f\circ g=1_B$. В множествах изоморфизм — это биекция.</p></div>
+<p>Последняя строка слайда — категории, с которыми работаем сегодня, в порядке появления:<a class="mn-ref" id="s0-mnr-7" href="#s0-mn-7">✳</a></p>
+<blockquote>множества · <strong>векторные пространства</strong> · группы · пространства</blockquote>
+<p id="s0-mn-7" class="mn"><a class="mn-back" href="#s0-mnr-7">✳</a> Порядок задан владельцем: сначала категория, потом функтор; аксиомы — отдельной строкой по центру, своей сценой.<a class="mn-ref" id="s0-mnr-8" href="#s0-mn-8">✳</a></p>
+<p id="s0-mn-8" class="mn"><a class="mn-back" href="#s0-mnr-8">✳</a> Картинок у слайда нет, и это решение, а не дыра: обе диаграммы сняты владельцем 01.08 — <em>«может быть, больше места будет, больше будет дышать»</em>.<a class="mn-ref" id="s0-mnr-9" href="#s0-mn-9">✳</a></p>
+<p id="s0-mn-9" class="mn"><a class="mn-back" href="#s0-mnr-9">✳</a> Изоморфизм вводится здесь, а не в акте про векторные пространства: иначе тот слайд теряет свой единственный вопрос.<a class="mn-ref" id="s0-mnr-10" href="#s0-mn-10">✳</a></p>
+<p id="s0-mn-10" class="mn"><a class="mn-back" href="#s0-mnr-10">✳</a> Категорный словарь на этом заканчивается. Чётче произносятся ровно два понятия — функтор и ретракт; дальше словарь не расширяется.</p>
+<div class="mn insight"><span class="tag">Зачем категория</span> Лучший ответ, если спросят из зала: <strong>цепное правило — это функториальность.</strong> $D(g\circ f)_a=Dg_{f(a)}\cdot Df_a$ и $D(\mathrm{id})=I$. Это идея гомоморфизма, но гомоморфизмом она не записывается: матрицы разного размера, они не лежат в одной алгебре. Стрелки между разными объектами и нужны затем, чтобы «сохранение композиции» формулировалось без требования одинакового размера.</div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-3">Векторные пространства · ~7 мин</h2></summary><div class="sec-body">
+<p>Первая конкретная категория. Работаем над $\mathbb R$ — это произносится вслух и держится до конца акта.</p>
+<p>Объекты — вещественные векторные пространства, морфизмы — линейные отображения. Изоморфизм по <a class="xref" href="#s0-d-4">определению 4</a> — линейное отображение с линейным обратным, то есть линейная биекция.</p>
+<div class="stmt thm" id="s0-t-5"><span class="lbl">Утверждение (изоморфность есть равенство размерностей).</span><p>Конечномерные $V$ и $W$ изоморфны тогда и только тогда, когда $\dim V=\dim W$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $e_1,\dots,e_n$ — базис $V$, а $f_1,\dots,f_n$ — базис $W$. Правило $e_i\mapsto f_i$ продолжается до линейного отображения единственным способом: разложение по базису однозначно, поэтому $\varphi(\sum v_ie_i):=\sum v_if_i$ определено корректно. Обратное строится тем же правилом в другую сторону, и обе композиции тождественны на базисе, значит тождественны всюду.</p></div></details></div>
+<p><strong>Обратно.</strong> Пусть $\varphi\colon V\to W$ — изоморфизм и $e_1,\dots,e_n$ — базис $V$. Тогда $\varphi(e_1),\dots,\varphi(e_n)$ — базис $W$: они порождают, потому что $\varphi$ сюръективно и линейно; они независимы, потому что из $\sum c_i\varphi(e_i)=0$ следует $\varphi(\sum c_ie_i)=0$, а $\varphi$ инъективно, значит все $c_i$ нули.</p>
+<p>Мораль слайда: в этой категории вопрос «изоморфны ли два объекта» решается <strong>одним числом</strong>. Именно поэтому дальше станет интересно: изоморфизм-то есть, а вот какой именно — уже не одно число.</p>
+<div class="stmt task" id="s0-e-6"><span class="lbl">Пример (два разных объекта, изоморфные над $\mathbb R$).</span><p>$\mathbb R^2$ и $\mathbb C$ устроены по-разному: у одного элементы — пары чисел, у другого комплексные числа с умножением. Но размерность над $\mathbb R$ у обоих равна двум, значит они изоморфны. Изоморфизмов при этом много: $(a,b)\mapsto a+bi$ и $(a,b)\mapsto b+ai$ годятся оба, и ни один не лучше другого.</p><a class="mn-ref" id="s0-mnr-11" href="#s0-mn-11">✳</a></div>
+<p id="s0-mn-11" class="mn"><a class="mn-back" href="#s0-mnr-11">✳</a> Поле фиксируем вслух, иначе ломается пример ($\mathbb C$ над $\mathbb C$ одномерно) и ломается запрет в конце акта, где нужен скаляр с $\lambda^2\ne1$.<a class="mn-ref" id="s0-mnr-12" href="#s0-mn-12">✳</a></p>
+<p id="s0-mn-12" class="mn"><a class="mn-back" href="#s0-mnr-12">✳</a> Место, где зал спотыкается: «изоморфны» не значит «одинаковы». Из этого зазора растёт вся первая половина лекции — вопрос не «есть ли изоморфизм», а «есть ли <strong>выделенный</strong>».<a class="mn-ref" id="s0-mnr-13" href="#s0-mn-13">✳</a></p>
+<p id="s0-mn-13" class="mn"><a class="mn-back" href="#s0-mnr-13">✳</a> Про канонические изоморфизмы здесь ещё не говорим, только знакомимся с категорией.<a class="mn-ref" id="s0-mnr-14" href="#s0-mn-14">✳</a></p>
+<p id="s0-mn-14" class="mn"><a class="mn-back" href="#s0-mnr-14">✳</a> Иллюстрации у слайда нет: рисовать «два пространства и стрелка» значит рисовать две кляксы. Если на макете выйдет пусто — слайд объединяется со следующим, а не заполняется декором.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-4">Спаривание · ~8 мин</h2></summary><div class="sec-body">
+<p>Восемь минут на одну мысль — это назначено, а не случилось. Владелец: <em>«это довольно очевидная мысль… она такая фундаментальная, и я уверен, что люди плохо её понимают»</em>.</p>
+<p>Начинаем с того, зачем нам вообще $V^*$: у векторного пространства есть отражение — пространство измерений на нём. Устроено оно так же, той же размерности, но это <strong>не то же самое</strong> пространство.</p>
+<div class="stmt defn" id="s0-d-7"><span class="lbl">Определение (двойственное пространство).</span><p>$V^*$ — множество линейных функций $\varphi\colon V\to\mathbb R$ со сложением и умножением на число поточечно: $(\varphi+\psi)(v)=\varphi(v)+\psi(v)$ и $(c\varphi)(v)=c\cdot\varphi(v)$.</p></div>
+<div class="stmt defn" id="s0-d-8"><span class="lbl">Определение (спаривание).</span><p>Функция двух аргументов</p><p class="eq">$$\langle-,-\rangle\colon V\times V^*\to\mathbb R,\qquad \langle v,\varphi\rangle:=\varphi(v).$$</p></div>
+<div class="stmt thm" id="s0-t-9"><span class="lbl">Утверждение (билинейность).</span><p>Спаривание линейно по каждому аргументу при фиксированном втором.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>По первому аргументу: $\langle v+w,\varphi\rangle=\varphi(v+w)=\varphi(v)+ \varphi(w)$ — это линейность самой $\varphi$. По второму: $\langle v,\varphi+\psi\rangle= (\varphi+\psi)(v)=\varphi(v)+\psi(v)$ — это определение сложения в $V^*$. Со скалярами так же.</p></div></details></div>
+<p>Вот мысль, ради которой слайд. В записи $\langle v,\varphi\rangle$ нет ничего, что отличало бы левый аргумент от правого:</p>
+<ul><li>зафиксируем $\varphi$ — получим линейную функцию на $V$; ничего нового, это сама $\varphi$;</li><li>зафиксируем $v$ — получим функцию $\varphi\mapsto\varphi(v)$ на пространстве $V^*$, и она линейна по $\varphi$ по <a class="xref" href="#s0-t-9">утверждению 9</a>.</li></ul>
+<p>То есть <strong>вектор есть линейная функция на пространстве функционалов</strong> — ровно в той же мере, в какой функционал есть линейная функция на пространстве векторов. Спаривание не различает, кто из них «настоящий объект», а кто «функция на объектах».</p>
+<div class="stmt thm" id="s0-t-10"><span class="lbl">Утверждение (невырожденность).</span><p>Пусть $V$ конечномерно. Если $\varphi(v)=0$ для всех $\varphi\in V^*$, то $v=0$. Если $\varphi(v)=0$ для всех $v\in V$, то $\varphi=0$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Второе — определение нулевой функции, доказывать нечего. Первое: пусть $v\ne0$. Дополним $v$ до базиса $v=e_1,e_2,\dots,e_n$ и возьмём $\varphi$, сопоставляющую вектору $\sum c_ie_i$ его первую координату $c_1$. Она линейна и $\varphi(v)=1\ne0$.</p></div></details><a class="mn-ref" id="s0-mnr-15" href="#s0-mn-15">✳</a></div>
+<p id="s0-mn-15" class="mn"><a class="mn-back" href="#s0-mnr-15">✳</a> Первая половина <a class="xref" href="#s0-t-10">утверждения 10</a> понадобится через два слайда — ею доказывается инъективность отображения $V\to V^{**}$. Здесь она стоит две строки и в контексте; там встала бы отступлением.<a class="mn-ref" id="s0-mnr-16" href="#s0-mn-16">✳</a></p>
+<p id="s0-mn-16" class="mn"><a class="mn-back" href="#s0-mnr-16">✳</a> Чего не говорим: ни слова про базис при определении $V^*$ (он не нужен), ни про матрицы, ни про строки и столбцы. Аналогия «функционал — строка, вектор — столбец» соблазнительна и вредна: она уже вносит выбор координат, а весь акт про то, что выбора хочется избежать.<a class="mn-ref" id="s0-mnr-17" href="#s0-mn-17">✳</a></p>
+<figure id="s0-mn-17" class="mn"><a class="mn-back" href="#s0-mnr-17">✳</a>  <svg viewBox="0 0 240 236" width="240" role="img" aria-label="Решётка: сверху ряд точек V задаёт столбцы, слева ряд точек V со звездой задаёт строки; одна строка и один столбец подсвечены, на их пересечении выделенная клетка"> <text class="s-txt" x="140" y="18" text-anchor="middle">V</text> <text class="s-txt" x="18" y="120" text-anchor="middle">V*</text> <circle class="s-node" cx="76" cy="40" r="3.4"/><circle class="s-node" cx="108" cy="40" r="3.4"/><circle class="s-node-r" cx="140" cy="40" r="3.4"/><circle class="s-node" cx="172" cy="40" r="3.4"/><circle class="s-node" cx="204" cy="40" r="3.4"/> <circle class="s-node" cx="44" cy="72" r="3.4"/><circle class="s-node" cx="44" cy="104" r="3.4"/><circle class="s-node-r" cx="44" cy="136" r="3.4"/><circle class="s-node" cx="44" cy="168" r="3.4"/><circle class="s-node" cx="44" cy="200" r="3.4"/> <rect class="s-fillsh" x="60" y="120" width="160" height="32"/> <rect class="s-fillsh" x="124" y="56" width="32" height="160"/> <rect class="s-fillsh" x="124" y="120" width="32" height="32"/> <rect class="s-line" x="124" y="120" width="32" height="32"/> <line class="s-thin" x1="60" y1="56" x2="220" y2="56"/><line class="s-thin" x1="60" y1="88" x2="220" y2="88"/><line class="s-thin" x1="60" y1="120" x2="220" y2="120"/><line class="s-thin" x1="60" y1="152" x2="220" y2="152"/><line class="s-thin" x1="60" y1="184" x2="220" y2="184"/><line class="s-thin" x1="60" y1="216" x2="220" y2="216"/> <line class="s-thin" x1="60" y1="56" x2="60" y2="216"/><line class="s-thin" x1="92" y1="56" x2="92" y2="216"/><line class="s-thin" x1="124" y1="56" x2="124" y2="216"/><line class="s-thin" x1="156" y1="56" x2="156" y2="216"/><line class="s-thin" x1="188" y1="56" x2="188" y2="216"/><line class="s-thin" x1="220" y1="56" x2="220" y2="216"/> </svg> <figcaption>Спаривание $\langle v,\varphi\rangle=\varphi(v)$ занимает одну клетку. Зафиксировать функционал — значит взять целиком строку и получить функцию на $V$; зафиксировать вектор — взять столбец и получить функцию на $V^{*}$. Два зеркальных жеста: запись не различает, кто из аргументов главный.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-5">Двойственный базис · ~8 мин</h2></summary><div class="sec-body">
+<p>Сначала строим изоморфизм — и он строится. Потом смотрим, за какую цену.</p>
+<p>Вопрос в зал произносится голосом на первой сцене, на слайде его нет: <strong>а размерность у $V$ и $V^*$ одинаковая?</strong> Ответ приходит следующей сценой.</p>
+<div class="stmt defn" id="s0-d-11"><span class="lbl">Определение (двойственный базис).</span><p>Пусть $e_1,\dots,e_n$ — базис $V$. Двойственный базис $e^1,\dots,e^n$ в $V^*$ задаётся правилом</p><p class="eq">$$e^i(e_j)=\begin{cases}1,& i=j,\\ 0,& i\ne j.\end{cases}$$</p><p>Этого достаточно: линейное отображение однозначно продолжается с базиса на всё пространство.</p></div>
+<div class="stmt thm" id="s0-t-12"><span class="lbl">Утверждение (размерности совпадают).</span><p>$e^1,\dots,e^n$ — базис пространства $V^*$; в частности $\dim V^*=\dim V$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p><strong>Порождают.</strong> Пусть $\varphi\in V^*$. Проверим равенство $\varphi=\sum_i\varphi(e_i)\,e^i$, подставив базисный вектор $e_j$: слева $\varphi(e_j)$, справа $\sum_i\varphi(e_i)e^i(e_j)=\varphi(e_j)$, потому что в сумме уцелело единственное слагаемое $i=j$. Две линейные функции совпали на базисе, значит совпали.</p></div></details></div>
+<p><strong>Независимы.</strong> Пусть $\sum_i c_ie^i=0$. Применим к $e_j$: получим $c_j=0$. И так для каждого $j$.</p>
+<p>Значит по <a class="xref" href="#s0-t-5">утверждению 5</a> изоморфизм $V\cong V^*$ есть, и он даже выписывается: $$\beta_e\colon V\to V^*,\qquad e_i\mapsto e^i,\qquad\text{то есть}\qquad \sum_i v_ie_i\ \longmapsto\ \sum_i v_ie^i.$$</p>
+<p>А теперь смотрим руками, чего он стоил.</p>
+<div class="stmt thm" id="s0-t-13"><span class="lbl">Утверждение (изоморфизм зависит от базиса).</span><p>В $V=\mathbb R^2$ возьмём два базиса: $e_1=(1,0),\ e_2=(0,1)$ и $e'_1=(1,0),\ e'_2=(1,1)$. Тогда $\beta_e\ne\beta_{e'}$: они расходятся уже на векторе $e_1$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Двойственный базис к штрихованному находим по <a class="xref" href="#s0-d-11">определению 11</a>. Для $e'^1$ нужно $e'^1(e'_1)=1$ и $e'^1(e'_2)=0$, то есть $e'^1(e_1)=1$ и $e'^1(e_1+e_2)=0$; из второго $e'^1(e_2)=-1$, значит $e'^1=e^1-e^2$. Для $e'^2$ нужно $e'^2(e_1)=0$ и $e'^2(e_1+e_2)=1$, откуда $e'^2(e_2)=1$, то есть $e'^2=e^2$.</p></div></details></div>
+<p>Сравниваем оба изоморфизма на одном векторе $e_1$ (он же $e'_1$): $$\beta_e(e_1)=e^1,\qquad \beta_{e'}(e_1)=\beta_{e'}(e'_1)=e'^1=e^1-e^2.$$ Это разные функционалы: на $e_2$ они дают нуль и $-1$.</p>
+<p>Изоморфизм $V\to V^*$ существует, но чтобы его предъявить, надо сначала выбрать базис. Другой человек выберет другой базис и предъявит другой изоморфизм, и ни один не лучше. Такой изоморфизм называется <strong>неканоническим</strong>. Дальше мы увидим случай, где выбора делать не надо, — он будет называться <strong>каноническим</strong>.</p>
+<div class="stmt rem" id="s0-n-14"><span class="lbl">Замечание (почему этого никто не замечает).</span><p>Скалярное произведение — это и есть выбор изоморфизма $V\to V^*$: вектору $v$ сопоставляется функционал $\langle v,-\rangle$. Поднимание и опускание индексов — применение этого изоморфизма туда и обратно. А в ортонормированном базисе матрица формы единичная, и то, что выбор был сделан, перестаёт быть видно вовсе.</p><a class="mn-ref" id="s0-mnr-18" href="#s0-mn-18">✳</a></div>
+<p id="s0-mn-18" class="mn"><a class="mn-back" href="#s0-mnr-18">✳</a> Одномерный счёт держать наготове — он понадобится на предпоследнем слайде акта. $V=\mathbb R$, базис $e$, другой базис $e'=\lambda e$ при $\lambda\ne0$. Условие $e'^1(e')=1$ даёт $e'^1=\lambda^{-1}e^1$, и тогда $\beta_{e'}(e)=\lambda^{-2}e^1$ против $\beta_e(e)=e^1$. <strong>Растяжение базиса в $\lambda$ раз меняет изоморфизм в $\lambda^{-2}$ раз</strong>, и совпадут они ровно при $\lambda^2=1$. То же условие всплывёт как препятствие — не по совпадению, а потому что там считается ровно эта величина.<a class="mn-ref" id="s0-mnr-19" href="#s0-mn-19">✳</a></p>
+<p id="s0-mn-19" class="mn"><a class="mn-back" href="#s0-mnr-19">✳</a> Базис $(1,0),(1,1)$ взят несимметричным нарочно: обе двойственные функции меняются нетривиально. При повороте на $90°$ картинка вышла бы слишком красивой, и зал решил бы, что дело в симметрии.<a class="mn-ref" id="s0-mnr-20" href="#s0-mn-20">✳</a></p>
+<p id="s0-mn-20" class="mn"><a class="mn-back" href="#s0-mnr-20">✳</a> Кандидат на сброс, приоритет 2: если не успеваем, <a class="xref" href="#s0-t-13">утверждение 13</a> объявляется, а вычисление опускается. Утверждение 12 не сбрасывается ни при каких условиях — без него нет изоморфизма.<a class="mn-ref" id="s0-mnr-21" href="#s0-mn-21">✳</a></p>
+<figure id="s0-mn-21" class="mn"><a class="mn-back" href="#s0-mnr-21">✳</a>  <svg viewBox="0 0 240 200" width="240" role="img" aria-label="Из одной точки выходят два базиса: чёрные стрелки основного базиса и чёрные тонкие стрелки штрихованного, и синий вектор между ними"> <circle class="s-node-r" cx="46" cy="160" r="3.4"/> <line class="s-line" x1="46" y1="160" x2="124" y2="160"/><path class="s-ar-m" d="M124,156 l9,4 -9,4 z"/> <line class="s-line" x1="46" y1="160" x2="46" y2="82"/><path class="s-ar-m" d="M42,82 l4,-9 4,9 z"/> <line class="s-thin" x1="46" y1="160" x2="124" y2="82"/><path class="s-ar-m" d="M121,86 L118,78 L129,77 z"/> <text class="s-txt-m" x="86" y="180" text-anchor="middle">e&#8321; = e&#8242;&#8321;</text> <text class="s-txt-m" x="34" y="76" text-anchor="end">e&#8322;</text> <text class="s-txt-m" x="132" y="74">e&#8242;&#8322;</text> <line class="s-accent" x1="46" y1="160" x2="196" y2="112"/><path class="s-ar-a" d="M194,118 L189,110 L200,107 z"/>
+<p><text class="s-txt" x="204" y="104">v</text> </svg> <figcaption>Один и тот же вектор $v$ и два базиса, выходящие из одной точки: чёрный $e_1,e_2$ и второй $e'_1=e_1$, $e'_2=e_1+e_2$. Координаты $v$ в них разные — а значит, разным получается и функционал, который сопоставляет вектору двойственный базис. Ни один из двух ответов не лучше другого.</figcaption> </figure></p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-6">Дважды двойственное · ~12 мин</h2></summary><div class="sec-body">
+<p>Самый длинный слайд лекции. Сначала показываем, что отображение есть и что оно <strong>без выбора</strong>, и только потом называем происходящее.</p>
+<div class="stmt defn" id="s0-d-15"><span class="lbl">Определение (каноническое отображение в дважды двойственное).</span><p class="eq">$$\eta_V\colon V\to V^{**},\qquad \eta_V(v)=\bigl(\varphi\mapsto\varphi(v)\bigr).$$</p><p>Вектору $v$ сопоставляется та функция на $V^*$, которая функционалу $\varphi$ выдаёт число $\varphi(v)$. Это ровно «зафиксируем $v$» из слайда про спаривание.</p></div>
+<p>Смотрим на формулу и произносим главное вслух: <strong>в ней нет базиса.</strong> Ни одного выбора не сделано; её можно написать, не зная про $V$ ничего, кроме того, что это векторное пространство.</p>
+<div class="stmt thm" id="s0-t-16"><span class="lbl">Утверждение ($\eta_V$ — изоморфизм).</span><p>При конечномерном $V$ отображение $\eta_V$ является изоморфизмом.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p><strong>Линейность.</strong> $\eta_V(v+w)$ — это функция $\varphi\mapsto\varphi(v+w)= \varphi(v)+\varphi(w)$, то есть сумма функций $\eta_V(v)$ и $\eta_V(w)$. Со скалярами так же.</p></div></details></div>
+<p><strong>Инъективность.</strong> Пусть $\eta_V(v)=0$, то есть $\varphi(v)=0$ для всех $\varphi\in V^*$. По <a class="xref" href="#s0-t-10">утверждению 10</a> тогда $v=0$.</p>
+<p><strong>Биективность.</strong> По <a class="xref" href="#s0-t-12">утверждению 12</a>, применённому дважды, $\dim V^{**}=\dim V^*=\dim V$, а инъективное линейное отображение между пространствами равной конечной размерности сюръективно.</p>
+<p>Здесь стоит остановиться на разнице. Двумя слайдами раньше изоморфизм тоже был, но его пришлось <strong>строить по базису</strong>. Здесь он <strong>написан формулой</strong>. Ровно эта разница и есть предмет лекции.</p>
+<p>Дальше проверяем, что «без выбора» — не впечатление, а свойство. Проверяемая форма такая: если конструкция ничего не выбирает, она обязана уживаться с любым линейным отображением.</p>
+<p>Любое линейное $f\colon V\to W$ порождает отображения на двойственных:</p>
+<ul><li>$f^*\colon W^*\to V^*$, где $f^*(\psi):=\psi\circ f$ — функционал на $W$ становится функционалом на $V$: прогоняем вектор через $f$, потом меряем. <strong>Стрелка развернулась;</strong></li><li>$f^{**}\colon V^{**}\to W^{**}$, где $f^{**}(\Xi):=\Xi\circ f^*$. <strong>Развернулась второй раз</strong>, то есть вернулась в исходное направление.</li></ul>
+<div class="stmt thm" id="s0-t-17"><span class="lbl">Утверждение (квадрат сходится).</span><p>Для любого линейного $f\colon V\to W$ выполняется $\eta_W\circ f=f^{**}\circ\eta_V$.</p><details class="d-proof"><summary>доказательство — проходим обе дороги на одном элементе</summary><div class="proof"><p>Обе части суть отображения $V\to W^{**}$, то есть на векторе $v$ каждая даёт функцию на $W^*$. Сравним их значения на произвольном $\psi\in W^*$.</p></div></details></div>
+<p><strong>Вправо-вниз</strong>, сначала $f$, потом $\eta_W$: $$\bigl(\eta_W(f v)\bigr)(\psi)=\psi(fv).$$</p>
+<p><strong>Вниз-вправо</strong>, сначала $\eta_V$, потом $f^{**}$: $$\bigl(f^{**}(\eta_V(v))\bigr)(\psi)=\bigl(\eta_V(v)\bigr)(f^*\psi)=(f^*\psi)(v)=(\psi\circ f)(v)=\psi(fv).$$</p>
+<p>Пришли в одно и то же, и на каждом шаге мы только раскрывали определение.</p>
+<div class="stmt rem" id="s0-n-18"><span class="lbl">Замечание (зал считал этот квадрат всю жизнь).</span><p>Два способа сопоставить пространству координаты — то есть два выбора базиса — превращают линейное отображение $f$ в две разные матрицы $F(f)$ и $G(f)$, связанные школьной формулой</p><p class="eq">$$G(f)=M_W\cdot F(f)\cdot M_V^{-1},$$</p><p>где $M_V,M_W$ — матрицы перехода. Это тот же квадрат, переписанный матрицами: семейство матриц перехода есть семейство компонент, а формула замены базиса есть условие, что квадрат сходится.</p><a class="mn-ref" id="s0-mnr-22" href="#s0-mn-22">✳</a></div>
+<p id="s0-mn-22" class="mn"><a class="mn-back" href="#s0-mnr-22">✳</a> Порядок внутри слайда продиктован владельцем: сначала показываем отображение, потом называем. Имя приходит после примера, не до.<a class="mn-ref" id="s0-mnr-23" href="#s0-mn-23">✳</a></p>
+<p id="s0-mn-23" class="mn"><a class="mn-back" href="#s0-mnr-23">✳</a> Числовой пример в резерв, на случай вопроса: $V=W=\mathbb R^2$, $f(x,y)=(x+y,y)$, $\psi(a,b)=a$, $v=(1,0)$. Вправо-вниз $\psi(fv)=1$; вниз-вправо $(f^*\psi)(v)=1+0=1$. На слайд не выносится: общий проход короче и доказывает больше.<a class="mn-ref" id="s0-mnr-24" href="#s0-mn-24">✳</a></p>
+<p id="s0-mn-24" class="mn"><a class="mn-back" href="#s0-mnr-24">✳</a> Двойное разворачивание стрелки — место, где зал может застрять. Не называть это контравариантностью и не останавливаться: «первый раз стрелка перевернулась, второй раз обратно, поэтому квадрат вообще можно выписать».<a class="mn-ref" id="s0-mnr-25" href="#s0-mn-25">✳</a></p>
+<p id="s0-mn-25" class="mn"><a class="mn-back" href="#s0-mnr-25">✳</a> Если спросят «а с $V^*$ тогда тоже так?» — отвечать точно, здесь легко соврать. Для <strong>произвольного</strong> $f$ квадрат для $V^*$ не выписывается: $f^*$ идёт назад, стороны не стыкуются по типам. <strong>Но замены координат обратимы</strong>, а у обратимого $f$ есть $f^{-1}$, и стрелку можно развернуть обратно — поэтому на следующем слайде квадрат выпишется. Одной фразой: вопрос «зависит ли от координат» законен, вопрос «уживается ли со всеми линейными отображениями» для $V^*$ — нет.<a class="mn-ref" id="s0-mnr-26" href="#s0-mn-26">✳</a></p>
+<p id="s0-mn-26" class="mn"><a class="mn-back" href="#s0-mnr-26">✳</a> Отсылка к прошлой лекции одной фразой: проверенное квадратом обобщает ситуацию, где равенства комбинаторных формул оказывались согласованными с переименованиями.<a class="mn-ref" id="s0-mnr-27" href="#s0-mn-27">✳</a></p>
+<p id="s0-mn-27" class="mn"><a class="mn-back" href="#s0-mnr-27">✳</a> Первая сцена слайда — без картинки: иллюстрация доказательства приходит последней, чтобы зал успел подумать.<a class="mn-ref" id="s0-mnr-28" href="#s0-mn-28">✳</a></p>
+<figure id="s0-mn-28" class="mn"><a class="mn-back" href="#s0-mnr-28">✳</a> <svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности: компонента преобразования, применённая до и после действия морфизма, даёт один результат"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">FA</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">FB</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">GA</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">GB</text><line class="s-thin" x1="86" y1="29" x2="158" y2="29"></line><path class="s-ar-m" d="M149,25 l9,4 -9,4 z"></path><line class="s-thin" x1="86" y1="173" x2="158" y2="173"></line><path class="s-ar-m" d="M149,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="122" y="18" text-anchor="middle" font-size="15">Ff</text><text class="s-txt-m" x="122" y="196" text-anchor="middle" font-size="15">Gf</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">α<tspan dy="3" font-size="11">A</tspan></text><text class="s-txt-m" x="206" y="105" font-size="15">α<tspan dy="3" font-size="11">B</tspan></text></svg><figcaption>Определение 40: перевести и потом подействовать — то же, что подействовать и потом перевести. Квадрат утверждения 6 есть этот же квадрат для двух видов.</figcaption></figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-7">Для $V^*$ канонического нет · ~5 мин</h2></summary><div class="sec-body">
+<p>Быстро: инструмент уже разобран на предыдущем слайде. Слово «категория» здесь не произносится, работаем теми словами, что введены.</p>
+<p>Что означало бы «не зависит от координат» — это <strong>соглашение</strong>, а не теорема: договариваемся, что конструкция уживается с любой заменой координат, ровно как $\eta$ уживалась с любым $f$. То есть квадрат должен сходиться.</p>
+<p>Дальше нужен ровно один факт. Если вектор растянули в $\lambda\ne0$ раз, то, чтобы результат измерения не поехал, функционал обязан сжаться: $$\langle \lambda v,\ ?\,\varphi\rangle=\langle v,\varphi\rangle\quad\Longrightarrow\quad ?=\lambda^{-1}.$$ Умножение вектора на $\lambda$ отвечает в двойственном пространстве умножению на $\lambda^{-1}$.</p>
+<p>Проверять все замены не надо: мы доказываем, что согласованности <strong>нет</strong>, значит достаточно предъявить одну замену, на которой она ломается.</p>
+<div class="stmt thm" id="s0-t-19"><span class="lbl">Утверждение (канонического изоморфизма $V\cong V^*$ нет).</span><p>Ни для какого $V\ne0$ не существует изоморфизма $\alpha_V\colon V\to V^*$, согласованного хотя бы с одним растяжением на $\lambda$ с $\lambda^2\ne1$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Берём $f=\lambda\cdot\mathrm{id}$. В квадрате сверху стоит умножение на $\lambda$, снизу на $\lambda^{-1}$; считаем обе дороги на векторе $v$: $$\text{вправо-вниз: }\ \alpha_V(\lambda v)=\lambda\,\alpha_V(v);\qquad \text{вниз-вправо: }\ \lambda^{-1}\alpha_V(v).$$ Равенство даёт $(\lambda^2-1)\,\alpha_V(v)=0$. Над $\mathbb R$ берём $\lambda=2$: получаем $3\,\alpha_V(v)=0$, то есть $\alpha_V=0$ для всех $v$. Нулевое отображение изоморфизмом не является при $V\ne0$.</p></div></details></div>
+<div class="stmt rem" id="s0-n-20"><span class="lbl">Замечание (запрет не запрещает лишнего).</span><p>Проделаем тот же счёт для $V^{**}$: там растяжение действует умножением на $(\lambda^{-1})^{-1}= \lambda$, то есть сверху $\lambda$ и снизу $\lambda$. Равенство $\lambda\,\eta_V=\lambda\,\eta_V$ выполняется даром, препятствия нет. И изоморфизм там действительно есть — мы построили его формулой.</p></div>
+<p>На последней сцене акта произносится имя, один раз, после того как оба ответа получены: правило $V\mapsto V^{**}$ есть функтор, и правило $V\mapsto V$ тоже; мы построили изоморфизм <strong>между двумя функторами сразу</strong>, одной формулой для всех пространств. Такое называется <strong>естественным изоморфизмом</strong>. А между $V$ и $V^*$ такого нет.<a class="mn-ref" id="s0-mnr-29" href="#s0-mn-29">✳</a></p>
+<p id="s0-mn-29" class="mn"><a class="mn-back" href="#s0-mnr-29">✳</a> Формальная оговорка для лектора, на слайд не идёт: доказанное живёт на категории, у которой объекты — все векторные пространства, а морфизмы — только умножения на ненулевые скаляры. Объекты обязаны остаться все: нужен функтор $V\mapsto V^*$, а $V^*$ — другой объект.<a class="mn-ref" id="s0-mnr-30" href="#s0-mn-30">✳</a></p>
+<p id="s0-mn-30" class="mn"><a class="mn-back" href="#s0-mnr-30">✳</a> Урезание до скаляров чинит не только подачу, но и постановку. На <strong>всей</strong> категории вопрос «естествен ли $V\cong V^*$» не формулируется: $V\mapsto V^*$ разворачивает стрелки, квадрат не с чем выписать. Корректную постановку даёт только сужение до обратимых морфизмов, а ненулевые скаляры обратимы. Второй лектор указывал 22.07, что расхожий пример «неестественный изоморфизм $V\cong V^*$» в наивной форме некорректен; наша форма корректна.<a class="mn-ref" id="s0-mnr-31" href="#s0-mn-31">✳</a></p>
+<p id="s0-mn-31" class="mn"><a class="mn-back" href="#s0-mnr-31">✳</a> Почему $\lambda=2$ здесь законно и почему эту строчку нельзя копировать. В конспекте прошлой лекции этот шаг был <strong>ошибкой</strong>: у двойки $\lambda^2\ne1$ выполнено не в каждом поле, в характеристике $3$ будет $4=1$. У нас шаг законен ровно потому, что поле $\mathbb R$ зафиксировано вслух. Правильная общая форма условия — «с <strong>обратимым</strong> $\lambda$, у которого $\lambda^2\ne1$»: просто «$\lambda^2\ne1$» не отсекает ничего, годится $\lambda=0$.<a class="mn-ref" id="s0-mnr-32" href="#s0-mn-32">✳</a></p>
+<p id="s0-mn-32" class="mn"><a class="mn-back" href="#s0-mnr-32">✳</a> Контравариантность не выпячиваем: <em>«я бы не слишком её вытягивал; люди и так спросят, что это на самом деле не функтор был»</em>. Спросят — ответим, сами не заводим.<a class="mn-ref" id="s0-mnr-33" href="#s0-mn-33">✳</a></p>
+<p id="s0-mn-33" class="mn"><a class="mn-back" href="#s0-mnr-33">✳</a> Не произносить «тот же самый приём» про другие запреты. Допустимая форма — «разные группы, одна схема»: здесь группа обратимых отображений, подставляется скаляр, инвариант — вес; в родственном запрете про перестановки группа $S_n$ и число неподвижных точек, и никакого скаляра там нет.<a class="mn-ref" id="s0-mnr-34" href="#s0-mn-34">✳</a></p>
+<p id="s0-mn-34" class="mn"><a class="mn-back" href="#s0-mnr-34">✳</a> Где именно произносится имя — открытый пункт. Моя расстановка: последняя сцена этого слайда, там оно оплачено обоими случаями сразу, а итог остаётся про диаграммы.<a class="mn-ref" id="s0-mnr-35" href="#s0-mn-35">✳</a></p>
+<figure id="s0-mn-35" class="mn"><a class="mn-back" href="#s0-mnr-35">✳</a> <svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности с подставленным обратимым скаляром: сверху умножение на лямбда, снизу на обратную лямбда, поэтому квадрат не сходится"><text class="s-txt" x="52" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="198" y="34" text-anchor="middle" font-size="17">V</text><text class="s-txt" x="52" y="178" text-anchor="middle" font-size="17">V*</text><text class="s-txt" x="198" y="178" text-anchor="middle" font-size="17">V*</text><line class="s-thin" x1="70" y1="29" x2="180" y2="29"></line><path class="s-ar-m" d="M171,25 l9,4 -9,4 z"></path><line class="s-thin" x1="74" y1="173" x2="176" y2="173"></line><path class="s-ar-m" d="M167,169 l9,4 -9,4 z"></path><line class="s-thin" x1="52" y1="48" x2="52" y2="152"></line><path class="s-ar-m" d="M48,143 l4,9 4,-9 z"></path><line class="s-thin" x1="198" y1="48" x2="198" y2="152"></line><path class="s-ar-m" d="M194,143 l4,9 4,-9 z"></path><text class="s-txt-m" x="125" y="18" text-anchor="middle" font-size="15">·λ</text><text class="s-txt-m" x="125" y="196" text-anchor="middle" font-size="15">·λ⁻¹</text><text class="s-txt-m" x="44" y="105" text-anchor="end" font-size="15">η</text><text class="s-txt-m" x="206" y="105" font-size="15">η</text><text class="s-txt-m" x="125" y="108" text-anchor="middle" font-size="14">λ ≠ λ⁻¹</text></svg><figcaption>Тот же квадрат, что задавал определение, впервые служит орудием: в него подставлена обратимая стрелка объекта в себя. Наверху растяжение умножает на $\lambda$, внизу, на двойственном, — на $\lambda^{-1}$; центральная метка называет требование, которое из этого выходит: $\lambda\ne\lambda^{-1}$, то есть в поле нужен обратимый $\lambda$ с $\lambda^2\ne1$.</figcaption></figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-8">Инъекции в палитру · ~7 мин</h2></summary><div class="sec-body">
+<p>Первый слайд второй половины: меняем инструмент. Раньше работал квадрат, здесь работает равенство композиций. Идея ретракции приходит на этом примере, без вывески.</p>
+<p>Фиксируем число $k$. Каждому конечному множеству $X$ сопоставим $$\mathrm{Inj}_k(X):=\{\text{инъекции }X\to\{1,\dots,k\}\}$$ — способы раскрасить элементы $X$ в $k$ цветов так, чтобы все цвета были разные.</p>
+<p>На биекциях правило работает: биекции $\sigma\colon X\to Y$ отвечает $f\mapsto f\circ\sigma^{-1}$, и функториальность проверяется в строку из $(\tau\circ\sigma)^{-1}=\sigma^{-1}\circ\tau^{-1}$. Вопрос слайда: а на <strong>всех</strong> отображениях?</p>
+<div class="stmt thm" id="s0-t-21"><span class="lbl">Утверждение (инъекции не продолжаются до функтора).</span><p>Сопоставление $X\mapsto\mathrm{Inj}_k(X)$ не продолжается до функтора $\mathbf{FinSet}\to\mathbf{FinSet}$ — ни ковариантно, ни контравариантно.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p><strong>Пара стрелок.</strong> Возьмём $A$ из $k$ элементов и $B$ из $k+1$, причём $A\subset B$. Положим $s\colon A\to B$ — вложение, а $r\colon B\to A$ — отображение, тождественное на $A$, а лишний элемент отправляющее в какой-нибудь элемент $A$ (он есть, $k\ge1$). Тогда $r\circ s=\mathrm{id}_A$.</p></div></details></div>
+<p><strong>Считаем оба множества.</strong> $\mathrm{Inj}_k(A)$ — биекции $A\to\{1,\dots,k\}$, их ровно $k!$, и в частности их больше нуля. А $\mathrm{Inj}_k(B)=\varnothing$: инъекции из $k+1$ элементов в $k$ не бывает.</p>
+<p><strong>Ковариантный случай.</strong> Пусть функтор $F$ с $F(X)=\mathrm{Inj}_k(X)$ существует. Тогда $$F(r)\circ F(s)=F(r\circ s)=F(\mathrm{id}_A)=\mathrm{id}_{F(A)},$$ то есть тождественное отображение непустого множества разложилось через пустое. Но уже стрелки $F(s)\colon\mathrm{Inj}_k(A)\to\varnothing$ не существует: отображений из непустого множества в пустое не бывает вовсе.</p>
+<p><strong>Контравариантный случай.</strong> Порядок композиции переворачивается: $F(s)\circ F(r)=F(r\circ s)=\mathrm{id}_{F(A)}$, и нужна стрелка $F(r)\colon\mathrm{Inj}_k(A)\to\varnothing$ — её опять не существует.<a class="mn-ref" id="s0-mnr-36" href="#s0-mn-36">✳</a></p>
+<p id="s0-mn-36" class="mn"><a class="mn-back" href="#s0-mnr-36">✳</a> Обязательная реплика вслух: эта конструкция была на прошлой лекции пятым пунктом примеров, и там зал видел её <strong>красивой</strong> — на биекциях всё работает. Здесь та же конструкция оказывается первым местом, где язык что-то <strong>запрещает</strong>. Без этой реплики зал вынесет ложную мораль «надо было сузить класс стрелок».<a class="mn-ref" id="s0-mnr-37" href="#s0-mn-37">✳</a></p>
+<p id="s0-mn-37" class="mn"><a class="mn-back" href="#s0-mnr-37">✳</a> Идею ретракции произносим, имя — нет: «$A$ вкладывается в $B$, и есть дорога обратно, возвращающая всё на место». Слово появится через два слайда, после второго примера.<a class="mn-ref" id="s0-mnr-38" href="#s0-mn-38">✳</a></p>
+<p id="s0-mn-38" class="mn"><a class="mn-back" href="#s0-mnr-38">✳</a> Почему $k+1$, а не $2k$: разница в один элемент уже ломает всё, и это видно без счёта. Больший разрыв ничего не добавляет, а на картинке читается хуже.<a class="mn-ref" id="s0-mnr-39" href="#s0-mn-39">✳</a></p>
+<p id="s0-mn-39" class="mn"><a class="mn-back" href="#s0-mnr-39">✳</a> Если возразят «а если взять $r$ по-другому» — ответ уже в доказательстве: мы не разбирали, какой именно $F(s)$, мы показали, что его не существует ни одного.<a class="mn-ref" id="s0-mnr-40" href="#s0-mn-40">✳</a></p>
+<p id="s0-mn-40" class="mn"><a class="mn-back" href="#s0-mnr-40">✳</a> Слайд исключён из кандидатов на сброс 05.08: <em>«это хорошая интересная конструкция… я бы оставил этот мостик к первой лекции»</em>.<a class="mn-ref" id="s0-mnr-41" href="#s0-mn-41">✳</a></p>
+<figure id="s0-mn-41" class="mn"><a class="mn-back" href="#s0-mnr-41">✳</a>  <svg viewBox="0 0 300 200" width="300" role="img" aria-label="Два множества: слева три точки, справа четыре, из них одна лишняя выделена; стрелка вложения вправо и стрелка возврата влево"> <ellipse class="s-fillsh" cx="58" cy="100" rx="36" ry="58"/><ellipse class="s-thin" cx="58" cy="100" rx="36" ry="58"/> <ellipse class="s-fillsh" cx="242" cy="100" rx="36" ry="70"/><ellipse class="s-thin" cx="242" cy="100" rx="36" ry="70"/> <text class="s-txt" x="58" y="28" text-anchor="middle">A</text> <text class="s-txt" x="242" y="16" text-anchor="middle">B</text> <circle class="s-node" cx="58" cy="74" r="3.4"/><circle class="s-node" cx="58" cy="100" r="3.4"/><circle class="s-node" cx="58" cy="126" r="3.4"/> <circle class="s-node" cx="242" cy="62" r="3.4"/><circle class="s-node" cx="242" cy="88" r="3.4"/><circle class="s-node" cx="242" cy="114" r="3.4"/><circle class="s-node-a" cx="242" cy="146" r="3.4"/> <line class="s-thin" x1="102" y1="72" x2="194" y2="72"/><path class="s-ar-m" d="M194,68 l9,4 -9,4 z"/> <text class="s-txt-m" x="148" y="62" text-anchor="middle">s</text> <line class="s-dash" x1="198" y1="128" x2="106" y2="128"/><path class="s-ar-a" d="M106,124 l-9,4 9,4 z"/> <text class="s-txt-m" x="148" y="148" text-anchor="middle">r</text> <text class="s-txt-m" x="148" y="190" text-anchor="middle">r &#8728; s = id</text> </svg> <figcaption>Множество $A$ вкладывается в большее $B$, и есть дорога обратно, возвращающая каждую точку $A$ на своё место. Лишней точке $B$ (она выделена) при возврате приходится сесть на одну из старых — обратная дорога есть, но биекцией она не является. Это и есть ретракт, ещё без имени.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-9">Центр группы · ~7 мин</h2></summary><div class="sec-body">
+<p>Второй пример того же механизма, на алгебре. Сначала пример, потом аксиоматизация — <em>«мы хотели начать с идеи про центр, посмотреть на пример, а потом его аксиоматизировать»</em>.</p>
+<p>Все участники выписаны:</p>
+<ul><li>$Z(G)=\{z\in G:\ zg=gz$ для всех $g\in G\}$;</li><li>$\mathbb Z_2=\{0,1\}$ со сложением по модулю $2$;</li><li>$s\colon\mathbb Z_2\to S_3$, где $0\mapsto e$ и $1\mapsto(1\,2)$;</li><li>$\mathrm{sgn}\colon S_3\to\mathbb Z_2$, где $e,(1\,2\,3),(1\,3\,2)\mapsto 0$ и $(1\,2),(1\,3),(2\,3)\mapsto 1$.</li></ul>
+<div class="stmt thm" id="s0-t-22"><span class="lbl">Утверждение (центр не продолжается до функтора).</span><p>Не существует функтора $\mathbf{Grp}\to\mathbf{Grp}$, совпадающего на объектах с правилом $G\mapsto Z(G)$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p><strong>Обе стрелки — гомоморфизмы.</strong> Без этого пара живёт в множествах, а не в группах. У $s$ из четырёх пар три проверяются даром, потому что $s(0)=e$; остаётся $a=b=1$: $s(1+1)=s(0)=e$ и $s(1)\cdot s(1)=(1\,2)(1\,2)=e$. У $\mathrm{sgn}$: чётность произведения перестановок есть сумма чётностей, а сложение чётностей и есть сложение в $\mathbb Z_2$.</p></div></details></div>
+<p><strong>Дорога туда и обратно.</strong> Считаем композицию на каждом элементе: $$\mathrm{sgn}\circ s\colon\quad 0\mapsto e\mapsto 0,\qquad 1\mapsto(1\,2)\mapsto 1.$$ Оба элемента вернулись на место, значит $\mathrm{sgn}\circ s=\mathrm{id}_{\mathbb Z_2}$. Направление важно: $\mathbb Z_2$ вкладывается в $S_3$, а знак возвращает обратно.</p>
+<p><strong>Центры.</strong> $Z(\mathbb Z_2)=\mathbb Z_2$, группа абелева. А $Z(S_3)=\{e\}$, и вот почему, без перебора шести элементов. Формула сопряжения: $\sigma(a\,b)\sigma^{-1}=(\sigma(a)\,\sigma(b))$ — левая часть посылает $\sigma(a)\mapsto a\mapsto b\mapsto\sigma(b)$ и $\sigma(b)\mapsto\sigma(a)$, а всё остальное оставляет на месте. Пусть $z$ центральна; тогда $z(a\,b)z^{-1}=(a\,b)$ для каждой транспозиции, то есть $\{z(a),z(b)\}=\{a,b\}$. Берём $(1\,2)$ и $(1\,3)$: $$\{z(1),z(2)\}=\{1,2\},\quad \{z(1),z(3)\}=\{1,3\}\ \Longrightarrow\ z(1)\in\{1\}.$$ Значит $z(1)=1$; так как $z$ — перестановка, $z(2)\ne1$, и из первого равенства $z(2)=2$, тогда $z(3)=3$. То есть $z=e$, и третья транспозиция не понадобилась.</p>
+<p><strong>Противоречие.</strong> Пусть функтор $Z$ существует. Применим его к паре: $$\mathrm{id}_{\mathbb Z_2}=Z(\mathrm{sgn})\circ Z(s)\colon\quad \mathbb Z_2\longrightarrow\{e\}\longrightarrow\mathbb Z_2.$$ Гомоморфизм из единичной группы переводит $e$ в нейтральный элемент, поэтому вся композиция посылает любой элемент в $0$. На элементе: $1\mapsto e\mapsto 0$, а $\mathrm{id}_{\mathbb Z_2}(1)=1$.</p>
+<p>Мораль, ведущая к следующему слайду: мы дважды подряд сделали одно и то же — нашли пару стрелок «туда и обратно» наверху, посмотрели, что стало внизу, и получили противоречие. Пора это назвать.<a class="mn-ref" id="s0-mnr-42" href="#s0-mn-42">✳</a></p>
+<p id="s0-mn-42" class="mn"><a class="mn-back" href="#s0-mnr-42">✳</a> Три места, где раньше приходилось достраивать: направление вложения читается из строки $1\mapsto(1\,2)$; обозначение только $\mathbb Z_2$, ровно два элемента; определение центра и обоснование $Z(S_3)=\{e\}$ стоят на месте.<a class="mn-ref" id="s0-mnr-43" href="#s0-mn-43">✳</a></p>
+<p id="s0-mn-43" class="mn"><a class="mn-back" href="#s0-mnr-43">✳</a> Если спросят про перебор: $Z(S_3)$ находится и перебором шести элементов, это честно и быстро. Формула сопряжения выбрана потому, что разбирает один случай до дна и объясняет причину, а перебор только подтверждает результат.<a class="mn-ref" id="s0-mnr-44" href="#s0-mn-44">✳</a></p>
+<p id="s0-mn-44" class="mn"><a class="mn-back" href="#s0-mnr-44">✳</a> Незакрытый инцидент вёрстки, тянется с 30.07: раскладка ловила не ту подстроку, и диаграммы на слайде не было вовсе. Формулировка переписана 30.07 и повторно не проверялась. При сборке проверять сборкой, а не грепом по источнику.<a class="mn-ref" id="s0-mnr-45" href="#s0-mn-45">✳</a></p>
+<figure id="s0-mn-45" class="mn"><a class="mn-back" href="#s0-mnr-45">✳</a>  <svg viewBox="0 0 300 200" width="300" role="img" aria-label="Наверху группа ℤ₂, стрелка в S3 и стрелка знака обратно в ℤ₂, композиция тождественна. Внизу их центры: ℤ₂, единичная группа, ℤ₂, и обратного пути внизу нет"> <text class="s-txt" x="30" y="34" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="34" text-anchor="middle" font-size="17">S₃</text><text class="s-txt" x="270" y="34" text-anchor="middle" font-size="17">ℤ₂</text> <text class="s-txt" x="30" y="180" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="180" text-anchor="middle" font-size="17">{e}</text><text class="s-txt" x="270" y="180" text-anchor="middle" font-size="17">ℤ₂</text> <line class="s-thin" x1="46" y1="29" x2="132" y2="29"></line><path class="s-ar-m" d="M123,25 l9,4 -9,4 z"></path> <line class="s-thin" x1="168" y1="29" x2="252" y2="29"></line><path class="s-ar-m" d="M243,25 l9,4 -9,4 z"></path> <line class="s-thin" x1="54" y1="175" x2="126" y2="175"></line><path class="s-ar-m" d="M117,171 l9,4 -9,4 z"></path> <line class="s-thin" x1="174" y1="175" x2="246" y2="175"></line><path class="s-ar-m" d="M237,171 l9,4 -9,4 z"></path> <line class="s-dash" x1="30" y1="46" x2="30" y2="158"></line><path class="s-ar-a" d="M26,149 l4,9 4,-9 z"></path> <line class="s-dash" x1="150" y1="46" x2="150" y2="158"></line><path class="s-ar-a" d="M146,149 l4,9 4,-9 z"></path> <line class="s-dash" x1="270" y1="46" x2="270" y2="158"></line><path class="s-ar-a" d="M266,149 l4,9 4,-9 z"></path> <text class="s-txt-m" x="89" y="18" text-anchor="middle" font-size="15">s</text><text class="s-txt-m" x="210" y="18" text-anchor="middle" font-size="15">sgn</text> <text class="s-txt-m" x="90" y="198" text-anchor="middle" font-size="15">Zs</text><text class="s-txt-m" x="210" y="198" text-anchor="middle" font-size="15">Zr</text> <text class="s-txt-m" x="38" y="106" font-size="15">Z</text><text class="s-txt-m" x="158" y="106" font-size="15">Z</text><text class="s-txt-m" x="278" y="106" font-size="15">Z</text> <text class="s-txt-m" x="150" y="62" text-anchor="middle" font-size="14">sgn ∘ s = id</text> <text class="s-txt-m" x="150" y="146" text-anchor="middle" font-size="14">= id ?</text> </svg> <figcaption>Наверху пара стрелок с тождественной композицией: транспозиция вкладывается в $S_3$, знак возвращает её обратно. Внизу тот же чертёж после взятия центров, и здесь средний этаж стал единичной группой: пройти $\mathbb Z_2\to\{e\}\to\mathbb Z_2$ тождественно нельзя.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-10">Ретракт · ~8 мин</h2></summary><div class="sec-body">
+<p>Несущий слайд второй половины. Сначала общее определение, потом обзор по категориям.</p>
+<div class="stmt defn" id="s0-d-23"><span class="lbl">Определение (ретракция, сечение, ретракт).</span><p>Пусть $r\colon B\to A$ и $s\colon A\to B$ таковы, что $r\circ s=\mathrm{id}_A$. Тогда $r$ —</p><p><strong>ретракция</strong>, $s$ — <strong>сечение</strong>, а $A$ — <strong>ретракт</strong> объекта $B$. Про обратную композицию $s\circ r$ не требуется ничего — этим ретракт слабее изоморфизма.</p></div>
+<div class="stmt thm" id="s0-t-24"><span class="lbl">Утверждение (ретракт переживает функтор).</span><p>Если $A$ — ретракт $B$ через пару $(r,s)$, то для любого функтора $F$ объект $FA$ — ретракт $FB$ через пару $(Fr,Fs)$.</p><details class="d-proof"><summary>доказательство — три строки, и зал видит, что инструмент тривиален</summary><div class="proof"><p class="eq">$$Fr\circ Fs=F(r\circ s)=F(\mathrm{id}_A)=\mathrm{id}_{FA}.$$</p><p>Первое равенство — функтор сохраняет композицию, второе — условие ретракта, третье — функтор сохраняет тождества. Других свойств не использовано.</p></div></details></div>
+<div class="stmt thm" id="s0-t-25"><span class="lbl">Утверждение (рабочая форма — то же наизнанку).</span><p>Пусть правило $X\mapsto FX$ задано только на объектах. Если $A$ — ретракт $B$, а пары морфизмов $u\colon FA\to FB$ и $v\colon FB\to FA$ с $v\circ u=\mathrm{id}_{FA}$ не существует, то это правило</p><p><strong>ни одним способом</strong> не продолжается до функтора.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Продолжение дало бы такую пару: $u=Fs$, $v=Fr$, а $v\circ u=\mathrm{id}_{FA}$ по <a class="xref" href="#s0-t-24">утверждению 24</a>.</p></div></details></div>
+<p>Ровно эту форму мы применяли дважды — с инъекциями и с центром. То, что делали руками, теперь названо и работает само.</p>
+<p>Дальше — обзор по категориям. Таблица читается как нарастание: всегда → всегда → по условию → надо изобретать инструмент.</p>
+<table> <thead><tr><th>категория</th><th>является ли подобъект ретрактом</th></tr></thead> <tbody> <tr><td>множества</td><td>всегда, если подмножество непусто</td></tr> <tr><td>векторные пространства</td><td>всегда: берём дополнение и проецируем</td></tr> <tr><td>группы</td><td>тогда и только тогда, когда $G=N\rtimes H$ — ретракты суть полупрямые множители</td></tr> <tr><td>пространства</td><td>общего критерия нет, нужен инструмент — функтор $\pi_1$</td></tr> </tbody> </table>
+<div class="stmt thm" id="s0-t-26"><span class="lbl">Утверждение (ретракты в множествах).</span><p>У $s\colon A\to B$ есть ретракция тогда и только тогда, когда $s$ инъективно (при $A\ne\varnothing$). У $r\colon B\to A$ есть сечение тогда и только тогда, когда $r$ сюръективно.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Если $r\circ s=\mathrm{id}$, то из $s(a)=s(a')$ следует $a=a'$ — вот и инъективность. Обратно: для инъективного $s$ определим $r$ на образе как обратное, а вне образа — константой в любой элемент $A$. Сечение — это выбор по одному прообразу для каждого элемента $A$; такие прообразы есть ровно при сюръективности.</p></div></details></div>
+<div class="stmt rem" id="s0-n-27"><span class="lbl">Замечание (что за этим стоит).</span><p>Второй пункт требует выбрать прообраз для каждого элемента сразу. Для конечных множеств это ничего не стоит, а в общем случае «всякая сюръекция имеет сечение» <strong>равносильно аксиоме выбора</strong>. Отсюда главная мораль строки: «всякая ретракция расщепляется» — не свойство математики вообще, а свойство конкретной категории. В множествах да; в группах и пространствах нет. Поэтому таблица и нарастает.</p></div>
+<p>Остальные строки короче.</p>
+<ul><li><strong>Векторные пространства.</strong> Пусть $U\subseteq W$ — подпространство. Дополним базис $U$ до базиса $W$; разложение $W=U\oplus U'$ даёт проекцию $r\colon W\to U$, тождественную на $U$.</li><li><strong>Группы.</strong> Критерий пишем, но не объясняем: <em>«я бы написал это, но просто бы не объяснял; сказал бы: если хотите, почитайте самостоятельно»</em>. Строка смыкается с предыдущим слайдом: $S_3=A_3\rtimes\mathbb Z_2$, и именно поэтому $\mathbb Z_2$ был там ретрактом.</li><a class="mn-ref" id="s0-mnr-46" href="#s0-mn-46">✳</a></ul>
+<p id="s0-mn-46" class="mn"><a class="mn-back" href="#s0-mnr-46">✳</a> Доказательство критерия для групп, если спросят. Пусть $r\colon G\to H$ — ретракция с сечением $s$. Из $r\circ s=\mathrm{id}$ следует, что $s$ инъективно, поэтому $H'=s(H)$ — подгруппа, изоморфная $H$. Положим $N=\ker r$; тогда $N\cap H'=1$ (если $s(h)\in\ker r$, то $h=r(s(h))=e$) и $NH'=G$ (для $g$ пишем $g=\bigl(g\cdot s(r(g))^{-1}\bigr)\cdot s(r(g))$, первый множитель в $\ker r$), а $N$ нормальна как ядро. Обратно: у полупрямого произведения проекция $nh\mapsto h$ — гомоморфизм, тождественный на $H$.<a class="mn-ref" id="s0-mnr-47" href="#s0-mn-47">✳</a></p>
+<p id="s0-mn-47" class="mn"><a class="mn-back" href="#s0-mnr-47">✳</a> Значок $\rtimes$ залу нечем прочитать, и это сознательно. Но лектор обязан ответить одной фразой: $G=N\rtimes H$ значит, что каждый элемент $G$ однозначно раскладывается в произведение элемента нормальной подгруппы $N$ и элемента $H$, причём $N\cap H=1$. Это расшифровка значка, а не разбор конструкции.<a class="mn-ref" id="s0-mnr-48" href="#s0-mn-48">✳</a></p>
+<p id="s0-mn-48" class="mn"><a class="mn-back" href="#s0-mnr-48">✳</a> Строку про векторные пространства не превращать в задачу: задачи «на запрет» там не бывает, препятствий нет по построению, ответ всегда «да». Весь сюжет запретов живёт в двух нижних строках.<a class="mn-ref" id="s0-mnr-49" href="#s0-mn-49">✳</a></p>
+<p id="s0-mn-49" class="mn"><a class="mn-back" href="#s0-mnr-49">✳</a> Почему рабочая форма важнее, чем кажется: она запрещает <strong>все</strong> продолжения сразу. Слабый довод «очевидное продолжение не годится: образ центра не обязан лежать в центре» запрещает одно продолжение, и зал вправе спросить «а другое?».<a class="mn-ref" id="s0-mnr-50" href="#s0-mn-50">✳</a></p>
+<p id="s0-mn-50" class="mn"><a class="mn-back" href="#s0-mnr-50">✳</a> Кандидат на сброс, приоритет 1: если не успеваем, строки «множества» и «векторные пространства» называются одной фразой без разбора.<a class="mn-ref" id="s0-mnr-51" href="#s0-mn-51">✳</a></p>
+<figure id="s0-mn-51" class="mn"><a class="mn-back" href="#s0-mnr-51">✳</a> <svg viewBox="0 0 300 200" width="300" role="img" aria-label="Ретракт и его образ: сверху объект A, сечение в B и ретракция обратно в A, снизу их образы под конструкцией, и обратный путь внизу невозможен"><text class="s-txt" x="30" y="34" text-anchor="middle" font-size="17">A</text><text class="s-txt" x="150" y="34" text-anchor="middle" font-size="17">B</text><text class="s-txt" x="270" y="34" text-anchor="middle" font-size="17">A</text><text class="s-txt" x="30" y="180" text-anchor="middle" font-size="17">FA</text><text class="s-txt" x="150" y="180" text-anchor="middle" font-size="17">FB</text><text class="s-txt" x="270" y="180" text-anchor="middle" font-size="17">FA</text><line class="s-thin" x1="46" y1="29" x2="132" y2="29"></line><path class="s-ar-m" d="M123,25 l9,4 -9,4 z"></path><line class="s-thin" x1="168" y1="29" x2="252" y2="29"></line><path class="s-ar-m" d="M243,25 l9,4 -9,4 z"></path><line class="s-thin" x1="54" y1="175" x2="126" y2="175"></line><path class="s-ar-m" d="M117,171 l9,4 -9,4 z"></path><line class="s-thin" x1="174" y1="175" x2="246" y2="175"></line><path class="s-ar-m" d="M237,171 l9,4 -9,4 z"></path><line class="s-dash" x1="30" y1="46" x2="30" y2="158"></line><path class="s-ar-a" d="M26,149 l4,9 4,-9 z"></path><line class="s-dash" x1="150" y1="46" x2="150" y2="158"></line><path class="s-ar-a" d="M146,149 l4,9 4,-9 z"></path><line class="s-dash" x1="270" y1="46" x2="270" y2="158"></line><path class="s-ar-a" d="M266,149 l4,9 4,-9 z"></path><text class="s-txt-m" x="89" y="18" text-anchor="middle" font-size="15">s</text><text class="s-txt-m" x="210" y="18" text-anchor="middle" font-size="15">r</text><text class="s-txt-m" x="90" y="198" text-anchor="middle" font-size="15">Fs</text><text class="s-txt-m" x="210" y="198" text-anchor="middle" font-size="15">Fr</text><text class="s-txt-m" x="38" y="106" font-size="15">F</text><text class="s-txt-m" x="158" y="106" font-size="15">F</text><text class="s-txt-m" x="278" y="106" font-size="15">F</text><text class="s-txt-m" x="150" y="62" text-anchor="middle" font-size="14">r ∘ s = 1</text><text class="s-txt-m" x="150" y="146" text-anchor="middle" font-size="14">обязано быть 1 — а не может</text></svg><figcaption>Якорь всех трёх сцен, и он единственный визуальный объект слайда. Сцена 1: наверху $C_2$ и $S_3$, внизу $C_2$ и единичная группа. Сцена 2: та же картинка, наверху $A$ и $B$ на $k$ и $k+1$ элементов, внизу $k!$ раскрасок и пустое множество. Меняются только надписи; форма и позиция каждой стрелки те же. Сцена 3: картинка остаётся, а под ней появляются три имени — сечение, ретракция, ретракт.</figcaption></figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-11">Фундаментальная группа · ~8 мин</h2></summary><div class="sec-body">
+<p>Последняя строка таблицы — та, где готового ответа нет и нужен инструмент. Топология ужата сознательно: <em>«подробно объяснять, почему фундаментальная группа окружности это $\mathbb Z$, не надо… если человек знает — знает, а если не знает, мы его тут не научим»</em>.</p>
+<p>Участники: $$D^2=\{x\in\mathbb R^2:\ \lVert x\rVert\le1\},\qquad S^1=\{x\in\mathbb R^2:\ \lVert x\rVert=1\},\qquad i\colon S^1\to D^2,\ i(x)=x.$$</p>
+<p>Берём как известное и честно произносим вслух: $\pi_1$ — функтор из пространств с отмеченной точкой в группы; $\pi_1(S^1)\cong\mathbb Z$, в частности элементов в этой группе больше одного; $\pi_1(D^2)=\{e\}$.</p>
+<p>Последнее как раз проверяем, и оно дешёвое: диск выпуклый, поэтому любая петля $\gamma$ с началом в $y$ стягивается прямолинейно, $H(t,u)=(1-u)\gamma(t)+u\,y$, и эта дорога не выходит из диска именно по выпуклости.</p>
+<p>Показываем на картинке, как произвольная петля даёт намотку: идём по петле и следим, на сколько полных оборотов провернулся угол. Число оборотов целое, и оно не меняется, пока петлю шевелят непрерывно. Опора — тригонометрический угол, который зал знает; слово «гомотопия» можно не произносить.</p>
+<p>Вопрос в зал произносится голосом: <strong>может ли диск непрерывно осесть на свою границу, оставив границу на месте?</strong> Диаграмма приходит следующей сценой.</p>
+<div class="stmt thm" id="s0-t-28"><span class="lbl">Утверждение (окружность не ретракт диска).</span><p>В топологических пространствах $S^1$ не является ретрактом $D^2$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $S^1$ — ретракт $D^2$: есть непрерывные $s\colon S^1\to D^2$ и $r\colon D^2\to S^1$ с $r\circ s=\mathrm{id}_{S^1}$. Применим <a class="xref" href="#s0-t-24">утверждение 24</a> к функтору $F=\pi_1$: $$\pi_1(r)\circ\pi_1(s)=\mathrm{id}\ \text{ на }\ \pi_1(S^1), \qquad\text{а идёт она так: }\ \mathbb Z\longrightarrow\{e\}\longrightarrow\mathbb Z.$$ Гомоморфизм из единичной группы посылает $e$ в нейтральный элемент, поэтому вся композиция посылает каждый элемент в нейтральный — она постоянна. Но она равна тождественному отображению, а тождественное постоянно только на группе из одного элемента. В $\mathbb Z$ элементов больше одного.</p></div></details></div>
+<p>Это третье появление той же формы: картинка та же, что была у центра группы, поменялись только буквы в узлах.<a class="mn-ref" id="s0-mnr-52" href="#s0-mn-52">✳</a></p>
+<p id="s0-mn-52" class="mn"><a class="mn-back" href="#s0-mnr-52">✳</a> Про отмеченную точку — на слайд не идёт, но лектор обязан знать. Выбирать её не надо: условие $r\circ s=\mathrm{id}$ выбирает её само. Берём $x_0=(1,0)$ и кладём $y_0:=s(x_0)$; тогда $r(y_0)=r(s(x_0))=x_0$, то есть обе стрелки сохраняют отмеченные точки автоматически. И $\pi_1(D^2)=\{e\}$ при любой точке: стягивание прямолинейное, выпуклость от точки не зависит.<a class="mn-ref" id="s0-mnr-53" href="#s0-mn-53">✳</a></p>
+<p id="s0-mn-53" class="mn"><a class="mn-back" href="#s0-mnr-53">✳</a> Сечение $s$ не обязано быть вложением $i$ — определение ретракта его не фиксирует. Доказательство разбирает произвольное $s$, и это не педантизм: если сказать «возьмём $i$», доказано будет меньше, чем нужно для Брауэра.<a class="mn-ref" id="s0-mnr-54" href="#s0-mn-54">✳</a></p>
+<p id="s0-mn-54" class="mn"><a class="mn-back" href="#s0-mnr-54">✳</a> Если спросят, почему $\pi_1(S^1)=\mathbb Z$: доказывается, но не сегодня; интуиция — число оборотов, и оно не может измениться скачком при непрерывном шевелении петли. Развёрнутого ответа не давать, это отдельная лекция.<a class="mn-ref" id="s0-mnr-55" href="#s0-mn-55">✳</a></p>
+<p id="s0-mn-55" class="mn"><a class="mn-back" href="#s0-mnr-55">✳</a> Асимметрия с первой половиной сознательная: линейную алгебру зал забыл, но знает — разворачиваем; топологию не знает вовсе — покупаем снаружи.<a class="mn-ref" id="s0-mnr-56" href="#s0-mn-56">✳</a><a class="mn-ref" id="s0-mnr-57" href="#s0-mn-57">✳</a></p>
+<figure id="s0-mn-56" class="mn"><a class="mn-back" href="#s0-mnr-56">✳</a>  <svg viewBox="0 0 200 240" width="200" role="img" aria-label="Окружность, вдоль которой раскручивается спираль в два витка со стрелкой на конце, и ниже шкала угла с отметками ноль, два пи и четыре пи"> <circle class="s-line" cx="100" cy="92" r="66"/> <path class="s-accent" d="M100.0,54.0 L101.8,54.0 L103.7,54.0 L105.5,54.2 L107.4,54.4 L109.2,54.7 L111.0,55.1 L112.8,55.6 L114.6,56.2 L116.3,56.9 L118.0,57.7 L119.7,58.5 L121.3,59.4 L122.9,60.4 L124.5,61.5 L126.0,62.7 L127.4,63.9 L128.8,65.2 L130.1,66.6 L131.4,68.0 L132.5,69.5 L133.7,71.1 L134.7,72.7 L135.7,74.4 L136.5,76.1 L137.3,77.8 L138.0,79.6 L138.7,81.5 L139.2,83.3 L139.7,85.2 L140.0,87.1 L140.3,89.1 L140.4,91.0 L140.5,93.0 L140.5,94.9 L140.4,96.9 L140.2,98.9 L139.9,100.8 L139.5,102.8 L139.0,104.7 L138.4,106.6 L137.7,108.4 L137.0,110.3 L136.1,112.1 L135.2,113.8 L134.1,115.6 L133.0,117.2 L131.8,118.8 L130.5,120.4 L129.2,121.9 L127.7,123.3 L126.3,124.7 L124.7,126.0 L123.1,127.2 L121.4,128.3 L119.6,129.4 L117.8,130.4 L116.0,131.3 L114.1,132.1 L112.2,132.8 L110.2,133.4 L108.2,133.9 L106.2,134.3 L104.1,134.6 L102.1,134.9 L100.0,135.0 L97.9,135.0 L95.8,135.0 L93.8,134.8 L91.7,134.5 L89.6,134.1 L87.6,133.6 L85.5,133.1 L83.6,132.4 L81.6,131.6 L79.7,130.8 L77.8,129.8 L75.9,128.7 L74.1,127.6 L72.4,126.4 L70.7,125.0 L69.1,123.7 L67.6,122.2 L66.1,120.6 L64.7,119.0 L63.3,117.3 L62.1,115.5 L60.9,113.7 L59.9,111.8 L58.9,109.9 L58.0,107.9 L57.2,105.9 L56.5,103.8 L55.9,101.7 L55.4,99.6 L55.0,97.5 L54.7,95.3 L54.6,93.1 L54.5,90.9 L54.5,88.7 L54.6,86.5 L54.9,84.3 L55.2,82.1 L55.7,79.9 L56.3,77.8 L56.9,75.7 L57.7,73.6 L58.6,71.5 L59.5,69.5 L60.6,67.5 L61.8,65.6 L63.0,63.7 L64.4,61.9 L65.8,60.2 L67.3,58.5 L68.9,56.9 L70.6,55.4 L72.4,54.0 L74.2,52.6 L76.1,51.4 L78.1,50.2 L80.1,49.1 L82.1,48.1 L84.2,47.2 L86.4,46.4 L88.6,45.8 L90.8,45.2 L93.1,44.7 L95.4,44.4 L97.7,44.1 L100.0,44.0 L102.3,44.0 L104.6,44.1 L107.0,44.3 L109.3,44.6 L111.6,45.0 L113.9,45.6 L116.1,46.2 L118.3,47.0 L120.5,47.8 L122.7,48.8 L124.8,49.9 L126.8,51.1 L128.8,52.4 L130.7,53.7 L132.6,55.2 L134.4,56.8 L136.1,58.4 L137.7,60.2 L139.3,62.0 L140.8,63.9 L142.1,65.8 L143.4,67.9 L144.6,69.9 L145.7,72.1 L146.7,74.3 L147.6,76.5 L148.3,78.8 L149.0,81.2 L149.5,83.5 L149.9,85.9 L150.3,88.4 L150.4,90.8 L150.5,93.2 L150.5,95.7 L150.3,98.1 L150.0,100.5 L149.6,103.0 L149.1,105.4 L148.5,107.8 L147.8,110.1 L146.9,112.4 L145.9,114.7 L144.8,116.9 L143.6,119.1 L142.4,121.2 L141.0,123.3 L139.5,125.3 L137.9,127.2 L136.2,129.0 L134.4,130.8 L132.5,132.5 L130.6,134.1 L128.5,135.6 L126.4,137.0 L124.3,138.2 L122.0,139.4 L119.8,140.5 L117.4,141.5 L115.0,142.3 L112.6,143.1 L110.1,143.7 L107.6,144.2 L105.1,144.6 L102.6,144.9 L100.0,145.0 L97.4,145.0 L94.9,144.9 L92.3,144.7 L89.8,144.3 L87.2,143.8 L84.7,143.2 L82.2,142.5 L79.8,141.7 L77.4,140.7 L75.0,139.6 L72.7,138.4 L70.4,137.1 L68.3,135.7 L66.1,134.2 L64.1,132.5 L62.1,130.8 L60.2,129.0 L58.4,127.1 L56.7,125.1 L55.1,123.0 L53.6,120.8 L52.2,118.6 L50.9,116.3 L49.7,113.9 L48.6,111.5 L47.7,109.0 L46.9,106.5 L46.1,103.9 L45.6,101.3 L45.1,98.7 L44.8,96.0 L44.6,93.3 L44.5,90.7 L44.5,88.0 L44.7,85.3 L45.0,82.6 L45.5,79.9 L46.0,77.3 L46.7,74.7 L47.6,72.1 L48.5,69.6 L49.6,67.1 L50.8,64.6 L52.1,62.2 L53.5,59.9 L55.1,57.7 L56.7,55.5 L58.5,53.4 L60.3,51.4 L62.3,49.5 L64.4,47.6 L66.5,45.9 L68.7,44.3 L71.0,42.7 L73.4,41.3 L75.9,40.0 L78.4,38.9 L80.9,37.8 L83.5,36.9 L86.2,36.1 L88.9,35.4 L91.7,34.8 L94.4,34.4 L97.2,34.1 L100.0,34.0"/> <path class="s-ar-a" d="M108.9,32.7 L100.7,38.5 L99.3,29.5 z"/> <circle class="s-node-r" cx="100.0" cy="54.0" r="4"/> <text class="s-txt" x="100" y="176" text-anchor="middle">S&#185;</text> <line class="s-thin" x1="28" y1="204" x2="172" y2="204"/> <line class="s-thin" x1="28" y1="198" x2="28" y2="210"/><line class="s-thin" x1="100" y1="198" x2="100" y2="210"/><line class="s-thin" x1="172" y1="198" x2="172" y2="210"/> <text class="s-txt-m" x="28" y="228" text-anchor="middle">0</text> <text class="s-txt-m" x="100" y="228" text-anchor="middle">2&#960;</text> <text class="s-txt-m" x="172" y="228" text-anchor="middle">4&#960;</text> </svg> <figcaption>Петля обходит окружность дважды — спираль нарисована расходящейся только чтобы витки было видно, на самой окружности они лежат друг на друге. Угол за два обхода прирос на $4\pi$: число оборотов целое, и оно не меняется, пока петлю шевелят непрерывно. Это число и есть элемент $\mathbb Z$.</figcaption> </figure>
+<figure id="s0-mn-57" class="mn"><a class="mn-back" href="#s0-mnr-57">✳</a>  <svg viewBox="0 0 220 250" width="220" role="img" aria-label="Наверху окружность и диск, стрелка вложения вперёд и пунктирная стрелка обратно. Внизу их фундаментальные группы: целые числа и единичная группа, и обратный путь через единичную группу помечен вопросом"> <circle class="s-line" cx="54" cy="52" r="24"/> <circle class="s-fillsh" cx="166" cy="52" r="24"/><circle class="s-line" cx="166" cy="52" r="24"/> <text class="s-txt" x="54" y="92" text-anchor="middle" font-size="17">S¹</text> <text class="s-txt" x="166" y="92" text-anchor="middle" font-size="17">D²</text> <line class="s-thin" x1="84" y1="44" x2="132" y2="44"/><path class="s-ar-m" d="M130,40 l9,4 -9,4 z"/> <line class="s-dash" x1="136" y1="62" x2="92" y2="62"/><path class="s-ar-a" d="M91,58 l-9,4 9,4 z"/> <text class="s-txt-m" x="108" y="34" text-anchor="middle" font-size="15">i</text> <text class="s-txt-m" x="108" y="78" text-anchor="middle" font-size="15">r</text> <line class="s-dash" x1="54" y1="104" x2="54" y2="148"/><path class="s-ar-a" d="M50,139 l4,9 4,-9 z"/> <line class="s-dash" x1="166" y1="104" x2="166" y2="148"/><path class="s-ar-a" d="M162,139 l4,9 4,-9 z"/> <text class="s-txt-m" x="62" y="128" font-size="15">π₁</text> <text class="s-txt-m" x="174" y="128" font-size="15">π₁</text> <text class="s-txt" x="54" y="176" text-anchor="middle" font-size="17">ℤ</text> <text class="s-txt" x="166" y="176" text-anchor="middle" font-size="17">{e}</text> <line class="s-thin" x1="70" y1="194" x2="146" y2="194"/><path class="s-ar-m" d="M144,190 l9,4 -9,4 z"/> <line class="s-dash" x1="150" y1="210" x2="73" y2="210"/><path class="s-ar-a" d="M73,206 l-9,4 9,4 z"/> <text class="s-txt-m" x="110" y="228" text-anchor="middle" font-size="14">= id ?</text> </svg> <figcaption>Окружность вкладывается в диск; вопрос в том, есть ли непрерывный путь обратно, тождественный на окружности. Фундаментальная группа переводит эту пару в пару между $\mathbb Z$ и единичной группой, а там тождество через единичную группу не проходит.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-12">Теорема Брауэра · ~7 мин</h2></summary><div class="sec-body">
+<p>Не новый приём, а расплата по уже доказанному. Итог сюжета лекции.</p>
+<div class="stmt thm" id="s0-t-29"><span class="lbl">Теорема (Брауэр).</span><p>Всякое непрерывное $f\colon D^2\to D^2$ имеет неподвижную точку.</p><details class="d-proof"><summary>доказательство — сведение, которое показывается анимацией</summary><div class="proof"><p>Предположим противное: $f(x)\ne x$ при всех $x$. Тогда определено направление «от $f(x)$ к $x$», и можно пойти из $x$ в эту сторону до первой точки выхода на границу. Назовём её $r(x)$; получилось непрерывное $r\colon D^2\to S^1$.</p></div></details></div>
+<p><strong>Теперь граница.</strong> Возьмём $x$ на границе. Луч идёт из $f(x)$ через $x$; так как $f(x)$ лежит в диске, луч в точке $x$ выходит из диска, а не входит. Значит первая точка выхода — сама $x$, то есть $r(x)=x$ при $\lVert x\rVert=1$.</p>
+<p>Стало быть $r$ — ретракция диска на окружность, тождественная на границе. А таких не бывает по <a class="xref" href="#s0-t-28">утверждению 28</a>. Противоречие, и предположение $f(x)\ne x$ ложно.</p>
+<div class="stmt rem" id="s0-n-30"><span class="lbl">Замечание (почему условие на границе несущее).</span><p>Отображение диска на окружность существует всегда — хоть постоянное, — и в самом факте его существования нет ничего невозможного. Противоречие возникает ровно потому, что построенное отображение <strong>тождественно на границе</strong>, то есть является ретракцией. Если показать только внутреннюю точку, зритель увидит «построили отображение в окружность» и не поймёт, что здесь невозможного.</p><a class="mn-ref" id="s0-mnr-58" href="#s0-mn-58">✳</a></div>
+<p id="s0-mn-58" class="mn"><a class="mn-back" href="#s0-mnr-58">✳</a> Единственный тонкий шаг — тот, что про границу, и обычно его пропускают. «Луч упирается в саму $x$» верно не даром: нужно, чтобы луч уходил из диска, а не входил, и это ровно неравенство $\langle x,\,x-f(x)\rangle\ge0$. Считается в строку: $\langle x,x-f(x)\rangle=1-\langle x,f(x)\rangle\ge1-\lVert x\rVert\lVert f(x)\rVert\ge0$ — по Коши–Буняковскому и потому что $\lVert f(x)\rVert\le1$. Если бы $f$ выпускало за пределы диска, ретракция бы не получилась и Брауэр был бы неверен.<a class="mn-ref" id="s0-mnr-59" href="#s0-mn-59">✳</a></p>
+<p id="s0-mn-59" class="mn"><a class="mn-back" href="#s0-mnr-59">✳</a> На слух довод «выходит, а не входит» не убеждает — произнести опору словами: точка $f(x)$ не может быть дальше от центра, чем граница, потому что $f$ отображает диск в себя. Формула на слайд не идёт, фраза «$f$ никуда не выпускает» — идёт.<a class="mn-ref" id="s0-mnr-60" href="#s0-mn-60">✳</a></p>
+<p id="s0-mn-60" class="mn"><a class="mn-back" href="#s0-mnr-60">✳</a> Формулы $u(x),a(x),t(x)$ и $r(x)=x+t(x)u(x)$ с четырьмя проверками на слайд не выносятся (решение 05.08): они остаются в <code>01-liniya-A.md §A4</code> для конспекта, листа упражнений и ответа на вопрос. Вывод показывается только анимацией.<a class="mn-ref" id="s0-mnr-61" href="#s0-mn-61">✳</a></p>
+<p id="s0-mn-61" class="mn"><a class="mn-back" href="#s0-mnr-61">✳</a> Если спросят «а в трёх измерениях» — да, верно, и доказательство то же, только вместо $\pi_1$ берётся другой функтор. Развивать не надо.<a class="mn-ref" id="s0-mnr-62" href="#s0-mn-62">✳</a></p>
+<p id="s0-mn-62" class="mn"><a class="mn-back" href="#s0-mnr-62">✳</a> ТЗ анимации: два кадра. Первый — внутренняя точка ездит по диску, $r(x)$ бежит следом по границе. Второй, обязательный, — $x$ едет <strong>по границе</strong>, и $r(x)$ едет вместе с ней, не отрываясь. Приёмка одним пунктом: зритель, не слушавший лекцию, должен увидеть, что во втором кадре точка остаётся на месте. ТЗ аниматору пишется отдельным файлом после утверждения ленты.<a class="mn-ref" id="s0-mnr-63" href="#s0-mn-63">✳</a></p>
+<figure id="s0-mn-63" class="mn"><a class="mn-back" href="#s0-mnr-63">✳</a>  <svg viewBox="0 0 220 214" width="220" role="img" aria-label="Диск с выделенной границей: внутри точка f от x, точка x и пунктирный луч из f от x через x до границы, где он упирается в точку r от x"> <circle class="s-fillsh" cx="110" cy="100" r="72"/> <circle class="s-accent" cx="110" cy="100" r="72"/> <line class="s-dash" x1="86" y1="128" x2="176" y2="81"/><path class="s-ar-a" d="M174,87 L170,80 L180,79 z"/> <circle class="s-node" cx="86" cy="128" r="4.4"/> <circle class="s-node-r" cx="120" cy="110" r="4.4"/> <circle class="s-node-a" cx="179" cy="79" r="4.4"/> <text class="s-txt" x="74" y="146" text-anchor="middle">f(x)</text> <text class="s-txt" x="126" y="102" text-anchor="middle">x</text> <text class="s-txt" x="172" y="64" text-anchor="middle">r(x)</text> <text class="s-txt" x="150" y="142" text-anchor="middle">D²</text> <text class="s-txt-m" x="110" y="196" text-anchor="middle">S¹</text> </svg> <figcaption>Если ни одна точка не остаётся на месте, то через $x$ и $f(x)$ проходит луч, и он высекает на границе точку $r(x)$. На самой границе луч упирается в исходную точку, поэтому построенное отображение оставляет окружность на месте.</figcaption> </figure>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-13">Итог · ~5 мин</h2></summary><div class="sec-body">
+<p>Итог лекции, а не сюжета: итог сюжета — Брауэр, он уже прозвучал. Здесь имя для пройденного. Полминуты содержания; уставшие уже не слушают, но видят картинку и перечитают потом.</p>
+<p>Три диаграммы приходят по одной, накоплением:</p>
+<ul><li>квадрат с $\lambda$ сверху и $\lambda^{-1}$ снизу — $V$ и $V^*$, канонического изоморфизма нет;</li><li>$\mathbb Z_2\to\{e\}\to\mathbb Z_2$ — центр группы, функтора нет;</li><li>$\mathbb Z\to e\to\mathbb Z$ — диск и окружность, ретракции нет, отсюда Брауэр.</li></ul>
+<p>Возвращается слоган, объявленный в первую минуту: функтор переводит коммутативную диаграмму в коммутативную. Все три картинки — это он: наверху равенство композиций есть, внизу его быть не может, значит функтора или ретракции наверху нет.</p>
+<p>И общая форма, названная одной фразой: обе половины лекции задавали один вопрос про разные конструкции. В первой нас интересовало, что функтор сохраняет <strong>изоморфизмы</strong>; во второй — что он сохраняет <strong>ретракты</strong>. <em>«И вообще $F$ сохраняет одно и то же»</em>.<a class="mn-ref" id="s0-mnr-64" href="#s0-mn-64">✳</a></p>
+<p id="s0-mn-64" class="mn"><a class="mn-back" href="#s0-mnr-64">✳</a> Вторая и третья диаграммы — одна и та же форма на разном материале, и это не избыточность, а главное, что зал должен унести: инструмент один, категории разные. Если на макете три картинки не встанут, снимается <strong>вторая</strong>, а не третья: третья несёт кульминацию.<a class="mn-ref" id="s0-mnr-65" href="#s0-mn-65">✳</a></p>
+<p id="s0-mn-65" class="mn"><a class="mn-back" href="#s0-mnr-65">✳</a> Имена: Эйленберга и Маклейна упомянуть можно одной строкой — 1942 год, функтор и естественный изоморфизм, слова «категория» ещё нет; 1945 — категория. Портрет не обязателен.<a class="mn-ref" id="s0-mnr-66" href="#s0-mn-66">✳</a></p>
+<p id="s0-mn-66" class="mn"><a class="mn-back" href="#s0-mnr-66">✳</a> Здесь не вводим ни одного нового понятия, ничего не доказываем и не обещаем следующую лекцию списком тем. Слайд существует, чтобы форма осталась на сетчатке.</p>
+</div></details></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
+});
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
