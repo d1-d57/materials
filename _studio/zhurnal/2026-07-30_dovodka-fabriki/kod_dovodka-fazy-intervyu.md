@@ -538,7 +538,10 @@ zakryt-vetku --vsyo-ravno`, надгробие `mogila/zahod/dovodka-fazy-interv
 ОДНОЙ командой `voskresit --branch zahod/dovodka-fazy-intervyu` (см. `## ПЛАН`, `## ВОПРОСЫ` №1).
 Больше ничего не удалялось, не перезаписывалось, не перемещалось.
 
-**КОММИТ:** `<заполняется следующим ходом — см. §4>` — `dovodka-fazy-intervyu: починены вакуумные
-G16.7/G16.8, добавлен черновик G16.9, долг check_g16() с устройством, сплошной проход 145 записей
-фазы (Часть B2), 3 исхода в ZAHOD.md` · `git_zona.py check --zone _studio/konvejer` → *(прогнать
-после коммита)*
+**КОММИТ:** `0792694` — «dovodka-fazy-intervyu: починены вакуумные G16.7/G16.8, добавлен черновик
+G16.9, долг check_g16() с устройством, сплошной проход 145 записей фазы (Часть B2), 3 исхода в
+ZAHOD.md» (зона `_studio/konvejer`) + `7e38a18` — «dovodka-fazy-intervyu: план/вопросы/отчёт захода»
+(зона `_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_dovodka-fazy-intervyu.md`) ·
+`git_zona.py check --zone _studio/konvejer` → ✅ · `git_zona.py check --zone
+_studio/zhurnal/2026-07-30_dovodka-fabriki` → ✅ (эта строка допишется третьим, финализирующим
+коммитом той же зоны — тот же приём, что применил заход `kartoteka-intervyu`)
