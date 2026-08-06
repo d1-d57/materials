@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Рендер иллюстраций вкладки в PNG для глазной сверки (cairosvg, без браузера)."""
-import re, pathlib, cairosvg
+import re, pathlib, cairosvg, dvizhki
 D = pathlib.Path(__file__).resolve().parent
-gen = (D.parent.parent / "_generator/build_doc.py").read_text(encoding="utf-8")
+# Движок зовётся по имени, а не по месту (`python3 -m pip install --user -e _generator/`
+# один раз — см. `_generator/README.md`). Прежняя строка считала путь вверх от себя —
+# `D.parent.parent / "_generator/build_doc.py"` — и считала НЕВЕРНО: это
+# `obzory/_generator/build_doc.py`, которого нет. Ровно та болезнь, ради которой заход.
+gen = dvizhki.ishodnik("build_doc.py")
 css = gen[gen.index(".s-line{"):gen.index(".s-ar-a{")]
 css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)   # в комментариях движка есть <circle> — ломает XML
 css += ".s-ar-a{fill:#2f6e8e} .s-ar-m{fill:#726c60}"
