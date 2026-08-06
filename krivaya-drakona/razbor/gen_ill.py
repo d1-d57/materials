@@ -5,7 +5,7 @@
 Источник → генератор → самодостаточный HTML (design-mode). Геометрия дракона
 считается, а не рисуется руками: правка = правка параметра, не 92 фигуры.
 
-Примитивы — по `_studio/konvejer/09-illustracii/SLOVAR-primitivov.md`:
+Примитивы — по `_illustracii/DISCIPLINA.md`:
   #4 путь-ломаная <polyline> .s-line/.s-accent · #1 узел <circle r=3.4> .s-node/.s-node-r
   #2 отрезок .s-line/.s-thin · #8 ось пунктиром .s-thin · #10 стрелка · #11 метка .s-txt
 Правило: внутри рисунка только МЕТКА; проза — в figcaption (пишется в *.md).

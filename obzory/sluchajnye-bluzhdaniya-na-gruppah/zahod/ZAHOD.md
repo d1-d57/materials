@@ -128,7 +128,7 @@ grep -o 'class="mn[a-z ]*"'   sluchajnye-bluzhdaniya/view.html | sort | uniq -c
 
 Нулей быть не должно. Полная спека диалекта — `_generator/README.md`.
 
-Иллюстрации, если понадобятся, — инлайновый SVG по словарю `_studio/konvejer/09-illustracii/SLOVAR-primitivov.md`, и место (поток или поле) решается **до** рисования.
+Иллюстрации, если понадобятся, — инлайновый SVG по словарю `_illustracii/DISCIPLINA.md`, и место (поток или поле) решается **до** рисования.
 
 ## 7. Как вести работу
 
