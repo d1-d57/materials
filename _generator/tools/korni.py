@@ -94,11 +94,6 @@ REPO = Path(os.environ.get("GIT_ZONA_REPO") or Path(__file__).resolve().parents[
     # зовут из проектов 40 раз, `ARKA.md` — 27, и зовут из курсов, а не из
     # фабрики презентаций, в которой они лежали. Рамы нет — рама у курсов.
     Корень("_meta",             "_meta/docs/KARTA.md",        "_meta/zhurnal",        True, "обязательна"),
-    # Дом арок скиллов (2026-08-06): скиллы живут в СОСЕДНЕМ репозитории
-    # `disciplina/`, журнал — `disciplina/zhurnal/`. Ворот нет и индекса нет:
-    # карточка `_studio/docs/KARTA.md` про документы materials, чужой репозиторий
-    # ею не судится.
-    Корень("disciplina",        None,                         "../disciplina/zhurnal", False, "нет"),
 )
 
 # Корень, где живёт инфраструктура git: черновик `.commit-plan` и автолог
