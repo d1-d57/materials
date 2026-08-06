@@ -399,7 +399,6 @@ grep -c '^ВЕРДИКТ: ' UROKI-FABRIKE.md   # разошлось ⇒ арка
 
 #### gejt-vhozhdeniya#1
 
-```
 1. Заход не назвал РЕПОЗИТОРИЙ работы, а контракт зоны писал пути так, будто он тот же, где лежит файл-заход. Все пути вида `disciplina/...` исполнитель искал внутри `materials` — там их нет ни в одной из 14 веток. Настоящий дом — отдельный репозиторий `~/Documents/GitHub/disciplina` со своими worktree.
    ДОМ: _studio/zhurnal/2026-08-05_faza-lenty/UROKI-FABRIKE.md
 ДОСТАВЛЕНО: gejt-vhozhdeniya#1 · 2026-08-07
