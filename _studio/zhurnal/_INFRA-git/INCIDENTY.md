@@ -157,3 +157,5 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-05 15:13 · arka/mat-kostyak · merge zahod/faza-lenty: конфликт в 2 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-05 15:45 · arka/mat-kostyak · план не готов или битый (см. вывод команды) · → поправить _studio/.commit-plan или пересобрать plan --force · статус: открыт
 - 2026-08-05 23:41 · arka/mat-kostyak · чужой лок держится дольше 90 с · → подождать и повторить ту же команду; лок руками не удалять · статус: открыт
+- 2026-08-06 05:01 · arka/mat-kostyak · merge zahod/shvy: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-06 05:02 · arka/mat-kostyak · merge zahod/karta-incidentov: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
