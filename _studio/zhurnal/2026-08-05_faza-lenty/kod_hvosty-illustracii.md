@@ -155,7 +155,7 @@ python3 _generator/tools/git_zona.py commit --zone <зона> \
 
 1. Свежий верификатор нашёл ~45 живых (не указатель, не журнал) ссылок на старый адрес `_studio/konvejer/09-illustracii/` ЗА ПРЕДЕЛАМИ зоны этого захода — полный список в `## ОТЧЁТ`. Крупнейший кластер (9 файлов, 17 строк) — собственная документация фабрики `_studio/docs/` и `_studio/konvejer/{00-KONVEJER,04-gibrid-istochnik,05-raskadrovka,06-tekst,ALGORITM,KATALOG}`, которую этот заход не имел права трогать. Остальное — `teoriya-kategoriy/SPEKA.md` (read-only архив), `obzory/*` вне `README.md`, `krivaya-drakona/*` вне `START-HERE.md`.
    ДОМ: `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md`
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: hvosty-illustracii#1
 
 2. Тот же верификатор + собственный греп нашли **33 собранных `.html`**, несущих устаревший CSS-комментарий из старой версии `build_doc.py` (адрес чинится пересборкой источника, не руками — правило §A), плюс отдельно `teorkat-vvedenie/src/dist/index.html`, `teorkat/lekciya-1.html`, `sayt/static/teorkat/lekciya-1.html` — производные уже почищенного `base.css`, но по другому конвейеру. Ни один не тронут: список — в `## ОТЧЁТ`, решение о приоритете пересборки — за владельцем.
    ДОМ: владелец

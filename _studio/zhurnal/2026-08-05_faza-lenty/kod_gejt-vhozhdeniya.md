@@ -228,7 +228,7 @@ python3 _generator/tools/bootstrap_zahod.py _studio/zhurnal/2026-08-05_faza-lent
 ```
 1. Заход не назвал РЕПОЗИТОРИЙ работы, а контракт зоны писал пути так, будто он тот же, где лежит файл-заход. Все пути вида `disciplina/...` исполнитель искал внутри `materials` — там их нет ни в одной из 14 веток. Настоящий дом — отдельный репозиторий `~/Documents/GitHub/disciplina` со своими worktree.
    ДОМ: _studio/zhurnal/2026-08-05_faza-lenty/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: gejt-vhozhdeniya#1
 
 2. Внутри нашего скилла живёт ссылка на кандидата, которого собираются гасить: `skills/slajdy/references/style-core.md` строки 33 и 143–144 адресуют наружу — в `content-studio/references/slide-voice.md` и `content-studio/assets/corpus/`. Отключение `content-studio` без починки этой ссылки оставит в каноне адрес в никуда.
    ДОМ: disciplina/skills/slajdy/references/style-core.md

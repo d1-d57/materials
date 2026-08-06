@@ -62,6 +62,7 @@ REPO = Path(os.environ.get("PRIYOMKA_REPO") or (TOOLS.parent.parent))
 # фикстуры — явная вставка пути надёжнее неявного sys.path[0].
 sys.path.insert(0, str(TOOLS))
 import dnevnik  # noqa: E402
+import dostavit_urok  # noqa: E402  — разбор очереди у Г8 берётся у КАНАЛА
 
 
 def read(p: Path) -> str:
@@ -370,13 +371,19 @@ def parse_ochered(voprosy_tekst: str):
         ochered.append({
             "n": n,
             "tekst": tekst_nahodki,
-            "dom": m_dom.group(1).strip(),
+            # 🔴 АДРЕС НОРМАЛИЗУЕТ КАНАЛ, А НЕ `.strip()`. Поле `ДОМ:` — живой
+            # текст: путь пишут голым, в бэктиках и с пояснением после него
+            # (`` `путь` (следующий заход очереди) ``). Взятый как есть, он не
+            # совпадает ни с одним файлом, и Г7 краснел на ВЕРНОЙ доставке —
+            # живой прогон по 37 заходам арки дал 12 таких ложно-красных
+            # из 12 сработавших.
+            "dom": dostavit_urok.адрес_из(m_dom.group(1)),
             "dostavleno": m_dost.group(1).strip() if m_dost else "нет",
         })
     return ochered
 
 
-def gate_g7(ochered):
+def gate_g7(ochered, arka=None):
     """Красный ТОЛЬКО когда пункт помечен доставленным, а по адресу нет метки.
 
     Ложное «сделано» опаснее честного «не сделано» (Ф1, часть B): недоставленный
@@ -386,15 +393,24 @@ def gate_g7(ochered):
     тоже только печать.
     """
     problemy = []
+    arka = arka or REPO
     for p in ochered:
         if p["dostavleno"].strip().lower() == "нет":
             continue
         if p["dom"].strip().lower() == "владелец":
             continue
-        put_doma = (REPO / p["dom"]).resolve() if not Path(p["dom"]).is_absolute() else Path(p["dom"])
-        if not put_doma.is_file():
+        # 🔴 РЕЗОЛВ ДОМА БЕРЁТСЯ У КАНАЛА, А НЕ СЧИТАЕТСЯ ЗДЕСЬ ОТ `REPO`.
+        # Свой резолв знал одну базу — корень репозитория. Живой прогон на
+        # `kod_hvosty.md` дал из-за этого ТРИ ЛОЖНО-КРАСНЫХ: дом записан
+        # `<эта арка>/UROKI-FABRIKE.md` — конвенцией шаблона, которую канал
+        # подставляет, а Г7 читал буквально и объявлял «дом не найден» на
+        # верной доставке. Ложно-красный гейт отключают так же быстро, как
+        # ложно-зелёный, только злее.
+        put_doma, _baza = dostavit_urok.резолв(p["dom"], arka, REPO)
+        if put_doma is None:
             problemy.append(f"пункт {p['n']} помечен доставленным (`{p['dostavleno']}`), "
-                             f"а дом `{p['dom']}` не найден на диске")
+                             f"а дом `{p['dom']}` не найден на диске "
+                             f"(пробованы базы: папка арки, корень репо, _studio/zhurnal)")
             continue
         if p["dostavleno"] not in read(put_doma):
             problemy.append(f"пункт {p['n']} помечен доставленным (`{p['dostavleno']}`), "
@@ -404,6 +420,53 @@ def gate_g7(ochered):
     if not ochered:
         return True, "пунктов очереди (ДОМ/ДОСТАВЛЕНО) нет"
     return True, f"{len(ochered)} пункт(ов) очереди, ложной доставки не найдено"
+
+
+def gate_g8(zahod_path: Path, arka: Path):
+    """Очередь захода: красный по СОСТОЯНИЮ и по ПОРОГУ, а не по факту.
+
+    🔴 ПОЧЕМУ НЕ «ЕСТЬ НЕДОСТАВЛЕННОЕ → КРАСНЫЙ». Пункты копятся по замыслу:
+    их разносят на консолидации, а не в каждом заходе. Гейт на факте покрасил бы
+    33 из 37 заходов живой арки — то есть почти каждый честный отчёт. Такой гейт
+    отключают первым, и это в репозитории уже случалось.
+
+    Поэтому красным становятся ровно два случая, и оба чинятся действием:
+      * **дом ЕСТЬ, а пункт не доставлен** — чинится одной командой `--dostavit`;
+        на 37 заходах арки таких пунктов 29 суммарно, то есть у большинства
+        заходов их нет вовсе, и гейт молчит;
+      * **очередь захода перевалила порог** (`dostavit_urok.ПОРОГ_ОЧЕРЕДИ`) —
+        число снято с корпуса, обоснование в самом канале.
+    «Дома нет» и `ДОМ: владелец` гейту не подсудны никогда: они не чинятся
+    командой, их место — печать ниже и `--gejt --zakrytie` при закрытии арки.
+
+    🔴 РАЗБОР БЕРЁТСЯ У КАНАЛА, А НЕ У `parse_ochered` ЭТОГО ЖЕ ФАЙЛА. Замер по
+    37 файлам арки: `parse_ochered` (якорь — номер в начале строки) видит 127
+    пунктов из 199. Гейт на нём молчал бы на трети очереди — ровно на той трети,
+    где номер записан жирным или секция названа иначе.
+    """
+    if not zahod_path.name.startswith("kod_"):
+        return True, "файл-заход не вида `kod_*.md` — Г8 неприменим"
+    spisok = dostavit_urok.punkty_zahoda(zahod_path)
+    bez = [n for n in spisok if not n["метка"]]
+    koren = arka.resolve().parent.parent.parent
+    zhivoj_dom = [n for n in bez
+                  if dostavit_urok.класс_адреса(n, arka.resolve(), koren)[0] == "дом есть"]
+    porog = dostavit_urok.ПОРОГ_ОЧЕРЕДИ
+    problemy = []
+    if zhivoj_dom:
+        imena = "; ".join(f"пункт {n['номер']} → `{n['дом']}`" for n in zhivoj_dom[:5])
+        problemy.append(f"{len(zhivoj_dom)} пункт(ов) не доставлены, хотя дом есть "
+                        f"на диске ({imena}) — чинится: "
+                        f"dostavit_urok.py --dostavit N {zahod_path}")
+    if len(bez) > porog:
+        problemy.append(f"очередь захода {len(bez)} > порога {porog} — "
+                        f"разносить пора сейчас, а не на закрытии арки")
+    if problemy:
+        return False, "; ".join(problemy)
+    if not spisok:
+        return True, "пунктов очереди в заходе нет"
+    return (True, f"{len(bez)} недоставленных из {len(spisok)} — в пределах нормы "
+                  f"(порог {porog}), доставить некуда: дома нет или решение за человеком")
 
 
 KONTRAKTNAYA_ZONA_RE = re.compile(r'^-\s*\*?\*?ЗОНА[^:]*:\*?\*?\s*(.+)$', re.M)
@@ -566,7 +629,9 @@ def main() -> int:
     gates.append(("Г6 урок в дневнике без пары в доме уроков", g6_ok, g6_msg))
     voprosy_dlya_ocheredi = sekciya(tekst, "ВОПРОСЫ")
     ochered = parse_ochered(voprosy_dlya_ocheredi or "")
-    gates.append(("Г7 пункт очереди отмечен доставленным, а следа нет", *gate_g7(ochered)))
+    gates.append(("Г7 пункт очереди отмечен доставленным, а следа нет", *gate_g7(ochered, arka)))
+    gates.append(("Г8 очередь захода: недоставленное с живым домом или сверх порога",
+                  *gate_g8(zahod_path, arka)))
 
     print("═══ МАШИННЫЕ ГЕЙТЫ ═══")
     krasnyh = 0
