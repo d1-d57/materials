@@ -204,4 +204,4 @@ python3 _generator/tools/git_zona.py commit --zone <зона> \
 **НЕОБРАТИМОЕ:** необратимого нет. Ничего не удалено, не перезаписано, не переименовано; `git checkout`/`reset` не вызывались; чужие файлы зоны не тронуты.
 
 **АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/disciplina` — открывать как git-репозиторий / будущий плагин (ключевые файлы: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `skills/illustracii/SKILL.md`, `README.md`); установка — командой выше.
-**КОММИТ:** `<будет вписан следующим ходом — §4>` — `<см. ниже>` · `git_zona.py check --zone <зона>` → `<будет вписан>`
+**КОММИТ:** `13858e9` — «faza-lenty: дымовой тест контейнера-плагина disciplina — перенос скилла illustracii, отчёт» · `git_zona.py check --zone "_studio/zhurnal/2026-08-05_faza-lenty/kod_plagin-dymovoy-test.md"` → ✅ (`show --stat` — ровно один путь, мой)
