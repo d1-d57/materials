@@ -48,6 +48,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import register_doc  # noqa: E402
 import check_zahod  # noqa: E402
+import check_sborki  # noqa: E402
 import korni  # noqa: E402
 
 REPO_ROOT = korni.REPO  # .../materials — единая формула на все инструменты
@@ -675,6 +676,16 @@ def main(argv):
               f"{shlex.quote(str(REPO_ROOT / '_generator/tools/register_doc.py'))} "
               f"{shlex.quote(str(dst))} {shlex.quote(описание)}", file=sys.stderr)
         return 1
+
+    # 🔴 ГЕЙТ СБОРКИ — прогоняется ТОЛЬКО на свежесобранном файле (`dst`), не на
+    # всём корпусе `kod_*.md`: живой замер — 91 из 176 файлов корпуса красные,
+    # 1.5 часа против 0.8 с на одном файле. Красный НЕ отменяет сборку — заход
+    # свежий, worktree ещё не заведён, файлов из зоны ещё нет, он краснеет по
+    # построению; гейт здесь только ПОКАЗЫВАЕТ, а решает Cowork.
+    print()
+    print(f"═══ check_sborki.py — гейт сборки на свежесобранном файле ({dst.name}) ═══")
+    check_sborki.main([str(dst)])
+    print(f"═══ конец check_sborki.py на {dst.name} ═══")
 
     print()
     if a.kanal == "terminal":

@@ -453,6 +453,10 @@ def main() -> int:
     print(f"   записей {vsego} · реплик владельца {len(vladelec)} · обещаний {len(ob)} · вопросов {len(voprosy)}")
     if neponyatnyh:
         print(f"   ⚠ нераспознано строк: {neponyatnyh} — если это заметная доля, формат изменился")
+    import dostavit_urok
+    uroki = arka / "UROKI-FABRIKE.md"
+    if uroki.is_file():
+        dostavit_urok.cmd_plan(uroki)
     print(f"\n🔴 Дальше — РУКАМИ: разнести по дневнику и домам, ответить на вопросы, "
           f"поставить отсечку. Выгрузка сама ничего не закрывает.")
 
