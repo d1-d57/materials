@@ -340,7 +340,7 @@ fi
 # ── ЛОВУШКА 6: канон не отстал от инструмента ──
 # Добавили подкоманду и не вписали в дом дисциплины — владелец о ней не узнает,
 # а Cowork выдаст вместо неё shell-строчку, которая сломается (§0 канона).
-DOC="$TOOLS/../../_studio/docs/kak-delat/GIT-disciplina.md"
+DOC="$TOOLS/../../_meta/disciplina/GIT-disciplina.md"
 if [ -f "$DOC" ]; then
     MISS=""
     for c in $(python3 "$TOOLS/git_zona.py" --help 2>/dev/null \
