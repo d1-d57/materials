@@ -110,8 +110,24 @@ git --no-optional-locks diff -U0 -- _studio/zhurnal/2026-08-05_faza-lenty/kod_vy
 | **дом — исполняемый код** | 1 | `_generator/tools/bootstrap_zahod.py`: markdown в конец `.py` даёт `SyntaxError`, переносит человек в докстринг |
 | **дом вне репозитория** | 1 | абсолютный путь в соседний репозиторий `disciplina/`; доставка туда уехала бы мимо этого коммита |
 
+⚠ **Числа этой таблицы — только по пунктам очереди.** `--volna` печатает арку
+целиком, то есть вместе с уроками из `UROKI-FABRIKE.md`, и его итог по классам
+больше: у уроков свои 43 недоставленных с живым домом и 15 адресов в `.py`.
+Уроки — предмет соседнего канала (`--plan UROKI-FABRIKE.md`), этот заход их не
+разносил. Команда, дающая ровно строки этой таблицы:
+
 ```bash
-python3 _generator/tools/dostavit_urok.py --volna _studio/zhurnal/2026-08-05_faza-lenty | tail -10
+python3 - <<'PY'
+import importlib.util, pathlib, collections
+s=importlib.util.spec_from_file_location("d","_generator/tools/dostavit_urok.py")
+d=importlib.util.module_from_spec(s); s.loader.exec_module(d)
+a=pathlib.Path("_studio/zhurnal/2026-08-05_faza-lenty"); k=a.resolve().parent.parent.parent
+c=collections.Counter()
+for f in sorted(a.glob("kod_*.md")):
+    for n in d.punkty_zahoda(f):
+        if not n["метка"]: c[d.класс_адреса(n, a.resolve(), k)[0]] += 1
+for kl, v in c.most_common(): print(f"{v:>4}  {kl}")
+PY
 ```
 
 ## §5. Сто находок с адресом `ДОМ: владелец`
