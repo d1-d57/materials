@@ -26,6 +26,16 @@
 2. **Проверяемый инструмент НИКОГДА не исполняется.** Только чтение текста, AST
    и греп. Гейт, запускающий боевой инструмент с мусорным входом, — это цена
    21.07: фикстура, поднятая хуком, создала коммит в БОЕВОМ репозитории.
+
+🔴 ОДНО УЗКОЕ ИСКЛЮЧЕНИЕ ИЗ ЗАКОНА 2 (заход `kod_gejty-kotorye-vrut.md`, 06.08):
+`--help` — проверка `check_help()` РЕАЛЬНО запускает инструмент, но РОВНО с
+флагом `--help` и НИКОГДА в режиме `--staged` (хук): по конвенции CLI это
+безопасный, свободный от побочных эффектов вызов — не «мусорный вход», от
+которого защищает закон 2, а единственный вход, для которого исполнение и
+есть проверка. Живой дефект: канон в каждом заходе требует «сверь `--help`,
+не угадывай», а `check_kurs.py --help` падает трейсбеком (аргумент принят за
+путь). Работает только в аудите (`--all`, явные пути) — там, где мутация
+боевого репозитория и так не грозит.
 """
 import argparse
 import ast
@@ -92,6 +102,30 @@ FS_DESTRUCTIVE_QUALIFIED = {("os", "remove"), ("os", "rmdir"), ("os", "unlink"),
 
 MARKER_NO_INPUT = "TOOL-CONTRACT: no-input"
 MARKER_COVERS = "TOOL-CONTRACT-COVERS:"
+HELP_TIMEOUT = 10  # секунд: `--help` обязан быть мгновенным, зависший процесс — тоже дефект контракта
+
+
+def check_help(path):
+    """`<инструмент> --help` обязан дать rc=0 и непустой вывод.
+
+    Единственное место файла, где инструмент ИСПОЛНЯЕТСЯ — см. исключение из
+    закона 2 в докстринге модуля. Не участвует в CHECKS/judge(): те работают
+    по staged-тексту и AST, а здесь нужен реальный процесс. Вызывается из
+    main() только когда НЕ `--staged`.
+    """
+    try:
+        out = subprocess.run([sys.executable, str(path), "--help"],
+                             capture_output=True, text=True,
+                             timeout=HELP_TIMEOUT, cwd=str(REPO))
+    except subprocess.TimeoutExpired:
+        return f"--help не вернулся за {HELP_TIMEOUT}с"
+    except OSError as e:
+        return f"--help не запустился: {e.__class__.__name__}"
+    if out.returncode != 0:
+        return f"--help вернул rc={out.returncode} (нужен 0)"
+    if not out.stdout.strip():
+        return "--help вернул rc=0, но пустой вывод"
+    return None
 
 
 def git_lines(*args):
@@ -526,6 +560,32 @@ def main(argv=None):
 
     targets, bad = read_targets(paths, a.staged)
     bad += judge(targets, verbose=a.verbose or not a.staged)
+
+    if a.all:
+        # Реальный запуск `--help` — ТОЛЬКО в полном аудите (`--all`), не в
+        # хуке (`--staged`, закон 2) и не на явных путях калибровки: мета-
+        # фикстура (`fixtures/tool_contract/PROGNAT.sh`) зовёт линтер на
+        # синтетических файлах-обрывках (GNU-изм в одной строке и т.п.) —
+        # это не рабочие CLI и `--help` на них закономерно падает, а не
+        # проверка живого инструмента. Живой прогон это и поймал: до сужения
+        # условия здоровые фикстуры-обрывки стали ложно-красными.
+        # paths, а не targets: интересует файл на диске, не staged-текст.
+        help_bad = []
+        for p in paths:
+            path = Path(p).resolve()
+            if path.suffix != ".py":
+                continue
+            reason = check_help(path)
+            if reason:
+                help_bad.append((path, reason))
+        if help_bad:
+            shown_root = REPO
+            print(f"\n❌ `--help` сломан у {len(help_bad)} инструмент(ов):")
+            for path, reason in help_bad:
+                shown = path.relative_to(shown_root) if shown_root in path.parents else path
+                print(f"   {shown}: {reason}")
+            bad += len(help_bad)
+
     if bad:
         print(f"\n❌ Контракт инструмента нарушен ({bad}). "
               f"Правила и цены — {CANON} §5.")
