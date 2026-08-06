@@ -255,11 +255,11 @@ _generator/tools/fixtures/lenta/{zdorovaya,slomannaya,pustaya,povtor}/lenta.md
 
 4. **Урок фабрике №1** (`poteri` структурно не видит файлы, изменённые с обеих сторон, → зона слияния в заходе занижается) — текст с ЦЕНОЙ в `## УРОКИ ФАБРИКЕ`.
    ДОМ: `_studio/konvejer/06-tekst/UROKI-FABRIKE.md`
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: svedenie-vetok#4
 
 5. **Урок фабрике №2** (ворота 5 не отличают нового сироту от унаследованного долга, а критерий требует «нового») — текст с ЦЕНОЙ в `## УРОКИ ФАБРИКЕ`.
    ДОМ: `_studio/konvejer/06-tekst/UROKI-FABRIKE.md`
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: svedenie-vetok#5
 
 6. **Чужой долг, найден и НЕ тронут:** 7 документов-сирот вне моей зоны — шесть в `_studio/zhurnal/2026-07-28_konspekt-l1/` (`SPISOK-perekomponovka-3.md`, `kod_matvychitka.md`, `kod_perekomponovka2.md`, `kod_perekomponovka3.md`, `kod_podgonka.md`, `kod_rez.md`) и `_studio/zhurnal/_SHTAB-teorkat-vvedenie/zahody/ЗАХОД-konspekt-l1.md`. Каждый существовал и был не зарегистрирован уже в точке отката. Регистрировать не стал: это правка `KARTA.md` под чужие документы из чужой арки.
    ДОМ: владелец
