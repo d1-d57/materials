@@ -64,10 +64,16 @@ def v_html(tekst: str) -> str:
     return "".join(f"<p>{s}</p>" for s in out)
 
 
-def zadacha_v_html(meta: dict, sekcii: dict[str, str], pokazat: list[str], zvezda: bool) -> str:
+def zadacha_v_html(meta: dict, sekcii: dict[str, str], pokazat: list[str],
+                   zvezda: bool, yarlyk: bool) -> str:
     if "Условие" not in sekcii:
         raise ValueError(f"{meta.get('id','?')}: нет секции '## Условие'")
-    kuski = [f'<div class="cond">{v_html(sekcii["Условие"])}</div>']
+    kuski = []
+    if yarlyk:
+        tegi = [meta[k].replace("-", " ") for k in ("tema", "priyom") if meta.get(k)]
+        if tegi:
+            kuski.append(f'<p class="tag">{html.escape(" · ".join(tegi))}</p>')
+    kuski.append(f'<div class="cond">{v_html(sekcii["Условие"])}</div>')
     for imya in pokazat:
         if imya not in sekcii:
             continue
@@ -104,7 +110,14 @@ STIL = """
   li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;
      font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
   li.zvezda::before{content:"\\2605";font-style:normal;font-size:22px;padding-top:6px;color:var(--accent);}
-  .cond,.hint,details,.spoiler{grid-column:2;}
+  li.rubrika{counter-increment:none;display:block;border-bottom:none;padding:34px 0 0;
+     font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;
+     text-transform:uppercase;color:var(--rubric);}
+  li.rubrika::before{content:none;}
+  li.rubrika+li{padding-top:14px;}
+  .tag,.cond,.hint,details,.spoiler{grid-column:2;}
+  .tag{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--ink-faint);margin:0 0 8px;}
   .cond p+p{margin-top:10px;}
   .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
      margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
@@ -164,6 +177,9 @@ def sobrat(manifest: Path, out: Path | None, tolko_lint: bool) -> int:
 
     bloki, bedy = [], []
     for punkt in punkty:
+        if punkt.startswith("#"):                       # рубрика: `- # Добить с ДЗ`
+            bloki.append(f'    <li class="rubrika">{html.escape(punkt.lstrip("#").strip())}</li>')
+            continue
         zvezda = punkt.startswith("★")
         punkt = punkt.lstrip("★").strip()
         chasti = [c.strip() for c in punkt.split("|")]
@@ -181,7 +197,7 @@ def sobrat(manifest: Path, out: Path | None, tolko_lint: bool) -> int:
         if not zm.get("proverka"):
             bedy.append(f"{zid}: пустое поле proverka — ответ не подтверждён")
         try:
-            bloki.append(zadacha_v_html(zm, zs, pokazat, zvezda))
+            bloki.append(zadacha_v_html(zm, zs, pokazat, zvezda, rezhim == "polnyj"))
         except ValueError as e:
             bedy.append(str(e))
 
@@ -189,7 +205,8 @@ def sobrat(manifest: Path, out: Path | None, tolko_lint: bool) -> int:
         for b in bedy:
             print(f"❌ {b}", file=sys.stderr)
         return 1
-    print(f"✅ {len(bloki)} задач(и), режим показа: {rezhim}")
+    zadach = sum(1 for b in bloki if "rubrika" not in b)
+    print(f"✅ {zadach} задач(и), режим показа: {rezhim}")
     if tolko_lint:
         return 0
 
