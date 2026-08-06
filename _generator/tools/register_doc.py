@@ -33,6 +33,7 @@
 import argparse
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -77,8 +78,59 @@ REPO = korni.REPO
 ОПИСАНИЕ_НЕ_ЗАДАНО = "⚠ описание не задано"
 
 
-def отн_путь(сырой):
-    """Путь относительно корня репо (posix), либо None — если он вне репо.
+def _git(папка, что):
+    """`git rev-parse <что>` из папки — Path либо None (git нет / не репозиторий)."""
+    try:
+        out = subprocess.run(
+            ["git", "--no-optional-locks", "-C", str(папка), "rev-parse", что],
+            capture_output=True, text=True, check=True).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        return None
+    return Path(os.path.realpath(Path(папка) / out)) if out else None
+
+
+def корень_файла(сырой):
+    """Корень рабочей копии, в которой ФИЗИЧЕСКИ лежит файл; иначе `REPO`.
+
+    🔴 ДЕФЕКТ Д1, РАДИ КОТОРОГО ЭТА ФУНКЦИЯ СУЩЕСТВУЕТ. Корень брался у ПРОЦЕССА
+    (константа `REPO` = папка инструмента либо `GIT_ZONA_REPO`), а контракт зоны
+    предписывает каждому параллельному заходу worktree. Заход зовёт дверь по
+    абсолютному пути (`python3 $MAT/_generator/tools/register_doc.py …`) — то
+    есть инструмент из ОСНОВНОЙ папки, а файл лежит в worktree, физически вне
+    неё. `relative_to()` бросал, дверь отвечала «путь вне репозитория», и
+    указание «завёл `.md` — зарегистрируй тем же ходом» становилось неисполнимым
+    для КАЖДОГО worktree-захода (урок 59 арки `2026-08-05_faza-lenty`).
+
+    Лечение — спросить корень у САМОГО ФАЙЛА: `git rev-parse --show-toplevel` от
+    его папки. Worktree честно называет себя, и путь внутри него принимается.
+
+    🔴 Проверяем `--git-common-dir`, а не только наличие git: у worktree того же
+    репозитория общий git-каталог совпадает с `REPO`, у ЧУЖОГО репозитория —
+    нет. Без этой проверки дверь взялась бы регистрировать файл соседнего
+    проекта в наш индекс.
+
+    🔴 Git нет вовсе → возвращаем `REPO`, как было. Свойство несущее: фикстуры
+    копируют инструменты в `$T/_generator/tools/` и гоняют их ДО `git init`
+    (`korni.py`, комментарий к `REPO`). Определение только через git убило бы
+    каждую такую фикстуру.
+    """
+    p = Path(сырой)
+    папка = (p if p.is_absolute() else (Path.cwd() / p)).parent
+    if not папка.is_dir():
+        return REPO
+    верх = _git(папка, "--show-toplevel")
+    if верх is None:
+        return REPO
+    if _git(папка, "--git-common-dir") != _git(REPO, "--git-common-dir"):
+        return REPO
+    return верх
+
+
+def отн_путь(сырой, база=None):
+    """Путь относительно корня рабочей копии (posix), либо None — если он вне неё.
+
+    `база` по умолчанию — корень рабочей копии САМОГО ФАЙЛА (см. `корень_файла`),
+    а не корень процесса: иначе дверь не работает ни в одном worktree.
 
     Принимаем и абсолютный, и относительный от текущей папки: исполнитель
     зовёт дверь из корня, а генератор захода — из любого места.
@@ -93,7 +145,7 @@ def отн_путь(сырой):
     p = p if p.is_absolute() else (Path.cwd() / p)
     p = Path(os.path.realpath(p.parent)) / p.name
     try:
-        return p.relative_to(Path(os.path.realpath(REPO))).as_posix()
+        return p.relative_to(Path(os.path.realpath(база or корень_файла(сырой)))).as_posix()
     except ValueError:
         return None
 
@@ -229,9 +281,16 @@ def registrate(путь, описание, тихо=False):
               "потому что ворота 5 после неё замолчат навсегда.", file=sys.stderr)
         return 2
 
-    rel = отн_путь(путь)
+    # 🔴 База — рабочая копия САМОГО ФАЙЛА, а не процесса (дефект Д1, см.
+    # `корень_файла`). Всё ниже считается от неё: и проверка «файл на диске», и
+    # индекс. Считать индекс от `REPO`, а файл от worktree — значит вписать
+    # строку регистрации в ЧУЖУЮ рабочую копию: у исполнителя она не попадёт в
+    # коммит, а у соседа появится строка про документ, которого он не видит.
+    база = корень_файла(путь)
+    rel = отн_путь(путь, база)
     if rel is None:
-        print(f"❌ Путь вне репозитория: {путь}", file=sys.stderr)
+        print(f"❌ Путь вне репозитория: {путь} (рабочая копия: {база})",
+              file=sys.stderr)
         return 2
     if not korni.дверь_принимает(rel):
         корни = "`, `".join(korni.префиксы_двери())
@@ -241,7 +300,7 @@ def registrate(путь, описание, тихо=False):
               f"место в `obzory/<slug>/src/` (см. `obzory/README.md`).",
               file=sys.stderr)
         return 2
-    if not (REPO / rel).is_file():
+    if not (база / rel).is_file():
         print(f"❌ Файла нет на диске: {rel}. Регистрация несуществующего "
               f"документа — запись о том, чего нет.", file=sys.stderr)
         return 2
@@ -259,7 +318,7 @@ def registrate(путь, описание, тихо=False):
               f"строка корня обязана называть, в какой `KARTA.md` писать.",
               file=sys.stderr)
         return 2
-    карта = REPO / KARTA_REL
+    карта = база / KARTA_REL
     if not карта.is_file():
         print(f"❌ Не нашёл индекс: {KARTA_REL}", file=sys.stderr)
         return 2
