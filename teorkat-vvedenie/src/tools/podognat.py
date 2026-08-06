@@ -15,6 +15,11 @@ from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
 SRC = TOOLS.parents[0]
+# REPO остаётся, но теперь ТОЛЬКО как рабочая папка прогонов (`cwd=REPO` в `run`).
+# Путь к движку из него больше не собирается: движок зовётся по имени —
+# `python3 -m dvizhki dek <src>` (ставится один раз, см. `_generator/README.md`).
+# Голое «python3», а не `sys.executable`, — так было до правки, и это не меняется:
+# заход переписывает адресацию, а не выбор интерпретатора.
 REPO = TOOLS.parents[2]
 PLOTNOST = TOOLS / "plotnost.json"
 MAX_ST = 6
@@ -45,7 +50,7 @@ def zapisat(d, path):
 
 def peremerit():
     run(["python3", str(TOOLS / "sverstat.py")])
-    run(["python3", str(REPO / "_generator" / "build_deck.py"), str(SRC)])
+    run(["python3", "-m", "dvizhki", "dek", str(SRC)])
     data = measure()
     return {d["id"] for d in data if d["dh"] > 1 or d["dw"] > 1}, data
 
@@ -79,7 +84,7 @@ if "--potok" in sys.argv:
     for rnd in range(1, 8):
         zapisat(nado, POTOK)
         run(["python3", str(TOOLS / "sverstat.py")])
-        run(["python3", str(REPO / "_generator" / "build_deck.py"), str(SRC)])
+        run(["python3", "-m", "dvizhki", "dek", str(SRC)])
         bad = {d["id"] for d in measure() if d["dh"] > 1 or d["dw"] > 1}
         novye = bad - nado
         print("круг %d: канон держат %d из 32 · переполнено %d · добавляем в перетекание %d"
@@ -89,7 +94,7 @@ if "--potok" in sys.argv:
         nado |= novye
     zapisat(nado, POTOK)
     run(["python3", str(TOOLS / "sverstat.py")])
-    run(["python3", str(REPO / "_generator" / "build_deck.py"), str(SRC)])
+    run(["python3", "-m", "dvizhki", "dek", str(SRC)])
     ost = [d for d in measure() if d["dh"] > 1 or d["dw"] > 1]
     print("\nитог: перетекание у %d слайдов из 32 · канон держат %d · переполнено %d"
           % (len(nado), 32 - len(nado), len(ost)))
@@ -150,7 +155,7 @@ if "--minimizirovat" in sys.argv:
 
 for rnd in range(1, MAX_ST + 3):
     run(["python3", str(TOOLS / "sverstat.py")])
-    run(["python3", str(REPO / "_generator" / "build_deck.py"), str(SRC)])
+    run(["python3", "-m", "dvizhki", "dek", str(SRC)])
     data = measure()
     bad = [d for d in data if d["dh"] > 1 or d["dw"] > 1]
     print("круг %d: переполнено %d из %d" % (rnd, len(bad), len(data)), end="")

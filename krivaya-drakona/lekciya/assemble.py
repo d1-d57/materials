@@ -12,7 +12,9 @@ import re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).parent
-ROOT = HERE.parents[1]                       # materials/
+# `ROOT = HERE.parents[1]` снят: он существовал ТОЛЬКО чтобы собрать путь к
+# `_generator`, а движки теперь зовутся по имени (`python3 -m dvizhki`, ставится
+# один раз — `_generator/README.md`). Считать корень репозитория этому скрипту незачем.
 TEKST, ILL, BUILD = HERE / "tekst", HERE / "ill", HERE / "build"
 
 def main():
@@ -49,12 +51,13 @@ def main():
         print("ГЕЙТ ПРОВАЛЕН: нет иллюстраций %s" % sorted(set(missing)))
         return 1
 
-    r = subprocess.run([sys.executable, str(ROOT / "_generator" / "build_doc.py"), str(BUILD)])
+    # `sys.executable`, а не голое `python3`: интерпретатор обязан остаться ТЕМ ЖЕ,
+    # которым запущен этот скрипт, — пакет `dvizhki` стоит именно в нём.
+    r = subprocess.run([sys.executable, "-m", "dvizhki", "doc", str(BUILD)])
     if r.returncode:
         return r.returncode
     print("\nГейт вида (правило №2 корня):")
-    return subprocess.run([sys.executable, str(ROOT / "_generator" / "tools" / "check_view.py"),
-                           str(BUILD)]).returncode
+    return subprocess.run([sys.executable, "-m", "dvizhki", "vid", str(BUILD)]).returncode
 
 if __name__ == "__main__":
     sys.exit(main())
