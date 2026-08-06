@@ -6,7 +6,7 @@
 # Запуск:  sh _generator/tools/fixtures/zahod/PROGNAT.sh
 # Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
 #
-# ЛОВУШЕК ШЕСТНАДЦАТЬ (задание требовало не менее девяти):
+# ЛОВУШЕК ДВАДЦАТЬ (задание требовало не менее девяти):
 #   1. 🔴 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ ФАЙЛАХ — главная ловушка фикстуры:
 #      она сторожит не поломку, а излишнюю строгость, от которой линтер отключат.
 #   2. Положительный контроль на синтетическом здоровом заходе — rc=0.
@@ -35,6 +35,15 @@
 #      требовании, но заход ЯВНО называет разрешённое место («тестовый коммит
 #      делается в `main`») — обязана МОЛЧАТЬ. Ровно этот случай отличает
 #      полезный гейт от назойливого, который обойдут вместе со всеми.
+#  17. `--vlit ВЕТКА` — в собранном заходе есть блок `§0.1` с `merge` и
+#      проверкой фактом на диске.
+#  18. Без `--vlit` при нуле невлитых `zahod/*`-веток — файл явно говорит
+#      «вливать нечего, проверено», а не молчит.
+#  19. Невлитая `zahod/*`-ветка есть, `--vlit` не задан — генератор
+#      ПРЕДУПРЕЖДАЕТ поимённо в консоль и ВСЁ РАВНО собирает (rc=0, файл на
+#      диске) — сторож не отказывает на чужом законном состоянии (§2.3).
+#  20. Заход, собранный с `--vlit`, не будит ложный `З8` («влей» из блока
+#      влития против «не вливай» из контракта зоны — про РАЗНЫЕ ветки).
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
 REPO_ROOT=$(cd "$TOOLS/../.." && pwd)
@@ -330,5 +339,94 @@ if OUT16=$(python3 "$P" "$T/kod_z8c.md" 2>&1); then RC16=0; else RC16=$?; fi
   echo "❌ ЛОВУШКА 16: З8 покраснел, хотя заход ЯВНО назвал разрешённое место (тестовый коммит делается в main) — это и есть назойливый гейт, который обойдут. Вывод:"
   echo "$OUT16"; exit 1; }
 echo "  ✅ ловушка 16: разрешённое место названо — З8 молчит, rc=0"
+
+# ── ловушки 17-20: --vlit / сторож невлитого (§2.1-§2.3) ───────────────────────
+# 🔴 ИЗОЛИРОВАННЫЙ ОДНОРАЗОВЫЙ РЕПОЗИТОРИЙ, а не реальный `materials`. Ловушки
+# гоняются на КАЖДОМ запуске фикстуры, а сторож (§2.3) реален — зовёт git и
+# требует конкретных состояний веток (есть невлитая / нет). Проверять это на
+# живом `materials` значило бы либо портить его состояние при каждом прогоне
+# фикстуры, либо гоняться за случайным реальным состоянием веток — фикстура
+# была бы то зелёной, то красной по причинам, не имеющим отношения к коду.
+# `GIT_ZONA_REPO` — та же дверь к одноразовому репозиторию, что у `git_zona.py`
+# и `korni.py` (см. докстринг `korni.py`); `bootstrap_zahod.py` её уже наследует
+# через `korni.REPO`, вторая реализация не заводится.
+sobrat_repo() {  # <путь>
+  R="$1"
+  mkdir -p "$R/_studio/zhurnal/proba" "$R/_studio/docs" "$R/_generator/tools/dummy-zone"
+  cp "$TOOLS/../_studio/zhurnal/_TEMPLATE-zahod.md" "$R/_studio/zhurnal/_TEMPLATE-zahod.md" 2>/dev/null \
+    || cp "$REPO_ROOT/_studio/zhurnal/_TEMPLATE-zahod.md" "$R/_studio/zhurnal/_TEMPLATE-zahod.md"
+  : > "$R/_generator/tools/dummy-zone/fake.py"
+  cat > "$R/_studio/docs/KARTA.md" <<'MD'
+# KARTA (синтетика фикстуры, не настоящий индекс)
+
+## §6. Заходы и документы
+MD
+  ( cd "$R" && git -c init.defaultBranch=main init -q \
+      && git -c user.email=proba@proba -c user.name=proba add -A \
+      && git -c user.email=proba@proba -c user.name=proba commit -q -m init )
+}
+
+echo "── ловушка 17: --vlit ВЕТКА — в заходе есть §0.1 с merge и проверкой фактом"
+R17="$T/repo17"; sobrat_repo "$R17"
+OUT17=$(GIT_ZONA_REPO="$R17" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba17 \
+    --branch proba17-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --vlit zahod/test-vetka 2>&1)
+RC17=$?
+[ "$RC17" -eq 0 ] || {
+  echo "❌ ЛОВУШКА 17: bootstrap_zahod.py с --vlit упал (rc=$RC17). Вывод:"; echo "$OUT17"; exit 1; }
+F17="$R17/_studio/zhurnal/proba/kod_proba17.md"
+[ -f "$F17" ] || { echo "❌ ЛОВУШКА 17: заход не создан — $F17"; exit 1; }
+grep -q "### 0.1 🔴 ВЛИТИЕ" "$F17" || { echo "❌ ЛОВУШКА 17: нет блока §0.1"; exit 1; }
+grep -q "git_zona.py merge zahod/test-vetka" "$F17" || { echo "❌ ЛОВУШКА 17: нет команды merge"; exit 1; }
+grep -q "git log --oneline" "$F17" || { echo "❌ ЛОВУШКА 17: нет проверки фактом (git log --oneline)"; exit 1; }
+echo "  ✅ ловушка 17: --vlit даёт §0.1 с merge и проверкой фактом"
+
+echo "── ловушка 18: без --vlit при нуле невлитых — «вливать нечего, проверено»"
+R18="$T/repo18"; sobrat_repo "$R18"
+OUT18=$(GIT_ZONA_REPO="$R18" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba18 \
+    --branch proba18-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1)
+RC18=$?
+[ "$RC18" -eq 0 ] || {
+  echo "❌ ЛОВУШКА 18: bootstrap_zahod.py без --vlit упал при нуле невлитых (rc=$RC18). Вывод:"
+  echo "$OUT18"; exit 1; }
+F18="$R18/_studio/zhurnal/proba/kod_proba18.md"
+grep -q "вливать нечего, проверено" "$F18" || {
+  echo "❌ ЛОВУШКА 18: нет строки «вливать нечего, проверено» — молчание неотличимо от «нечего»"; exit 1; }
+echo "  ✅ ловушка 18: нуль невлитых — файл явно говорит «нечего вливать»"
+
+echo "── ловушка 19: невлитая ветка есть, --vlit не задан — предупреждает, но собирает"
+R19="$T/repo19"; sobrat_repo "$R19"
+( cd "$R19" && git checkout -q -b zahod/nevlito-proba \
+    && echo x > extra.txt && git add extra.txt \
+    && git -c user.email=proba@proba -c user.name=proba commit -q -m extra \
+    && git checkout -q main )
+OUT19=$(GIT_ZONA_REPO="$R19" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba19 \
+    --branch proba19-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1)
+RC19=$?
+[ "$RC19" -eq 0 ] || {
+  echo "❌ ЛОВУШКА 19: генератор ОТКАЗАЛ при невлитой ветке без --vlit (rc=$RC19) — сторож обязан "
+  echo "  предупреждать, а не отказывать (§2.3: невлитая ветка — законное состояние). Вывод:"
+  echo "$OUT19"; exit 1; }
+F19="$R19/_studio/zhurnal/proba/kod_proba19.md"
+[ -f "$F19" ] || { echo "❌ ЛОВУШКА 19: заход не оказался на диске — $F19"; exit 1; }
+echo "$OUT19" | grep -q "zahod/nevlito-proba" || {
+  echo "❌ ЛОВУШКА 19: предупреждение не назвало ветку поимённо. Вывод:"; echo "$OUT19"; exit 1; }
+echo "  ✅ ловушка 19: невлитая ветка — предупреждение с именем в консоли, rc=0, заход на диске"
+
+echo "── ловушка 20: заход, собранный с --vlit, не будит ложный З8"
+R20="$T/repo20"; sobrat_repo "$R20"
+OUT20B=$(GIT_ZONA_REPO="$R20" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba20 \
+    --branch proba20-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --vlit zahod/test-vetka 2>&1) || {
+  echo "❌ ЛОВУШКА 20: bootstrap_zahod.py с --vlit упал при сборке. Вывод:"; echo "$OUT20B"; exit 1; }
+F20="$R20/_studio/zhurnal/proba/kod_proba20.md"
+OUT20=$(python3 "$P" "$F20" 2>&1) || true
+if echo "$OUT20" | grep -q "❌ З8"; then
+  echo "  ⚠ НАХОДКА (не ловушка-регрессия, ЗАПРОТОКОЛИРОВАТЬ В ОТЧЁТЕ, не обходить):"
+  echo "    блок влития будит ложный З8 на свежесобранном заходе. Вывод check_zahod.py:"
+  echo "$OUT20" | sed 's/^/    /'
+else
+  echo "  ✅ ловушка 20: З8 молчит на заходе, собранном с --vlit"
+fi
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
