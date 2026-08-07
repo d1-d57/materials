@@ -39,6 +39,8 @@ DECKS = [
     REPO / "buffon" / "src" / "shablon.html",
 ]
 
+SKELETON_TOKENS = REPO / "_generator" / "skeleton" / "tokens.css"
+
 CANVAS_W, CANVAS_H = 1440, 810
 
 
@@ -138,6 +140,41 @@ def as_px(v):
 def as_num(v):
     m = _NUM.match(v)
     return float(m.group(1)) if m else None
+
+
+def _root_vars(css_path):
+    """`:root{...}` объявления файла токенов → {переменная: сырое значение}.
+    Пустой словарь, если файла нет или блока `:root` в нём нет — вызывающий
+    код сам решает, есть ли откуда падать дальше по каскаду."""
+    if not css_path.exists():
+        return {}
+    css = css_path.read_text(encoding="utf-8")
+    m = re.search(r":root\s*\{([^{}]*)\}", css, re.S)
+    if not m:
+        return {}
+    without_comments = re.sub(r"/\*.*?\*/", "", m.group(1), flags=re.S)
+    return parse_decl(without_comments)
+
+
+def canon_defaults(deck_src_dir):
+    """Умолчание кегль/lh/blok для дека, каскад skeleton → дек-`tokens.css`
+    (Э4 захода solver-v3-dyhanie): большинство слайдов НЕ переопределяют эти
+    переменные per-slide — не значит, что автор не выбирал их, значит выбрал
+    молчаливо унаследованное значение. `korpus.py` раньше считал только явные
+    per-slide переопределения (`is_body_typography_selector`) — 8 слайдов из
+    49 контентных для `blok`, ноль для `dandelin`/`buffon` (там `--blok`
+    вообще не переопределён ни разу, весь дек живёт на умолчании 26px из
+    `_generator/skeleton/tokens.css`). Дек-`tokens.css` может переопределить
+    любую из трёх переменных на уровне всего дека (ни один из трёх живых не
+    переопределяет `--blok`, `dandelin` не переопределяет и `--lh`) — каскад
+    воспроизводит это, а не жёстко берёт только skeleton."""
+    merged = dict(_root_vars(SKELETON_TOKENS))
+    merged.update(_root_vars(Path(deck_src_dir) / "tokens.css"))
+    return {
+        "kegl": as_px(merged.get("--t-body", "")),
+        "lh": as_num(merged.get("--lh", "")),
+        "blok": as_px(merged.get("--blok", "")),
+    }
 
 
 def _parse_grid_area(v):
@@ -244,6 +281,23 @@ def analyze_deck(path):
                 px = as_px(decl["margin-top"])
                 if px:
                     slot.setdefault("blok", px)
+    # Э4 захода solver-v3-dyhanie: молчаливое умолчание — тоже решение автора,
+    # не «нет данных». Каждый контентный id получает слот (даже если у него
+    # НИ ОДНОГО per-slide правила не было вовсе — `dandelin`/`buffon` для
+    # `blok` именно такие), а kegl/lh/blok, не заданные явно, — из каскада
+    # skeleton→дек `tokens.css` (`canon_defaults`). ДО этой правки `blok_px`
+    # видел 8 явных переопределений из 49 контентных слайдов (все — в
+    # `teorkat-vvedenie`) и строил потолок зоны 21.4px; факт измерения — см.
+    # `## ПЛАН`/`## ОТЧЁТ` захода, числа сняты живым прогоном, не вписаны.
+    defaults = canon_defaults(path.parent)
+    for sid in ids:
+        if not is_content_slide(sid):
+            continue
+        slot = per_slide.setdefault(sid, {})
+        for k in ("kegl", "lh", "blok"):
+            if k not in slot and defaults.get(k) is not None:
+                slot[k] = defaults[k]
+                slot.setdefault("унаследовано", set()).add(k)
     # liniya — вторым проходом, требует ВСЕ правила слайда разом (кросс-ссылка
     # `.grid` ↔ `.board`/`.rail`, см. докстринг `liniya_equiv_for_slide`).
     for sid, slot in per_slide.items():
@@ -295,6 +349,12 @@ def corpus_stats():
     kegl = [s["kegl"] for s in all_slides.values() if "kegl" in s]
     lh = [s["lh"] for s in all_slides.values() if "lh" in s]  # lh уже отношение к кеглю (unitless line-height)
     blok = [s["blok"] for s in all_slides.values() if "blok" in s]
+    # Э1 захода solver-v3-dyhanie: отступ — ДОЛЯ кегля, не свободная px-ручка
+    # (тот же приём, что уже даёт `lh`). Ratio считается только там, где есть
+    # ОБА числа на одном слайде — после починки Э4 это все 49 контентных
+    # слайдов (было бы 8, если бы `blok` остался только явным).
+    blok_koef = [s["blok"] / s["kegl"] for s in all_slides.values()
+                 if "blok" in s and s.get("kegl")]
     liniya_h = [s["liniya"] for s in all_slides.values() if s.get("axis") == "horizontal"]
     liniya_v = [s["liniya"] for s in all_slides.values() if s.get("axis") == "vertical"]
 
@@ -305,6 +365,7 @@ def corpus_stats():
         "кегль_px": summarize(kegl),
         "lh_отношение_к_кеглю": summarize(lh),
         "blok_px": summarize(blok),
+        "blok_koef_k_keglyu": summarize(blok_koef),
         "liniya_equiv_horizontal_pct": summarize(liniya_h),
         "liniya_equiv_vertical_pct": summarize(liniya_v),
     }
@@ -318,7 +379,8 @@ def main():
     print("\n--- сводка ---", file=sys.stderr)
     print("правил обработано: %d (по декам: %s)" % (total_rules, per_deck_rules), file=sys.stderr)
     for name, s in (("кегль", report["кегль_px"]), ("lh", report["lh_отношение_к_кеглю"]),
-                     ("blok", report["blok_px"]), ("liniya гориз", report["liniya_equiv_horizontal_pct"]),
+                     ("blok", report["blok_px"]), ("blok/kegl", report["blok_koef_k_keglyu"]),
+                     ("liniya гориз", report["liniya_equiv_horizontal_pct"]),
                      ("liniya верт", report["liniya_equiv_vertical_pct"])):
         if s:
             print("  %-14s n=%-4d p5=%-8s медиана=%-8s p95=%s" % (name, s["n"], s["p5"], s["median"], s["p95"]),
