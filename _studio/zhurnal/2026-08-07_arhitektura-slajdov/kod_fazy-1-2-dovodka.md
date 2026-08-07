@@ -510,7 +510,7 @@ python3 _generator/tools/git_zona.py commit --zone <зона> \
 | `disciplina` · `zahod/fazy-1-2-dovodka` | `5506a55` | работа аналитика: раздел «РЕШЕНИЯ ПРИЁМКИ 2026-08-08» в `DOLG.md` |
 | `disciplina` · `zahod/fazy-1-2-dovodka` | `1abe8bc` | моя зона: фазы 1–2, оба промпта, `DOLG.md`, два справочника |
 | `materials` · `arka/mat-kostyak` | `db13da6` | работа аналитика: борд, десять уроков с ценой, три файла-захода + их регистрация в `KARTA.md` |
-| `materials` · `arka/mat-kostyak` | `<этот коммит>` | файл-заход с планом, вопросами и отчётом |
+| `materials` · `arka/mat-kostyak` | `fcddd5b` | файл-заход с планом, вопросами и отчётом |
 
 ⚠ Ветку в `disciplina` завёл от `zahod/fazy-3-7`, а не от `main`: в ней лежат переписанные фазы
 3–7 (`818a4c9`), от `main` не видные. Обе ветки ждут слияния — вопрос №4.
