@@ -9,13 +9,16 @@ minuty: 2
 vazhnost: osnovnoj
 byudzhet_slov: 35
 tip_verstki: polosa_gorizontalnaya
-liniya: 57
+liniya: 63
 illustracii: [s04-pochemu-eto-krasivo]
 vvodit: []
 opiraetsya_na:
   - {termin: изоморфизм видов, vvedeno: до фикстуры}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 38
+mezhstrochye: 1.44
+otstup_bloka: 22
 ---
 ## Математика — развёрнуто
 ### [narrativ] операции сохраняются при переименовании

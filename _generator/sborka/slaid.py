@@ -22,6 +22,7 @@ kompilyator-slajda, раскладка обновлена Э6 захода karto
 `<out>.png` вместо `<out>.html`.
 """
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -33,6 +34,16 @@ sys.path.insert(0, str(GENERATOR))
 from formaty import parse_slide, render_body, FormatSlaida  # noqa: E402
 from tipy import compile_tip, TipVerstki, GLOBAL_CSS  # noqa: E402
 from build_deck import max_scenes, scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
+
+
+def load_math_cache(lekcija_dir):
+    """<лекция>/math/katex.json → dict, тот же приём, что build_deck.py:376-377
+    (READ-ONLY чтение оттуда — Э5 захода solver-vmeshcheniya). Файла нет → {}, и
+    формулы уходят видимым маркером `⟦MISSING-MATH:...⟧`, не молча."""
+    math_path = Path(lekcija_dir) / "math" / "katex.json"
+    if not math_path.is_file():
+        return {}
+    return json.loads(_read(math_path))
 
 
 def _read(p):
@@ -76,7 +87,10 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     # этим же прогоном: .svg долетал до data-ill, шаблон не находился, панель пустая).
     params["illustracii"] = [Path(s).stem for s in (params.get("illustracii") or [])]
     acc_tag = "span"
-    body_html = render_body(body_md, acc_tag=acc_tag)
+    # lekcija_dir = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция> (тот же
+    # расчёт, что ниже для illustrations_dir по умолчанию)
+    math = load_math_cache(slide_path.parents[2])
+    body_html = render_body(body_md, acc_tag=acc_tag, math=math)
     css, slide_html = compile_tip(sid, params, body_html)
     # 🔴 БЕЗ `data-scenes` движок (`scenesOf`, engine.js) считает слайд односценовым
     # безусловно, и БЕЗ порождённого каскада (`{{SCENE_CASCADE}}`) правило
@@ -94,6 +108,13 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     templates = load_illustrations(stems, illustrations_dir) if stems else ""
 
     fonts_css = _read(SKELETON / "fonts" / "faces.css")
+    # 🔴 БЕЗ ЭТОГО (Э5 захода solver-vmeshcheniya, найдено живым прогоном): формула
+    # рендерится ДВАЖДЫ — видимая KaTeX-разметка и следом голый текст MathML-аннотации,
+    # потому что скелет не нёс ядро katex.min.css (правило, прячущее `.katex-mathml`).
+    # Раньше это было незаметно: кэш формул был пуст, всё уходило в MISSING-MATH.
+    # `katex.css` — дословный порт секции [1] teorkat-vvedenie/src/overlay.css
+    # (READ-ONLY источник, машинно порождён `sobrat_overlay.py`, шрифты+ядро KaTeX).
+    katex_css = _read(SKELETON / "katex.css")
     tokens_css = _read(SKELETON / "tokens.css")
     base_css = _read(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", scene_cascade_css(n_scenes))
     engine_js = _read(SKELETON / "engine.js")
@@ -105,6 +126,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
 <title>%(title)s</title>
 <style>
 %(fonts)s
+%(katex)s
 %(tokens)s
 %(base)s
 %(global_css)s
@@ -126,6 +148,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
         "title": title or sid,
         "n_scenes": n_scenes,
         "fonts": fonts_css,
+        "katex": katex_css,
         "tokens": tokens_css,
         "base": base_css,
         "global_css": GLOBAL_CSS,

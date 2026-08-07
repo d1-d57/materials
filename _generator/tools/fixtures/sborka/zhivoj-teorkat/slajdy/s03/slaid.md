@@ -16,6 +16,9 @@ opiraetsya_na:
   - {termin: биекция, vvedeno: до фикстуры}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 38
+mezhstrochye: 1.5278
+otstup_bloka: 26
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] три биномиальных тождества и их биективные доказательства

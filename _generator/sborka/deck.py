@@ -53,13 +53,16 @@ def _compile_one(slide_path_str):
     from formaty import parse_slide, render_body
     from tipy import compile_tip
     from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
+    from slaid import load_math_cache  # noqa: E402  (Э5 захода solver-vmeshcheniya)
 
     slide_path = _Path(slide_path_str)
     sid = slide_path.parent.name
     text = slide_path.read_text(encoding="utf-8")
     params, body_md = parse_slide(text, sid=sid)
     params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
-    body_html = render_body(body_md, acc_tag="span")
+    # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
+    math = load_math_cache(slide_path.parents[2])
+    body_html = render_body(body_md, acc_tag="span", math=math)
     css, html = compile_tip(sid, params, body_html)
     n_scenes = max_scenes(html)
     return (sid, params.get("tip_verstki"), params.get("status", "v_deke"),
@@ -159,6 +162,7 @@ def build(src, out, jobs=None):
     from tipy import GLOBAL_CSS
     from build_deck import scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
     fonts_css = read_text(SKELETON / "fonts" / "faces.css")
+    katex_css = read_text(SKELETON / "katex.css")  # см. slaid.py — Э5 захода solver-vmeshcheniya
     tokens_css = read_text(SKELETON / "tokens.css")
     base_css = read_text(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", scene_cascade_css(n_scenes_dek))
     engine_js = read_text(SKELETON / "engine.js")
@@ -170,6 +174,7 @@ def build(src, out, jobs=None):
 <title>%(title)s</title>
 <style>
 %(fonts)s
+%(katex)s
 %(tokens)s
 %(base)s
 %(global_css)s
@@ -188,6 +193,7 @@ def build(src, out, jobs=None):
 """ % {
         "title": meta.get("title", src.name),
         "fonts": fonts_css,
+        "katex": katex_css,
         "tokens": tokens_css,
         "base": base_css,
         "global_css": GLOBAL_CSS,

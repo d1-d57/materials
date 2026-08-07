@@ -9,13 +9,16 @@ minuty: 4
 vazhnost: opornyj
 byudzhet_slov: 90
 tip_verstki: polosa_gorizontalnaya
-liniya: 74
+liniya: 92
 illustracii: [s08-chetnye-i-nechetnye-podmnozhestva]
 vvodit: []
 opiraetsya_na:
   - {termin: изоморфизм видов, vvedeno: до фикстуры}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 36.28
+mezhstrochye: 1.38
+otstup_bloka: 20
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] чередующаяся сумма и биекция дополнения x0

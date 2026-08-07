@@ -23,11 +23,13 @@ from pathlib import Path
 
 SBORKA = Path(__file__).resolve().parent
 GENERATOR = SBORKA.parent
+SKELETON = GENERATOR / "skeleton"
 sys.path.insert(0, str(SBORKA))
 sys.path.insert(0, str(GENERATOR))
 from formaty import parse_card, parse_front_matter, render_body  # noqa: E402
 import bloki  # noqa: E402
 from build_deck import parse_brief, read_text  # noqa: E402  (READ-ONLY импорт, Я6)
+from slaid import load_math_cache  # noqa: E402  (Э5 захода solver-vmeshcheniya)
 
 
 def _load_slides(lekcija_dir):
@@ -55,23 +57,23 @@ def _load_slides(lekcija_dir):
     return lekcija_params, out
 
 
-def _blocks_html(blocks):
+def _blocks_html(blocks, math):
     if not blocks:
         return '<p class="pusto">(текста нет)</p>'
-    return "\n".join(render_body(b.telo, acc_tag="span") for b in blocks if b.telo.strip())
+    return "\n".join(render_body(b.telo, acc_tag="span", math=math) for b in blocks if b.telo.strip())
 
 
-def _vkladka_potokom(slides):
+def _vkladka_potokom(slides, math):
     """Вкладка 1 — вся математика подряд, без разбивки по слайдам."""
     parts = []
     for sid, params, sections in slides:
         if sections is None:
             continue
-        parts.append(_blocks_html(sections["matematika"]))
+        parts.append(_blocks_html(sections["matematika"], math))
     return "\n".join(parts) or '<p class="pusto">(математики нет)</p>'
 
 
-def _vkladka_po_slajdam(slides, razdel):
+def _vkladka_po_slajdam(slides, razdel, math):
     """Вкладка 2/3 — тот же/сжатый материал, с заголовком на каждый слайд.
     `razdel`: 'matematika' или 'tekst'."""
     parts = []
@@ -82,7 +84,7 @@ def _vkladka_po_slajdam(slides, razdel):
         if sections is None:
             parts.append('<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>')
         else:
-            parts.append(_blocks_html(sections[razdel]))
+            parts.append(_blocks_html(sections[razdel], math))
         parts.append('</section>')
     return "\n".join(parts)
 
@@ -113,16 +115,21 @@ def build(lekcija_dir, out):
         raise SystemExit("нет слайдов status:v_deke в %s" % lekcija_dir)
 
     title = lekcija_params.get("title") or lekcija_dir.name
-    tab1 = _vkladka_potokom(slides)
-    tab2 = _vkladka_po_slajdam(slides, "matematika")
-    tab3 = _vkladka_po_slajdam(slides, "tekst")
+    math = load_math_cache(lekcija_dir)
+    tab1 = _vkladka_potokom(slides, math)
+    tab2 = _vkladka_po_slajdam(slides, "matematika", math)
+    tab3 = _vkladka_po_slajdam(slides, "tekst", math)
+    # KaTeX-ядро (прячет .katex-mathml) — та же дыра, что в slaid.py/deck.py:
+    # без него формула из кэша дублируется голым текстом MathML-аннотации рядом.
+    katex_css = read_text(SKELETON / "katex.css")
 
     doc = """<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <title>%(title)s — лента</title>
-<style>%(css)s</style>
+<style>%(katex)s
+%(css)s</style>
 </head>
 <body>
 <h1>%(title)s</h1>
@@ -142,6 +149,7 @@ def build(lekcija_dir, out):
 </html>
 """ % {
         "title": _html.escape(title),
+        "katex": katex_css,
         "css": CSS,
         "n": len(slides),
         "tab1": tab1,
