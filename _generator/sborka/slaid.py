@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Компилятор ОДНОГО слайда — параметры → самодостаточный HTML (Э2/Э3 захода).
+"""Компилятор ОДНОГО слайда — параметры → самодостаточный HTML (Э2/Э3 захода
+kompilyator-slajda, раскладка обновлена Э6 захода kartochka-i-sborka).
 
-  python3 _generator/sborka/slaid.py <лекция>/src2/slides/s06.md -o /tmp/s06.html [--kadr]
+  python3 _generator/sborka/slaid.py <лекция>/slajdy/s06/slaid.md -o /tmp/s06.html [--kadr]
+
+Раскладка — Я2: `<лекция>/slajdy/<imya>/slaid.md`, пул иллюстраций — ОТДЕЛЬНО,
+`<лекция>/illustracii/` (не внутри папки слайда, имя по спецификации, не
+англ. "illustrations"). `sid` для HTML/`data-ill` — ИМЯ ПАПКИ слайда, не стем
+файла (файл всегда называется `slaid.md`).
 
 Выход — тот же канон, что несёт `_generator/skeleton/`: токены, base.css, шрифты,
 движок `engine.js` дословно (Я3: «отсюда берутся цвета, шрифты и оформление
@@ -23,8 +29,10 @@ SBORKA = Path(__file__).resolve().parent
 GENERATOR = SBORKA.parent
 SKELETON = GENERATOR / "skeleton"
 sys.path.insert(0, str(SBORKA))
+sys.path.insert(0, str(GENERATOR))
 from formaty import parse_slide, render_body, FormatSlaida  # noqa: E402
 from tipy import compile_tip, TipVerstki, GLOBAL_CSS  # noqa: E402
+from build_deck import max_scenes, scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
 
 
 def _read(p):
@@ -32,27 +40,33 @@ def _read(p):
 
 
 def load_illustrations(stems, illustrations_dir):
-    """<stem> → <template id="ill-<stem>">…</template>, файл ищется как .svg или .html."""
+    """<stem> → <template id="ill-<stem>">…</template>. Пул иллюстраций (Э5 захода
+    kartochka-i-sborka, раскладка Я2): `<лекция>/illustracii/<stem>/risunok.svg`
+    (или `risunok.html`) — ПАПКА на иллюстрацию, не плоский файл; рядом с рисунком
+    в той же папке лежит `zakaz.md` (человеку/гейту, компилятор его не читает)."""
     out = []
     for stem in stems:
         base = Path(stem).stem  # illustracii может нести "s06-a.svg" — имя ФАЙЛА (Э1)
-        svg = illustrations_dir / (base + ".svg")
-        html = illustrations_dir / (base + ".html")
+        folder = illustrations_dir / base
+        svg = folder / "risunok.svg"
+        html = folder / "risunok.html"
         if svg.is_file():
             content = _read(svg)
         elif html.is_file():
             content = _read(html)
         else:
             raise FormatSlaida(
-                "иллюстрация '%s' не найдена в %s (ни .svg, ни .html)" % (base, illustrations_dir))
+                "иллюстрация '%s' не найдена в %s (ни risunok.svg, ни risunok.html)"
+                % (base, folder))
         out.append('<template id="ill-%s">%s</template>' % (base, content))
     return "\n".join(out)
 
 
 def compile_slide_html(slide_path, illustrations_dir=None, title=None):
-    """.md слайда → (sid, полный самодостаточный HTML документа)."""
+    """.md слайда → (sid, полный самодостаточный HTML документа). `sid` — имя
+    ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не стем файла."""
     slide_path = Path(slide_path)
-    sid = slide_path.stem
+    sid = slide_path.parent.name
     text = _read(slide_path)
     params, body_md = parse_slide(text, sid=sid)
     # `illustracii` в шапке — ИМЕНА ФАЙЛОВ (Э1: "ИМЕНА файлов из illustrations/"), а
@@ -64,15 +78,24 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     acc_tag = "span"
     body_html = render_body(body_md, acc_tag=acc_tag)
     css, slide_html = compile_tip(sid, params, body_html)
+    # 🔴 БЕЗ `data-scenes` движок (`scenesOf`, engine.js) считает слайд односценовым
+    # безусловно, и БЕЗ порождённого каскада (`{{SCENE_CASCADE}}`) правило
+    # `[data-scene-from]{opacity:0}` (base.css) ничем не переопределяется — пропуск
+    # ({@N|…} внутри блока, Э2 захода kartochka-i-sborka) компилировался бы
+    # НАВСЕГДА невидимым, не «до своей сцены», а вообще. Найдено этим же прогоном
+    # (Э8, живой кадр `s03`, критерий 4) — компилятор двух прошлых заходов не нёс
+    # ни того, ни другого.
+    n_scenes = max_scenes(slide_html)
 
     if illustrations_dir is None:
-        illustrations_dir = slide_path.parents[1] / "illustrations"
+        # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
+        illustrations_dir = slide_path.parents[2] / "illustracii"
     stems = params["illustracii"]
     templates = load_illustrations(stems, illustrations_dir) if stems else ""
 
     fonts_css = _read(SKELETON / "fonts" / "faces.css")
     tokens_css = _read(SKELETON / "tokens.css")
-    base_css = _read(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", "")
+    base_css = _read(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", scene_cascade_css(n_scenes))
     engine_js = _read(SKELETON / "engine.js")
 
     doc = """<!DOCTYPE html>
@@ -90,7 +113,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
 </head>
 <body>
 <div id="stage"><div id="deck">
-<section class="slide" id="%(sid)s">
+<section class="slide" id="%(sid)s" data-scenes="%(n_scenes)d">
 %(slide)s
 </section>
 </div></div>
@@ -101,6 +124,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
 </html>
 """ % {
         "title": title or sid,
+        "n_scenes": n_scenes,
         "fonts": fonts_css,
         "tokens": tokens_css,
         "base": base_css,
@@ -131,7 +155,7 @@ def render_kadr(html_path, png_path):
 
 def main():
     ap = argparse.ArgumentParser(description="Компилятор одного слайда → самодостаточный HTML")
-    ap.add_argument("slide", help="путь к <лекция>/src2/slides/<id>.md")
+    ap.add_argument("slide", help="путь к <лекция>/slajdy/<id>/slaid.md")
     ap.add_argument("-o", "--out", required=True, help="путь выхода .html")
     ap.add_argument("--kadr", action="store_true", help="снять PNG-кадр рядом с HTML")
     args = ap.parse_args()

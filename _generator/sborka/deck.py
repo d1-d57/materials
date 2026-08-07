@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Сборка ЦЕЛОГО дека — параллельно по слайдам (Э4 захода).
+"""Сборка ЦЕЛОГО дека — параллельно по слайдам (Э6 захода kartochka-i-sborka).
 
-  python3 _generator/sborka/deck.py <лекция>/src2 -o <лекция>/src2/dist/index.html [-j 15]
+  python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html [-j 15]
 
-Слайды независимы (Э1: параметры + текст, никаких перекрёстных ссылок между файлами
+Раскладка — Я2 (istochnik-istiny.md §2): `<лекция>/slajdy/<imya>/slaid.md`, один
+файл на слайд, ИМЯ ПАПКИ = `sid` (не `slide_path.stem` — тот теперь всегда literally
+"slaid" у всех слайдов сразу, различает их только папка). Иллюстрации — ОТДЕЛЬНЫЙ
+пул `<лекция>/illustracii/` (Э5 захода, имя ПО СПЕЦИФИКАЦИИ, не англ. "illustrations"
+старого пути). `status: rezerv` — слайд лежит в папке, в дек НЕ входит и в
+`slide_order` может не быть вовсе (Я1 §4-бис).
+
+Слайды независимы (параметры + текст, никаких перекрёстных ссылок между файлами
 слайдов), поэтому компиляция каждого — отдельный процесс (`ProcessPoolExecutor`,
 stdlib, без pip). Порядок — `brief.md:slide_order` тем же диалектом, что читает
-`build_deck.py` (Я6, `parse_brief`, READ-ONLY импорт); `oblozhka` принудительно
+`build_deck.py` (Я6, `parse_brief`, READ-ONLY импорт; `brief.md` — И манифест
+порядка, И карточка лекции, см. `## ПЛАН` захода п.4); `oblozhka` принудительно
 первой, `finalnyj` принудительно последней — по ТИПУ слайда, а не по месту в списке
 автора (устойчивее зарезервированных id старого `build_deck.py`).
 
@@ -29,25 +37,33 @@ for p in (str(SBORKA), str(GENERATOR)):
 
 
 def _compile_one(slide_path_str):
-    """Воркер отдельного процесса: путь к .md → (sid, tip, illustracii-стемы, css, html).
+    """Воркер отдельного процесса: путь к .md → (sid, tip, status, illustracii-стемы,
+    css, html, n_scenes). `sid` — ИМЯ ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не
+    стем файла. `n_scenes` — Э8 захода kartochka-i-sborka: без него движок считает
+    слайд односценовым и пропуск (`{@N|…}`) не раскрывается НИКОГДА (см. slaid.py).
     Импорты — ВНУТРИ функции: `ProcessPoolExecutor` на macOS стартует процессы
     методом spawn, каждый воркер импортирует этот модуль заново с нуля."""
     import sys as _sys
     from pathlib import Path as _Path
     sb = _Path(__file__).resolve().parent
-    if str(sb) not in _sys.path:
-        _sys.path.insert(0, str(sb))
+    gen = sb.parent
+    for p in (str(sb), str(gen)):
+        if p not in _sys.path:
+            _sys.path.insert(0, p)
     from formaty import parse_slide, render_body
     from tipy import compile_tip
+    from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
 
     slide_path = _Path(slide_path_str)
-    sid = slide_path.stem
+    sid = slide_path.parent.name
     text = slide_path.read_text(encoding="utf-8")
     params, body_md = parse_slide(text, sid=sid)
     params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     body_html = render_body(body_md, acc_tag="span")
     css, html = compile_tip(sid, params, body_html)
-    return sid, params.get("tip"), params["illustracii"], css, html
+    n_scenes = max_scenes(html)
+    return (sid, params.get("tip_verstki"), params.get("status", "v_deke"),
+            params["illustracii"], css, html, n_scenes)
 
 
 def _order(slide_order, tips):
@@ -65,23 +81,40 @@ def build(src, out, jobs=None):
     from build_deck import parse_brief, read_text  # READ-ONLY импорт (Я6)
 
     src = Path(src)
-    slides_dir = src / "slides"
-    illustrations_dir = src / "illustrations"
-    slide_paths = sorted(slides_dir.glob("*.md"))
+    slajdy_dir = src / "slajdy"
+    illustrations_dir = src / "illustracii"  # ИМЯ ПО СПЕЦИФИКАЦИИ (Я2), не "illustrations"
+    slide_paths = sorted(slajdy_dir.glob("*/slaid.md"))
     if not slide_paths:
-        raise SystemExit("нет слайдов в %s" % slides_dir)
+        raise SystemExit("нет слайдов в %s (ищу */slaid.md)" % slajdy_dir)
 
     brief = src / "brief.md"
     meta = parse_brief(read_text(brief)) if brief.is_file() else {}
-    slide_order = meta.get("slide_order") or [p.stem for p in slide_paths]
-    have = {p.stem for p in slide_paths}
+    have = {p.parent.name for p in slide_paths}
+    # status слайда узнаём, только распарсив карточку — до первого прохода компиляции
+    # его не знаем, поэтому лёгкая предпроверка (missing/extra) читает шапки сама,
+    # не дожидаясь параллельной сборки (нужно ДО того, как решать `slide_order` по
+    # умолчанию, и ошибка тут дешевле, чем после N параллельных компиляций).
+    from formaty import parse_card
+    status_by_sid = {}
+    for p in slide_paths:
+        params, _ = parse_card(read_text(p), sid=p.parent.name)
+        status_by_sid[p.parent.name] = params.get("status", "v_deke")
+
+    slide_order = meta.get("slide_order") or [sid for sid in sorted(have)
+                                               if status_by_sid[sid] != "rezerv"]
     missing = [s for s in slide_order if s not in have]
     if missing:
-        raise SystemExit("brief.md называет слайды, которых нет в slides/: %s" % missing)
-    extra = have - set(slide_order)
+        raise SystemExit("brief.md называет слайды, которых нет в slajdy/: %s" % missing)
+    # "лишний" на диске — ошибка, ТОЛЬКО если он не в резерве: резервный слайд по
+    # Я1 §4-бис легально сидит в папке и в slide_order может не значиться вовсе.
+    extra = sorted(s for s in have - set(slide_order) if status_by_sid[s] != "rezerv")
     if extra:
-        raise SystemExit("в slides/ есть слайды, не названные в brief.md slide_order: %s"
-                          % sorted(extra))
+        raise SystemExit("в slajdy/ есть слайды (не в резерве), не названные в "
+                          "brief.md slide_order: %s" % extra)
+    # 🔴 резерв ИСКЛЮЧАЕТСЯ из компиляции безусловно — даже если автор по ошибке
+    # (или намеренно, как явная документация) оставил его в slide_order: «лежит в
+    # папке, в дек не входит» (Я1 §4-бис) — свойство САМОГО слайда, не манифеста.
+    slide_order = [s for s in slide_order if status_by_sid[s] != "rezerv"]
 
     jobs = jobs or os.cpu_count() or 1
     # 🔴 `fork`, не дефолт macOS (`spawn`). Компиляция слайда — регэкспы над
@@ -92,31 +125,42 @@ def build(src, out, jobs=None):
     # против 0.15с). `fork` дешевле в разы (не пересобирает интерпретатор с нуля);
     # если и он не даёт выигрыша — это законный отрицательный результат про ЭТУ
     # задачу (лёгкая CPU-работа), а не брак реализации, и назван в отчёте как есть.
+    # Компилируем ТОЛЬКО то, что реально войдёт в дек — резервные слайды могут быть
+    # намеренно недописаны и не обязаны собираться (Я1 §4-бис: «в дек не входит»).
+    to_compile = [p for p in slide_paths if p.parent.name in slide_order]
     ctx = mp.get_context("fork") if hasattr(os, "fork") else None
     with ProcessPoolExecutor(max_workers=jobs, mp_context=ctx) as ex:
-        results = list(ex.map(_compile_one, [str(p) for p in slide_paths]))
+        results = list(ex.map(_compile_one, [str(p) for p in to_compile]))
 
-    by_id = {sid: (tip, ills, css, html) for sid, tip, ills, css, html in results}
-    tips = {sid: tip for sid, (tip, _, _, _) in by_id.items()}
+    by_id = {sid: (tip, status, ills, css, html, n_scenes)
+              for sid, tip, status, ills, css, html, n_scenes in results}
+    tips = {sid: tip for sid, (tip, _, _, _, _, _) in by_id.items()}
     order = _order(slide_order, tips)
 
     all_ills = []
     seen_ill = set()
     for sid in order:
-        for stem in by_id[sid][1]:
+        for stem in by_id[sid][2]:
             if stem not in seen_ill:
                 seen_ill.add(stem)
                 all_ills.append(stem)
     templates = load_ill(all_ills, illustrations_dir) if all_ills else ""
 
-    all_css = "\n".join(by_id[sid][2] for sid in order)
-    sections = "\n".join('<section class="slide" id="%s">\n%s\n</section>' % (sid, by_id[sid][3])
-                          for sid in order)
+    all_css = "\n".join(by_id[sid][3] for sid in order)
+    sections = "\n".join(
+        '<section class="slide" id="%s" data-scenes="%d">\n%s\n</section>'
+        % (sid, by_id[sid][5], by_id[sid][4])
+        for sid in order)
+    # 🔴 каскад ОДИН на весь дек (общий <style>) — обязан покрывать МАКСИМУМ сцен
+    # среди всех слайдов, не только последнего скомпилированного (Э8 захода
+    # kartochka-i-sborka, критерий 4; см. slaid.py — та же дыра без этого).
+    n_scenes_dek = max([1] + [by_id[sid][5] for sid in order])
 
     from tipy import GLOBAL_CSS
+    from build_deck import scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
     fonts_css = read_text(SKELETON / "fonts" / "faces.css")
     tokens_css = read_text(SKELETON / "tokens.css")
-    base_css = read_text(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", "")
+    base_css = read_text(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", scene_cascade_css(n_scenes_dek))
     engine_js = read_text(SKELETON / "engine.js")
 
     doc = """<!DOCTYPE html>
@@ -156,17 +200,18 @@ def build(src, out, jobs=None):
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8")
-    return len(order), out
+    n_rezerv = sum(1 for s in status_by_sid.values() if s == "rezerv")
+    return len(order), n_rezerv, out
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Параллельная сборка дека из src2/")
-    ap.add_argument("src", help="папка <лекция>/src2 (содержит slides/, illustrations/, brief.md)")
+    ap = argparse.ArgumentParser(description="Параллельная сборка дека из папки лекции")
+    ap.add_argument("src", help="папка <лекция> (содержит slajdy/, illustracii/, brief.md)")
     ap.add_argument("-o", "--out", required=True, help="путь выхода .html")
     ap.add_argument("-j", "--jobs", type=int, default=None, help="число процессов (по умолчанию — ядра)")
     args = ap.parse_args()
-    n, out = build(args.src, args.out, jobs=args.jobs)
-    print("собран дек: %d слайдов → %s" % (n, out))
+    n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs)
+    print("собран дек: слайдов в деке %d, в резерве %d → %s" % (n, n_rezerv, out))
     return 0
 
 

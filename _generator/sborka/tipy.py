@@ -45,7 +45,7 @@ def _esc(s):
 
 
 def _zagolovok_html(p):
-    z = p.get("zagolovok")
+    z = p.get("zagolovok_na_ekrane")
     if not z:
         return ""
     return '<div class="zagolovok">%s</div>' % _esc(z)
@@ -148,7 +148,7 @@ def tolko_tekst(sid, p, text_html):
 
 # ───────────────────────── 7. oblozhka ─────────────────────────
 def oblozhka(sid, p, text_html):
-    z = p.get("zagolovok", "")
+    z = p.get("zagolovok_na_ekrane", "")
     ills = p.get("illustracii") or []
     css = ("#%s{ background:var(--board); } "
            "#%s .wrap{ position:absolute; inset:0; display:grid; "
@@ -166,7 +166,7 @@ def oblozhka(sid, p, text_html):
 
 # ───────────────────────── 8. vizitka ─────────────────────────
 def vizitka(sid, p, text_html):
-    z = p.get("zagolovok", "Про меня")
+    z = p.get("zagolovok_na_ekrane", "Про меня")
     ills = p.get("illustracii") or []
     photo = ills[0] if len(ills) >= 1 else None
     qr = ills[1] if len(ills) >= 2 else None
@@ -189,7 +189,7 @@ def vizitka(sid, p, text_html):
 
 # ───────────────────────── 9. finalnyj (не «финальный» — имя словаря) ─────────────────────────
 def finalnyj(sid, p, text_html):
-    z = p.get("zagolovok", "Спасибо за внимание")
+    z = p.get("zagolovok_na_ekrane", "Спасибо за внимание")
     ills = p.get("illustracii") or []
     css = ("#%s{ background:var(--board); } "
            "#%s .thx-wrap{ position:absolute; inset:0; display:grid; "
@@ -206,7 +206,7 @@ def finalnyj(sid, p, text_html):
 
 # ───────────────────────── 10. razdelitel (утверждён владельцем 2026-08-08) ─────────────────────────
 def razdelitel(sid, p, text_html):
-    z = p.get("zagolovok", "")
+    z = p.get("zagolovok_na_ekrane", "")
     ills = p.get("illustracii") or []
     css = ("#%s{ background:var(--board); } "
            "#%s .head{ position:absolute; left:0; top:61px; width:100%%; "
@@ -238,7 +238,7 @@ REESTR = {
 
 
 def compile_tip(sid, p, text_html):
-    tip = p.get("tip")
+    tip = p.get("tip_verstki")
     if tip in ОТЛОЖЕННЫЕ:
         raise TipVerstki(
             "тип '%s' отложен сознательно в этом заходе (Э2 захода) — не реализован" % tip)
