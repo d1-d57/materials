@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
 # список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
@@ -564,5 +564,28 @@ echo "$OUT26B" | grep -q "invalid choice" || {
   echo "❌ ЛОВУШКА 26: progon_baza.py упал, но без понятного сообщения о причине:"
   echo "$OUT26B"; exit 1; }
 echo "  ✅ ловушка 26б: progon_baza.py — мусор в --baza падает громко (rc≠0, сообщение по делу)"
+
+echo "── ловушка 27: 🔴 TOOL-CONTRACT (заход dovodka-solvera, Часть Б) — koridor_obyoma.py на кривом входе падает ГРОМКО"
+OUT27A=$(python3 "$OBP/koridor_obyoma.py" 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py без обязательных флагов вернул rc=0 — молча:"
+  echo "$OUT27A"; exit 1; }
+echo "$OUT27A" | grep -q "required: --axis, --liniya, --sostav" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27A"; exit 1; }
+echo "  ✅ ловушка 27а: koridor_obyoma.py — без флагов падает громко (rc≠0, сообщение по делу)"
+OUT27B=$(python3 "$OBP/koridor_obyoma.py" --axis diagonal --liniya 50 --sostav p 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py с --axis diagonal (не из choices) вернул rc=0:"
+  echo "$OUT27B"; exit 1; }
+echo "$OUT27B" | grep -q "invalid choice" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27B"; exit 1; }
+echo "  ✅ ловушка 27б: koridor_obyoma.py — мусор в --axis падает громко (rc≠0, сообщение по делу)"
+OUT27C=$(python3 "$OBP/koridor_obyoma.py" --axis horizontal --liniya 50 --sostav xyz 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py с нераспознанным токеном --sostav вернул rc=0:"
+  echo "$OUT27C"; exit 1; }
+echo "$OUT27C" | grep -qi "токен состава не распознан\|traceback" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27C"; exit 1; }
+echo "  ✅ ловушка 27в: koridor_obyoma.py — мусор в --sostav падает громко (rc≠0, сообщение по делу)"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
