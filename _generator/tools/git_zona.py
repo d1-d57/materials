@@ -494,6 +494,31 @@ def batch_oids(queries):
     return res
 
 
+def ref_shas(refs):
+    """{ref: sha} — резолвит КАЖДЫЙ ref ПРЯМО СЕЙЧАС, полными именами.
+
+    Отсутствующий ref в словарь не попадает (не кидает, не гадает) —
+    `for-each-ref` с полным именем как паттерном матчит РОВНО этот ref и молчит,
+    если его больше нет, в отличие от `rev-parse`, который на несуществующем
+    имени пишет ошибку и портит разбор пачки. Нужен, чтобы поймать ГОНКУ
+    (заход `vhod-fazy-1`, Э1): `blobs_elsewhere`/`blobs_v_istorii` резолвят эти
+    же refs НЕСКОЛЬКИМИ git-вызовами позже вызова `all_refs()` — если между
+    снимком имён и резолвом содержимого чужой писатель подвинет или удалит
+    ref-кандидат (в этом репозитории параллельно живут до 8 worktree), сверка
+    «до/после» это ловит, вместо того чтобы молча напечатать вердикт по
+    наполовину уехавшему состоянию.
+    """
+    if not refs:
+        return {}
+    out = {}
+    r = git("for-each-ref", "--format=%(refname) %(objectname)", *refs, check=False)
+    for line in r.stdout.splitlines():
+        ref, _, sha = line.rpartition(" ")
+        if ref:
+            out[ref] = sha
+    return out
+
+
 def blobs_v_istorii(pairs, refs):
     """Пути из `pairs` [(путь, оид)], чей блоб лежит в ИСТОРИИ `refs`, а не
     только на их вершинах.
@@ -615,16 +640,39 @@ def branch_loss(name, head="HEAD"):
     # работе, которую `adopt` перенёс на СОСЕДНЮЮ ветку (случай верификатора 2.1).
     kand = res["propadet"] + res["rashozhdenie"]
     if kand:
-        oids = batch_oids([f"{full}:{p}" for p in kand])
-        pairs = [(p, o) for p, o in zip(kand, oids) if o]
         gde = [x for x in others
                if x.startswith("refs/heads/") or x.startswith("refs/remotes/")]
-        doehalo = blobs_elsewhere(pairs, gde)
-        # 🔴 ВТОРОЙ ШАГ — ИСТОРИЯ, а не только вершины (см. `blobs_v_istorii`).
-        # Дороже, поэтому спрашивается только про то, что не закрыл первый.
-        ostalos = [(p, o) for p, o in pairs if p not in doehalo]
-        v_istorii = blobs_v_istorii(ostalos, gde)
-        doehalo = doehalo | v_istorii
+        # 🔴 ГОНКА (заход `vhod-fazy-1`, Э1, живой замер 2026-08-08: два прогона
+        # `doctor` минуты в разницу дали противоположные вердикты по одной и той
+        # же ветке). Причина найдена фактом, не гипотезой — воспроизведена
+        # инъекцией: `gde` снят ЗДЕСЬ, а блобы этих refs резолвит
+        # `blobs_elsewhere`/`blobs_v_istorii` НИЖЕ, несколькими git-вызовами
+        # позже. Если чужой писатель (в этом репозитории параллельно живут до
+        # 8 worktree) удалит/подвинет ref-кандидат в этом окне, «доехало»
+        # молча теряет источник — «safe» откатывается в «loss» без единой
+        # ошибки. Проверено прогоном: та же функция на статичном состоянии
+        # даёт ОДИН и тот же вердикт 10/10 (см. фикстуру, ловушка 41); значит
+        # чинить внутреннюю логику `blobs_elsewhere` не нужно — нужно ловить
+        # САМ факт, что состояние уехало между снимком имён и резолвом
+        # содержимого, а не печатать вердикт по наполовину уехавшему снимку.
+        for popytka in (1, 2):
+            do = ref_shas(gde)
+            oids = batch_oids([f"{full}:{p}" for p in kand])
+            pairs = [(p, o) for p, o in zip(kand, oids) if o]
+            doehalo = blobs_elsewhere(pairs, gde)
+            # 🔴 ВТОРОЙ ШАГ — ИСТОРИЯ, а не только вершины (см. `blobs_v_istorii`).
+            # Дороже, поэтому спрашивается только про то, что не закрыл первый.
+            ostalos = [(p, o) for p, o in pairs if p not in doehalo]
+            v_istorii = blobs_v_istorii(ostalos, gde)
+            doehalo = doehalo | v_istorii
+            posle = ref_shas(gde)
+            if do == posle:
+                break
+            # Первая попытка уехала — пробуем ещё раз со свежим состоянием.
+            # Уехала И вторая — состояние трясёт быстрее, чем мы читаем;
+            # честно помечаем вердикт нестабильным, а не выдаём его как факт.
+            if popytka == 2:
+                res["nestabilno"] = True
         if v_istorii:
             res["doehalo_istoriya"] = sorted(v_istorii)
         if doehalo:
@@ -711,6 +759,7 @@ def print_loss_watch(only=None, title=True):
 
     wt = worktree_branches()
     rows = [branch_loss(n, head) for n in others]
+    nestabilnye = [r["name"] for r in rows if r.get("nestabilno")]
     skipped = [r["name"] for r in rows if r["verdict"] == "skip"]
     checked = len(others) - len(skipped)
     ohvat = f"проверено {checked} из {len(others)}{where}"
@@ -806,6 +855,15 @@ def print_loss_watch(only=None, title=True):
     if skipped:
         print(f"   ⚠ Не удалось прочитать {len(skipped)} ветк(у/и) — охват НЕПОЛОН: "
               + ", ".join(skipped))
+    if nestabilnye:
+        # 🔴 ГОНКА ПОЙМАНА, А НЕ ЗАМОЛЧАНА (Э1 захода `vhod-fazy-1`) — состояние
+        # ссылок-кандидатов «доехало» менялось прямо во время чтения (дважды
+        # подряд, иначе перечитали бы молча и доверились второй попытке).
+        # Вердикт ниже — по последней попытке, а не выдумка, но доверять ему
+        # как окончательному нельзя: перечитать отдельно, когда писатель уймётся.
+        print(f"   ⚠ {len(nestabilnye)} ветк(а/и) уехала во время чтения (гонка с "
+              "другим writer'ом, а не наш баг) — вердикт по ней МОГ не устояться, "
+              "перечитай отдельно: " + ", ".join(nestabilnye))
     # 🔴 Код возврата ОТЛИЧАЕТСЯ от `doctor`, и это НЕ противоречие: `doctor` —
     # диагност, не гейт, ему нельзя печатать ❌ на здоровом исходе (урок арки
     # `2026-07-28_konspekt-l1`, «плана нет» при чистом дереве обязано быть rc=0).
