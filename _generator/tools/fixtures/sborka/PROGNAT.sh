@@ -1,8 +1,10 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
-# список, отказ от shell, потолок, таймаут).
+# список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
+# — кривой вход `postroit_kartochku.py`/`sravnit.py` (Э3: временная карточка
+# из старого слайда → компиляция → солвер) обязан падать ГРОМКО, не молчать.
 #
 # Запуск:  sh _generator/tools/fixtures/sborka/PROGNAT.sh
 # Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
@@ -531,5 +533,20 @@ t = t.replace(staro, '```\n_generator/tools/check_zahod.py — лексичес�
 open(p, 'w', encoding='utf-8').write(t)
 PY
 krasnet "якорь в код-блоке не существует" "С3" "$T/kod_yakor-v-fense.md"
+
+echo "── ловушка 25: 🔴 TOOL-CONTRACT — postroit_kartochku.py/sravnit.py на кривом входе падают ГРОМКО"
+OBP="$TOOLS/fixtures/sborka/obratnyj-progon"
+OUT25A=$(python3 "$OBP/postroit_kartochku.py" net-takoj-deki net-takoj-slaid 2>&1) && {
+  echo "❌ ЛОВУШКА 25: postroit_kartochku.py на несуществующем деке/слайде вернул rc=0 — молча"
+  echo "   сделал не то, вместо громкого отказа:"; echo "$OUT25A"; exit 1; }
+echo "$OUT25A" | grep -qi "нет\|no such file\|traceback" || {
+  echo "❌ ЛОВУШКА 25: postroit_kartochku.py упал, но без понятного сообщения о причине:"
+  echo "$OUT25A"; exit 1; }
+echo "  ✅ ловушка 25а: postroit_kartochku.py — кривой вход упал громко (rc≠0, сообщение по делу)"
+OUT25B=$(python3 "$OBP/sravnit.py" net-takoj-deki net-takoj-slaid 2>&1) && {
+  echo "❌ ЛОВУШКА 25: sravnit.py на несуществующем деке/слайде вернул rc=0:"; echo "$OUT25B"; exit 1; }
+echo "$OUT25B" | grep -qi "нет\|no such file\|traceback" || {
+  echo "❌ ЛОВУШКА 25: sravnit.py упал, но без понятного сообщения о причине:"; echo "$OUT25B"; exit 1; }
+echo "  ✅ ловушка 25б: sravnit.py — кривой вход упал громко (rc≠0, сообщение по делу)"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
