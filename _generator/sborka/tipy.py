@@ -52,10 +52,28 @@ def _zagolovok_html(p):
 
 
 def _kegl_style(p):
-    k = p.get("kegl")
-    if not k or float(k) == 1.0:
+    """Инлайновые CSS-переменные текстовой зоны — авторская ручка `kegl`
+    (множитель token'а `--t-body`, как было) плюс три числа солвера (заход
+    solver-vmeshcheniya, Э3): `kegl_px` (абсолютный кегль, замещает `kegl`),
+    `mezhstrochye` (`--lh`), `otstup_bloka` (`--blok`). Солвер пишет ИМЕННО эти
+    поля в карточку — они и есть найденное решение, применённое к вёрстке."""
+    parts = []
+    kegl_px = p.get("kegl_px")
+    if kegl_px:
+        parts.append("--t-body:%spx" % kegl_px)
+    else:
+        k = p.get("kegl")
+        if k and float(k) != 1.0:
+            parts.append("--t-body:calc(38px * %s)" % k)
+    lh = p.get("mezhstrochye")
+    if lh:
+        parts.append("--lh:%s" % lh)
+    blok = p.get("otstup_bloka")
+    if blok:
+        parts.append("--blok:%spx" % blok)
+    if not parts:
         return ""
-    return ' style="--t-body:calc(38px * %s)"' % k
+    return ' style="%s"' % ";".join(parts)
 
 
 def _text_zone(sid, p, text_html, cls="copy"):
@@ -105,11 +123,17 @@ def _require_liniya(sid, p):
 def polosa_gorizontalnaya(sid, p, text_html):
     liniya = _require_liniya(sid, p)
     ills = p.get("illustracii") or []
+    # `--liniya` — CSS-переменная, не литерал в CSS (заход solver-vmeshcheniya,
+    # Э3): `liniya` — ручка СЛАЙДА солвера, JS меняет её тем же путём, что
+    # `--t-body`/`--lh`/`--blok`, без пересборки. Инвариант «второй литерал не
+    # задаётся отдельным числом» (см. докстринг модуля) не просто сохранён, а
+    # усилен: теперь в самой CSS-строке нет числовых литералов вовсе, ОБА
+    # значения — производные одной переменной.
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
-           "grid-template-rows: %g%% calc(100%% - %g%%); }" % (sid, liniya, liniya))
+           "grid-template-rows: var(--liniya) calc(100%% - var(--liniya)); }" % sid)
     text = _text_zone(sid, p, text_html)
     ill = _ill_zone(ills, axis="row") if ills else '<div class="zone board"></div>'
-    body = '<div class="grid">%s%s</div>' % (text, ill)
+    body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, ill)
     return css, body
 
 
@@ -118,10 +142,10 @@ def polosa_vertikalnaya(sid, p, text_html):
     liniya = _require_liniya(sid, p)
     ills = p.get("illustracii") or []
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
-           "grid-template-columns: %g%% calc(100%% - %g%%); }" % (sid, liniya, liniya))
+           "grid-template-columns: var(--liniya) calc(100%% - var(--liniya)); }" % sid)
     text = _text_zone(sid, p, text_html)
     ill = _ill_zone(ills, axis="col") if ills else '<div class="zone board"></div>'
-    body = '<div class="grid">%s%s</div>' % (text, ill)
+    body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, ill)
     return css, body
 
 
