@@ -95,6 +95,18 @@ def build_card(deck, sid, out_root):
         dst_math.mkdir(parents=True, exist_ok=True)
         shutil.copy(src_math, dst_math / "katex.json")
 
+    # 🔴 Найдено заходом solver-v3-dyhanie (Э3, живой прогон измерения дыхания):
+    # без обёртки `### [narrativ] …` голый текст раздела — ORPHAN для
+    # `bloki._parse_blocks` (нет ни одного `### [tip] мысль`), а
+    # `render_section_markdown` собирает markdown ТОЛЬКО из `blocks`, orphan
+    # молча выбрасывает. Итог — `.zone.t-body` компилировалась ПУСТОЙ на всех
+    # 16 слайдах (проверено фактом: `body_md == ""`, `zone.childElementCount
+    # == 0`), любой кегль тривиально «влезал» (fill=100% всегда, scrollHeight
+    # зоны без контента равен её же вынужденной grid-высоте) — солвер решал
+    # пустую задачу, не реальную. Один синтетический блок с ТЕМ ЖЕ `mysl` в
+    # обоих разделах чинит именно это, не трогая `slaid.py`/`formaty.py`/
+    # `bloki.py` (они не в моей зоне) и не расширяя карточку сверх «текст +
+    # тип вёрстки + liniya», как и было задумано доком выше.
     card = (
         "---\n"
         "imya: %s\n"
@@ -103,8 +115,10 @@ def build_card(deck, sid, out_root):
         "illustracii: []\n"
         "---\n"
         "## Математика — развёрнуто\n"
+        "### [narrativ] исходный текст слайда\n"
         "%s\n\n"
         "## Текст слайда — сжато\n"
+        "### [narrativ] исходный текст слайда\n"
         "%s\n\n"
         "## Правки\n"
     ) % (sid, tip, liniya, text, text)
