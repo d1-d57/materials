@@ -159,6 +159,8 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-05 23:41 · arka/mat-kostyak · чужой лок держится дольше 90 с · → подождать и повторить ту же команду; лок руками не удалять · статус: открыт
 - 2026-08-06 05:01 · arka/mat-kostyak · merge zahod/shvy: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-06 05:02 · arka/mat-kostyak · merge zahod/karta-incidentov: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-06 18:14 · zahod/edinstvennost-sekcij · merge zahod/vlitie-v-generator выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-06 18:40 · zahod/edinstvennost-sekcij · merge zahod/etap-21-ssylki выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
 - 2026-08-06 13:36 · arka/mat-kostyak · план не готов или битый (см. вывод команды) · → поправить _studio/.commit-plan или пересобрать plan --force · статус: открыт
 - 2026-08-06 16:58 · arka/mat-kostyak · merge zahod/gejt-protivorechiya не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-06 19:20 · arka/mat-kostyak · запуск с мусорными аргументами · → лишнее в команде: zahod/gejt-vhozhdeniya — убрать хвост и повторить · статус: открыт
