@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Демо: карточка и сборка — лента</title>
+<style>
+body{font-family:'Glacial Indifference',Arial,sans-serif;max-width:900px;margin:0 auto;padding:32px;
+     background:#faf7f2;color:#242019;line-height:1.5}
+h1{font-family:'Forum',serif;font-size:32px;margin-bottom:4px}
+.podzagolovok{color:#7a7267;margin-bottom:24px}
+.taby input{display:none}
+.taby label{display:inline-block;padding:10px 20px;margin-right:6px;background:#e9e2d8;
+            border-radius:8px 8px 0 0;cursor:pointer;font-weight:600}
+.panel{display:none;border-top:3px solid #bf5b4f;padding-top:20px}
+#t1:checked ~ .taby label[for=t1],
+#t2:checked ~ .taby label[for=t2],
+#t3:checked ~ .taby label[for=t3]{background:#bf5b4f;color:#fff}
+#t1:checked ~ #p1,#t2:checked ~ #p2,#t3:checked ~ #p3{display:block}
+h2{font-family:'Forum',serif;font-size:22px;margin:28px 0 8px;color:#bf5b4f}
+.slajd-lenty:first-child h2{margin-top:0}
+.pusto{color:#a39a8c;font-style:italic}
+</style>
+</head>
+<body>
+<h1>Демо: карточка и сборка</h1>
+<div class="podzagolovok">лента · 8 слайдов (status: v_deke)</div>
+<input type="radio" name="tab" id="t1" checked>
+<input type="radio" name="tab" id="t2">
+<input type="radio" name="tab" id="t3">
+<div class="taby">
+<label for="t1">Вся математика</label>
+<label for="t2">По слайдам</label>
+<label for="t3">Сжато (финал)</label>
+</div>
+<div class="panel" id="p1"><p>Тип вёрстки задаёт долю текстовой зоны одним числом `liniya` — вторая доля холста считается компилятором как `100% − liniya`, а не задаётся вторым литералом. Так исчезает целый класс правок «поправили одну долю, забыли вторую» — его физически не с кем случиться, второго числа просто нет в файле.</p>
+<p>`polosa_vertikalnaya` делит холст на колонки тем же числом `liniya`, что и горизонтальная версия делит на строки — один и тот же приём, другая ось грида.</p>
+<p>Не у каждого слайда есть иллюстрация — тип `tolko_tekst` занимает текстом весь холст, без зон под картинку вовсе.</p>
+<p>Список показывает формат `- пункт` markdown-диалекта компилятора.</p>
+<p>Служебный слайд, вне математики лекции — представление докладчика залу.</p></div>
+<div class="panel" id="p2"><section class="slajd-lenty" id="ls-sl-title">
+<h2>Обложка демо-дека</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-s01-polosa-g">
+<h2>Полоса горизонтальная</h2>
+<p>Тип вёрстки задаёт долю текстовой зоны одним числом `liniya` — вторая доля холста считается компилятором как `100% − liniya`, а не задаётся вторым литералом. Так исчезает целый класс правок «поправили одну долю, забыли вторую» — его физически не с кем случиться, второго числа просто нет в файле.</p>
+</section>
+<section class="slajd-lenty" id="ls-s02-polosa-v">
+<h2>Полоса вертикальная</h2>
+<p>`polosa_vertikalnaya` делит холст на колонки тем же числом `liniya`, что и горизонтальная версия делит на строки — один и тот же приём, другая ось грида.</p>
+</section>
+<section class="slajd-lenty" id="ls-s03-polnyj-ekran">
+<h2>Полный экран</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-s04-tolko-tekst">
+<h2>Только текст</h2>
+<p>Не у каждого слайда есть иллюстрация — тип `tolko_tekst` занимает текстом весь холст, без зон под картинку вовсе.</p>
+<p>Список показывает формат `- пункт` markdown-диалекта компилятора.</p>
+</section>
+<section class="slajd-lenty" id="ls-sl-divider1">
+<h2>Разделитель раздела</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-sl-vizitka">
+<h2>Визитка докладчика</h2>
+<p>Служебный слайд, вне математики лекции — представление докладчика залу.</p>
+</section>
+<section class="slajd-lenty" id="ls-sl-thanks">
+<h2>Финальный слайд</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section></div>
+<div class="panel" id="p3"><section class="slajd-lenty" id="ls-sl-title">
+<h2>Обложка демо-дека</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-s01-polosa-g">
+<h2>Полоса горизонтальная</h2>
+<p>Текст в верхней зоне (44% высоты), иллюстрация — в нижней (56%, посчитано компилятором, не автором).</p>
+</section>
+<section class="slajd-lenty" id="ls-s02-polosa-v">
+<h2>Полоса вертикальная</h2>
+<p>Текст в левой колонке (56% ширины), иллюстрация — в правой.</p>
+</section>
+<section class="slajd-lenty" id="ls-s03-polnyj-ekran">
+<h2>Полный экран</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-s04-tolko-tekst">
+<h2>Только текст</h2>
+<p>Слайд без иллюстраций вовсе — только текст, во всю ширину и высоту холста.</p>
+<ul class="tlist"><li>первый пункт</li><li>второй пункт</li></ul>
+</section>
+<section class="slajd-lenty" id="ls-sl-divider1">
+<h2>Разделитель раздела</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section>
+<section class="slajd-lenty" id="ls-sl-vizitka">
+<h2>Визитка докладчика</h2>
+<p><span class="acc">Имя Фамилия</span></p>
+<p>Строка биографии.</p>
+</section>
+<section class="slajd-lenty" id="ls-sl-thanks">
+<h2>Финальный слайд</h2>
+<p class="pusto">(текста нет — иллюстрация/пусто, K3)</p>
+</section></div>
+</body>
+</html>
