@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
 # список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
@@ -548,5 +548,21 @@ OUT25B=$(python3 "$OBP/sravnit.py" net-takoj-deki net-takoj-slaid 2>&1) && {
 echo "$OUT25B" | grep -qi "нет\|no such file\|traceback" || {
   echo "❌ ЛОВУШКА 25: sravnit.py упал, но без понятного сообщения о причине:"; echo "$OUT25B"; exit 1; }
 echo "  ✅ ловушка 25б: sravnit.py — кривой вход упал громко (rc≠0, сообщение по делу)"
+
+echo "── ловушка 26: 🔴 TOOL-CONTRACT (заход dovodka-solvera) — progon_baza.py на кривом входе падает ГРОМКО"
+OUT26A=$(python3 "$OBP/progon_baza.py" 2>&1) && {
+  echo "❌ ЛОВУШКА 26: progon_baza.py без обязательного --baza вернул rc=0 — молча:"
+  echo "$OUT26A"; exit 1; }
+echo "$OUT26A" | grep -q "required: --baza" || {
+  echo "❌ ЛОВУШКА 26: progon_baza.py упал, но без понятного сообщения о причине:"
+  echo "$OUT26A"; exit 1; }
+echo "  ✅ ловушка 26а: progon_baza.py — без --baza падает громко (rc≠0, сообщение по делу)"
+OUT26B=$(python3 "$OBP/progon_baza.py" --baza 99 2>&1) && {
+  echo "❌ ЛОВУШКА 26: progon_baza.py с --baza 99 (не из choices) вернул rc=0:"
+  echo "$OUT26B"; exit 1; }
+echo "$OUT26B" | grep -q "invalid choice" || {
+  echo "❌ ЛОВУШКА 26: progon_baza.py упал, но без понятного сообщения о причине:"
+  echo "$OUT26B"; exit 1; }
+echo "  ✅ ловушка 26б: progon_baza.py — мусор в --baza падает громко (rc≠0, сообщение по делу)"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
