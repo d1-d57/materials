@@ -91,8 +91,19 @@ def build_zones(corpus=None):
     # самом мелком допустимом кегле отступ не вправе превысить канон-максимум
     # в px. Абсолютный px-пол (`BLOK_FLOOR_PX`) — отдельная страховка снизу,
     # применяется в JS на фактическом кегле пробы, не здесь.
+    # А1 захода dovodka-solvera: margin=0.0 убирает запас 15% СНИЗУ p5 (было
+    # 0.15, стало 0.23 по факту корпуса) — тот же приём, каким Э2 предыдущего
+    # захода убрал запас СВЕРХУ p95 у kegl. Причина: на пяти слайдах, где
+    # раньше не влезало вовсе (`dandelin/s09`, `s09p`, `buffon/sl-circle`,
+    # `teorkat-vvedenie/s05`, `s06`), солвер выбирал blok_koef НИЖЕ p25 корпуса
+    # (0.634) у всех пяти, а на `s05` — буквально дно зоны (0.15 = сам предел,
+    # не что-то между) — проверено фактом (`progon_baza.py --baza 16`), не
+    # предположено. Причина механическая: `build_rungi` кладёт на самый тугой
+    # ряд ровно `zones["blok_koef"][0]` (см. докстринг `build_rungi`), т.е.
+    # запас в зоне — это запас, который солвер реально использует на плотных
+    # слайдах, а не подстраховка на случай выброса корпуса.
     blok_koef = _bounds_from_corpus(c["blok_koef_k_keglyu"], abs_floor=0.05,
-                                     abs_ceil=round(26 / KEGL_FLOOR, 3))
+                                     abs_ceil=round(26 / KEGL_FLOOR, 3), margin=0.0)
     # liniya — ДОЛЯ ТЕКСТА. Горизонтальная: владелец «15–80% широко» + корпус
     # (медиана ≈49%, p95≈69%) согласны в ту же сторону; 82 как потолок —
     # чуть выше корпусного p95, но строго ниже 92 (баг s08, здесь дисквалифицирован).
@@ -176,6 +187,14 @@ EPS_PENALTY = 0.15    # доля от минимального штрафа — 
 # сравнивать промежуток, если блок один), p5=3.28, медиана=6.70, p95=10.07,
 # stdev=2.17. Дата данных 2026-08-07.
 DYHANIE_STAT = {"median": 6.6982, "stdev": 2.1728}
+# p25 — Часть Б захода dovodka-solvera («коридор объёма»): «дыхание ≥ p25»
+# — один из двух полов корпусной нормы для коридора (второй — kegl≥median).
+# `DYHANIE_STAT` выше не содержит p25 (снят другим заходом под другую задачу —
+# z-score штрафу нужны только median/stdev), поэтому досчитан ОТДЕЛЬНО тем же
+# инструментом и тем же измерением, не новым: `python3 -c` над сырыми строками
+# `izmerit_dyhanie.py` → `korpus.pct(значения, 25)` = 5.5543 (n=13, те же 13
+# значений, что дали DYHANIE_STAT). Дата данных 2026-08-08.
+DYHANIE_P25 = 5.5543
 
 
 # JS выполняется ОДИН раз на слайд (page.evaluate), весь перебор — внутри
@@ -468,7 +487,23 @@ def podobrat_slide(page, html_path, axis, iters=8, steps=6, text_len_chars=None,
 
 
 def izmerit(page, html_path, kegl=None, lh=None, blok=None):
-    """Разовый промер (без перебора) — текущий/заданный триплет → влезло или нет."""
+    """Разовый промер (без перебора) — текущий/заданный триплет → влезло или нет.
+
+    Часть Б захода dovodka-solvera («коридор объёма») добавила `content_fill`
+    и `dyhanie` — найдено ЭТИМ прогоном (не было известно заранее): `.zone`
+    растянута CSS-гридом до высоты своего ряда (`align-items` по умолчанию —
+    `stretch`), поэтому `scrollHeight` при НЕ переполненном содержимом ВСЕГДА
+    равен `clientHeight` (растянутый бокс, не контент) — `fill` отсюда даёт
+    100% при 10 знаках так же, как при 300 (проверено фактом: `koridor_obyoma.py`
+    на синтетической пробе, `content_extent` при этом честно росло 33.5%→97.8%).
+    `fill`/`fits` — старое поведение, не тронуты (уже используются в других
+    местах через `scrollHeight<=clientHeight`, это условие переполнения не
+    зависит от stretch). `content_fill` — доля `clientHeight`, которую РЕАЛЬНО
+    занял текст (нижний край последнего ребёнка минус верх зоны) — то, что
+    нужно для «мельчит и пусто внизу» (fill от stretch-бокса для этого
+    непригоден). `dyhanie` — тот же промежуточный расчёт, что в `_JS_SOLVE.
+    tipografika()` (Э3 захода solver-v3-dyhanie), для одноразового промера
+    без полного перебора решётки."""
     from urllib.parse import quote
     url = "file://" + quote(str(Path(html_path).resolve()))
     page.goto(url)
@@ -485,8 +520,22 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
       if (c.lh != null) zone.style.setProperty('--lh', String(c.lh));
       if (c.blok != null) zone.style.setProperty('--blok', c.blok + 'px');
       const sh = zone.scrollHeight, ch = zone.clientHeight;
+      const blocks = Array.from(zone.querySelectorAll(':scope > p, :scope > ul.tlist'));
+      const zoneTop = zone.getBoundingClientRect().top;
+      const contentExtent = blocks.length ? blocks[blocks.length - 1].getBoundingClientRect().bottom - zoneTop : 0;
+      let dyhanie = null;
+      if (blocks.length > 1) {
+        let gapSum = 0;
+        for (let i = 1; i < blocks.length; i++) {
+          const gap = blocks[i].getBoundingClientRect().top - blocks[i - 1].getBoundingClientRect().bottom;
+          if (gap > 0) gapSum += gap;
+        }
+        dyhanie = ch ? (100 * gapSum / ch) : null;
+      }
       return {scrollHeight: sh, clientHeight: ch, fits: sh <= ch,
-              fill: ch ? (100 * sh / ch) : null};
+              fill: ch ? (100 * sh / ch) : null,
+              content_fill: ch ? (100 * contentExtent / ch) : null,
+              n_blocks: blocks.length, dyhanie: dyhanie};
     }
     """
     r = page.evaluate(js, {"kegl": kegl, "lh": lh, "blok": blok})

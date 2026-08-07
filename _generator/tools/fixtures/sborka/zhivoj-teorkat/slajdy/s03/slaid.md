@@ -9,7 +9,7 @@ minuty: 3
 vazhnost: opornyj
 byudzhet_slov: 40
 tip_verstki: polosa_gorizontalnaya
-liniya: 37.33
+liniya: 48.5
 illustracii: [s03-tri-biekcii-1, s03-tri-biekcii-2, s03-tri-biekcii-3]
 vvodit: []
 opiraetsya_na:
@@ -17,8 +17,8 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 kegl_px: 40
-mezhstrochye: 1.41
-otstup_bloka: 14.4
+mezhstrochye: 1.496
+otstup_bloka: 25.5
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] три биномиальных тождества и их биективные доказательства

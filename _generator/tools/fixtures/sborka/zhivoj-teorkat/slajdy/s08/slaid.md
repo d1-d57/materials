@@ -16,9 +16,9 @@ opiraetsya_na:
   - {termin: изоморфизм видов, vvedeno: до фикстуры}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 38
+kegl_px: 36
 mezhstrochye: 1.2
-otstup_bloka: 4
+otstup_bloka: 8.3
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] чередующаяся сумма и биекция дополнения x0

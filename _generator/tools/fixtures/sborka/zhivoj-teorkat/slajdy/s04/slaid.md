@@ -17,8 +17,8 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 kegl_px: 40
-mezhstrochye: 1.48
-otstup_bloka: 17.9
+mezhstrochye: 1.496
+otstup_bloka: 25.5
 ---
 ## Математика — развёрнуто
 ### [narrativ] операции сохраняются при переименовании

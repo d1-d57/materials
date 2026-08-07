@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
 # список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
@@ -548,5 +548,44 @@ OUT25B=$(python3 "$OBP/sravnit.py" net-takoj-deki net-takoj-slaid 2>&1) && {
 echo "$OUT25B" | grep -qi "нет\|no such file\|traceback" || {
   echo "❌ ЛОВУШКА 25: sravnit.py упал, но без понятного сообщения о причине:"; echo "$OUT25B"; exit 1; }
 echo "  ✅ ловушка 25б: sravnit.py — кривой вход упал громко (rc≠0, сообщение по делу)"
+
+echo "── ловушка 26: 🔴 TOOL-CONTRACT (заход dovodka-solvera) — progon_baza.py на кривом входе падает ГРОМКО"
+OUT26A=$(python3 "$OBP/progon_baza.py" 2>&1) && {
+  echo "❌ ЛОВУШКА 26: progon_baza.py без обязательного --baza вернул rc=0 — молча:"
+  echo "$OUT26A"; exit 1; }
+echo "$OUT26A" | grep -q "required: --baza" || {
+  echo "❌ ЛОВУШКА 26: progon_baza.py упал, но без понятного сообщения о причине:"
+  echo "$OUT26A"; exit 1; }
+echo "  ✅ ловушка 26а: progon_baza.py — без --baza падает громко (rc≠0, сообщение по делу)"
+OUT26B=$(python3 "$OBP/progon_baza.py" --baza 99 2>&1) && {
+  echo "❌ ЛОВУШКА 26: progon_baza.py с --baza 99 (не из choices) вернул rc=0:"
+  echo "$OUT26B"; exit 1; }
+echo "$OUT26B" | grep -q "invalid choice" || {
+  echo "❌ ЛОВУШКА 26: progon_baza.py упал, но без понятного сообщения о причине:"
+  echo "$OUT26B"; exit 1; }
+echo "  ✅ ловушка 26б: progon_baza.py — мусор в --baza падает громко (rc≠0, сообщение по делу)"
+
+echo "── ловушка 27: 🔴 TOOL-CONTRACT (заход dovodka-solvera, Часть Б) — koridor_obyoma.py на кривом входе падает ГРОМКО"
+OUT27A=$(python3 "$OBP/koridor_obyoma.py" 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py без обязательных флагов вернул rc=0 — молча:"
+  echo "$OUT27A"; exit 1; }
+echo "$OUT27A" | grep -q "required: --axis, --liniya, --sostav" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27A"; exit 1; }
+echo "  ✅ ловушка 27а: koridor_obyoma.py — без флагов падает громко (rc≠0, сообщение по делу)"
+OUT27B=$(python3 "$OBP/koridor_obyoma.py" --axis diagonal --liniya 50 --sostav p 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py с --axis diagonal (не из choices) вернул rc=0:"
+  echo "$OUT27B"; exit 1; }
+echo "$OUT27B" | grep -q "invalid choice" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27B"; exit 1; }
+echo "  ✅ ловушка 27б: koridor_obyoma.py — мусор в --axis падает громко (rc≠0, сообщение по делу)"
+OUT27C=$(python3 "$OBP/koridor_obyoma.py" --axis horizontal --liniya 50 --sostav xyz 2>&1) && {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py с нераспознанным токеном --sostav вернул rc=0:"
+  echo "$OUT27C"; exit 1; }
+echo "$OUT27C" | grep -qi "токен состава не распознан\|traceback" || {
+  echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
+  echo "$OUT27C"; exit 1; }
+echo "  ✅ ловушка 27в: koridor_obyoma.py — мусор в --sostav падает громко (rc≠0, сообщение по делу)"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
