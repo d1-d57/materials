@@ -188,12 +188,13 @@ def parse_slide(text, sid="?"):
     return params, body_md
 
 
-def render_body(body_md, acc_tag="span"):
+def render_body(body_md, acc_tag="span", math=None):
     """markdown тела (уже плоский, после `parse_slide`/`bloki.render_section_markdown`)
-    → HTML. Без кэша формул (Э2 захода: «кэш формул KaTeX» сознательно НЕ входит в
-    этот заход) — `$…$` уходит в `render_md` с пустым кэшем, формула возвращается
-    видимым маркером `⟦MISSING-MATH:...⟧` (НАМЕРЕННО, лучше кричащий пробел, чем
-    молча съеденная формула)."""
+    → HTML. `math` — кэш формул KaTeX (Э5 захода solver-vmeshcheniya: подключён к
+    новому пути, приём тот же, что `build_deck.py` уже применяет для каскада сцен —
+    просто читает `<лекция>/math/katex.json`, если он есть). Без кэша (`math=None`
+    или формулы в нём нет) — видимый маркер `⟦MISSING-MATH:...⟧` (НАМЕРЕННО, лучше
+    кричащий пробел, чем молча съеденная формула)."""
     if not body_md.strip():
         return ""
-    return render_md(body_md, {}, acc_tag)
+    return render_md(body_md, math or {}, acc_tag)
