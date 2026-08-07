@@ -1420,4 +1420,112 @@ V=$(git -C "$T40" worktree list | grep -c 'vitrina' || true)
 [ "$V" = "0" ] && echo "  ✅ opublikovat: одноразовая папка витрины снята" \
     || { echo "  ❌ ПАПКА ВИТРИНЫ ОСТАЛАСЬ — вторая копия сайта на диске"; FAIL=1; }
 
+# ── ЛОВУШКА 41: ГОНКА в `branch_loss` — «доехало» уезжает МЕЖДУ снимком имён
+# ссылок-кандидатов и резолвом их блобов, вердикт молча падает с safe в loss ──
+# Заход `vhod-fazy-1`, Э1. Живой замер 2026-08-08: два прогона `doctor` минуты
+# в разницу по одной и той же ветке (`zahod/solver-v3-dyhanie`) дали ПРОТИВО-
+# ПОЛОЖНЫЕ вердикты — прогон 1 «✅ доехало», прогон 2 «🔴 пропадёт 20 путей»,
+# без единого коммита между ними. Обе гипотезы аналитика (позиционный сдвиг в
+# `batch_oids`; влияние `worktree_branches()` на вердикт) проверены ПЕРВЫМИ и
+# опровергнуты фактом (см. `## ПЛАН` захода) — причина не там.
+# НАЙДЕНО: `others`/`gde` (список refs-кандидатов «содержимое доехало копией»)
+# снимается ОДИН раз в начале `branch_loss()`, а `blobs_elsewhere`/
+# `blobs_v_istorii` резолвят блобы ЭТИХ ЖЕ refs несколькими git-вызовами позже.
+# Если чужой писатель (в этом репозитории параллельно живут до 8 worktree)
+# удалит/подвинет ref-кандидат в этом окне, «доехало» молча теряет источник —
+# `safe` откатывается в `loss` без единой ошибки на экране.
+# ПОЧИНКА: `ref_shas()` снимает SHA кандидатов ДО и ПОСЛЕ резолва блобов;
+# разошлось — одна повторная попытка со свежим снимком (гонка обычно разовая
+# и самоисцеляется чтением по новой); разошлось И на повторе — вердикт честно
+# помечается `nestabilno` и печатается ОТДЕЛЬНОЙ строкой предупреждения, а не
+# выдаётся как факт. Ниже — гонка ИНЪЕЦИРУЕТСЯ (тот же приём, что ловушка 38):
+# монки-патчим `blobs_elsewhere`, чтобы удалить ветку-источник ПРЯМО ПОСЕРЕДИНЕ
+# резолва — ДО починки это даёт `loss` без предупреждения (ложно, молча);
+# ПОСЛЕ починки — тот же `loss` (гонка была разовая, самоисцелилась), а на
+# ПОСТОЯННОЙ гонке (мутация на каждый вызов) — `nestabilno` и предупреждение.
+if python3 - "$TOOLS/git_zona.py" <<'PY'
+import sys, subprocess, tempfile, os, importlib.util
+
+TOOLS_PY = sys.argv[1]
+
+def make_repo():
+    T = tempfile.mkdtemp()
+    def sh(*a):
+        subprocess.run(["git", "-C", T] + list(a), check=True, capture_output=True)
+    subprocess.run(["git", "init", "-q", T], check=True)
+    sh("config", "user.email", "fixture@test"); sh("config", "user.name", "fixture")
+    open(os.path.join(T, "f.txt"), "w").write("baza\n")
+    sh("add", "-A"); sh("commit", "-qm", "baza"); sh("branch", "-M", "osnova")
+    sh("checkout", "-q", "-b", "vetka-uniq")
+    open(os.path.join(T, "UNIQ.md"), "w").write("rabota\n")
+    sh("add", "-A"); sh("commit", "-qm", "unik")
+    sh("checkout", "-q", "osnova")
+    # sosed держит ТОТ ЖЕ блоб через adopt (checkout -- путь, БЕЗ слияния
+    # истории) — ровно случай, ради которого заведён `blobs_elsewhere`.
+    sh("checkout", "-q", "-b", "sosed")
+    sh("checkout", "-q", "vetka-uniq", "--", "UNIQ.md")
+    sh("commit", "-qm", "adopt uniq")
+    sh("checkout", "-q", "osnova")
+    return T
+
+def load_gz(T, tag):
+    spec = importlib.util.spec_from_file_location("gz" + tag, TOOLS_PY)
+    gz = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gz)
+    os.environ["GIT_ZONA_REPO"] = T
+    gz.REPO = gz.Path(T)
+    return gz
+
+fails = []
+
+# 1. БЕЗ гонки — safe, доехало через sosed, nestabilno не взведён.
+T1 = make_repo(); gz1 = load_gz(T1, "a")
+r1 = gz1.branch_loss("vetka-uniq")
+if not (r1.get("verdict") == "safe" and r1.get("doehalo_sosed") == ["UNIQ.md"]
+        and not r1.get("nestabilno")):
+    fails.append(f"без гонки ждали safe/doehalo — получили {r1}")
+
+# 2. РАЗОВАЯ гонка (sosed исчезает РОВНО в окне резолва) — самоисцеляется
+#    повтором: свежий снимок видит sosed уже нет ⇒ честный loss, БЕЗ
+#    nestabilno (вторая попытка сама по себе стабильна).
+T2 = make_repo(); gz2 = load_gz(T2, "b")
+orig_be2 = gz2.blobs_elsewhere
+def once_be(pairs, refs, _t=T2, _o=orig_be2):
+    r = _o(pairs, refs)
+    subprocess.run(["git", "-C", _t, "branch", "-D", "sosed"], capture_output=True)
+    return r
+gz2.blobs_elsewhere = once_be
+r2 = gz2.branch_loss("vetka-uniq")
+if not (r2.get("verdict") == "loss" and not r2.get("nestabilno")):
+    fails.append(f"разовая гонка ждали loss без nestabilno (самоисцеление) — получили {r2}")
+
+# 3. ПОСТОЯННАЯ гонка (sosed форс-двигается на каждый вызов) — вердикт не
+#    успевает устояться ⇒ честно помечен nestabilno, а не выдан как факт.
+T3 = make_repo(); gz3 = load_gz(T3, "c")
+orig_be3 = gz3.blobs_elsewhere
+ctr = [0]
+def churn_be(pairs, refs, _t=T3, _o=orig_be3):
+    r = _o(pairs, refs)
+    ctr[0] += 1
+    open(os.path.join(_t, f"chuzhoe{ctr[0]}.txt"), "w").write("x\n")
+    subprocess.run(["git", "-C", _t, "add", "-A"], capture_output=True)
+    subprocess.run(["git", "-C", _t, "commit", "-qm", f"chuzhoe{ctr[0]}"], capture_output=True)
+    sha = subprocess.run(["git", "-C", _t, "rev-parse", "HEAD"],
+                          capture_output=True, text=True).stdout.strip()
+    subprocess.run(["git", "-C", _t, "branch", "-f", "sosed", sha], capture_output=True)
+    subprocess.run(["git", "-C", _t, "reset", "--hard", "HEAD~1"], capture_output=True)
+    return r
+gz3.blobs_elsewhere = churn_be
+r3 = gz3.branch_loss("vetka-uniq")
+if not r3.get("nestabilno"):
+    fails.append(f"постоянная гонка ждали nestabilno=True — получили {r3}")
+
+for f in fails:
+    print("FAIL:", f)
+sys.exit(1 if fails else 0)
+PY
+then echo "  ✅ ловушка 41: branch_loss самоисцеляется на разовой гонке и честно метит постоянную"
+else echo "  ❌ ГОНКА В branch_loss: вердикт по ветке падает молча — см. вывод выше"; FAIL=1
+fi
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
