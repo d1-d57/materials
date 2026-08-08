@@ -28,7 +28,8 @@ from pathlib import Path
 
 SBORKA = Path(__file__).resolve().parent
 sys.path.insert(0, str(SBORKA))
-from formaty import parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNIT, FormatSlaida  # noqa: E402
+from formaty import (parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNIT,  # noqa: E402
+                      FormatSlaida, strip_lifecycle_block, FAZA_STROKA_RE)
 import bloki  # noqa: E402
 
 
@@ -36,15 +37,79 @@ def _unfilled(val):
     return val is None or val == "" or val == ZAPOLNIT
 
 
-def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid):
-    """Одна карточка → список замечаний (пустой — карточка чиста)."""
+# Р2 захода porcia-1-zamknut-konvejer (долг Д38): набор обязательных полей
+# зависит от фазы, на выходе которой стоит карточка. Сегодня специфицирована
+# только Ф1: карточка слайда ЕЩЁ НЕ ТРОНУТА (все поля шапки решает Ф2) — пустой
+# набор требований, ровно то, что даёт зелёный `--faza 1` на свежепорождённой
+# карточке. Остальные значения `--faza` явной спецификации не несут и сознательно
+# падают на полную проверку — минимум, а не гадание за несуществующее требование.
+FAZA_POLYA = {1: ()}
+
+# Р1б (П0: «дисциплина, невозможная игнорировать физически») — блок «что дальше»
+# обязан быть в КАЖДОЙ карточке (`bootstrap_lekcii.py` его вшивает) и называть
+# все фазы Ф2-Ф6 хотя бы одной командой. Критерий 3 Р1: убрали блок — гейт
+# краснеет, а не молчит (иначе это украшение, не дисциплина).
+FAZY_OBYAZATELNY_V_BLOKE = (2, 3, 4, 5, 6)
+
+
+def _check_lifecycle_block(text, sid):
+    blok, _ = strip_lifecycle_block(text)
+    if blok is None:
+        return ["%s: блок «что дальше» (жизнь карточки) отсутствует — должен быть "
+                "HTML-комментарием строго до YAML-шапки, см. bootstrap_lekcii.py" % sid]
+    nazvano = {int(m.group(1)) for m in FAZA_STROKA_RE.finditer(blok)}
+    ne_nazvano = [f for f in FAZY_OBYAZATELNY_V_BLOKE if f not in nazvano]
+    if ne_nazvano:
+        return ["%s: блок «что дальше» не называет фазу(ы) %s (нужны все: %s)"
+                 % (sid, ", ".join("Ф%d" % f for f in ne_nazvano),
+                    ", ".join("Ф%d" % f for f in FAZY_OBYAZATELNY_V_BLOKE))]
+    return []
+
+
+def _polya_dlya_fazy(faza):
+    if faza is None:
+        return OBYAZATELNYE_POLYA
+    return FAZA_POLYA.get(faza, OBYAZATELNYE_POLYA)
+
+
+# Дочистка приёмки (тот же заход porcia-1-zamknut-konvejer): полный гейт молчал
+# на теле-заглушке (`### [narrativ] заполнить` / `заполнить`, ровно то, что
+# порождает `bootstrap_lekcii.py`, Р1а) — слово ZAPOLNIT в поле шапки ловилось,
+# в блоке тела — нет. Раздел «Математика» обязан быть настоящим начиная с
+# выхода Ф2, «Текст слайда» — с выхода Ф3; на выходе Ф1 (`--faza 1`) тело ещё
+# не пишется вовсе. Прочие `faza` (как и у `_polya_dlya_fazy`) падают на полную
+# проверку — минимум, не гадание за неспецифицированное требование.
+RAZDELY_TELA = {"matematika": bloki.KEY_MATEMATIKA, "tekst": bloki.KEY_TEKST}
+
+
+def _razdely_dlya_fazy(faza):
+    if faza == 1:
+        return ()
+    if faza == 2:
+        return ("matematika",)
+    return ("matematika", "tekst")
+
+
+def _check_zapolnit_v_tele(sid, sections, faza):
     issues = []
+    for razdel in _razdely_dlya_fazy(faza):
+        for b in sections[razdel]:
+            if b.mysl == ZAPOLNIT or b.telo.strip() == ZAPOLNIT:
+                issues.append("%s: раздел «%s» несёт незаполненный блок-заглушку "
+                               "(мысль или тело — «%s»)" % (sid, RAZDELY_TELA[razdel], ZAPOLNIT))
+    return issues
+
+
+def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=None):
+    """Одна карточка → список замечаний (пустой — карточка чиста)."""
+    issues = _check_lifecycle_block(text, sid)
     try:
         params, raw_body = parse_card(text, sid=sid)
     except FormatSlaida as e:
-        return ["%s: карточка не парсится: %s" % (sid, e)]
+        issues.append("%s: карточка не парсится: %s" % (sid, e))
+        return issues
 
-    for f in OBYAZATELNYE_POLYA:
+    for f in _polya_dlya_fazy(faza):
         if _unfilled(params.get(f)):
             issues.append("%s: обязательное поле '%s' не заполнено" % (sid, f))
 
@@ -82,6 +147,8 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid):
     for m in bloki.check_composition(sections):
         issues.append("%s: состав блоков не совпадает — %s" % (sid, m))
 
+    issues.extend(_check_zapolnit_v_tele(sid, sections, faza))
+
     budget = params.get("byudzhet_slov")
     if not _unfilled(budget):
         try:
@@ -97,7 +164,7 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid):
     return issues
 
 
-def check_lekcija(lekcija_dir):
+def check_lekcija(lekcija_dir, faza=None):
     """Папка лекции → (issues: [str], n_slides: int). issues пуст — гейт зелёный."""
     lekcija_dir = Path(lekcija_dir)
     brief_path = lekcija_dir / "brief.md"
@@ -129,16 +196,20 @@ def check_lekcija(lekcija_dir):
     issues = []
     for p in slide_paths:
         sid = p.parent.name
-        issues.extend(check_slide(sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid))
+        issues.extend(check_slide(sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza))
     return issues, len(slide_paths)
 
 
 def main():
     ap = argparse.ArgumentParser(description="Гейт карточек лекции — краснеет и не пропускает дальше")
     ap.add_argument("lekcija", help="путь к папке лекции (несёт brief.md + slajdy/)")
+    ap.add_argument("--faza", type=int, default=None,
+                     help="набор обязательных полей зависит от фазы (Р2, долг Д38); "
+                          "сегодня различает только --faza 1 (выход Ф1 — карточка ещё "
+                          "не тронута); остальные значения = полная проверка, как без флага")
     args = ap.parse_args()
 
-    issues, n = check_lekcija(args.lekcija)
+    issues, n = check_lekcija(args.lekcija, faza=args.faza)
     if not issues:
         print("ЗЕЛЁНЫЙ: %d карточек проверено, замечаний 0" % n)
         return 0

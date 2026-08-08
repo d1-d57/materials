@@ -61,6 +61,25 @@ from build_deck import render_md, render_inline_md  # noqa: E402  (read-only и�
 import bloki  # noqa: E402
 
 FRONT_RE = re.compile(r"^---\n(.*?)\n---\n?(.*)$", re.S)
+
+# Р1б захода porcia-1-zamknut-konvejer (П0: «дисциплина, которую невозможно
+# игнорировать физически»): `bootstrap_lekcii.py` вшивает в каждую порождённую
+# карточку слайда, СТРОГО до шапки, HTML-комментарий «что дальше с этим файлом»
+# — какая фаза что заполняет и какой командой это проверяется, поимённо. Формат
+# строки внутри комментария фиксирован и машиночитаем: `gejt_kartochki.py`
+# гейтует на нём (см. Я1 §6-бис). Строка вида:
+#   ФАЗА 2 (раскадровка): решить поля шапки :: python3 _generator/sborka/gejt_kartochki.py <лекция>
+LIFECYCLE_RE = re.compile(r"^<!--(.*?)-->\s*", re.S)
+FAZA_STROKA_RE = re.compile(r"^ФАЗА\s+(\d+)[^:\n]*:\s*(.+?)\s*::\s*(\S.*)$", re.M)
+
+
+def strip_lifecycle_block(text):
+    """Карточка слайда → (блок «что дальше»: str|None, остальной текст: str).
+    Парсеру шапки блок не нужен — отрезаем ЗДЕСЬ, один раз, прозрачно для всех
+    вызывающих `parse_card`/`parse_front_matter`. Блока нет (старая карточка,
+    чужой формат) → (None, text) без изменений."""
+    m = LIFECYCLE_RE.match(text)
+    return (m.group(1), text[m.end():]) if m else (None, text)
 LIST_ITEM_RE = re.compile(r"^\s*-\s*(.+?)\s*$")
 DICT_ITEM_RE = re.compile(r"^\s*-\s*\{(.*)\}\s*$")
 KEY_RE = re.compile(r"^([A-Za-z_]+):\s*(.*)$")
@@ -161,6 +180,7 @@ def parse_card(text, sid="?"):
     """.md карточки слайда → (params: dict, raw_body: str) — шапка нормализована
     (illustracii/vvodit/opiraetsya_na/bez_opredeleniya_namerenno всегда списки,
     status по умолчанию 'v_deke'), raw_body — тело КАК ЕСТЬ, разделы ещё не разобраны."""
+    _, text = strip_lifecycle_block(text)
     params, body = parse_front_matter(text, sid)
     if "tip_verstki" not in params:
         raise FormatSlaida("слайд %s: обязательное поле 'tip_verstki' отсутствует" % sid)
