@@ -43,14 +43,26 @@
 Обойти можно: `git commit --no-verify`. Это НЕ дыра — закон говорит «нельзя нарушить
 МОЛЧА», а не «нельзя нарушить». Обошёл — значит напечатал это руками и знаешь, что делаешь.
 """
+import os
 import re
 import subprocess
 import sys
+import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]  # .../materials
 UROKI_NAME = "UROKI-FABRIKE.md"
 ZAHOD_SECTION = "## УРОКИ ФАБРИКЕ"
+
+# 🔴 ЗНАЧЕНИЕ ПРОДУБЛИРОВАНО, А НЕ ИМПОРТИРОВАНО ИЗ korni.py — НАРОЧНО.
+# `import korni` роняет фикстуру `fixtures/dvizhok`: она копирует check_uroki.py
+# в изолированную песочницу БЕЗ соседних инструментов (проверяет только логику
+# самого хука), и импорт падал там `ModuleNotFoundError` на каждом здоровом
+# пути — нашёл регрессией живой прогон `fixtures/dvizhok/PROGNAT.sh` при первой
+# же правке. check_uroki.py и раньше был листовым модулем без кросс-тул
+# импортов (его саму импортирует dostavit_urok.py, а не наоборот) — эта строка
+# обязана совпадать с `korni.ВЕРДИКТЫ_REL`, но копия дешевле хрупкой связи.
+VERDIKTY_REL = "_studio/zhurnal/_INFRA-git/VERDIKTY.md"
 
 HEADING = re.compile(r"^### (.+)$")
 # Цена засчитывается и с жирным выделением: `**ЦЕНА: …**` — это то же самое,
@@ -173,6 +185,134 @@ def artefakt_missing(path):
     return done and in_scope and not filled
 
 
+# ── ГЕЙТ 3: закрытие реестра — тем же ходом, что и починка ──────────────────
+# ЗАЧЕМ. Владелец дословно: «мы запускаем заход, который закрывает долги А,Б,С,
+# отрабатывает, всё хорошо. Потом спрашиваю — А,Б,С не закрыты… состояние
+# ускользает». Между «починил» и «отмечено» стоят три хода (исполнитель чинит →
+# приёмка верит отчёту → метку переставляет кто-то потом), и на любом из них
+# теряются — за одну ночь потерялись дважды. Лечится тем же приёмом, что уже
+# стоит выше для АРТЕФАКТА: заявление о закрытии в `## ОТЧЁТ` без переставленной
+# метки в реестре красит коммит.
+#
+# 🔴 ТРИ РЕЕСТРА — ТРИ РАЗНЫХ СПОСОБА СВЕРКИ, назвал в `## ПЛАН` этого захода:
+#  * ДОЛГИ (`DOLG.md`) живут в ДРУГОМ git-репозитории (`~/Documents/GitHub/
+#    disciplina`, не `materials`) — коммит `materials` физически не может внести
+#    его правку в свой `git diff --cached`. Сверяем ЖИВОЙ файл с диска: строка
+#    `СТАТУС:` найденного долга обязана нести СЕГОДНЯШНЮЮ дату данных (тот же
+#    канон, что корневой `CLAUDE.md` правило 6 / Р34 уже требует от любой
+#    отметки «закрыто» — не 1:1 «тот же коммит», а ближайшее исполнимое
+#    приближение к цели владельца).
+#  * ИНЦИДЕНТЫ закрываются в `VERDIKTY.md` (НЕ в `INCIDENTY.md` — та входящая
+#    сырая корзина, «руками строки не заводятся», см. её собственную шапку) —
+#    этот файл ВНУТРИ `materials`, сверяем ДОБАВЛЕННУЮ строку `git diff --cached`
+#    этого же коммита.
+#  * УРОКИ закрываются строкой `ВЕРДИКТ:` в `UROKI-FABRIKE.md` арки ТОГО ЖЕ
+#    захода — тоже внутри `materials`, тот же приём git-diff.
+#
+# Заявление ловится СО-ВХОЖДЕНИЕМ по строке (глагол «закры*» + токен рядом),
+# не разбором смысла — терпимая сторона ошибки, тот же принцип, что у Г6
+# `priyomka.py`: «ложное срабатывание стоит взгляда, пропуск стоит потерянного
+# долга». Отчёт без заявлений о закрытии гейт не трогает — обратная
+# совместимость обеспечена ПУСТЫМ множеством заявлений, а не отдельной веткой.
+DOLG_PATH = Path(os.environ.get("CHECK_UROKI_DOLG")
+                  or "~/Documents/GitHub/disciplina/skills/slajdy/DOLG.md").expanduser()
+
+CLOSURE_VERB = re.compile(r"закры\w*", re.I)
+DOLG_TOKEN = re.compile(r"\b((?:Д|Б)\d+)\b")
+INCIDENT_MARK_RE = re.compile(r"вердикт:\s*закрыт\s+гейтом", re.I)
+
+
+def otchet_sekciya(text):
+    """Текст `## ОТЧЁТ` (до следующего `## ` или конца файла); "" — секции нет."""
+    m = re.search(r'^##\s+ОТЧЁТ[^\n]*\n(.*?)(?=^##\s|\Z)', text, re.M | re.S)
+    return m.group(1) if m else ""
+
+
+def zayavlennye_zakrytiya(otchet):
+    """(долги: {метки}, инцидент: bool, урок: bool) — заявления о закрытии в ОТЧЁТЕ."""
+    dolgi, incident, urok = set(), False, False
+    for line in otchet.splitlines():
+        if CLOSURE_VERB.search(line):
+            for m in DOLG_TOKEN.finditer(line):
+                dolgi.add(m.group(1))
+            if re.search(r"инцидент", line, re.I):
+                incident = True
+        if re.search(r"урок", line, re.I) and re.search(r"реализован|закры\w*", line, re.I):
+            urok = True
+    return dolgi, incident, urok
+
+
+def otnositelno(put, baza):
+    try:
+        return put.resolve().relative_to(baza.resolve()).as_posix()
+    except (ValueError, OSError):
+        return None
+
+
+def staged_added_lines(rel_path, repo_root):
+    """Строки, ДОБАВЛЕННЫЕ этим же staged-коммитом (без ведущего `+`)."""
+    if rel_path is None:
+        return []
+    r = subprocess.run(
+        ["git", "--no-optional-locks", "diff", "--cached", "-U0", "--", rel_path],
+        cwd=repo_root, capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        return []
+    return [ln[1:] for ln in r.stdout.splitlines() if ln.startswith("+") and not ln.startswith("+++")]
+
+
+def dolg_metka_svezha(label, dolg_path=None, segodnya=None):
+    """True/False — метка тронута/не тронута сегодня. None — файл вне доступа
+    (честная граница гейта: он не может проверить репозиторий, которого нет на
+    этой машине, и молчит про этот долг вместо ложного красного)."""
+    dolg_path = dolg_path or DOLG_PATH
+    if not dolg_path.is_file():
+        return None
+    segodnya = segodnya or datetime.date.today().isoformat()
+    for line in dolg_path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        if re.search(r"\b" + re.escape(label) + r"\b", line) and "СТАТУС:" in line:
+            return segodnya in line
+    return False
+
+
+def incident_metka_dobavlena(repo_root):
+    rel = otnositelno(repo_root / VERDIKTY_REL, repo_root)
+    return any(INCIDENT_MARK_RE.search(ln) for ln in staged_added_lines(rel, repo_root))
+
+
+def urok_metka_dobavlena(uroki_path, repo_root):
+    rel = otnositelno(uroki_path, repo_root)
+    for ln in staged_added_lines(rel, repo_root):
+        m = VERDICT.match(ln.strip())
+        if m and m.group(1).strip():
+            return True
+    return False
+
+
+def zakrytiya_bez_metki(path, text, repo_root=None, dolg_path=None, segodnya=None):
+    """[(вид, метка, почему), ...] — заявленные закрытия без переставленной метки."""
+    repo_root = repo_root or REPO_ROOT
+    otchet = otchet_sekciya(text)
+    dolgi, incident, urok = zayavlennye_zakrytiya(otchet)
+    problemy = []
+    for label in sorted(dolgi):
+        svezha = dolg_metka_svezha(label, dolg_path, segodnya)
+        if svezha is False:
+            problemy.append(("долг", label,
+                              f"в {dolg_path or DOLG_PATH} нет строки СТАТУС: "
+                              f"с сегодняшней датой для {label}"))
+    if incident and not incident_metka_dobavlena(repo_root):
+        problemy.append(("инцидент", "—",
+                          f"этот коммит не добавляет строку «вердикт: закрыт гейтом "
+                          f"...» в {VERDIKTY_REL}"))
+    if urok and not urok_metka_dobavlena(path.parent / UROKI_NAME, repo_root):
+        problemy.append(("урок", "—",
+                          f"этот коммит не добавляет непустую строку ВЕРДИКТ: в "
+                          f"{path.parent.name}/{UROKI_NAME}"))
+    return problemy
+
+
 def lessons_in(path):
     """[(строка, заголовок)] — уроки БЕЗ цены и БЕЗ вердикта; плюс сколько всего проверено.
 
@@ -226,9 +366,21 @@ def main(argv):
     broken = []
     checked = 0
     bezadresa = []
+    nezakrytye = []
+
+    def rel(p):
+        try:
+            return p.relative_to(REPO_ROOT)
+        except ValueError:
+            return p  # файл вне репо (ручной прогон) — печатаем как есть
+
     for f in targets_from(paths):
-        if f.name.startswith("kod_") and artefakt_missing(f):
-            bezadresa.append(f)
+        if f.name.startswith("kod_"):
+            if artefakt_missing(f):
+                bezadresa.append(f)
+            text = f.read_text(encoding="utf-8", errors="ignore")
+            for vid, metka, pochemu in zakrytiya_bez_metki(f, text):
+                nezakrytye.append((f, vid, metka, pochemu))
         for les in lessons_in(f):
             if les["verdict"]:
                 continue  # уже отсуждён закрывающей сессией — не пересматриваем
@@ -239,11 +391,7 @@ def main(argv):
     if bezadresa:
         print("❌ ОТЧЁТ БЕЗ АДРЕСА АРТЕФАКТА — владельцу нечего открыть:\n", file=sys.stderr)
         for f in bezadresa:
-            try:
-                p = f.relative_to(REPO_ROOT)
-            except ValueError:
-                p = f
-            print(f"  {p}\n      ↳ отчёт заполнен (хэш коммита есть), "
+            print(f"  {rel(f)}\n      ↳ отчёт заполнен (хэш коммита есть), "
                   f"а строки «**АРТЕФАКТ:** <абсолютный путь>» нет", file=sys.stderr)
         print("\nЧини одним из двух — оба законных:", file=sys.stderr)
         print("  • дописать «**АРТЕФАКТ:** /абсолютный/путь» в ## ОТЧЁТ;", file=sys.stderr)
@@ -251,14 +399,20 @@ def main(argv):
               "заход, который ничего не собрал, это законный исход.", file=sys.stderr)
         print("\nПроскочить: git commit --no-verify (можно; но уже не молча).\n", file=sys.stderr)
 
-    if not broken:
-        return 1 if bezadresa else 0
+    if nezakrytye:
+        print("❌ ЗАКРЫТИЕ БЕЗ МЕТКИ — заявлено в ## ОТЧЁТ, реестр не тронут этим же ходом:\n",
+              file=sys.stderr)
+        for f, vid, metka, pochemu in nezakrytye:
+            hvost = f" {metka}" if metka != "—" else ""
+            print(f"  {rel(f)}\n      ↳ {vid}{hvost}: {pochemu}", file=sys.stderr)
+        print("\nЧини одним из двух — оба законных:", file=sys.stderr)
+        print("  • переставь метку тем же коммитом (форма — `reviziya_dolgov.py`: "
+              "СТАТУС/ВЕРДИКТ · дата · команда → вывод);", file=sys.stderr)
+        print("  • убери заявление о закрытии из ## ОТЧЁТ, если оно ещё рано.", file=sys.stderr)
+        print("\nПроскочить: git commit --no-verify (можно; но уже не молча).\n", file=sys.stderr)
 
-    def rel(p):
-        try:
-            return p.relative_to(REPO_ROOT)
-        except ValueError:
-            return p  # файл вне репо (ручной прогон) — печатаем как есть
+    if not broken:
+        return 1 if (bezadresa or nezakrytye) else 0
 
     print("❌ УРОК БЕЗ ЦЕНЫ — в канон он не пойдёт (RESHENIYA Р31, KONSTITUCIYA §11):\n",
           file=sys.stderr)

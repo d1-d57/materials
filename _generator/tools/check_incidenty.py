@@ -88,15 +88,17 @@ def data_polnaya(s):
 
 
 class Verdikt:
-    __slots__ = ("tip", "zahod", "prichina", "zakryt_data", "data_dannyh", "syraya")
+    __slots__ = ("tip", "zahod", "prichina", "zakryt_data", "data_dannyh", "syraya", "gejt")
 
-    def __init__(self, tip, data_dannyh, syraya, zahod=None, prichina=None, zakryt_data=None):
+    def __init__(self, tip, data_dannyh, syraya, zahod=None, prichina=None,
+                 zakryt_data=None, gejt=None):
         self.tip = tip
         self.zahod = zahod
         self.prichina = prichina
         self.zakryt_data = zakryt_data
         self.data_dannyh = data_dannyh
         self.syraya = syraya
+        self.gejt = gejt
 
 
 def razobrat_verdikt(telo, data_dannyh, syraya):
@@ -111,6 +113,16 @@ def razobrat_verdikt(telo, data_dannyh, syraya):
         if not prichina:
             return None
         return Verdikt('шум', data_dannyh, syraya, prichina=prichina)
+    # 🔴 «закрыт гейтом `<имя>`» — владелец дословно: «мы должны писать, что
+    # инцидент закрыт гейтом КОНКРЕТНО. Записано, что „выстроил рычаги" —
+    # выглядит ужасно». До этой формы у «закрыт» была только голая дата, и имя
+    # гейта уходило в прозу мимо машины — не отличить от «починил и не назвал».
+    if telo.startswith('закрыт гейтом '):
+        m = re.fullmatch(r"`([^`]+)`", telo[len('закрыт гейтом '):].strip())
+        if not m:
+            return None
+        return Verdikt('закрыт', data_dannyh, syraya,
+                        zakryt_data=data_dannyh[:10], gejt=m.group(1))
     if telo.startswith('закрыт '):
         d = telo[len('закрыт '):].strip()
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d):
