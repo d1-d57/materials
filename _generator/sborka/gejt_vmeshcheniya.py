@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# TOOL-CONTRACT: called-by-hand — закрытие ФАЗЫ 3 (заход svedenie-i-smeta, Э2.5).
+# Автоматическим хуком быть НЕ МОЖЕТ по существу: требует скомпилированных
+# слайдов и живого браузера, на pre-commit это минуты и падение без Chrome.
+# Точка вызова названа в конвейере — `bootstrap_lekcii.LIFECYCLE_TMPL`, строка
+# «ФАЗА 3.9», до ФАЗЫ 4. До 08.08 гейт был написан и не звался НИ НА ОДНОМ шаге.
 """Гейт вмещения (Э4 захода solver-vmeshcheniya) — краснеет и не пропускает
 дальше, если текст на скомпилированном слайде обрезан `overflow:hidden`.
 
@@ -40,6 +45,14 @@ def main():
     ap = argparse.ArgumentParser(description="Гейт вмещения — краснеет на обрезанном тексте")
     ap.add_argument("html", nargs="+", help="скомпилированные HTML слайдов (slaid.py -o ...)")
     args = ap.parse_args()
+
+    # 🔴 Кривой вход отвергается ДО запуска браузера: несуществующий путь раньше
+    # давал `FileNotFoundError` из середины прогона, уже подняв Chrome, и вердикт
+    # по остальным слайдам терялся вместе с трейсбеком.
+    net = [h for h in args.html if not Path(h).is_file()]
+    if net:
+        print("ОШИБКА: не существует или не файл — %s" % ", ".join(net), file=sys.stderr)
+        return 2
 
     from playwright.sync_api import sync_playwright
     bad = []
