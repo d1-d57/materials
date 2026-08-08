@@ -44,6 +44,10 @@ je "4a. здоровый провод" "$?" "0"
 python3 $TOOL "$FIX/bez-illyustracij" --tiho
 je "4b. лекция без иллюстраций" "$?" "0"
 
+# 4c — карточка нового формата, с lifecycle-блоком «что дальше» перед шапкой
+python3 $TOOL "$FIX/s-lifecycle-blokom" --tiho
+je "4c. карточка с lifecycle-блоком" "$?" "0"
+
 # кривой вход — без аргументов
 python3 $TOOL >/dev/null 2>&1
 je "5. без аргументов" "$?" "2"
