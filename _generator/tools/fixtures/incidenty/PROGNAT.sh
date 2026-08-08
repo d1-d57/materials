@@ -132,6 +132,37 @@ else
   OK=1
 fi
 
+# 8. Вердикт «закрыт гейтом `<имя>`» (заход zamykanie-reestrov, ## ПЛАН) —
+#    новая форма словаря, признаётся типом «закрыт» и класс молчит, exit 0.
+#    Владелец дословно: «должны писать, что закрыт гейтом КОНКРЕТНО» — до этой
+#    формы «закрыт» умел только голую дату, имя гейта уходило мимо машины.
+cat > "$TMP/8-incidenty.md" <<EOF
+- $DATA_9D 10:00 · arka/mat-kostyak · план не готов или битый (см. вывод команды) · → поправить план · статус: открыт
+EOF
+cat > "$TMP/8-verdikty.md" <<EOF
+- I план битый · вердикт: закрыт гейтом \`check_plan_svezhest.py\` · дата данных: $DATA_9D
+EOF
+pusk "8-zakryt-gejtom" 0 "$TMP/8-incidenty.md" "$TMP/8-verdikty.md"
+
+# 9. Regression guard: «закрыт гейтом» БЕЗ backtick-имени — сломанная форма,
+#    razobrat_verdikt() обязан вернуть None (класс остаётся БЕЗ вердикта, а не
+#    молча приниматься), иначе вписать пустое имя гейта стало бы легальным.
+cat > "$TMP/9-incidenty.md" <<EOF
+- $DATA_9D 10:00 · arka/mat-kostyak · план не готов или битый (см. вывод команды) · → поправить план · статус: открыт
+EOF
+cat > "$TMP/9-verdikty.md" <<EOF
+- I план битый · вердикт: закрыт гейтом плохая форма · дата данных: $DATA_9D
+EOF
+python3 "$GATE" --incidenty "$TMP/9-incidenty.md" --verdikty "$TMP/9-verdikty.md" > "$TMP/9.out" 2>&1
+got=$?
+if [ "$got" = "1" ] && grep -q "I план битый" "$TMP/9.out"; then
+  echo "  ✓ 9-zakryt-gejtom-bez-imeni: код $got, класс без вердикта поймал сломанную форму"
+else
+  echo "  ✗ 9-zakryt-gejtom-bez-imeni: код $got, или класса нет в выводе — сломанная форма молча принята"
+  cat "$TMP/9.out"
+  OK=1
+fi
+
 echo
 [ "$OK" = 0 ] && echo "ВСЁ ЗЕЛЁНОЕ" || echo "ЕСТЬ ПРОВАЛЫ"
 exit "$OK"
