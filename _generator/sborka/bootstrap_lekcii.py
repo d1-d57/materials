@@ -52,7 +52,58 @@ from build_deck import parse_brief  # noqa: E402 (READ-ONLY импорт — е�
 POLYA_LEKCII = ("title", "dlya_kogo", "zhanr", "dlitelnost_minut",
                 "skvoznaya_liniya")
 
-SLIDE_CARD_TMPL = """---
+# Р1б захода porcia-1-zamknut-konvejer (П0: «дисциплина, которую невозможно
+# игнорировать физически») — блок «что дальше» вшивается СТРОГО до шапки, одним
+# HTML-комментарием; `gejt_kartochki.py` его требует (Я1 §6-бис, `formaty.py`
+# режет перед разбором шапки). Формат строки — Я4-образец `bootstrap_zahod.py`,
+# перенесённый на карточку слайда: `ФАЗА N (имя): что :: команда`, команды —
+# из живого кода (`--help`), не из захода. `slaid.py` уже принимает и папку
+# слайда, и файл `slaid.md` (Р4); `deck.py` уже подбирает типографику сам,
+# пока явные kegl_px/liniya в шапке не проставлены руками (Р3).
+LIFECYCLE_TMPL = """<!--
+ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (вшито bootstrap_lekcii.py — не редактировать руками,
+gejt_kartochki.py краснеет на отсутствии этого блока или неполном наборе фаз).
+Формат строки: ФАЗА N (имя фазы): что делается :: команда.
+
+ФАЗА 2 (раскадровка): решить tip_verstki/liniya/nazvanie/zachem/akcent/minuty/vazhnost/byudzhet_slov в шапке, написать блоки «Математика — развёрнуто» (### [tip] мысль, типы — bloki.py) :: python3 _generator/sborka/gejt_kartochki.py <лекция>
+ФАЗА 3 (текст слайдов): написать «Текст слайда — сжато» тем же составом блоков, что в «Математике» :: python3 _generator/sborka/gejt_kartochki.py <лекция>
+ФАЗА 4 (вёрстка): собрать и посмотреть слайд отдельно :: python3 _generator/sborka/slaid.py <лекция>/slajdy/%(imya)s -o /tmp/%(imya)s.html
+ФАЗА 5 (иллюстрации): назвать файлы в illustracii, положить risunok.svg (или risunok.html) в <лекция>/illustracii/<имя>/ :: python3 _generator/sborka/gejt_kartochki.py <лекция>
+ФАЗА 6 (сборка и QA): собрать весь дек — типографика подбирается автоматически, явные kegl_px/liniya в шапке не перетираются :: python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html
+-->
+"""
+
+
+def _lifecycle_text(imya):
+    return LIFECYCLE_TMPL % {"imya": imya}
+
+
+# Р1а — тело порождается тремя каноническими разделами (bloki.ZAGOLOVKI) сразу,
+# «Математика» и «Текст слайда» — ОДИНАКОВЫМ единственным блоком-пометкой:
+# `bloki.check_composition` сравнивает состав (tip, mysl) между разделами, и
+# идентичная пара проходит гейт БЕЗ единой правки тела (Р1 критерий 1) — автор
+# трогает только шапку, пока не берётся за содержание. Голая пометка без блочной
+# обёртки (`### [tip] …`) недопустима: bloki.py считает любой текст вне блока
+# осиротевшим абзацем и красит гейт даже на свежем бутстрапе — это разнесло бы
+# Р1 и Р2 (там нужен зелёный `--faza 1` на нетронутой карточке).
+BODY_TMPL = """## Математика — развёрнуто
+### [narrativ] %(zap)s
+%(zap)s
+
+## Текст слайда — сжато
+### [narrativ] %(zap)s
+%(zap)s
+
+## Правки
+- %(zap)s
+"""
+
+
+def _body_text():
+    return BODY_TMPL % {"zap": ZAPOLNIT}
+
+
+SLIDE_CARD_TMPL = """%(lifecycle)s---
 imya: %(imya)s
 nazvanie: %(zap)s
 zagolovok_na_ekrane: %(zap)s
@@ -70,11 +121,12 @@ opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
 ---
-"""
+%(body)s"""
 
 
 def _slide_card_text(imya):
-    return SLIDE_CARD_TMPL % {"imya": imya, "zap": ZAPOLNIT}
+    return SLIDE_CARD_TMPL % {"imya": imya, "zap": ZAPOLNIT,
+                               "lifecycle": _lifecycle_text(imya), "body": _body_text()}
 
 
 INTERVYU_TMPL = """## Части

@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py bootstrap_lekcii.py gejt_kartochki.py deck.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
 # список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
@@ -587,5 +587,140 @@ echo "$OUT27C" | grep -qi "токен состава не распознан\|tr
   echo "❌ ЛОВУШКА 27: koridor_obyoma.py упал, но без понятного сообщения о причине:"
   echo "$OUT27C"; exit 1; }
 echo "  ✅ ловушка 27в: koridor_obyoma.py — мусор в --sostav падает громко (rc≠0, сообщение по делу)"
+
+echo "── ловушка 28: 🔴 Р1 (заход porcia-1-zamknut-konvejer) — своя карточка зелёная для своего гейта"
+SBORKA="$REPO_ROOT/_generator/sborka"
+ZAP_VALS_PY='
+import sys
+from pathlib import Path
+lek = Path(sys.argv[1])
+sids = sys.argv[2:]
+vals = {
+    "nazvanie: заполнить": "nazvanie: X", "zagolovok_na_ekrane: заполнить": "zagolovok_na_ekrane: X",
+    "zachem: заполнить": "zachem: X", "akcent: заполнить": "akcent: X",
+    "kommentarij_lektoru: заполнить": "kommentarij_lektoru: X", "minuty: заполнить": "minuty: 1",
+    "vazhnost: заполнить": "vazhnost: opornyj", "byudzhet_slov: заполнить": "byudzhet_slov: 10",
+    "tip_verstki: заполнить": "tip_verstki: tolko_tekst", "liniya: заполнить": "liniya: 50",
+}
+for sid in sids:
+    p = lek / "slajdy" / sid / "slaid.md"
+    t = p.read_text(encoding="utf-8")
+    for old, new in vals.items():
+        t = t.replace(old, new)
+    p.write_text(t, encoding="utf-8")
+'
+L28="$T/lek28"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L28" >/dev/null
+python3 - "$L28" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n  - s02\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L28" >/dev/null
+python3 -c "$ZAP_VALS_PY" "$L28" s01 s02
+OUT28=$(python3 "$SBORKA/gejt_kartochki.py" "$L28" 2>&1) || {
+  echo "❌ ЛОВУШКА 28: bootstrap_lekcii.py + заполненная ТОЛЬКО шапка не даёт зелёный гейт (Р1 регрессия):"
+  echo "$OUT28"; exit 1; }
+echo "$OUT28" | grep -q "ЗЕЛЁНЫЙ" || {
+  echo "❌ ЛОВУШКА 28: rc=0, но текст не «ЗЕЛЁНЫЙ»:"; echo "$OUT28"; exit 1; }
+echo "  ✅ ловушка 28: порождённая карточка (шапка заполнена, тело не тронуто) — гейт зелёный"
+
+echo "── ловушка 29: 🔴 Р2 — --faza 1 зелёный там, где полный гейт красный (свежепорождённая карточка)"
+L29="$T/lek29"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L29" >/dev/null
+python3 - "$L29" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L29" >/dev/null
+OUT29F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) || {
+  echo "❌ ЛОВУШКА 29: --faza 1 на свежепорождённой (нетронутой) карточке НЕ зелёный:"
+  echo "$OUT29F"; exit 1; }
+OUT29P=$(python3 "$SBORKA/gejt_kartochki.py" "$L29" 2>&1) && {
+  echo "❌ ЛОВУШКА 29: полный гейт на свежепорождённой (незаполненной) карточке дал rc=0 — поля Ф2 не проверяются:"
+  echo "$OUT29P"; exit 1; }
+echo "  ✅ ловушка 29: --faza 1 зелёный (rc=0), полный гейт красный (rc=1) — та же свежая карточка"
+
+echo "── ловушка 30: 🔴 Р3 — солвер встроен в deck.py: явный kegl/liniya переживает сборку"
+L30="$T/lek30"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L30" >/dev/null
+python3 - "$L30" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L30" >/dev/null
+python3 -c "$ZAP_VALS_PY" "$L30" s01
+python3 - "$L30" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+lines = p.read_text(encoding="utf-8").split("\n")
+out = []
+for line in lines:
+    out.append(line)
+    if line.startswith("liniya:"):
+        out.append("kegl_px: 77")  # явное значение — солвер обязан его не тронуть
+p.write_text("\n".join(out), encoding="utf-8")
+PY
+KEGL_DO=$(grep "^kegl_px:" "$L30/slajdy/s01/slaid.md")
+if python3 -c "import playwright" >/dev/null 2>&1; then
+  OUT30=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" 2>&1) || {
+    echo "❌ ЛОВУШКА 30: deck.py с playwright в наличии упал:"; echo "$OUT30"; exit 1; }
+  [ -f "$L30/dist/index.html" ] || {
+    echo "❌ ЛОВУШКА 30: дек не создан на диске:"; echo "$OUT30"; exit 1; }
+  KEGL_POSLE=$(grep "^kegl_px:" "$L30/slajdy/s01/slaid.md")
+  [ "$KEGL_DO" = "$KEGL_POSLE" ] || {
+    echo "❌ ЛОВУШКА 30: явный kegl_px ПЕРЕЗАПИСАН солвером ($KEGL_DO → $KEGL_POSLE):"; exit 1; }
+  echo "$OUT30" | grep -q "пропущен, явные значения" || {
+    echo "❌ ЛОВУШКА 30: deck.py не назвал слайд пропущенным из-за явных значений в шапке:"
+    echo "$OUT30"; exit 1; }
+  echo "  ✅ ловушка 30: playwright в наличии — явный kegl_px пережил сборку ($KEGL_DO), дек собран"
+else
+  OUT30=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" 2>&1) && {
+    echo "❌ ЛОВУШКА 30: playwright ОТСУТСТВУЕТ, а deck.py (подбор по умолчанию) вернул rc=0 — молча собрал без подбора:"
+    echo "$OUT30"; exit 1; }
+  echo "$OUT30" | grep -qi "playwright" || {
+    echo "❌ ЛОВУШКА 30: отказ без playwright не назвал причину внятно:"; echo "$OUT30"; exit 1; }
+  OUT30B=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" --bez-podbora 2>&1) || {
+    echo "❌ ЛОВУШКА 30: --bez-podbora без playwright всё равно упал:"; echo "$OUT30B"; exit 1; }
+  echo "  ✅ ловушка 30: playwright ОТСУТСТВУЕТ — deck.py громко отказал по умолчанию, --bez-podbora собрал"
+fi
+
+echo "── ловушка 31: 🔴 Р1б — гейт краснеет, если блок «что дальше» убрать (не украшение)"
+L31="$T/lek31"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L31" >/dev/null
+python3 - "$L31" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L31" >/dev/null
+python3 -c "$ZAP_VALS_PY" "$L31" s01
+python3 - "$L31" <<'PY'
+import re, sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8")
+t2 = re.sub(r"^<!--.*?-->\s*", "", t, flags=re.S)
+assert t2 != t, "блок «что дальше» не найден — ловушке нечего убирать"
+p.write_text(t2, encoding="utf-8")
+PY
+OUT31=$(python3 "$SBORKA/gejt_kartochki.py" "$L31" 2>&1) && {
+  echo "❌ ЛОВУШКА 31: карточка без блока «что дальше» прошла гейт зелёным — блок украшение, не дисциплина:"
+  echo "$OUT31"; exit 1; }
+echo "$OUT31" | grep -q "блок «что дальше».*отсутствует" || {
+  echo "❌ ЛОВУШКА 31: гейт покраснел, но не поимённо на отсутствии блока «что дальше»:"
+  echo "$OUT31"; exit 1; }
+echo "  ✅ ловушка 31: карточка без блока «что дальше» — гейт красный, поимённо"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

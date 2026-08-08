@@ -69,6 +69,77 @@ def _compile_one(slide_path_str):
             params["illustracii"], css, html, n_scenes)
 
 
+# Р3 захода porcia-1-zamknut-konvejer: ось `liniya` солвера имеет смысл только
+# у двух типов вёрстки (полоса делится горизонтально/вертикально) — остальные
+# типы подбирают только kegl/lh/blok (axis=None, vmeshchenie.podobrat_slide сам
+# не варьирует liniya без оси).
+AXIS_BY_TIP = {"polosa_gorizontalnaya": "horizontal", "polosa_vertikalnaya": "vertical"}
+
+
+def _podobrat_tipografiku(to_compile):
+    """Прогоняет солвер (`vmeshchenie.podobrat_slide`) по каждому слайду из
+    `to_compile`, у которого В ШАПКЕ ЕЩЁ НЕТ явного `kegl_px`/`liniya`, и
+    применяет выбор в карточку (`vmeshchenie.apply_to_card`) ДО финальной
+    параллельной компиляции. Раньше `deck.py` вообще не звал `vmeshchenie.py`
+    (Р3: главный инструмент арки был не подключён к сборке).
+
+    Явный `kegl_px` ИЛИ явный `liniya` в шапке — солвер слайд НЕ ТРОГАЕТ вовсе
+    (не «подбирает недостающее вокруг явного» — это уже дизайн типографики,
+    не проводка, не моя задача; «явное не перетирается» read буквально)."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError as e:
+        raise SystemExit(
+            "playwright не установлен — подбор типографики недоступен и деку "
+            "БЕЗ подбора я не соберу молча (см. §2 Р3 захода "
+            "porcia-1-zamknut-konvejer): либо `pip install playwright && "
+            "playwright install chrome`, либо явный флаг --bez-podbora. (%s)" % e)
+    import tempfile
+    from formaty import parse_card
+    from slaid import compile_slide_html
+    import vmeshchenie
+
+    podobrano, propushcheno = 0, 0
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(channel="chrome", headless=True)
+        page = browser.new_page(viewport={"width": 1440, "height": 810}, device_scale_factor=1)
+        try:
+            for slide_path in to_compile:
+                sid = slide_path.parent.name
+                params, _ = parse_card(slide_path.read_text(encoding="utf-8"), sid=sid)
+                axis = AXIS_BY_TIP.get(params.get("tip_verstki"))
+                # `liniya` — ОБЯЗАТЕЛЬНОЕ поле шапки у ЛЮБОГО tip_verstki (гейт того
+                # требует), но солвер её вообще трогает только у polosa_* (axis не
+                # None). У остальных типов число в liniya — просто заполненное ради
+                # гейта, не решение автора про ЭТУ типографику; считать его «явным»
+                # заблокировало бы подбор kegl_px для каждого не-polosa слайда.
+                kegl_yavnyj = bool(params.get("kegl_px"))
+                liniya_yavnaya = axis is not None and params.get("liniya") not in (None, "", "заполнить")
+                if kegl_yavnyj or liniya_yavnaya:
+                    propushcheno += 1
+                    print("подбор: %s — пропущен, явные значения в шапке (kegl_px=%s liniya=%s)"
+                          % (sid, params.get("kegl_px"), params.get("liniya")), file=sys.stderr)
+                    continue
+                with tempfile.TemporaryDirectory() as tmp:
+                    _, html = compile_slide_html(slide_path)
+                    html_path = Path(tmp) / "slide.html"
+                    html_path.write_text(html, encoding="utf-8")
+                    res = vmeshchenie.podobrat_slide(page, html_path, axis=axis)
+                if res["chosen"] is None:
+                    raise SystemExit(
+                        "подбор: %s — ни одна проба не влезла внутри жёстких зон "
+                        "(см. `vmeshchenie.py --demo-zony`)" % sid)
+                vmeshchenie.apply_to_card(slide_path, res["chosen"])
+                podobrano += 1
+                print("подбор: %s — kegl=%.1f liniya=%s" % (
+                    sid, res["chosen"]["kegl"], res["chosen"].get("liniya")), file=sys.stderr)
+        finally:
+            browser.close()
+    print("подбор типографики: %d слайдов подобрано, %d пропущено (явные значения в шапке)"
+          % (podobrano, propushcheno))
+    return podobrano, propushcheno
+
+
 def _order(slide_order, tips):
     """slide_order автора + принудительно oblozhka первой, finalnyj последней —
     по ТИПУ (устойчиво к тому, где автор их фактически перечислил)."""
@@ -78,7 +149,7 @@ def _order(slide_order, tips):
     return cover + middle + final
 
 
-def build(src, out, jobs=None):
+def build(src, out, jobs=None, podbor=True):
     from slaid import load_illustrations as load_ill  # переиспользуем загрузчик Э2/Э3
     sys.path.insert(0, str(GENERATOR))
     from build_deck import parse_brief, read_text  # READ-ONLY импорт (Я6)
@@ -131,6 +202,10 @@ def build(src, out, jobs=None):
     # Компилируем ТОЛЬКО то, что реально войдёт в дек — резервные слайды могут быть
     # намеренно недописаны и не обязаны собираться (Я1 §4-бис: «в дек не входит»).
     to_compile = [p for p in slide_paths if p.parent.name in slide_order]
+
+    if podbor:
+        _podobrat_tipografiku(to_compile)
+
     ctx = mp.get_context("fork") if hasattr(os, "fork") else None
     with ProcessPoolExecutor(max_workers=jobs, mp_context=ctx) as ex:
         results = list(ex.map(_compile_one, [str(p) for p in to_compile]))
@@ -215,8 +290,11 @@ def main():
     ap.add_argument("src", help="папка <лекция> (содержит slajdy/, illustracii/, brief.md)")
     ap.add_argument("-o", "--out", required=True, help="путь выхода .html")
     ap.add_argument("-j", "--jobs", type=int, default=None, help="число процессов (по умолчанию — ядра)")
+    ap.add_argument("--bez-podbora", action="store_true",
+                     help="не подбирать типографику солвером — собрать как есть "
+                          "(умолчание: подбор ВКЛЮЧЁН, Р3 захода porcia-1-zamknut-konvejer)")
     args = ap.parse_args()
-    n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs)
+    n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs, podbor=not args.bez_podbora)
     print("собран дек: слайдов в деке %d, в резерве %d → %s" % (n, n_rezerv, out))
     return 0
 
