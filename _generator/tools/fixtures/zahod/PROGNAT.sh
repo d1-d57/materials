@@ -467,4 +467,42 @@ echo "$OUT23" | grep -q "З9" && {
   echo "$OUT23"; exit 1; }
 echo "  ✅ ловушка 23: свежесобранный скелет — З9 молчит"
 
+echo "── ловушка 24: 🔴 Г5 (заход gejty-vrut) — гейт «время+токены» на канале app "
+echo "   объявлен НЕПРИМЕНИМЫМ явно, а не молчаливо неисполним"
+# ДО починки: заход на канале `app` получал БУКВАЛЬНО тот же текст, что и на
+# `terminal` — «снимает ПРИЁМКА ИЗ ЛОГА ПРОГОНА», хотя на `app` никакого лога
+# `tee` не кладёт вовсе (см. ветку `a.kanal == "terminal"` в bootstrap_zahod.py —
+# только там заводится `log_path`). Требование, обязательное в каждом заходе,
+# было неисполнимо буквально и молчало об этом.
+R24="$T/repo24"; sobrat_repo "$R24"
+OUT24A=$(GIT_ZONA_REPO="$R24" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24app \
+    --branch proba24app-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app 2>&1) || true
+F24A="$R24/_studio/zhurnal/proba/kod_proba24app.md"
+[ -f "$F24A" ] || {
+  echo "❌ ЛОВУШКА 24: bootstrap_zahod.py --kanal app не собрал файл — $F24A. Вывод:"
+  echo "$OUT24A"; exit 1; }
+grep -q "время прогона + токены — на канале \`app\` НЕПРИМЕНИМО" "$F24A" || {
+  echo "❌ ГЕЙТ Г5 НЕ ПОЧИНЕН: заход на канале app не объявляет требование неприменимым. Файл:"
+  cat "$F24A" | grep -A2 "время прогона"; exit 1; }
+grep -q "снимает ПРИЁМКА из лога прогона" "$F24A" && {
+  echo "❌ ЛОВУШКА 24: на канале app всё ещё стоит текст про лог, которого не существует"
+  exit 1; }
+echo "  ✅ ловушка 24а: канал app — требование явно объявлено неприменимым"
+
+# Regression guard: канал terminal обязан СОХРАНИТЬ исполнимую формулировку —
+# починка Г5 не смеет тихо отключить требование там, где оно работает.
+R24B="$T/repo24b"; sobrat_repo "$R24B"
+OUT24B=$(GIT_ZONA_REPO="$R24B" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24term \
+    --branch proba24term-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1) || true
+F24B="$R24B/_studio/zhurnal/proba/kod_proba24term.md"
+[ -f "$F24B" ] || {
+  echo "❌ ЛОВУШКА 24б: bootstrap_zahod.py --kanal terminal не собрал файл. Вывод:"
+  echo "$OUT24B"; exit 1; }
+grep -q "снимает ПРИЁМКА из лога прогона" "$F24B" || {
+  echo "❌ РЕГРЕССИЯ Г5: канал terminal потерял исполнимую формулировку про лог. Файл:"
+  cat "$F24B" | grep -A2 "время прогона"; exit 1; }
+grep -q "НЕПРИМЕНИМО" "$F24B" && {
+  echo "❌ РЕГРЕССИЯ Г5: канал terminal получил формулировку канала app"; exit 1; }
+echo "  ✅ ловушка 24б: канал terminal — формулировка про лог на месте (регресс не случился)"
+
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
