@@ -22,6 +22,7 @@ stdlib, без pip). Порядок — `brief.md:slide_order` тем же ди�
 `build_deck.py` этим НЕ трогается — параллельный путь, отдельная папка.
 """
 import argparse
+import re
 import sys
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
@@ -124,6 +125,25 @@ def _podobrat_tipografiku(to_compile):
                     continue
                 with tempfile.TemporaryDirectory() as tmp:
                     _, html = compile_slide_html(slide_path)
+                    # 🔴 Найдено живым прогоном (заплатка sborka-l2-fazy-4-7): не у
+                    # каждого tip_verstki есть текстовая зона вовсе — `polnyj_ekran`
+                    # с непустым `illustracii` рендерит ТОЛЬКО картинки (`tipy.py:
+                    # polnyj_ekran`), без `.zone.t-body`. Раньше солвер лез туда
+                    # безусловно и падал `RuntimeError("зона .zone.t-body не найдена
+                    # на слайде")`, роняя ВЕСЬ дек ради одного слайда без текста.
+                    # Подгонять там нечего — тот же класс, что и «явные значения»,
+                    # только причина другая. 🔴 Проверять НЕ голой подстрокой "t-body":
+                    # `--t-body` (CSS-токен кегля) сидит в <style> КАЖДОГО слайда
+                    # безусловно, даже без единой `.t-body`-зоны в теле — голая
+                    # подстрока всегда находила совпадение и не пропускала ничего
+                    # (найдено этим же прогоном, вторая попытка). Ищем реальный
+                    # class="… t-body …" в HTML-теле.
+                    if not re.search(r'class="[^"]*\bt-body\b[^"]*"', html):
+                        propushcheno += 1
+                        print("подбор: %s — пропущен, текстовой зоны на слайде нет "
+                              "(tip_verstki=%s без текста)" % (sid, params.get("tip_verstki")),
+                              file=sys.stderr)
+                        continue
                     html_path = Path(tmp) / "slide.html"
                     html_path.write_text(html, encoding="utf-8")
                     res = vmeshchenie.podobrat_slide(page, html_path, axis=axis)
