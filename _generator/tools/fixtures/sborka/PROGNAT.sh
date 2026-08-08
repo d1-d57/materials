@@ -601,6 +601,11 @@ vals = {
     "kommentarij_lektoru: заполнить": "kommentarij_lektoru: X", "minuty: заполнить": "minuty: 1",
     "vazhnost: заполнить": "vazhnost: opornyj", "byudzhet_slov: заполнить": "byudzhet_slov: 10",
     "tip_verstki: заполнить": "tip_verstki: tolko_tekst", "liniya: заполнить": "liniya: 50",
+    # решения ФАЗЫ 1 (заход format-kartochki-faza-1): тип идеи из закрытого списка
+    # и центральный блок, чья мысль обязана резолвиться в блок «Математики».
+    # Мысль «завязка» ставят те же ловушки ниже, когда пишут настоящее тело.
+    "tip_idei: заполнить": "tip_idei: narrative",
+    "centralnyj_blok: заполнить": "centralnyj_blok: завязка",
 }
 for sid in sids:
     p = lek / "slajdy" / sid / "slaid.md"
@@ -645,7 +650,13 @@ echo "$OUT28" | grep -q "ЗЕЛЁНЫЙ" || {
   echo "❌ ЛОВУШКА 28: rc=0, но текст не «ЗЕЛЁНЫЙ»:"; echo "$OUT28"; exit 1; }
 echo "  ✅ ловушка 28: порождённая карточка (шапка и тело заполнены по-настоящему) — гейт зелёный"
 
-echo "── ловушка 29: 🔴 Р2 — --faza 1 зелёный там, где полный гейт красный (свежепорождённая карточка)"
+echo "── ловушка 29: 🔴 Р (заход format-kartochki-faza-1) — --faza 1 КРАСНЕЕТ на свежепорождённой карточке"
+# 🔴 ЛОВУШКА ПЕРЕВЁРНУТА, и это главное содержание захода format-kartochki-faza-1.
+# Прежняя редакция сторожила ОБРАТНОЕ — «--faza 1 зелёный на нетронутой карточке» —
+# и тем самым закрепляла дефект фикстурой: гейт выхода фазы 1 в спецификации
+# (`fazy-1-2-plan.md §3`) требует тип идеи, размеченные блоки и ровно один
+# центральный блок, а код на всём этом молчал и отвечал зелёным. Гейт, который не
+# может провалиться, — не гейт; ловушка сторожит именно способность провалиться.
 L29="$T/lek29"
 python3 "$SBORKA/bootstrap_lekcii.py" "$L29" >/dev/null
 python3 - "$L29" <<'PY'
@@ -656,13 +667,45 @@ t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
 open(p, "w", encoding="utf-8").write(t)
 PY
 python3 "$SBORKA/bootstrap_lekcii.py" "$L29" >/dev/null
-OUT29F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) || {
-  echo "❌ ЛОВУШКА 29: --faza 1 на свежепорождённой (нетронутой) карточке НЕ зелёный:"
+OUT29F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) && {
+  echo "❌ ЛОВУШКА 29: --faza 1 на свежепорождённой (нетронутой) карточке ЗЕЛЁНЫЙ — решений фазы 1 нет, а гейт их не требует:"
   echo "$OUT29F"; exit 1; }
+for TREB in "tip_idei" "centralnyj_blok" "незаполненной мыслью"; do
+  echo "$OUT29F" | grep -q "$TREB" || {
+    echo "❌ ЛОВУШКА 29: --faza 1 покраснел, но не поимённо на «$TREB»:"; echo "$OUT29F"; exit 1; }
+done
+echo "$OUT29F" | grep -q "проверено 1 из 1" || {
+  echo "❌ ЛОВУШКА 29: вердикт без строки охвата «проверено X из Y»:"; echo "$OUT29F"; exit 1; }
+echo "$OUT29F" | grep -q "НЕ проверяю:" || {
+  echo "❌ ЛОВУШКА 29: вердикт без объявленных слепых зон («НЕ проверяю:»):"; echo "$OUT29F"; exit 1; }
+# принимаем решения РОВНО ФАЗЫ 1 и ничего сверх: тип идеи, название, идея одной
+# фразой, минуты, центральный блок, разметка блоков БЕЗ тел. Поля вёрстки
+# (akcent/vazhnost/tip_verstki/liniya/byudzhet_slov) НЕ трогаем намеренно — иначе
+# ловушка проверяла бы не то: --faza 1 обязан зеленеть на этом, а полный гейт —
+# краснеть, потому что Ф2 и Ф3 ещё не проходили.
+python3 - "$L29" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8")
+for old, new in (("nazvanie: заполнить", "nazvanie: Завязка"),
+                 ("tip_idei: заполнить", "tip_idei: narrative"),
+                 ("zachem: заполнить", "zachem: зритель должен увидеть, зачем всё это"),
+                 ("minuty: заполнить", "minuty: 6"),
+                 ("centralnyj_blok: заполнить", "centralnyj_blok: завязка")):
+    t = t.replace(old, new)
+for razdel in ("## Математика — развёрнуто", "## Текст слайда — сжато"):
+    t = t.replace("%s\n### [narrativ] заполнить\nзаполнить" % razdel,
+                  "%s\n### [narrativ] завязка\n\n### [opredelenie] само понятие" % razdel)
+p.write_text(t, encoding="utf-8")
+PY
+OUT29G=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) || {
+  echo "❌ ЛОВУШКА 29: план фазы 1 принят целиком (тип идеи, блоки с мыслью, центральный), а --faza 1 всё равно красный:"
+  echo "$OUT29G"; exit 1; }
 OUT29P=$(python3 "$SBORKA/gejt_kartochki.py" "$L29" 2>&1) && {
-  echo "❌ ЛОВУШКА 29: полный гейт на свежепорождённой (незаполненной) карточке дал rc=0 — поля Ф2 не проверяются:"
+  echo "❌ ЛОВУШКА 29: полный гейт на карточке с одним лишь планом фазы 1 дал rc=0 — поля Ф2/Ф3 не проверяются:"
   echo "$OUT29P"; exit 1; }
-echo "  ✅ ловушка 29: --faza 1 зелёный (rc=0), полный гейт красный (rc=1) — та же свежая карточка"
+echo "  ✅ ловушка 29: свежая карточка — --faza 1 красный поимённо (tip_idei, центральный блок, мысль блока), с охватом и слепыми зонами; принятый план фазы 1 — зелёный, полный гейт всё ещё красный"
 
 echo "── ловушка 30: 🔴 Р3 — солвер встроен в deck.py: явный kegl/liniya переживает сборку"
 L30="$T/lek30"
@@ -741,7 +784,7 @@ echo "$OUT31" | grep -q "блок «что дальше».*отсутствуе�
   echo "$OUT31"; exit 1; }
 echo "  ✅ ловушка 31: карточка без блока «что дальше» — гейт красный, поимённо"
 
-echo "── ловушка 32: 🔴 Р1 дочистка приёмки — ZAPOLNIT в теле не проходит полный гейт"
+echo "── ловушка 32: 🔴 МЫСЛЬ блока — выход Ф1, ТЕЛО блока — выход Ф2/Ф3, и оба умеют краснеть"
 L32="$T/lek32"
 python3 "$SBORKA/bootstrap_lekcii.py" "$L32" >/dev/null
 python3 - "$L32" <<'PY'
@@ -753,27 +796,55 @@ open(p, "w", encoding="utf-8").write(t)
 PY
 python3 "$SBORKA/bootstrap_lekcii.py" "$L32" >/dev/null
 python3 -c "$ZAP_VALS_PY" "$L32" s01
-# шапка настоящая, тело — НЕТРОНУТАЯ заглушка бутстрапа
+# 🔴 Заход format-kartochki-faza-1 развёл заглушку на ДВА события разных фаз:
+# МЫСЛЬ блока — выход Ф1 (разметка), ТЕЛО блока — выход Ф2/Ф3 (содержание).
+# Прежняя редакция ловушки требовала «--faza 1 зелёный на нетронутом теле» и тем
+# самым утверждала, что разметка блоков фазы 1 не касается. Касается — это и есть
+# её единственный выход.
+# шапка настоящая, тело — НЕТРОНУТАЯ заглушка бутстрапа: мысль тоже «заполнить»
 OUT32P=$(python3 "$SBORKA/gejt_kartochki.py" "$L32" 2>&1) && {
   echo "❌ ЛОВУШКА 32: полный гейт дал rc=0 на теле-заглушке — ZAPOLNIT в теле не ловится:"
   echo "$OUT32P"; exit 1; }
-echo "$OUT32P" | grep -q "незаполненный блок-заглушку" || {
-  echo "❌ ЛОВУШКА 32: полный гейт красный, но не поимённо на заглушке тела:"
+echo "$OUT32P" | grep -q "незаполненной мыслью" || {
+  echo "❌ ЛОВУШКА 32: полный гейт красный, но не поимённо на заглушке мысли блока:"
   echo "$OUT32P"; exit 1; }
-OUT32F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
-  echo "❌ ЛОВУШКА 32: --faza 1 на той же карточке (шапка настоящая, тело — заглушка) НЕ зелёный:"
+OUT32F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) && {
+  echo "❌ ЛОВУШКА 32: --faza 1 на нетронутой заглушке тела ЗЕЛЁНЫЙ — разметка блоков не проверяется:"
   echo "$OUT32F"; exit 1; }
-# заполняем тело настоящим текстом — оба режима обязаны позеленеть
+echo "$OUT32F" | grep -q "незаполненной мыслью" || {
+  echo "❌ ЛОВУШКА 32: --faza 1 красный, но не поимённо на заглушке мысли блока:"
+  echo "$OUT32F"; exit 1; }
+# размечаем блоки (мысль есть, тела ещё нет) — Ф1 зеленеет, полный гейт красный
+python3 - "$L32" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8")
+for razdel in ("## Математика — развёрнуто", "## Текст слайда — сжато"):
+    t = t.replace("%s\n### [narrativ] заполнить\nзаполнить" % razdel,
+                  "%s\n### [narrativ] завязка\nзаполнить" % razdel)
+p.write_text(t, encoding="utf-8")
+PY
+OUT32F1=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
+  echo "❌ ЛОВУШКА 32: блоки размечены (мысль есть), а --faza 1 всё равно красный — Ф1 требует тел, которых на ней не пишут:"
+  echo "$OUT32F1"; exit 1; }
+OUT32P1=$(python3 "$SBORKA/gejt_kartochki.py" "$L32" 2>&1) && {
+  echo "❌ ЛОВУШКА 32: полный гейт дал rc=0 на размеченных, но НЕ НАПИСАННЫХ блоках:"
+  echo "$OUT32P1"; exit 1; }
+echo "$OUT32P1" | grep -q "ненаписанное тело блока" || {
+  echo "❌ ЛОВУШКА 32: полный гейт красный, но не поимённо на незаполненном теле блока:"
+  echo "$OUT32P1"; exit 1; }
+# заполняем тела настоящим текстом — оба режима обязаны позеленеть
 python3 - "$L32" <<'PY'
 import sys
 from pathlib import Path
 p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
 t = p.read_text(encoding="utf-8")
 t = t.replace(
-    "## Математика — развёрнуто\n### [narrativ] заполнить\nзаполнить",
+    "## Математика — развёрнуто\n### [narrativ] завязка\nзаполнить",
     "## Математика — развёрнуто\n### [narrativ] завязка\nНастоящий развёрнутый текст.")
 t = t.replace(
-    "## Текст слайда — сжато\n### [narrativ] заполнить\nзаполнить",
+    "## Текст слайда — сжато\n### [narrativ] завязка\nзаполнить",
     "## Текст слайда — сжато\n### [narrativ] завязка\nНастоящий сжатый текст.")
 p.write_text(t, encoding="utf-8")
 PY
@@ -781,7 +852,7 @@ OUT32P2=$(python3 "$SBORKA/gejt_kartochki.py" "$L32" 2>&1) || {
   echo "❌ ЛОВУШКА 32: настоящее тело — полный гейт всё равно красный:"; echo "$OUT32P2"; exit 1; }
 OUT32F2=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
   echo "❌ ЛОВУШКА 32: настоящее тело — --faza 1 покраснел:"; echo "$OUT32F2"; exit 1; }
-echo "  ✅ ловушка 32: тело-заглушка — полный красный/faza1 зелёный; настоящее тело — оба зелёные"
+echo "  ✅ ловушка 32: заглушка — оба красные на МЫСЛИ; размечено без тел — faza1 зелёный, полный красный на ТЕЛЕ; написано — оба зелёные"
 
 echo "── ловушка 33: 🔴 Д17 (заход tihie-polomki, П1) — тег сцены над списком не рушит его в абзац"
 OUT33=$(python3 - <<'PY'
@@ -838,5 +909,52 @@ PY
 OUT34B=$(python3 "$SBORKA/slaid.py" "$L34/slajdy/s01" -o "$T/s01-good.html" 2>&1) || {
   echo "❌ ЛОВУШКА 34: {.tlist} (правильный класс) НЕ прошла:"; echo "$OUT34B"; exit 1; }
 echo "  ✅ ловушка 34б: {.tlist} — зелёное, rc=0"
+
+echo "── ловушка 35: 🔴 Д-6 (заход format-kartochki-faza-1) — миграция дописывает поля, не трогая заполненного, и идемпотентна"
+# Зачем сторожить фикстурой: формат карточки меняется, пока интервью по живой
+# лекции уже идёт. Цель владельца дословно — «не переделывать слайды», и
+# единственное, что её обеспечивает, — КОМАНДА миграции, а не инструкция
+# «допишите поле». Ловушка сторожит три её свойства разом: поля появились,
+# заполненное не тронуто, второй прогон даёт нулевой диф.
+L35="$T/lek35"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L35" >/dev/null
+python3 - "$L35" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L35" >/dev/null
+# имитируем карточку СТАРОГО формата: вырезаем поля фазы 1 и блок «что дальше»,
+# одно поле заполняем по-настоящему — миграция обязана его не тронуть
+python3 - "$L35" <<'PY'
+import re, sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = re.sub(r"^<!--.*?-->\s*", "", p.read_text(encoding="utf-8"), flags=re.S)
+for pole in ("tip_idei", "centralnyj_blok", "matematika_iz"):
+    t = re.sub(r"^%s:.*\n" % pole, "", t, flags=re.M)
+t = t.replace("nazvanie: заполнить", "nazvanie: Живое название")
+p.write_text(t, encoding="utf-8")
+PY
+cp -R "$L35" "$T/lek35-do"
+OUT35=$(python3 "$SBORKA/bootstrap_lekcii.py" "$L35" --migraciya 2>&1) || {
+  echo "❌ ЛОВУШКА 35: миграция упала:"; echo "$OUT35"; exit 1; }
+for POLE in "tip_idei" "centralnyj_blok" "matematika_iz"; do
+  grep -q "^$POLE:" "$L35/slajdy/s01/slaid.md" || {
+    echo "❌ ЛОВУШКА 35: после миграции в шапке нет поля $POLE:"; echo "$OUT35"; exit 1; }
+done
+grep -q "^ФАЗА 1" "$L35/slajdy/s01/slaid.md" || {
+  echo "❌ ЛОВУШКА 35: блок «что дальше» не перешит — ФАЗА 1 в нём не названа:"; exit 1; }
+grep -q "^nazvanie: Живое название$" "$L35/slajdy/s01/slaid.md" || {
+  echo "❌ ЛОВУШКА 35: миграция затёрла ЗАПОЛНЕННОЕ поле nazvanie — ровно то, чего Д-6 запрещает:"
+  exit 1; }
+cp -R "$L35" "$T/lek35-posle1"
+OUT35B=$(python3 "$SBORKA/bootstrap_lekcii.py" "$L35" --migraciya 2>&1) || {
+  echo "❌ ЛОВУШКА 35: повторная миграция упала:"; echo "$OUT35B"; exit 1; }
+diff -r "$T/lek35-posle1" "$L35" >/dev/null || {
+  echo "❌ ЛОВУШКА 35: второй прогон миграции изменил дерево — не идемпотентна:"; exit 1; }
+echo "  ✅ ловушка 35: поля дописаны, блок «что дальше» перешит с ФАЗЫ 1, заполненное цело, второй прогон — нулевой диф"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

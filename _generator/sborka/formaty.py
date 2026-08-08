@@ -7,14 +7,17 @@
     imya: izomorfizm-vidov
     nazvanie: Изоморфизм комбинаторных видов
     zagolovok_na_ekrane: ""
+    tip_idei: definition
     zachem: зритель должен увидеть, что изоморфизм видов — это не совпадение чисел
     akcent: согласованность, а не равенство количеств
+    centralnyj_blok: изоморфизм видов
     kommentarij_lektoru: здесь я останавливаюсь и спрашиваю зал
     minuty: 6
     vazhnost: opornyj
     byudzhet_slov: 55
     tip_verstki: polosa_gorizontalnaya
     liniya: 44
+    matematika_iz: [Спаривание, Двойственный базис]
     illustracii: [kvadrat-estestvennosti]
     vvodit: [изоморфизм видов]
     opiraetsya_na:
@@ -90,9 +93,28 @@ INLINE_DICT_RE = re.compile(r"^\{(.*)\}$")
 # Гейт (Я1 §6) требует эти поля заполненными — компилятор их не требует (см.
 # докстрику), но список нужен и гейту, и bootstrap'у (Э3) для пометки «заполнить» —
 # один источник правды на оба.
-OBYAZATELNYE_POLYA = ("imya", "nazvanie", "zachem", "akcent", "minuty",
+OBYAZATELNYE_POLYA = ("imya", "nazvanie", "zachem", "tip_idei", "akcent", "minuty",
                        "vazhnost", "tip_verstki", "liniya", "byudzhet_slov")
 ZAPOLNIT = "заполнить"
+
+# Р захода format-kartochki-faza-1: типология ИДЕИ СЛАЙДА — закрытый список из
+# `fazy-1-2-plan.md §2`, выведенный замером 201 слайда по шести декам корпуса.
+# Живёт ЗДЕСЬ, а не в гейте: список нужен и гейту (проверить значение), и
+# `bootstrap_lekcii.py` (напечатать допустимые рядом с пометкой «заполнить») —
+# один источник на оба, как и `OBYAZATELNYE_POLYA` выше.
+#
+# ⚠ Список ЗАКРЫТЫЙ, но НЕ ОКОНЧАТЕЛЬНЫЙ (`fazy-1-2-plan.md §2` дословно): он
+# покрывает шесть деков, а не всю математику. Слайд, не ложащийся ни в один тип, —
+# повод обсудить НОВЫЙ тип, а не тихо подобрать ближайший; сообщение гейта обязано
+# говорить именно это, иначе исполнитель молча подгонит слайд под чужую полку.
+TIPY_IDEI = ("definition", "proof_step", "narrative", "problem",
+              "divider", "cover", "vizitka", "closing")
+
+# Спецзначение `centralnyj_blok` — те самые 6 слайдов из 201, где центра нет по
+# существу (списки однородных пунктов: набор задач, меню будущих тем). Гейт выхода
+# фазы 1 требует «ровно один блок помечен центральным (исключение — слайд-
+# перечисление, помечается ЯВНО)» — вот это и есть «явно».
+CENTRALNYJ_PERECHISLENIE = "perechislenie"
 
 
 class FormatSlaida(Exception):
@@ -185,7 +207,8 @@ def parse_card(text, sid="?"):
     params, body = parse_front_matter(text, sid)
     if "tip_verstki" not in params:
         raise FormatSlaida("слайд %s: обязательное поле 'tip_verstki' отсутствует" % sid)
-    for lst_key in ("illustracii", "vvodit", "opiraetsya_na", "bez_opredeleniya_namerenno"):
+    for lst_key in ("illustracii", "vvodit", "opiraetsya_na",
+                     "bez_opredeleniya_namerenno", "matematika_iz"):
         params.setdefault(lst_key, [])
         if isinstance(params[lst_key], str):
             params[lst_key] = [params[lst_key]]

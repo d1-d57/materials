@@ -37,6 +37,7 @@
 целиком перезаписать может ТОЛЬКО `--force`, и только на ходе «каркас» (иначе отказ
 — не затирать лекцию, которая уже что-то накопила по фазам)."""
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -44,12 +45,12 @@ SBORKA = Path(__file__).resolve().parent
 _GENERATOR = SBORKA.parent
 sys.path.insert(0, str(SBORKA))
 sys.path.insert(0, str(_GENERATOR))
-from formaty import ZAPOLNIT  # noqa: E402
+from formaty import ZAPOLNIT, FRONT_RE, strip_lifecycle_block  # noqa: E402
 from build_deck import parse_brief  # noqa: E402 (READ-ONLY импорт — единый парсер brief.md)
 
 # Поля лекции — Я1 §1 целиком (кроме двух, вычисляемых при бутстрапе: id/slide_order
 # несут структуру, не замысел, заполняются ЗДЕСЬ, а не владельцем).
-POLYA_LEKCII = ("title", "dlya_kogo", "zhanr", "dlitelnost_minut",
+POLYA_LEKCII = ("title", "dlya_kogo", "zhanr", "dlitelnost_minut", "zamer_tempa",
                 "skvoznaya_liniya")
 
 # Р1б захода porcia-1-zamknut-konvejer (П0: «дисциплина, которую невозможно
@@ -65,7 +66,8 @@ LIFECYCLE_TMPL = """<!--
 gejt_kartochki.py краснеет на отсутствии этого блока или неполном наборе фаз).
 Формат строки: ФАЗА N (имя фазы): что делается :: команда.
 
-ФАЗА 2 (раскадровка): решить tip_verstki/liniya/nazvanie/zachem/akcent/minuty/vazhnost/byudzhet_slov в шапке, написать блоки «Математика — развёрнуто» (### [tip] мысль, типы — bloki.py) :: python3 _generator/sborka/gejt_kartochki.py <лекция>
+ФАЗА 1 (интервью): назвать nazvanie/tip_idei (типы — formaty.TIPY_IDEI)/zachem (идея одной фразой)/minuty, разметить блоки в ОБОИХ разделах — ### [tip] мысль, тела ещё пустые — и назвать centralnyj_blok :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
+ФАЗА 2 (раскадровка): решить tip_verstki/liniya/akcent/vazhnost/byudzhet_slov в шапке, написать тела блоков «Математика — развёрнуто» по разметке фазы 1 :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 3 (текст слайдов): написать «Текст слайда — сжато» тем же составом блоков, что в «Математике» :: python3 _generator/sborka/gejt_kartochki.py <лекция>
 ФАЗА 4 (вёрстка): собрать и посмотреть слайд отдельно :: python3 _generator/sborka/slaid.py <лекция>/slajdy/%(imya)s -o /tmp/%(imya)s.html
 ФАЗА 5 (иллюстрации): назвать файлы в illustracii, положить risunok.svg (или risunok.html) в <лекция>/illustracii/<имя>/ :: python3 _generator/sborka/gejt_kartochki.py <лекция>
@@ -107,14 +109,17 @@ SLIDE_CARD_TMPL = """%(lifecycle)s---
 imya: %(imya)s
 nazvanie: %(zap)s
 zagolovok_na_ekrane: %(zap)s
+tip_idei: %(zap)s
 zachem: %(zap)s
 akcent: %(zap)s
+centralnyj_blok: %(zap)s
 kommentarij_lektoru: %(zap)s
 minuty: %(zap)s
 vazhnost: %(zap)s
 byudzhet_slov: %(zap)s
 tip_verstki: %(zap)s
 liniya: %(zap)s
+matematika_iz: []
 illustracii: []
 vvodit: []
 opiraetsya_na: []
@@ -122,6 +127,21 @@ bez_opredeleniya_namerenno: []
 status: v_deke
 ---
 %(body)s"""
+
+# Поля, которые заход format-kartochki-faza-1 добавил в шапку, и якорь, ПОСЛЕ
+# которого каждое вставляется миграцией в уже существующие карточки. Порядок и
+# соседство значат: `tip_idei` рядом с названием (что это за слайд),
+# `centralnyj_blok` рядом с акцентом (что на нём главное), `matematika_iz` —
+# рядом с иллюстрациями, обе ссылки наружу карточки. Якоря нет в старой карточке
+# → поле дописывается в конец шапки, а не теряется.
+NOVYE_POLYA_SLAJDA = (
+    ("tip_idei", "zagolovok_na_ekrane", ZAPOLNIT),
+    ("centralnyj_blok", "akcent", ZAPOLNIT),
+    ("matematika_iz", "liniya", "[]"),
+)
+NOVYE_POLYA_LEKCII = (
+    ("zamer_tempa", "dlitelnost_minut", ZAPOLNIT),
+)
 
 
 def _slide_card_text(imya):
@@ -223,6 +243,77 @@ def dosypat(lekcija_dir):
     return created, len(slide_ids)
 
 
+def _vstavit_polya(text, novye, sid):
+    """Дописать недостающие поля в YAML-шапку ТЕКСТОМ, не круг через парсер.
+    Круг через `parse_front_matter` → сериализация потерял бы порядок полей,
+    кавычки и всё, чего парсер не хранит; шапку живой карточки владелец читает
+    глазами, и переставленные поля — это переделка, которой Д-6 и запрещает.
+    Возвращает (новый текст, [имена дописанных полей])."""
+    m = FRONT_RE.match(text)
+    if not m:
+        raise SystemExit("%s: нет YAML-шапки (---...---) — мигрировать нечего" % sid)
+    head_lines = m.group(1).split("\n")
+    dopisano = []
+    for key, yakor, znachenie in novye:
+        if any(re.match(r"^%s\s*:" % re.escape(key), ln) for ln in head_lines):
+            continue  # поле уже есть — не трогаем ЗНАЧЕНИЕ, каким бы оно ни было
+        stroka = "%s: %s" % (key, znachenie)
+        idx = next((i for i, ln in enumerate(head_lines)
+                    if re.match(r"^%s\s*:" % re.escape(yakor), ln)), None)
+        head_lines.insert(len(head_lines) if idx is None else idx + 1, stroka)
+        dopisano.append(key)
+    if not dopisano:
+        return text, []
+    return "---\n%s\n---\n%s" % ("\n".join(head_lines), m.group(2)), dopisano
+
+
+def migrirovat(lekcija_dir):
+    """Д-6 захода format-kartochki-faza-1 — поднять УЖЕ СУЩЕСТВУЮЩЕЕ дерево лекции
+    до формата, который требует гейт выхода фазы 1. Ровно два действия:
+
+      · дописать недостающие поля шапки со значением-заглушкой (заполненного НЕ
+        трогаем — ни в одном поле, ни при повторном прогоне);
+      · перешить машинный блок «что дальше» на текущий `LIFECYCLE_TMPL` (он
+        объявлен «вшито bootstrap_lekcii.py — не редактировать руками», значит
+        его дом здесь; теперь он обязан начинаться с ФАЗЫ 1).
+
+    Тело карточки не трогается вовсе: разметка блоков — работа владельца на
+    интервью, а не бутстрапа. Идемпотентно: второй прогон даёт нулевой диф.
+    Зачем это команда, а не инструкция «допишите поле»: формат меняется, пока
+    интервью по живой лекции уже идёт, и цель владельца дословно — «не
+    переделывать слайды»."""
+    lekcija_dir = Path(lekcija_dir)
+    brief = lekcija_dir / "brief.md"
+    if not brief.is_file():
+        raise SystemExit("%s: brief.md не найден — это не дерево лекции" % lekcija_dir)
+
+    tronuto = []
+    t = brief.read_text(encoding="utf-8")
+    t2, dopisano = _vstavit_polya(t, NOVYE_POLYA_LEKCII, "brief.md")
+    if t2 != t:
+        brief.write_text(t2, encoding="utf-8")
+        tronuto.append("brief.md: +%s" % ", ".join(dopisano))
+
+    for card in sorted((lekcija_dir / "slajdy").glob("*/slaid.md")):
+        sid = card.parent.name
+        t = card.read_text(encoding="utf-8")
+        blok_ustarel = not t.startswith(_lifecycle_text(sid))
+        # Поля вставляются в шапку ДО того, как впереди встанет блок «что дальше»:
+        # `FRONT_RE` требует `---` в самом начале текста, а блок — HTML-комментарий
+        # перед ним. Поэтому режем блок, правим шапку, пришиваем блок заново.
+        _, bez_bloka = strip_lifecycle_block(t)
+        bez_bloka, dopisano = _vstavit_polya(bez_bloka, NOVYE_POLYA_SLAJDA, sid)
+        novyj = _lifecycle_text(sid) + bez_bloka
+        if novyj == t:
+            continue
+        card.write_text(novyj, encoding="utf-8")
+        chto = ["+%s" % k for k in dopisano]
+        if blok_ustarel:
+            chto.append("блок «что дальше» перешит")
+        tronuto.append("%s: %s" % (sid, ", ".join(chto)))
+    return tronuto
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Порождает анкету лекции: каркас (без аргументов) → досыпать "
@@ -234,7 +325,22 @@ def main():
     ap.add_argument("--force", action="store_true",
                      help="ход «каркас»: перезаписать существующий brief.md/INTERVYU.md "
                           "(слайды всё равно не трогаются)")
+    ap.add_argument("--migraciya", action="store_true",
+                     help="поднять УЖЕ СУЩЕСТВУЮЩЕЕ дерево до текущего формата: дописать "
+                          "недостающие поля шапки заглушкой и перешить машинный блок «что "
+                          "дальше». Заполненного не трогает, тело карточки не трогает вовсе, "
+                          "идемпотентно (второй прогон — нулевой диф)")
     args = ap.parse_args()
+
+    if args.migraciya:
+        tronuto = migrirovat(args.lekcija)
+        if not tronuto:
+            print("миграция: дерево уже в текущем формате, изменений 0")
+            return 0
+        print("миграция: тронуто файлов %d" % len(tronuto))
+        for s in tronuto:
+            print("  · %s" % s)
+        return 0
 
     if args.slajdy is not None:
         slide_ids = [s.strip() for s in args.slajdy.split(",") if s.strip()]
