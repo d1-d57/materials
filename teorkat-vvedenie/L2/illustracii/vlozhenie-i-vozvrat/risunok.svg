@@ -1,0 +1,13 @@
+<svg viewBox="0 0 300 200" width="300" role="img" aria-label="Два множества: слева три точки, справа четыре, из них одна лишняя выделена; стрелка вложения вправо и стрелка возврата влево">
+<ellipse class="s-fillsh" cx="58" cy="100" rx="36" ry="58"/><ellipse class="s-thin" cx="58" cy="100" rx="36" ry="58"/>
+<ellipse class="s-fillsh" cx="242" cy="100" rx="36" ry="70"/><ellipse class="s-thin" cx="242" cy="100" rx="36" ry="70"/>
+<text class="s-txt" x="58" y="28" text-anchor="middle">A</text>
+<text class="s-txt" x="242" y="16" text-anchor="middle">B</text>
+<circle class="s-node" cx="58" cy="74" r="3.4"/><circle class="s-node" cx="58" cy="100" r="3.4"/><circle class="s-node" cx="58" cy="126" r="3.4"/>
+<circle class="s-node" cx="242" cy="62" r="3.4"/><circle class="s-node" cx="242" cy="88" r="3.4"/><circle class="s-node" cx="242" cy="114" r="3.4"/><circle class="s-node-a" cx="242" cy="146" r="3.4"/>
+<line class="s-thin" x1="102" y1="72" x2="194" y2="72"/><path class="s-ar-m" d="M194,68 l9,4 -9,4 z"/>
+<text class="s-txt-m" x="148" y="62" text-anchor="middle">s</text>
+<line class="s-dash" x1="198" y1="128" x2="106" y2="128"/><path class="s-ar-a" d="M106,124 l-9,4 9,4 z"/>
+<text class="s-txt-m" x="148" y="148" text-anchor="middle">r</text>
+<text class="s-txt-m" x="148" y="190" text-anchor="middle">r &#8728; s = id</text>
+</svg>

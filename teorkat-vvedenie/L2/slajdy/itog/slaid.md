@@ -25,7 +25,7 @@ byudzhet_slov: заполнить
 tip_verstki: заполнить
 liniya: заполнить
 matematika_iz: []
-illustracii: []
+illustracii: [kvadrat-so-skalyarom, centr-i-ego-obraz, disk-i-okruzhnost]
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []

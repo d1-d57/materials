@@ -1,0 +1,12 @@
+<svg viewBox="0 0 240 236" width="240" role="img" aria-label="Решётка: сверху ряд точек V задаёт столбцы, слева ряд точек V со звездой задаёт строки; одна строка и один столбец подсвечены, на их пересечении выделенная клетка">
+<text class="s-txt" x="140" y="18" text-anchor="middle">V</text>
+<text class="s-txt" x="18" y="120" text-anchor="middle">V*</text>
+<circle class="s-node" cx="76" cy="40" r="3.4"/><circle class="s-node" cx="108" cy="40" r="3.4"/><circle class="s-node-r" cx="140" cy="40" r="3.4"/><circle class="s-node" cx="172" cy="40" r="3.4"/><circle class="s-node" cx="204" cy="40" r="3.4"/>
+<circle class="s-node" cx="44" cy="72" r="3.4"/><circle class="s-node" cx="44" cy="104" r="3.4"/><circle class="s-node-r" cx="44" cy="136" r="3.4"/><circle class="s-node" cx="44" cy="168" r="3.4"/><circle class="s-node" cx="44" cy="200" r="3.4"/>
+<rect class="s-fillsh" x="60" y="120" width="160" height="32"/>
+<rect class="s-fillsh" x="124" y="56" width="32" height="160"/>
+<rect class="s-fillsh" x="124" y="120" width="32" height="32"/>
+<rect class="s-line" x="124" y="120" width="32" height="32"/>
+<line class="s-thin" x1="60" y1="56" x2="220" y2="56"/><line class="s-thin" x1="60" y1="88" x2="220" y2="88"/><line class="s-thin" x1="60" y1="120" x2="220" y2="120"/><line class="s-thin" x1="60" y1="152" x2="220" y2="152"/><line class="s-thin" x1="60" y1="184" x2="220" y2="184"/><line class="s-thin" x1="60" y1="216" x2="220" y2="216"/>
+<line class="s-thin" x1="60" y1="56" x2="60" y2="216"/><line class="s-thin" x1="92" y1="56" x2="92" y2="216"/><line class="s-thin" x1="124" y1="56" x2="124" y2="216"/><line class="s-thin" x1="156" y1="56" x2="156" y2="216"/><line class="s-thin" x1="188" y1="56" x2="188" y2="216"/><line class="s-thin" x1="220" y1="56" x2="220" y2="216"/>
+</svg>

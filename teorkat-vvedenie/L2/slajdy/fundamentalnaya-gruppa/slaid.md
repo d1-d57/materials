@@ -25,7 +25,7 @@ byudzhet_slov: заполнить
 tip_verstki: заполнить
 liniya: заполнить
 matematika_iz: []
-illustracii: []
+illustracii: [namotka-petli, disk-i-okruzhnost]
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []

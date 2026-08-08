@@ -1,0 +1,8 @@
+<svg viewBox="0 0 250 214" width="250" role="img" aria-label="Пустой коммутативный квадрат: четыре узла без подписей и четыре стрелки, две вправо и две вниз">
+<circle class="s-node" cx="52" cy="34" r="3.4"/><circle class="s-node" cx="198" cy="34" r="3.4"/>
+<circle class="s-node" cx="52" cy="180" r="3.4"/><circle class="s-node" cx="198" cy="180" r="3.4"/>
+<line class="s-thin" x1="62" y1="34" x2="180" y2="34"/><path class="s-ar-m" d="M180,30 l9,4 -9,4 z"/>
+<line class="s-thin" x1="62" y1="180" x2="180" y2="180"/><path class="s-ar-m" d="M180,176 l9,4 -9,4 z"/>
+<line class="s-thin" x1="52" y1="44" x2="52" y2="162"/><path class="s-ar-m" d="M48,162 l4,9 4,-9 z"/>
+<line class="s-thin" x1="198" y1="44" x2="198" y2="162"/><path class="s-ar-m" d="M194,162 l4,9 4,-9 z"/>
+</svg>
