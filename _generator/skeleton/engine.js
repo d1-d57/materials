@@ -4,10 +4,52 @@ const W = 1440, H = 810;
 const slides = Array.from(document.querySelectorAll('.slide:not([data-skip])'));
 let groupSizes = {};
 
+/* ---- lecture progress bar (Д27 захода gruppa-D-kompilyator) ----
+   `sborka/deck.py` и `slaid.py` не читают `_generator/skeleton/shablon.html`
+   (у них свой инлайн-шаблон `doc = """…"""`) — тот прогресс-бар (#lect-progress/
+   #lect-zone), что уже есть в shablon.html у пайплайна build_deck.py, до них не
+   долетает вовсе. Прототип там опрашивал `location.hash` по таймеру (отдельный
+   скрипт, без доступа к внутренностям движка); здесь `cur`/`slides.length` уже
+   точно известны движку — хук в showSingle() ниже, без опроса. */
+const lectZone = document.createElement('div');
+lectZone.id = 'lect-zone';
+document.body.appendChild(lectZone);
+const lectProgress = document.createElement('div');
+lectProgress.id = 'lect-progress';
+document.body.appendChild(lectProgress);
+function updateProgress() {
+  lectProgress.style.width = (slides.length ? 100 * (cur + 1) / slides.length : 0) + '%';
+}
+lectZone.addEventListener('mouseenter', () => {
+  lectProgress.style.height = '6px'; lectProgress.style.opacity = '.85';
+});
+lectZone.addEventListener('mouseleave', () => {
+  lectProgress.style.height = '2.5px'; lectProgress.style.opacity = '.55';
+});
+lectZone.addEventListener('click', e => {
+  const i = Math.min(slides.length - 1, Math.floor(e.clientX / innerWidth * slides.length));
+  showSingle(i, 1); syncHash();
+});
+
 /* ---- assets hydration: zones reference <template id="ill-NAME"> ---- */
 document.querySelectorAll('[data-ill]').forEach(box => {
   const t = document.getElementById('ill-' + box.dataset.ill);
-  if (t) box.appendChild(t.content.cloneNode(true));
+  if (!t) return;
+  box.appendChild(t.content.cloneNode(true));
+  /* Д52#2 захода gruppa-D-kompilyator: `.panel > svg{width:100%;height:100%}`
+     (base.css) сажает БОКС svg на панель, но не спасает от собственных
+     width/height-атрибутов авторской иллюстрации (специфичность инлайн-
+     атрибута может забить внешний стиль) и не удерживает пропорцию — снимаем
+     конфликтующие атрибуты и явно ставим preserveAspectRatio ЗДЕСЬ, в
+     единственном месте, где иллюстрация становится живым DOM (не в каждой
+     иллюстрации по отдельности). Вписывает и маленький svg в большую панель,
+     и большой в маленькую — оба вида проверял audit.py (`svgOverflow`). */
+  box.querySelectorAll('svg').forEach(svg => {
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    if (!svg.hasAttribute('preserveAspectRatio'))
+      svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  });
 });
 
 /* ---- auto-fit: largest font that doesn't overflow the zone ---- */
@@ -109,6 +151,7 @@ function showSingle(i, k) {
   const s = slides[cur];
   fitAll(s);
   scaleSlide(s);
+  updateProgress();
 }
 function next() {
   if (scene < scenesOf(slides[cur])) applyScene(slides[cur], ++scene);
@@ -174,6 +217,7 @@ const Q = new URLSearchParams(location.search);
 const only = Q.get('only');
 function exportFrame() {
   document.getElementById('hint').style.display = 'none';
+  lectZone.style.display = 'none'; lectProgress.style.display = 'none';
   document.getElementById('stage').style.placeItems = 'start';
   const n = +only;
   const k = Q.get('scene') !== null ? +Q.get('scene') : scenesOf(slides[n]);
