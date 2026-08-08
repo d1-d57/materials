@@ -119,6 +119,15 @@ def _require_liniya(sid, p):
         raise TipVerstki("слайд %s: 'liniya' не число: %r" % (sid, p["liniya"]))
 
 
+def _require_num(sid, p, key):
+    if key not in p:
+        raise TipVerstki("слайд %s: тип 'kompozit' требует поле '%s'" % (sid, key))
+    try:
+        return float(p[key])
+    except ValueError:
+        raise TipVerstki("слайд %s: '%s' не число: %r" % (sid, key, p[key]))
+
+
 # ───────────────────────── 1. polosa_gorizontalnaya ─────────────────────────
 def polosa_gorizontalnaya(sid, p, text_html):
     liniya = _require_liniya(sid, p)
@@ -247,6 +256,37 @@ def razdelitel(sid, p, text_html):
     return css, body
 
 
+# ───────────────────────── 11. kompozit (Д18 захода gruppa-D-kompilyator) ─────────────────────────
+def kompozit(sid, p, text_html):
+    """Текст + доска, а доска сама разбита на ДВЕ неравные иллюстрации — геометрия
+    снята с живых деков (Я2 захода): dandelin `s05a`/`s09` (`.grid{grid-template-
+    columns:56% 44%}` снаружи + `.board{grid-template-rows:54% 46%}` внутри) и
+    buffon `sl-coords` (доска с двумя иллюстрациями разной ширины). Не сводится к
+    восьми готовым: `_ill_zone` даёт только РАВНЫЙ flex для списка иллюстраций, а
+    здесь сплит процентный и неравный — вторая независимая доля, поэтому и второй
+    параметр `liniya_ill` (не хардкод пары чисел: `calc()`, тот же инвариант
+    модуля, что уже несёт `liniya`, применён дважды — см. докстринг модуля)."""
+    liniya = _require_liniya(sid, p)
+    liniya_ill = _require_num(sid, p, "liniya_ill")
+    ills = p.get("illustracii") or []
+    if len(ills) != 2:
+        raise TipVerstki(
+            "слайд %s: 'kompozit' требует ровно 2 иллюстрации в 'illustracii', получено %d"
+            % (sid, len(ills)))
+    css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
+           "grid-template-columns: var(--liniya) calc(100%% - var(--liniya)); } "
+           "#%s .board{ display:grid; grid-template-rows: var(--liniya-ill) "
+           "calc(100%% - var(--liniya-ill)); gap:%dpx; padding:%dpx; box-sizing:border-box; }"
+           % (sid, sid, ILL_GAP, ILL_PAD))
+    text = _text_zone(sid, p, text_html)
+    panels = "".join(
+        '<div class="panel" data-ill="%s" style="min-width:0;min-height:0"></div>' % _esc(s)
+        for s in ills)
+    board = '<div class="zone board" style="--liniya-ill:%g%%">%s</div>' % (liniya_ill, panels)
+    body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, board)
+    return css, body
+
+
 REESTR = {
     "polosa_gorizontalnaya": polosa_gorizontalnaya,
     "polosa_vertikalnaya": polosa_vertikalnaya,
@@ -256,9 +296,10 @@ REESTR = {
     "vizitka": vizitka,
     "finalnyj": finalnyj,
     "razdelitel": razdelitel,
+    "kompozit": kompozit,
 }
 
-ОТЛОЖЕННЫЕ = ("kartochka_centr", "kompozit", "rejka_sajdbar")
+ОТЛОЖЕННЫЕ = ("kartochka_centr", "rejka_sajdbar")
 
 
 def compile_tip(sid, p, text_html):
