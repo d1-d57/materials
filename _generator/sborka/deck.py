@@ -50,7 +50,7 @@ def _compile_one(slide_path_str):
     for p in (str(sb), str(gen)):
         if p not in _sys.path:
             _sys.path.insert(0, p)
-    from formaty import parse_slide, render_body
+    from formaty import parse_slide, render_body, check_no_missing_math
     from tipy import compile_tip
     from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
     from slaid import load_math_cache  # noqa: E402  (Э5 захода solver-vmeshcheniya)
@@ -61,8 +61,10 @@ def _compile_one(slide_path_str):
     params, body_md = parse_slide(text, sid=sid)
     params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
-    math = load_math_cache(slide_path.parents[2])
+    lekcija_dir = slide_path.parents[2]
+    math = load_math_cache(lekcija_dir)
     body_html = render_body(body_md, acc_tag="span", math=math, sid=sid)
+    check_no_missing_math(body_html, sid, lekcija_dir)
     css, html = compile_tip(sid, params, body_html)
     n_scenes = max_scenes(html)
     return (sid, params.get("tip_verstki"), params.get("status", "v_deke"),
@@ -294,7 +296,12 @@ def main():
                      help="не подбирать типографику солвером — собрать как есть "
                           "(умолчание: подбор ВКЛЮЧЁН, Р3 захода porcia-1-zamknut-konvejer)")
     args = ap.parse_args()
-    n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs, podbor=not args.bez_podbora)
+    from formaty import FormatSlaida  # noqa: E402  (тот же приём, что slaid.py main())
+    try:
+        n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs, podbor=not args.bez_podbora)
+    except FormatSlaida as e:
+        print("ОШИБКА: %s" % e, file=sys.stderr)
+        return 1
     print("собран дек: слайдов в деке %d, в резерве %d → %s" % (n, n_rezerv, out))
     return 0
 
