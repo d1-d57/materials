@@ -620,12 +620,30 @@ open(p, "w", encoding="utf-8").write(t)
 PY
 python3 "$SBORKA/bootstrap_lekcii.py" "$L28" >/dev/null
 python3 -c "$ZAP_VALS_PY" "$L28" s01 s02
+# 🔴 дочистка приёмки (тот же заход): шапки мало — тело-заглушка полный гейт теперь
+# красит (ловушка 32), поэтому «зелёная своя карточка» проверяется на ПОЛНОСТЬЮ
+# заполненной (шапка + настоящее тело), не только на шапке.
+python3 - "$L28" <<'PY'
+import sys
+from pathlib import Path
+lek = Path(sys.argv[1])
+for sid in ("s01", "s02"):
+    p = lek / "slajdy" / sid / "slaid.md"
+    t = p.read_text(encoding="utf-8")
+    t = t.replace(
+        "## Математика — развёрнуто\n### [narrativ] заполнить\nзаполнить",
+        "## Математика — развёрнуто\n### [narrativ] завязка\nНастоящий развёрнутый текст %s." % sid)
+    t = t.replace(
+        "## Текст слайда — сжато\n### [narrativ] заполнить\nзаполнить",
+        "## Текст слайда — сжато\n### [narrativ] завязка\nНастоящий сжатый текст %s." % sid)
+    p.write_text(t, encoding="utf-8")
+PY
 OUT28=$(python3 "$SBORKA/gejt_kartochki.py" "$L28" 2>&1) || {
-  echo "❌ ЛОВУШКА 28: bootstrap_lekcii.py + заполненная ТОЛЬКО шапка не даёт зелёный гейт (Р1 регрессия):"
+  echo "❌ ЛОВУШКА 28: bootstrap_lekcii.py + заполненная шапка и тело не дают зелёный гейт (Р1 регрессия):"
   echo "$OUT28"; exit 1; }
 echo "$OUT28" | grep -q "ЗЕЛЁНЫЙ" || {
   echo "❌ ЛОВУШКА 28: rc=0, но текст не «ЗЕЛЁНЫЙ»:"; echo "$OUT28"; exit 1; }
-echo "  ✅ ловушка 28: порождённая карточка (шапка заполнена, тело не тронуто) — гейт зелёный"
+echo "  ✅ ловушка 28: порождённая карточка (шапка и тело заполнены по-настоящему) — гейт зелёный"
 
 echo "── ловушка 29: 🔴 Р2 — --faza 1 зелёный там, где полный гейт красный (свежепорождённая карточка)"
 L29="$T/lek29"
@@ -722,5 +740,47 @@ echo "$OUT31" | grep -q "блок «что дальше».*отсутствуе�
   echo "❌ ЛОВУШКА 31: гейт покраснел, но не поимённо на отсутствии блока «что дальше»:"
   echo "$OUT31"; exit 1; }
 echo "  ✅ ловушка 31: карточка без блока «что дальше» — гейт красный, поимённо"
+
+echo "── ловушка 32: 🔴 Р1 дочистка приёмки — ZAPOLNIT в теле не проходит полный гейт"
+L32="$T/lek32"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L32" >/dev/null
+python3 - "$L32" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L32" >/dev/null
+python3 -c "$ZAP_VALS_PY" "$L32" s01
+# шапка настоящая, тело — НЕТРОНУТАЯ заглушка бутстрапа
+OUT32P=$(python3 "$SBORKA/gejt_kartochki.py" "$L32" 2>&1) && {
+  echo "❌ ЛОВУШКА 32: полный гейт дал rc=0 на теле-заглушке — ZAPOLNIT в теле не ловится:"
+  echo "$OUT32P"; exit 1; }
+echo "$OUT32P" | grep -q "незаполненный блок-заглушку" || {
+  echo "❌ ЛОВУШКА 32: полный гейт красный, но не поимённо на заглушке тела:"
+  echo "$OUT32P"; exit 1; }
+OUT32F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
+  echo "❌ ЛОВУШКА 32: --faza 1 на той же карточке (шапка настоящая, тело — заглушка) НЕ зелёный:"
+  echo "$OUT32F"; exit 1; }
+# заполняем тело настоящим текстом — оба режима обязаны позеленеть
+python3 - "$L32" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8")
+t = t.replace(
+    "## Математика — развёрнуто\n### [narrativ] заполнить\nзаполнить",
+    "## Математика — развёрнуто\n### [narrativ] завязка\nНастоящий развёрнутый текст.")
+t = t.replace(
+    "## Текст слайда — сжато\n### [narrativ] заполнить\nзаполнить",
+    "## Текст слайда — сжато\n### [narrativ] завязка\nНастоящий сжатый текст.")
+p.write_text(t, encoding="utf-8")
+PY
+OUT32P2=$(python3 "$SBORKA/gejt_kartochki.py" "$L32" 2>&1) || {
+  echo "❌ ЛОВУШКА 32: настоящее тело — полный гейт всё равно красный:"; echo "$OUT32P2"; exit 1; }
+OUT32F2=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
+  echo "❌ ЛОВУШКА 32: настоящее тело — --faza 1 покраснел:"; echo "$OUT32F2"; exit 1; }
+echo "  ✅ ловушка 32: тело-заглушка — полный красный/faza1 зелёный; настоящее тело — оба зелёные"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

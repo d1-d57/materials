@@ -72,6 +72,34 @@ def _polya_dlya_fazy(faza):
     return FAZA_POLYA.get(faza, OBYAZATELNYE_POLYA)
 
 
+# Дочистка приёмки (тот же заход porcia-1-zamknut-konvejer): полный гейт молчал
+# на теле-заглушке (`### [narrativ] заполнить` / `заполнить`, ровно то, что
+# порождает `bootstrap_lekcii.py`, Р1а) — слово ZAPOLNIT в поле шапки ловилось,
+# в блоке тела — нет. Раздел «Математика» обязан быть настоящим начиная с
+# выхода Ф2, «Текст слайда» — с выхода Ф3; на выходе Ф1 (`--faza 1`) тело ещё
+# не пишется вовсе. Прочие `faza` (как и у `_polya_dlya_fazy`) падают на полную
+# проверку — минимум, не гадание за неспецифицированное требование.
+RAZDELY_TELA = {"matematika": bloki.KEY_MATEMATIKA, "tekst": bloki.KEY_TEKST}
+
+
+def _razdely_dlya_fazy(faza):
+    if faza == 1:
+        return ()
+    if faza == 2:
+        return ("matematika",)
+    return ("matematika", "tekst")
+
+
+def _check_zapolnit_v_tele(sid, sections, faza):
+    issues = []
+    for razdel in _razdely_dlya_fazy(faza):
+        for b in sections[razdel]:
+            if b.mysl == ZAPOLNIT or b.telo.strip() == ZAPOLNIT:
+                issues.append("%s: раздел «%s» несёт незаполненный блок-заглушку "
+                               "(мысль или тело — «%s»)" % (sid, RAZDELY_TELA[razdel], ZAPOLNIT))
+    return issues
+
+
 def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=None):
     """Одна карточка → список замечаний (пустой — карточка чиста)."""
     issues = _check_lifecycle_block(text, sid)
@@ -118,6 +146,8 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
 
     for m in bloki.check_composition(sections):
         issues.append("%s: состав блоков не совпадает — %s" % (sid, m))
+
+    issues.extend(_check_zapolnit_v_tele(sid, sections, faza))
 
     budget = params.get("byudzhet_slov")
     if not _unfilled(budget):
