@@ -75,8 +75,15 @@ def load_illustrations(stems, illustrations_dir):
 
 def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     """.md слайда → (sid, полный самодостаточный HTML документа). `sid` — имя
-    ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не стем файла."""
+    ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не стем файла.
+
+    `slide_path` принимает И файл (`slajdy/<sid>/slaid.md`), И саму папку слайда
+    (`slajdy/<sid>`) — раньше папка давала `IsADirectoryError` (Р4 захода
+    porcia-1-zamknut-konvejer: интерфейсы путей `deck.py`/`slaid.py` разъехались,
+    деку нужна папка лекции, а `slaid.py` требовал файл слайда буквально)."""
     slide_path = Path(slide_path)
+    if slide_path.is_dir():
+        slide_path = slide_path / "slaid.md"
     sid = slide_path.parent.name
     text = _read(slide_path)
     params, body_md = parse_slide(text, sid=sid)
