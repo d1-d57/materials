@@ -56,6 +56,14 @@ body.blanked #stage { visibility: hidden; }
         opacity: 0; transition: opacity .35s ease; pointer-events: none; }
 #hint.is-shown { opacity: 1; }
 
+/* прогресс-бар лекции (Д27 захода gruppa-D-kompilyator) — элементы создаёт
+   engine.js (sborka/deck.py и slaid.py не несут статичной разметки для них). */
+#lect-zone { position: fixed; left: 0; bottom: 0; width: 100%; height: 14px;
+             z-index: 200; cursor: pointer; }
+#lect-progress { position: fixed; left: 0; bottom: 0; height: 2.5px; width: 0;
+                 background: var(--brick); opacity: .55; z-index: 201; pointer-events: none;
+                 transition: width .25s ease, height .15s ease, opacity .15s ease; }
+
 /* белая панель-паспарту */
 .panel { background: var(--card); }
 .panel > img { width: 100%; height: 100%; object-fit: contain; display: block; }
