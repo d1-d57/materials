@@ -58,6 +58,11 @@ zelenoe() {   # $1 — здоровый файл, $2 — что проверяе
 # 28.07): дословный `touch -d` в тестовых данных этого файла покрасил ЧУЖУЮ
 # фикстуру и заблокировал бы каждый коммит, трогающий git_zona.py, — гейт
 # ударил бы по своим ровно так, как заход запрещает.
+# 🔴 Каждый файл, идущий в zelenoe(), несёт ОБА маркера — `no-input` (свой
+# исходный смысл) и `called-by-hand` (проверка 13, живая точка вызова/маркер):
+# иначе он ложно краснеет от НЕСВЯЗАННОЙ проверки, а изолировать одну переменную
+# за раз — весь смысл этой мета-фикстуры (см. шапку файла). Файлы, идущие только
+# в krasnoe(), маркер `called-by-hand` не несут — лишний нарушитель им не мешает.
 python3 - "$T" <<'PY'
 import sys, pathlib
 T = pathlib.Path(sys.argv[1])
@@ -68,6 +73,7 @@ gnu = "tou" + "ch -d"          # склейка: буквального GNU-из
     f'    print("состарить файл: {gnu} 10-minutes-ago cel")\n', encoding="utf-8")
 (T / "gnu_ok.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     "def podskazka():\n"
     '    print("состарить файл: python3 -c os.utime(...)")\n', encoding="utf-8")
 # Комментарий и докстринг — документация, а не код: перечень запрещённого в них
@@ -75,6 +81,7 @@ gnu = "tou" + "ch -d"          # склейка: буквального GNU-из
 # же калибровкой — линтер покраснел сам на себе).
 (T / "gnu_doc.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     f"# нельзя писать {gnu} — это GNU-изм\n"
     "def podskazka():\n"
     f'    """Запрещено: {gnu}."""\n'
@@ -95,6 +102,7 @@ def chitat():
 PY
 cat > "$T/lock_ok.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 import subprocess
 def chitat():
     return subprocess.run(["git", "--no-optional-locks", "diff", "--cached"],
@@ -113,6 +121,7 @@ def podskazka():
 PY
 cat > "$T/shell_ok.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 def podskazka():
     print("уборка: python3 _generator/tools/git_zona.py clean")
 PY
@@ -123,6 +132,7 @@ zelenoe "$T/shell_ok.py"  "вместо неё печатается подком
 # Набор специально узкий: ложное красное здесь дороже пропуска.
 cat > "$T/shell_proza.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 def dolozhit(rc):
     print(f"git rm упал (rc={rc})")
 PY
@@ -139,6 +149,7 @@ def sohranit():
 PY
 cat > "$T/sbx_ok.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 import subprocess
 from gz import in_sandbox, refuse_write
 def sohranit():
@@ -153,6 +164,7 @@ zelenoe "$T/sbx_ok.py"  "та же операция под защитой"
 # здоровых check_*.py, которые только смотрят в индекс.
 cat > "$T/sbx_read.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 import subprocess
 def posmotret():
     subprocess.run(["git", "--no-optional-locks", "ls-files"])
@@ -162,7 +174,11 @@ zelenoe "$T/sbx_read.py" "читающий инструмент без защи�
 # ── ПРОВЕРКА 5: кривой вход доказан, а не обещан ──
 # ЦЕНА 23.07: `bootstrap_arka.py --help` проглотил флаг как имя арки и создал
 # папку-сироту, которую потом каждый `plan` тянул в черновик коммита.
+# 🔴 called-by-hand стоит здесь СРАЗУ: этот файл дальше проверяется ТОЛЬКО на
+# «кривой вход» (BASELINE/охват фикстуры) — без маркера каждая зелёная мутация
+# ниже ложно краснела бы ещё и от «живой точки вызова», путая переменные.
 cat > "$T/vhod_bad.py" <<'PY'
+# TOOL-CONTRACT: called-by-hand
 import argparse
 def main():
     argparse.ArgumentParser().parse_args()
@@ -171,6 +187,7 @@ krasnoe "$T/vhod_bad.py" "разбор входа без фикстуры, по�
 
 cat > "$T/vhod_marker.py" <<'PY'
 # TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
 import argparse
 def main():
     argparse.ArgumentParser().parse_args()
@@ -217,7 +234,17 @@ V=$($LINT --fixtures-for _generator/tools/bootstrap_zahod.py 2>/dev/null \
 
 # ── ПРОВЕРКА 8: молчит, когда чисто (Р31) ──
 # Гейт, который шумит зря, отключат — и это будет конец затеи.
-V=$(TOOL_CONTRACT_HOME="$T" $LINT --staged 2>&1 | wc -c | tr -d ' ')
+# 🔴 Найдено живым прогоном (заход `instrument-podklyuchen`, 2026-08-08): `--staged` без
+# `GIT_ZONA_REPO` смотрит на РЕАЛЬНЫЙ репозиторий исполнителя — если в момент прогона фикстуры
+# у него ЗАСТЕЙДЖЕНЫ свои правки (обычное дело посреди коммита зоны), «молчит на чистом» ложно
+# краснеет на ЕГО живой работе, а не на пустоте. `TOOL_CONTRACT_HOME` изолирует BASELINE/охват
+# фикстур, но не сам git — нужна ОБА изолировать. Пустой одноразовый репозиторий с нуля даёт
+# настоящую пустоту вместо «пустоты по совпадению».
+T8=$(mktemp -d)
+(cd "$T8" && git init -q . && git config user.email t@t && git config user.name t \
+    && git commit -q --allow-empty -m base)
+V=$(TOOL_CONTRACT_HOME="$T" GIT_ZONA_REPO="$T8" $LINT --staged 2>&1 | wc -c | tr -d ' ')
+rm -rf "$T8"
 [ "$V" = "0" ] && echo "  ✅ на пустом staged линтер молчит" \
                || { echo "  ❌ ЛИНТЕР ШУМИТ НА ЧИСТОМ — его отключат (Р31)"; FAIL=1; }
 
@@ -247,6 +274,7 @@ gnu, flag = "s" + "ed", "-" + "i"      # склейка: буквального 
     '    os.system("git commit -m proba")\n', encoding="utf-8")
 (T / "shell_ok.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     "import os\n"
     "def posmotret():\n"
     '    os.system("git --no-optional-locks status")\n', encoding="utf-8")
@@ -258,12 +286,14 @@ gnu, flag = "s" + "ed", "-" + "i"      # склейка: буквального 
 # Ложное, на котором линтер краснел: .remove() у обычного СПИСКА — не снос.
 (T / "spisok.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     "def ubrat(imena, x):\n"
     "    imena.remove(x)\n"
     "    return imena\n", encoding="utf-8")
 # Ложное: сборка команды по кускам — огрызок ["git"] судить нельзя.
 (T / "sborka.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     "import subprocess\n"
     "FLAGS = [\"--no-optional-locks\"]\n"
     "def chitat():\n"
@@ -271,6 +301,7 @@ gnu, flag = "s" + "ed", "-" + "i"      # склейка: буквального 
 # Ложное: прозаическое предупреждение про rm БЕЗ glob — не выдача shell.
 (T / "proza_rm.py").write_text(
     "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
     "def predupredit():\n"
     '    print("⚠ Никогда не набирай rm -rf вручную")\n', encoding="utf-8")
 PY
@@ -295,7 +326,42 @@ PY
 krasnoe "$T/probnaya.sh" "GNU-изм в .sh (фикстуры и хуки исполняются у владельца)"
 zelenoe "$T/chistaya.sh" "здоровый .sh"
 
-# ── ПРОВЕРКА 12: 🔴 СУДИТ ИНДЕКС И ТОЛЬКО ДОБАВЛЕННЫЕ СТРОКИ ──
+# ── ПРОВЕРКА 12: 🔴 ЖИВАЯ ТОЧКА ВЫЗОВА — не подключён и не помечен = не гейт ──
+# Заход `instrument-podklyuchen` (2026-08-08): шесть инструментов были зелёными
+# только потому, что их никто не звал. Написанный, но нигде не упомянутый
+# инструмент обязан покраснеть; тот же инструмент с маркером «зовут руками» или
+# с реальным упоминанием ВНЕ себя — пройти.
+cat > "$T/sirota.py" <<'PY'
+# TOOL-CONTRACT: no-input
+def rabota():
+    return 1
+PY
+krasnoe "$T/sirota.py" "инструмент нигде не упомянут и не помечен called-by-hand"
+
+cat > "$T/pomechen.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+def rabota():
+    return 1
+PY
+zelenoe "$T/pomechen.py" "тот же инструмент с явным маркером called-by-hand"
+
+# Живая ссылка ИЗВНЕ (не маркер) — тоже законное доказательство подключения.
+cat > "$T/podklyuchen.py" <<'PY'
+# TOOL-CONTRACT: no-input
+def rabota():
+    return 1
+PY
+cat > "$T/vyzyvayushij.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import subprocess
+def zvat():
+    subprocess.run(["python3", "podklyuchen.py"])
+PY
+zelenoe "$T/podklyuchen.py" "упомянут в другом файле того же дома — живая точка вызова есть"
+
+# ── ПРОВЕРКА 13: 🔴 СУДИТ ИНДЕКС И ТОЛЬКО ДОБАВЛЕННЫЕ СТРОКИ ──
 # Две половины, каждая из которых по отдельности убивает затею:
 #  · читать рабочую копию вместо индекса — гейт зелёный на коммите с нарушителем
 #    («поправил после add» — рутина, а не трюк);
@@ -310,7 +376,7 @@ git config user.name fixture
 cp "$TOOLS/check_tool_contract.py" _generator/tools/
 mkdir -p _generator/tools/fixtures/tool_contract
 cp "$TOOLS/fixtures/tool_contract/BASELINE" _generator/tools/fixtures/tool_contract/
-printf '# TOOL-CONTRACT: no-input\nimport subprocess\ndef a():\n    subprocess.run(["git", "diff"])\n' \
+printf '# TOOL-CONTRACT: no-input\n# TOOL-CONTRACT: called-by-hand\nimport subprocess\ndef a():\n    subprocess.run(["git", "diff"])\n' \
     > _generator/tools/dolg.py
 git add -A && git commit -qm baseline
 
