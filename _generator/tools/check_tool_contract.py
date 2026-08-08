@@ -458,9 +458,24 @@ def check_input_fixture(path, text, tree, ctx):
 def live_trigger_scope():
     """Файлы, где может жить реальный вызов инструмента: сам дом инструментов
     (`HOME_DIR` — та же дверь, что у FIXTURES/BASELINE, работает и в фикстуре),
-    плюс сиблинги в бою (`_generator/*.py`, `.githooks/*`) через REPO."""
+    плюс сиблинги в бою (`_generator/*.py`, `_generator/sborka/*.py`,
+    `.githooks/*`) через REPO.
+
+    🔴 `_generator/sborka/` добавлена 09.08 (заход `gigiena-i-svedenie`) — и это
+    починка ЛОЖНОГО КРАСНОГО, а не расширение «на всякий случай». `REPO/_generator`
+    обходился `iterdir()` с `p.is_file()`, то есть подпапка отсеивалась, — а
+    боевой конвейер сборки живёт именно там. Замер до починки: `bloki.py`,
+    `korpus.py`, `podgonka.py` числились «нигде не вызываются», хотя импортируются
+    соседями (`bloki` — из `formaty/bootstrap_lekcii/lenta/gejt_kartochki/smeta`,
+    `korpus` и `podgonka` — из `vmeshchenie`, `podgonka` ещё из `zamer_smety`).
+    Три ложных красных из шести на сплошном прогоне — половина; гейт с такой
+    долей ложных срабатываний обходят, а не чинят по нему (`KONSTITUCIYA §11а`).
+    Тот же пробел заставлял ГЕЙТЫ этой папки зеленеть только маркером
+    `called-by-hand`: у `gejt_vmeshcheniya.py` строка «ФАЗА 3.9» в
+    `bootstrap_lekcii.LIFECYCLE_TMPL` есть, а увидеть её проверке было нечем."""
     paths = list(HOME_DIR.glob("*.py"))
-    for extra in (REPO / "_generator", REPO / ".githooks"):
+    for extra in (REPO / "_generator", REPO / "_generator" / "sborka",
+                  REPO / ".githooks"):
         if extra.is_dir():
             paths += [p for p in extra.iterdir() if p.is_file()]
     return paths

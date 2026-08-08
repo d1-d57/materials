@@ -203,10 +203,21 @@ def git(*args, check=True):
     """Единственная дверь к git. --no-optional-locks не даёт чтению взять лок.
 
     Окружение — `_git_env()`, без унаследованных `GIT_*`: см. её докстроку.
+
+    🔴 `errors="replace"` — НЕ косметика (цена 09.08, заход `gigiena-i-svedenie`).
+    Строгий декодер здесь ронял НЕ печать, а саму операцию: `merge --continue`
+    падал `UnicodeDecodeError` на байте 0xe2 в stderr, дважды подряд на одном и
+    том же смещении, — а `git commit` при этом отрабатывал. Причина в том, что
+    в stderr коммита пишет не только git: `pre-commit` поднимает десятки
+    python-процессов, все наследуют ОДИН пайп, и параллельные записи длиннее
+    `PIPE_BUF` режут многобайтовый символ пополам. То есть чем разговорчивее хук,
+    тем вероятнее падение — на нормально работающем репозитории, без единой
+    ошибки git. Слияние пришлось доводить голым `git commit --no-edit` в обход
+    единственной двери. Испорченный байт в ПЕЧАТИ терпим, потеря операции — нет.
     """
     r = subprocess.run(
         ["git", "--no-optional-locks", *args],
-        cwd=REPO, capture_output=True, text=True, env=_git_env(),
+        cwd=REPO, capture_output=True, text=True, errors="replace", env=_git_env(),
     )
     if check and r.returncode != 0:
         sys.exit(f"❌ git {' '.join(args)} упал:\n{r.stderr.strip()}")
