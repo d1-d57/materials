@@ -511,7 +511,8 @@ PY
 T17=$(mktemp -d)
 trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" "$T17/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
+   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$T17/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
 cd "$T17"
 git init -q .
@@ -764,7 +765,8 @@ git -C "$T5" worktree remove --force "$WT5" >/dev/null 2>&1 || true
 T22=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
 mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" "$T22/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
+   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$T22/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T22/_studio/zhurnal/"
 cd "$T22"
 git init -q .

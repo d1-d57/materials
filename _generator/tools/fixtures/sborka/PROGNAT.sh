@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py bootstrap_lekcii.py gejt_kartochki.py deck.py
+# TOOL-CONTRACT-COVERS: check_sborki.py postroit_kartochku.py sravnit.py progon_baza.py koridor_obyoma.py bootstrap_lekcii.py gejt_kartochki.py deck.py smeta.py zamer_smety.py gejt_vmeshcheniya.py
 # ↑ ОХВАТ: гейт сборки как механизм — семь ИСПОЛНЯЮЩИХ проверок (С1-С7) над
 # утверждениями файла-захода о мире, плюс граница безопасности §2.1 (белый
 # список, отказ от shell, потолок, таймаут). Ловушка 25 (заход obratnyj-progon)
@@ -956,5 +956,92 @@ OUT35B=$(python3 "$SBORKA/bootstrap_lekcii.py" "$L35" --migraciya 2>&1) || {
 diff -r "$T/lek35-posle1" "$L35" >/dev/null || {
   echo "❌ ЛОВУШКА 35: второй прогон миграции изменил дерево — не идемпотентна:"; exit 1; }
 echo "  ✅ ловушка 35: поля дописаны, блок «что дальше» перешит с ФАЗЫ 1, заполненное цело, второй прогон — нулевой диф"
+
+# ── ловушки 36-38: смета вмещения (заход svedenie-i-smeta, Э2) ─────────────────
+echo "── ловушка 36: смета — КРИВОЙ ВХОД отвергается внятно, а не трейсбеком"
+for PROBA in "--byudzhet net_takogo_tipa 50" "--byudzhet polosa_vertikalnaya abc" "$T/net-takoj-papki"; do
+  OUT36=$(python3 "$SBORKA/smeta.py" $PROBA 2>&1) && {
+    echo "❌ ЛОВУШКА 36: кривой вход «$PROBA» принят (rc=0):"; echo "$OUT36"; exit 1; }
+  echo "$OUT36" | grep -q "ОШИБКА" || {
+    echo "❌ ЛОВУШКА 36: кривой вход «$PROBA» отвергнут, но БЕЗ внятного «ОШИБКА»:"
+    echo "$OUT36"; exit 1; }
+  echo "$OUT36" | grep -q "Traceback" && {
+    echo "❌ ЛОВУШКА 36: кривой вход «$PROBA» дал ТРЕЙСБЕК вместо сообщения:"
+    echo "$OUT36"; exit 1; }
+done
+OUT36G=$(python3 "$SBORKA/gejt_vmeshcheniya.py" "$T/net-takogo-slajda.html" 2>&1) && {
+  echo "❌ ЛОВУШКА 36: гейт вмещения принял несуществующий файл:"; echo "$OUT36G"; exit 1; }
+echo "$OUT36G" | grep -q "ОШИБКА" || {
+  echo "❌ ЛОВУШКА 36: гейт вмещения отверг несуществующий файл без «ОШИБКА»:"
+  echo "$OUT36G"; exit 1; }
+OUT36Z=$(python3 "$SBORKA/zamer_smety.py" --konstanty "$T/net-takoj-lekcii" 2>&1) && {
+  echo "❌ ЛОВУШКА 36: замер принял несуществующую лекцию:"; echo "$OUT36Z"; exit 1; }
+echo "  ✅ ловушка 36: пять кривых входов отвергнуты внятно, без трейсбеков"
+
+echo "── ловушка 37: 🔴 смета ВОСПРОИЗВОДИТ ЗАМЕР геометрии — иначе она живёт своей жизнью"
+# Сердце Э2: `smeta.py` — вторая модель вёрстки рядом с браузером. Разойтись она
+# может только молча, поэтому сверка с замером обязана быть исполнимой командой.
+OUT37=$(python3 "$SBORKA/smeta.py" --proverit-geometriyu 2>&1) || {
+  echo "❌ ЛОВУШКА 37: геометрия сметы разошлась с замером браузера:"; echo "$OUT37"; exit 1; }
+echo "$OUT37" | grep -q "проверено 20 точек из 20" || {
+  echo "❌ ЛОВУШКА 37: сверка геометрии без строки охвата «проверено X точек из Y»:"
+  echo "$OUT37"; exit 1; }
+echo "  ✅ ловушка 37: геометрия сметы воспроизводит замер, охват объявлен"
+
+echo "── ловушка 38: 🔴 ГЕЙТ РАСХОЖДЕНИЯ УМЕЕТ ПРОВАЛИТЬСЯ (иначе он украшение)"
+# Тот же принцип, что у ловушки 29: гейт, который не может покраснеть, — не гейт.
+OUT38K=$(python3 "$SBORKA/smeta.py" --sverit "$REPO_ROOT/teorkat-vvedenie/L2" --isportit 1.3 2>&1) && {
+  echo "❌ ЛОВУШКА 38: ПОДДЕЛАННАЯ смета (×1.3) не покрасила гейт расхождения:"
+  echo "$OUT38K"; exit 1; }
+echo "$OUT38K" | grep -q "ГЕЙТ РАСХОЖДЕНИЯ КРАСНЫЙ" || {
+  echo "❌ ЛОВУШКА 38: гейт вернул rc≠0, но без вердикта «ГЕЙТ РАСХОЖДЕНИЯ КРАСНЫЙ»:"
+  echo "$OUT38K"; exit 1; }
+OUT38Z=$(python3 "$SBORKA/smeta.py" --sverit "$REPO_ROOT/teorkat-vvedenie/L2" 2>&1) || {
+  echo "❌ ЛОВУШКА 38: КАЛИБРОВАННАЯ смета покрасила гейт — ложное срабатывание:"
+  echo "$OUT38Z"; exit 1; }
+echo "$OUT38Z" | grep -q "мереных карточках" || {
+  echo "❌ ЛОВУШКА 38: зелёный вердикт без охвата «N мереных карточках»:"
+  echo "$OUT38Z"; exit 1; }
+echo "  ✅ ловушка 38: подделанная смета — красный с вердиктом; калиброванная — зелёный с охватом"
+
+echo "── ловушка 39: 🔴 ПУСТОЙ ТЕГ не съедает блоки сметы (`<br>`, `<br/>`, `<img>`)"
+# Найдено верификатором §3 на НЕ-калибровочном материале: `HTMLParser` зовёт
+# `handle_starttag` и на `<br>`, парного закрытия не будет, стек глубины уезжал
+# НАВСЕГДА — и все следующие абзацы верхнего уровня переставали опознаваться.
+# Молча: ни ошибки, ни предупреждения, просто смета занижала на 6.9 строки
+# (`buffon/sl-grid` — один блок вместо трёх). На L2 `<br>` не встречается ни разу.
+OUT39=$(python3 - <<'PYEOF' 2>&1
+import sys
+sys.path.insert(0, "_generator/sborka")
+from smeta import _ZonaParser
+Z = '<div class="zone copy t-body">%s<p>BBBB</p><p>CCCC</p></div>'
+for imya, pervyj, segm in (("без пустых", "<p>AAAA</p>", 1),
+                            ("br", "<p>AA<br>AA</p>", 2),
+                            ("br со слэшем", "<p>AA<br/>AA</p>", 2),
+                            ("img", "<p>AA<img src=x>AA</p>", 1)):
+    p = _ZonaParser(); p.feed(Z % pervyj)
+    if len(p.bloki) != 3:
+        print("ПРОВАЛ: %s — блоков %d, ожидалось 3" % (imya, len(p.bloki))); sys.exit(1)
+    if len(p.bloki[0]["segmenty"]) != segm:
+        print("ПРОВАЛ: %s — сегментов %d, ожидалось %d"
+              % (imya, len(p.bloki[0]["segmenty"]), segm)); sys.exit(1)
+print("ok")
+PYEOF
+) || { echo "❌ ЛОВУШКА 39: $OUT39"; exit 1; }
+echo "  ✅ ловушка 39: три формы пустого тега — блоки целы, `<br>` рвёт строку, `<img>` нет"
+
+echo "── ловушка 40: 🔴 смета ОТКАЗЫВАЕТСЯ на узкой колонке, а не занижает молча"
+# Занижение — опасная сторона ошибки: даёт ПРОПУСК переполнения, а не ложную
+# тревогу. Проверено верификатором §3: при 22 знаках в строке смета занижала на
+# 2.95 строки. Ниже проверенной границы обязан быть ОТКАЗ.
+OUT40=$(python3 "$SBORKA/smeta.py" --byudzhet polosa_vertikalnaya 20 2>&1) && {
+  echo "❌ ЛОВУШКА 40: смета выдала бюджет на колонке уже проверенной границы:"
+  echo "$OUT40"; exit 1; }
+echo "$OUT40" | grep -q "знаков в строке" || {
+  echo "❌ ЛОВУШКА 40: отказ без названного числа знаков в строке:"; echo "$OUT40"; exit 1; }
+OUT40G=$(python3 "$SBORKA/smeta.py" --byudzhet polosa_vertikalnaya 66 2>&1) || {
+  echo "❌ ЛОВУШКА 40: рабочая колонка (66%) тоже отвергнута — граница задрана:"
+  echo "$OUT40G"; exit 1; }
+echo "  ✅ ловушка 40: узкая колонка — отказ с числом; рабочая — бюджет"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

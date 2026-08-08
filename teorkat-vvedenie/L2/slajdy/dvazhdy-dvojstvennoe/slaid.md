@@ -18,7 +18,7 @@ tip_idei: proof_step
 zachem: построить изоморфизм, который не требует никакого выбора
 akcent: отображение в дважды двойственное написано формулой, а не построено по базису
 centralnyj_blok: отображение в дважды двойственное — изоморфизм
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 6
 vazhnost: osnovnoj
 byudzhet_slov: 45

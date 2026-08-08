@@ -532,7 +532,43 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
         }
         dyhanie = ch ? (100 * gapSum / ch) : null;
       }
-      return {scrollHeight: sh, clientHeight: ch, fits: sh <= ch,
+      // Заход svedenie-i-smeta, Э2.1: ШИРИНА зоны — та самая `W`, из которой
+      // смета считает знаки в строке. Снимается ТЕМ ЖЕ промером, что и высота
+      // (заход дословно: «не заводить второй замерщик»). `clientWidth` — за
+      // вычетом padding'а `.zone.copy`, т.е. ровно та ширина, по которой
+      // браузер реально переносит строки.
+      const cw = zone.clientWidth;
+      // Э2.1: `clientWidth/clientHeight` включают padding (`.zone.copy` — 46/64px),
+      // а строки переносятся по КОНТЕНТНОЙ ширине и укладываются в КОНТЕНТНУЮ
+      // высоту. Смете нужен контентный бокс, поэтому padding вычитается здесь,
+      // на самом элементе, а не константой в смете (padding живёт в `tipy.py`
+      // и `base.css` и может там измениться — тогда смета обязана поехать сама).
+      // высота строки в px — не вычисленная снаружи из (lh × kegl), а взятая
+      // с самой зоны: `--lh` может прийти из карточки, из солвера или из
+      // дефолта токена, и угадывание источника — это второй источник правды.
+      const cs = getComputedStyle(zone);
+      const lhPx = parseFloat(cs.lineHeight);
+      const keglPx = parseFloat(cs.fontSize);
+      const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+      const padY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+      // заголовок на экране (`tipy._text_zone`) стоит ВНУТРИ зоны и съедает её
+      // высоту изнутри — для сметы это вычет из H, а не отдельный слой
+      const zag = zone.querySelector('.zagolovok');
+      let zagH = 0;
+      if (zag) {
+        const zr = zag.getBoundingClientRect();
+        zagH = zr.height + parseFloat(getComputedStyle(zag).marginBottom);
+      }
+      return {scrollHeight: sh, clientHeight: ch, clientWidth: cw, fits: sh <= ch,
+              content_w: cw - padX, content_h: ch - padY, zagolovok_h: zagH,
+              // высота, которую РЕАЛЬНО занял текст, от верха контентного бокса
+              // (а не от верха зоны): ровно то, с чем гейт расхождения (Э2.4)
+              // сравнивает предсказание сметы. `fill`/`scrollHeight` для этого
+              // непригодны — зона растянута гридом, см. докстринг выше.
+              content_extent: contentExtent - parseFloat(cs.paddingTop),
+              pad_top: parseFloat(cs.paddingTop),
+              line_height_px: isFinite(lhPx) ? lhPx : null,
+              kegl_px: isFinite(keglPx) ? keglPx : null,
               fill: ch ? (100 * sh / ch) : null,
               content_fill: ch ? (100 * contentExtent / ch) : null,
               n_blocks: blocks.length, dyhanie: dyhanie};

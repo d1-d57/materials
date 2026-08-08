@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# TOOL-CONTRACT: called-by-hand — ревизия DOLG.md, зовёт аналитик/владелец
+# осознанно, не автоматический гейт (заход `instrument-podklyuchen`, Ш1).
 """Чекер статусов DOLG.md скилла slajdy.
 
 Читает ~/Documents/GitHub/disciplina/skills/slajdy/DOLG.md (путь можно

@@ -18,7 +18,7 @@ tip_idei: proof_step
 zachem: показать, что выбор базиса — функтор, а замена базиса связывает два таких функтора квадратом
 akcent: выбор координат — это функтор, и замена координат связывает два функтора
 centralnyj_blok: выбор базиса задаёт функтор
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 8
 vazhnost: opornyj
 byudzhet_slov: 55

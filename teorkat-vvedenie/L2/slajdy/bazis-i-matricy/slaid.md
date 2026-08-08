@@ -18,7 +18,7 @@ tip_idei: definition
 zachem: ввести базис и получить из него критерий: изоморфизм есть ровно тогда, когда базисы одной длины
 akcent: базис — это ВЫБОР, и он даёт критерий изоморфности
 centralnyj_blok: изоморфизм есть ровно тогда, когда базисы одинаковой длины
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: opornyj
 byudzhet_slov: 45

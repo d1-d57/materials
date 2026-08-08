@@ -2327,6 +2327,45 @@ def cmd_adopt(args):
     return 0
 
 
+def _obyavit_ne_vstroennoe(novye_instrumenty):
+    """Ш2-бис (заход `instrument-podklyuchen`, 2026-08-08). Вызывается ПОСЛЕ
+    успешного слияния. Печатает, что приехало нового, и для каждого — встроено
+    ли оно (та же проверка «живая точка вызова или маркер», что несёт
+    `check_tool_contract.py` — не дублирую логику вторым разбором).
+
+    🔴 ПЕЧАТЬ, НЕ ОТКАЗ (см. докстринг `cmd_merge`) — отказ здесь оставил бы
+    принятую работу невлитой, то есть ровно ту болезнь, которую весь заход
+    лечит. Владелец решает, встраивать сейчас или записать долгом."""
+    if not novye_instrumenty:
+        return
+    print(f"\n═══ Новых исполняемых файлов в этом слиянии: {len(novye_instrumenty)} ═══")
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import check_tool_contract as ctc  # noqa: E402 — путь вставлен строкой выше
+    ne_vstroeno = []
+    for rel in sorted(novye_instrumenty):
+        p = REPO / rel
+        if not p.is_file():
+            print(f"   ⚠ {rel} — приехал файлом слияния, но на диске его нет "
+                  f"(конфликт/переименование?), пропускаю проверку")
+            continue
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        pomechen = ctc.MARKER_CALLED_BY_HAND in text
+        podklyuchen = pomechen or ctc.has_live_trigger(p.name)
+        print(f"   {'✅' if podklyuchen else '❌'} {rel} — "
+              f"{'встроен' if podklyuchen else 'НЕ встроен'}"
+              f"{' (маркер called-by-hand)' if pomechen else ''}")
+        if not podklyuchen:
+            ne_vstroeno.append(rel)
+    if ne_vstroeno:
+        print(f"\n🔴 ВЛИТО, НО НЕ ВСТРОЕНО ({len(ne_vstroeno)}):")
+        for rel in ne_vstroeno:
+            print(f"   влито, но не встроено: {rel}")
+        print("   Ни у одного нет живой точки вызова (хук/другой инструмент/шаг "
+              "сборки) и нет маркера `# TOOL-CONTRACT: called-by-hand`. "
+              "Встраиваешь сейчас — подключи; законно оставить долгом, но назвать "
+              "его явно, не молчать.")
+
+
 def cmd_merge(args):
     """Влить ветку в ТЕКУЩУЮ — единственная законная дверь к слиянию.
 
@@ -2410,6 +2449,16 @@ def cmd_merge(args):
     base = git("merge-base", "HEAD", branch).stdout.strip()
     commits = [l for l in git("log", "--oneline", f"HEAD..{branch}").stdout.splitlines() if l]
     touched = [l for l in git("diff", "--name-only", f"HEAD...{branch}").stdout.splitlines() if l]
+    # 🔴 Ш2-бис (заход `instrument-podklyuchen`, 2026-08-08). «Влито без
+    # конфликтов» отвечает на вопрос «доехали ли файлы», не на вопрос «встроен
+    # ли новый инструмент в систему» — владелец назвал это явно: слияние обязано
+    # СРАВНИВАТЬ новое с тем, что уже вызывается, не только копировать пути.
+    # Список — ДО самого merge (`base...branch` не зависит от исхода слияния),
+    # используется ТОЛЬКО после успеха ниже.
+    novye_instrumenty = [l.split("\t", 1)[1] for l in
+                          git("diff", "--name-status", "--diff-filter=A",
+                              f"{base}...{branch}").stdout.splitlines()
+                          if l and (l.endswith(".py") or l.endswith(".sh"))]
 
     print(f"═══ merge: `{branch}` → `{head}` ═══\n")
     if not commits:
@@ -2481,6 +2530,7 @@ def cmd_merge(args):
     r = git("merge", "--no-edit", branch, check=False)
     if r.returncode == 0:
         print(f"\n✅ Влито без конфликтов: {git('log', '-1', '--oneline').stdout.strip()}")
+        _obyavit_ne_vstroennoe(novye_instrumenty)
         return 0
 
     conflicts = [l for l in git("diff", "--name-only", "--diff-filter=U").stdout.splitlines() if l]

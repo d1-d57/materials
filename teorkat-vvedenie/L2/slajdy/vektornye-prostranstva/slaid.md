@@ -18,7 +18,7 @@ tip_idei: definition
 zachem: ввести категорию, в которой дальше живёт весь первый акт
 akcent: важный пример категории, с объектами которой мы работаем весь акт
 centralnyj_blok: векторные пространства и линейные отображения
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: osnovnoj
 byudzhet_slov: 55
