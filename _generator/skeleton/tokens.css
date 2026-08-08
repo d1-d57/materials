@@ -1,5 +1,6 @@
 :root {
   --paper: #e6e5e1; --board: #a7c2cb; --card: #ffffff; --ink: #333333;
+  --accent: #785a18; --marker: #c0aa5a; /* ярус 2 выделения (style-core.md §Accent, Ш3 svedenie-i-proba) */
   --brick: #bf5b4f; --steel: #8195ad; --mustard: #c9a23c; --rule: #c3cedd;
   --blush: #f0e2de;   /* пастель «опасной зоны» (бледный кирпич) */
   /* --hollow/--steel-d — дословно из teorkat-vvedenie/src/tokens.css (Я4, заход

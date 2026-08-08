@@ -126,7 +126,7 @@ body.blanked #stage { visibility: hidden; }
    (build_deck.py, READ-ONLY импорт formaty.py). Без этого блока метки рендерились
    обычным абзацем — главная причина переполнения на s08.
    ============================================================================ */
-.acc{font-weight:700;color:var(--ink)}
+.acc{font-weight:700;color:var(--accent)}
 .acc .katex,.acc .katex *{color:var(--ink)}
 
 .tlist{list-style:none}
