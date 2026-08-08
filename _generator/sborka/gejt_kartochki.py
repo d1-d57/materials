@@ -45,6 +45,26 @@ from formaty import (parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNI
 import bloki  # noqa: E402
 
 
+# Заглушка, доехавшая до зрителя (POMARKI-2026-08-09 §4, разбор centr-gruppy):
+# `zagolovok_na_ekrane: заполнить` рендерился на экран буквально («ЗАПОЛНИТЬ»
+# крупным капсом), а поле не входило в `OBYAZATELNYE_POLYA` (`formaty.py`, вне
+# зоны этого захода) — карточка была зелёной, слайд «успешно» собран, заглушка
+# доехала до зрителя. Пустая строка `""` ЛЕГАЛЬНА (слайд без заголовка на
+# экране — законный случай, так уже стоит в нескольких фикстурах); красит
+# ТОЛЬКО буквальное значение ZAPOLNIT. 🔴 На выходе ФАЗЫ 1 не проверяется —
+# `zagolovok_na_ekrane` не в `FAZA_POLYA[1]` (та же фаза, где решается
+# `tip_verstki`/`liniya`, а не интервью): красить `--faza 1` за поле, которое
+# эта фаза не обязана заполнять, значит повторить регрессию `--faza 1`,
+# описанную выше в этом файле (ловушка 29 `PROGNAT.sh`).
+def _check_zagolovok_na_ekrane(sid, params, faza):
+    if faza == 1:
+        return []
+    if params.get("zagolovok_na_ekrane") == ZAPOLNIT:
+        return ["%s: поле 'zagolovok_na_ekrane' несёт незаполненную пометку "
+                "'%s' — она рендерится на экран буквально" % (sid, ZAPOLNIT)]
+    return []
+
+
 def _unfilled(val):
     return val is None or val == "" or val == ZAPOLNIT
 
@@ -237,6 +257,7 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
             issues.append("%s: обязательное поле '%s' не заполнено" % (sid, f))
 
     issues.extend(_check_tip_idei(sid, params))
+    issues.extend(_check_zagolovok_na_ekrane(sid, params, faza))
 
     for name in params.get("illustracii") or []:
         if name not in illustracii_pool:

@@ -17,8 +17,15 @@ document.body.appendChild(lectZone);
 const lectProgress = document.createElement('div');
 lectProgress.id = 'lect-progress';
 document.body.appendChild(lectProgress);
+/* П13 (POMARKI-2026-08-09 §4): номер слайда в правом нижнем углу — механизм
+   был закрыт ошибочно на #lect-progress (та полоса прогресса, не номер);
+   долг Д27 в части номера возвращён в ЖИВ. */
+const lectNumber = document.createElement('div');
+lectNumber.id = 'lect-number';
+document.body.appendChild(lectNumber);
 function updateProgress() {
   lectProgress.style.width = (slides.length ? 100 * (cur + 1) / slides.length : 0) + '%';
+  lectNumber.textContent = slides.length ? (cur + 1) + ' / ' + slides.length : '';
 }
 lectZone.addEventListener('mouseenter', () => {
   lectProgress.style.height = '6px'; lectProgress.style.opacity = '.85';
@@ -218,6 +225,7 @@ const only = Q.get('only');
 function exportFrame() {
   document.getElementById('hint').style.display = 'none';
   lectZone.style.display = 'none'; lectProgress.style.display = 'none';
+  lectNumber.style.display = 'none';
   document.getElementById('stage').style.placeItems = 'start';
   const n = +only;
   const k = Q.get('scene') !== null ? +Q.get('scene') : scenesOf(slides[n]);

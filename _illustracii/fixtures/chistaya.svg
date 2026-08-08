@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="фикстура-контроль — чистая, без нарушений П9/П10/П11/П12">
+  <path class="s-line s-accent" d="M 10,30 C 10,6 90,6 90,30"/>
+  <line class="s-thin s-ar-m" x1="10" y1="30" x2="90" y2="30"/>
+  <text class="s-txt" x="35" y="4">Z</text>
+  <text class="s-txt" x="10" y="45">Z(s)</text>
+  <text class="s-txt" x="80" y="45">Z(sgn)</text>
+  <text class="s-txt-a" x="45" y="56">Z(id) = id</text>
+</svg>
