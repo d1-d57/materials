@@ -62,7 +62,7 @@ def _compile_one(slide_path_str):
     params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
     math = load_math_cache(slide_path.parents[2])
-    body_html = render_body(body_md, acc_tag="span", math=math)
+    body_html = render_body(body_md, acc_tag="span", math=math, sid=sid)
     css, html = compile_tip(sid, params, body_html)
     n_scenes = max_scenes(html)
     return (sid, params.get("tip_verstki"), params.get("status", "v_deke"),

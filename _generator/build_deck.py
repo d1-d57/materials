@@ -18,6 +18,7 @@ istochnik/src/ → self-contained index.html + линтер-гейт.
 внутри) — substitute() гоняет несколько проходов до неподвижной точки.
 """
 import re, sys, json, argparse
+from functools import lru_cache
 from pathlib import Path
 
 PLACEHOLDER_RE = re.compile(r"\{\{[A-Za-z0-9_:.\-]+\}\}")
@@ -165,12 +166,14 @@ def parse_brief(text):
 SCENE_PREFIX = re.compile(r"^\{([^}|]*)\}[ \t]*")
 
 
-def _attrs_from_tag(tag):
+def _attrs_from_tag(tag, default_cls=None):
     """Атрибуты В ПОРЯДКЕ токенов тега — чтобы точно воспроизвести исходный порядок
     class/data-scene (браузеру он безразличен, но строгая посимвольная сверка ловит):
     '@2 .note' → ' data-scene-from="2" class="note"'; '.pA @-3' → ' class="pA" data-scene-until="3"';
     '@2-4' → ' data-scene-from="2" data-scene-until="4"'. Классы (несколько .x) сливаются в один
-    class="…" на месте ПЕРВОГО класс-токена."""
+    class="…" на месте ПЕРВОГО класс-токена. `default_cls` — класс, если тег ни одного своего не
+    несёт (нужен `<ul>` без явного `{.cls}`: раньше дефолт `tlist` был отдельной переменной у
+    вызывающего, теперь общий для всех вызовов — заход tihie-polomki, П1)."""
     parts, cls, cls_at = [], [], None
     for tok in tag.split():
         if tok.startswith("@"):
@@ -190,6 +193,8 @@ def _attrs_from_tag(tag):
             cls.append(tok[1:])
     if cls_at is not None:
         parts[cls_at] = 'class="%s"' % " ".join(cls)
+    elif default_cls:
+        parts.append('class="%s"' % default_cls)
     return (" " + " ".join(parts)) if parts else ""
 
 
@@ -237,31 +242,85 @@ def render_inline_md(text, math, acc_tag="b"):
 
 def render_md(text, math, acc_tag="b"):
     """content/*.md → HTML зон текста (DESIGN §7 / SLIDE-FORMAT.md). Пустая строка = абзац <p>.
-    Ведущий тег {@N}/{.cls} → сцена/класс абзаца. Блок «- » (с опц. {.cls} над ним) → <ul>.
+    Ведущий тег {@N}/{.cls} → сцена/класс БЛОКА (абзаца ИЛИ списка целиком — заход tihie-polomki,
+    П1: раньше тег снимался только с абзаца, список под ним схлопывался в текст, потому что
+    отдельная узкая проверка `{.cls}`-строки не понимала `@N`). Блок «- » → <ul>.
     Перенос внутри абзаца: '\\' на конце строки → <br>, иначе пробел. $tex$ → кэш. HTML — как есть."""
     out = []
     for block in re.split(r"\n\s*\n", text.strip("\n")):
         lines = [ln.strip() for ln in block.split("\n") if ln.strip()]
         if not lines:
             continue
-        # список с опциональным классом-тегом {.cls} над ним
-        ul_cls, body = "tlist", lines
-        mcls = re.match(r"^\{\.([\w-]+)\}$", lines[0])
-        if mcls and len(lines) > 1 and all(l.startswith("- ") for l in lines[1:]):
-            ul_cls, body = mcls.group(1), lines[1:]
-        if all(l.startswith("- ") for l in body):
-            items = "".join("<li>%s</li>" % render_inline_md(l[2:].strip(), math, acc_tag) for l in body)
-            out.append('<ul class="%s">%s</ul>' % (ul_cls, items))
-            continue
-        # абзац: ведущая аннотация {@N}/{.cls}?
-        attrs = ""
+        # тег в начале блока снимается ОДИН раз, до развилки список/абзац — он
+        # свойство блока целиком, не абзаца отдельно от списка
+        tag, body = None, lines
         m = SCENE_PREFIX.match(lines[0])
         if m:
-            attrs = _attrs_from_tag(m.group(1))
-            lines[0] = lines[0][m.end():]
-            lines = [l for l in lines if l != ""] or [""]
-        out.append("<p%s>%s</p>" % (attrs, render_inline_md(_join_lines(lines), math, acc_tag)))
+            tag = m.group(1)
+            rest = lines[0][m.end():]
+            if rest.strip() == "":
+                body = lines[1:] or [""]
+            else:
+                body = [rest] + lines[1:]
+        if all(l.startswith("- ") for l in body):
+            attrs = _attrs_from_tag(tag or "", default_cls="tlist")
+            items = "".join("<li>%s</li>" % render_inline_md(l[2:].strip(), math, acc_tag) for l in body)
+            out.append('<ul%s>%s</ul>' % (attrs, items))
+            continue
+        attrs = _attrs_from_tag(tag) if tag is not None else ""
+        out.append("<p%s>%s</p>" % (attrs, render_inline_md(_join_lines(body), math, acc_tag)))
     return "\n".join(out)
+
+
+# ───────────────────────── словарь классов {.имя} (заход tihie-polomki, П2) ─────────────────────────
+# `{.tlsit}` вместо `{.tlist}` рендерился обычным классом молча — гейт зелёный, класс без стиля.
+# Словарь СОБИРАЕТСЯ из файлов (не пишется списком в коде — список разошёлся бы со скелетом через
+# неделю): класс-селекторы `skeleton/base.css` (канон-CSS тела карточки, читается всеми пайплайнами)
+# + `GLOBAL_CSS` из `sborka/tipy.py`, импортированный (не regex по .py — там `.get()/.split()` дали
+# бы мусорные «классы» вроде `get`/`split`; `tipy.py` не импортирует ничего из `build_deck.py`,
+# цикла не будет — тот же приём, каким `slaid.py`/`deck.py` уже читают `GLOBAL_CSS`).
+CSS_CLASS_RE = re.compile(r"\.([A-Za-z_][\w-]*)")
+
+
+CSS_COMMENT_RE = re.compile(r"/\*.*?\*/", re.S)
+
+
+@lru_cache(maxsize=1)
+def known_classes():
+    """Комментарии CSS вырезаются ДО разбора: в них живая проза («engine.js», «sborka/deck.py»)
+    даёт `.js`/`.py`-мусор в CSS_CLASS_RE — не опасно (лишний класс в словаре не даёт ложного
+    красного, только теоретически пропустил бы опечатку, совпавшую с расширением файла), но
+    вырезать дёшево и без него список чище."""
+    generator = Path(__file__).resolve().parent
+    base_css_path = generator / "skeleton" / "base.css"
+    base_css = CSS_COMMENT_RE.sub("", read_text(base_css_path)) if base_css_path.is_file() else ""
+    classes = set(CSS_CLASS_RE.findall(base_css))
+    sborka = generator / "sborka"
+    if str(sborka) not in sys.path:
+        sys.path.insert(0, str(sborka))
+    from tipy import GLOBAL_CSS  # noqa: E402  (read-only импорт, см. докстроку выше)
+    classes |= set(CSS_CLASS_RE.findall(GLOBAL_CSS))
+    return classes
+
+
+# `{.имя}` — ТОЛЬКО ведущий тег блока (та же позиция, что ищет `SCENE_PREFIX` в `render_md`);
+# инлайн-формы `{@N|…}`/`{fill@N|…}`/`{blur@N|…}` (`render_inline_md`) класса не несут вовсе —
+# проверено по их regex'ам, там нет `.`-токена. Строка считается от НАЧАЛА переданного текста
+# (`text`), а не исходного файла — вызывающий не глотает нумерацию, он и сам сырой текст карточки.
+LEADING_TAG_RE = re.compile(r"^\{([^}|]*)\}", re.M)
+
+
+def find_unknown_classes(text, known):
+    """Сырой markdown (ДО render_md) → [(имя_класса, номер_строки), …] для классов вне `known`."""
+    problems = []
+    for m in LEADING_TAG_RE.finditer(text):
+        for tok in m.group(1).split():
+            if tok.startswith("."):
+                name = tok[1:]
+                if name not in known:
+                    line = text[:m.start()].count("\n") + 1
+                    problems.append((name, line))
+    return problems
 
 
 # ───────────────────────── порождение служебных слайдов ─────────────────────────
@@ -377,9 +436,15 @@ def load_source(src):
     math = json.loads(read_text(math_path)) if math_path.is_file() else {}
 
     names["content"] = []
+    names["content_raw"] = {}
     for p in sorted((src / "content").glob("*.md")) if (src / "content").is_dir() else []:
-        filemap["{{MD:%s}}" % p.stem] = render_md(read_text(p), math, meta.get("accent_tag", "b"))
+        raw = read_text(p)
+        filemap["{{MD:%s}}" % p.stem] = render_md(raw, math, meta.get("accent_tag", "b"))
         names["content"].append(p.stem)
+        # сырой текст — для П2-проверки {.имя} в lint() (заход tihie-polomki): она смотрит
+        # именно на авторские теги блока, а не на весь HTML (там ещё классы KaTeX и дословный
+        # HTML контента — не тег {.имя}, лезть в них было бы неверным охватом проверки).
+        names["content_raw"][p.stem] = raw
 
     # Канон-CSS служебных слайдов — по требованию шаблона (у деков, собранных до
     # перехода на порождение, плейсхолдера нет, и подстановка их не касается).
@@ -450,6 +515,30 @@ def lint(shablon, filemap, meta, names):
     # 1b. все $tex$ из content нашли рендер в кэше формул math/katex.json
     for tex in re.findall(r"⟦MISSING-MATH:(.*?)⟧", assembled):
         errors.append("формула $%s$ не в math/katex.json (пересобери harvest_katex.py)" % tex)
+
+    # 1c. {.имя} из content/*.md — сверка со словарём скелета (заход tihie-polomki, П2;
+    # тот же приём, что var(--x) в п.3 ниже: 0 внешнего словаря в коде, только regex по файлам).
+    # 🔴 Смотрим СЫРОЙ текст (`names["content_raw"]`), а не рендер: рендер несёт ЕЩЁ и классы
+    # KaTeX (`.mord`/`.vlist`/…) и дословный HTML контента (докстрока render_md — content/*.md
+    # пишем сами, HTML в них не экранируется), у них class="…" совсем не про тег {.имя} и не
+    # обязан жить в словаре скелета — первый прогон на живых деках дал 1823/6/3/2970 ложных
+    # красных именно по этой причине, пока проверка смотрела на `filemap["{{MD:%s}}"]`.
+    # `render_body` (sborka/formaty.py) закрывает эту же дыру для НОВОГО пайплайна живым
+    # исключением с номером строки; здесь — старый пайплайн, номера строки нет (как и у
+    # соседней проверки var(--x) ниже).
+    # 🔴 Деки старого пайплайна (buffon/dandelin/fibonacci — до перехода на канон-скелет)
+    # несут СВОЙ CSS прямо в `<style>` шаблона (`#sl-vizitka .bullets`, `.slide .t-body p.eq`
+    # и т.п.) — классы оттуда тоже законные, не только словарь скелета. Без этой строки первый
+    # прогон на живых деках дал 7+3 ложных красных (buffon/fibonacci) на классах, которые есть
+    # и стилизованы, просто не в skeleton/base.css. Источник — САМ `shablon` этого дека, тот же
+    # приём «из файлов, не из головы».
+    deck_css = "".join(re.findall(r"<style\b[^>]*>(.*?)</style>", shablon, re.S))
+    known = known_classes() | set(CSS_CLASS_RE.findall(CSS_COMMENT_RE.sub("", deck_css)))
+    for name, raw in names.get("content_raw", {}).items():
+        for cls, _line in find_unknown_classes(raw, known):
+            errors.append("content/%s.md: класс '.%s' не найден в словаре скелета "
+                          "(base.css + tipy.py:GLOBAL_CSS) — опечатка в {.имя}?"
+                          % (name, cls))
 
     # 2. data-ill / data-iframe → файл существует
     ill_names = set(names.get("illustrations", []))

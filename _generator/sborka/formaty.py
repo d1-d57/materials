@@ -56,7 +56,8 @@ from pathlib import Path
 _GENERATOR = Path(__file__).resolve().parents[1]
 if str(_GENERATOR) not in sys.path:
     sys.path.insert(0, str(_GENERATOR))
-from build_deck import render_md, render_inline_md  # noqa: E402  (read-only импорт, см. докстроку)
+from build_deck import (render_md, render_inline_md,  # noqa: E402  (read-only импорт, см. докстроку)
+                         known_classes, find_unknown_classes)
 
 import bloki  # noqa: E402
 
@@ -208,13 +209,29 @@ def parse_slide(text, sid="?"):
     return params, body_md
 
 
-def render_body(body_md, acc_tag="span", math=None):
+def render_body(body_md, acc_tag="span", math=None, sid=None):
     """markdown тела (уже плоский, после `parse_slide`/`bloki.render_section_markdown`)
     → HTML. `math` — кэш формул KaTeX (Э5 захода solver-vmeshcheniya: подключён к
     новому пути, приём тот же, что `build_deck.py` уже применяет для каскада сцен —
     просто читает `<лекция>/math/katex.json`, если он есть). Без кэша (`math=None`
     или формулы в нём нет) — видимый маркер `⟦MISSING-MATH:...⟧` (НАМЕРЕННО, лучше
-    кричащий пробел, чем молча съеденная формула)."""
+    кричащий пробел, чем молча съеденная формула).
+
+    🔴 Опечатка в `{.имя}` (заход tihie-polomki, П2): раньше `_attrs_from_tag` брала
+    ЛЮБУЮ строку после точки, не проверяя её ни против чего — `{.tlsit}` рендерился
+    обычным классом без стиля, все гейты зелёные. Проверка ЗДЕСЬ, до `render_md`, а
+    не в `build_deck.py:lint()` — `lint()` гейтует только СТАРЫЙ пайплайн
+    (`load_source`/`assemble`), а `render_body` — единственная точка, через которую
+    и `slaid.py`, и `deck.py` пропускают тело КАЖДОЙ карточки нового пайплайна; здесь
+    же есть сырой markdown с реальными номерами строк, которых уже нет у отрендеренного
+    HTML в `lint()`."""
     if not body_md.strip():
         return ""
+    unknown = find_unknown_classes(body_md, known_classes())
+    if unknown:
+        name, line = unknown[0]
+        raise FormatSlaida(
+            "%sкласс '.%s' не найден в словаре скелета (строка %d тела карточки) — "
+            "опечатка в {.имя}? Список классов: base.css + tipy.py:GLOBAL_CSS."
+            % ("слайд %s: " % sid if sid else "", name, line))
     return render_md(body_md, math or {}, acc_tag)

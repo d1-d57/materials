@@ -97,7 +97,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     # lekcija_dir = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция> (тот же
     # расчёт, что ниже для illustrations_dir по умолчанию)
     math = load_math_cache(slide_path.parents[2])
-    body_html = render_body(body_md, acc_tag=acc_tag, math=math)
+    body_html = render_body(body_md, acc_tag=acc_tag, math=math, sid=sid)
     css, slide_html = compile_tip(sid, params, body_html)
     # 🔴 БЕЗ `data-scenes` движок (`scenesOf`, engine.js) считает слайд односценовым
     # безусловно, и БЕЗ порождённого каскада (`{{SCENE_CASCADE}}`) правило
