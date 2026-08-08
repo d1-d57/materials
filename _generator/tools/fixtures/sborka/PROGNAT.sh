@@ -783,4 +783,60 @@ OUT32F2=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
   echo "❌ ЛОВУШКА 32: настоящее тело — --faza 1 покраснел:"; echo "$OUT32F2"; exit 1; }
 echo "  ✅ ловушка 32: тело-заглушка — полный красный/faza1 зелёный; настоящее тело — оба зелёные"
 
+echo "── ловушка 33: 🔴 Д17 (заход tihie-polomki, П1) — тег сцены над списком не рушит его в абзац"
+OUT33=$(python3 - <<'PY'
+import sys
+sys.path.insert(0, "_generator")
+from build_deck import render_md
+html = render_md('{@3}\n- раз\n- два', {}, None)
+print(html)
+sys.exit(0 if ('<ul' in html and html.count('<li>') == 2 and 'data-scene-from="3"' in html) else 1)
+PY
+)
+RC33=$?
+[ "$RC33" -eq 0 ] || {
+  echo "❌ ЛОВУШКА 33: список под тегом сцены схлопнулся в абзац (Д17 регрессия):"
+  echo "$OUT33"; exit 1; }
+echo "  ✅ ловушка 33: {@3}+список → <ul> с data-scene-from=\"3\" и двумя <li>: $OUT33"
+
+echo "── ловушка 34: 🔴 (заход tihie-polomki, П2) — опечатка в {.имя} даёт красное поимённо, rc≠0"
+L34="$T/lek34"
+python3 "$SBORKA/bootstrap_lekcii.py" "$L34" >/dev/null
+python3 - "$L34" <<'PY'
+import sys
+p = sys.argv[1] + "/brief.md"
+t = open(p, encoding="utf-8").read()
+t = t.replace("slide_order:\n", "slide_order:\n  - s01\n")
+open(p, "w", encoding="utf-8").write(t)
+PY
+python3 "$SBORKA/bootstrap_lekcii.py" "$L34" >/dev/null
+python3 -c "$ZAP_VALS_PY" "$L34" s01
+python3 - "$L34" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8")
+t = t.replace(
+    "## Текст слайда — сжато\n### [narrativ] заполнить\nзаполнить",
+    "## Текст слайда — сжато\n### [narrativ] завязка\n{.tlsit}\n- раз\n- два")
+p.write_text(t, encoding="utf-8")
+PY
+OUT34A=$(python3 "$SBORKA/slaid.py" "$L34/slajdy/s01" -o "$T/s01-bad.html" 2>&1) && {
+  echo "❌ ЛОВУШКА 34: {.tlsit} (опечатка) прошла молча, rc=0:"; echo "$OUT34A"; exit 1; }
+echo "$OUT34A" | grep -q "tlsit" || {
+  echo "❌ ЛОВУШКА 34: гейт покраснел, но не поимённо на классе tlsit:"; echo "$OUT34A"; exit 1; }
+echo "$OUT34A" | grep -q "строка" || {
+  echo "❌ ЛОВУШКА 34: гейт покраснел, но без номера строки (П2-критерий требует именно его):"
+  echo "$OUT34A"; exit 1; }
+echo "  ✅ ловушка 34а: {.tlsit} — красное поимённо, с номером строки, rc≠0"
+python3 - "$L34" <<'PY'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+p.write_text(p.read_text(encoding="utf-8").replace("{.tlsit}", "{.tlist}"), encoding="utf-8")
+PY
+OUT34B=$(python3 "$SBORKA/slaid.py" "$L34/slajdy/s01" -o "$T/s01-good.html" 2>&1) || {
+  echo "❌ ЛОВУШКА 34: {.tlist} (правильный класс) НЕ прошла:"; echo "$OUT34B"; exit 1; }
+echo "  ✅ ловушка 34б: {.tlist} — зелёное, rc=0"
+
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
