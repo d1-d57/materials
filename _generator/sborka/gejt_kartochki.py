@@ -41,7 +41,7 @@ SBORKA = Path(__file__).resolve().parent
 sys.path.insert(0, str(SBORKA))
 from formaty import (parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNIT,  # noqa: E402
                       FormatSlaida, strip_lifecycle_block, FAZA_STROKA_RE,
-                      TIPY_IDEI, TIPY_IDEI_BEZ_SODERZHANIYA, CENTRALNYJ_PERECHISLENIE)
+                      TIPY_IDEI, TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ, CENTRALNYJ_PERECHISLENIE)
 import bloki  # noqa: E402
 
 
@@ -254,20 +254,26 @@ def _check_centralnyj_blok(sid, params, sections):
 # Развилка «выбери и обоснуй» (задание Ф1, пункт 1): слайд типа narrativ/divider
 # может законно ничего не вводить. Решение — НЕ отдельный маркер-заглушка (третий
 # формат сверх уже существующего `CENTRALNYJ_PERECHISLENIE`), а условие «оба поля
-# пусты ОДНОВРЕМЕННО» плюс полное освобождение служебных типов идеи
-# (TIPY_IDEI_BEZ_SODERZHANIYA — divider/cover/vizitka/closing), у которых по
-# определению нет содержания. Подробное обоснование — `## ПЛАН` захода.
+# пусты ОДНОВРЕМЕННО» плюс полное освобождение типов идеи, с которых связей не
+# требуют (TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ — служебные плюс `narrative`).
+# Подробное обоснование — `## ПЛАН` захода.
+#
+# 🔴 Заход svedenie-i-smeta, Э1.4: освобождение было УЖЕ ЗДЕСЬ ОПИСАНО строкой выше
+# («слайд типа narrativ/divider может законно ничего не вводить»), но в коде стоял
+# список одних лишь служебных типов — и `--faza 1` красил `napominanie` и `itog`.
+# Разошлись не правило и код, а комментарий и его же реализация; чинится списком,
+# а не текстом комментария. Цена и список — `formaty.py`.
 def _check_vvodit_opiraetsya(sid, params, faza):
     if faza != 1:
         return []
-    if params.get("tip_idei") in TIPY_IDEI_BEZ_SODERZHANIYA:
+    if params.get("tip_idei") in TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ:
         return []
     if not (params.get("vvodit") or params.get("opiraetsya_na")):
         return ["%s: vvodit и opiraetsya_na пусты одновременно — выход фазы 1 обязан "
                 "решить, что слайд вводит и на что опирается (единственная машинная "
-                "проверка порядка понятий, У12); слайд служебного типа (%s) — "
-                "освобождён, иначе заполни хотя бы одно поле"
-                % (sid, ", ".join(TIPY_IDEI_BEZ_SODERZHANIYA))]
+                "проверка порядка понятий, У12); типы %s освобождены (служебным нечего "
+                "вводить, narrative — вступление/итог), иначе заполни хотя бы одно поле"
+                % (sid, ", ".join(TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ))]
     return []
 
 
