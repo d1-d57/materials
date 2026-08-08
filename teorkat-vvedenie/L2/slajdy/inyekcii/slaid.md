@@ -18,7 +18,7 @@ tip_idei: proof_step
 zachem: первый запрет: тот же инструмент, но теперь он отвечает «нельзя»
 akcent: конструкция с прошлой лекции впервые оказывается запрещённой
 centralnyj_blok: инъекции не продолжаются до функтора
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: vspomogatelnyj
 byudzhet_slov: 45

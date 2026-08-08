@@ -18,7 +18,7 @@ tip_idei: definition
 zachem: вспомнить язык на том, что уже видели, и назвать функтор
 akcent: категория и функтор вводятся одновременно — это один словарь, а не два
 centralnyj_blok: категория и функтор
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: osnovnoj
 byudzhet_slov: 90

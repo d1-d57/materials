@@ -13,12 +13,21 @@
   exit 1 — хотя бы один обрезан
 """
 import argparse
+import re
 import sys
 from pathlib import Path
 
 SBORKA = Path(__file__).resolve().parent
 sys.path.insert(0, str(SBORKA))
 from vmeshchenie import izmerit  # noqa: E402
+
+# 🔴 Найдено живым прогоном (заплатка sborka-l2-fazy-4-7): не у каждого слайда
+# есть текстовая зона — `tip_verstki: polnyj_ekran` с непустым `illustracii`
+# рендерит ТОЛЬКО картинки (`tipy.py: polnyj_ekran`), без `.zone.t-body`. Мерить
+# там нечего — раньше гейт падал `RuntimeError` и ронял ВЕСЬ прогон ради одного
+# бестекстового слайда, даже если он последний в списке. Тот же приём, что уже
+# стоит в `deck.py:_podobrat_tipografiku` — пропуск ДО вызова измерителя.
+T_BODY_RE = re.compile(r'class="[^"]*\bt-body\b[^"]*"')
 
 
 def check_slide(page, html_path):
@@ -37,7 +46,12 @@ def main():
     with sync_playwright() as p:
         b = p.chromium.launch(channel="chrome", headless=True)
         page = b.new_page(viewport={"width": 1440, "height": 810}, device_scale_factor=1)
+        skipped = 0
         for html in args.html:
+            if not T_BODY_RE.search(Path(html).read_text(encoding="utf-8")):
+                print("⚪ БЕЗ ТЕКСТА  %-40s текстовой зоны на слайде нет — не мерю" % html)
+                skipped += 1
+                continue
             r = check_slide(page, html)
             fill = r["fill"]
             clipped = fill is not None and fill > 100
@@ -53,7 +67,8 @@ def main():
             print("  %s — заполнение %.1f%%, не влезает %.1f%% высоты зоны"
                   % (html, fill, fill - 100), file=sys.stderr)
         return 1
-    print("\nГЕЙТ ЗЕЛЁНЫЙ: все %d слайд(ов) влезли." % len(args.html))
+    print("\nГЕЙТ ЗЕЛЁНЫЙ: все %d слайд(ов) с текстом влезли (%d без текстовой зоны — не мерены)."
+          % (len(args.html) - skipped, skipped))
     return 0
 
 

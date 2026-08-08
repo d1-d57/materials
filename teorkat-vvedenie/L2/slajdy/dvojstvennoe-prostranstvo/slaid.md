@@ -18,7 +18,7 @@ tip_idei: definition
 zachem: ввести двойственное пространство через координаты и увидеть, что размерность у него та же
 akcent: координаты — это функции, и они живут в новом пространстве
 centralnyj_blok: координаты вектора — линейные функции
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: osnovnoj
 byudzhet_slov: 50

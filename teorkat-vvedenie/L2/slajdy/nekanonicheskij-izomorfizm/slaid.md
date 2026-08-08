@@ -18,7 +18,7 @@ tip_idei: proof_step
 zachem: показать, что изоморфизма без выбора между V и двойственным не бывает вовсе
 akcent: квадрат, задававший определение, впервые служит орудием запрета
 centralnyj_blok: канонического изоморфизма нет
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 40

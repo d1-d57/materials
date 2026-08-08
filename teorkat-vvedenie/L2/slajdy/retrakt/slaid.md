@@ -18,7 +18,7 @@ tip_idei: definition
 zachem: ввести язык ретракта и посмотреть, в каких категориях он даёт ответ, а в каких нет
 akcent: то, что делали руками дважды, получает язык и становится инструментом
 centralnyj_blok: язык ретракта
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 8
 vazhnost: opornyj
 byudzhet_slov: 70

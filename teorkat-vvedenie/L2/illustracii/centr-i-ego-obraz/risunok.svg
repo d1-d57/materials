@@ -1,4 +1,4 @@
-<svg viewBox="0 0 300 200" width="300" role="img" aria-label="Наверху группа ℤ₂, стрелка в S3 и стрелка знака обратно в ℤ₂, композиция тождественна. Внизу их центры: ℤ₂, единичная группа, ℤ₂, и обратного пути внизу нет">
+<svg viewBox="0 -20 300 290" width="300" role="img" aria-label="Наверху ℤ₂, стрелка s в S₃, стрелка sgn обратно в ℤ₂, дуга сверху над рядом — их композиция тождественна. Внизу центры после функтора: ℤ₂, единичная группа, ℤ₂, дуга снизу показывает, что композиция не может быть тождественной">
 <text class="s-txt" x="30" y="34" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="34" text-anchor="middle" font-size="17">S₃</text><text class="s-txt" x="270" y="34" text-anchor="middle" font-size="17">ℤ₂</text>
 <text class="s-txt" x="30" y="180" text-anchor="middle" font-size="17">ℤ₂</text><text class="s-txt" x="150" y="180" text-anchor="middle" font-size="17">{e}</text><text class="s-txt" x="270" y="180" text-anchor="middle" font-size="17">ℤ₂</text>
 <line class="s-thin" x1="46" y1="29" x2="132" y2="29"></line><path class="s-ar-m" d="M123,25 l9,4 -9,4 z"></path>
@@ -11,6 +11,8 @@
 <text class="s-txt-m" x="89" y="18" text-anchor="middle" font-size="15">s</text><text class="s-txt-m" x="210" y="18" text-anchor="middle" font-size="15">sgn</text>
 <text class="s-txt-m" x="90" y="198" text-anchor="middle" font-size="15">Zs</text><text class="s-txt-m" x="210" y="198" text-anchor="middle" font-size="15">Zr</text>
 <text class="s-txt-m" x="38" y="106" font-size="15">Z</text><text class="s-txt-m" x="158" y="106" font-size="15">Z</text><text class="s-txt-m" x="278" y="106" font-size="15">Z</text>
-<text class="s-txt-m" x="150" y="62" text-anchor="middle" font-size="14">sgn ∘ s = id</text>
-<text class="s-txt-m" x="150" y="146" text-anchor="middle" font-size="14">= id ?</text>
+<path class="s-line" d="M30,20 C30,-14 270,-14 270,20"></path>
+<text class="s-txt-m" x="150" y="-18" text-anchor="middle" font-size="14">id</text>
+<path class="s-line" d="M30,206 C30,240 270,240 270,206"></path>
+<text class="s-txt-m" x="150" y="254" text-anchor="middle" font-size="14">≠ id</text>
 </svg>

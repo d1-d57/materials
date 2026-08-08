@@ -18,7 +18,7 @@ tip_idei: proof_step
 zachem: ответить на вопрос, для которого прямого критерия нет, — инструментом
 akcent: петли различают диск и окружность — и этим запрещают ретракцию
 centralnyj_blok: диск не садится на свою границу
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 8
 vazhnost: osnovnoj
 byudzhet_slov: 45

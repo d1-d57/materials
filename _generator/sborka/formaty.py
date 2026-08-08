@@ -265,3 +265,21 @@ def render_body(body_md, acc_tag="span", math=None, sid=None):
             "опечатка в {.имя}? Список классов: base.css + tipy.py:GLOBAL_CSS."
             % ("слайд %s: " % sid if sid else "", name, line))
     return render_md(body_md, math or {}, acc_tag)
+
+
+MISSING_MATH_RE = re.compile(r"⟦MISSING-MATH:(.*?)⟧")
+
+
+def check_no_missing_math(html, sid, lekcija_dir):
+    """`html` несёт `⟦MISSING-MATH:…⟧` → `FormatSlaida` с точной командой чинки
+    (заплатка sborka-l2-fazy-4-7, П3). До этой правки `slaid.py`/`deck.py` собирали
+    HTML с видимым браком МОЛЧА, rc=0 — та же дыра, от которой уже защищён
+    `deck.py` для playwright («деку БЕЗ подбора я не соберу молча»); эта проверка —
+    тот же приём для кэша формул."""
+    missing = sorted(set(MISSING_MATH_RE.findall(html)))
+    if missing:
+        raise FormatSlaida(
+            "слайд %s: %d формул(ы) нет в кэше math/katex.json — соберите кэш: "
+            "`node _generator/sborka/kesh_formul.js %s`. Не отрендерено: %s"
+            % (sid, len(missing), lekcija_dir,
+               "; ".join("$%s$" % t for t in missing[:5]) + (" …" if len(missing) > 5 else "")))
