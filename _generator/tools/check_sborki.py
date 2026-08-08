@@ -768,6 +768,25 @@ def check_s3_puti(z, pr, zahod_path):
         return any(golyj == zp.rstrip('/') or zp.rstrip('/').endswith('/' + golyj)
                    or golyj.endswith('/' + zp.rstrip('/')) for zp in zona_puti)
 
+    # 🔴 Г2 (заход `gejty-vrut`). Путь вида `../<репо>-wt/<имя>` в КОНТРАКТЕ ЗОНЫ —
+    # не адрес на диске, а ОБЕЩАНИЕ: `git_zona.py worktree add <имя>` заводит эту
+    # папку ПЕРВЫМ ХОДОМ исполнителя (см. `WT_HOME / args.name` в `git_zona.py`),
+    # и в момент проверки её по построению ещё нет. Урок 45 (путь, названный
+    # адресом работы, обязан существовать) здесь неприменим: заход сам объявляет,
+    # что заведёт эту папку. Оговорка узкая — НЕ гасит С3 на битых путях: без
+    # парного `worktree add <то же имя>` в тексте токен остаётся обычным
+    # непроверенным путём и краснеет по-старому.
+    # `<репо>` — не литерал «materials»: `glavnyj_repo().name`, тот же приём, что
+    # уже живёт в С2/С3 для путей соседних репозиториев.
+    WORKTREE_OBESHCHANIE_RE = re.compile(r'^\.\./([\w.-]+)-wt/([\w.-]+)/?$')
+
+    def worktree_obeshchanie(tok):
+        m = WORKTREE_OBESHCHANIE_RE.match(tok)
+        if not m or m.group(1) != glavnyj_repo().name:
+            return False
+        imya = m.group(2)
+        return bool(re.search(rf'worktree\s+add\s+{re.escape(imya)}\b', z))
+
     proverennye, v_proze = {}, []
     for tok, poz in puti(z):
         if tok in imena_vetok or tok.rstrip('/') in imena_vetok:
@@ -785,6 +804,12 @@ def check_s3_puti(z, pr, zahod_path):
         if put_zony(tok):
             msgs.append(("⚠", "С3", f"путь зоны `{tok}` не существует — законно, если "
                                      f"его создаёт сам заход"))
+            continue
+        if worktree_obeshchanie(tok):
+            msgs.append(("⚠", "С3", f"путь `{tok}` — обещание worktree (заход сам зовёт "
+                                     f"`worktree add` под этим именем первым ходом), не "
+                                     f"адрес на диске; легитимно не существовать сейчас "
+                                     f"(Г2)"))
             continue
         if not any(a <= poz < b for a, b in adresnye):
             v_proze.append(tok)
