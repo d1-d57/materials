@@ -30,10 +30,14 @@
 верификатора-субагента (стилевое), этот гейт — счётную проверку; расхождение названо в `SKILL.md`
 рядом со старой строкой, не тихо переопределено.
 
-Свой минимальный парсер шапки слайда и `zakaz.md` — НЕ импортирует `_generator/sborka/formaty.py`
-(чужая зона, правится параллельным заходом `format-kartochki-faza-1`); нужно только поле
-`illustracii:` в инлайн-списке — единственная форма, которую `SKILL.md:494-498` объявляет
-легальной для списковых полей карточки.
+Свой минимальный парсер шапки слайда и `zakaz.md` — НЕ импортирует `_generator/sborka/formaty.py`.
+Причина «чужая зона, правится параллельным заходом `format-kartochki-faza-1`» отпала: та ветка
+влита. Осталась другая, более твёрдая — `formaty.py` тянет за собой `build_deck`/`bloki` (рендер
+и разбор блоков), а этот гейт держит идиому «stdlib, без сторонних зависимостей» из абзаца ниже;
+импорт `formaty` привязал бы зелёный/красный этого гейта к состоянию совсем другого куска сборки.
+Нужно только срезать lifecycle-блок и прочитать поле `illustracii:` в инлайн-списке — единственная
+форма, которую `SKILL.md:494-498` объявляет легальной для списковых полей карточки; для этого
+достаточно той же регулярки, что и в `formaty.LIFECYCLE_RE`, продублированной здесь одной строкой.
 
 Идиома семьи (`_generator/DVIZHKI.md`): stdlib, детерминизм, без сети и pip, `exit 1` при красном.
 
@@ -55,17 +59,27 @@ ZAGLUSHKA = "заполнить"
 
 FRONT_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 ILL_RE = re.compile(r"^illustracii:\s*\[(.*)\]\s*$")
+# та же форма, что `formaty.LIFECYCLE_RE` — карточка нового формата (bootstrap_lekcii.py)
+# несёт этот HTML-комментарий СТРОГО перед шапкой; см. докстринг выше про дубликат.
+LIFECYCLE_RE = re.compile(r"^<!--(.*?)-->\s*", re.S)
 
 
 def _read(p):
     return p.read_text(encoding="utf-8")
 
 
+def _strip_lifecycle(text):
+    """Срезает вшитый bootstrap_lekcii.py блок «что дальше», если он есть. Карточка
+    старого формата (блока нет) возвращается без изменений — обратная совместимость."""
+    m = LIFECYCLE_RE.match(text)
+    return text[m.end():] if m else text
+
+
 def slide_illustracii(slaid_path):
     """slaid.md → список имён из поля `illustracii:` (инлайн-список), уже нормализованных
     через stem — так же, как компилятор `_generator/sborka/slaid.py:load_illustrations`
     нормализует имя файла до имени папки пула."""
-    text = _read(slaid_path)
+    text = _strip_lifecycle(_read(slaid_path))
     m = FRONT_RE.match(text)
     if not m:
         raise SystemExit("%s: нет YAML-шапки (---...---)" % slaid_path)
