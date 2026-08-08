@@ -195,8 +195,17 @@ def ensure_worktree(name, branch):
             return path, 1
         print(f"Рабочая папка уже есть, беру её: {path} (ветка `{stoit}` сходится)")
         return path, 0
+    # 🔴 `cwd=REPO_ROOT` ОБЯЗАТЕЛЕН (заход `gejty-vrut`, побочный эффект починки
+    # Г3). `git_zona.py` теперь резолвит СВОЙ репозиторий по МЕСТУ ВЫЗОВА
+    # (`git rev-parse --show-toplevel` от cwd), а не по расположению файла —
+    # без явного `cwd` дочерний процесс наследует cwd ЭТОГО скрипта, который
+    # может стоять где угодно (например, в фикстуре, копирующей инструменты в
+    # одноразовый репозиторий и зовущей `bootstrap_zahod.py` из боевой папки).
+    # Тогда worktree завёлся бы в чужом дереве молча — ровно тот класс дефекта,
+    # который Г3 и чинит.
     r = subprocess.run([sys.executable, str(GIT_ZONA), "worktree", "add", name,
-                        "--branch", branch], capture_output=True, text=True)
+                        "--branch", branch], cwd=REPO_ROOT,
+                       capture_output=True, text=True)
     print(r.stdout.strip() or r.stderr.strip())
     if r.returncode != 0:
         print("ОШИБКА: рабочая папка не завелась — заход НЕ создаю.", file=sys.stderr)

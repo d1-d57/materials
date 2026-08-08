@@ -1033,7 +1033,15 @@ V=$(git -C "$T29" for-each-ref --format='%(refname)' refs/heads/main | wc -l | t
 T32=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22" "$T6" "$T25" "$O25" "$T29" "$O29" "$T32"' EXIT
 mkdir -p "$T32/_generator/tools" "$T32/arka" "$T32/zona"
-cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/zakryt_sessiyu.py" "$TOOLS/korni.py" "$T32/_generator/tools/"
+# 🔴 Г4 (заход `gejty-vrut`). ДВЕ пропущенные копии, найденные ПОСЛЕДОВАТЕЛЬНО
+# прямым ручным прогоном (см. ОТЧЁТ захода): `priyomka.py` импортирует
+# `dostavit_urok` (Г8, разбор очереди), а тот сам импортирует `check_uroki`.
+# Ни один не копировался в изолированную папку фикстуры — любой вызов падал
+# `ModuleNotFoundError` ДО единой строки полезного вывода, и обе ловушки ниже
+# были красны НЕЗАВИСИМО от кода приёмки: они грепают вывод краша, а не
+# вердикт. Без починки — трейсбек до `check_uroki`, с ней — осмысленный вывод.
+cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/dostavit_urok.py" \
+   "$TOOLS/check_uroki.py" "$TOOLS/zakryt_sessiyu.py" "$TOOLS/korni.py" "$T32/_generator/tools/"
 cd "$T32"
 git init -q .
 git config user.email fixture@test
@@ -1527,5 +1535,57 @@ PY
 then echo "  ✅ ловушка 41: branch_loss самоисцеляется на разовой гонке и честно метит постоянную"
 else echo "  ❌ ГОНКА В branch_loss: вердикт по ветке падает молча — см. вывод выше"; FAIL=1
 fi
+
+# ── ЛОВУШКА 42: 🔴 РЕПОЗИТОРИЙ — ПО МЕСТУ ВЫЗОВА (cwd), А НЕ ПО ФАЙЛУ ИНСТРУМЕНТА ──
+# Заход `gejty-vrut`, дефект Г3. `REPO` резолвился через `korni.REPO`, а тот —
+# через `Path(__file__).resolve().parents[2]`: расположение САМОГО ФАЙЛА
+# `git_zona.py`, а не текущий каталог. Позванный АБСОЛЮТНЫМ путём из ОСНОВНОЙ
+# папки, стоя в worktree (ровно то, что велит делать каждый заход: `python3
+# <корень>/_generator/tools/git_zona.py check`), инструмент молча резолвил
+# ОСНОВНУЮ папку и проверял ЕЁ — `check --zone` — первый гейт приёмки, и
+# инструмент, который меряет не то дерево, делает приёмку декоративной.
+# Ниже — настоящий `git worktree`: ОДИН тмп-репозиторий с ДВУМЯ рабочими
+# копиями (главная T42 и worktree T42-wt), в каждой свой untracked-файл;
+# инструмент зовётся АБСОЛЮТНЫМ путём из T42, а `cwd` — T42-wt. Обязан увидеть
+# worktree, не главную копию, и ОБЯЗАН НАПЕЧАТАТЬ, что именно проверяет —
+# печать объявлена частью починки, не факультативом.
+T42=$(mktemp -d)
+git init -q -b osnova "$T42"
+git -C "$T42" config user.email fixture@test; git -C "$T42" config user.name fixture
+mkdir -p "$T42/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T42/_generator/tools/"
+echo "baza" > "$T42/f.txt"
+git -C "$T42" add -A; git -C "$T42" commit -qm baza
+git -C "$T42" worktree add -q "$T42-wt" -b rabota >/dev/null 2>&1
+echo "tolko-glavnaya" > "$T42/main-only.txt"
+echo "tolko-worktree" > "$T42-wt/worktree-only.txt"
+OUT42=$(cd "$T42-wt" && env -u GIT_ZONA_REPO python3 "$T42/_generator/tools/git_zona.py" check 2>&1) || true
+if echo "$OUT42" | grep -qF "$T42-wt" \
+   && echo "$OUT42" | grep -q "worktree-only.txt" \
+   && ! echo "$OUT42" | grep -q "main-only.txt"
+then echo "  ✅ ловушка 42: repo резолвится по cwd (worktree), сам себя называет, чужого untracked не видит"
+else echo "  ❌ РЕЗОЛВ РЕПО ПО ФАЙЛУ, НЕ ПО CWD (Г3): см. вывод — $OUT42"; FAIL=1
+fi
+git -C "$T42" worktree remove --force "$T42-wt" >/dev/null 2>&1 || true
+rm -rf "$T42" "$T42-wt"
+
+# ── ЛОВУШКА 43: GIT_ZONA_REPO ПО-ПРЕЖНЕМУ ПРИОРИТЕТНЕЕ cwd (дверь фикстур) ──
+# Регресс к ловушке 42: починка Г3 не должна отбирать у тестового окружения
+# способ указать репозиторий явно — иначе ломаются ВСЕ остальные ловушки этого
+# файла, которые выставляют `GIT_ZONA_REPO="$T"` перед каждым вызовом.
+T43=$(mktemp -d)
+git init -q -b osnova "$T43"
+git -C "$T43" config user.email fixture@test; git -C "$T43" config user.name fixture
+mkdir -p "$T43/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T43/_generator/tools/"
+echo "baza" > "$T43/f.txt"
+git -C "$T43" add -A; git -C "$T43" commit -qm baza
+echo "tolko-t43" > "$T43/t43-only.txt"
+OUT43=$(cd /tmp && GIT_ZONA_REPO="$T43" python3 "$T43/_generator/tools/git_zona.py" check 2>&1) || true
+if echo "$OUT43" | grep -qF "$T43" && echo "$OUT43" | grep -q "t43-only.txt"
+then echo "  ✅ ловушка 43: GIT_ZONA_REPO по-прежнему перебивает cwd — фикстуры не пострадали"
+else echo "  ❌ GIT_ZONA_REPO ПЕРЕСТАЛ РАБОТАТЬ: см. вывод — $OUT43"; FAIL=1
+fi
+rm -rf "$T43"
 
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }

@@ -68,7 +68,35 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import korni  # noqa: E402
 
-REPO = korni.REPO
+
+def _resolve_repo():
+    """Репозиторий по МЕСТУ ВЫЗОВА (`cwd`), а не по расположению файла инструмента.
+
+    🔴 Заход `gejty-vrut`, дефект Г3. `korni.REPO` резолвится через `Path(__file__)
+    .resolve().parents[2]` — расположение САМОГО ФАЙЛА `korni.py`. Позванный
+    АБСОЛЮТНЫМ путём из основной папки, стоя в worktree (ровно так, как велит
+    делать каждый заход: `python3 <корень>/_generator/tools/git_zona.py check`),
+    инструмент резолвит путь к main-репозиторию и МОЛЧА проверяет его, а не ту
+    рабочую копию, в которой стоит исполнитель. `check --zone` — первый гейт
+    приёмки: инструмент, который меряет не то дерево, делает приёмку декоративной.
+    `korni.py` этой правкой не тронут — он общий с другими инструментами
+    (`check_sborki.py`, `register_doc.py`, …), и часть их фикстур опирается на его
+    резолв через `__file__`; здесь резолв СВОЙ, только для `git_zona.py`.
+    `GIT_ZONA_REPO` остаётся приоритетным безусловно — это дверь тестовых
+    фикстур (`fixtures/git_zona/PROGNAT.sh` и другие), они выставляют её на
+    каждый вызов, и это поведение здесь не меняется.
+    """
+    override = os.environ.get("GIT_ZONA_REPO")
+    if override:
+        return Path(override)
+    r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--show-toplevel"],
+                       capture_output=True, text=True)
+    if r.returncode == 0 and r.stdout.strip():
+        return Path(r.stdout.strip())
+    return korni.REPO  # не git-дерево или git не ответил — прежнее поведение
+
+
+REPO = _resolve_repo()
 # Черновик плана и автолог инцидентов — у ИНФРА-корня реестра, а не у литерала
 # `_studio`. Индекс git у репозитория один, значит и они одни; но при выносе
 # фабрик их переезд обязан быть одной строкой реестра, а не поиском литерала.
@@ -1669,6 +1697,11 @@ def cmd_clean(args):
 
 
 def cmd_check(args):
+    # 🔴 Печать ОБЯЗАТЕЛЬНА (Г3, `gejty-vrut`): молчаливая правильность
+    # неотличима от молчаливой ошибки. `check --zone` — первый гейт приёмки,
+    # и по этой строке видно, что он вообще смотрит на то дерево, что нужно.
+    branch = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip() or "?"
+    print(f"🔎 Репозиторий: {REPO} · ветка: {branch}")
     rows = dirty(args.zone)
     where = f"зона {args.zone}" if args.zone else "всё дерево"
     if not rows:
