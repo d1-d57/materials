@@ -1,0 +1,14 @@
+<svg viewBox="0 0 420 150" width="420" role="img" aria-label="Слева точка на плоскости и её запись комплексным числом, справа многочлен и набор его коэффициентов">
+<line class="s-thin" x1="20" y1="120" x2="140" y2="120"/><line class="s-thin" x1="40" y1="135" x2="40" y2="25"/>
+<line class="s-dash" x1="40" y1="55" x2="105" y2="55"/><line class="s-dash" x1="105" y1="55" x2="105" y2="120"/>
+<circle class="s-node-a" cx="105" cy="55" r="4"/>
+<text class="s-txt" x="112" y="48">x+iy</text>
+<text class="s-txt-m" x="105" y="136" text-anchor="middle">x</text>
+<text class="s-txt-m" x="28" y="59" text-anchor="end">y</text>
+<line class="s-line" x1="160" y1="72" x2="196" y2="72"/><path class="s-ar-m" d="M194,68 l9,4 -9,4 z"/>
+<text class="s-txt" x="212" y="78">(x, y)</text>
+<line class="s-thin" x1="270" y1="25" x2="270" y2="130"/>
+<text class="s-txt" x="288" y="60">a₀ + a₁x + … + aₙxⁿ</text>
+<line class="s-line" x1="300" y1="80" x2="336" y2="80"/><path class="s-ar-m" d="M334,76 l9,4 -9,4 z"/>
+<text class="s-txt" x="288" y="108">(a₀, a₁, …, aₙ)</text>
+</svg>

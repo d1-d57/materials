@@ -1,0 +1,15 @@
+<svg viewBox="0 0 240 250" width="240" role="img" aria-label="Два вектора из одной точки, достроенный на них параллелограмм и диагональ; ниже тот же вектор, растянутый вдвое">
+<circle class="s-node-r" cx="40" cy="140" r="3.4"/>
+<line class="s-thin" x1="150" y1="40" x2="190" y2="90"/><line class="s-thin" x1="80" y1="90" x2="190" y2="90"/>
+<line class="s-line" x1="40" y1="140" x2="150" y2="40"/><path class="s-ar-m" d="M147,47 L143,39 L154,37 z"/>
+<line class="s-line" x1="40" y1="140" x2="80" y2="90"/><path class="s-ar-m" d="M78,97 L73,90 L83,86 z"/>
+<line class="s-accent" x1="40" y1="140" x2="190" y2="90"/><path class="s-ar-a" d="M187,96 L183,88 L194,86 z"/>
+<text class="s-txt-m" x="96" y="76" text-anchor="middle">u</text>
+<text class="s-txt-m" x="156" y="30" text-anchor="middle">v</text>
+<text class="s-txt" x="198" y="86">u+v</text>
+<line class="s-line" x1="40" y1="225" x2="86" y2="167"/><path class="s-ar-m" d="M84,174 L79,167 L89,163 z"/>
+<line class="s-dash" x1="86" y1="167" x2="132" y2="109"/><path class="s-ar-a" d="M130,116 L125,109 L135,105 z"/>
+<circle class="s-node-r" cx="40" cy="225" r="3.4"/>
+<text class="s-txt-m" x="96" y="205" text-anchor="middle">v</text>
+<text class="s-txt" x="138" y="106">2v</text>
+</svg>
