@@ -105,12 +105,20 @@ _JS_SHRIFT = r"""
   // Меряется НЕ по готовым абзацам (там перенос уже случился и последняя
   // строка короче — среднее поехало бы), а одной неразрывной пробной строкой
   // в ТОЙ ЖЕ зоне, тем же шрифтом и кеглем: ширина / число знаков / кегль.
-  const probe = document.createElement('span');
-  probe.style.cssText = 'white-space:pre;position:absolute;visibility:hidden;left:-99999px';
-  probe.textContent = cfg.proba;
-  zone.appendChild(probe);
-  const probeW = probe.getBoundingClientRect().width;
-  probe.remove();
+  function proba_shirina(cls) {
+    const probe = document.createElement('span');
+    probe.style.cssText = 'white-space:pre;position:absolute;visibility:hidden;left:-99999px';
+    if (cls) probe.className = cls;
+    probe.textContent = cfg.proba;
+    zone.appendChild(probe);
+    const w = probe.getBoundingClientRect().width;
+    probe.remove();
+    return w;
+  }
+  const probeW = proba_shirina('');
+  // `.acc{font-weight:700}` (base.css:144) — жирный акцент ШИРЕ обычного знака,
+  // и смета, считавшая его обычным, занижала длину абзаца.
+  const probeAccW = proba_shirina('acc');
 
   const znakW = probeW / cfg.proba.length;
 
@@ -165,6 +173,7 @@ _JS_SHRIFT = r"""
 
   return {kegl_px: kegl, line_height_px: lh, zone_w: zone.clientWidth, zone_h: zone.clientHeight,
           proba_width: probeW, proba_len: cfg.proba.length,
+          k_acc: probeAccW / probeW,
           n_inline: inl.length, n_formula_only: formulaOnly.length,
           formula_lines: formulaLines, inline_ratios: ratios, inline_pary: pary};
 }
@@ -220,6 +229,7 @@ def zamer_konstant(page, lekcija):
     n_inline_vsego = 0
     n_formula_only = 0
     pary = []
+    acc_ratios = []
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / "s.html"
         for md in slides:
@@ -238,12 +248,14 @@ def zamer_konstant(page, lekcija):
             kegl = r["kegl_px"]
             if kegl:
                 znak_ratios.append((r["proba_width"] / r["proba_len"]) / kegl)
+            acc_ratios.append(r["k_acc"])
             disp_ratios.extend(r["formula_lines"])
             inline_nadbavki.extend(r["inline_ratios"])
             pary.extend(r["inline_pary"])
             n_inline_vsego += r["n_inline"]
             n_formula_only += r["n_formula_only"]
-    return {"k_znak": _svodka(znak_ratios), "h_formula": _svodka(disp_ratios),
+    return {"k_znak": _svodka(znak_ratios), "k_acc": _svodka(acc_ratios),
+            "h_formula": _svodka(disp_ratios),
             "k_inline": _svodka(inline_nadbavki),
             "k_inline_podgonka": _podgonka([(L, w) for L, w, _ in pary]),
             "k_glif_podgonka": _podgonka([(g, w) for _, w, g in pary if g]),

@@ -63,6 +63,14 @@ ZAGOLOVOK_PX = 78.44
 # (min=median=max=0.5353): шрифт один, кегль один, мерить больше нечего.
 K_ZNAK = 0.5353
 
+# k_acc — во сколько раз ЖИРНЫЙ акцент (`.acc{font-weight:700}`, base.css:144)
+# шире обычного знака той же пробы: 1.0658, n=14, разброс нулевой (та же команда,
+# `--konstanty` — это метрика гарнитуры, а не свойство текста слайда).
+# Найдено разбором остаточного расхождения: `vektornye-prostranstva` — абзац с
+# двумя `.acc`, смета 4 строки против браузерных 4.98. Шесть процентов ширины на
+# длинном абзаце — это ровно одна недосчитанная строка.
+K_ACC = 1.0658
+
 # h_formula — высота выносной формулы в долях СТРОКИ. n=8, медиана 1.0159.
 # 🔴 «Выносная формула» здесь — НЕ `$$…$$`: такого синтаксиса в конвейере нет
 # вовсе (`build_deck.render_inline_md` знает ровно `$…$`), и `.katex-display` не
@@ -107,7 +115,9 @@ BLOK_DEFAULT = 26.0
 LI_GAP_PX = 10.0        # `.tlist li + li{margin-top:10px}`
 OP_NEXT_GAP_PX = 4.0    # `.t-body p.op-def + p{margin-top:4px}` (и op-utv/op-task)
 LI_PAD_EM = 1.15        # `.tlist li{padding-left:1.15em}` — сужает строку пункта
-OP_FIRST_EM = 0.18      # `.t-body > p.op-*:first-child{margin-top:.18em}`
+OP_FIRST_EM = 0.18      # `.t-body > p.op-*:first-child{margin-top:.18em}` — em СВОЕГО кегля
+OP_KEGL_EM = 0.80       # `.op-def,.op-utv,.op-task{font-size:.80em}` (base.css:193)
+OP_LH = 1.12            # там же: `line-height:1.12` — своя, не `--lh` зоны
 
 OP_CLASSES = ("op-def", "op-utv", "op-task")
 
@@ -199,6 +209,7 @@ class _ZonaParser(HTMLParser):
         self._zagolovok = False
         self.est_zagolovok = False
         self._lst_depth = None    # глубина открытия .lst (display:block внутри абзаца)
+        self._acc_depth = None    # глубина открытия .acc (жирный — шире обычного)
 
     # ── служебное
     @staticmethod
@@ -212,7 +223,7 @@ class _ZonaParser(HTMLParser):
         # текущий сегмент абзаца и открывает следующий.
         if tag in PUSTYE_TEGI:
             if tag == "br" and self._cur is not None and self._katex_depth is None:
-                self._cur["segmenty"].append(0.0)
+                self._cur["segmenty"].append([])
             return
         self._stack.append(tag)
         d = len(self._stack)
@@ -240,10 +251,13 @@ class _ZonaParser(HTMLParser):
             self.est_zagolovok = True
             return
 
+        if "acc" in kl and self._acc_depth is None:
+            self._acc_depth = d
+
         # ступенька `.lst` — блочная: своя строка, свой отступ слева
         if "lst" in kl and self._cur is not None and self._lst_depth is None:
             self._lst_depth = d
-            self._cur["segmenty"].append(0.0)
+            self._cur["segmenty"].append([])
             self._cur.setdefault("lst", 0)
             self._cur["lst"] += 1
             return
@@ -262,7 +276,15 @@ class _ZonaParser(HTMLParser):
         # блок хранится СЕГМЕНТАМИ: перенос `<br>` и блочная ступенька `.lst`
         # рвут строку принудительно, и суммировать знаки через них нельзя —
         # три коротких физических строки схлопнулись бы в одну расчётную.
-        self._cur = {"tip": tip, "segmenty": [0.0], "klassy": kl, "ul": self._v_ul}
+        # 🔴 Сегмент хранит СПИСОК СЛОВ, а не сумму знаков. Причина — Расхождение 2
+        # верификатора §3: `ceil(знаков / знаков_в_строке)` это НИЖНЯЯ оценка, а не
+        # оценка. Браузер переносит по пробелам и слово пополам не рвёт, поэтому
+        # строка систематически недозаполняется; формула вдобавок неразрывна
+        # (`.katex{white-space:nowrap}`, base.css:191) и уезжает вниз целиком.
+        # Предъявленный контрпример: карточка из одиннадцати слов по 26 знаков —
+        # смета говорила «влезает, запас 4.16 строки», браузер обрезал текст.
+        # Занижение — опасная сторона ошибки: это ПРОПУСК переполнения.
+        self._cur = {"tip": tip, "segmenty": [[]], "klassy": kl, "ul": self._v_ul}
 
     def handle_startendtag(self, tag, attrs):
         """`<br/>` со слэшем. Базовый `HTMLParser` разворачивает его в пару
@@ -285,15 +307,18 @@ class _ZonaParser(HTMLParser):
             n_glif = len(re.sub(r"\s+", "", "".join(self._glify)))
             self._katex_depth = None
             if self._cur is not None:
-                self._cur["segmenty"][-1] += znakov_formuly(n_glif)
+                # формула — ОДНО неразрывное слово (`.katex{white-space:nowrap}`)
+                self._cur["segmenty"][-1].append(znakov_formuly(n_glif))
                 self._cur.setdefault("formul", 0)
                 self._cur["formul"] += 1
                 self._cur.setdefault("glif_len", 0)
                 self._cur["glif_len"] += n_glif
+        elif self._acc_depth is not None and d == self._acc_depth:
+            self._acc_depth = None
         elif self._lst_depth is not None and d == self._lst_depth:
             self._lst_depth = None
             if self._cur is not None:
-                self._cur["segmenty"].append(0.0)
+                self._cur["segmenty"].append([])
         elif self._zagolovok and tag == "div":
             self._zagolovok = False
         elif self._cur is not None and tag == self._cur["tip"]:
@@ -312,7 +337,17 @@ class _ZonaParser(HTMLParser):
                 self._glify.append(data)
             return
         if self._cur is not None:
-            self._cur["segmenty"][-1] += len(data)
+            # текст рвётся на слова по пробелам — ровно так, как это делает вёрстка.
+            # Прилипание к предыдущему слову (`)` после формулы, запятая) — не новое
+            # слово: ведущий пробел его и отличает.
+            seg = self._cur["segmenty"][-1]
+            hvost = not data[:1].isspace()
+            k = K_ACC if self._acc_depth is not None else 1.0
+            for i, slovo in enumerate(data.split()):
+                if i == 0 and hvost and seg:
+                    seg[-1] += len(slovo) * k
+                else:
+                    seg.append(len(slovo) * k)
 
 
 def _bloki_slajda(slide_path):
@@ -379,13 +414,20 @@ def smeta_slajda(slide_path):
             shirina = math.floor((W - LST_PAD_EM * kegl) / (K_ZNAK * kegl))
         else:
             shirina = znakov_v_stroke
-        # 🔴 max(1, …) обязателен: абзац из двух слов — это строка. То же для
-        # каждого пункта списка и каждой ступеньки `.lst` (заход, Э2.3, дословно).
+        # 🔴 Абзац из двух слов — это строка (заход, Э2.3): у `ulozhit` минимум 1.
         # Считаем ПОСЕГМЕНТНО: `<br>` и `.lst` рвут строку принудительно, и
-        # сумма знаков через разрыв дала бы одну расчётную строку вместо трёх.
-        segmenty = [s for s in b["segmenty"] if s > 0] or [0.0]
-        n = sum(max(1, math.ceil(s / shirina)) if shirina > 0 else 1 for s in segmenty)
-        znakov = sum(b["segmenty"])
+        # укладка через разрыв дала бы одну расчётную строку вместо трёх.
+        segmenty = [s for s in b["segmenty"] if s] or [[]]
+        # `.op-def/.op-utv/.op-task` — свой кегль 0.8em и свой межстрочный 1.12
+        # (`base.css:192-193`): их строка НИЖЕ основной (34.05px против 58.06), и
+        # знаков в неё влезает по-другому. Одна `stroka_px` на все блоки завышала
+        # такой блок на 0.41 строки (Расхождение 3 верификатора §3).
+        est_op = any(k in OP_CLASSES for k in b["klassy"])
+        kegl_bloka = OP_KEGL_EM * kegl if est_op else kegl
+        stroka_bloka_px = (OP_LH * kegl_bloka) if est_op else stroka_px
+        shirina_bloka = (math.floor(shirina * kegl / kegl_bloka) if est_op else shirina)
+        n = sum(ulozhit(s, shirina_bloka) for s in segmenty)
+        znakov = sum(sum(s) for s in b["segmenty"])
         # абзац, состоящий ровно из одной формулы, — «выносная»: её высота снята
         # замером и равна H_FORMULA строки, а не расчётной ширине текста
         if b.get("formul") == 1 and znakov <= znakov_formuly(b.get("glif_len", 0)) + 2:
@@ -394,8 +436,8 @@ def smeta_slajda(slide_path):
         # ступеньки внутри одного абзаца разделены `.spisok .lst + .lst`
         if b.get("lst", 0) > 1:
             zazor += LST_GAP_PX * (b["lst"] - 1)
-        vysota_px += zazor + n * stroka_px
-        strok += n + zazor / stroka_px
+        vysota_px += zazor + n * stroka_bloka_px
+        strok += n * (stroka_bloka_px / stroka_px) + zazor / stroka_px
         detali.append({"tip": b["tip"], "znakov": round(znakov, 1), "strok": n,
                         "segmentov": len(segmenty), "lst": b.get("lst", 0),
                         "zazor_strok": round(zazor / stroka_px, 3)})
@@ -415,6 +457,28 @@ def smeta_slajda(slide_path):
     }
 
 
+def ulozhit(slova, znakov_v_stroke):
+    """Слова → число СТРОК жадной укладкой, ровно как переносит браузер:
+    слово целиком либо влезает в остаток строки, либо уезжает на следующую.
+    Пробел между словами — один знак. Слово длиннее строки (длинная формула)
+    занимает свою строку целиком и не рвётся (`white-space:nowrap`).
+
+    🔴 Это замена `ceil(сумма_знаков / знаков_в_строке)`, которая была НИЖНЕЙ
+    оценкой и давала пропуски переполнения (Расхождение 2 верификатора §3)."""
+    if znakov_v_stroke <= 0:
+        return 1
+    strok, tekushchaya = 1, 0.0
+    for w in slova:
+        if tekushchaya <= 0:
+            tekushchaya = w
+        elif tekushchaya + 1 + w <= znakov_v_stroke:
+            tekushchaya += 1 + w
+        else:
+            strok += 1
+            tekushchaya = w
+    return strok
+
+
 def _zazor_px(prev, cur, blok_px, kegl):
     """Зазор ПЕРЕД блоком `cur` в px — ровно правила `base.css`, прочитанные, не
     угаданные.
@@ -424,9 +488,20 @@ def _zazor_px(prev, cur, blok_px, kegl):
     Кегль в отношении `blok_koef / lh` сокращается — потому зазор от кегля не
     зависит, и это проверка, что формула ВЫВЕДЕНА, а не подогнана."""
     if prev is None:
-        # первый блок зоны: у op-* есть свой маленький отступ, у остальных нет
+        # 🔴 Три правила `base.css` — БЕЗ комбинатора, они срабатывают и на ПЕРВОМ
+        # ребёнке зоны, и margin там не схлопывается (у зоны есть padding-top):
+        #   `.t-body ul.tlist{margin-top:var(--blok)}`     (base.css:26)
+        #   `.t-body p.formula{margin-top:var(--blok)}`    (base.css:187)
+        #   `.t-body p.op-*{margin-top:var(--blok)}`, но `:first-child` → .18em
+        # Раньше первый блок безусловно получал 0. Доказательство одной карточкой
+        # (верификатор §3): `napominanie` — единственная в L2, чья зона начинается
+        # с `<ul>`; её расхождение было ровно −0.42 строки = 26/58.06 = 0.448, и
+        # с этой правкой она даёт 7.96 против браузерных 7.94.
         if any(k in OP_CLASSES for k in cur["klassy"]):
-            return OP_FIRST_EM * kegl
+            # `.18em` — от СОБСТВЕННОГО кегля элемента (0.8em), не от кегля зоны
+            return OP_FIRST_EM * OP_KEGL_EM * kegl
+        if cur["tip"] == "li" or "formula" in cur["klassy"]:
+            return blok_px
         return 0.0
     if cur["tip"] == "li" and prev["tip"] == "li" and prev.get("ul") == cur.get("ul"):
         return LI_GAP_PX                      # `.tlist li + li`
@@ -512,6 +587,11 @@ def sverit(lekcija, dopusk=DOPUSK_STROK, isportit=1.0):
                 s = smeta_slajda(md)
             except (ValueError, NeBerus) as e:
                 out.append({"sid": sid, "propushcheno": str(e)})
+                continue
+            except Exception as e:
+                # лекция без `math/katex.json` роняла сверку трейсбеком и теряла
+                # вердикт по всем остальным карточкам (верификатор §3)
+                out.append({"sid": sid, "propushcheno": "%s: %s" % (type(e).__name__, e)})
                 continue
             _, html = compile_slide_html(md)
             p.write_text(html, encoding="utf-8")
