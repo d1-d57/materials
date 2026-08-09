@@ -36,6 +36,10 @@ for p in (str(SBORKA), str(GENERATOR)):
     if p not in sys.path:
         sys.path.insert(0, p)
 
+import vmeshchenie  # noqa: E402 — П1: дом метки `podbor_avto` и её разбора ОДИН, и он там
+POLE_METKI = vmeshchenie.POLE_METKI
+POLE_NAMERENIYA = vmeshchenie.POLE_NAMERENIYA
+
 
 def _compile_one(slide_path_str):
     """Воркер отдельного процесса: путь к .md → (sid, tip, status, illustracii-стемы,
@@ -78,17 +82,103 @@ def _compile_one(slide_path_str):
 # не варьирует liniya без оси).
 AXIS_BY_TIP = {"polosa_gorizontalnaya": "horizontal", "polosa_vertikalnaya": "vertical"}
 
+# П1 захода tri-provodki: значения полей-намерений, читаемые как «да».
+DA = ("da", "да", "true", "yes", "1")
 
-def _podobrat_tipografiku(to_compile):
+
+def _da(value):
+    return isinstance(value, str) and value.strip().lower() in DA
+
+
+def reshenie_o_podbore(params, otpechatok_tela, zanovo=False):
+    """Шапка карточки + отпечаток её тела → (подбирать: bool, причина: str).
+
+    🔴 КЛАСС ОШИБКИ, ОТ КОТОРОЙ ЭТА ФУНКЦИЯ ЛЕЧИТ (П1 захода tri-provodki):
+    ПРИЗНАК НАЛИЧИЯ ПРИНЯТ ЗА ПРИЗНАК РЕШЕНИЯ. Прежняя развилка читала непустую
+    `liniya` как «автор сам выбрал ширину полосы — не лезь». Но `liniya` —
+    ОБЯЗАТЕЛЬНОЕ поле шапки (`formaty.OBYAZATELNYE_POLYA`; без числа
+    `tipy._require_liniya` роняет компиляцию, `gejt_kartochki.py` требует поле
+    заполненным) ⇒ у ЛЮБОЙ полосы, прошедшей гейт, условие было истинно ВСЕГДА, и
+    солвер выключался ровно на тех слайдах, ради которых он и писался (ось
+    `liniya` существует только у `polosa_*`). Замер до правки на живой Л2:
+    подобрано 0 из 18, пропущено 18.
+
+    Поэтому признаков теперь два, и оба НЕобязательны — то есть их наличие
+    действительно есть решение, а не следствие гейта:
+
+    - `verstka_reshena: da` — НАМЕРЕНИЕ АВТОРА: типографику слайда он решил сам,
+      солвер не трогает ничего. Одно поле на все четыре ручки солвера
+      (`liniya`/`kegl_px`/`mezhstrochye`/`otstup_bloka`), а не на одну ось: автор
+      решает вёрстку слайда целиком.
+    - `podbor_avto` — МЕТКА САМОГО СОЛВЕРА (`vmeshchenie.apply_to_card`): отпечаток
+      тела, по которому подбирали, и значения, которые он записал. Лечит второй
+      дефект того же класса: без метки записанный солвером `kegl_px` на следующей
+      сборке читался как «явный», подбор был ОДНОРАЗОВЫМ, и любая правка текста
+      молча ехала на старом кегле.
+
+    Шесть исходов — таблицей, потому что каждый оплачен отдельной причиной:
+
+      | шапка                                   | решение     | `--zanovo` |
+      | `verstka_reshena: da`                   | не трогать  | не трогать |
+      | метки нет, есть `kegl_px` (легаси)      | не трогать  | подбирать  |
+      | метки нет, `kegl_px` нет                | ПОДБИРАТЬ   | подбирать  |
+      | метка есть, значения свои, тело то же   | пропустить (вход не менялся) | подбирать |
+      | метка есть, тело изменилось             | ПЕРЕПОДОБРАТЬ | подбирать |
+      | метка есть, значения в шапке чужие      | не трогать (правил человек) | подбирать |
+
+    🔴 ЛЕГАСИ ПО УМОЛЧАНИЮ НЕ ТРОГАЕМ, и это решение стоило одного прогона, а не
+    вкуса. Карточки, размеченные ДО этого захода, несут `kegl_px`/`liniya` без
+    метки — рука автора и рука солвера в них неразличимы. Первый вариант правила
+    («легаси = запись солвера, переподбирать») прогнан на живой Л2: солвер тронул
+    15 слайдов из 15 и разошёлся с ручными решениями круга 2 КРУПНО и в сторону
+    хуже — `dvazhdy-dvojstvennoe` liniya 54 → 79,17 (полосу под квадрат сузили
+    втрое, а её РАСШИРЯЛИ осознанно, чтобы квадрат не висел в пустоте),
+    `inyekcii` 58 → 82, `fundamentalnaya-gruppa` 70 → 53,5. Причина расхождения
+    названа, а не подогнана порогом: солвер оптимизирует вмещение ТЕКСТА и
+    похожесть на корпус и ничего не знает про пропорцию картинки, под которую
+    человек и крутил `liniya`. ⇒ по умолчанию молчим, а размораживается лекция
+    ЯВНОЙ командой `--zanovo` — то есть решением человека, а не побочным эффектом
+    ближайшей сборки. Иначе получаем ровно тот исход, который хуже нынешнего:
+    солвер не молчит, а молча портит.
+    """
+    if _da(params.get(POLE_NAMERENIYA)):
+        return False, "намерение автора: %s: %s" % (POLE_NAMERENIYA, params[POLE_NAMERENIYA])
+
+    otp_metki, znacheniya_metki = vmeshchenie.razobrat_metku(params.get(POLE_METKI))
+    kegl = params.get("kegl_px")
+    if zanovo:
+        return True, "переподбор по --zanovo"
+    if otp_metki is None:
+        if kegl:
+            return False, ("легаси: значения без метки `%s` (kegl_px=%s) — солвер их не "
+                           "трогает; переподобрать всю лекцию: --zanovo; заморозить "
+                           "навсегда: `%s: da`" % (POLE_METKI, kegl, POLE_NAMERENIYA))
+        return True, "подбор впервые"
+
+    for k, v in znacheniya_metki.items():
+        v_shapki = params.get(k)
+        try:
+            if v_shapki is None or abs(float(v_shapki) - v) > 1e-9:
+                return False, "после солвера правили руками: %s=%s, солвер писал %s" % (
+                    k, v_shapki, v)
+        except (TypeError, ValueError):
+            return False, "после солвера правили руками: %s=%r нечисловое" % (k, v_shapki)
+
+    if otp_metki != otpechatok_tela:
+        return True, "текст изменился (было %s, стало %s)" % (otp_metki, otpechatok_tela)
+    return False, "вход не менялся с прошлого подбора (%s)" % otp_metki
+
+
+def _podobrat_tipografiku(to_compile, zanovo=False):
     """Прогоняет солвер (`vmeshchenie.podobrat_slide`) по каждому слайду из
-    `to_compile`, у которого В ШАПКЕ ЕЩЁ НЕТ явного `kegl_px`/`liniya`, и
-    применяет выбор в карточку (`vmeshchenie.apply_to_card`) ДО финальной
-    параллельной компиляции. Раньше `deck.py` вообще не звал `vmeshchenie.py`
-    (Р3: главный инструмент арки был не подключён к сборке).
+    `to_compile`, который этого требует по `reshenie_o_podbore`, и применяет выбор
+    в карточку (`vmeshchenie.apply_to_card`) ДО финальной параллельной компиляции.
+    Раньше `deck.py` вообще не звал `vmeshchenie.py` (Р3: главный инструмент арки
+    был не подключён к сборке).
 
-    Явный `kegl_px` ИЛИ явный `liniya` в шапке — солвер слайд НЕ ТРОГАЕТ вовсе
-    (не «подбирает недостающее вокруг явного» — это уже дизайн типографики,
-    не проводка, не моя задача; «явное не перетирается» read буквально)."""
+    🔴 КОГО пропускать — решает `reshenie_o_podbore` (см. её докстринг: там весь
+    разбор «решение автора» против «поле обязано быть заполнено»). Здесь только
+    прогон и печать: почему пропущен КАЖДЫЙ слайд — строкой, поимённо."""
     try:
         from playwright.sync_api import sync_playwright
     except ImportError as e:
@@ -100,29 +190,26 @@ def _podobrat_tipografiku(to_compile):
     import tempfile
     from formaty import parse_card
     from slaid import compile_slide_html
-    import vmeshchenie
 
-    podobrano, propushcheno = 0, 0
+    podobrano, propushcheno, legasi = 0, 0, []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(channel="chrome", headless=True)
         page = browser.new_page(viewport={"width": 1440, "height": 810}, device_scale_factor=1)
         try:
             for slide_path in to_compile:
                 sid = slide_path.parent.name
-                params, _ = parse_card(slide_path.read_text(encoding="utf-8"), sid=sid)
+                params, telo = parse_card(slide_path.read_text(encoding="utf-8"), sid=sid)
                 axis = AXIS_BY_TIP.get(params.get("tip_verstki"))
-                # `liniya` — ОБЯЗАТЕЛЬНОЕ поле шапки у ЛЮБОГО tip_verstki (гейт того
-                # требует), но солвер её вообще трогает только у polosa_* (axis не
-                # None). У остальных типов число в liniya — просто заполненное ради
-                # гейта, не решение автора про ЭТУ типографику; считать его «явным»
-                # заблокировало бы подбор kegl_px для каждого не-polosa слайда.
-                kegl_yavnyj = bool(params.get("kegl_px"))
-                liniya_yavnaya = axis is not None and params.get("liniya") not in (None, "", "заполнить")
-                if kegl_yavnyj or liniya_yavnaya:
+                nado, prichina = reshenie_o_podbore(params, vmeshchenie.otpechatok(telo),
+                                                    zanovo=zanovo)
+                if not nado:
                     propushcheno += 1
-                    print("подбор: %s — пропущен, явные значения в шапке (kegl_px=%s liniya=%s)"
-                          % (sid, params.get("kegl_px"), params.get("liniya")), file=sys.stderr)
+                    if prichina.startswith("легаси"):
+                        legasi.append(sid)
+                    print("подбор: %s — пропущен, %s" % (sid, prichina), file=sys.stderr)
                     continue
+                bylo = (params.get("kegl_px"), params.get("liniya")) if params.get("kegl_px") else None
+                print("подбор: %s — %s" % (sid, prichina), file=sys.stderr)
                 with tempfile.TemporaryDirectory() as tmp:
                     _, html = compile_slide_html(slide_path)
                     # 🔴 Найдено живым прогоном (заплатка sborka-l2-fazy-4-7): не у
@@ -155,11 +242,90 @@ def _podobrat_tipografiku(to_compile):
                 podobrano += 1
                 print("подбор: %s — kegl=%.1f liniya=%s" % (
                     sid, res["chosen"]["kegl"], res["chosen"].get("liniya")), file=sys.stderr)
+                if bylo is not None:
+                    # Значения в карточке уже были — печатаем расхождение поимённо.
+                    # Молча заменить прежнее число новым это ровно то, чего боится
+                    # §3 захода: солвер, который не молчит, а молча портит.
+                    print("  ⚠ поверх прежних значений: kegl %s → %.1f · liniya %s → %s"
+                          % (bylo[0], res["chosen"]["kegl"], bylo[1],
+                             res["chosen"].get("liniya") if res["chosen"].get("liniya") is not None
+                             else "не трогалась"), file=sys.stderr)
         finally:
             browser.close()
-    print("подбор типографики: %d слайдов подобрано, %d пропущено (явные значения в шапке)"
-          % (podobrano, propushcheno))
+    print("подбор типографики: %d слайдов подобрано, %d пропущено" % (podobrano, propushcheno))
+    if legasi:
+        print("  ⚠ ЗАМОРОЖЕННЫХ ЛЕГАСИ-карточек (значения без метки `%s`): %d — %s.\n"
+              "     Разморозить лекцию целиком: `deck.py <лекция> -o <выход> --zanovo`;\n"
+              "     закрепить решение автора навсегда: `%s: da` в шапке карточки."
+              % (POLE_METKI, len(legasi), ", ".join(legasi), POLE_NAMERENIYA))
     return podobrano, propushcheno
+
+
+# ─────────────── П2 захода tri-provodki: служебные слайды ───────────────
+# Обложка, визитка и финальный слайд УЖЕ УМЕЮТ рисоваться (`tipy.oblozhka`,
+# `tipy.vizitka`, `tipy.finalnyj` — все три принимают `zagolovok_na_ekrane` и
+# `illustracii`), и `_order` уже ставит обложку первой, финальный последним. Не
+# хватало ровно одного: шага, который их ПОРОДИТ. Сегодня они появлялись, только
+# если автор заводил папку слайда руками, — а он не обязан и не должен.
+#
+# 🔴 ВХОД — `brief.md`, и НИКАКОГО нового документа: требование владельца «чем
+# меньше документов, тем лучше». `brief.md` уже и манифест порядка, и карточка
+# лекции; служебный слайд — производная лекции в целом, а не отдельный источник.
+# Все поля НЕОБЯЗАТЕЛЬНЫ: лекция, ничего про них не сказавшая, собирается как
+# раньше плюс обложка с заголовком из `title`.
+SLUZHEBNYE = (
+    # тип         поле-выключатель   поле заголовка         поле иллюстраций
+    ("oblozhka",  None,              "oblozhka_zagolovok",  "oblozhka_illustracii"),
+    ("vizitka",   "bez_vizitki",     "vizitka_zagolovok",   "vizitka_illustracii"),
+    ("finalnyj",  "bez_finalnogo",   "finalnyj_zagolovok",  "finalnyj_illustracii"),
+)
+
+
+def _spisok(v):
+    """Значение поля `brief.md` → список имён. `parse_brief` отдаёт либо список
+    (многострочная запись `- имя`), либо одну строку; строку с запятыми режем."""
+    if not v:
+        return []
+    if isinstance(v, str):
+        return [x.strip() for x in v.split(",") if x.strip()]
+    return [str(x).strip() for x in v if str(x).strip()]
+
+
+def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
+    """`brief.md` + типы слайдов, УЖЕ лежащих на диске → что генератор порождает сам.
+
+    → список `(sid, params, tekst_md)`, готовый к `tipy.compile_tip`.
+
+    Правила (П2 захода tri-provodki):
+    - **обложка безусловна**, выключателя у неё нет: дек без обложки — это не
+      решение автора, это забытый слайд;
+    - **визитка и финальный есть по умолчанию**, снимаются явным флагом в
+      `brief.md` (`bez_vizitki: da` / `bez_finalnogo: da`);
+    - 🔴 **автор завёл служебный слайд руками — генератор молчит.** Проверка по
+      ТИПУ карточки, а не по её имени: слайд-обложка может называться как угодно
+      (`_order` тоже сортирует по типу, по той же причине).
+    Заголовок обложки НЕ обязан совпадать с внутренним `title` лекции: `title` —
+    рабочее имя («Функторы»), а на экран выносится `oblozhka_zagolovok`, если он
+    назван. Разделители здесь не порождаются вовсе — их автор ставит осознанно.
+    """
+    est_tipy = set(tipy_na_diske.values())
+    zanyatye = set(zanyatye_sid) | set(tipy_na_diske)
+    plan = []
+    for tip, vykl, pole_z, pole_ill in SLUZHEBNYE:
+        if tip in est_tipy:
+            continue                      # автор завёл сам — дубля не будет
+        if vykl and _da(meta.get(vykl)):
+            continue                      # снят явным флагом в brief.md
+        zagolovok = meta.get(pole_z)
+        if tip == "oblozhka" and not zagolovok:
+            zagolovok = meta.get("title", "")
+        params = {"tip_verstki": tip, "illustracii": _spisok(meta.get(pole_ill))}
+        if zagolovok:
+            params["zagolovok_na_ekrane"] = zagolovok
+        sid = tip if tip not in zanyatye else tip + "-avto"
+        zanyatye.add(sid)
+        plan.append((sid, params, meta.get("vizitka_tekst", "") if tip == "vizitka" else ""))
+    return plan
 
 
 def _order(slide_order, tips):
@@ -171,7 +337,7 @@ def _order(slide_order, tips):
     return cover + middle + final
 
 
-def build(src, out, jobs=None, podbor=True):
+def build(src, out, jobs=None, podbor=True, zanovo=False):
     from slaid import load_illustrations as load_ill  # переиспользуем загрузчик Э2/Э3
     sys.path.insert(0, str(GENERATOR))
     from build_deck import parse_brief, read_text  # READ-ONLY импорт (Я6)
@@ -191,10 +357,12 @@ def build(src, out, jobs=None, podbor=True):
     # не дожидаясь параллельной сборки (нужно ДО того, как решать `slide_order` по
     # умолчанию, и ошибка тут дешевле, чем после N параллельных компиляций).
     from formaty import parse_card
-    status_by_sid = {}
+    status_by_sid, tip_by_sid = {}, {}
     for p in slide_paths:
         params, _ = parse_card(read_text(p), sid=p.parent.name)
         status_by_sid[p.parent.name] = params.get("status", "v_deke")
+        # тип нужен П2 (служебные слайды) ДО компиляции — второй раз файлы не читаем
+        tip_by_sid[p.parent.name] = params.get("tip_verstki")
 
     slide_order = meta.get("slide_order") or [sid for sid in sorted(have)
                                                if status_by_sid[sid] != "rezerv"]
@@ -226,7 +394,7 @@ def build(src, out, jobs=None, podbor=True):
     to_compile = [p for p in slide_paths if p.parent.name in slide_order]
 
     if podbor:
-        _podobrat_tipografiku(to_compile)
+        _podobrat_tipografiku(to_compile, zanovo=zanovo)
 
     ctx = mp.get_context("fork") if hasattr(os, "fork") else None
     with ProcessPoolExecutor(max_workers=jobs, mp_context=ctx) as ex:
@@ -234,6 +402,27 @@ def build(src, out, jobs=None, podbor=True):
 
     by_id = {sid: (tip, status, ills, css, html, n_scenes)
               for sid, tip, status, ills, css, html, n_scenes in results}
+
+    # П2: служебные слайды порождаются ЗДЕСЬ, а не читаются с диска — файла у них
+    # нет и не будет. Компилируются в этом же процессе, не в пуле: их максимум три,
+    # а `_compile_one` умеет только путь к .md.
+    from formaty import render_body
+    from tipy import compile_tip
+    from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
+    from slaid import load_math_cache
+    math = load_math_cache(src)
+    sluzhebnye = plan_sluzhebnyh(meta, {s: tip_by_sid[s] for s in slide_order}, zanyatye_sid=have)
+    for sid, params, tekst_md in sluzhebnye:
+        body_html = render_body(tekst_md, acc_tag="span", math=math, sid=sid) if tekst_md else ""
+        css, html = compile_tip(sid, params, body_html)
+        by_id[sid] = (params["tip_verstki"], "v_deke", params["illustracii"],
+                       css, html, max_scenes(html))
+        print("служебный слайд порождён генератором: %s (%s)" % (sid, params["tip_verstki"]))
+    # обложка/финальный встанут по типу в `_order`; визитка — сразу за обложкой,
+    # то есть в НАЧАЛО авторского порядка.
+    slide_order = [s for s, p, _ in sluzhebnye if p["tip_verstki"] != "finalnyj"] + slide_order \
+        + [s for s, p, _ in sluzhebnye if p["tip_verstki"] == "finalnyj"]
+
     tips = {sid: tip for sid, (tip, _, _, _, _, _) in by_id.items()}
     order = _order(slide_order, tips)
 
@@ -315,10 +504,15 @@ def main():
     ap.add_argument("--bez-podbora", action="store_true",
                      help="не подбирать типографику солвером — собрать как есть "
                           "(умолчание: подбор ВКЛЮЧЁН, Р3 захода porcia-1-zamknut-konvejer)")
+    ap.add_argument("--zanovo", action="store_true",
+                     help="переподобрать типографику ВСЕЙ лекции, не считаясь ни с меткой "
+                          "`podbor_avto`, ни с легаси-значениями в шапках; `verstka_reshena: da` "
+                          "по-прежнему неприкосновенно (П1 захода tri-provodki)")
     args = ap.parse_args()
     from formaty import FormatSlaida  # noqa: E402  (тот же приём, что slaid.py main())
     try:
-        n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs, podbor=not args.bez_podbora)
+        n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs,
+                                 podbor=not args.bez_podbora, zanovo=args.zanovo)
     except FormatSlaida as e:
         print("ОШИБКА: %s" % e, file=sys.stderr)
         return 1
