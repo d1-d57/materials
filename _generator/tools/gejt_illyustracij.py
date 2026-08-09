@@ -16,6 +16,16 @@
   2. `zakaz.md` есть, но не все пять полей заполнены (заглушка «заполнить» — тоже незаполнено);
   3. в пуле лежит `zakaz.md`, на который не ссылается ни один слайд — заказ-сирота.
 
+🔴 ССЫЛАЮТСЯ ДВА ИСТОЧНИКА, НЕ ОДИН. Кроме `slajdy/*/slaid.md` картинку заказывает шапка
+`brief.md` — полями `<тип>_illustracii` (`oblozhka_illustracii`, `finalnyj_illustracii`;
+таблица `SLUZHEBNYE` в `_generator/sborka/deck.py`). Служебные слайды генератор ПОРОЖДАЕТ, папки
+слайда у них нет вовсе, и картинка обложки, читай гейт только слайды, выглядит сиротой: замер
+захода `zakrytie-l2` — до возврата картинки «заказов 10, ✓ ЗЕЛЁНЫЙ», после «заказов 11,
+✗ КРАСНЫЙ», ссылок в обоих случаях 10. Это ложный красный: заказ на месте, ссылка на него тоже,
+гейт просто смотрел в одну из двух дверей. Ловля НАСТОЯЩЕЙ сироты (проверка 3) при этом
+сохраняется — обе фикстуры (`gejt-ill-brief-oblozhka`, `gejt-ill-brief-sirota`) держат ровно эту
+границу: гейт, переставший ловить сирот, хуже нынешнего.
+
 Пять полей заказа — по ANKETA G2 дословно (`_studio/konvejer/04.5-intervyu/ANKETA.md`), не по
 вкусу: что изображено · сколько объектов и как подписаны · что происходит · чего рисовать НЕ
 надо · размер. Формат специфицирован в `disciplina/skills/slajdy/SKILL.md`, фаза 2, РЕШЕНИЯ ФАЗЫ
@@ -59,6 +69,8 @@ ZAGLUSHKA = "заполнить"
 
 FRONT_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 ILL_RE = re.compile(r"^illustracii:\s*\[(.*)\]\s*$")
+# шапка `brief.md`: `<тип>_illustracii` — поле-заказчик служебного слайда (deck.SLUZHEBNYE).
+BRIEF_ILL_RE = re.compile(r"^([A-Za-z0-9_]+)_illustracii:\s*(.*)$")
 # та же форма, что `formaty.LIFECYCLE_RE` — карточка нового формата (bootstrap_lekcii.py)
 # несёт этот HTML-комментарий СТРОГО перед шапкой; см. докстринг выше про дубликат.
 LIFECYCLE_RE = re.compile(r"^<!--(.*?)-->\s*", re.S)
@@ -91,6 +103,47 @@ def slide_illustracii(slaid_path):
                 return []
             return [Path(x.strip().strip('"')).stem for x in inner.split(",") if x.strip()]
     return []
+
+
+def _imena(surovo):
+    """Сырое значение поля → список имён пула. Нормализация через `Path(...).stem` —
+    та же, что у `slide_illustracii` и у компилятора `sborka/slaid.py:load_illustrations`."""
+    return [Path(x.strip().strip('"').strip("'")).stem
+            for x in surovo.split(",") if x.strip()]
+
+
+def brief_illustracii(brief_path):
+    """`brief.md` → имена из ВСЕХ полей `<тип>_illustracii` шапки.
+
+    Три формы значения — ровно те, что принимает `_generator/sborka/deck.py:_spisok`
+    (канон там, здесь только чтение): инлайн-список `[a, b]`, строка через запятую
+    `a, b` и многострочный блок `- имя`. Шапки нет — пусто, а не отказ: `brief.md`
+    без шапки не наше дело, о нём краснеет другой гейт."""
+    if not brief_path.is_file():
+        return []
+    m = FRONT_RE.match(_read(brief_path))
+    if not m:
+        return []
+    imena = []
+    sobirayu = False               # мы внутри многострочного блока `- имя`
+    for line in m.group(1).splitlines():
+        golo = line.strip()
+        if sobirayu:
+            if golo.startswith("- "):
+                imena += _imena(golo[2:])
+                continue
+            sobirayu = False       # блок кончился на первой не-`- ` строке
+        bm = BRIEF_ILL_RE.match(golo)
+        if not bm:
+            continue
+        znachenie = bm.group(2).strip()
+        if not znachenie:
+            sobirayu = True        # список идёт следующими строками
+        elif znachenie.startswith("[") and znachenie.endswith("]"):
+            imena += _imena(znachenie[1:-1])
+        else:
+            imena += _imena(znachenie)
+    return imena
 
 
 def parse_zakaz(zakaz_path):
@@ -127,11 +180,15 @@ def proverit(lekcija_dir):
     pool_dir = lekcija / "illustracii"
 
     slaid_files = sorted(slajdy_dir.glob("*/slaid.md")) if slajdy_dir.is_dir() else []
-    ssylki = {}  # имя иллюстрации → [sid, ...]
+    ssylki = {}  # имя иллюстрации → [кто сослался, ...]
     for sp in slaid_files:
         sid = sp.parent.name
         for imya in slide_illustracii(sp):
             ssylki.setdefault(imya, []).append(sid)
+
+    # второй источник ссылок — шапка brief.md (служебные слайды; см. докстринг)
+    for imya in brief_illustracii(lekcija / "brief.md"):
+        ssylki.setdefault(imya, []).append("brief.md")
 
     zakazy = sorted(p.parent.name for p in pool_dir.glob("*/zakaz.md")) if pool_dir.is_dir() else []
 
@@ -140,7 +197,7 @@ def proverit(lekcija_dir):
     # 1. слайд ссылается на имя без zakaz.md в пуле
     for imya, sidy in sorted(ssylki.items()):
         if imya not in zakazy:
-            bedy.append(("Z1", "картинка '%s' (слайд %s) — нет zakaz.md в пуле %s"
+            bedy.append(("Z1", "картинка '%s' (ссылается: %s) — нет zakaz.md в пуле %s"
                           % (imya, ", ".join(sidy), pool_dir)))
 
     # 2. zakaz.md есть, но не все пять полей заполнены
@@ -153,12 +210,13 @@ def proverit(lekcija_dir):
     # 3. заказ-сирота — никто не ссылается
     for imya in zakazy:
         if imya not in ssylki:
-            bedy.append(("Z3", "заказ '%s' в пуле %s — сирота, ни один слайд не ссылается"
+            bedy.append(("Z3", "заказ '%s' в пуле %s — сирота, не ссылается ни слайд, ни brief.md"
                          % (imya, pool_dir)))
 
     svodka = {
         "slaidov": len(slaid_files),
         "ssylok": len(ssylki),
+        "iz_brief": sum(1 for kto in ssylki.values() if "brief.md" in kto),
         "zakazov": len(zakazy),
     }
     return bedy, svodka
@@ -180,8 +238,8 @@ def main():
     if not tiho:
         print("── ГЕЙТ ЗАКАЗА ИЛЛЮСТРАЦИЙ (gejt_illyustracij) ──")
         print("  %s" % args[0])
-        print("  слайдов: %d · ссылок на иллюстрации: %d · заказов в пуле: %d"
-              % (svodka["slaidov"], svodka["ssylok"], svodka["zakazov"]))
+        print("  слайдов: %d · ссылок на иллюстрации: %d (из них из brief.md: %d) · заказов в пуле: %d"
+              % (svodka["slaidov"], svodka["ssylok"], svodka["iz_brief"], svodka["zakazov"]))
         print("\n  ЧЕГО ЭТОТ ГЕЙТ НЕ ПРОВЕРЯЕТ:")
         print("     · [стиль] иллюстрация действительно отвечает своему zakaz.md — верификатор-субагент")
         print("     · [форма] var(--x) внутри рисунка определены в токенах — линтер build_deck.py")

@@ -90,7 +90,7 @@ def _text_zone(sid, p, text_html, cls="copy"):
             % (cls, _kegl_style(p), _zagolovok_html(p), text_html))
 
 
-def _ill_zone(ills, axis, cls="board"):
+def _ill_zone(ills, axis, cls="board", pad=None):
     """axis: 'row' — бок о бок (для горизонтальной полосы, где полоса делится по
     ВЫСОТЕ и картинка занимает её по ШИРИНЕ); 'col' — стопкой (для вертикальной
     полосы, где картинка занимает зону по ВЫСОТЕ). Я1 Э2, правило дословно.
@@ -98,7 +98,12 @@ def _ill_zone(ills, axis, cls="board"):
     🔴 `align-items:stretch` (дефолт flex, НЕ `center`) + `flex:1 1 0` на панели —
     это и есть «занимают целиком»: без них панель без явных width/height схлопывается
     в 0×0 (найдено этим же прогоном на живом кадре — полоса была голубой заливкой без
-    единого пикселя картинки, притом что `data-ill` был в порядке)."""
+    единого пикселя картинки, притом что `data-ill` был в порядке).
+
+    `pad` — отступ полосы внутрь; по умолчанию общий `ILL_PAD`. Обложка передаёт 0:
+    там полоса сама и есть свободное поле кадра, а 28px с двух сторон срезали у
+    квадратного рисунка 56px из 250 доступных — почти четверть (заход `zakrytie-l2`,
+    Ш3; замер на живом кадре: панель 1384×194 в полосе высотой 250)."""
     n = len(ills)
     if n < 1 or n > MAX_ILL:
         raise TipVerstki("иллюстраций в полосе %d — допустимо 1..%d (Я1 Э2)" % (n, MAX_ILL))
@@ -116,7 +121,7 @@ def _ill_zone(ills, axis, cls="board"):
     return ('<div class="zone %s ill-row" style="display:flex;flex-direction:%s;'
             'align-items:stretch;justify-content:center;gap:%dpx;padding:%dpx;'
             'height:100%%;box-sizing:border-box">%s</div>'
-            % (cls, flex_dir, ILL_GAP, ILL_PAD, panels))
+            % (cls, flex_dir, ILL_GAP, ILL_PAD if pad is None else pad, panels))
 
 
 def _require_liniya(sid, p):
@@ -192,7 +197,21 @@ def tolko_tekst(sid, p, text_html):
 def oblozhka(sid, p, text_html):
     """`sub`/`dateplace` — необязательные вторая/третья строка обложки
     (`sluzhebnye/oblozhka.html`: `?SUB{SUB}`/`?DATEPLACE{DATEPLACE}`, заход
-    vizitka-i-oblozhka, В2); числа CSS дословно из `sluzhebnye/style.css`."""
+    vizitka-i-oblozhka, В2); числа CSS дословно из `sluzhebnye/style.css`.
+
+    🔴 `.art` — ЕДИНСТВЕННОЕ место, где число НЕ из `sluzhebnye/style.css`, и вот
+    почему (заход `zakrytie-l2`, Ш3). Канон там задаёт `bottom:46px; height:250px`,
+    и эти же значения стояли здесь — то есть расхождения с каноном не было вовсе.
+    Дефект в другом: канон снят с обложки Л1, где мотив ШИРОКИЙ и в полосу 250px
+    ложится сам. Квадратный рисунок в такой полосе упирается в высоту и рисуется
+    маркой — замер на живом кадре Л2: панель 1384×194 при ширине зоны 1440.
+    Поэтому высота здесь — доля кадра, а не абсолют, и доля выбрана НЕ на глаз:
+    три канонные строки занимают 169–522 из 810 (тот же замер), ниже них свободны
+    288px, и это жёсткий потолок — двигать строки запрещено. `height:30%` (243px)
+    при `bottom:3%` (24px) ставит верх полосы на 543 — ровно те же ~20px просвета
+    под третьей строкой, что и раньше, а рисунок растёт со 194 до 243 (+25%).
+    Больше на этой обложке не даёт геометрия текста, а не выбор числа.
+    Вместе с `pad=0` (см. `_ill_zone`) полоса отдаётся рисунку целиком."""
     z = p.get("zagolovok_na_ekrane", "")
     sub = p.get("sub")
     dateplace = p.get("dateplace")
@@ -205,9 +224,9 @@ def oblozhka(sid, p, text_html):
            "#%s .sub{ font-family:'Glacial Indifference','Noto Sans',sans-serif; "
            "text-align:center; color:var(--ink); font-size:32px; letter-spacing:.04em; margin-top:36px; } "
            "#%s .sub2{ font-size:22px; margin-top:14px; color:var(--ink); opacity:.78; line-height:1.5; } "
-           "#%s .art{ position:absolute; left:0; right:0; bottom:46px; height:250px; }"
+           "#%s .art{ position:absolute; left:0; right:0; bottom:3%%; height:30%%; }"
            % (sid, sid, sid, sid, sid, sid, sid))
-    art = ('<div class="art">%s</div>' % _ill_zone(ills, axis="row", cls="")
+    art = ('<div class="art">%s</div>' % _ill_zone(ills, axis="row", cls="", pad=0)
            if ills else "")
     sub_html = '<div class="sub">%s</div>' % _esc(sub) if sub else ""
     dateplace_html = '<div class="sub sub2">%s</div>' % _esc(dateplace) if dateplace else ""
