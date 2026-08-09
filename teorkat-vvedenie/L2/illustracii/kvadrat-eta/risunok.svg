@@ -1,14 +1,14 @@
-<svg viewBox="0 0 250 200" width="250" role="img" aria-label="Квадрат естественности для V и W: сверху линейное отображение, снизу его дважды двойственное, по бокам канонические отображения">
-<text class="s-txt" x="46" y="34" text-anchor="middle" font-size="17">V</text>
-<text class="s-txt" x="204" y="34" text-anchor="middle" font-size="17">W</text>
-<text class="s-txt" x="46" y="178" text-anchor="middle" font-size="17">V**</text>
-<text class="s-txt" x="204" y="178" text-anchor="middle" font-size="17">W**</text>
-<line class="s-thin" x1="66" y1="29" x2="184" y2="29"/><path class="s-ar-m" d="M182,25 l9,4 -9,4 z"/>
-<line class="s-thin" x1="76" y1="173" x2="174" y2="173"/><path class="s-ar-m" d="M172,169 l9,4 -9,4 z"/>
-<line class="s-thin" x1="46" y1="48" x2="46" y2="152"/><path class="s-ar-m" d="M42,143 l4,9 4,-9 z"/>
-<line class="s-thin" x1="204" y1="48" x2="204" y2="152"/><path class="s-ar-m" d="M200,143 l4,9 4,-9 z"/>
-<text class="s-txt-m" x="124" y="18" text-anchor="middle" font-size="15">A</text>
-<text class="s-txt-m" x="124" y="196" text-anchor="middle" font-size="15">A**</text>
-<text class="s-txt-m" x="38" y="105" text-anchor="end" font-size="15">η<tspan dy="3" font-size="11">V</tspan></text>
-<text class="s-txt-m" x="212" y="105" font-size="15">η<tspan dy="3" font-size="11">W</tspan></text>
+<svg viewBox="0 0 250 240" role="img" aria-label="Квадрат естественности для конкретных пространств V и W: сверху отображение A, снизу его дважды двойственное, по бокам канонические отображения эта для V и для W">
+<text class="s-txt" x="46" y="52" text-anchor="middle" font-size="17">V</text>
+<text class="s-txt" x="204" y="52" text-anchor="middle" font-size="17">W</text>
+<text class="s-txt" x="46" y="202" text-anchor="middle" font-size="17">V**</text>
+<text class="s-txt" x="204" y="202" text-anchor="middle" font-size="17">W**</text>
+<line class="s-thin" x1="66" y1="46" x2="182" y2="46"/><path class="s-ar-m" d="M182,42 l9,4 -9,4 z"/>
+<line class="s-thin" x1="78" y1="196" x2="172" y2="196"/><path class="s-ar-m" d="M172,192 l9,4 -9,4 z"/>
+<line class="s-thin" x1="46" y1="68" x2="46" y2="167"/><path class="s-ar-m" d="M42,158 l4,9 4,-9 z"/>
+<line class="s-thin" x1="204" y1="68" x2="204" y2="167"/><path class="s-ar-m" d="M200,158 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="124" y="32" text-anchor="middle" font-size="15">A</text>
+<text class="s-txt-m" x="124" y="226" text-anchor="middle" font-size="15">A**</text>
+<text class="s-txt-m" x="36" y="121" text-anchor="end" font-size="15">η<tspan dy="3" font-size="11">V</tspan></text>
+<text class="s-txt-m" x="214" y="121" font-size="15">η<tspan dy="3" font-size="11">W</tspan></text>
 </svg>

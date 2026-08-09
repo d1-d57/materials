@@ -31,6 +31,11 @@ opiraetsya_na:
   - {termin: категория, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 40
+mezhstrochye: 1.3
+otstup_bloka: 14
+obosnovanie_verstki: среднее текста плюс новая иллюстрация со сложением векторов — вертикальная полоса. Полоса на месте, вместимость добрана типографикой, кегль поднят до 40
+zagolovok_snyat_namerenno: da
 ---
 
 ## Математика — развёрнуто

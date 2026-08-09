@@ -1,14 +1,15 @@
-<svg viewBox="0 -24 300 200" width="300" role="img" aria-label="Два множества: слева три точки, справа четыре, из них одна лишняя выделена; стрелка вложения вправо и стрелка возврата влево; дуга сверху — их композиция тождественна">
-<ellipse class="s-fillsh" cx="58" cy="100" rx="36" ry="58"/><ellipse class="s-thin" cx="58" cy="100" rx="36" ry="58"/>
-<ellipse class="s-fillsh" cx="242" cy="100" rx="36" ry="70"/><ellipse class="s-thin" cx="242" cy="100" rx="36" ry="70"/>
-<text class="s-txt" x="58" y="28" text-anchor="middle">A</text>
-<text class="s-txt" x="242" y="16" text-anchor="middle">B</text>
-<circle class="s-node" cx="58" cy="74" r="3.4"/><circle class="s-node" cx="58" cy="100" r="3.4"/><circle class="s-node" cx="58" cy="126" r="3.4"/>
-<circle class="s-node" cx="242" cy="62" r="3.4"/><circle class="s-node" cx="242" cy="88" r="3.4"/><circle class="s-node" cx="242" cy="114" r="3.4"/><circle class="s-node-a" cx="242" cy="146" r="3.4"/>
-<line class="s-thin" x1="102" y1="72" x2="194" y2="72"/><path class="s-ar-m" d="M194,68 l9,4 -9,4 z"/>
-<text class="s-txt-m" x="148" y="62" text-anchor="middle">s</text>
-<line class="s-dash" x1="198" y1="128" x2="106" y2="128"/><path class="s-ar-a" d="M106,124 l-9,4 9,4 z"/>
-<text class="s-txt-m" x="148" y="148" text-anchor="middle">r</text>
-<path class="s-line" d="M58,36 C58,-10 242,-10 242,36"/>
-<text class="s-txt-m" x="150" y="-14" text-anchor="middle">id</text>
+<svg viewBox="0 0 660 150" role="img" aria-label="Слева множество A из трёх точек, справа B из четырёх — одна лишняя выделена. Сплошная стрелка s идёт от A к B, пунктирная стрелка r возвращается от B к A, между ними дуга композиции: она выходит из A, разворачивается у B и возвращается стрелкой в A, внутри неё подпись id">
+<ellipse class="s-fillsh" cx="78" cy="78" rx="40" ry="48"/><ellipse class="s-thin" cx="78" cy="78" rx="40" ry="48"/>
+<ellipse class="s-fillsh" cx="582" cy="78" rx="40" ry="58"/><ellipse class="s-thin" cx="582" cy="78" rx="40" ry="58"/>
+<text class="s-txt" x="78" y="22" text-anchor="middle" font-size="17">A</text>
+<text class="s-txt" x="582" y="12" text-anchor="middle" font-size="17">B</text>
+<circle class="s-node" cx="78" cy="58" r="4"/><circle class="s-node" cx="78" cy="78" r="4"/><circle class="s-node" cx="78" cy="98" r="4"/>
+<circle class="s-node" cx="582" cy="44" r="4"/><circle class="s-node" cx="582" cy="66" r="4"/><circle class="s-node" cx="582" cy="88" r="4"/><circle class="s-node-a" cx="582" cy="114" r="4"/>
+<line class="s-thin" x1="118" y1="46" x2="533" y2="46"/><path class="s-ar-m" d="M533,42 l9,4 -9,4 z"/>
+<text class="s-txt-m" x="330" y="34" text-anchor="middle" font-size="15">s</text>
+<line class="s-dash" x1="542" y1="112" x2="127" y2="112"/><path class="s-ar-a" d="M127,108 l-9,4 9,4 z"/>
+<text class="s-txt-m" x="330" y="132" text-anchor="middle" font-size="15">r</text>
+<path class="s-line" d="M126,64 H528 A14,14 0 0,1 528,92 H126"/>
+<path class="s-ar-m" d="M126,88 l-9,4 9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="316" y="83" text-anchor="middle" font-size="15">id</text>
 </svg>

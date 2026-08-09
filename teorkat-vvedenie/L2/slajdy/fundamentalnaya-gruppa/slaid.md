@@ -23,7 +23,7 @@ minuty: 8
 vazhnost: osnovnoj
 byudzhet_slov: 55
 tip_verstki: polosa_vertikalnaya
-liniya: 66
+liniya: 70
 matematika_iz: [Фундаментальная группа]
 illustracii: [namotka-petli, disk-i-okruzhnost]
 vvodit: []
@@ -31,6 +31,10 @@ opiraetsya_na:
   - {termin: ретракт, vvedeno: retrakt}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 38
+mezhstrochye: 1.3
+otstup_bloka: 14
+obosnovanie_verstki: среднее текста и ДВЕ иллюстрации — вертикальная полоса. Полоса сдвинута с 66 на 70: при 66 текст влезал только на поджатом межстрочье 1.2, при 70 — дышит на 1.3
 ---
 
 ## Математика — развёрнуто

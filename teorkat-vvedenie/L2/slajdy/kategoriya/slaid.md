@@ -13,7 +13,7 @@ gejt_kartochki.py краснеет на отсутствии этого блок
 ---
 imya: kategoriya
 nazvanie: Категория
-zagolovok_na_ekrane: Категория и функтор
+zagolovok_na_ekrane: ""
 tip_idei: definition
 zachem: вспомнить язык на том, что уже видели, и назвать функтор
 akcent: категория и функтор вводятся одновременно — это один словарь, а не два
@@ -22,7 +22,7 @@ kommentarij_lektoru: ""
 minuty: 7
 vazhnost: osnovnoj
 byudzhet_slov: 90
-tip_verstki: tolko_tekst
+tip_verstki: polnyj_ekran
 liniya: 100
 matematika_iz: [Категория]
 illustracii: []
@@ -30,6 +30,11 @@ vvodit: [категория, функтор]
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
+zagolovok_snyat_namerenno: da
+kegl_px: 36
+mezhstrochye: 1.25
+otstup_bloka: 10
+obosnovanie_verstki: текста много, иллюстрации нет — по доктрине «текст во весь слайд». tolko_tekst не подошёл: его поле grid ложится поверх поля зоны и съедает 128px высоты, слайд резался на 167%. Заголовок снят как переключатель «по соображениям места» — только так текст влезает при кегле 36 и дышащем межстрочье
 ---
 
 ## Математика — развёрнуто

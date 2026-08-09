@@ -31,6 +31,10 @@ opiraetsya_na:
   - {termin: изоморфизм векторных пространств, vvedeno: izomorfizm}
 bez_opredeleniya_namerenno: []
 status: v_deke
+obosnovanie_verstki: иллюстрация снята как бессмысленная, текста среднее — по доктрине «среднее без картинки» это только текст, полосы быть не должно. Типографику подбирает солвер
+kegl_px: 38
+mezhstrochye: 1.274
+otstup_bloka: 12.6
 ---
 
 ## Математика — развёрнуто

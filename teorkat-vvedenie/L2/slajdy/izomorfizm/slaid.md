@@ -31,6 +31,10 @@ opiraetsya_na:
   - {termin: линейное отображение, vvedeno: vektornye-prostranstva}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 38
+mezhstrochye: 1.3
+otstup_bloka: 14
+obosnovanie_verstki: было пусто в правой полосе — тип сменён на горизонтальную, полоса получила иллюстрацию с примерами. Кегль 38 сохранён, вместимость добрана межстрочьем
 ---
 
 ## Математика — развёрнуто

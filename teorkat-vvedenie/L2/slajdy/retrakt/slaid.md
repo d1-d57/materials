@@ -32,6 +32,10 @@ opiraetsya_na:
   - {termin: изоморфизм векторных пространств, vvedeno: izomorfizm}
 bez_opredeleniya_namerenno: []
 status: v_deke
+obosnovanie_verstki: картинка убрана вовсе, владелец просил крупный заголовок «Ретракты» и полноценно потратить место на саму конструкцию — только текст. Типографику подбирает солвер
+kegl_px: 38
+mezhstrochye: 1.2
+otstup_bloka: 8.7
 ---
 
 ## Математика — развёрнуто
