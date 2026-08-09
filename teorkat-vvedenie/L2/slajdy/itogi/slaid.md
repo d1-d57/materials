@@ -30,6 +30,10 @@ vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
+obosnovanie_verstki: новый слайд с текстовыми итогами, иллюстрации не нужны — только текст. Типографику подбирает солвер
+kegl_px: 41
+mezhstrochye: 1.57
+otstup_bloka: 30.3
 ---
 
 ## Математика — развёрнуто

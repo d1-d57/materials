@@ -1,22 +1,24 @@
-<svg viewBox="0 -20 220 300" width="220" role="img" aria-label="Наверху окружность и диск, стрелка вложения i вперёд и пунктирная стрелка r обратно, дуга сверху — их композиция тождественна на окружности. Внизу фундаментальные группы: целые числа и единичная группа, дуга снизу показывает, что композиция не может быть тождественной">
-<circle class="s-line" cx="54" cy="52" r="24"/>
-<circle class="s-fillsh" cx="166" cy="52" r="24"/><circle class="s-line" cx="166" cy="52" r="24"/>
-<text class="s-txt" x="54" y="92" text-anchor="middle" font-size="17">S¹</text>
-<text class="s-txt" x="166" y="92" text-anchor="middle" font-size="17">D²</text>
-<line class="s-thin" x1="84" y1="44" x2="132" y2="44"/><path class="s-ar-m" d="M130,40 l9,4 -9,4 z"/>
-<line class="s-dash" x1="136" y1="62" x2="92" y2="62"/><path class="s-ar-a" d="M91,58 l-9,4 9,4 z"/>
-<text class="s-txt-m" x="108" y="34" text-anchor="middle" font-size="15">i</text>
-<text class="s-txt-m" x="108" y="78" text-anchor="middle" font-size="15">r</text>
-<line class="s-dash" x1="54" y1="104" x2="54" y2="148"/><path class="s-ar-a" d="M50,139 l4,9 4,-9 z"/>
-<line class="s-dash" x1="166" y1="104" x2="166" y2="148"/><path class="s-ar-a" d="M162,139 l4,9 4,-9 z"/>
-<text class="s-txt-m" x="62" y="128" font-size="15">π₁</text>
-<text class="s-txt-m" x="174" y="128" font-size="15">π₁</text>
-<text class="s-txt" x="54" y="176" text-anchor="middle" font-size="17">ℤ</text>
-<text class="s-txt" x="166" y="176" text-anchor="middle" font-size="17">{e}</text>
-<line class="s-thin" x1="70" y1="194" x2="146" y2="194"/><path class="s-ar-m" d="M144,190 l9,4 -9,4 z"/>
-<line class="s-dash" x1="150" y1="210" x2="73" y2="210"/><path class="s-ar-a" d="M73,206 l-9,4 9,4 z"/>
-<path class="s-line" d="M54,20 C54,-14 166,-14 166,20"/>
-<text class="s-txt-m" x="110" y="-18" text-anchor="middle" font-size="14">id</text>
-<path class="s-line" d="M54,222 C54,256 166,256 166,222"/>
-<text class="s-txt-m" x="110" y="270" text-anchor="middle" font-size="14">≠ id</text>
+<svg viewBox="0 0 340 330" role="img" aria-label="Наверху окружность и диск: стрелка вложения i идёт к диску, пунктирная стрелка r возвращается, между ними дуга — она разворачивается у диска и возвращается стрелкой в окружность, композиция тождественна. Внизу их фундаментальные группы: целые числа и единичная группа, там такая же дуга помечена как не тождественная">
+<circle class="s-line" cx="60" cy="88" r="26"/>
+<circle class="s-fillsh" cx="280" cy="88" r="26"/><circle class="s-line" cx="280" cy="88" r="26"/>
+<text class="s-txt" x="60" y="142" text-anchor="middle" font-size="17">S¹</text>
+<text class="s-txt" x="280" y="142" text-anchor="middle" font-size="17">D²</text>
+<line class="s-thin" x1="86" y1="44" x2="245" y2="44"/><path class="s-ar-m" d="M245,40 l9,4 -9,4 z"/>
+<text class="s-txt-m" x="168" y="32" text-anchor="middle" font-size="15">i</text>
+<line class="s-dash" x1="254" y1="118" x2="95" y2="118"/><path class="s-ar-a" d="M95,114 l-9,4 9,4 z"/>
+<text class="s-txt-m" x="168" y="112" text-anchor="middle" font-size="15">r</text>
+<path class="s-line" d="M95,62 H240 A14,14 0 0,1 240,90 H95"/>
+<path class="s-ar-m" d="M95,86 l-9,4 9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="164" y="81" text-anchor="middle" font-size="15">id</text>
+<line class="s-dash" x1="60" y1="156" x2="60" y2="202"/><path class="s-ar-a" d="M56,193 l4,9 4,-9 z"/>
+<line class="s-dash" x1="280" y1="156" x2="280" y2="202"/><path class="s-ar-a" d="M276,193 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="70" y="182" font-size="15">π₁</text>
+<text class="s-txt-m" x="290" y="182" font-size="15">π₁</text>
+<text class="s-txt" x="60" y="238" text-anchor="middle" font-size="17">ℤ</text>
+<text class="s-txt" x="280" y="238" text-anchor="middle" font-size="17">{e}</text>
+<line class="s-thin" x1="78" y1="232" x2="257" y2="232"/><path class="s-ar-m" d="M257,228 l9,4 -9,4 z"/>
+<line class="s-dash" x1="266" y1="292" x2="89" y2="292"/><path class="s-ar-a" d="M89,288 l-9,4 9,4 z"/>
+<path class="s-line" d="M89,262 H252 A14,14 0 0,1 252,290 H89"/>
+<path class="s-ar-m" d="M89,286 l-9,4 9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="164" y="281" text-anchor="middle" font-size="15">≠ id</text>
 </svg>

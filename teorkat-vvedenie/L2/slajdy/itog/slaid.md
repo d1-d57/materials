@@ -30,6 +30,8 @@ vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
+zagolovok_snyat_namerenno: da
+obosnovanie_verstki: полный экран под три диаграммы — это финальная картинка-свод, текстовой зоны у неё нет. Итоги словами вынесены на отдельный слайд перед ним
 ---
 
 ## Математика — развёрнуто

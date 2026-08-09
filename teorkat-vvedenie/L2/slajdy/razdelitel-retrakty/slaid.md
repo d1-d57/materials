@@ -30,6 +30,7 @@ vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
+obosnovanie_verstki: разделитель части II, стоит перед «Инъекциями» — там, где появляется первый запрет, как поправил владелец
 ---
 
 ## Математика — развёрнуто

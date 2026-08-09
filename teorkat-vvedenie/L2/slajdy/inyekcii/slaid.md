@@ -31,6 +31,11 @@ opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 38
+mezhstrochye: 1.3
+otstup_bloka: 14
+obosnovanie_verstki: мало текста и он ложится длинной строкой — горизонтальная полоса по прямому указанию владельца. Полосу оставил во всю ширину (58%), текст влез поджатым межстрочьем без потери кегля
+zagolovok_snyat_namerenno: da
 ---
 
 ## Математика — развёрнуто

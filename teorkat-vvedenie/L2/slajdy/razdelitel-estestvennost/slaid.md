@@ -30,6 +30,7 @@ vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
+obosnovanie_verstki: разделитель части I — почти пустой экран с крупным названием части, по прямому заказу владельца на два разделителя
 ---
 
 ## Математика — развёрнуто

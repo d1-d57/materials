@@ -1,15 +1,16 @@
-<svg viewBox="0 0 240 250" width="240" role="img" aria-label="Два вектора из одной точки, достроенный на них параллелограмм и диагональ; ниже тот же вектор, растянутый вдвое">
-<circle class="s-node-r" cx="40" cy="140" r="3.4"/>
-<line class="s-thin" x1="150" y1="40" x2="190" y2="90"/><line class="s-thin" x1="80" y1="90" x2="190" y2="90"/>
-<line class="s-line" x1="40" y1="140" x2="150" y2="40"/><path class="s-ar-m" d="M147,47 L143,39 L154,37 z"/>
-<line class="s-line" x1="40" y1="140" x2="80" y2="90"/><path class="s-ar-m" d="M78,97 L73,90 L83,86 z"/>
-<line class="s-accent" x1="40" y1="140" x2="190" y2="90"/><path class="s-ar-a" d="M187,96 L183,88 L194,86 z"/>
-<text class="s-txt-m" x="96" y="76" text-anchor="middle">u</text>
-<text class="s-txt-m" x="156" y="30" text-anchor="middle">v</text>
-<text class="s-txt" x="198" y="86">u+v</text>
-<line class="s-line" x1="40" y1="225" x2="86" y2="167"/><path class="s-ar-m" d="M84,174 L79,167 L89,163 z"/>
-<line class="s-dash" x1="86" y1="167" x2="132" y2="109"/><path class="s-ar-a" d="M130,116 L125,109 L135,105 z"/>
-<circle class="s-node-r" cx="40" cy="225" r="3.4"/>
-<text class="s-txt-m" x="96" y="205" text-anchor="middle">v</text>
-<text class="s-txt" x="138" y="106">2v</text>
+<svg viewBox="0 0 270 440" role="img" aria-label="Сверху: два вектора u и v из одной точки, на них пунктиром достроен параллелограмм, его диагональ выделена как сумма u плюс v. Снизу: вектор v и он же, растянутый вдвое">
+<line class="s-dash" x1="162" y1="140" x2="218" y2="34"/>
+<line class="s-dash" x1="102" y1="70" x2="218" y2="34"/>
+<circle class="s-node-r" cx="42" cy="180" r="4"/>
+<line class="s-line" x1="42" y1="180" x2="156" y2="143"/><path class="s-ar-m" d="M164,140 L154,150 L151,139 z" style="fill:var(--ink)"/>
+<line class="s-line" x1="42" y1="180" x2="99" y2="76"/><path class="s-ar-m" d="M103,67 L94,79 L89,70 z" style="fill:var(--ink)"/>
+<line class="s-accent" x1="42" y1="180" x2="215" y2="39"/><path class="s-ar-a" d="M223,32 L212,42 L206,33 z"/>
+<text class="s-txt" x="104" y="176" text-anchor="middle" font-size="16">u</text>
+<text class="s-txt" x="56" y="118" text-anchor="middle" font-size="16">v</text>
+<text class="s-txt" x="228" y="28" font-size="16">u+v</text>
+<circle class="s-node-r" cx="42" cy="400" r="4"/>
+<line class="s-line" x1="42" y1="400" x2="99" y2="296"/><path class="s-ar-m" d="M103,287 L94,299 L89,290 z" style="fill:var(--ink)"/>
+<line class="s-dash" x1="105" y1="285" x2="158" y2="188"/><path class="s-ar-a" d="M163,179 L154,191 L148,182 z"/>
+<text class="s-txt" x="56" y="338" text-anchor="middle" font-size="16">v</text>
+<text class="s-txt" x="170" y="176" font-size="16">2v</text>
 </svg>
