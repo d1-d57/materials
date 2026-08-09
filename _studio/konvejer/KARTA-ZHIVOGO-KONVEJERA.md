@@ -19,13 +19,13 @@
 
 | Фаза | Решение фазы | Артефакт | Дом на диске | Гейт | Верификатор | Чем доказано, что гейт зовут |
 |---|---|---|---|---|---|---|
-| **1 · Интервью** | карточка лекции (жанр·бюджет·сквозная линия·`tochno_ne_pokazyvaem`·`uzhe_vvedeno_ranee`) + разбиение на слайды/блоки + `vvodit`/`opiraetsya_na` | `brief.md` (шапка) · `slajdy/<имя>/slaid.md` (шапка+разметка блоков) · `INTERVYU.md` | `<лекция>/{brief.md,INTERVYU.md,slajdy/<имя>/slaid.md}` | Хук 1: `grep -c "^ПРИНЯТО фаза-1:" brief.md` = 1 | свежий агент судит план целиком, не видит истории обсуждения | **НЕ закрыт формально на L2**: `grep -c '^ПРИНЯТО фаза-1:' teorkat-vvedenie/L2/brief.md` → `0`. Карточка лекции при этом заполнена (жанр/бюджет/сквозная линия/`tochno_ne_pokazyvaem` — 5 пунктов/`uzhe_vvedeno_ranee` — 3 пункта, все непустые, `brief.md` строки 20–36) |
+| **1 · Интервью** | карточка лекции (жанр·бюджет·сквозная линия·`tochno_ne_pokazyvaem`·`uzhe_vvedeno_ranee`) + разбиение на слайды/блоки + `vvodit`/`opiraetsya_na` | `brief.md` (шапка) · `slajdy/<имя>/slaid.md` (шапка+разметка блоков) · `INTERVYU.md` | `<лекция>/{brief.md,INTERVYU.md,slajdy/<имя>/slaid.md}` | Хук 1: `grep -c "^ПРИНЯТО фаза-1:" brief.md` = 1 · **нет .py-гейта:** проверка фазы — однострочный grep по `brief.md`, отдельного инструмента у неё нет и не задумано | свежий агент судит план целиком, не видит истории обсуждения | **НЕ закрыт формально на L2**: `grep -c '^ПРИНЯТО фаза-1:' teorkat-vvedenie/L2/brief.md` → `0`. Карточка лекции при этом заполнена (жанр/бюджет/сквозная линия/`tochno_ne_pokazyvaem` — 5 пунктов/`uzhe_vvedeno_ranee` — 3 пункта, все непустые, `brief.md` строки 20–36) |
 | **2 · Раскадровка** | перенос куска ленты в блок (`matematika_iz`) · вырезки · `tip_verstki`/`liniya` · заказ иллюстраций (`zakaz.md`, 5+1 полей) · уточнённый бюджет слов | `slajdy/<имя>/slaid.md` (`## Математика — развёрнуто`, шапка дописана) · `VYREZANO.md` · `illustracii/<имя>/zakaz.md` | `<лекция>/{VYREZANO.md,illustracii/<имя>/zakaz.md}` | `gejt_kartochki.py` (частично применим, Д38) · сверка покрытия ленты (3 числа) · `gejt_illyustracij.py` · Хук 2 | содержание блока отвечает мысли плана; `tip_verstki` из реестра, не изобретён | `python3 _generator/tools/gejt_illyustracij.py teorkat-vvedenie/L2` → **ЗЕЛЁНЫЙ**, 11 ссылок/11 заказов. Пример заказа (`illustracii/centr-i-ego-obraz/zakaz.md`) несёт все 6 полей заполненными. **`VYREZANO.md` отсутствует вовсе** (обязателен даже при 0 вырезках — SKILL.md ВЫХОД фазы 2), `ПРИНЯТО фаза-2:` = `0` |
 | **3 · Текст слайдов** | регистр по типу блока · сжатие до плаката · порядок при переборе бюджета | `slajdy/<имя>/slaid.md`, `## Текст слайда — сжато` | тот же файл | `gejt_kartochki.py` (применим ЦЕЛИКОМ — единственная фаза) exit 0 · `check_view.py` · Хук 3 | правило первого употребления термина, форма фразы по типу, плакатный стиль | `python3 _generator/sborka/gejt_kartochki.py teorkat-vvedenie/L2` → **«ЗЕЛЁНЫЙ (полная проверка): проверено 15 из 15 карточек, замечаний 0»**. Карточка `centr-gruppy` несёт запись правки «2026-08-09 · фаза 3: текст слайдов написан». `ПРИНЯТО фаза-3:` = `0` — формально не закрыт, хотя контент готов |
 | **4 · Вёрстка** | вмещается ли текст в `tip_verstki` · кегль · порядок починки переполнения · SPLIT | `slajdy/<имя>/dist/index.html`(+png) | `<лекция>/slajdy/<имя>/dist/` | компиляция без отказа + `audit.py` [браузерный] + `gejt_vmeshcheniya.py` (**СУЩЕСТВУЕТ и подключён**, ФАЗА 3.9) | канон формы, блочный ритм (two-plane core) | 🔴 **ИСПРАВЛЕНО 2026-08-09 на слитом дереве:** прежняя запись «ГЕЙТ ВМЕЩЕНИЯ (не существует — долг)» была НЕВЕРНА — карта прочитала документацию вместо диска, ровно тот грех, ради разоблачения которого писалась. Факт: `ls -la _generator/sborka/gejt_vmeshcheniya.py` → файл на 5217 байт, написан давно; `grep -c gejt_vmeshcheniya _generator/sborka/bootstrap_lekcii.py` → `1` (строка «ФАЗА 3.9», закрытие фазы 3, до ФАЗЫ 4). Прежний замер верен для НЕСЛИТОГО дерева, где файла не было. Сборка: `deck.py --bez-podbora` → см. фазу 6 |
 | **5 · Иллюстрации** | делегирование скиллу `illustracii` · стык по имени папки пула · первая генерация одним агентом | `illustracii/<имя>/risunok.svg` | `<лекция>/illustracii/<имя>/` | `gejt_kartochki.py` (резолв имён) + `gejt_illyustracij.py` | иллюстрация отвечает `zakaz.md` по всем полям (сосед-скилл `illustracii`) | `gejt_illyustracij.py` → ЗЕЛЁНЫЙ (см. фазу 2). `ls teorkat-vvedenie/L2/illustracii/*/risunok.svg \| wc -l` → `11` из 11 заказов |
 | **6 · Сборка и QA** | что входит в дек (`status: rezerv`) · происхождение дека · working-копия, не delivery | `<лекция>/dist/index.html` · `dist/lenta.html` | `<лекция>/dist/` | 5 слоёв: `gejt_kartochki.py` → `deck.py`/`lenta.py` → render-identity (N/A на первой сборке) → `audit.py` → глаз | гейт прогнан на эталоне прежде работы | 🔴 **ИСПРАВЛЕНО 2026-08-09 на слитом дереве: 44 `⟦MISSING-MATH⟧` больше нет, и изменилось не только число, а САМ КЛАСС ОТКАЗА.** (а) Живой дек на диске ЕСТЬ: `grep -c MISSING-MATH teorkat-vvedenie/L2/dist/index.html` → **`0`** (прежняя запись «живого `dist/` на диске сегодня нет» относилась к неслитому дереву). (б) Тихо собрать дек с дырами вместо формул сборка БОЛЬШЕ НЕ МОЖЕТ: она отказывается. Замер той же командой, что дала 44: `python3 _generator/sborka/deck.py teorkat-vvedenie/L2 --bez-podbora -o /tmp/x.html` → **rc=1**, `ОШИБКА: слайд centr-gruppy: 3 формул(ы) нет в кэше math/katex.json`. То есть «44 дыры в деке» сменились на «сборка встала» — заплатка `sborka-l2-fazy-4-7` (ФАЗА 3.5, `kesh_formul.js`). (в) 🔴 ЖИВОЙ ОСТАТОК, не закрытый этим заходом: кэш `math/katex.json` отстал от карточки `centr-gruppy` на 3 формулы — пересборка дека сегодня встанет. Дом — `teorkat-vvedenie/**`, вне зоны захода `gigiena-i-svedenie` |
-| **7 · Сцены** | где ставить паузу (`{@N}`) · пропуск внутри блока (`{fill@N}`/`{blur@N}`) · накопление vs замена | теги сцен внутри тел блоков (тот же `slaid.md`) | `<лекция>/slajdy/<имя>/slaid.md` | `--scene-diff` [браузерный] + попиксельная проверка видимости | каждый клик что-то меняет; порождённое `data-scenes` отвечает замыслу | На L2 сцен **0**: `grep -rl '{@\|{blur@\|{fill@' teorkat-vvedenie/L2/slajdy/*/slaid.md` → пусто. Легально — фаза идёт последней, дек до неё ещё не дошёл. `{blur@N}` сегодня **не работает физически** ни на одном дереве (SKILL.md: `.blur-reveal`/`data-reveal` отсутствуют в `base.css`/`engine.js`) |
+| **7 · Сцены** | где ставить паузу (`{@N}`) · пропуск внутри блока (`{fill@N}`/`{blur@N}`) · накопление vs замена | теги сцен внутри тел блоков (тот же `slaid.md`) | `<лекция>/slajdy/<имя>/slaid.md` | `audit.py` `--scene-diff` [браузерный] + попиксельная проверка видимости | каждый клик что-то меняет; порождённое `data-scenes` отвечает замыслу | На L2 сцен **0**: `grep -rl '{@\|{blur@\|{fill@' teorkat-vvedenie/L2/slajdy/*/slaid.md` → пусто. Легально — фаза идёт последней, дек до неё ещё не дошёл. `{blur@N}` сегодня **не работает физически** ни на одном дереве (SKILL.md: `.blur-reveal`/`data-reveal` отсутствуют в `base.css`/`engine.js`) |
 
 ## 1а. Класс «ИНСТРУМЕНТ ЕСТЬ, ВЫЗОВА НЕТ» — самый частый способ, которым фабрика ломается тихо
 
@@ -51,6 +51,15 @@ python3 _generator/tools/check_tool_contract.py $(ls _generator/tools/*.py _gene
   `_generator/` через `iterdir()` с `p.is_file()`, то есть **подпапка `_generator/sborka/`
   отсеивалась** — а боевой конвейер сборки живёт именно там. Половина ложных срабатываний на
   сплошном прогоне; гейт с такой долей обходят, а не чинят по нему. Охват расширен.
+- 🔴 **ПОПРАВКА 2026-08-09 (заход `karta-kak-reestr`), замер вместо повтора: `podgonka` НЕ
+  импортируется ниоткуда.** Утверждение выше верно для `bloki` и `korpus`, но не для `podgonka`:
+  `grep -rnE '^\s*(import podgonka|from podgonka)' --include='*.py'` по всему репозиторию → **пусто**.
+  `vmeshchenie.py` называет `podgonka.kegl_dlya_znakov` в КОММЕНТАРИИ (строка 31), и это единственная
+  связь; `_podgonka` в `zamer_smety.py` — локальная функция, к модулю отношения не имеющая. Тот же
+  замер опровергает и докстринг самого `check_tool_contract.check_live_trigger` (строки 468–470),
+  который эту связь утверждает. Строка реестра §5 у `podgonka.py` заполнена по замеру, а не по этому
+  абзацу. *Как поймано: независимый субагент-верификатор, сверявший пять случайных строк реестра
+  своими командами.*
 - **`gejt_verstki.py`** — был красным по-настоящему: вызова не имел нигде. Подключён маркером
   `# TOOL-CONTRACT: called-by-hand` с НАЗВАННОЙ фазой (ФАЗА 2). 🔴 **Остаток долга:** строки фазы в
   `bootstrap_lekcii.LIFECYCLE_TMPL` по-прежнему нет — она в чужой зоне; поставят её, маркер можно
@@ -183,7 +192,133 @@ G8–G15`). Число хуков — `grep -c '^### H' _studio/konvejer/GEJTY.m
 7. **Браузерный слой не прогнать в песочнице** — первая реальная проверка вёрстки и сцен ждёт машину
    владельца. На машине владельца: `playwright install && python3 _generator/audit.py teorkat-vvedenie/L2/dist/index.html`
 
+## 5. РЕЕСТР ИНСТРУМЕНТОВ — машиночитаемый, сторожится гейтом
+
+> **Зачем раздел существует.** Текстовая карта протухла дважды, и второй раз — на самой себе
+> (§1, фаза 4: «ГЕЙТ ВМЕЩЕНИЯ не существует» при живом файле рядом). Проза не краснеет.
+> Ниже — не проза, а таблица, которую читает программой `_generator/tools/check_karty.py`:
+> она сверяет реестр с диском и краснеет на расхождении, называя виновника поимённо.
+
+### 5.1 Как читать и как менять
+
+**Строка реестра — ровно пять клеток, порядок фиксирован:**
+
+```
+| `<путь от корня репо>` | <фаза / роль> | <кто зовёт> | <чем проверен> | ЖИВ|АРХИВ |
+```
+
+- **файл** — путь от корня репозитория, в обратных кавычках. Гейт проверяет, что он есть на диске.
+- **фаза / роль** — какой фазе `Ф1…Ф7` живого конвейера служит инструмент, либо
+  `инфраструктура`, либо имя другого проекта. Решает человек. **Что делает каждая фаза —
+  таблица §1 этого же файла** (Ф1 интервью · Ф2 раскадровка · Ф3 текст слайдов · Ф4 вёрстка ·
+  Ф5 иллюстрации · Ф6 сборка и QA · Ф7 сцены). Запись `Ф4/Ф6` читается как «служит ОБЕИМ
+  фазам», а не «одной из по контексту». *Обе оговорки дописаны по замечанию свежего читателя,
+  которому дали ТОЛЬКО этот раздел: без них он мог перечислить инструменты фазы, но не сказать,
+  что эта фаза делает, а косую черту трактовал сам.*
+- **кто зовёт** — `хук` · другой инструмент · шаг сборки · `по руке`. Замер — прогоном
+  `check_tool_contract.py`, не чтением докстринга.
+- **чем проверен** — какая `PROGNAT.sh` покрывает инструмент. Ответ даёт сам инструмент:
+  `python3 _generator/tools/check_tool_contract.py --fixtures-for <путь>`.
+- **статус** — `ЖИВ` либо `АРХИВ`, ровно одно слово. Решает человек.
+
+🔴 **ЗАКОННАЯ ПУСТОТА ОТЛИЧАЕТСЯ ОТ ДЫРЫ ФОРМОЙ, А НЕ НАМЕРЕНИЕМ.** У инструмента может не
+быть фикстуры, у фазы — верификатора: это находка, а не ошибка. Но записывается она
+**явно**: клетка либо несёт содержание, либо ровно `нет: <причина>`. Клетка пустая или с
+прочерком — **красное**. Пустая с причиной — зелёное. Иначе «мы про это знаем» неотличимо
+от «мы это забыли», а именно эта неразличимость и стоила карте двух протуханий.
+
+### 5.2 Реестр
+
+| файл | фаза / роль | кто зовёт | чем проверен | статус |
+|---|---|---|---|---|
+| `_generator/tools/bootstrap_arka.py` | инфраструктура · процесс-память арки | по руке (аналитик заводит арку); прямым запуском гоняют фикстуры `korni`, `register_doc` | `fixtures/git_zona/PROGNAT.sh` · `fixtures/korni/PROGNAT.sh` · `fixtures/register_doc/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/bootstrap_lekcia.py` | Ф1 СТАРОГО дерева (`src/`+`slides/`, `PAPKA-LEKCII.md`); на живом дереве заменён `_generator/sborka/bootstrap_lekcii.py` | нет: настоящей точки вызова нет ни одной — инструмент старого дерева | `fixtures/git_zona/PROGNAT.sh` (ловушка 14 сторожит `bootstrap_*`) | АРХИВ |
+| `_generator/tools/bootstrap_zahod.py` | инфраструктура · генератор заходов | по руке (аналитик собирает заход); прямым запуском гоняют фикстуры `gigiena`, `git_zona`, `korni`, `register_doc`, `zahod` | `fixtures/gigiena/PROGNAT.sh` · `fixtures/git_zona/PROGNAT.sh` · `fixtures/korni/PROGNAT.sh` · `fixtures/register_doc/PROGNAT.sh` · `fixtures/dvizhok/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_incidenty.py` | инфраструктура · разбор классов инцидентов | инстр.: `import` — `git_zona.py`, `schet_nezakrytogo.py`; запуск — `zakryt_sessiyu.py` | `fixtures/incidenty/PROGNAT.sh` · `fixtures/korni/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_kartoteka.py` | инфраструктура · целостность картотеки и корней | хук `.githooks/pre-commit` · инстр.: `import` — `register_doc.py` | `fixtures/korni/PROGNAT.sh` · `fixtures/register_doc/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_karty.py` | инфраструктура · согласованность ЭТОГО реестра с диском | по руке, маркер `called-by-hand`: строка для `.githooks/pre-commit` готова и названа пунктом очереди захода `karta-kak-reestr` (хук вне его зоны); прямым запуском гоняет `fixtures/karty/PROGNAT.sh` | `fixtures/karty/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_kurs.py` | другой проект: курс «Теория категорий», не фаза дека | по руке; настоящей точки вызова в дереве нет — единственное упоминание имени лежит в докстринге `check_tool_contract.py` как пример | нет: фикстуры нет — долг, назван в `## ВОПРОСЫ` захода `karta-kak-reestr` | ЖИВ |
+| `_generator/tools/check_lenta.py` | Ф2 · форма ленты | хук `.githooks/pre-commit` | `fixtures/lenta/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_sborki.py` | инфраструктура · гейт сборки захода (С1–С8) | инстр.: `import` — `bootstrap_zahod.py` (линтует собранный заход до записи на диск) | `fixtures/gigiena/PROGNAT.sh` · `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_termin.py` | Ф3 · термин не раньше определения | по руке (канон `STANDART-teksta.md` правило 11); прямым запуском гоняет `fixtures/termin/PROGNAT.sh` | `fixtures/termin/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_tool_contract.py` | инфраструктура · контракт инструмента | хук `.githooks/pre-commit` · инстр.: запуск — `bootstrap_zahod.py`, `check_karty.py` (инвариант И3 спрашивает ответ у него) | `fixtures/tool_contract/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_uroki.py` | инфраструктура · у урока обязана быть ЦЕНА | хук `.githooks/pre-commit` · инстр.: `import` — `dostavit_urok.py`, `schet_nezakrytogo.py` | `fixtures/uroki/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_ves.py` | инфраструктура · тяжёлый файл вне git не заводится молча | хук `.githooks/pre-commit` | `fixtures/ves/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/check_view.py` | Ф3/Ф6 · текст не съеден при отрисовке | инстр.: запуск — `dvizhki.py` · сценарий приёмки `_studio/zhurnal/2026-07-21_mat-kostyak/PRIEMKA.sh` | нет: фикстуры нет — долг, назван в `## ВОПРОСЫ` захода `karta-kak-reestr` | ЖИВ |
+| `_generator/tools/check_zahod.py` | инфраструктура · линтер входа (З1–З10) | инстр.: `import` — `bootstrap_zahod.py` (`STRUCTURAL_CHECKS` на собранном тексте) | `fixtures/zahod/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/dnevnik.py` | инфраструктура · полнота дневника сессии | инстр.: `import` — `priyomka.py`, `zakryt_sessiyu.py` | `fixtures/sessiya/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/dostavit_urok.py` | инфраструктура · транспорт наблюдения в его дом | инстр.: `import` — `priyomka.py`, `schet_nezakrytogo.py`, `zakryt_sessiyu.py` | `fixtures/nablyudenia/PROGNAT.sh` · `fixtures/urok/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/gejt_illyustracij.py` | Ф2 (заказ) и Ф5 (приёмка) | хук `.githooks/pre-commit` — единственный настоящий вызов; `sostoyanie.py` эту команду ПЕЧАТАЕТ советом, а не запускает | `fixtures/illyustracii/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/gejt_verstki.py` | Ф2 · вёрстка слайда решена и обоснована | по руке, маркер `called-by-hand` с названной ФАЗОЙ 2; настоящей точки вызова нет — строка в `bootstrap_lekcii.LIFECYCLE_TMPL` остаётся ДОЛГОМ захода `gigiena-i-svedenie`, её там пока НЕТ | `fixtures/verstki/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/git_zona.py` | инфраструктура · единственная дверь к git | инстр.: запуск — `bootstrap_zahod.py`, `priyomka.py`, `sdelat_handoff.py`, `zakryt_sessiyu.py`; прямым запуском гоняют фикстуры `git_zona`, `korni`, `dvizhok`. `check_kartoteka.py` эту команду ПЕЧАТАЕТ советом, а не запускает; фикстуры `sborka` и `tool_contract` держат её только строкой в шаблоне | `fixtures/git_zona/PROGNAT.sh` · `fixtures/korni/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/graf_zavisimostej.py` | Ф2/Ф3 · граф зависимостей лекции, циклы и порядок | хук `.githooks/pre-commit` | `fixtures/graf/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/korni.py` | инфраструктура · реестр корней | инстр.: `import` — `bootstrap_arka.py`, `bootstrap_zahod.py`, `check_incidenty.py`, `check_kartoteka.py`, `git_zona.py`, `register_doc.py` | `fixtures/korni/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/priyomka.py` | инфраструктура · приёмка отчёта (Г0–Г8) | по руке (аналитик гоняет на отчёте); вызова из инструментов нет — связь ОБРАТНАЯ: `priyomka.py` сама импортирует `dnevnik.py` и `dostavit_urok.py`; прямым запуском гоняют фикстуры `priyomka`, `git_zona` | `fixtures/priyomka/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/register_doc.py` | инфраструктура · дверь регистрации `.md` в `KARTA.md §6` | инстр.: `import` — `bootstrap_arka.py`, `bootstrap_zahod.py`; запуск — `sdelat_handoff.py`, `zakryt_sessiyu.py` | `fixtures/korni/PROGNAT.sh` · `fixtures/register_doc/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/reviziya_dolgov.py` | инфраструктура · статусы `DOLG.md` скилла `slajdy` | по руке, маркер `called-by-hand`; настоящей точки вызова нет | `fixtures/reviziya_dolgov/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/schet_nezakrytogo.py` | инфраструктура · четыре числа незакрытого | инстр.: `import` — `bootstrap_zahod.py`, `zakryt_sessiyu.py` | `fixtures/nezakrytogo/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/sdelat_handoff.py` | инфраструктура · вход в следующую сессию | по руке, маркер `called-by-hand`; настоящей точки вызова нет | `fixtures/sessiya/PROGNAT.sh` | ЖИВ |
+| `_generator/tools/sostoyanie.py` | трекер СТАРОГО конвейера: читает `GEJTY.md` и дерево `src/`+`slides/`; на дереве `slajdy/` не наводится | нет: настоящей точки вызова нет — упоминания в `check_lenta.py` и `check_zahod.py` это проза о гейте G7; прямым запуском гоняет только своя фикстура | `fixtures/sostoyanie/PROGNAT.sh` | АРХИВ |
+| `_generator/tools/sostoyanie_lekcii.py` | другой проект: представление над markdown-базой курса теоркат | по руке; настоящей точки вызова нет — `check_kurs.py` называет его в прозе | нет: фикстуры нет — долг, назван в `## ВОПРОСЫ` захода `karta-kak-reestr` | ЖИВ |
+| `_generator/tools/zakryt_sessiyu.py` | инфраструктура · выгрузка знания из транскрипта | инстр.: `import` — `dnevnik.py`; запуск — `sdelat_handoff.py` | `fixtures/sessiya/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/bloki.py` | Ф1/Ф3 · блоки, сцены и разделы тела карточки | инстр.: `import` — `formaty.py`, `gejt_kartochki.py`, `lenta.py` | нет: своей фикстуры нет — из трёх вызывающих `fixtures/sborka/PROGNAT.sh` гоняет только `gejt_kartochki.py` | ЖИВ |
+| `_generator/sborka/bootstrap_lekcii.py` | Ф1 · порождение дерева лекции (`slajdy/`, карточки, `LIFECYCLE`) | по руке (порождение дерева лекции); прямым запуском гоняет `fixtures/sborka/PROGNAT.sh` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/deck.py` | Ф6 · сборка целого дека | инстр.: запуск — `bootstrap_lekcii.py`; прямым запуском гоняет `fixtures/sborka/PROGNAT.sh` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/formaty.py` | Ф1/Ф2 · формат карточки слайда и markdown её тела | инстр.: `import` — `bootstrap_lekcii.py`, `deck.py`, `gejt_kartochki.py`, `lenta.py`, `slaid.py`, `smeta.py`, `graf_zavisimostej.py` | нет: своей фикстуры нет — покрыт косвенно через `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/gejt_kartochki.py` | Ф3 целиком; Ф2, Ф5, Ф6 частично | инстр.: запуск — `bootstrap_lekcii.py`; прямым запуском гоняет `fixtures/sborka/PROGNAT.sh` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/gejt_vmeshcheniya.py` | Ф4 · гейт вмещения (ФАЗА 3.9, закрытие Ф3 до Ф4) | инстр.: запуск — `bootstrap_lekcii.py` (строка «ФАЗА 3.9» в `LIFECYCLE_TMPL`) · плюс маркер `called-by-hand` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/korpus.py` | Ф4 · диапазоны кегля из корпуса живых деков | инстр.: `import korpus` — `vmeshchenie.py` (по имени МОДУЛЯ, без `.py`: эвристика `check_tool_contract` этого не видит, §5.4) | нет: своей фикстуры нет — покрыт КОСВЕННО и это проверено: `fixtures/sborka/PROGNAT.sh` гоняет `gejt_vmeshcheniya.py`, а тот через `vmeshchenie.py` грузит `korpus` (замер: модуль оказывается в `sys.modules`) | ЖИВ |
+| `_generator/sborka/lenta.py` | Ф2/Ф6 · лента лекции одним HTML | по руке (представление ленты); вызова из инструментов нет — `sostoyanie.py` команду печатает советом | нет: спутник-фикстуры кривого входа нет — КРАСНЫЙ контракта, отдельный заход (`gigiena-i-svedenie`, `## ВОПРОСЫ` п.4) | ЖИВ |
+| `_generator/sborka/podgonka.py` | Ф4 · подгонка кегля под знаки | нет: ни импорта, ни запуска, ни `по руке` — у модуля нет ни `__main__`, ни `argparse`, запускать его нечем; `vmeshchenie.py` называет `podgonka.kegl_dlya_znakov` в комментарии, импорта нет | нет: покрытия нет ВОВСЕ — ни своей фикстуры, ни косвенного: модуль никем не импортируется, ни одна `PROGNAT.sh` не исполняет ни строки | ЖИВ |
+| `_generator/sborka/slaid.py` | Ф4/Ф5 · компилятор одного слайда, резолв иллюстраций | инстр.: `import` — `deck.py`, `lenta.py`, `smeta.py`, `zamer_smety.py`; запуск — `bootstrap_lekcii.py` | нет: спутник-фикстуры кривого входа нет — КРАСНЫЙ контракта, отдельный заход | ЖИВ |
+| `_generator/sborka/smeta.py` | Ф2 · смета вмещения без браузера | инстр.: запуск — `bootstrap_lekcii.py` · плюс маркер `called-by-hand` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/tipy.py` | Ф2/Ф4 · реестр типов вёрстки | инстр.: `import` — `build_deck.py`, `deck.py`, `slaid.py` | нет: своей фикстуры нет — косвенно через `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/sborka/vmeshchenie.py` | Ф4 · измеритель вмещения и солвер кегля | инстр.: `import` — `deck.py`, `gejt_vmeshcheniya.py`, `smeta.py`, `zamer_smety.py` | нет: спутник-фикстуры кривого входа нет — КРАСНЫЙ контракта, отдельный заход | ЖИВ |
+| `_generator/sborka/zamer_smety.py` | Ф2 · замер исходных чисел сметы | инстр.: запуск — `smeta.py` · плюс маркер `called-by-hand` | `fixtures/sborka/PROGNAT.sh` | ЖИВ |
+| `_generator/audit.py` | Ф4/Ф6/Ф7 · канон-аудит собранного дека, `--scene-diff` [браузерный] | по руке [браузерный]; настоящего вызова нет — `sostoyanie.py` и `build_deck.py` называют команду в прозе | нет: фикстуры нет, и прогнать её негде — браузерный слой в песочнице не запускается (§3); `check_tool_contract` на нём КРАСНЫЙ («кривой вход») | ЖИВ |
+| `_generator/build_deck.py` | Ф4/Ф6 · движок дека СТАРОГО дерева (`src/`+`slides/`, `{{SLIDES}}`) — им собраны все ранее выпущенные деки проектов | инстр.: `import` — `bootstrap_lekcii.py`, `deck.py`, `formaty.py`, `lenta.py`, `slaid.py`; запуск — `dvizhki.py` | `fixtures/dvizhok/PROGNAT.sh` | ЖИВ |
+| `_generator/build_doc.py` | другой движок: документ-вид (лекции-статьи, листки-развороты), не фаза дека | инстр.: запуск — `dvizhki.py`, `check_lenta.py`, `check_view.py` · сценарий приёмки `_studio/zhurnal/2026-07-21_mat-kostyak/PRIEMKA.sh` | нет: фикстуры нет; `check_tool_contract` на нём КРАСНЫЙ («кривой вход») | ЖИВ |
+| `_generator/build_listok.py` | другой проект: листок задач из банка (спецмат), не фаза дека | нет: настоящей точки вызова нет ни одной — КРАСНЫЙ контракта «нигде не вызывается», дом вне зоны захода `karta-kak-reestr` | нет: фикстуры нет; и тот же КРАСНЫЙ контракта по «кривому входу» | ЖИВ |
+| `_generator/dvizhki.py` | инфраструктура · единственная дверь к `_generator` снаружи | проекты: `python3 -m dvizhki` — `krivaya-drakona/lekciya/assemble.py`, `krivaya-drakona/razbor/assemble.py`, `teorkat-vvedenie/src/tools/podognat.py`; `import dvizhki` — `obzory/sluchajnye-bluzhdaniya-na-gruppah/zahod/render.py`; консольная точка входа — `_generator/setup.cfg` | нет: фикстуры нет; `check_tool_contract` на нём КРАСНЫЙ («кривой вход») | ЖИВ |
+| `_generator/harvest_katex.py` | Ф6 · сборщик кэша формул из готовой колоды | по руке; настоящего вызова нет — `build_deck.py` и `kesh_formul.js` называют его в прозе | нет: фикстуры нет; `check_tool_contract` на нём КРАСНЫЙ («кривой вход») | ЖИВ |
+| `_generator/render.py` | Ф4/Ф6/Ф7 · локальный рендер и сверка колод [браузерный] | инстр.: `import` — `slaid.py` | `fixtures/dvizhok/PROGNAT.sh` | ЖИВ |
+| `_generator/setup.py` | инфраструктура · шим сборки пакета `dvizhki` (`pip` без PEP 660) | сборка пакета: `pip install -e _generator` по `_generator/setup.cfg`; фабрикой не зовётся | нет: фикстуры нет и не нужна — две строки без разбора входа | ЖИВ |
+### 5.3 Числа — командами, не глазами
+
+```
+ls _generator/tools/*.py _generator/sborka/*.py _generator/*.py | wc -l          # инструментов под реестром
+grep -cE '^\| `_generator/[^`]+` \|' _studio/konvejer/KARTA-ZHIVOGO-KONVEJERA.md  # строк реестра
+grep -cE '\| АРХИВ \|$' _studio/konvejer/KARTA-ZHIVOGO-KONVEJERA.md               # из них АРХИВ
+python3 _generator/tools/check_karty.py                                          # гейт согласованности
+```
+
+### 5.4 🔴 Чего этот реестр НЕ доказывает — объявлено, чтобы зелёный не читали шире
+
+- 🔴 **КОЛОНКА «КТО ЗОВЁТ» И ГЕЙТ ОТВЕЧАЮТ НА РАЗНЫЕ ВОПРОСЫ, И ЭТО НАДО ЗНАТЬ ОБОИМ.**
+  Колонка заполнена НАСТОЯЩИМИ точками вызова: `import <модуль>`, запуск процессом
+  (`python3 … x.py`, `sys.executable`), `python3 -m <модуль>`, строка хука. Упоминание
+  имени в комментарии или докстринге вызовом НЕ считается. Инвариант И3 гейта спрашивает
+  ответ у `check_tool_contract.has_live_trigger()`, а та — текстовая эвристика: упомянут
+  ли basename вне своего файла. **Эвристика слепа в обе стороны, и обе измерены на живом
+  дереве:** ложный ЗЕЛЁНЫЙ — `priyomka.py`, `podgonka.py`, `korpus.py`, `harvest_katex.py`
+  (имя названо только прозой соседа либо докстрингом самого гейта); ложное КРАСНОЕ по
+  смыслу — `dvizhki.py`, у которого девять живых вызовов вида `python3 -m dvizhki` в трёх
+  проектах, а эвристика видит лишь `README.md`. Первая независимая сверка пяти случайных
+  строк дала **1 правдивую из 5** именно потому, что первая редакция колонки была
+  заполнена этой же эвристикой; колонка переписана по замеру, эвристика — нет.
+  **Практический вывод: зелёный И3 означает «basename где-то упомянут», а не «инструмент
+  реально зовут». Правду о вызове несёт КОЛОНКА, а не код возврата.**
+- **Статус `ЖИВ` не означает «прогнан сегодня»**: он означает решение человека, что
+  инструмент служит живому конвейеру. Работоспособность доказывают `PROGNAT.sh` и колонка
+  «чем проверен», а не статус.
+- **`.py` внутри `_generator/**/fixtures/`** в реестр не входят: это нагрузка одной фикстуры,
+  а не инструмент фабрики (то же исключение, что у `check_tool_contract.check_live_trigger`).
+  Разница чисел: `find _generator -name '*.py' | wc -l` минус охват реестра.
+- **Колонка «фаза / роль» машинно не проверяется ничем.** Гейт сверяет существование,
+  вызов и покрытие; сказать, что инструмент отнесён не к той фазе, он не может.
+
 ---
 *Сверка — заход `karta-konvejera` (`../zhurnal/2026-08-07_arhitektura-slajdov/kod_karta-zhivogo-konvejera.md`).
+Реестр §5 и гейт `check_karty.py` — заход `karta-kak-reestr` (`../zhurnal/2026-08-07_arhitektura-slajdov/kod_karta-kak-reestr.md`).
 Живой источник фаз — `~/Documents/GitHub/disciplina/skills/slajdy/SKILL.md`. Старый реестр — `GEJTY.md`,
 `ALGORITM.md`, `KATALOG.md`, `00-KONVEJER.md` в этой же папке.*
