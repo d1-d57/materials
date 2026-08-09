@@ -6,9 +6,9 @@
 <line class="s-thin" x1="172" y1="70" x2="231" y2="70"/><path class="s-ar-m" d="M231,66 l9,4 -9,4 z"/>
 <text class="s-txt-m" x="94" y="58" text-anchor="middle" font-size="15">s</text>
 <text class="s-txt-m" x="204" y="58" text-anchor="middle" font-size="15">sgn</text>
-<path class="s-line" d="M40,50 C40,16 260,16 260,44"/>
-<path class="s-ar-m" d="M256,35 l4,9 4,-9 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="150" y="20" text-anchor="middle" font-size="15">id</text>
+<path class="s-line" d="M40,50 V32 A14,14 0 0,1 54,18 H246 A14,14 0 0,1 260,32 V44"/>
+<path class="s-ar-m" d="M256,44 L260,53 L264,44 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="150" y="13" text-anchor="middle" font-size="15">id</text>
 <line class="s-dash" x1="40" y1="92" x2="40" y2="320"/><path class="s-ar-a" d="M36,311 l4,9 4,-9 z"/>
 <line class="s-dash" x1="150" y1="92" x2="150" y2="320"/><path class="s-ar-a" d="M146,311 l4,9 4,-9 z"/>
 <line class="s-dash" x1="260" y1="92" x2="260" y2="320"/><path class="s-ar-a" d="M256,311 l4,9 4,-9 z"/>
@@ -22,7 +22,7 @@
 <line class="s-thin" x1="176" y1="342" x2="231" y2="342"/><path class="s-ar-m" d="M231,338 l9,4 -9,4 z"/>
 <text class="s-txt-m" x="94" y="330" text-anchor="middle" font-size="15">Z(s)</text>
 <text class="s-txt-m" x="204" y="330" text-anchor="middle" font-size="15">Z(sgn)</text>
-<path class="s-line" d="M40,364 C40,404 260,404 260,370"/>
-<path class="s-ar-m" d="M256,379 l4,-9 4,9 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="150" y="432" text-anchor="middle" font-size="15">≠ id</text>
+<path class="s-line" d="M40,364 V382 A14,14 0 0,0 54,396 H246 A14,14 0 0,0 260,382 V370"/>
+<path class="s-ar-m" d="M256,370 L260,361 L264,370 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="150" y="418" text-anchor="middle" font-size="15">≠ id</text>
 </svg>
