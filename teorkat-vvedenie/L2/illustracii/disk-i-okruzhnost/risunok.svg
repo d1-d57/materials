@@ -2,8 +2,8 @@
 <text class="s-txt-m" x="195" y="34" text-anchor="middle" font-size="17">i</text>
 <line class="s-thin" x1="87" y1="48" x2="305" y2="48"/>
 <path class="s-ar-m" d="M305,44 l9,4 -9,4 z"/>
-<text class="s-txt" x="48" y="100" text-anchor="middle" font-size="44">S¹</text>
-<text class="s-txt" x="352" y="100" text-anchor="middle" font-size="44">D²</text>
+<text class="s-txt" x="48" y="100" text-anchor="middle" font-size="40" style="font-size:40px">S¹</text>
+<text class="s-txt" x="352" y="100" text-anchor="middle" font-size="40" style="font-size:40px">D²</text>
 <path class="s-line" d="M87,76 H300 A14,14 0 0,1 300,104 H87"/>
 <path class="s-ar-m" d="M87,100 L78,104 L87,108 z" style="fill:var(--ink)"/>
 <text class="s-txt-m" x="195" y="95" text-anchor="middle" font-size="17">id</text>
@@ -18,8 +18,8 @@
 <text class="s-txt-m" x="362" y="228" font-size="17">π₁</text>
 <line class="s-thin" x1="87" y1="288" x2="305" y2="288"/>
 <path class="s-ar-m" d="M305,284 l9,4 -9,4 z"/>
-<text class="s-txt" x="48" y="332" text-anchor="middle" font-size="44">ℤ</text>
-<text class="s-txt" x="352" y="332" text-anchor="middle" font-size="44">{e}</text>
+<text class="s-txt" x="48" y="332" text-anchor="middle" font-size="40" style="font-size:40px">ℤ</text>
+<text class="s-txt" x="352" y="332" text-anchor="middle" font-size="40" style="font-size:40px">{e}</text>
 <path class="s-line" d="M87,316 H300 A14,14 0 0,1 300,344 H87"/>
 <path class="s-ar-m" d="M87,340 L78,344 L87,348 z" style="fill:var(--ink)"/>
 <text class="s-txt-m" x="195" y="335" text-anchor="middle" font-size="17">≠ id</text>
