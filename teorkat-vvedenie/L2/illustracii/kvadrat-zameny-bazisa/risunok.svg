@@ -3,8 +3,8 @@
 <text class="s-txt" x="204" y="52" text-anchor="middle" font-size="17">ℝᵐ</text>
 <text class="s-txt" x="46" y="202" text-anchor="middle" font-size="17">ℝⁿ</text>
 <text class="s-txt" x="204" y="202" text-anchor="middle" font-size="17">ℝᵐ</text>
-<line class="s-thin" x1="72" y1="46" x2="176" y2="46"/><path class="s-ar-m" d="M176,42 l9,4 -9,4 z"/>
-<line class="s-thin" x1="72" y1="196" x2="176" y2="196"/><path class="s-ar-m" d="M176,192 l9,4 -9,4 z"/>
+<line class="s-thin" x1="72" y1="46" x2="169" y2="46"/><path class="s-ar-m" d="M169,42 l9,4 -9,4 z"/>
+<line class="s-thin" x1="72" y1="196" x2="169" y2="196"/><path class="s-ar-m" d="M169,192 l9,4 -9,4 z"/>
 <line class="s-thin" x1="46" y1="68" x2="46" y2="167"/><path class="s-ar-m" d="M42,158 l4,9 4,-9 z"/>
 <line class="s-thin" x1="204" y1="68" x2="204" y2="167"/><path class="s-ar-m" d="M200,158 l4,9 4,-9 z"/>
 <text class="s-txt-m" x="124" y="32" text-anchor="middle" font-size="15">A</text>

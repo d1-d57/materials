@@ -1,4 +1,4 @@
-<svg viewBox="0 0 250 214" width="250" role="img" aria-label="Пустой коммутативный квадрат: четыре узла без подписей и четыре стрелки, две вправо и две вниз">
+<svg viewBox="0 0 250 214" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Пустой коммутативный квадрат: четыре узла без подписей и четыре стрелки, две вправо и две вниз">
 <circle class="s-node" cx="52" cy="34" r="3.4"/><circle class="s-node" cx="198" cy="34" r="3.4"/>
 <circle class="s-node" cx="52" cy="180" r="3.4"/><circle class="s-node" cx="198" cy="180" r="3.4"/>
 <line class="s-thin" x1="62" y1="34" x2="180" y2="34"/><path class="s-ar-m" d="M180,30 l9,4 -9,4 z"/>

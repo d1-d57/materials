@@ -32,7 +32,16 @@ GLOBAL_CSS = (
     ".zone.board{ background:var(--board); } "
     ".zone.copy{ padding:46px 64px; } "
     ".zagolovok{ font-family:'Forum',serif; text-transform:uppercase; "
-    "font-size:44px; line-height:1.15; margin-bottom:28px; color:var(--ink); }"
+    "font-size:44px; line-height:1.15; margin-bottom:28px; color:var(--ink); } "
+    # ---- визитка: текст канона (sluzhebnye/vizitka.md) несёт {.bullets} и
+    # <a class="tg-link">; правила дословно с sluzhebnye/style.css (заход
+    # vizitka-i-oblozhka, В1) — без них render_body роняет карточку гейтом
+    # «класс не найден в словаре скелета» (base.css + этот файл — весь словарь).
+    ".bullets{ list-style:none; padding-left:32px; } "
+    ".bullets li{ position:relative; } "
+    ".bullets li::before{ content:''; position:absolute; left:-30px; top:.55em; "
+    "width:9px; height:9px; border-radius:50%; background:var(--ink); } "
+    ".tg-link{ color:inherit; text-decoration:none; cursor:pointer; }"
 )
 
 
@@ -181,38 +190,54 @@ def tolko_tekst(sid, p, text_html):
 
 # ───────────────────────── 7. oblozhka ─────────────────────────
 def oblozhka(sid, p, text_html):
+    """`sub`/`dateplace` — необязательные вторая/третья строка обложки
+    (`sluzhebnye/oblozhka.html`: `?SUB{SUB}`/`?DATEPLACE{DATEPLACE}`, заход
+    vizitka-i-oblozhka, В2); числа CSS дословно из `sluzhebnye/style.css`."""
     z = p.get("zagolovok_na_ekrane", "")
+    sub = p.get("sub")
+    dateplace = p.get("dateplace")
     ills = p.get("illustracii") or []
     css = ("#%s{ background:var(--board); } "
            "#%s .wrap{ position:absolute; inset:0; display:grid; "
            "grid-template-rows:1fr auto 1.7fr; align-items:center; padding:0 130px; } "
            "#%s .head{ grid-row:2; } "
            "#%s .head .t-display{ font-size:96px; } "
+           "#%s .sub{ font-family:'Glacial Indifference','Noto Sans',sans-serif; "
+           "text-align:center; color:var(--ink); font-size:32px; letter-spacing:.04em; margin-top:36px; } "
+           "#%s .sub2{ font-size:22px; margin-top:14px; color:var(--ink); opacity:.78; line-height:1.5; } "
            "#%s .art{ position:absolute; left:0; right:0; bottom:46px; height:250px; }"
-           % (sid, sid, sid, sid, sid))
+           % (sid, sid, sid, sid, sid, sid, sid))
     art = ('<div class="art">%s</div>' % _ill_zone(ills, axis="row", cls="")
            if ills else "")
-    body = ('<div class="wrap"><div class="head"><div class="t-display">%s</div></div></div>%s'
-            % (_esc(z), art))
+    sub_html = '<div class="sub">%s</div>' % _esc(sub) if sub else ""
+    dateplace_html = '<div class="sub sub2">%s</div>' % _esc(dateplace) if dateplace else ""
+    body = ('<div class="wrap"><div class="head"><div class="t-display">%s</div>%s%s</div></div>%s'
+            % (_esc(z), sub_html, dateplace_html, art))
     return css, body
 
 
 # ───────────────────────── 8. vizitka ─────────────────────────
 def vizitka(sid, p, text_html):
+    """Фото и QR — не иллюстрации лекции (не через `data-ill`/пул `illustracii/`),
+    а готовый HTML канона (`sluzhebnye/vizitka-photo.html`/`vizitka-qr.html`,
+    `<img src="data:...">`): deck.py читает их с диска и кладёт в `photo_html`/
+    `qr_html` (заход vizitka-i-oblozhka, В1). Раскладка (251×260, 250×250) не
+    менялась — она уже совпадала с каноном."""
     z = p.get("zagolovok_na_ekrane", "Про меня")
-    ills = p.get("illustracii") or []
-    photo = ills[0] if len(ills) >= 1 else None
-    qr = ills[1] if len(ills) >= 2 else None
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
            "grid-template-columns:410px 56px 1fr; grid-template-rows:107px 1fr; } "
            "#%s .board{ grid-area:1/1/3/2; background:var(--board); position:relative; } "
            "#%s .brd-title{ position:absolute; left:36px; top:34px; font-size:74px; } "
            "#%s .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:260px; } "
+           "#%s .p-photo img{ width:100%%; height:100%%; object-fit:cover; } "
            "#%s .p-qr{ position:absolute; left:81px; top:479px; width:250px; height:250px; } "
+           "#%s .p-qr img{ width:100%%; height:100%%; } "
            "#%s .copy{ grid-area:2/3; }"
-           % (sid, sid, sid, sid, sid, sid))
-    photo_html = ('<div class="panel p-photo" data-ill="%s"></div>' % _esc(photo)) if photo else ""
-    qr_html = ('<div class="panel p-qr" data-ill="%s"></div>' % _esc(qr)) if qr else ""
+           % (sid, sid, sid, sid, sid, sid, sid, sid))
+    photo_raw = p.get("photo_html", "")
+    qr_raw = p.get("qr_html", "")
+    photo_html = ('<div class="panel p-photo">%s</div>' % photo_raw) if photo_raw else ""
+    qr_html = ('<div class="panel p-qr">%s</div>' % qr_raw) if qr_raw else ""
     body = ('<div class="grid">'
             '<div class="zone board"><div class="brd-title t-display">%s</div>%s%s</div>'
             '<div class="zone copy t-body">%s</div>'

@@ -17,6 +17,7 @@
   python3 _generator/sborka/vmeshchenie.py --demo-zony               # Э1: отказ ДО поиска (п.1 критерия)
 """
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -580,10 +581,62 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
     return r
 
 
+POLE_METKI = "podbor_avto"
+POLE_NAMERENIYA = "verstka_reshena"
+_METKA_ZNACHENIYA = ("kegl_px", "mezhstrochye", "otstup_bloka", "liniya")
+
+
+def otpechatok(telo):
+    """sha1[:12] ТЕЛА карточки — отпечаток входа солвера.
+
+    🔴 Считается по ТЕЛУ, а не по файлу и не по `mtime`: шапку карточки пишет сам
+    `apply_to_card` (и правит человек — заголовок, статус, обоснование вёрстки), и
+    любой из этих признаков гонял бы солвер на слайде, текст которого не менялся.
+    Меняется вход солвера — меняется отпечаток; всё остальное его не касается."""
+    return hashlib.sha1((telo or "").strip().encode("utf-8")).hexdigest()[:12]
+
+
+def sobrat_metku(otp, znacheniya):
+    """(отпечаток тела, что записал солвер) → одна строка шапки.
+
+    Формат `<hash>|kegl_px=…|mezhstrochye=…|otstup_bloka=…|liniya=…`: и отпечаток
+    входа, и СВОИ значения на выходе. Второе не роскошь — без него нельзя отличить
+    «значения записал солвер» от «после солвера их поправили руками», а это две
+    противоположные ситуации (одна — переподбирать, другая — не сметь трогать)."""
+    hvost = "".join("|%s=%s" % (k, znacheniya[k]) for k in _METKA_ZNACHENIYA
+                    if znacheniya.get(k) is not None)
+    return otp + hvost
+
+
+def razobrat_metku(stroka):
+    """Строка метки → (отпечаток|None, {поле: float}). Мусор/пусто → (None, {})."""
+    if not stroka or not isinstance(stroka, str):
+        return None, {}
+    chasti = stroka.split("|")
+    otp, znacheniya = chasti[0].strip(), {}
+    if not otp:
+        return None, {}
+    for kus in chasti[1:]:
+        if "=" not in kus:
+            continue
+        k, v = kus.split("=", 1)
+        try:
+            znacheniya[k.strip()] = float(v)
+        except ValueError:
+            return None, {}
+    return otp, znacheniya
+
+
 def apply_to_card(slide_md_path, best):
     """Решение солвера → карточка слайда (`slaid.md`): дописывает/заменяет поля
-    `liniya`, `kegl_px`, `mezhstrochye`, `otstup_bloka` в YAML-шапке. Правит
-    ТОЛЬКО эти четыре строки."""
+    `liniya`, `kegl_px`, `mezhstrochye`, `otstup_bloka` в YAML-шапке — и ПЯТЫМ
+    полем `podbor_avto` метит их своей рукой.
+
+    🔴 Метка — лекарство от «подбор одноразовый» (П1 захода tri-provodki, второй
+    дефект): без неё записанные сюда значения на следующей сборке неотличимы от
+    решения автора, слайд пропускается, и правка текста молча едет на старом кегле.
+    С меткой видно и ЧТО записал солвер, и ПО КАКОМУ тексту, — решение принимает
+    `deck.reshenie_o_podbore`, здесь только честная запись авторства."""
     p = Path(slide_md_path)
     text = p.read_text(encoding="utf-8")
     new_fields = {
@@ -593,6 +646,9 @@ def apply_to_card(slide_md_path, best):
     }
     if best.get("liniya") is not None:
         new_fields["liniya"] = round(best["liniya"], 2)
+    from formaty import parse_card  # noqa: E402 — тот же приём импорта-внутри, что в deck.py
+    _, telo = parse_card(text, sid=p.parent.name)
+    new_fields[POLE_METKI] = sobrat_metku(otpechatok(telo), new_fields)
     lines = text.split("\n")
     seen = set()
     out = []

@@ -753,10 +753,42 @@ if python3 -c "import playwright" >/dev/null 2>&1; then
   KEGL_POSLE=$(grep "^kegl_px:" "$L30/slajdy/s01/slaid.md")
   [ "$KEGL_DO" = "$KEGL_POSLE" ] || {
     echo "❌ ЛОВУШКА 30: явный kegl_px ПЕРЕЗАПИСАН солвером ($KEGL_DO → $KEGL_POSLE):"; exit 1; }
-  echo "$OUT30" | grep -q "пропущен, явные значения" || {
-    echo "❌ ЛОВУШКА 30: deck.py не назвал слайд пропущенным из-за явных значений в шапке:"
+  echo "$OUT30" | grep -q "s01 — пропущен" || {
+    echo "❌ ЛОВУШКА 30: deck.py не назвал слайд пропущенным поимённо:"
+    echo "$OUT30"; exit 1; }
+  echo "$OUT30" | grep -q "verstka_reshena" || {
+    echo "❌ ЛОВУШКА 30: пропуск назван, но не сказано, чем закрепить решение автора — а именно"
+    echo "   этого не хватало исполнителю, который потом полез искать причину в код:"
     echo "$OUT30"; exit 1; }
   echo "  ✅ ловушка 30: playwright в наличии — явный kegl_px пережил сборку ($KEGL_DO), дек собран"
+  # 30б (заход tri-provodki): ТА ЖЕ карточка с флагом --zanovo обязана быть
+  # ПЕРЕПОДОБРАНА — иначе размораживать замороженную лекцию нечем вовсе, и
+  # «подбор одноразовый» остаётся ровно там, где был.
+  OUT30C=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" --zanovo 2>&1) || {
+    echo "❌ ЛОВУШКА 30б: сборка с --zanovo упала:"; echo "$OUT30C"; exit 1; }
+  KEGL_ZANOVO=$(grep "^kegl_px:" "$L30/slajdy/s01/slaid.md")
+  [ "$KEGL_DO" != "$KEGL_ZANOVO" ] || {
+    echo "❌ ЛОВУШКА 30б: --zanovo НЕ переподобрал ($KEGL_DO остался) — размораживать лекцию нечем:"
+    echo "$OUT30C"; exit 1; }
+  grep -q "^podbor_avto:" "$L30/slajdy/s01/slaid.md" || {
+    echo "❌ ЛОВУШКА 30б: солвер записал значения и НЕ пометил их своей рукой (podbor_avto) —"
+    echo "   на следующей сборке они снова станут неотличимы от решения автора"; exit 1; }
+  echo "  ✅ ловушка 30б: --zanovo переподобрал ($KEGL_DO → $KEGL_ZANOVO) и пометил запись podbor_avto"
+  # 30в: намерение автора сильнее --zanovo — иначе поле-намерение ничего не значит.
+  python3 - "$L30" <<'PY30'
+import sys
+from pathlib import Path
+p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
+t = p.read_text(encoding="utf-8").replace("\nliniya:", "\nverstka_reshena: da\nliniya:", 1)
+p.write_text(t, encoding="utf-8")
+PY30
+  KEGL_DO_V=$(grep "^kegl_px:" "$L30/slajdy/s01/slaid.md")
+  OUT30D=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" --zanovo 2>&1) || {
+    echo "❌ ЛОВУШКА 30в: сборка с --zanovo и намерением автора упала:"; echo "$OUT30D"; exit 1; }
+  [ "$KEGL_DO_V" = "$(grep '^kegl_px:' "$L30/slajdy/s01/slaid.md")" ] || {
+    echo "❌ ЛОВУШКА 30в: verstka_reshena: da НЕ удержало --zanovo — намерение автора ничего не значит:"
+    echo "$OUT30D"; exit 1; }
+  echo "  ✅ ловушка 30в: verstka_reshena: da сильнее --zanovo — решение автора неприкосновенно"
 else
   OUT30=$(python3 "$SBORKA/deck.py" "$L30" -o "$L30/dist/index.html" 2>&1) && {
     echo "❌ ЛОВУШКА 30: playwright ОТСУТСТВУЕТ, а deck.py (подбор по умолчанию) вернул rc=0 — молча собрал без подбора:"
