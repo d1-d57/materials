@@ -276,7 +276,9 @@ def _podobrat_tipografiku(to_compile, zanovo=False):
 SLUZHEBNYE = (
     # тип         поле-выключатель   поле заголовка         поле иллюстраций
     ("oblozhka",  None,              "oblozhka_zagolovok",  "oblozhka_illustracii"),
-    ("vizitka",   "bez_vizitki",     "vizitka_zagolovok",   "vizitka_illustracii"),
+    # В1 захода vizitka-i-oblozhka: содержание визитки — канон sluzhebnye/,
+    # поля brief.md для неё больше не читаются (см. plan_sluzhebnyh ниже).
+    ("vizitka",   "bez_vizitki",     None,                   None),
     ("finalnyj",  "bez_finalnogo",   "finalnyj_zagolovok",  "finalnyj_illustracii"),
 )
 
@@ -306,8 +308,19 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
       (`_order` тоже сортирует по типу, по той же причине).
     Заголовок обложки НЕ обязан совпадать с внутренним `title` лекции: `title` —
     рабочее имя («Функторы»), а на экран выносится `oblozhka_zagolovok`, если он
-    назван. Разделители здесь не порождаются вовсе — их автор ставит осознанно.
+    назван. Обложка также умеет две необязательные строки — `oblozhka_sub`
+    (обычно «Лекция N») и `oblozhka_dateplace` (дата эфира), в `sluzhebnye/
+    oblozhka.html` это слоты `?SUB`/`?DATEPLACE` (В2 захода vizitka-i-oblozhka).
+    Разделители здесь не порождаются вовсе — их автор ставит осознанно.
+
+    🔴 Визитка — не как остальные два: В1 захода vizitka-i-oblozhka закрыл
+    дефект «механизм построен и не подключён» — `brief.md` для неё ничего не
+    решает, содержание (текст, фото, QR) читается прямо из
+    `_generator/skeleton/sluzhebnye/` при КАЖДОЙ сборке. Владелец правит текст
+    ТАМ, не здесь — лекция про визитку не думает вовсе.
     """
+    from build_deck import read_text  # READ-ONLY импорт, Я6 — тот же приём, что build()
+
     est_tipy = set(tipy_na_diske.values())
     zanyatye = set(zanyatye_sid) | set(tipy_na_diske)
     plan = []
@@ -316,15 +329,32 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
             continue                      # автор завёл сам — дубля не будет
         if vykl and _da(meta.get(vykl)):
             continue                      # снят явным флагом в brief.md
+        sid = tip if tip not in zanyatye else tip + "-avto"
+        zanyatye.add(sid)
+        if tip == "vizitka":
+            sluzh = SKELETON / "sluzhebnye"
+            params = {
+                "tip_verstki": "vizitka",
+                "illustracii": [],
+                "photo_html": read_text(sluzh / "vizitka-photo.html").strip(),
+                "qr_html": read_text(sluzh / "vizitka-qr.html").strip(),
+            }
+            plan.append((sid, params, read_text(sluzh / "vizitka.md")))
+            continue
         zagolovok = meta.get(pole_z)
         if tip == "oblozhka" and not zagolovok:
             zagolovok = meta.get("title", "")
         params = {"tip_verstki": tip, "illustracii": _spisok(meta.get(pole_ill))}
         if zagolovok:
             params["zagolovok_na_ekrane"] = zagolovok
-        sid = tip if tip not in zanyatye else tip + "-avto"
-        zanyatye.add(sid)
-        plan.append((sid, params, meta.get("vizitka_tekst", "") if tip == "vizitka" else ""))
+        if tip == "oblozhka":
+            sub = meta.get("oblozhka_sub")
+            if sub:
+                params["sub"] = sub
+            dateplace = meta.get("oblozhka_dateplace")
+            if dateplace:
+                params["dateplace"] = dateplace
+        plan.append((sid, params, ""))
     return plan
 
 
