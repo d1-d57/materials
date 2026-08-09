@@ -23,7 +23,7 @@ minuty: 6
 vazhnost: osnovnoj
 byudzhet_slov: 45
 tip_verstki: polosa_vertikalnaya
-liniya: 54
+liniya: 70
 matematika_iz: [Дважды двойственное]
 illustracii: [kvadrat-eta]
 vvodit: [спаривание, дважды двойственное пространство]
@@ -79,6 +79,7 @@ $\eta_W\circ f=f^{**}\circ\eta_V\colon$ обе дороги на $v$ и $\psi$ �
 - 2026-08-09 · фаза 2 акта 2 и правки владельца по акту 1
 - 2026-08-09 · фаза 3: текст слайдов написан
 - 2026-08-09 · вёрстка по доктрине владельца: polosa_vertikalnaya, без заголовка
+- 2026-08-09 · разбор §8.2: вертикальная линия сильно правее (liniya 54 → 70), иллюстрация уменьшена — формулы ⟨v,φ⟩=φ(v) и η_V(v)=(φ↦φ(v)) больше не срезаются о границу голубой зоны
 
 ## Доводка вёрстки — задание фазам 4–6
 > Источник: `_studio/zhurnal/2026-08-07_arhitektura-slajdov/PRAVKI-SBORKI-L2.md`,

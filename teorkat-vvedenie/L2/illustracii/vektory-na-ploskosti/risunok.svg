@@ -2,15 +2,15 @@
 <line class="s-dash" x1="162" y1="140" x2="218" y2="34"/>
 <line class="s-dash" x1="102" y1="70" x2="218" y2="34"/>
 <circle class="s-node-r" cx="42" cy="180" r="4"/>
-<line class="s-line" x1="42" y1="180" x2="156" y2="143"/><path class="s-ar-m" d="M164,140 L154,150 L151,139 z" style="fill:var(--ink)"/>
-<line class="s-line" x1="42" y1="180" x2="99" y2="76"/><path class="s-ar-m" d="M103,67 L94,79 L89,70 z" style="fill:var(--ink)"/>
-<line class="s-accent" x1="42" y1="180" x2="215" y2="39"/><path class="s-ar-a" d="M223,32 L212,42 L206,33 z"/>
+<line class="s-line" x1="42" y1="180" x2="156" y2="143"/><path class="s-ar-m" d="M157.23,146.8 L164.56,140.22 L154.77,139.2 z" style="fill:var(--ink)"/>
+<line class="s-line" x1="42" y1="180" x2="99" y2="76"/><path class="s-ar-m" d="M102.51,77.92 L103.33,68.11 L95.49,74.08 z" style="fill:var(--ink)"/>
+<line class="s-accent" x1="42" y1="180" x2="215" y2="39"/><path class="s-ar-a" d="M217.53,42.1 L221.98,33.31 L212.47,35.9 z"/>
 <text class="s-txt" x="104" y="176" text-anchor="middle" font-size="16">u</text>
 <text class="s-txt" x="56" y="118" text-anchor="middle" font-size="16">v</text>
 <text class="s-txt" x="228" y="28" font-size="16">u+v</text>
 <circle class="s-node-r" cx="42" cy="400" r="4"/>
-<line class="s-line" x1="42" y1="400" x2="99" y2="296"/><path class="s-ar-m" d="M103,287 L94,299 L89,290 z" style="fill:var(--ink)"/>
-<line class="s-dash" x1="105" y1="285" x2="158" y2="188"/><path class="s-ar-a" d="M163,179 L154,191 L148,182 z"/>
+<line class="s-line" x1="42" y1="400" x2="99" y2="296"/><path class="s-ar-m" d="M102.51,297.92 L103.33,288.11 L95.49,294.08 z" style="fill:var(--ink)"/>
+<line class="s-dash" x1="105" y1="285" x2="158" y2="188"/><path class="s-ar-a" d="M161.51,189.92 L162.32,180.1 L154.49,186.08 z"/>
 <text class="s-txt" x="56" y="338" text-anchor="middle" font-size="16">v</text>
 <text class="s-txt" x="170" y="176" font-size="16">2v</text>
 </svg>
