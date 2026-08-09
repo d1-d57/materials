@@ -18,7 +18,7 @@ tip_idei: narrative
 zachem: итог сюжета: доказанное только что запрещает целую теорему
 akcent: не новый приём, а расплата по уже доказанному
 centralnyj_blok: теорема Брауэра
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: opornyj
 byudzhet_slov: 40

@@ -41,7 +41,7 @@ SBORKA = Path(__file__).resolve().parent
 sys.path.insert(0, str(SBORKA))
 from formaty import (parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNIT,  # noqa: E402
                       FormatSlaida, strip_lifecycle_block, FAZA_STROKA_RE,
-                      TIPY_IDEI, CENTRALNYJ_PERECHISLENIE)
+                      TIPY_IDEI, TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ, CENTRALNYJ_PERECHISLENIE)
 import bloki  # noqa: E402
 
 
@@ -243,6 +243,40 @@ def _check_centralnyj_blok(sid, params, sections):
             % (sid, val, n, bloki.KEY_MATEMATIKA)]
 
 
+# У12 захода uroki-faz-1-2-v-disciplinu, 🔴 ГЛАВНОЕ: `vvodit`/`opiraetsya_na` —
+# единственная машинная проверка порядка понятий («изоморфны ⟺ размерности равны»
+# стояло на слайде за два слайда ДО того, где размерность вводится — поймал
+# владелец глазами, гейт молчал, потому что оба поля были пустыми у всех карточек
+# и заполнять их не требовал никто). Проверка `opiraetsya_na → vvodit` (ниже, в
+# check_slide) работает и на пустом списке, но пустой список НИЧЕГО не проверяет —
+# «зелёный от промаха мимо входа», тот же класс, что уже стоит в каноне.
+#
+# Развилка «выбери и обоснуй» (задание Ф1, пункт 1): слайд типа narrativ/divider
+# может законно ничего не вводить. Решение — НЕ отдельный маркер-заглушка (третий
+# формат сверх уже существующего `CENTRALNYJ_PERECHISLENIE`), а условие «оба поля
+# пусты ОДНОВРЕМЕННО» плюс полное освобождение типов идеи, с которых связей не
+# требуют (TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ — служебные плюс `narrative`).
+# Подробное обоснование — `## ПЛАН` захода.
+#
+# 🔴 Заход svedenie-i-smeta, Э1.4: освобождение было УЖЕ ЗДЕСЬ ОПИСАНО строкой выше
+# («слайд типа narrativ/divider может законно ничего не вводить»), но в коде стоял
+# список одних лишь служебных типов — и `--faza 1` красил `napominanie` и `itog`.
+# Разошлись не правило и код, а комментарий и его же реализация; чинится списком,
+# а не текстом комментария. Цена и список — `formaty.py`.
+def _check_vvodit_opiraetsya(sid, params, faza):
+    if faza != 1:
+        return []
+    if params.get("tip_idei") in TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ:
+        return []
+    if not (params.get("vvodit") or params.get("opiraetsya_na")):
+        return ["%s: vvodit и opiraetsya_na пусты одновременно — выход фазы 1 обязан "
+                "решить, что слайд вводит и на что опирается (единственная машинная "
+                "проверка порядка понятий, У12); типы %s освобождены (служебным нечего "
+                "вводить, narrative — вступление/итог), иначе заполни хотя бы одно поле"
+                % (sid, ", ".join(TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ))]
+    return []
+
+
 def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=None):
     """Одна карточка → список замечаний (пустой — карточка чиста)."""
     issues = _check_lifecycle_block(text, sid)
@@ -258,6 +292,7 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
 
     issues.extend(_check_tip_idei(sid, params))
     issues.extend(_check_zagolovok_na_ekrane(sid, params, faza))
+    issues.extend(_check_vvodit_opiraetsya(sid, params, faza))
 
     for name in params.get("illustracii") or []:
         if name not in illustracii_pool:
@@ -265,6 +300,17 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
                            % (sid, name))
 
     for item in params.get("opiraetsya_na") or []:
+        # У12: инлайн-форма `opiraetsya_na: [{termin: X, vvedeno: Y}]` синтаксически
+        # законна для INLINE_LIST_RE (formaty.py), но тот режет по запятой наивно и
+        # кладёт СТРОКИ, не словари — `.get()` ниже ронял AttributeError трейсбеком
+        # вместо внятного сообщения. Рабочая форма — многострочная (kartochka-slajda.md §2).
+        if not isinstance(item, dict):
+            issues.append(
+                "%s: opiraetsya_na несёт элемент не в форме словаря (%r) — похоже на "
+                "инлайн-запись '[{termin: X, vvedeno: Y}]', она не разбирается парсером "
+                "шапки; рабочая форма многострочная: 'opiraetsya_na:\\n  - {termin: X, "
+                "vvedeno: Y}' (kartochka-slajda.md §2)" % (sid, item))
+            continue
         termin, vvedeno = item.get("termin"), item.get("vvedeno")
         vvedeno_na_slajde = termin in vvodit_by_sid.get(vvedeno, ())
         vvedeno_ranee = termin in uzhe_vvedeno

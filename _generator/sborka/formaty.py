@@ -110,6 +110,34 @@ ZAPOLNIT = "заполнить"
 TIPY_IDEI = ("definition", "proof_step", "narrative", "problem",
               "divider", "cover", "vizitka", "closing")
 
+# Заход uroki-faz-1-2-v-disciplinu, У12: подмножество TIPY_IDEI, у которого по
+# определению (fazy-1-2-plan.md §2 — «служебные: титул, визитка, финал») нет
+# содержания — им нечего вводить и не на что опираться. Гейт выхода фазы 1
+# использует этот список, чтобы не требовать vvodit/opiraetsya_na там, где
+# требовать нечего.
+TIPY_IDEI_BEZ_SODERZHANIYA = ("divider", "cover", "vizitka", "closing")
+
+# Заход svedenie-i-smeta, Э1.4: список ОСВОБОЖДЁННЫХ ОТ СВЯЗЕЙ шире списка
+# служебных выше, и путать их нельзя — у них разный смысл. Служебному типу нечего
+# вводить, потому что у него нет СОДЕРЖАНИЯ вовсе. Слайду типа `narrative`
+# содержание положено, но связей может законно не быть: вступление пересказывает
+# прошлую лекцию, итог собирает уже сказанное — ни то, ни другое не вводит нового
+# понятия и не опирается на конкретное.
+#
+# 🔴 Освобождение ПЕРМИССИВНО, а не запретительно: narrative-слайд, который реально
+# на что-то опирается, поля заполняет (в живой L2 так и сделано — `teorema-brauera`,
+# tip_idei: narrative, opiraetsya_na непуст). Освобождение снимает ТРЕБОВАНИЕ, а не
+# возможность.
+#
+# ЦЕНА, из-за которой список заведён: У12 включил проверку по
+# TIPY_IDEI_BEZ_SODERZHANIYA, и `--faza 1` покраснел на `napominanie` и `itog` —
+# двух законно-пустых narrative-карточках из пятнадцати. Два ложных красных из трёх
+# на живой лекции — ровно та доля, после которой гейт отключают целиком. При этом
+# сам код уже противоречил своему комментарию: комментарий в `gejt_kartochki.py`
+# говорил «слайд типа narrativ/divider может законно ничего не вводить», а
+# освобождение narrativ не покрывало.
+TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ = TIPY_IDEI_BEZ_SODERZHANIYA + ("narrative",)
+
 # Спецзначение `centralnyj_blok` — те самые 6 слайдов из 201, где центра нет по
 # существу (списки однородных пунктов: набор задач, меню будущих тем). Гейт выхода
 # фазы 1 требует «ровно один блок помечен центральным (исключение — слайд-
@@ -258,3 +286,21 @@ def render_body(body_md, acc_tag="span", math=None, sid=None):
             "опечатка в {.имя}? Список классов: base.css + tipy.py:GLOBAL_CSS."
             % ("слайд %s: " % sid if sid else "", name, line))
     return render_md(body_md, math or {}, acc_tag)
+
+
+MISSING_MATH_RE = re.compile(r"⟦MISSING-MATH:(.*?)⟧")
+
+
+def check_no_missing_math(html, sid, lekcija_dir):
+    """`html` несёт `⟦MISSING-MATH:…⟧` → `FormatSlaida` с точной командой чинки
+    (заплатка sborka-l2-fazy-4-7, П3). До этой правки `slaid.py`/`deck.py` собирали
+    HTML с видимым браком МОЛЧА, rc=0 — та же дыра, от которой уже защищён
+    `deck.py` для playwright («деку БЕЗ подбора я не соберу молча»); эта проверка —
+    тот же приём для кэша формул."""
+    missing = sorted(set(MISSING_MATH_RE.findall(html)))
+    if missing:
+        raise FormatSlaida(
+            "слайд %s: %d формул(ы) нет в кэше math/katex.json — соберите кэш: "
+            "`node _generator/sborka/kesh_formul.js %s`. Не отрендерено: %s"
+            % (sid, len(missing), lekcija_dir,
+               "; ".join("$%s$" % t for t in missing[:5]) + (" …" if len(missing) > 5 else "")))

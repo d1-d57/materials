@@ -101,6 +101,7 @@ FS_DESTRUCTIVE_QUALIFIED = {("os", "remove"), ("os", "rmdir"), ("os", "unlink"),
                             ("os", "removedirs"), ("shutil", "rmtree")}
 
 MARKER_NO_INPUT = "TOOL-CONTRACT: no-input"
+MARKER_CALLED_BY_HAND = "TOOL-CONTRACT: called-by-hand"
 MARKER_COVERS = "TOOL-CONTRACT-COVERS:"
 HELP_TIMEOUT = 10  # секунд: `--help` обязан быть мгновенным, зависший процесс — тоже дефект контракта
 
@@ -454,12 +455,82 @@ def check_input_fixture(path, text, tree, ctx):
             f"пометки `# {MARKER_NO_INPUT}`"]
 
 
+def live_trigger_scope():
+    """Файлы, где может жить реальный вызов инструмента: сам дом инструментов
+    (`HOME_DIR` — та же дверь, что у FIXTURES/BASELINE, работает и в фикстуре),
+    плюс сиблинги в бою (`_generator/*.py`, `_generator/sborka/*.py`,
+    `.githooks/*`) через REPO.
+
+    🔴 `_generator/sborka/` добавлена 09.08 (заход `gigiena-i-svedenie`) — и это
+    починка ЛОЖНОГО КРАСНОГО, а не расширение «на всякий случай». `REPO/_generator`
+    обходился `iterdir()` с `p.is_file()`, то есть подпапка отсеивалась, — а
+    боевой конвейер сборки живёт именно там. Замер до починки: `bloki.py`,
+    `korpus.py`, `podgonka.py` числились «нигде не вызываются», хотя импортируются
+    соседями (`bloki` — из `formaty/bootstrap_lekcii/lenta/gejt_kartochki/smeta`,
+    `korpus` и `podgonka` — из `vmeshchenie`, `podgonka` ещё из `zamer_smety`).
+    Три ложных красных из шести на сплошном прогоне — половина; гейт с такой
+    долей ложных срабатываний обходят, а не чинят по нему (`KONSTITUCIYA §11а`).
+    Тот же пробел заставлял ГЕЙТЫ этой папки зеленеть только маркером
+    `called-by-hand`: у `gejt_vmeshcheniya.py` строка «ФАЗА 3.9» в
+    `bootstrap_lekcii.LIFECYCLE_TMPL` есть, а увидеть её проверке было нечем."""
+    paths = list(HOME_DIR.glob("*.py"))
+    for extra in (REPO / "_generator", REPO / "_generator" / "sborka",
+                  REPO / ".githooks"):
+        if extra.is_dir():
+            paths += [p for p in extra.iterdir() if p.is_file()]
+    return paths
+
+
+def has_live_trigger(name):
+    """Инструмент `name` (basename) реально упомянут ВНЕ собственного файла —
+    та же текстовая эвристика, что и замер Ш1 захода `instrument-podklyuchen`
+    (грепом среди `_generator/tools/*.py _generator/*.py .githooks/*`)."""
+    for p in live_trigger_scope():
+        if p.name == name:
+            continue
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        if name in text:
+            return True
+    return False
+
+
+def check_live_trigger(path, text, tree, ctx):
+    """Кластер F (заход `instrument-podklyuchen`, 2026-08-08). Написанный, но
+    нигде не вызываемый гейт не гейт: он зелёный только потому, что его никто
+    не звал — шесть живых случаев на дату замера (`proverka_pomarok.py`,
+    `gejt_illyustracij.py`, `graf_zavisimostej.py`, `check_lenta.py`,
+    `reviziya_dolgov.py`, `sdelat_handoff.py`), половина из них — гейты,
+    обязанные срабатывать сами, половина — законно вызываемые руками.
+    Инструмент обязан ЛИБО реально упоминаться вне собственного файла (хук,
+    другой инструмент, шаг сборки), ЛИБО нести явный маркер «зовут руками» —
+    третьего не дано, и «я потом подключу» не считается.
+
+    🔴 Исключение: файлы ВНУТРИ `fixtures/` (не сам `PROGNAT.sh`, а `.py`-нагрузка
+    рядом с ним, например `fixtures/sborka/obratnyj-progon/*.py`) — это данные
+    ОДНОЙ фикстуры, не инструмент фабрики; у них нет и не может быть своей точки
+    вызова, требовать её значило бы красить исторические файлы захода задним
+    числом (найдено живым прогоном `--all`, 2026-08-08)."""
+    if "fixtures" in path.parts:
+        return []
+    if MARKER_CALLED_BY_HAND in text:
+        return []
+    if has_live_trigger(path.name):
+        return []
+    return [f"инструмент нигде не упоминается как вызываемый (хук/другой "
+            f"инструмент/шаг сборки) и не несёт маркера `# {MARKER_CALLED_BY_HAND}` — "
+            f"либо подключи живую точку вызова, либо объяви инструмент по вызову"]
+
+
 CHECKS = [
     ("переносимость", check_gnuisms),
     ("--no-optional-locks", check_optional_locks),
     ("shell владельцу", check_shell_to_owner),
     ("запрет записи из песочницы", check_sandbox_guard),
     ("кривой вход", check_input_fixture),
+    ("живая точка вызова", check_live_trigger),
 ]
 
 

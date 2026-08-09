@@ -1129,6 +1129,40 @@ def print_report(lek, ctx, results, hook_results):
     return 1 if hard_fail else 0
 
 
+NEW_TREE_EXIT = 2  # отдельный от FAIL(1)/PASS(0) код — «отказался», не «проверил и покраснел»
+
+
+def is_new_tree(lek):
+    """Признак дерева Ф1–Ф7 (SKILL.md, `disciplina/skills/slajdy/`, 2026-08-07+):
+    `<лекция>/slajdy/<имя>/slaid.md`. Старое дерево (это GEJTY.md и есть) такой папки
+    не заводит ни на одном живом деке — проверено `find . -maxdepth 2 -iname slajdy`
+    по репозиторию (заход `karta-konvejera`, К2)."""
+    return (lek / "slajdy").is_dir()
+
+
+def print_new_tree_refusal(lek):
+    print("СОСТОЯНИЕ: %s" % lek)
+    print("\n🔴 ЭТОТ ТРЕКЕР НЕ ПРИМЕНИМ К ЭТОЙ ЛЕКЦИИ.")
+    print("Найдена папка %s/slajdy/ — признак дерева семи фаз Ф1…Ф7" % lek)
+    print("(SKILL.md, ~/Documents/GitHub/disciplina/skills/slajdy/, живой конвейер с 2026-08-07).")
+    print("Гейты G1–G15/H1–H6 из _studio/konvejer/GEJTY.md относятся к КОНВЕЙЕРУ ДО 27.07.2026")
+    print("(дерево <лекция>/{kartoteka,kotly,chernovik,src}) и на новое дерево не наводятся —")
+    print("печатать по ним FAIL значило бы врать: они ищут файлы, которых это дерево не заводит.")
+    print("\nСоответствие старых гейтов новым фазам, с чем и как каждый живёт сегодня —")
+    print("_studio/konvejer/KARTA-ZHIVOGO-KONVEJERA.md.")
+    print("\nЖивые команды по факту этой сверки:")
+    for line in (
+        "python3 _generator/sborka/gejt_kartochki.py %s      # фазы 1-3, гейт карточек" % lek,
+        "python3 _generator/tools/gejt_illyustracij.py %s    # фаза 5, заказы иллюстраций" % lek,
+        "grep -c '^ПРИНЯТО фаза-1:' %s/brief.md   # Хук 1 закрыт?" % lek,
+        "grep -c '^ПРИНЯТО фаза-2:' %s/brief.md   # Хук 2 закрыт?" % lek,
+        "grep -c '^ПРИНЯТО фаза-3:' %s/brief.md   # Хук 3 закрыт?" % lek,
+        "python3 _generator/sborka/deck.py %s -o %s/dist/index.html   # фаза 6, сборка" % (lek, lek),
+        "python3 _generator/sborka/lenta.py %s -o %s/dist/lenta.html  # представление, все фазы" % (lek, lek),
+    ):
+        print("  " + line)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Трекер состояния лекции по GEJTY.md (read-only)")
     ap.add_argument("lekcia", help="путь к папке лекции")
@@ -1137,6 +1171,10 @@ def main():
     if not lek.is_dir():
         print("ОШИБКА: не папка — %s" % lek, file=sys.stderr)
         return 1
+
+    if is_new_tree(lek):
+        print_new_tree_refusal(lek)
+        return NEW_TREE_EXIT
 
     ctx, results, hook_results = run(lek)
     exit_code = print_report(lek, ctx, results, hook_results)

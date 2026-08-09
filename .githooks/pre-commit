@@ -108,3 +108,73 @@ if [ -n "$ALL_STAGED" ]; then
         }
     done
 fi
+
+# ══════ Заход `instrument-podklyuchen` (2026-08-08): четыре гейта подключаются ══════
+# сюда живыми точками вызова — до этого «подключён» значило «упомянут в markdown,
+# сработает, если агент прочтёт и вспомнит» (владелец назвал механизм точно).
+# Все четыре прогнаны на живом дереве ПЕРЕД подключением (замер захода, § ПЛАН):
+# `gejt_illyustracij.py`/`graf_zavisimostej.py` — зелёные на всех живых лекциях,
+# подключены без смягчения; `proverka_pomarok.py`/`check_lenta.py` — красные на
+# унаследованном (13 из 82 иллюстраций, единственная живая лента) — судим ТОЛЬКО
+# `--diff-filter=A` (новое обязано родиться чистым), тот же приём, которым уже
+# лечит себя `check_tool_contract.py:added_lines()` и `check_kartoteka.py --staged`.
+
+# ── Помарки иллюстраций: proverka_pomarok.py на НОВЫХ staged-иллюстрациях ──
+ILL_NEW=$(git diff --cached --name-only --diff-filter=A \
+    | grep -E '/src/(illustrations|chapters)/[^/]+\.(svg|html)$')
+if [ -n "$ILL_NEW" ]; then
+    ILL_TMP=$(mktemp -d)
+    ILL_FILES=""
+    for p in $ILL_NEW; do
+        safe=$(echo "$p" | tr '/' '_')
+        if git --no-optional-locks show ":$p" > "$ILL_TMP/$safe" 2>/dev/null
+        then ILL_FILES="$ILL_FILES $ILL_TMP/$safe"
+        fi
+    done
+    if [ -n "$ILL_FILES" ]; then
+        python3 _illustracii/proverka_pomarok.py $ILL_FILES || {
+            echo "❌ Помарки иллюстраций (proverka_pomarok.py) — новая иллюстрация"
+            echo "   красная, коммит остановлен. Разбор — _illustracii/proverka_pomarok.py."
+            rm -rf "$ILL_TMP"
+            exit 1
+        }
+    fi
+    rm -rf "$ILL_TMP"
+fi
+
+# ── Гейт заказа иллюстраций + граф зависимостей — на staged лекциях (ACM) ──
+LEC_ROOTS=$(git diff --cached --name-only --diff-filter=ACM \
+    | grep -E '/(slajdy/[^/]+/slaid\.md|illustracii/[^/]+/zakaz\.md)$' \
+    | sed -E 's#/(slajdy|illustracii)/.*$##' | sort -u)
+for LEC in $LEC_ROOTS; do
+    [ -d "$LEC" ] || continue
+    python3 _generator/tools/gejt_illyustracij.py "$LEC" --tiho || {
+        echo "❌ Гейт заказа иллюстраций (gejt_illyustracij.py) красный на «$LEC» —"
+        echo "   коммит остановлен:"
+        python3 _generator/tools/gejt_illyustracij.py "$LEC"
+        exit 1
+    }
+    python3 _generator/tools/graf_zavisimostej.py "$LEC" || {
+        echo "❌ Граф зависимостей (graf_zavisimostej.py) красный на «$LEC» — коммит остановлен."
+        exit 1
+    }
+done
+
+# ── Гейт формы ленты: check_lenta.py на НОВЫХ staged лентах ──
+LENTA_NEW=$(git diff --cached --name-only --diff-filter=A | grep -E '/LENTA-[^/]+\.md$')
+if [ -n "$LENTA_NEW" ]; then
+    LENTA_TMP=$(mktemp -d)
+    for p in $LENTA_NEW; do
+        safe=$(echo "$p" | tr '/' '_')
+        if git --no-optional-locks show ":$p" > "$LENTA_TMP/$safe" 2>/dev/null; then
+            python3 _generator/tools/check_lenta.py "$LENTA_TMP/$safe" --tiho || {
+                echo "❌ Гейт формы ленты (check_lenta.py) красный на новой «$p» —"
+                echo "   коммит остановлен:"
+                python3 _generator/tools/check_lenta.py "$LENTA_TMP/$safe"
+                rm -rf "$LENTA_TMP"
+                exit 1
+            }
+        fi
+    done
+    rm -rf "$LENTA_TMP"
+fi

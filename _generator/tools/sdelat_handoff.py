@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# TOOL-CONTRACT: called-by-hand — хэндофф собирает аналитик в конце сессии
+# осознанно, не автоматический гейт (заход `instrument-podklyuchen`, Ш1).
 """ГЕНЕРАТОР ХЭНДОФФА — собирает вход в следующую сессию из ПАРАМЕТРОВ.
 
     python3 _generator/tools/sdelat_handoff.py <папка-арки> \

@@ -18,7 +18,7 @@ tip_idei: narrative
 zachem: зритель уходит с одной фразой в голове — функтор переводит коммутативную диаграмму в коммутативную
 akcent: слоган объявляется и не комментируется — дальше вся лекция про то, где он проявляется
 centralnyj_blok: о чём лекция
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 7
 vazhnost: vspomogatelnyj
 byudzhet_slov: 45

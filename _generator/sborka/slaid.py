@@ -31,7 +31,7 @@ GENERATOR = SBORKA.parent
 SKELETON = GENERATOR / "skeleton"
 sys.path.insert(0, str(SBORKA))
 sys.path.insert(0, str(GENERATOR))
-from formaty import parse_slide, render_body, FormatSlaida  # noqa: E402
+from formaty import parse_slide, render_body, FormatSlaida, check_no_missing_math  # noqa: E402
 from tipy import compile_tip, TipVerstki, GLOBAL_CSS  # noqa: E402
 from build_deck import max_scenes, scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
 
@@ -96,8 +96,10 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     acc_tag = "span"
     # lekcija_dir = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция> (тот же
     # расчёт, что ниже для illustrations_dir по умолчанию)
-    math = load_math_cache(slide_path.parents[2])
+    lekcija_dir = slide_path.parents[2]
+    math = load_math_cache(lekcija_dir)
     body_html = render_body(body_md, acc_tag=acc_tag, math=math, sid=sid)
+    check_no_missing_math(body_html, sid, lekcija_dir)
     css, slide_html = compile_tip(sid, params, body_html)
     # 🔴 БЕЗ `data-scenes` движок (`scenesOf`, engine.js) считает слайд односценовым
     # безусловно, и БЕЗ порождённого каскада (`{{SCENE_CASCADE}}`) правило

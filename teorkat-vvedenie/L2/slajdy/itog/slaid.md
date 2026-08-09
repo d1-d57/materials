@@ -18,7 +18,7 @@ tip_idei: narrative
 zachem: назвать общее у всего, что делали, — и не пересказывать конкретику
 akcent: одна ситуация, увиденная в трёх разных местах
 centralnyj_blok: одна и та же ситуация в разных местах
-kommentarij_lektoru: заполнить
+kommentarij_lektoru: ""
 minuty: 5
 vazhnost: vspomogatelnyj
 byudzhet_slov: 40
