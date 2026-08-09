@@ -1,8 +1,8 @@
 <svg viewBox="0 0 840 170" role="img" aria-label="Слева: точка на плоскости с вектором из начала координат, помечена как x плюс i y, и стрелка с палочкой у хвоста (переход элемента) к паре координат x, y. Справа: многочлен и такая же стрелка с палочкой к упорядоченному набору его коэффициентов">
 <line class="s-thin" x1="20" y1="132" x2="150" y2="132"/><path class="s-ar-m" d="M150,128 l9,4 -9,4 z"/>
 <line class="s-thin" x1="46" y1="146" x2="46" y2="28"/><path class="s-ar-m" d="M42,37 l4,-9 4,9 z"/>
-<line class="s-dash" x1="46" y1="60" x2="110" y2="60"/><line class="s-dash" x1="114" y1="66" x2="114" y2="130"/>
-<line class="s-accent" x1="46" y1="132" x2="108" y2="68"/><path class="s-ar-a" d="M110.87,70.78 L114.26,61.54 L105.13,65.22 z"/>
+<line class="s-dash" x1="46" y1="60" x2="110" y2="60"/><line class="s-dash" x1="114" y1="66" x2="114" y2="132"/>
+<line class="s-accent" x1="46" y1="132" x2="102.87" y2="71.49"/><path class="s-ar-a" d="M105.74,74.27 L109.13,65.03 L99.99,68.71 z"/>
 <circle class="s-node-a" cx="114" cy="60" r="4.6"/>
 <text class="s-txt" x="126" y="52" font-size="17">x+iy</text>
 <text class="s-txt-m" x="114" y="152" text-anchor="middle" font-size="14">x</text>

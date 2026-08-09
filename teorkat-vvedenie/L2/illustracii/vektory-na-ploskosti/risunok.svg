@@ -12,5 +12,5 @@
 <line class="s-line" x1="42" y1="400" x2="99" y2="296"/><path class="s-ar-m" d="M102.51,297.92 L103.33,288.11 L95.49,294.08 z" style="fill:var(--ink)"/>
 <line class="s-dash" x1="105" y1="285" x2="158" y2="188"/><path class="s-ar-a" d="M161.51,189.92 L162.32,180.1 L154.49,186.08 z"/>
 <text class="s-txt" x="56" y="338" text-anchor="middle" font-size="16">v</text>
-<text class="s-txt" x="170" y="176" font-size="16">2v</text>
+<text class="s-txt" x="172" y="198" font-size="16">2v</text>
 </svg>

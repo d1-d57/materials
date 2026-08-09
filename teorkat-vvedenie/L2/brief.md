@@ -21,6 +21,9 @@ slide_order:
   - itogi
   - itog
 title: Функторы
+oblozhka_zagolovok: Функторы
+oblozhka_illustracii: pustoj-kvadrat
+finalnyj_zagolovok: Спасибо за внимание
 dlya_kogo: старшеклассники и программисты; линейную алгебру и группы знают, топологию не знают вовсе
 zhanr: kategornaya_algebra
 dlitelnost_minut: 120

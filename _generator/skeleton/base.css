@@ -127,7 +127,7 @@ body.blanked #stage { visibility: hidden; }
 .s-node-c3{fill:var(--p3);stroke:var(--p3)}
 .s-txt{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--ink)}
 .s-txt-w{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--card);font-weight:600}
-.s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel)}
+.s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel-t)}
 .s-ar-a{fill:var(--brick)}
 .s-ar-m{fill:var(--steel-d)}
 .ill-box{position:relative;overflow:hidden}

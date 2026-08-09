@@ -44,6 +44,15 @@
      на доске — служебная линия/стрелка темнее. Без этих токенов var(--hollow)/
      var(--steel-d) в словаре примитивов ниже падали в чёрный (unset var → initial). */
   --hollow: #e7f0f4; --steel-d: #566b86;
+  /* --steel-t (2026-08-09, заход final-l2, Ш4) — ПОДПИСЬ на доске, не линия.
+     Замер: --steel #8195ad по --board #a7c2cb даёт 1,64 : 1, --steel-d — 2,92 : 1;
+     оба ниже порога 4,5 : 1, а имя стрелки в коммутативном квадрате — содержание,
+     а не служебная разметка. Тон и насыщенность --steel сохранены (HLS h=.591 s=.212),
+     погашена только светлота до первого значения, берущего порог: 4,54 : 1 на доске,
+     6,73 на --paper, 8,49 на --card. Иерархия «объект / имя стрелки» держится теперь
+     кеглем (13 против 12), а не бледностью. Носитель линии/наконечника — по-прежнему
+     --steel-d, он НЕ тронут: темнить всю графику за день до эфира никто не просил. */
+  --steel-t: #3f4e61;
   --p1: #b18ec0; --p2: #7b9bd1; --p3: #8fae72; --p4: #d9b349; --p5: #c96a55; /* пары SIM-6 */
   --cgreen: #7ea474; --corange: #d98e4a; /* тройка «частей иглы»: горчица+зелёный+оранжевый */
   --t-body: 38px;          /* тело НИКОГДА не автофитится; на слайде может быть свой кегль (промер) */
@@ -184,7 +193,7 @@ body.blanked #stage { visibility: hidden; }
 .s-node-c3{fill:var(--p3);stroke:var(--p3)}
 .s-txt{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--ink)}
 .s-txt-w{font-family:'Noto Sans',sans-serif;font-size:13px;fill:var(--card);font-weight:600}
-.s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel)}
+.s-txt-m{font-family:'Noto Sans',sans-serif;font-size:12px;fill:var(--steel-t)}
 .s-ar-a{fill:var(--brick)}
 .s-ar-m{fill:var(--steel-d)}
 .ill-box{position:relative;overflow:hidden}
@@ -262,6 +271,8 @@ body.blanked #stage { visibility: hidden; }
 .t-body > p.op-task:first-child{margin-top:.18em}
 
 .zone.board{ background:var(--board); } .zone.copy{ padding:46px 64px; } .zagolovok{ font-family:'Forum',serif; text-transform:uppercase; font-size:44px; line-height:1.15; margin-bottom:28px; color:var(--ink); }
+#oblozhka{ background:var(--board); } #oblozhka .wrap{ position:absolute; inset:0; display:grid; grid-template-rows:1fr auto 1.7fr; align-items:center; padding:0 130px; } #oblozhka .head{ grid-row:2; } #oblozhka .head .t-display{ font-size:96px; } #oblozhka .art{ position:absolute; left:0; right:0; bottom:46px; height:250px; }
+#vizitka .grid{ position:absolute; inset:0; display:grid; grid-template-columns:410px 56px 1fr; grid-template-rows:107px 1fr; } #vizitka .board{ grid-area:1/1/3/2; background:var(--board); position:relative; } #vizitka .brd-title{ position:absolute; left:36px; top:34px; font-size:74px; } #vizitka .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:260px; } #vizitka .p-qr{ position:absolute; left:81px; top:479px; width:250px; height:250px; } #vizitka .copy{ grid-area:2/3; }
 #napominanie .grid{ position:absolute; inset:0; display:grid; padding:64px 96px; }
 #kategoriya .full{ position:absolute; inset:0; }
 #razdelitel-estestvennost{ background:var(--board); } #razdelitel-estestvennost .head{ position:absolute; left:0; top:61px; width:100%; font-size:56px; line-height:1.18; } #razdelitel-estestvennost .head{ top:0; bottom:0; display:flex; align-items:center; justify-content:center; }
@@ -280,10 +291,17 @@ body.blanked #stage { visibility: hidden; }
 #teorema-brauera .grid{ position:absolute; inset:0; display:grid; grid-template-rows: var(--liniya) calc(100% - var(--liniya)); }
 #itogi .grid{ position:absolute; inset:0; display:grid; padding:64px 96px; }
 #itog .full{ position:absolute; inset:0; }
+#finalnyj{ background:var(--board); } #finalnyj .thx-wrap{ position:absolute; inset:0; display:grid; grid-template-rows:1fr; padding:0 120px 52px; } #finalnyj .thx-head{ align-self:center; justify-self:center; font-size:60px; } #finalnyj .thx-art{ min-height:0; }
 </style>
 </head>
 <body>
 <div id="stage"><div id="deck">
+<section class="slide" id="oblozhka" data-scenes="1">
+<div class="wrap"><div class="head"><div class="t-display">Функторы</div></div></div><div class="art"><div class="zone  ill-row" style="display:flex;flex-direction:row;align-items:stretch;justify-content:center;gap:24px;padding:28px;height:100%;box-sizing:border-box"><div class="panel" data-ill="pustoj-kvadrat" style="flex:1 1 0;min-width:0;min-height:0"></div></div></div>
+</section>
+<section class="slide" id="vizitka" data-scenes="1">
+<div class="grid"><div class="zone board"><div class="brd-title t-display">Про меня</div></div><div class="zone copy t-body"></div></div>
+</section>
 <section class="slide" id="napominanie" data-scenes="1">
 <div class="grid"><div class="zone copy t-body" style="--t-body:41px;--lh:1.57;--blok:30.3px"><ul class="tlist"><li>в прошлый раз мы занимались комбинаторными видами, а это <span class="acc">по определению</span> функторы</li><li>сегодня — что такое функтор и какие у него свойства</li><li>главное свойство: функтор переводит коммутативную диаграмму в коммутативную</li><li>увидим, как это тривиальное свойство доказывает нетривиальные утверждения</li></ul></div></div>
 </section>
@@ -384,8 +402,20 @@ body.blanked #stage { visibility: hidden; }
 <section class="slide" id="itog" data-scenes="1">
 <div class="full"><div class="zone board full ill-row" style="display:flex;flex-direction:row;align-items:stretch;justify-content:center;gap:24px;padding:28px;height:100%;box-sizing:border-box"><div class="panel" data-ill="kvadrat-so-skalyarom" style="flex:1 1 0;min-width:0;min-height:0"></div><div class="panel" data-ill="centr-i-ego-obraz" style="flex:1 1 0;min-width:0;min-height:0"></div><div class="panel" data-ill="disk-i-okruzhnost" style="flex:1 1 0;min-width:0;min-height:0"></div></div></div>
 </section>
+<section class="slide" id="finalnyj" data-scenes="1">
+<div class="thx-wrap"><div class="thx-head t-display">Спасибо за внимание</div></div>
+</section>
 </div></div>
 <div id="hint">← → листать · F — экран · B — чёрный</div>
+<template id="ill-pustoj-kvadrat"><svg viewBox="0 0 250 214" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Пустой коммутативный квадрат: четыре узла без подписей и четыре стрелки, две вправо и две вниз">
+<circle class="s-node" cx="52" cy="34" r="3.4"/><circle class="s-node" cx="198" cy="34" r="3.4"/>
+<circle class="s-node" cx="52" cy="180" r="3.4"/><circle class="s-node" cx="198" cy="180" r="3.4"/>
+<line class="s-thin" x1="62" y1="34" x2="180" y2="34"/><path class="s-ar-m" d="M180,30 l9,4 -9,4 z"/>
+<line class="s-thin" x1="62" y1="180" x2="180" y2="180"/><path class="s-ar-m" d="M180,176 l9,4 -9,4 z"/>
+<line class="s-thin" x1="52" y1="44" x2="52" y2="162"/><path class="s-ar-m" d="M48,162 l4,9 4,-9 z"/>
+<line class="s-thin" x1="198" y1="44" x2="198" y2="162"/><path class="s-ar-m" d="M194,162 l4,9 4,-9 z"/>
+</svg>
+</template>
 <template id="ill-vektory-na-ploskosti"><svg viewBox="0 0 270 440" role="img" aria-label="Сверху: два вектора u и v из одной точки, на них пунктиром достроен параллелограмм, его диагональ выделена как сумма u плюс v. Снизу: вектор v и он же, растянутый вдвое">
 <line class="s-dash" x1="162" y1="140" x2="218" y2="34"/>
 <line class="s-dash" x1="102" y1="70" x2="218" y2="34"/>
@@ -400,14 +430,14 @@ body.blanked #stage { visibility: hidden; }
 <line class="s-line" x1="42" y1="400" x2="99" y2="296"/><path class="s-ar-m" d="M102.51,297.92 L103.33,288.11 L95.49,294.08 z" style="fill:var(--ink)"/>
 <line class="s-dash" x1="105" y1="285" x2="158" y2="188"/><path class="s-ar-a" d="M161.51,189.92 L162.32,180.1 L154.49,186.08 z"/>
 <text class="s-txt" x="56" y="338" text-anchor="middle" font-size="16">v</text>
-<text class="s-txt" x="170" y="176" font-size="16">2v</text>
+<text class="s-txt" x="172" y="198" font-size="16">2v</text>
 </svg>
 </template>
 <template id="ill-izomorfizmy-primery"><svg viewBox="0 0 840 170" role="img" aria-label="Слева: точка на плоскости с вектором из начала координат, помечена как x плюс i y, и стрелка с палочкой у хвоста (переход элемента) к паре координат x, y. Справа: многочлен и такая же стрелка с палочкой к упорядоченному набору его коэффициентов">
 <line class="s-thin" x1="20" y1="132" x2="150" y2="132"/><path class="s-ar-m" d="M150,128 l9,4 -9,4 z"/>
 <line class="s-thin" x1="46" y1="146" x2="46" y2="28"/><path class="s-ar-m" d="M42,37 l4,-9 4,9 z"/>
-<line class="s-dash" x1="46" y1="60" x2="110" y2="60"/><line class="s-dash" x1="114" y1="66" x2="114" y2="130"/>
-<line class="s-accent" x1="46" y1="132" x2="108" y2="68"/><path class="s-ar-a" d="M110.87,70.78 L114.26,61.54 L105.13,65.22 z"/>
+<line class="s-dash" x1="46" y1="60" x2="110" y2="60"/><line class="s-dash" x1="114" y1="66" x2="114" y2="132"/>
+<line class="s-accent" x1="46" y1="132" x2="102.87" y2="71.49"/><path class="s-ar-a" d="M105.74,74.27 L109.13,65.03 L99.99,68.71 z"/>
 <circle class="s-node-a" cx="114" cy="60" r="4.6"/>
 <text class="s-txt" x="126" y="52" font-size="17">x+iy</text>
 <text class="s-txt-m" x="114" y="152" text-anchor="middle" font-size="14">x</text>
@@ -424,8 +454,8 @@ body.blanked #stage { visibility: hidden; }
 <text class="s-txt" x="204" y="52" text-anchor="middle" font-size="17">ℝᵐ</text>
 <text class="s-txt" x="46" y="202" text-anchor="middle" font-size="17">ℝⁿ</text>
 <text class="s-txt" x="204" y="202" text-anchor="middle" font-size="17">ℝᵐ</text>
-<line class="s-thin" x1="72" y1="46" x2="176" y2="46"/><path class="s-ar-m" d="M176,42 l9,4 -9,4 z"/>
-<line class="s-thin" x1="72" y1="196" x2="176" y2="196"/><path class="s-ar-m" d="M176,192 l9,4 -9,4 z"/>
+<line class="s-thin" x1="72" y1="46" x2="169" y2="46"/><path class="s-ar-m" d="M169,42 l9,4 -9,4 z"/>
+<line class="s-thin" x1="72" y1="196" x2="169" y2="196"/><path class="s-ar-m" d="M169,192 l9,4 -9,4 z"/>
 <line class="s-thin" x1="46" y1="68" x2="46" y2="167"/><path class="s-ar-m" d="M42,158 l4,9 4,-9 z"/>
 <line class="s-thin" x1="204" y1="68" x2="204" y2="167"/><path class="s-ar-m" d="M200,158 l4,9 4,-9 z"/>
 <text class="s-txt-m" x="124" y="32" text-anchor="middle" font-size="15">A</text>
@@ -437,14 +467,14 @@ body.blanked #stage { visibility: hidden; }
 <template id="ill-kvadrat-eta"><svg viewBox="0 0 250 240" role="img" aria-label="Квадрат естественности для конкретных пространств V и W: сверху отображение A, снизу его дважды двойственное, по бокам канонические отображения эта для V и для W">
 <text class="s-txt" x="46" y="52" text-anchor="middle" font-size="17">V</text>
 <text class="s-txt" x="204" y="52" text-anchor="middle" font-size="17">W</text>
-<text class="s-txt" x="46" y="202" text-anchor="middle" font-size="17">V**</text>
-<text class="s-txt" x="204" y="202" text-anchor="middle" font-size="17">W**</text>
-<line class="s-thin" x1="66" y1="46" x2="182" y2="46"/><path class="s-ar-m" d="M182,42 l9,4 -9,4 z"/>
-<line class="s-thin" x1="78" y1="196" x2="172" y2="196"/><path class="s-ar-m" d="M172,192 l9,4 -9,4 z"/>
+<text class="s-txt" x="46" y="202" text-anchor="middle" font-size="17">V<tspan dy="-5" font-size="8.5">∗∗</tspan></text>
+<text class="s-txt" x="204" y="202" text-anchor="middle" font-size="17">W<tspan dy="-5" font-size="8.5">∗∗</tspan></text>
+<line class="s-thin" x1="66" y1="46" x2="175" y2="46"/><path class="s-ar-m" d="M175,42 l9,4 -9,4 z"/>
+<line class="s-thin" x1="78" y1="196" x2="163" y2="196"/><path class="s-ar-m" d="M163,192 l9,4 -9,4 z"/>
 <line class="s-thin" x1="46" y1="68" x2="46" y2="167"/><path class="s-ar-m" d="M42,158 l4,9 4,-9 z"/>
 <line class="s-thin" x1="204" y1="68" x2="204" y2="167"/><path class="s-ar-m" d="M200,158 l4,9 4,-9 z"/>
 <text class="s-txt-m" x="124" y="32" text-anchor="middle" font-size="15">A</text>
-<text class="s-txt-m" x="124" y="226" text-anchor="middle" font-size="15">A**</text>
+<text class="s-txt-m" x="124" y="226" text-anchor="middle" font-size="15">A<tspan dy="-4.5" font-size="8">∗∗</tspan></text>
 <text class="s-txt-m" x="36" y="121" text-anchor="end" font-size="15">η<tspan dy="3" font-size="11">V</tspan></text>
 <text class="s-txt-m" x="214" y="121" font-size="15">η<tspan dy="3" font-size="11">W</tspan></text>
 </svg>
