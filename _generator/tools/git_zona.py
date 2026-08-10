@@ -2084,8 +2084,25 @@ def commit_zone_oneshot(args):
     # 🔴 ФИНАЛЬНАЯ СТРОКА-ВЕРДИКТ — всегда ПОСЛЕДНЯЯ, чтобы владелец читал только её.
     # Всё выше (⚠, списки «вне зоны») — контекст; решение «дальше или к Claude» — здесь.
     # Родилось из вопроса владельца 28.07: жёлтый ⚠ на успехе читался как «что-то не так».
+    # 🔴 «Вывезено» здесь раньше печаталось безусловно при rc == 0 — даже когда
+    # `--push` не передавали и push не пытались. Слово означает «уехало на
+    # origin» (см. урок 04.08 про «вывезено ≠ опубликовано» строками ниже) — и
+    # это же различие тут же нарушалось. Вердикт снят ЗАМЕРОМ, а не по rc/args.push:
+    # `git push`, которому нечего вывозить, тоже возвращает 0, а голый rc после
+    # commit ничего не знает про push вовсе.
     if rc == 0:
-        print("\n✅ ГОТОВО — сохранено и вывезено. Дальше без Claude; вернись, только если увидишь 🔴.")
+        up = git("rev-parse", "--abbrev-ref", "@{upstream}", check=False)
+        if up.returncode != 0:
+            print("\n✅ ГОТОВО — сохранено. Ветка не отслеживает origin — вывоз "
+                  "отсюда не проверить. Дальше без Claude; вернись, только если увидишь 🔴.")
+        else:
+            ahead = git("rev-list", "--count", "@{upstream}..HEAD").stdout.strip()
+            if ahead == "0":
+                print("\n✅ ГОТОВО — сохранено и вывезено. Дальше без Claude; вернись, только если увидишь 🔴.")
+            else:
+                print(f"\n✅ ГОТОВО — сохранено. {ahead} коммит(ов) остаются только на "
+                      "этой машине (origin не тронут). Дальше без Claude; вернись, "
+                      "только если увидишь 🔴.")
     else:
         print("\n🔴 ВЕРНИСЬ К CLAUDE — что-то не доехало; пришли ему вывод выше.")
     return rc
@@ -2939,6 +2956,123 @@ def cmd_purge(args):
     return 0
 
 
+def _mestnye_tolko(branch):
+    """Сколько коммитов ветки `branch` нет на `origin/<то же имя>`.
+
+    Единообразно для веток С трекингом и БЕЗ: если `origin/<branch>` вообще
+    не существует локально, вся ветка — «локально-только» (никогда не уезжала
+    под этим именем). Считаем через прямое имя удалённой ветки, а не через
+    `@{upstream}` — трекинг может смотреть на другое имя или отсутствовать,
+    а подкоманде нужно именно «есть ли это на origin под тем же именем».
+    """
+    if git("rev-parse", "--verify", "--quiet", f"origin/{branch}",
+           check=False).returncode == 0:
+        return int(git("rev-list", "--count", f"origin/{branch}..{branch}").stdout.strip())
+    return int(git("rev-list", "--count", branch).stdout.strip())
+
+
+def cmd_vyvezti(args):
+    """Вывезти локальные коммиты на origin — единственная дверь push (§0 канона:
+    голый `git push` руками запрещён так же, как остальной голый git).
+
+    Форма — калька `opublikovat`: без `--yes` только ПРЕДПРОСМОТР (сколько
+    коммитов и по каким веткам уедет, снято командой, origin не тронут); с
+    `--yes` — реальный push и ЗАМЕР РЕЗУЛЬТАТА ПОСЛЕ через `_mestnye_tolko()`,
+    а не по коду возврата `push`: `git push`, которому нечего вывозить, тоже
+    возвращает 0 и соврал бы «вывезено» на пустом месте (тот же класс ошибки,
+    что чинит Шаг 1 у `commit`).
+
+    По умолчанию — ТОЛЬКО текущая ветка: ветки `zahod/*` молча пачкой не
+    вывозятся, у каждой свой статус готовности и решает владелец, не эта
+    команда. `--zahody` добавляет остальные локальные `zahod/*` — и они
+    перечисляются ПОИМЁННО в предпросмотре, не одной цифрой.
+    """
+    if in_sandbox():
+        sug = "vyvezti" + (" --zahody" if args.zahody else "") + (" --yes" if args.yes else "")
+        log_incident("песочница: push запрещён", "vyvezti исполняет владелец/host-side Claude Code")
+        return refuse_write("Вывоз (push)", suggest=sug)
+
+    head = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
+    if head == "HEAD":
+        print("⛔ DETACHED HEAD — ты не на ветке, вывозить нечего под этим именем.")
+        return 1
+
+    branches = [head]
+    if args.zahody:
+        others = [b.strip().lstrip("* ") for b in git("branch").stdout.splitlines()]
+        branches += sorted(b for b in others if b.startswith("zahod/") and b != head)
+
+    # 🔴 fetch ПЕРВЫМ действием, даже в предпросмотре (как у `opublikovat`
+    # перед диффом) — иначе `origin/<ветка>` может быть протухшей веткой
+    # с прошлого прогона, и число «локально-только» соврёт в обе стороны.
+    r = git("fetch", "origin", check=False)
+    if r.returncode != 0:
+        print(f"⛔ Не удалось обновить origin (rc={r.returncode}):\n"
+              f"   {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else '(тихо)'}\n"
+              "   Предпросмотр без свежих данных о origin недостоверен — не считаю дальше.")
+        return 1
+
+    plan = [(b, _mestnye_tolko(b)) for b in branches]
+    total = sum(n for _, n in plan)
+
+    print(f"═══ вывоз: {len(plan)} ветк(а/и/) — суммарно {total} коммит(ов) только "
+          "на этой машине ═══\n")
+    for b, n in plan:
+        na_origin = git("rev-parse", "--verify", "--quiet", f"origin/{b}", check=False).returncode == 0
+        if not na_origin:
+            print(f"   {b}: на origin вовсе нет — уедет вся ветка ({n} коммит(ов))")
+        elif n:
+            print(f"   {b}: впереди origin/{b} на {n}")
+        else:
+            print(f"   {b}: уже совпадает с origin/{b}")
+
+    if total == 0:
+        print("\n✅ Вывозить нечего — все перечисленные ветки уже на origin.")
+        return 0
+
+    if not args.yes:
+        print(f"\n→ Это ПРЕДПРОСМОТР, origin не тронут. Вывезти:\n"
+              f"     python3 {Path(__file__)} vyvezti --yes" + (" --zahody" if args.zahody else ""))
+        return 0
+
+    sweep_dead_locks()
+    if not wait_for_lock():
+        log_incident("vyvezti: чужой лок держится дольше 90 с",
+                     "подождать и повторить ту же команду")
+        return 2
+
+    print(f"\n→ push: вывожу {len(plan)} ветк(а/и/)…")
+    fails = []
+    for b, _ in plan:
+        r = git("push", "--set-upstream", "origin", b, check=False)
+        if r.returncode != 0:
+            fails.append((b, r))
+            first = ((r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+                     or ["(вывод пуст)"])[0]
+            print(f"   ❌ {b}: rc={r.returncode} — {first}")
+        else:
+            print(f"   ✅ {b}: push прошёл")
+
+    # 🔴 ВЕРДИКТ — ЗАМЕРОМ ПОСЛЕ, не по rc push (см. докстроку).
+    posle = [(b, _mestnye_tolko(b)) for b, _ in plan]
+    ostalos = sum(n for _, n in posle)
+
+    if fails:
+        log_incident("vyvezti: push отвергнут на части веток",
+                     "смотреть вывод команды по каждой ветке, повторить не вслепую")
+
+    if ostalos == 0:
+        print(f"\n✅ Вывезено — локально-только коммитов не осталось ни на одной "
+              "из перечисленных веток.")
+        return 1 if fails else 0
+
+    print(f"\n⚠ После вывоза локально-только осталось {ostalos} коммит(ов):")
+    for b, n in posle:
+        if n:
+            print(f"   {b}: {n}")
+    return 1
+
+
 def main():
     ap = argparse.ArgumentParser(description="Вся работа с git в materials/ — через этот файл.")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -3045,6 +3179,16 @@ def main():
                          "`purge --yes -- --help` (после `--` всё считается путём)")
     pu.add_argument("--yes", action="store_true", help="выполнить снос (без него — только показать)")
     pu.set_defaults(func=cmd_purge)
+
+    vv = sub.add_parser("vyvezti",
+                        help="вывезти текущую ветку на origin (и, с --zahody, "
+                             "остальные zahod/*); без --yes — предпросмотр")
+    vv.add_argument("--zahody", action="store_true",
+                    help="добавить в вывоз остальные локальные ветки zahod/* "
+                         "(поимённо в предпросмотре); без флага — только текущая")
+    vv.add_argument("--yes", action="store_true",
+                    help="выполнить push (без него — только показать, что уедет)")
+    vv.set_defaults(func=cmd_vyvezti)
 
     # parse_known_args вместо parse_args: лишние аргументы — НЕ питоновый usage,
     # а человеческий диагноз. Цена (23.07): владелец скопировал команду с хвостом
