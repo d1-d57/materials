@@ -201,3 +201,4 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-10 04:44 · arka/mat-kostyak · merge zahod/final-sessii: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
 - 2026-08-10 04:44 · arka/mat-kostyak · merge zahod/final-sessii: конфликт в 2 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-10 04:52 · arka/mat-kostyak · запуск с мусорными аргументами · → лишнее в команде: · _studio/docs/ · _studio/konvejer/ · _generator/tools/ — убрать хвост и повторить · статус: открыт
+- 2026-08-10 05:48 · zahod/vyvoz · коммит с --no-verify: чужой долг: подкоманда vyvezti не описана в _meta/disciplina/GIT-disciplina.md — файл вне зоны захода (_generator/tools/·_studio/zhurnal/), править нельзя · → назвать причину долгом в отчёте захода; своё красное — чинить · статус: открыт
