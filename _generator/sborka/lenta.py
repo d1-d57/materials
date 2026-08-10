@@ -89,22 +89,31 @@ def _vkladka_po_slajdam(slides, razdel, math):
     return "\n".join(parts)
 
 
+# Собственной палитры у ленты больше нет (заход konstantnyj-sloj, Ш7): шесть
+# литералов, не связанных с `tokens.css` через var(), заменены на токены канона —
+# `#faf7f2`→--paper, `#242019`→--ink, `#7a7267`/`#a39a8c`→--steel, `#e9e2d8`→--board,
+# `#bf5b4f`→--brick (последний ПОБИТОВО совпадал с прежним --brick: величину когда-то
+# скопировали, а не связали). Сам `:root` подставляется в <style> из
+# `skeleton/tokens.css` — так же, как katex.css, читается тем же `read_text`.
+# ШРИФТОВЫХ ФАЙЛОВ лента НЕ вшивает (это служебный просмотрщик владельца, а не дек;
+# faces.css — 1,9 МБ на каждый прогон): var(--font-*) здесь резолвится в хвост
+# fallback-цепочки — системный sans-serif/serif. Это ожидаемое поведение, а не дыра.
 CSS = """
-body{font-family:'Glacial Indifference',Arial,sans-serif;max-width:900px;margin:0 auto;padding:32px;
-     background:#faf7f2;color:#242019;line-height:1.5}
-h1{font-family:'Forum',serif;font-size:32px;margin-bottom:4px}
-.podzagolovok{color:#7a7267;margin-bottom:24px}
+body{font-family:var(--font-body);max-width:900px;margin:0 auto;padding:32px;
+     background:var(--paper);color:var(--ink);line-height:1.5}
+h1{font-family:var(--font-display);font-size:32px;margin-bottom:4px}
+.podzagolovok{color:var(--steel);margin-bottom:24px}
 .taby input{display:none}
-.taby label{display:inline-block;padding:10px 20px;margin-right:6px;background:#e9e2d8;
+.taby label{display:inline-block;padding:10px 20px;margin-right:6px;background:var(--board);
             border-radius:8px 8px 0 0;cursor:pointer;font-weight:600}
-.panel{display:none;border-top:3px solid #bf5b4f;padding-top:20px}
+.panel{display:none;border-top:3px solid var(--brick);padding-top:20px}
 #t1:checked ~ .taby label[for=t1],
 #t2:checked ~ .taby label[for=t2],
-#t3:checked ~ .taby label[for=t3]{background:#bf5b4f;color:#fff}
+#t3:checked ~ .taby label[for=t3]{background:var(--brick);color:var(--card)}
 #t1:checked ~ #p1,#t2:checked ~ #p2,#t3:checked ~ #p3{display:block}
-h2{font-family:'Forum',serif;font-size:22px;margin:28px 0 8px;color:#bf5b4f}
+h2{font-family:var(--font-display);font-size:22px;margin:28px 0 8px;color:var(--brick)}
 .slajd-lenty:first-child h2{margin-top:0}
-.pusto{color:#a39a8c;font-style:italic}
+.pusto{color:var(--steel);font-style:italic}
 """
 
 
@@ -122,6 +131,9 @@ def build(lekcija_dir, out):
     # KaTeX-ядро (прячет .katex-mathml) — та же дыра, что в slaid.py/deck.py:
     # без него формула из кэша дублируется голым текстом MathML-аннотации рядом.
     katex_css = read_text(SKELETON / "katex.css")
+    # Токены канона — тем же ходом, что katex.css: без них var(--paper)/var(--font-*)
+    # в CSS ниже не резолвятся, и лента падает в дефолты браузера (Ш7).
+    tokens_css = read_text(SKELETON / "tokens.css")
 
     doc = """<!DOCTYPE html>
 <html lang="ru">
@@ -129,6 +141,7 @@ def build(lekcija_dir, out):
 <meta charset="UTF-8">
 <title>%(title)s — лента</title>
 <style>%(katex)s
+%(tokens)s
 %(css)s</style>
 </head>
 <body>
@@ -150,6 +163,7 @@ def build(lekcija_dir, out):
 """ % {
         "title": _html.escape(title),
         "katex": katex_css,
+        "tokens": tokens_css,
         "css": CSS,
         "n": len(slides),
         "tab1": tab1,

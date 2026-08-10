@@ -31,7 +31,7 @@ ILL_PAD = 28
 GLOBAL_CSS = (
     ".zone.board{ background:var(--board); } "
     ".zone.copy{ padding:46px 64px; } "
-    ".zagolovok{ font-family:'Forum',serif; text-transform:uppercase; "
+    ".zagolovok{ font-family:var(--font-display); text-transform:uppercase; "
     "font-size:44px; line-height:1.15; margin-bottom:28px; color:var(--ink); } "
     # ---- визитка: текст канона (sluzhebnye/vizitka.md) несёт {.bullets} и
     # <a class="tg-link">; правила дословно с sluzhebnye/style.css (заход
@@ -221,7 +221,7 @@ def oblozhka(sid, p, text_html):
            "grid-template-rows:1fr auto 1.7fr; align-items:center; padding:0 130px; } "
            "#%s .head{ grid-row:2; } "
            "#%s .head .t-display{ font-size:96px; } "
-           "#%s .sub{ font-family:'Glacial Indifference','Noto Sans',sans-serif; "
+           "#%s .sub{ font-family:var(--font-body); "
            "text-align:center; color:var(--ink); font-size:32px; letter-spacing:.04em; margin-top:36px; } "
            "#%s .sub2{ font-size:22px; margin-top:14px; color:var(--ink); opacity:.78; line-height:1.5; } "
            "#%s .art{ position:absolute; left:0; right:0; bottom:3%%; height:30%%; }"
@@ -246,7 +246,11 @@ def vizitka(sid, p, text_html):
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
            "grid-template-columns:410px 56px 1fr; grid-template-rows:107px 1fr; } "
            "#%s .board{ grid-area:1/1/3/2; background:var(--board); position:relative; } "
-           "#%s .brd-title{ position:absolute; left:36px; top:34px; font-size:74px; } "
+           # 74px было подобрано под Forum; Cormorant Garamond шире — «Про меня» переставало
+           # влезать в доску 410px, вторая строка ложилась на фото (замер: 374px при 74px,
+           # 329px при 64px, доступно 374px). Кегль взят из перенесённой шкалы —
+           # --t-frametitle-n, заголовок узкой колонки (.sty:428,454 → 20pt).
+           "#%s .brd-title{ position:absolute; left:36px; top:34px; font-size:var(--t-frametitle-n); } "
            "#%s .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:260px; } "
            "#%s .p-photo img{ width:100%%; height:100%%; object-fit:cover; } "
            "#%s .p-qr{ position:absolute; left:81px; top:479px; width:250px; height:250px; } "
