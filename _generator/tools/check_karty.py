@@ -70,8 +70,10 @@ VNE_OHVATA = ("fixtures", "vendor", "skeleton", "__pycache__", "node_modules")
 ZAGOLOVOK_REESTRA = re.compile(r'^##\s+5\.\s.*РЕЕСТР\s+ИНСТРУМЕНТОВ', re.M)
 ZAGOLOVOK_FAZ = re.compile(r'^##\s+1\.\s', re.M)
 SLEDUYUSHCHIJ = re.compile(r'^##\s', re.M)
-# Строка реестра: первая клетка — путь в обратных кавычках, последняя — статус.
+# Строка реестра: первая клетка — путь в обратных кавычках, остальные — по заголовку.
 STROKA_RE = re.compile(r'^\|\s*`[^`]+`\s*\|')
+# Строка-разделитель markdown-таблицы: `|---|---|…|`.
+RAZDELITEL_RE = re.compile(r'^\|[\s:|-]+\|$')
 STATUSY = ("ЖИВ", "АРХИВ")
 # Законная пустота: клетка ровно вида `нет: <причина>`, причина непустая.
 NET_RE = re.compile(r'^нет:\s*\S')
@@ -80,6 +82,16 @@ PUSTO = ("", "—", "-", "–", "нет", "нет:", "н/д", "N/A")
 PY_RE = re.compile(r'`([\w.-]+\.py)`')
 # Явное объявление «гейта-инструмента у фазы нет, и вот почему».
 NET_GEJTA_RE = re.compile(r'нет\s+\.py-гейта:\s*\S')
+# 🔴 Реестр читается ПО ИМЕНИ заголовка колонки, не по позиции и не по счёту клеток
+# (заход `final-sessii`): реестр задуман растущим (§5 «ЗАЧЕМ»), рост колонок вправо
+# не обязан ронять парсер. Маркер — подстрока в заголовке клетки, без учёта регистра.
+IMENA_KOLONOK = {
+    "put": ("файл",),
+    "rol": ("фаза",),
+    "zovut": ("зов",),        # «кто зовёт»
+    "proveren": ("провер",),  # «чем проверен»
+    "status": ("статус",),
+}
 
 
 def telo_sekcii(text, zagolovok_re):
@@ -90,6 +102,17 @@ def telo_sekcii(text, zagolovok_re):
     hvost = text[m.end():]
     nxt = SLEDUYUSHCHIJ.search(hvost)
     return hvost[:nxt.start()] if nxt else hvost
+
+
+def zagolovok_kolonok(stroka):
+    """Имя→индекс клетки по строке-заголовку таблицы. Нераспознанные клетки не входят."""
+    indeksy = {}
+    for i, imya in enumerate(kletki(stroka)):
+        nizhnyaya = imya.strip().lower()
+        for klyuch, markery in IMENA_KOLONOK.items():
+            if klyuch not in indeksy and any(m in nizhnyaya for m in markery):
+                indeksy[klyuch] = i
+    return indeksy
 
 
 def kletki(stroka):
@@ -110,10 +133,27 @@ def obyavlennaya_pustota(kletka):
 
 
 def chitat_reestr(text):
-    """`(строки, ошибки формы)`. Строка — dict с пятью клетками и номером строки.
+    """`(строки, ошибки формы)`. Строка — dict с пятью полями и номером строки.
 
     🔴 Формат судится ДО содержания: реестр, который нельзя разобрать программой, —
     это снова текст, а текст протух уже дважды.
+
+    Колонки читаются ПО ИМЕНИ заголовка таблицы (`zagolovok_kolonok()`), не по позиции
+    и не по счёту клеток: реестр задуман растущим (§5 «ЗАЧЕМ»), лишние клетки справа
+    (например УРОВЕНЬ) не роняют строку. Требуются только пять семантических колонок
+    из `IMENA_KOLONOK`; их порядок в самой таблице неважен.
+
+    🔴 Таблица ищется ПО СОДЕРЖИМОМУ, не по номеру подраздела: заголовок `|...|`
+    (называющий все нужные колонки) сразу над строкой-разделителем `|---|...|`. Как
+    только строка данных обрывается (первая НЕ-`|`-строка после начала таблицы) —
+    чтение таблицы останавливается СРАЗУ, дальше в разделе «## 5.» не ходим. Это же
+    решает и ловушку STROKA_RE «где угодно в разделе»: раньше тело секции читалось
+    целиком до следующего «## », и строки вида `| \`путь\` | … |` из §5.5 (список,
+    похожий на форму реестра) ловились как настоящие — заход `uroven-instrumentov`
+    поэтому переписал §5.5 списком. Первая попытка чинить это якорем на «### 5.2»
+    сломала фикстуру `fixtures/karty/PROGNAT.sh` — та строит `## 5.` БЕЗ подраздела,
+    таблица идёт сразу под заголовком секции; поиск по содержимому таблицы работает
+    в обеих формах.
     """
     telo = telo_sekcii(text, ZAGOLOVOK_REESTRA)
     if telo is None:
@@ -125,31 +165,61 @@ def chitat_reestr(text):
     # Тот же закон, что у `check_sborki` («заход, который ЦИТИРУЕТ, ничего не
     # утверждает»): иначе гейт краснеет на собственной документации, а такой отключают.
     v_bloke = False
+    indeksy = None
+    zhdyom_razdelitel = False
+    v_tablice = False
     for sdvig, ln in enumerate(telo.splitlines()):
         if ln.lstrip().startswith("```"):
             v_bloke = not v_bloke
             continue
-        if v_bloke or not STROKA_RE.match(ln):
+        if v_bloke:
             continue
-        nomer = text[:nachalo].count('\n') + sdvig + 1
-        k = kletki(ln)
-        if len(k) != 5:
-            oshibki.append(f"строка {nomer}: клеток {len(k)}, а формат требует ровно 5 "
-                           f"(файл · фаза/роль · кто зовёт · чем проверен · статус)")
+        stripped = ln.strip()
+        if v_tablice:
+            if not stripped.startswith("|"):
+                break  # первая НЕ-табличная строка — таблица кончилась, дальше не читаем
+            if not STROKA_RE.match(ln):
+                continue  # строка-разделитель или иная служебная — не данные
+            nomer = text[:nachalo].count('\n') + sdvig + 1
+            k = kletki(ln)
+            maks_indeks = max(indeksy.values())
+            if len(k) <= maks_indeks:
+                oshibki.append(f"строка {nomer}: клеток {len(k)}, а по заголовку таблицы "
+                               f"нужно хотя бы {maks_indeks + 1}")
+                continue
+            put = k[indeksy["put"]].strip('`')
+            status = k[indeksy["status"]]
+            if status not in STATUSY:
+                oshibki.append(f"строка {nomer} (`{put}`): статус «{status}» — разрешены "
+                               f"только {' и '.join(STATUSY)}")
+                continue
+            rol, zovut, proveren = (k[indeksy["rol"]], k[indeksy["zovut"]],
+                                    k[indeksy["proveren"]])
+            for imya, kletka in (("фаза / роль", rol), ("кто зовёт", zovut),
+                                 ("чем проверен", proveren)):
+                if not zapolnena(kletka):
+                    oshibki.append(f"строка {nomer} (`{put}`): клетка «{imya}» пуста МОЛЧА. "
+                                   f"Законная пустота пишется явно: `нет: <причина>` — "
+                                   f"иначе «мы про это знаем» неотличимо от «мы это забыли»")
+            stroki.append({"put": put, "rol": rol, "zovut": zovut, "proveren": proveren,
+                           "status": status, "nomer": nomer})
             continue
-        put = k[0].strip('`')
-        if k[4] not in STATUSY:
-            oshibki.append(f"строка {nomer} (`{put}`): статус «{k[4]}» — разрешены "
-                           f"только {' и '.join(STATUSY)}")
+        if zhdyom_razdelitel:
+            zhdyom_razdelitel = False
+            if RAZDELITEL_RE.match(stripped):
+                v_tablice = True
+            else:
+                indeksy = None  # ложная тревога — не заголовок таблицы, ищем дальше
             continue
-        for imya, kletka in (("фаза / роль", k[1]), ("кто зовёт", k[2]),
-                             ("чем проверен", k[3])):
-            if not zapolnena(kletka):
-                oshibki.append(f"строка {nomer} (`{put}`): клетка «{imya}» пуста МОЛЧА. "
-                               f"Законная пустота пишется явно: `нет: <причина>` — "
-                               f"иначе «мы про это знаем» неотличимо от «мы это забыли»")
-        stroki.append({"put": put, "rol": k[1], "zovut": k[2], "proveren": k[3],
-                       "status": k[4], "nomer": nomer})
+        if stripped.startswith("|"):
+            kandidat = zagolovok_kolonok(ln)
+            if set(IMENA_KOLONOK) <= set(kandidat):
+                indeksy = kandidat
+                zhdyom_razdelitel = True
+    if indeksy is None or not v_tablice:
+        oshibki.append("в §5 не найдена таблица реестра — заголовок со всеми нужными "
+                       "колонками, сразу над строкой-разделителем `|---|---|…`; "
+                       "сверять нечего")
     return stroki, oshibki
 
 

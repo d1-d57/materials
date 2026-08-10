@@ -320,18 +320,68 @@ def _sosednij_repo(zone, repo_root):
     репозитории. Ложное «проверено» хуже отсутствия пункта: пункт заметен, а
     ложное «проверено» читают и идут дальше. Ровно на этом соседний репозиторий
     забывали трижды за сутки.
+
+    🔴 Токен зоны для соседа — АБСОЛЮТНЫЙ путь (контракт зоны требует именно его,
+    `RUKOVODSTVO §2 «Про второй репозиторий»`): первый сегмент `/Users/.../disciplina`
+    после наивного `strip('/').split('/')[0]` — это `Users`, а не `disciplina`. Ищем
+    имя ОТНОСИТЕЛЬНО папки-родителя репозиториев, а не «первым куском строки».
+    Найдено заходом `final-sessii` живым прогоном (`sosed` уходил в `None` на
+    ровно таком токене).
     """
     try:
         baza = check_sborki.glavnyj_repo()
     except Exception:
         baza = repo_root
+    baza_roditel = Path(baza).parent
     for tok in (zone or "").split():
-        pervyj = tok.strip().strip('/').split('/')[0]
+        pervyj = _pervyj_segment_soseda(tok, baza_roditel)
         if not pervyj or (repo_root / pervyj).exists():
             continue
-        if (Path(baza).parent / pervyj / ".git").exists():
+        if (baza_roditel / pervyj / ".git").exists():
             return pervyj
     return None
+
+
+def _pervyj_segment_soseda(tok, baza_roditel):
+    """Первый сегмент имени соседа для токена зоны `tok`.
+
+    Относительный токен (`disciplina/doma/...`) — первый кусок пути как раньше.
+    Абсолютный (`/Users/.../disciplina/...`) — сегмент СРАЗУ ПОСЛЕ папки-родителя
+    репозиториев, а не первый сегмент абсолютного пути вообще (см. докстрока
+    `_sosednij_repo`). Не удалось разрешить — `None`, не гадаем.
+    """
+    t = tok.strip()
+    p = Path(t)
+    if not p.is_absolute():
+        return t.strip('/').split('/')[0]
+    try:
+        otnositelno = p.resolve().relative_to(baza_roditel.resolve())
+    except (ValueError, OSError):
+        return None
+    return otnositelno.parts[0] if otnositelno.parts else None
+
+
+def _razbit_zonu_po_repo(zone, repo_root, sosed):
+    """Токены `zone`, разложенные на «свои» (репозиторий генератора) и «соседа».
+
+    Та же эвристика, что у `_sosednij_repo`/`_pervyj_segment_soseda`, но применена
+    к КАЖДОМУ токену: Г1 при мультирепо-зоне печатает разные команды для разных
+    репозиториев (см. `gigiena_blok`) и обязан знать, какой токен чей.
+    """
+    if not sosed:
+        return (zone.split() if zone else []), []
+    try:
+        baza = check_sborki.glavnyj_repo()
+    except Exception:
+        baza = repo_root
+    baza_roditel = Path(baza).parent
+    svoi, chuzhie = [], []
+    for tok in (zone or "").split():
+        t = tok.strip()
+        if not t:
+            continue
+        (chuzhie if _pervyj_segment_soseda(t, baza_roditel) == sosed else svoi).append(t)
+    return svoi, chuzhie
 
 
 def gigiena_blok(zone, repo_root, baza, baza_err):
@@ -351,6 +401,35 @@ def gigiena_blok(zone, repo_root, baza, baza_err):
     else:
         g3 = (f"{NE_ZAPOLNENO % 'база сравнения веток'} — при сборке снять не удалось"
               f" ({baza_err}). Подставь ветку арки сам и скажи об этом в отчёте.")
+
+    # 🔴 ОДНА КОМАНДА НА КАЖДЫЙ ПРЕФИКС, А НЕ ОДНА НА ВСЮ ЗОНУ. `git_zona.py check
+    # --zone` берёт значение `--zone` ОДНОЙ строкой и матчит её как ОДИН литеральный
+    # префикс (`in_zone()`: `path == z or path.startswith(z + "/")`) — несколько
+    # путей одной строкой («_studio · _generator/tools») не совпадают ни с одним
+    # реальным путём и печатают вакуозный ✅, даже БЕЗ второго репозитория. Найдено
+    # живым прогоном заходом `final-sessii` перед коммитом (командой `check --zone
+    # "_studio · _generator/tools"` на заведомо грязном дереве — вышло ✅). Шире, чем
+    # диагноз задачи (та говорила только про мультирепо), но тот же корень; `git_zona.py`
+    # не трогаем — фикс живёт здесь, в тексте, который генератор печатает.
+    if sosed:
+        svoi_tok, _ = _razbit_zonu_po_repo(zone, repo_root, sosed)
+    else:
+        svoi_tok = list(zony)
+    svoi_tok = [t for t in svoi_tok if t and t != "·"]
+    if svoi_tok:
+        komandy_svoi = "; ".join(
+            f"`python3 _generator/tools/git_zona.py check --zone {t}` → ✅" for t in svoi_tok)
+    else:
+        komandy_svoi = NE_ZAPOLNENO % "пути зоны"
+
+    if sosed:
+        g1 = (f"{komandy_svoi} (репозиторий `{repo_root.name}`); `cd ../{sosed} && "
+              f"git --no-optional-locks status --porcelain` → пусто (репозиторий `{sosed}`, "
+              f"ОСНОВНАЯ папка соседа, не worktree). Красное на любой из команд — отчёт "
+              f"не принимается: приёмка гоняет их все первым ходом.")
+    else:
+        g1 = (f"{komandy_svoi}. Красное на любой из команд — отчёт не принимается: "
+              f"приёмка гоняет их все первым ходом.")
 
     if sosed:
         g2 = (f"зона заходит в `{sosed}/` — ОТДЕЛЬНЫЙ репозиторий рядом. "
@@ -381,9 +460,7 @@ def gigiena_blok(zone, repo_root, baza, baza_err):
         "",
         f"{GIGIENA_ZONA_METKA} {zona_md}",
         "",
-        f"- **Г1. Зона доехала в git.** `python3 _generator/tools/git_zona.py check "
-        f"--zone {zona_cmd}` → ✅. Красное здесь — отчёт не принимается: приёмка гоняет "
-        f"этот же гейт первым ходом.",
+        f"- **Г1. Зона доехала в git.** {g1}",
         f"- **Г2. Второй репозиторий.** {g2}",
         f"- **Г3. Невлитых веток не прибавилось.** {g3}",
         "- **Г4. Новый инструмент имеет живую точку вызова.** Завёл `.py` в "

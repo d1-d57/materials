@@ -455,11 +455,11 @@
 
 **`_studio/zhurnal/2026-08-07_arhitektura-slajdov/VYGRUZKA-2026-08-10.md`** (Выгрузка сессии 2026-08-10 — сырьё для дневника арки 2026-08-07_arhitektura-slajdov)
 
-**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_zakryt-arku.md`** (Закрыть арку архитектуры слайдов: разнести планы владельца по домам в RAZVITIE.md ссылками, вынести просьбы и вопросы в очередь, поставить честный баннер закрытия)
+**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_zakryt-arku.md`** (Заход: закрытие арки 2026-08-07_arhitektura-slajdov — разнос §9 по домам, отметка закрытия)
 
-**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_uroven-instrumentov.md`** (Разметить 52 инструмента фабрики уровнем применимости: МЕТА (любая работа с заходами) / ФАБРИКА / СЛАЙДЫ — чтобы знать, что переносится в скилл ресёрча как есть)
+**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_uroven-instrumentov.md`** (Заход: разметка реестра §5 колонкой УРОВЕНЬ (МЕТА/КОНТЕНТ/СЛАЙДЫ/СПОРНО) — закрыт и принят)
 
-**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_final-sessii.md`** (Финал сессии: влить обе ветки в обоих репозиториях, забрать хвосты, оживить check_karty.py и починить Г1 для мультирепо-зон)
+**`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_final-sessii.md`** (Заход: свести четыре независимые работы, убрать два ложных зелёных (последний заход арки))
 
 **`_studio/zhurnal/2026-08-07_arhitektura-slajdov/kod_posadka.md`** (Посадка сессии: продвинуть arka/mat-kostyak до final-sessii и вернуть основную папку disciplina на main)
 
