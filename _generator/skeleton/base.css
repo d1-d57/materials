@@ -16,7 +16,7 @@ html, body { height: 100%; background: #2b3038; }
 .zone  { position: relative; overflow: hidden; min-width: 0; min-height: 0; }
 .fit   { max-width: 100%; max-height: 100%; }
 
-.t-body { font-family: 'Noto Sans', sans-serif; font-size: var(--t-body); text-wrap: pretty;
+.t-body { font-family: var(--font-body); font-size: var(--t-body); text-wrap: pretty;
           line-height: var(--lh); color: var(--ink); }
 /* абзац = --blok (ручка солвера, заход solver-vmeshcheniya Э3), а не жёсткая
    пустая строка: canon-приём teorkat-vvedenie/src/overlay.css — «промежуток между
@@ -27,9 +27,9 @@ html, body { height: 100%; background: #2b3038; }
 .t-body ul.tlist + p { margin-top: var(--blok); }
 .t-body b { font-weight: 700; }
 .t-small { font-size: var(--t-small); }
-.t-display { font-family: 'Forum', serif; text-transform: uppercase; text-wrap: balance;
+.t-display { font-family: var(--font-display); text-transform: uppercase; text-wrap: balance;
              color: var(--ink); text-align: center; line-height: 1.18; letter-spacing: .01em; }
-.t-math { font-family: 'Glacial Indifference', 'Noto Sans', sans-serif; font-weight: 700; }
+.t-math { font-family: var(--font-math); font-weight: 700; }
 
 /* пропуск «____ → ответ»: blank и ответ в одной inline-grid ячейке */
 .fill { display: inline-grid; text-align: center; }
@@ -190,7 +190,7 @@ body.blanked #stage { visibility: hidden; }
 .formula .katex{font-size:1.1em}
 .katex{font-size:1.0em;white-space:nowrap}
 
-.op-def,.op-utv,.op-task{font-family:'Forum',serif;text-transform:uppercase;
+.op-def,.op-utv,.op-task{font-family:var(--font-display);text-transform:uppercase;
   letter-spacing:.055em;line-height:1.12;font-size:.80em}
 .t-body p.op-def,.t-body p.op-utv,.t-body p.op-task{margin-top:var(--blok)}
 .t-body p.op-def + p,.t-body p.op-utv + p,.t-body p.op-task + p{margin-top:4px}
