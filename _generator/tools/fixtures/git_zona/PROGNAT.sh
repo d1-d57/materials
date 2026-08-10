@@ -526,6 +526,7 @@ cd - >/dev/null
 # без обоих ловушка проверяла бы отказ бутстрапа, а не тираж формата очереди.
 python3 "$T17/_generator/tools/bootstrap_zahod.py" arka proba17 \
     --branch fixture-branch --zone '`moya-zona/tool.py`' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --opisanie "фикстура: заход несёт формат очереди" > /dev/null 2>&1 || true
 if [ -f "$T17/arka/kod_proba17.md" ]; then
     V=$(grep -c 'ДОМ:.*ДОСТАВЛЕНО:\|ДОСТАВЛЕНО: нет' "$T17/arka/kod_proba17.md" || true)
@@ -777,6 +778,7 @@ cd - >/dev/null
 python3 "$T22/_generator/tools/bootstrap_zahod.py" _studio/zhurnal/proba22 proba22t \
     --branch fixture-branch22 --zone "_studio/zhurnal/proba22/" --worktree proba22wt \
     --kanal app \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --opisanie "фикстура: файл в основной, worktree для кода" > /dev/null 2>&1 || true
 [ -f "$T22/_studio/zhurnal/proba22/kod_proba22t.md" ] \
     && echo "  ✅ часть D: файл-заход создан В ОСНОВНОЙ папке (--worktree задан)" \
