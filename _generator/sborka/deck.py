@@ -481,6 +481,10 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     katex_css = read_text(SKELETON / "katex.css")  # см. slaid.py — Э5 захода solver-vmeshcheniya
     tokens_css = read_text(SKELETON / "tokens.css")
     base_css = read_text(SKELETON / "base.css").replace("{{SCENE_CASCADE}}", scene_cascade_css(n_scenes_dek))
+    # узор углов темы — ОТДЕЛЬНЫМ файлом, а не в base.css: тот читают оба движка,
+    # и деки чужих лекций получили бы узор «Теорката» (заход primenenie-vizuala,
+    # Ш5; причина расписана в шапке uzor.css)
+    uzor_css = read_text(SKELETON / "uzor.css")
     engine_js = read_text(SKELETON / "engine.js")
 
     doc = """<!DOCTYPE html>
@@ -493,6 +497,7 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
 %(katex)s
 %(tokens)s
 %(base)s
+%(uzor)s
 %(global_css)s
 %(css)s
 </style>
@@ -512,6 +517,7 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
         "katex": katex_css,
         "tokens": tokens_css,
         "base": base_css,
+        "uzor": uzor_css,
         "global_css": GLOBAL_CSS,
         "css": all_css,
         "sections": sections,

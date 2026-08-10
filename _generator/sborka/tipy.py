@@ -31,8 +31,18 @@ ILL_PAD = 28
 GLOBAL_CSS = (
     ".zone.board{ background:var(--board); } "
     ".zone.copy{ padding:46px 64px; } "
+    # Заголовок слайда — РОЛЬ темы `frametitle`, а не своё число и свой цвет
+    # (заход primenenie-vizuala, Ш1-Ш2). Цвет: `.sty:172` `\setbeamercolor{frametitle}
+    # {fg=CTPlum,...}` и то же дословно в теле `\CTContentNode` (`.sty:372`) и в
+    # fallback-шаблоне (`.sty:595`) — CTPlum, то есть `--accent`; чёрным заголовок
+    # в теме не бывает нигде. Кегль/интерлиньяж: `.sty:183` 24/32pt → перенесённая
+    # пара `--t-frametitle`/`--lh-frametitle` (76px/1.333) вместо прежних 44px/1.15.
+    # УЗКИЙ вариант той же роли (20/28pt, `.sty:428,454`) тема включает НЕ по
+    # переполнению, а по типу слайда — там, где сбоку или снизу иллюстрация;
+    # у нас это `_zag_uzkij` на трёх типах ниже.
     ".zagolovok{ font-family:var(--font-display); text-transform:uppercase; "
-    "font-size:44px; line-height:1.15; margin-bottom:28px; color:var(--ink); } "
+    "font-size:var(--t-frametitle); line-height:var(--lh-frametitle); "
+    "margin-bottom:28px; color:var(--accent); } "
     # ---- визитка: текст канона (sluzhebnye/vizitka.md) несёт {.bullets} и
     # <a class="tg-link">; правила дословно с sluzhebnye/style.css (заход
     # vizitka-i-oblozhka, В1) — без них render_body роняет карточку гейтом
@@ -124,6 +134,45 @@ def _ill_zone(ills, axis, cls="board", pad=None):
             % (cls, flex_dir, ILL_GAP, ILL_PAD if pad is None else pad, panels))
 
 
+def _zag_uzkij(sid):
+    """Узкая роль заголовка (`--t-frametitle-n`, 20/28pt `.sty:428,454`) для типов,
+    где рядом с текстом стоит иллюстрация. Признак взят у темы, а не подобран по
+    факту переполнения: `ctrightframe` (`.sty:427-428`) и `ctbottomframe`
+    (`.sty:453-454`) переопределяют `frametitle` на 20pt ВСЕГДА, просто потому что
+    это тип слайда с картинкой; полнотекстовый `cttextframe` оставляет 24pt."""
+    return (" #%s .zagolovok{ font-size:var(--t-frametitle-n); "
+            "line-height:var(--lh-frametitle-n); }" % sid)
+
+
+def _linija_ill(sid, storona):
+    """ПРАВИЛО (заход primenenie-vizuala, Ш4): есть блок иллюстрации, соседствующий
+    с текстовой зоной → на общей грани разделительная линия. Нет иллюстрации (пустая
+    доска, полноэкранная картинка без текста, служебный слайд) → линии нет.
+    Условие живёт в типе вёрстки, а не в списке слайдов: новая лекция получает
+    линию сама, ровно там, где у неё появится иллюстрация.
+
+    Где это записано у дизайнера. В тексте `.sty` линия одна — `:562`, и она про
+    ДРУГОЕ (шапка визитки). Граница блока иллюстрации записана не текстом, а
+    ассетом: зелёная панель `assets/green-bg.png`, которую `\\CTRightBackground`
+    (`.sty:312`) и `\\CTBottomBackground` (`.sty:333`) растягивают на полосу
+    иллюстрации, обведена по всем четырём сторонам каймой #757E70 (замер по
+    пикселям: 3px из 2500×1406, все четыре стороны; наружу от кадра три стороны
+    уходят в вылет `\\CTPanelBleed`, видна одна — обращённая к тексту). То есть
+    правило владельца в теме есть, просто оно в картинке, а не в коде.
+    Носитель у нас — перенесённые токены `--rule`/`--rule-w`/`--rule-op` (новых
+    констант заход заводить запрещает); расхождение цвета названо в отчёте:
+    кайма #757E70 против CTSageDark #708174 — соседние тона, не один.
+
+    storona: 'top' — иллюстрация под текстом, 'left' — иллюстрация справа от него.
+    Линия рисуется псевдоэлементом, а не border: `--rule-op` (opacity=.55 темы)
+    к border-color не применить, не изобретая четвёртой константы с альфой."""
+    geom = ("left:0; right:0; top:0; height:var(--rule-w);" if storona == "top"
+            else "top:0; bottom:0; left:0; width:var(--rule-w);")
+    return (" #%s .zone.board::before{ content:''; position:absolute; %s "
+            "background:var(--rule); opacity:var(--rule-op); z-index:1; }"
+            % (sid, geom))
+
+
 def _require_liniya(sid, p):
     if "liniya" not in p:
         raise TipVerstki("слайд %s: тип требует поле 'liniya' (единственное число, Э1)" % sid)
@@ -153,7 +202,10 @@ def polosa_gorizontalnaya(sid, p, text_html):
     # усилен: теперь в самой CSS-строке нет числовых литералов вовсе, ОБА
     # значения — производные одной переменной.
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
-           "grid-template-rows: var(--liniya) calc(100%% - var(--liniya)); }" % sid)
+           "grid-template-rows: var(--liniya) calc(100%% - var(--liniya)); }" % sid
+           + _zag_uzkij(sid))   # ctbottomframe: иллюстрация снизу → 20pt
+    if ills:
+        css += _linija_ill(sid, "top")
     text = _text_zone(sid, p, text_html)
     ill = _ill_zone(ills, axis="row") if ills else '<div class="zone board"></div>'
     body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, ill)
@@ -165,7 +217,10 @@ def polosa_vertikalnaya(sid, p, text_html):
     liniya = _require_liniya(sid, p)
     ills = p.get("illustracii") or []
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
-           "grid-template-columns: var(--liniya) calc(100%% - var(--liniya)); }" % sid)
+           "grid-template-columns: var(--liniya) calc(100%% - var(--liniya)); }" % sid
+           + _zag_uzkij(sid))   # ctrightframe: иллюстрация сбоку → 20pt
+    if ills:
+        css += _linija_ill(sid, "left")
     text = _text_zone(sid, p, text_html)
     ill = _ill_zone(ills, axis="col") if ills else '<div class="zone board"></div>'
     body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, ill)
@@ -325,7 +380,9 @@ def kompozit(sid, p, text_html):
            "grid-template-columns: var(--liniya) calc(100%% - var(--liniya)); } "
            "#%s .board{ display:grid; grid-template-rows: var(--liniya-ill) "
            "calc(100%% - var(--liniya-ill)); gap:%dpx; padding:%dpx; box-sizing:border-box; }"
-           % (sid, sid, ILL_GAP, ILL_PAD))
+           % (sid, sid, ILL_GAP, ILL_PAD)
+           + _zag_uzkij(sid)    # текст рядом с доской — та же узкая колонка, что ctrightframe
+           + _linija_ill(sid, "left"))  # доска здесь всегда с двумя иллюстрациями (проверка выше)
     text = _text_zone(sid, p, text_html)
     panels = "".join(
         '<div class="panel" data-ill="%s" style="min-width:0;min-height:0"></div>' % _esc(s)
