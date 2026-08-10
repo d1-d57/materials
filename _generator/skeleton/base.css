@@ -1,6 +1,15 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body { height: 100%; background: #2b3038; }
+/* Летербокс (заход primenenie-vizuala, Ш3). Слайд 16:9, экран — нет, поля вокруг
+   кадра неизбежны; тёмный #2b3038 читался отдельной структурой — «рамкой телевизора»
+   вокруг лекции. Поле теперь того же цвета, что холст слайда, и перестаёт быть
+   структурой: --paper есть у ВСЕХ читателей этого файла (проверено грепом по
+   tokens.css четырёх деков второго пайплайна, build_deck.py:295 — все четыре
+   несут --paper), поэтому голый var() здесь безопасен.
+   ⚠ В комментарии CSS нельзя писать звёздочку со слешем: этот блок уже один раз
+   закрылся на «звёздочка-слеш» внутри пути-глоба, правило html,body съелось
+   парсером, и летербокс стал БЕЛЫМ. Поймано замером пикселя, не глазами. */
+html, body { height: 100%; background: var(--paper); }
 #stage { position: fixed; inset: 0; display: grid; place-items: center; overflow: hidden; }
 .slide { width: 1440px; height: 810px; position: relative; overflow: hidden;
          transform-origin: center center; background: var(--paper); color: var(--ink); }
@@ -26,7 +35,11 @@ html, body { height: 100%; background: #2b3038; }
 .t-body ul.tlist { margin-top: var(--blok); }
 .t-body ul.tlist + p { margin-top: var(--blok); }
 .t-body b { font-weight: 700; }
-.t-small { font-size: var(--t-small); }
+/* пара кегль+интерлиньяж роли `caption` (.sty:190, 9,5/11,5pt): до этого висел
+   один кегль, а шаг строк подписи наследовался от --lh тела — половина роли
+   (заход primenenie-vizuala, Ш2). Fallback: у деков второго пайплайна --lh-small
+   нет, там line-height остаётся прежним наследованным. */
+.t-small { font-size: var(--t-small); line-height: var(--lh-small, inherit); }
 .t-display { font-family: var(--font-display); text-transform: uppercase; text-wrap: balance;
              color: var(--ink); text-align: center; line-height: 1.18; letter-spacing: .01em; }
 .t-math { font-family: var(--font-math); font-weight: 700; }
@@ -51,8 +64,12 @@ html, body { height: 100%; background: #2b3038; }
 @media (prefers-reduced-motion: reduce) { [data-scene-from] { transition: none; } }
 
 body.blanked #stage { visibility: hidden; }
+/* тот же Ш3: подсказка живёт В летербоксе, и холодный #8a96a3 был подобран под
+   тёмное поле. На --paper он не читается — берётся приглушённый --steel.
+   Fallback внутри var() — по уроку 4 захода konstantnyj-sloj: файл читают ДВА
+   движка, и у дека без --steel правило иначе молча упало бы в inherit. */
 #hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
-        color: #8a96a3; font: 13px/1 ui-monospace, monospace;
+        color: var(--steel, #8a96a3); font: 13px/1 ui-monospace, monospace;
         opacity: 0; transition: opacity .35s ease; pointer-events: none; }
 #hint.is-shown { opacity: 1; }
 
@@ -70,6 +87,13 @@ body.blanked #stage { visibility: hidden; }
    обновляет engine.js (та же схема, что #lect-zone/#lect-progress выше). */
 #lect-number { position: fixed; right: 14px; bottom: 14px; z-index: 202;
                color: var(--steel); font: 13px/1 ui-monospace, monospace;
+               /* Ш3 того же захода: номер стоит в летербоксе, который стал цветом
+                  холста, — на светлом поле он читается громче, чем нужно. Цвет уже
+                  был --steel, добавлена только приспущенная непрозрачность: виден,
+                  но не спорит с контентом. Отступление от темы названо в отчёте —
+                  у дизайнера номер CTPlum 9,2pt и непрозрачный (.sty:356-362), но
+                  там он ВНУТРИ кадра, а у нас снаружи. */
+               opacity: .55;
                pointer-events: none; }
 
 /* П12 (POMARKI-2026-08-09 §3, разбор centr-gruppy): «мы убираем белый фон.
@@ -144,16 +168,30 @@ body.blanked #stage { visibility: hidden; }
 .acc{font-weight:700;color:var(--accent)}
 .acc .katex,.acc .katex *{color:var(--ink)}
 
+/* Маркер списка ПЕРВОГО уровня — роль темы `itemize item` (.sty:196-198):
+   квадрат 0.42em цветом CTPlum, то есть --accent (заход primenenie-vizuala, Ш6).
+   Было: 0.3em цветом --steel — это подпунктовый маркер темы (.sty:199-201,
+   0.32em CTSageDark), стоявший на первом уровне.
+   `top` пересчитан, а не подобран: оптический центр держится на месте —
+   было .58 + .3/2 = .73em, стало .52 + .42/2 = .73em.
+   `var(--accent, var(--steel))` — не украшение: base.css читают ДВА движка
+   (build_deck.py:295), --accent есть только у dandelin из четырёх деков второго
+   пайплайна, а неопределённая var в `background` делает свойство невалидным —
+   маркеры просто ИСЧЕЗЛИ бы, молча и без единого красного гейта (урок 4 захода
+   konstantnyj-sloj). Fallback = ровно прежнее поведение там, где токена нет.
+   НЕ перенесён `\itemsep{0.42em}` (.sty:204) — это метрика (у нас margin-top:10px),
+   а метрику этот заход не двигает: своего токена под неё нет, а выдумывать
+   константу §1 запрещает. */
 .tlist{list-style:none}
 .tlist li{position:relative;padding-left:1.15em}
 .tlist li + li{margin-top:10px}
-.tlist li::before{content:'';position:absolute;left:0;top:.58em;
-  width:.3em;height:.3em;background:var(--steel)}
+.tlist li::before{content:'';position:absolute;left:0;top:.52em;
+  width:.42em;height:.42em;background:var(--accent, var(--steel))}
 
 .lestnica .lst,.spisok .lst{display:block;position:relative;padding-left:1.15em;
   break-inside:avoid}
 .lestnica .lst::before,.spisok .lst::before{content:'';position:absolute;left:0;
-  top:.58em;width:.3em;height:.3em;background:var(--steel)}
+  top:.52em;width:.42em;height:.42em;background:var(--accent, var(--steel))}
 .spisok .lst + .lst{margin-top:10px}
 
 .bul{display:inline-block;width:.28em;height:.28em;background:var(--steel);
