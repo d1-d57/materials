@@ -10,8 +10,9 @@ slide_order:
   - bazis-i-matricy
   - zamena-bazisa
   - dvojstvennoe-prostranstvo
-  - dvazhdy-dvojstvennoe
+  - dvojstvennyj-bazis
   - nekanonicheskij-izomorfizm
+  - dvazhdy-dvojstvennoe
   - razdelitel-retrakty
   - inyekcii
   - centr-gruppy
