@@ -6,7 +6,7 @@
 # Запуск:  sh _generator/tools/fixtures/zahod/PROGNAT.sh
 # Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
 #
-# ЛОВУШЕК ДВАДЦАТЬ ДЕВЯТЬ (задание требовало не менее девяти):
+# ЛОВУШЕК ТРИДЦАТЬ ОДНА (задание требовало не менее девяти):
 #   1. 🔴 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ ФАЙЛАХ — главная ловушка фикстуры:
 #      она сторожит не поломку, а излишнюю строгость, от которой линтер отключат.
 #      ⚠ С 08.08 — с одним ОБЪЯВЛЕННЫМ вычетом: З10 (см. ловушку 24 и докстринг
@@ -67,6 +67,11 @@
 #      секции «## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ» — красный, поимённо.
 #  29. 🔴 З11 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ — оба калибровочных захода без
 #      секции краснеют по З11 поимённо (тот же приём, что у ловушки 25 для З10).
+#  30. 🔴 (заход `modeli-arn`) --model sonnet — ЖИВОЙ прогон bootstrap_zahod.py:
+#      терминальная команда несёт ARN application-inference-profile/gn8yl4ks1php.
+#  31. 🔴 (заход `modeli-arn`) та же команда НЕ несёт «--model sonnet» словом —
+#      регрессия на `model_l = a.model.lower()`, единственную причину, по
+#      которой ARN раньше случайно проезжал невредимым.
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
 REPO_ROOT=$(cd "$TOOLS/../.." && pwd)
@@ -635,5 +640,29 @@ for LIVE in "$LIVE1" "$LIVE2"; do
     echo "$OUT29"; exit 1; }
 done
 echo "  ✅ ловушка 29: оба живых захода без секции краснеют по З11 поимённо"
+
+# ── ловушки 30-31: заход `modeli-arn` — --model sonnet даёт ARN, не слово ────
+# 🔴 ЖИВОЙ ПРОГОН bootstrap_zahod.py на реальном объекте (не пересказ). Под
+# Bedrock слово в --model разворачивается в id без ключа и падает AccessDenied
+# — терминальная команда обязана нести ARN, а не `--model sonnet`. Пункт (б)
+# отдельно от (а): без него ловушка зеленела бы и на команде, где ARN дописан
+# РЯДОМ со словом, а не вместо него.
+echo "── ловушка 30: --model sonnet — терминальная команда несёт ARN application-inference-profile"
+R30="$T/repo30"; sobrat_repo "$R30"
+OUT30=$(GIT_ZONA_REPO="$R30" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba30 \
+    --branch proba30-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" --model sonnet 2>&1) || {
+  echo "❌ ЛОВУШКА 30: bootstrap_zahod.py --model sonnet упал. Вывод:"; echo "$OUT30"; exit 1; }
+echo "$OUT30" | grep -q "application-inference-profile/gn8yl4ks1php" || {
+  echo "❌ ЛОВУШКА 30: терминальная команда НЕ несёт ARN gn8yl4ks1php (Sonnet 5). Вывод:"
+  echo "$OUT30"; exit 1; }
+echo "  ✅ ловушка 30: --model sonnet — в команде ARN application-inference-profile/gn8yl4ks1php"
+
+echo "── ловушка 31: 🔴 та же команда НЕ несёт --model sonnet словом (регрессия model_l.lower())"
+echo "$OUT30" | grep -q -- "--model sonnet" && {
+  echo "❌ ЛОВУШКА 31: терминальная команда всё ещё содержит «--model sonnet» словом — "
+  echo "  под Bedrock это AccessDenied. Вывод:"
+  echo "$OUT30"; exit 1; }
+echo "  ✅ ловушка 31: «--model sonnet» словом в команде отсутствует"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
