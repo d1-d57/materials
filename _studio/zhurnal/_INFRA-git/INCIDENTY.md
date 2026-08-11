@@ -183,3 +183,11 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-08 17:07 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-08 17:38 · arka/mat-kostyak · push упал · → коммиты целы; повторить `commit --push` или `git push` · статус: открыт
 - 2026-08-08 17:49 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-08 21:13 · zahod/svedenie-i-smeta · merge zahod/instrument-podklyuchen выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/uroki-faz-1-2 выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/hvosty-adresa выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/sborka-l2 выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/konsolidaciya-i-git-kontur выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
+- 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/sborka-l2: конфликт в 11 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-08 21:16 · zahod/svedenie-i-smeta · merge --continue: коммит слияния не прошёл · → смотреть вывод хука и `doctor` · статус: открыт
+- 2026-08-08 21:20 · zahod/svedenie-i-smeta · merge zahod/konsolidaciya-i-git-kontur: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
