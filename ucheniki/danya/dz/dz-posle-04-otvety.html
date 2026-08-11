@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание — ответы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 90px;}
+  header.mast{padding:58px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;
+       font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
+  .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);
+     display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
+  li:last-child{border-bottom:none;}
+  li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;
+     font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
+  li.zvezda::before{content:"\2605";font-style:normal;font-size:22px;padding-top:6px;color:var(--accent);}
+  li.rubrika{counter-increment:none;display:block;border-bottom:none;padding:34px 0 0;
+     font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;
+     text-transform:uppercase;color:var(--rubric);}
+  li.rubrika::before{content:none;}
+  li.rubrika+li{padding-top:14px;}
+  .tag,.cond,.hint,details,.spoiler{grid-column:2;}
+  .tag{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--ink-faint);margin:0 0 8px;}
+  .cond p+p{margin-top:10px;}
+  .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
+  details{margin:10px 0 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-faint);cursor:pointer;list-style:none;display:inline-block;
+     border:1px solid var(--rule);border-radius:3px;padding:3px 10px;}
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details[open] summary{margin-bottom:8px;}
+  .spoiler{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     padding-left:14px;border-left:2px solid var(--rubric);}
+  .spoiler p+p{margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Математика</p>
+    <h1>Домашнее задание — ответы</h1>
+    <p class="date">30 июля 2026</p>
+  </header>
+
+  <ol>
+    <li>
+      <div class="cond"><p>Существует ли десятизначное число, у которого первая цифра равна количеству нулей в его записи, вторая цифра — количеству единиц, третья — количеству двоек, и так далее, а десятая — количеству девяток?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>6210001000 — и это единственное такое число.</p></div></details>
+    </li>
+
+    <li>
+      <div class="cond"><p>На доске написаны числа 1, ½, ⅓, …, 1⁄n. За ход стирают любые два числа a и b и пишут вместо них число a + b + ab. После n − 1 ходов остаётся одно число. Какое?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>n.</p></div></details>
+    </li>
+
+    <li>
+      <div class="cond"><p>Даны десять различных двузначных чисел. Докажите, что из них можно выбрать два непустых набора, не имеющих общих чисел, суммы которых равны.</p></div>
+    </li>
+
+    <li>
+      <div class="cond"><p>Можно ли числа от 1 до 16 выписать в ряд так, чтобы сумма любых двух соседних чисел была точным квадратом?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>Да. Например: 8, 1, 15, 10, 6, 3, 13, 12, 4, 5, 11, 14, 2, 7, 9, 16.</p></div></details>
+    </li>
+
+    <li>
+      <div class="cond"><p>В каждой клетке квадрата 5×5 сидит жук. По сигналу каждый жук переползает в соседнюю по стороне клетку. Докажите, что после этого какая-то клетка окажется пустой.</p></div>
+    </li>
+
+    <li>
+      <div class="cond"><p>В классе 30 учеников, и никакие трое из них не дружат попарно. Какое наибольшее число пар друзей может быть в классе?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>225.</p></div></details>
+    </li>
+
+    <li class="zvezda">
+      <div class="cond"><p>На занятии мы разобрали: если в клетках доски 8×8 расставлены различные числа, то найдутся две соседние по стороне клетки, числа в которых отличаются не меньше чем на 5.</p><p>Верно ли такое же утверждение для доски 5×5 — обязательно ли найдутся соседние клетки с разностью не меньше 5?</p><p>А какое наибольшее число можно поставить вместо пятёрки в исходной задаче про 8×8?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>Для 5×5 — да, верно. В задаче про 8×8 вместо пятёрки можно поставить 8, и это уже нельзя улучшить. Вообще для доски n×n точная граница равна n.</p></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>
