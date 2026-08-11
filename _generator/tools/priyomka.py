@@ -63,6 +63,7 @@ REPO = Path(os.environ.get("PRIYOMKA_REPO") or (TOOLS.parent.parent))
 sys.path.insert(0, str(TOOLS))
 import dnevnik  # noqa: E402
 import dostavit_urok  # noqa: E402  — разбор очереди у Г8 берётся у КАНАЛА
+import git_zona  # noqa: E402  — Л1 берёт путь очереди у `zayavki_dir()`, второй реализации нет
 
 
 def read(p: Path) -> str:
@@ -481,6 +482,35 @@ def gate_g8(zahod_path: Path, arka: Path):
                   ", доставить некуда: дома нет или решение за человеком"))
 
 
+ЛIMIT_VOZRASTA_CH = 24
+
+
+def gate_l1():
+    """Заявка открыта дольше 24 ч → красный (`GIT-disciplina §4г`, ловушка Л1).
+
+    Механизм заявок (`_studio/zhurnal/2026-08-11_ochered-zayavok/PROEKT.md §4`)
+    работает только пока очередь кто-то читает. Написанная и забытая заявка
+    сегодня НЕ видна ничем — этот гейт делает её видимой на приёмке, а не
+    только в печати `git_zona.py doctor`.
+
+    🔴 ПОСТОЯННЫЕ ИСКЛЮЧЕНИЯ (`СРОЧНОСТЬ: postoyannaya`) ВОЗРАСТОМ НЕ СУДЯТСЯ.
+    Иначе гейт красил бы каждую приёмку арки, где висит намеренно долгоживущая
+    заявка, и его отключили бы первым же вечером (§4 PROEKT.md).
+
+    🔴 ПУТЬ ОЧЕРЕДИ — У `git_zona.zayavki_dir()`, второй реализации не заводим:
+    два разных ответа на «где очередь» разъедутся молча (задание Ш3 этого захода).
+    """
+    stroki = git_zona._zayavki_otkrytyye()
+    sudimyje = [s for s in stroki if s[3].strip().lower() != "postoyannaya"]
+    prosrochennyje = [s for s in sudimyje if s[2] > ЛIMIT_VOZRASTA_CH]
+    if prosrochennyje:
+        imena = "; ".join(f"{zid} ({vozrast} ч)" for zid, _p, vozrast, _s, _t in prosrochennyje)
+        return (False, f"{len(prosrochennyje)} заявка(и) старше {ЛIMIT_VOZRASTA_CH} ч: {imena} "
+                       f"— написали и забыли (постоянные исключения возрастом не судятся)")
+    return (True, f"проверено {len(stroki)} заявок, просроченных (>{ЛIMIT_VOZRASTA_CH} ч, "
+                  f"кроме постоянных исключений) нет")
+
+
 KONTRAKTNAYA_ZONA_RE = re.compile(r'^-\s*\*?\*?ЗОНА[^:]*:\*?\*?\s*(.+)$', re.M)
 
 
@@ -644,6 +674,7 @@ def main() -> int:
     gates.append(("Г7 пункт очереди отмечен доставленным, а следа нет", *gate_g7(ochered, arka)))
     gates.append(("Г8 очередь захода: недоставленное с живым домом или сверх порога",
                   *gate_g8(zahod_path, arka)))
+    gates.append(("Л1 заявка Cowork открыта дольше 24 ч", *gate_l1()))
 
     print("═══ МАШИННЫЕ ГЕЙТЫ ═══")
     krasnyh = 0
