@@ -527,6 +527,22 @@
 
 **`_studio/zhurnal/2026-08-11_dveri-discipliny/VYGRUZKA-2026-08-11-2.md`** (Выгрузка сессии 2026-08-11 — сырьё для дневника арки 2026-08-11_dveri-discipliny)
 
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_chestnyj-kriterij.md`** (Заход: честный критерий «поместилось» — сторож и солвер меряют scrollHeight>clientHeight и краснеют там, где глаз не видит обрезки; починить в одном месте + включить переносы hyphens)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/VYGRUZKA-2026-08-11.md`** (Выгрузка сессии 2026-08-11 — сырьё для дневника арки 2026-08-10_dizajn-i-metriki)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/VYGRUZKA-2026-08-11-2.md`** (Выгрузка сессии 2026-08-11 — сырьё для дневника арки 2026-08-10_dizajn-i-metriki)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/HANDOFF-2026-08-12.md`** (Хэндофф в сессию 2026-08-12: Часть I арки — словарь вёрстки, спецификация блочной модели)
+
+**`_studio/zhurnal/2026-08-11_dovodka-L2/ZAPUSK-faza-2-polnaya.md`** (стартовое сообщение сессии полной пересборки фазы 2 Л2: пять шагов от инвентаризации до перевёрстки, что делегируем Claude Code)
+
+**`_studio/zhurnal/2026-08-11_dveri-discipliny/kod_modeli.md`** (генератор печатает стартовую команду с ARN модели Bedrock вместо слова sonnet/opus)
+
+**`_studio/zhurnal/2026-08-11_dovodka-L2/kod_karta-dyr-l2.md`** (Ш0 арки dovodka-L2: механическая сверка 18 карточек L2/slajdy с правилами PRAVILA-FAZY-2 → карта дыр KARTA-DYR-L2.md)
+
+**`_studio/zhurnal/2026-08-11_dovodka-L2/SPEC-BLOKA.md`** (Ш1 арки dovodka-L2: спецификация формата блока фазы 2 — слоты по типам, поля блока врезкой, регистр по П7, чем ловится; четыре развилки владельцу)
+
 
 
 
