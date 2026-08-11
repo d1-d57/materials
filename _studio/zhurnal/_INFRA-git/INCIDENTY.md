@@ -227,3 +227,8 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-11 04:59 · arka/mat-kostyak · merge zahod/konsolidaciya-i-git-kontur: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 04:59 · arka/mat-kostyak · merge zahod/sborka-l2: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 04:59 · arka/mat-kostyak · merge zahod/svedenie-i-smeta: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-11 04:59 · arka/mat-kostyak · запуск с мусорными аргументами · → лишнее в команде:  --zone _studio — убрать хвост и повторить · статус: открыт
+- 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/tri-provodki: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
+- 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/uroki-faz-1-2: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
+- 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/zamykanie-reestrov: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
+- 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/svedenie-arki: грязные пути пересекаются со сливаемыми · → закоммитить или откатить эти пути и повторить merge · статус: открыт
