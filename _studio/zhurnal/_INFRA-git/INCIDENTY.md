@@ -195,6 +195,7 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-08 21:14 · zahod/svedenie-i-smeta · merge zahod/sborka-l2: конфликт в 11 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-08 21:16 · zahod/svedenie-i-smeta · merge --continue: коммит слияния не прошёл · → смотреть вывод хука и `doctor` · статус: открыт
 - 2026-08-08 21:20 · zahod/svedenie-i-smeta · merge zahod/konsolidaciya-i-git-kontur: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-09 01:19 · zahod/svedenie-arki · merge zahod/svedenie-i-smeta выходит за зону · → назвать все зоны через повторный --zone либо сливать без --zone осознанно · статус: открыт
 - 2026-08-09 01:29 · arka/mat-kostyak · коммит с --no-verify: чужой долг: заход hvosty-adresa заявил в своём ОТЧЁТЕ закрытие долга Д27, а метку СТАТУС в DOLG.md не переставил; DOLG.md лежит во втором репозитории и правка долгов мне контрактом зоны запрещена (там разрешено только переименование маркеров) · → назвать причину долгом в отчёте захода; своё красное — чинить · статус: открыт
 - 2026-08-09 02:11 · zahod/gigiena-i-svedenie · merge zahod/svedenie-arki: конфликт в 2 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-09 02:13 · zahod/gigiena-i-svedenie · merge --continue: коммит слияния не прошёл · → смотреть вывод хука и `doctor` · статус: открыт
@@ -238,3 +239,4 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/tri-provodki: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/uroki-faz-1-2: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/zamykanie-reestrov: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/svedenie-arki: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
