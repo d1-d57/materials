@@ -21,10 +21,20 @@ BANK = REPO / "_fond" / "zadachi" / "bank"
 REZHIMY = {
     "usloviya":  [],
     "podskazki": ["Подсказка", "Ещё подсказка"],
+    "otvety":    ["Ответ"],
     "polnyj":    ["Подсказка", "Ещё подсказка", "Ответ", "Решение"],
 }
 SPOJLER = {"Ещё подсказка", "Ответ", "Решение"}   # эти — под катом
 OTKRYTO = {"Подсказка"}                            # эта — открытым текстом
+
+# в манифесте секцию можно назвать латиницей: `- zhuki-5x5 | podskazka`
+ALIASY = {"podskazka": "Подсказка", "eshchyo-podskazka": "Ещё подсказка",
+          "otvet": "Ответ", "reshenie": "Решение"}
+
+
+def imya_sekcii(s: str) -> str:
+    s = s.strip()
+    return ALIASY.get(s.lower(), s.capitalize())
 
 
 def razobrat(text: str) -> tuple[dict, dict[str, str]]:
@@ -161,9 +171,12 @@ STRANICA = """<!DOCTYPE html>
 """
 
 
-def sobrat(manifest: Path, out: Path | None, tolko_lint: bool) -> int:
+def sobrat(manifest: Path, out: Path | None, tolko_lint: bool,
+           rezhim_cli: str | None = None, zagolovok_cli: str | None = None) -> int:
     meta, sekcii = razobrat(manifest.read_text(encoding="utf-8"))
-    rezhim = meta.get("pokazyvat", "usloviya")
+    if zagolovok_cli:
+        meta["zagolovok"] = zagolovok_cli
+    rezhim = rezhim_cli or meta.get("pokazyvat", "usloviya")
     if rezhim not in REZHIMY:
         print(f"❌ pokazyvat: {rezhim} — можно {', '.join(REZHIMY)}", file=sys.stderr)
         return 1
@@ -186,7 +199,10 @@ def sobrat(manifest: Path, out: Path | None, tolko_lint: bool) -> int:
         zid = chasti[0]
         pokazat = po_umolchaniyu
         if len(chasti) > 1:
-            pokazat = [] if chasti[1] == "-" else [c.strip().capitalize() for c in chasti[1].split(",")]
+            pokazat = [] if chasti[1] == "-" else [imya_sekcii(c) for c in chasti[1].split(",")]
+            for imya in pokazat:
+                if imya not in SPOJLER | OTKRYTO:
+                    bedy.append(f"{zid}: неизвестная секция «{imya}» в манифесте")
         fajl = BANK / f"{zid}.md"
         if not fajl.exists():
             bedy.append(f"нет задачи в банке: {zid} ({fajl})")
@@ -227,12 +243,15 @@ def main() -> int:
     p.add_argument("manifest", type=Path)
     p.add_argument("-o", "--out", type=Path)
     p.add_argument("--lint", action="store_true", help="только проверить, не собирать")
+    p.add_argument("--pokazyvat", choices=list(REZHIMY),
+                   help="перебить режим показа из манифеста: один список задач — несколько видов")
+    p.add_argument("--zagolovok", help="перебить заголовок из манифеста")
     a = p.parse_args()
     if not a.manifest.exists():
         print(f"❌ нет манифеста: {a.manifest}", file=sys.stderr)
         return 1
     try:
-        return sobrat(a.manifest, a.out, a.lint)
+        return sobrat(a.manifest, a.out, a.lint, a.pokazyvat, a.zagolovok)
     except ValueError as e:
         print(f"❌ {e}", file=sys.stderr)
         return 1
