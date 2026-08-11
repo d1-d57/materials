@@ -53,6 +53,28 @@
 
 Картотека и корпус лежат вне проекта — адреса в `teorkat-vvedenie/VNESHNIE-RESURSY.md`. Свою копию не заводить (`SPEKA §Внешние ресурсы`).
 
+## 🔴 Скиллы дисциплины — ЧИТАТЬ ФАЙЛАМИ, они не подтягиваются
+
+Папка `disciplina` подключена рабочей папкой 11.08. В `~/Documents/GitHub/disciplina/skills/` живут
+девять актуальных скиллов, и **ни один из них Cowork не грузит** — его кэш держит отменённое
+поколение плагина (`arhiv-skillov/`). Значит триггер не сработает: открывай их сознательно, как
+обычные файлы, по имени момента.
+
+| момент | файл |
+|---|---|
+| закрываю сессию, делаю хэндофф | `disciplina/skills/disciplina-handoff/SKILL.md` |
+| собираю заход исполнителю | `disciplina/skills/disciplina-zahod/SKILL.md` |
+| принимаю отчёт захода | `disciplina/skills/disciplina-priyomka/SKILL.md` |
+| завожу или закрываю арку | `disciplina/skills/disciplina-arka/SKILL.md` |
+| любой git | `disciplina/skills/disciplina-git/SKILL.md` |
+| где что живёт, что краснеет | `disciplina/skills/disciplina-istochnik-pravdy/SKILL.md` |
+| работаю со слайдами | `disciplina/skills/slajdy/SKILL.md` |
+| рисую иллюстрацию | `disciplina/skills/illustracii/SKILL.md` |
+| ресёрч-цикл | `disciplina/skills/reserch-cikl/SKILL.md` |
+
+⚠ `disciplina/arhiv-skillov/` — ОТМЕНЁННОЕ поколение (`session-handoff`, `popsci-research` и др.).
+Не читать. Правила владельца пока ссылаются на два имени оттуда — разъезд, см. `UROKI-FABRIKE` урок 7.
+
 ## Скиллы арки
 
 `math-russian-terminology` → `russian-editor` на любом финальном русском тексте слайда; заходы исполнителю — по `RUKOVODSTVO-zahodami.md`.
