@@ -1,0 +1,449 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% Загружается уникальный файл beamerthemeCategoryTheoryFixed.sty. Это исключает
+% случайное подключение старой темы, в которой ещё нет команд \RightPic,
+% \BottomPic, \LectureCoverFrame и \LectureClosingFrame.
+\usetheme{CategoryTheoryFixed}
+\graphicspath{{pic/}}
+
+% Глобальные размеры подвижных зон. На отдельном слайде их можно заменить
+% параметром illustration=<процент>.
+\CategorySetIllustrationPercents{40}{42}
+\title{ВВЕДЕНИЕ В\\ТЕОРИЮ КАТЕГОРИЙ}
+\subtitle{Лекция 1}
+\author{Иван Яковлев}
+\institute{Курс лекций}
+\date{29 июля 2026}
+
+\begin{document}
+
+\LectureCoverFrame
+
+\begin{ctinstructorframe}
+  {ИВАН ЯКОВЛЕВ}
+  {математик, преподаватель и автор визуальных лекций}
+  {\includegraphics[width=\linewidth,height=.4\paperheight,keepaspectratio]
+    {assets/photo.jpg}}
+  {\includegraphics[width=\linewidth]{assets/qr.png}}
+
+  \begin{itemize}
+    \item Закончил Матфак ВШЭ;
+    \item работаю в 179 школе;
+    \item преподаю математику школьникам, студентам и взрослым,
+      организую математические события;
+    \item веду телеграм-канал «Кроссворд Тьюринга».
+  \end{itemize}
+
+  \vspace{.20cm}
+  \textbf{Канал:} \texttt{@turings\_crossword}\\[-.02cm]
+  \textbf{Telegram:} \texttt{@d1\_d57}
+\end{ctinstructorframe}
+
+% -----------------------------------------------------------------------------
+% От комбинаторной биекции к комбинаторным видам
+% -----------------------------------------------------------------------------
+
+\begin{ctbottomframe}[illustration=35]{СООТВЕТСТВИЕ ЗАДАЧ}{%
+  \BottomPic[.27\paperheight]{pic/01-k15-edge-pair.png}%
+}
+В этих двух комбинаторных задачах одинаковый ответ:
+\begin{itemize}
+  \item сколько в сумме сторон и диагоналей у 15-угольника;
+  \item сколькими способами можно выбрать две батарейки из 15 имеющихся.
+\end{itemize}
+
+Причина — взаимно однозначное соответствие
+\[
+  \text{отрезок}\ \longleftrightarrow\
+  \text{пара вершин}\ \longleftrightarrow\
+  \text{пара батареек}
+\]
+\end{ctbottomframe}
+
+\begin{cttextframe}{ГЛАВНЫЙ ПРИНЦИП}
+Если между элементами двух множеств установлено взаимно однозначное
+соответствие, то в этих множествах равное число элементов.
+
+\vspace{.35cm}
+Иными словами, для доказательства равенства
+\[
+  |X|=|Y|
+\]
+достаточно предъявить биекцию
+\[
+  \varphi\colon X\longrightarrow Y
+\]
+
+Такое доказательство объясняет не только равенство чисел, но и то,
+\emph{почему} две задачи имеют один ответ.
+\end{cttextframe}
+
+\begin{cttextframe}{КОМБИНАТОРНЫЕ ТОЖДЕСТВА}
+Рассмотрим несколько тождеств о биномиальных коэффициентах:
+
+\begin{columns}[T,onlytextwidth]
+  \begin{column}{.47\textwidth}
+    \[
+      \binom nk=\binom n{n-k}
+    \]
+    \[
+      \sum_{k=0}^{n}\binom nk=2^n
+    \]
+  \end{column}
+  \begin{column}{.47\textwidth}
+    \[
+      k\binom nk=n\binom{n-1}{k-1}
+    \]
+    \[
+      \binom nk=\binom{n-1}{k-1}+\binom{n-1}k
+    \]
+  \end{column}
+\end{columns}
+\vspace{.3cm}
+Каждое равенство можно прочитать как утверждение о двух способах
+посчитать один и тот же класс объектов.
+\end{cttextframe}
+
+\begin{cttextframe}{ЕЩЁ ЧЕТЫРЕ ТОЖДЕСТВА}
+\[
+  \binom{m+n}k=\sum_{j=0}^{k}\binom mj\binom n{k-j}
+\]
+\[
+  \sum_{k=0}^{n}(-1)^k\binom nk=0
+  \qquad n\ge1
+\]
+\[
+  \sum_{0\le \ell\le k\le n}\binom nk\binom k\ell=3^n
+\]
+\[
+  \sum_{k\ge0}\binom{n+1-k}{k}=\mathrm{Fib}_{n+2}
+\]
+\end{cttextframe}
+
+\begin{cttextframe}{ЧТО ЗНАЧИТ «КОМБИНАТОРНО»}
+Эти тождества можно доказывать по-разному:
+\begin{itemize}
+  \item используя формулу для биномиальных коэффициентов;
+  \item по индукции;
+  \item при помощи бинома Ньютона.
+\end{itemize}
+
+Обычно больше всего ценятся комбинаторные доказательства.
+\\[5mm]
+\begin{block}{Комбинаторное доказательство}
+Это доказательство, в котором устанавливается взаимно однозначное
+соответствие между множествами $X$ и $Y$, отвечающими левой и правой
+частям тождества.
+\end{block}
+\end{cttextframe}
+
+% -----------------------------------------------------------------------------
+% Три основные биекции
+% -----------------------------------------------------------------------------
+
+\begin{ctbottomframe}[illustration=36]{БИЕКЦИЯ ДОПОЛНЕНИЯ}{%
+  \BottomPic[.3\paperheight]{pic/02-complement-bijection.png}%
+}
+Отображение
+\[
+  S\longmapsto U\setminus S
+\]
+переводит $k$-элементные подмножества $U$ в
+$(n-k)$-элементные и является биекцией. Поэтому
+\small
+\[
+  \binom nk=\binom n{n-k}
+\]
+\end{ctbottomframe}
+
+\begin{ctbottomframe}[illustration=36]{ПОДМНОЖЕСТВО КАК СЛОВО}{%
+  \BottomPic[.225\paperheight]{pic/03-subset-binary-word.png}%
+}
+Каждому подмножеству соответствует двоичное слово: единица означает,
+что элемент выбран, ноль — что не выбран.
+\[
+  S\longmapsto
+  \bigl(\mathbf 1_{u_1\in S},\ldots,\mathbf 1_{u_n\in S}\bigr)
+\]
+Отсюда
+\[
+  \sum_k\binom nk=2^n
+\]
+\end{ctbottomframe}
+
+\begin{ctbottomframe}[illustration=34]{ТРИ СОСТОЯНИЯ ЭЛЕМЕНТА}{%
+  \BottomPic[.21\paperheight]{pic/04-nested-subsets-three-colours.png}%
+}
+Цепочке подмножеств $L\subseteq K\subseteq U$ соответствует раскраска
+каждого элемента в один из трёх цветов:
+\[
+  L,\qquad K\setminus L,\qquad U\setminus K
+\]
+Поэтому
+\[
+  \sum_{0\le \ell\le k\le n}\binom nk\binom k\ell=3^n
+\]
+\end{ctbottomframe}
+
+\begin{ctrightframe}[illustration=38]{ПОЧЕМУ ЭТО КРАСИВО}{%
+  \RightPic{pic/05-complement-naturality.png}%
+}
+Описанные операции согласованы с переименованием элементов.
+
+Для биекции
+\[
+  S\longmapsto U\setminus S
+\]
+это означает:
+\begin{itemize}
+  \item биекция $\sigma\colon U\to V$ переводит дополнение в дополнение;
+  \item взятие дополнения коммутирует с $\sigma$.
+\end{itemize}
+\end{ctrightframe}
+
+% -----------------------------------------------------------------------------
+% Комбинаторные виды и естественность
+% -----------------------------------------------------------------------------
+
+\begin{ctrightframe}[illustration=35]{КОМБИНАТОРНЫЙ ВИД}{%
+  \RightPic{pic/06-functoriality-square.png}%
+}
+Комбинаторный вид $F$ сопоставляет конечному множеству $U$ множество
+структур $F(U)$, а биекции $\sigma\colon U\to V$ — биекцию
+\[
+  F[\sigma]\colon F(U)\longrightarrow F(V)
+\]
+Переименования согласованы с композицией:
+\[
+  F[\tau\circ\sigma]=F[\tau]\circ F[\sigma]
+\]
+\end{ctrightframe}
+
+\begin{ctrightframe}[illustration=33]{ПРИМЕРЫ ВИДОВ I}{%
+  \RightPic{pic/07-species-examples.png}%
+}
+Примеры комбинаторных видов:
+\begin{itemize}
+  \item линейные порядки;
+  \item циклические порядки;
+  \item перестановки;
+  \item беспорядки;
+  \item инволюции — перестановки с
+    \[
+      \pi^2=\mathrm{id}
+    \]
+\end{itemize}
+\end{ctrightframe}
+
+\begin{cttextframe}{ПРИМЕРЫ ВИДОВ II}
+К комбинаторным видам также относятся:
+\begin{itemize}
+  \item подмножества $E(U)$ и $k$-подмножества $E_k(U)$;
+  \item разбиения на блоки;
+  \item графы, деревья и корневые деревья с вершинами $U$;
+  \item инъекции и сюръекции.
+\end{itemize}
+
+При переименовании элементов $U$ переименовываются и объекты каждого
+из этих множеств. Именно это превращает отдельную конструкцию в вид.
+\end{cttextframe}
+
+\begin{ctrightframe}[illustration=35]{ЕСТЕСТВЕННОСТЬ}{%
+  \RightPic{pic/08-natural-isomorphism-square.png}%
+}
+Естественный изоморфизм $\varphi\colon F\to G$ — семейство биекций
+\[
+  \varphi_U\colon F(U)\longrightarrow G(U)
+\]
+таких, что для каждой биекции $\sigma\colon U\to V$
+\[
+  \varphi_V\circ F[\sigma]
+  =G[\sigma]\circ\varphi_U
+\]
+
+Это даёт доказательство $|F(U)|=|G(U)|$, согласованное для всех $U$.
+\end{ctrightframe}
+
+\begin{ctbottomframe}[illustration=37]{ЧЁТНОСТЬ ПОДМНОЖЕСТВ}{%
+  \BottomPic[.33\paperheight]{pic/09-even-odd-not-natural.png}%
+}
+\small
+При $n\ge1$
+\[
+  \sum_{k=0}^{n}(-1)^k\binom nk=0
+\]
+то есть число чётных подмножеств равно числу нечётных:
+\[
+  |E^+|=|E^-|
+\]
+Биекцию задаёт операция
+\[
+  S\longmapsto S\mathbin{\triangle}\{x_0\}
+\]
+\end{ctbottomframe}
+
+\begin{cttextframe}{БИЕКЦИЯ НЕ ЕСТЕСТВЕННА}
+Операция $S\mapsto S\mathbin{\triangle}\{x_0\}$ добавляет или убирает
+выбранный элемент $x_0$.
+
+Однако это не изоморфизм видов: произвольное переименование элементов
+не обязано сохранять $x_0$.
+\\[.5cm]
+\begin{block}{Упражнение}
+Покажите, что виды $E^+$ и $E^-$:
+\begin{itemize}
+  \item не изоморфны при чётном числе элементов;
+  \item изоморфны при нечётном числе элементов.
+\end{itemize}
+\end{block}
+\end{cttextframe}
+
+% -----------------------------------------------------------------------------
+% Дополнительная структура
+% -----------------------------------------------------------------------------
+
+\begin{cttextframe}{ОТМЕЧЕННЫЕ ВИДЫ}
+Как вывести из изоморфизма видов тождество Паскаля?
+\[
+  \binom nk=\binom{n-1}{k-1}+\binom{n-1}k
+\]
+
+Чтобы естественно получить числа $\binom{n-1}{k-1}$ и
+$\binom{n-1}k$, добавим дополнительную структуру:
+\begin{itemize}
+  \item отмеченное множество $(U,\ast)$ — множество и фиксированный элемент;
+  \item биекция $U_\ast\to V_\ast$ сохраняет отмеченный элемент;
+  \item отмеченный вид — функтор из отмеченных множеств в множества.
+\end{itemize}
+\end{cttextframe}
+
+\begin{cttextframe}{ПАСКАЛЬ КАК ИЗОМОРФИЗМ}
+На отмеченных множествах отображение
+\[
+  S\longmapsto S\mathbin{\triangle}\{\ast\}
+\]
+задаёт изоморфизм отмеченных видов $E^+$ и $E^-$.
+
+Теперь разобьём $k$-подмножества на два класса:
+\begin{itemize}
+  \item содержащие отмеченную точку — их $\binom{n-1}{k-1}$;
+  \item не содержащие отмеченную точку — их $\binom{n-1}{k}$.
+\end{itemize}
+
+Это сразу даёт тождество Паскаля.
+\end{cttextframe}
+
+\begin{cttextframe}{ПОКРАШЕННЫЕ ВИДЫ}
+Как доказать тождество Вандермонда
+\[
+  \binom{m+n}k=\sum_r\binom mr\binom n{k-r}
+\]
+комбинаторно? Введём ещё один тип дополнительной структуры:
+\begin{itemize}
+  \item покрашенное множество $(M,N)$ — пара множеств;
+  \item биекция покрашенных множеств сохраняет цвет;
+  \item покрашенный вид — функтор из покрашенных множеств в множества.
+\end{itemize}
+\end{cttextframe}
+
+\begin{ctbottomframe}[illustration=30]{ТОЖДЕСТВО ВАНДЕРМОНДА}{%
+  \BottomPic[.20\paperheight]{pic/10-vandermonde-decomposition.png}%
+}
+Разобьём $k$-подмножества $M\sqcup N$ по числу $r$ элементов из $M$.
+Для фиксированного $r$ получаем
+\small
+\[
+  \binom mr\binom n{k-r}
+\]
+\normalsize
+Суммируя по всем $r$, получаем
+\small
+\[
+  \binom{m+n}k=\sum_r\binom mr\binom n{k-r}
+\]
+\end{ctbottomframe}
+
+% -----------------------------------------------------------------------------
+% Категории и функторы
+% -----------------------------------------------------------------------------
+
+\begin{ctbottomframe}[illustration=40]{ОПРЕДЕЛЕНИЕ КАТЕГОРИИ}{%
+  \BottomPic[.3\paperheight]{pic/11-category-composition.png}%
+}
+Категория $\mathcal C$ состоит из:
+\begin{itemize}
+  \item класса объектов $\mathrm{Ob}\,\mathcal C$;
+  \item множеств морфизмов $\mathcal C(A,B)$;
+  \item композиции и единичных морфизмов
+    \[
+      \circ\colon\mathcal C(B,C)\times\mathcal C(A,B)
+      \longrightarrow\mathcal C(A,C)
+      \qquad
+      1_A\in\mathcal C(A,A)
+    \]
+\end{itemize}
+\end{ctbottomframe}
+
+\begin{cttextframe}{АКСИОМЫ КАТЕГОРИИ}
+Композиция ассоциативна:
+\[
+  h\circ(g\circ f)=(h\circ g)\circ f
+\]
+
+Единичные морфизмы являются нейтральными относительно композиции:
+\[
+  1_B\circ f=f=f\circ1_A
+\]
+
+Эти два требования позволяют работать с длинными цепочками морфизмов,
+не фиксируя скобки и не меняя объект при композиции с единицей.
+\end{cttextframe}
+
+\begin{cttextframe}{ФУНКТОРЫ}
+Функтор $F\colon\mathcal C\to\mathcal D$ состоит из:
+\begin{itemize}
+  \item отображения объектов
+    \[
+      \mathrm{Ob}\,\mathcal C\longrightarrow\mathrm{Ob}\,\mathcal D
+    \]
+  \item отображений морфизмов
+    \[
+      \mathcal C(A,B)\longrightarrow\mathcal D(FA,FB)
+    \]
+\end{itemize}
+которые сохраняют композицию и единицы:
+\[
+  F(g\circ f)=Fg\circ Ff
+  \qquad
+  F1_A=1_{FA}
+\]
+\end{cttextframe}
+
+\begin{cttextframe}{ПРИМЕРЫ КАТЕГОРИЙ}
+\begin{itemize}
+  \item конечные множества и биекции;
+  \item отмеченные множества и сохраняющие отметку биекции;
+  \item покрашенные множества и сохраняющие цвет биекции.
+\end{itemize}
+
+Комбинаторный вид является функтором из подходящей категории конечных
+множеств в категорию множеств. Именно язык категорий позволяет единообразно
+говорить о переименовании всех рассмотренных структур.
+\end{cttextframe}
+
+\begin{cttextframe}{ИТОГ}
+\begin{itemize}
+  \item Понятие комбинаторного доказательства получило точную
+    формулировку — \textbf{изоморфизм комбинаторных видов}.
+  \item Понятие комбинаторного вида пришлось трактовать в разных
+    ситуациях по-разному.
+  \item Тождества можно не только проверять, но и искать:
+    изоморфизм видов — сильное условие, помогающее находить объект.
+  \item Невозможность и единственность стали теоремами; дальше —
+    классификация самих видов.
+\end{itemize}
+\end{cttextframe}
+
+\LectureClosingFrame
+
+\end{document}
