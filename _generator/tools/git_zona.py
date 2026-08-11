@@ -52,6 +52,7 @@ origin и всё, что вне git. По нему диагноз ставитс
 
 import argparse
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -103,6 +104,13 @@ REPO = _resolve_repo()
 PLAN = REPO / korni.ПЛАН_REL
 LOCK_WAIT_SEC = 90
 INCIDENTY = REPO / korni.ИНЦИДЕНТЫ_REL
+
+# Заявки — почтовый ящик Cowork → заход (`ochered-zayavok/PROEKT.md`). Пути
+# ОТНОСИТЕЛЬНЫЕ: считаются не от `REPO`, а от `glavnaya_rabochaya()` через
+# `zayavki_dir()` (см. рядом с `glavnaya_rabochaya()` — она определена ниже).
+ZAYAVKI_DIR = "_studio/zhurnal/_INFRA-git/zayavki"
+ZAYAVKI_SDELANO = ZAYAVKI_DIR + "/sdelano"
+POSTOYANNYE = "_studio/zhurnal/_INFRA-git/POSTOYANNYE.md"
 
 
 def in_sandbox():
@@ -1093,6 +1101,19 @@ def glavnaya_rabochaya():
     return gcd.parent if gcd.name == ".git" else REPO
 
 
+def zayavki_dir():
+    """Папка заявок — от ГЛАВНОЙ рабочей копии, а НЕ от `REPO`/`cwd`.
+
+    Заявку читает заход, сидящий в СВОЁМ worktree — у worktree своя рабочая
+    копия, и заявки, созданной Cowork в главной папке, он через `REPO` не
+    увидит вовсе: «заявок нет» стало бы неотличимо от «очередь пуста».
+    Создаёт папку при первом обращении — читатель не обязан заводить её сам.
+    """
+    p = glavnaya_rabochaya() / ZAYAVKI_DIR
+    p.mkdir(parents=True, exist_ok=True)
+    return p
+
+
 def vetka_vychekauchena(name):
     """Стоит ли ветка в КАКОЙ-ЛИБО рабочей папке, включая основную.
 
@@ -1490,6 +1511,169 @@ def cmd_mogily(args):
     return 0
 
 
+# ─────────────────────────── заявки (почтовый ящик) ───────────────────────────
+#
+# Устройство целиком — `_studio/zhurnal/2026-08-11_ochered-zayavok/PROEKT.md`.
+# Cowork физически не может писать в `.git` (песочница) — заявка заменяет
+# «команду в чат владельцу»: Cowork кладёт просьбу файлом, следующий заход
+# забирает её первым ходом. Три двери: `zayavka` (создать, разрешено из
+# песочницы — пишет в рабочее дерево, не в `.git`), `zayavki` (печать,
+# read-only, откуда угодно), `zayavka-zakryt` (закрыть, только host-side —
+# перенос файла есть `unlink`, в песочнице запрещённый).
+
+_PLASTHOLDER_ZAYAVKI = re.compile(r"^<.*>$")
+
+
+def _est_plejsholder(text):
+    """Пустой текст или голый плейсхолдер `<...>` — не заявка, а недописанное."""
+    t = (text or "").strip()
+    return (not t) or bool(_PLASTHOLDER_ZAYAVKI.match(t))
+
+
+def _zayavka_slug(text):
+    """Первые слова текста → `[a-z0-9-]`, БЕЗ ведущего дефиса.
+
+    Ведущий дефис в имени файла `rm` принимает за флаг, а `is_suspect` — за
+    мусор (см. этот же файл, `is_suspect`) — тот же класс ловушки, что и у
+    `bootstrap_arka.py`/`bootstrap_zahod.py`. Срезаем его ВСЕГДА, даже если
+    текст сам начинается с `-`.
+    """
+    slug = re.sub(r"[^a-z0-9]+", "-", text.strip().lower()).strip("-")
+    slug = "-".join(slug.split("-")[:6])[:60].strip("-")
+    return slug or "zayavka"
+
+
+def cmd_zayavka(args):
+    """Создать заявку — ЕДИНСТВЕННАЯ пишущая команда, разрешённая из песочницы.
+
+    Пишет в рабочее дерево, не в `.git` — мин не оставляет. `in_sandbox()`
+    здесь НЕ ставится нарочно: иначе писать заявки было бы некому.
+    """
+    text = (args.text or "").rstrip("\n")
+    if _est_plejsholder(text):
+        print("⛔ Заявка пустая или осталась плейсхолдером `<...>` — впиши текст просьбы.")
+        return 1
+
+    d = zayavki_dir()
+    stamp = time.strftime("%Y-%m-%dT%H%M")
+    slug = _zayavka_slug(text)
+    base = f"{stamp}-{slug}"
+    name = base + ".md"
+    n = 2
+    while (d / name).exists():
+        name = f"{base}-{n}.md"
+        n += 1
+
+    avtor = "sandbox" if in_sandbox() else "host"
+    arka = args.arka or "не названа"
+    srochnost = args.srochnost or "obychnaya"
+    (d / name).write_text(
+        f"ЗАЯВКА: {time.strftime('%Y-%m-%dT%H:%M')} · автор: {avtor} · арка: {arka}\n"
+        f"СРОЧНОСТЬ: {srochnost}\n\n"
+        f"{text}\n",
+        encoding="utf-8")
+    zid = name[:-3]
+    print(f"✅ Заявка создана: {zid}\n   {d / name}")
+    return 0
+
+
+def _zayavki_otkrytyye():
+    """[(id, путь, возраст_ч, срочность, первая_строка_текста)] по возрасту."""
+    d = zayavki_dir()
+    if not d.is_dir():
+        return []
+    rows = []
+    for p in sorted(d.glob("*.md")):
+        if not p.is_file():
+            continue
+        try:
+            text = p.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        lines = text.splitlines()
+        srochnost = "?"
+        for l in lines:
+            if l.startswith("СРОЧНОСТЬ:"):
+                srochnost = l[len("СРОЧНОСТЬ:"):].strip()
+                break
+        pervaya = next((l.strip() for l in lines[2:] if l.strip()), "")
+        vozrast_ch = max(0, int((time.time() - p.stat().st_mtime) / 3600))
+        rows.append((p.stem, p, vozrast_ch, srochnost, pervaya))
+    rows.sort(key=lambda r: -r[2])
+    return rows
+
+
+def cmd_zayavki(args):
+    """Печать очереди — read-only, работает откуда угодно (в т.ч. из worktree)."""
+    otkrytyye = _zayavki_otkrytyye()
+    if not otkrytyye:
+        print("✅ заявок нет")
+    else:
+        print(f"Открытых заявок: {len(otkrytyye)}\n")
+        for zid, _p, vozrast_ch, srochnost, pervaya in otkrytyye:
+            print(f"   · {zid}  ({vozrast_ch} ч, {srochnost})\n     {pervaya}")
+
+    postoyannyje = glavnaya_rabochaya() / POSTOYANNYE
+    n_postoyannyh = 0
+    if postoyannyje.is_file():
+        soderzhimoje = postoyannyje.read_text(encoding="utf-8")
+        n_postoyannyh = sum(1 for l in soderzhimoje.splitlines()
+                            if l.startswith("- "))
+        print(f"\n── {POSTOYANNYE} ──\n")
+        print(soderzhimoje.rstrip())
+
+    print(f"\nОхват: заявок открыто {len(otkrytyye)}, "
+          f"постоянных исключений {n_postoyannyh}")
+    return 0
+
+
+def cmd_zayavka_zakryt(args):
+    """Закрыть заявку — только host-side: перенос файла есть `unlink`."""
+    if in_sandbox():
+        return refuse_write("закрытие заявки",
+                             suggest=f"zayavka-zakryt {args.id or '<id>'} "
+                                     f"--rezultat \"<что вышло>\"")
+
+    rezultat = (args.rezultat or "").strip()
+    zastryala = (args.zastryala or "").strip()
+    if bool(rezultat) == bool(zastryala):
+        print("⛔ Нужен РОВНО ОДИН из `--rezultat` / `--zastryala` (не оба, не ни одного).")
+        return 1
+    if _est_plejsholder(rezultat or zastryala):
+        print("⛔ Результат/причина пустые или остались плейсхолдером `<...>` — "
+              "напиши, что вышло на самом деле.")
+        return 1
+
+    d = zayavki_dir()
+    p = d / f"{args.id}.md"
+    if not p.is_file():
+        suschie = sorted(q.stem for q in d.glob("*.md")) if d.is_dir() else []
+        print(f"⛔ Нет такой заявки: {args.id}")
+        if suschie:
+            print("   Существующие:")
+            for s in suschie:
+                print(f"     {s}")
+        else:
+            print("   Открытых заявок нет вовсе.")
+        return 1
+
+    stamp = time.strftime("%Y-%m-%dT%H:%M")
+    with open(p, "a", encoding="utf-8") as f:
+        if rezultat:
+            f.write(f"ЗАКРЫТО: {stamp} · {rezultat}\n")
+        else:
+            f.write(f"ЗАСТРЯЛА: {stamp} · {zastryala}\n")
+
+    if rezultat:
+        sdelano = glavnaya_rabochaya() / ZAYAVKI_SDELANO
+        sdelano.mkdir(parents=True, exist_ok=True)
+        p.rename(sdelano / p.name)
+        print(f"✅ Заявка закрыта и перенесена: {sdelano / p.name}")
+    else:
+        print(f"⚠ Заявка помечена ЗАСТРЯЛА, остаётся открытой: {p}")
+    return 0
+
+
 # ─────────────────────────────── doctor ───────────────────────────────
 
 def cmd_doctor(args):
@@ -1616,6 +1800,15 @@ def cmd_doctor(args):
         print(f"\n{check_incidenty.status_line(inc_text, verd_text)}")
     except (ImportError, OSError):
         pass  # doctor не обязан валиться из-за печати; гейт при закрытии сессии всё равно проверит
+
+    # Заявки — ПЕЧАТЬ, не гейт (§ochered-zayavok/PROEKT.md §3): единственное
+    # место, где владелец видит очередь, ни о чём не спрашивая.
+    otkrytyye = _zayavki_otkrytyye()
+    if otkrytyye:
+        starejshaya = max(v for _, _, v, _, _ in otkrytyye)
+        print(f"заявок открыто: {len(otkrytyye)}, старейшей {starejshaya} ч")
+    else:
+        print("✅ заявок нет")
 
     print("\nПоследние коммиты:")
     for l in git("log", "-5", "--oneline").stdout.splitlines():
@@ -2549,6 +2742,30 @@ def cmd_merge(args):
         if len(other) > 20:
             print(f"   … ещё {len(other) - 20}")
 
+    # 🔴 Ш8 (`ochered-zayavok`): у СЛИВАЕМОЙ ветки живая рабочая папка — там
+    # может идти чужой заход, и merge притащит недоделанное. `poteri`/`doctor`
+    # это уже печатают, `cmd_merge` про это молчал и вливал.
+    put_wt = worktree_branches().get(branch)
+    if put_wt:
+        if not args.vsyo_ravno:
+            print(f"\n⛔ `{branch}` вычекаучена в рабочей папке — не сливаю:\n"
+                  f"   {put_wt}\n"
+                  "   Там может идти живой заход, и слияние притащит недоделанное.\n"
+                  "   Сперва спроси того, кто в ней работает, либо повтори с\n"
+                  "   `--vsyo-ravno \"<причина>\"`.")
+            return 1
+        print(f"\n⚠ --vsyo-ravno: сливаю `{branch}` несмотря на живую рабочую папку "
+              f"{put_wt}. Причина: {args.vsyo_ravno}")
+        log_incident(f"merge {branch}: сливаю ветку с живой рабочей папкой --vsyo-ravno",
+                     f"причина: {args.vsyo_ravno} — работа папки {put_wt} могла разойтись")
+
+    # 🔴 Ш7 (`ochered-zayavok`): merge пишет в `.git` — из песочницы отказ, как
+    # у всех пишущих команд. ПОСЛЕ предпросмотра и проверок зоны/грязи (Cowork
+    # видит, что приедет, и готовую строку владельцу), но ДО sweep_dead_locks
+    # (он удаляет файлы — из песочницы запрещено).
+    if in_sandbox():
+        return refuse_write("merge", suggest=f"merge {branch}")
+
     sweep_dead_locks()
     if not wait_for_lock():
         log_incident("merge: чужой лок держится дольше 90 с",
@@ -3108,6 +3325,27 @@ def main():
     mg2 = sub.add_parser("mogily", help="что похоронено: список надгробий (read-only)")
     mg2.set_defaults(func=cmd_mogily)
 
+    za = sub.add_parser("zayavka",
+                        help="создать заявку в очередь — почтовый ящик Cowork → заход "
+                             "(разрешено из песочницы)")
+    za.add_argument("text", help="текст просьбы (в кавычках)")
+    za.add_argument("--srochnost", choices=["obychnaya", "blokiruet", "postoyannaya"],
+                    default="obychnaya", help="по умолчанию obychnaya")
+    za.add_argument("--arka", help="арка-источник (необязателен)")
+    za.set_defaults(func=cmd_zayavka)
+
+    zi = sub.add_parser("zayavki",
+                        help="что лежит в очереди — read-only, работает откуда угодно")
+    zi.set_defaults(func=cmd_zayavki)
+
+    zz = sub.add_parser("zayavka-zakryt",
+                        help="закрыть заявку: --rezultat (перенос в sdelano/) или "
+                             "--zastryala (остаётся открытой); только host-side")
+    zz.add_argument("id", help="id заявки (имя файла без .md)")
+    zz.add_argument("--rezultat", help="что вышло — обязателен, если не --zastryala")
+    zz.add_argument("--zastryala", help="что помешало — заявка остаётся открытой")
+    zz.set_defaults(func=cmd_zayavka_zakryt)
+
     c = sub.add_parser("check", help="что вне git (read-only, краснеет)")
     c.add_argument("--zone", help="проверять только этот префикс пути")
     c.set_defaults(func=cmd_check)
@@ -3162,6 +3400,9 @@ def main():
     mg.add_argument("--abort", action="store_true", help="откатить незаконченное слияние целиком")
     mg.add_argument("--continue", dest="cont", action="store_true",
                     help="завершить слияние после разрешения конфликтов")
+    mg.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
+                    help="слить, даже если у ветки живая рабочая папка; ПРИЧИНА "
+                         "обязательна и пишется в INCIDENTY")
     mg.set_defaults(func=cmd_merge)
 
     op = sub.add_parser("opublikovat",
