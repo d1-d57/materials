@@ -512,7 +512,7 @@ T17=$(mktemp -d)
 trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
 cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
-   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$T17/_generator/tools/"
+   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" "$T17/_generator/tools/"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
 cd "$T17"
 git init -q .
@@ -1591,5 +1591,195 @@ then echo "  ✅ ловушка 43: GIT_ZONA_REPO по-прежнему пере
 else echo "  ❌ GIT_ZONA_REPO ПЕРЕСТАЛ РАБОТАТЬ: см. вывод — $OUT43"; FAIL=1
 fi
 rm -rf "$T43"
+
+
+# ══════ ЗАЯВКИ (почтовый ящик) — заход `ochered-zayavok`, ядро З1 ══════
+# `PROEKT.md` целиком: `_studio/zhurnal/2026-08-11_ochered-zayavok/PROEKT.md`.
+# Три двери (`zayavka`/`zayavki`/`zayavka-zakryt`), строка в `doctor`, две
+# защиты `merge` (Ш7 — отказ из песочницы, Ш8 — отказ на живой рабочей папке).
+
+# ── ЛОВУШКА 44: `zayavka` создаёт файл; две машинные строки; текст дословно ──
+T44=$(mktemp -d)
+git init -q -b main "$T44"
+git -C "$T44" config user.email fixture@test; git -C "$T44" config user.name fixture
+mkdir -p "$T44/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T44/_generator/tools/"
+echo baza > "$T44/f.txt"; git -C "$T44" add -A; git -C "$T44" commit -qm baza
+OUT44=$(GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "текст дословно, две строки над ним" 2>&1)
+ID44=$(echo "$OUT44" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+FILE44="$T44/_studio/zhurnal/_INFRA-git/zayavki/$ID44.md"
+if [ -n "$ID44" ] && [ -f "$FILE44" ] \
+   && grep -q '^ЗАЯВКА: ' "$FILE44" && grep -q '^СРОЧНОСТЬ: ' "$FILE44" \
+   && grep -qF "текст дословно, две строки над ним" "$FILE44"
+then echo "  ✅ ловушка 44: zayavka создаёт файл, две машинные строки на месте, текст дословно"
+else echo "  ❌ ZAYAVKA НЕ СОЗДАЛА ПРАВИЛЬНЫЙ ФАЙЛ: см. $OUT44"; FAIL=1
+fi
+
+# ── ЛОВУШКА 45: пустой текст и плейсхолдер `<...>` — отказ, файла нет ──
+BEFORE45=$(find "$T44/_studio/zhurnal/_INFRA-git/zayavki" -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
+GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "" >/dev/null 2>&1 || true
+GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "<текст>" >/dev/null 2>&1 || true
+AFTER45=$(find "$T44/_studio/zhurnal/_INFRA-git/zayavki" -maxdepth 1 -name '*.md' | wc -l | tr -d ' ')
+[ "$BEFORE45" = "$AFTER45" ] && echo "  ✅ ловушка 45: пустой текст и плейсхолдер <...> — отказ, файла не появилось" \
+    || { echo "  ❌ ПУСТАЯ/ПЛЕЙСХОЛДЕРНАЯ ЗАЯВКА СОЗДАЛА ФАЙЛ — отказ не работает"; FAIL=1; }
+
+# ── ЛОВУШКА 46: текст, начинающийся с `-`, даёт имя БЕЗ ведущего дефиса ──
+OUT46=$(GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka -- "-starts with dash leading test" 2>&1)
+ID46=$(echo "$OUT46" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+if [ -n "$ID46" ] && [ -f "$T44/_studio/zhurnal/_INFRA-git/zayavki/$ID46.md" ] \
+   && echo "$ID46" | grep -qF "starts-with-dash-leading-test" \
+   && ! echo "$ID46" | grep -q -- 'T[0-9]*--'
+then echo "  ✅ ловушка 46: ведущий дефис в тексте не попал в имя файла"
+else echo "  ❌ ВЕДУЩИЙ ДЕФИС ПРОСОЧИЛСЯ В ИМЯ — rm/purge примут файл за флаг/мусор: $OUT46"; FAIL=1
+fi
+
+# ── ЛОВУШКА 47: второй вызов с тем же текстом не затирает первый (появляется `-2`) ──
+OUT47A=$(GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "текст-тёзка ловушки сорок семь" 2>&1)
+OUT47B=$(GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "текст-тёзка ловушки сорок семь" 2>&1)
+ID47A=$(echo "$OUT47A" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+ID47B=$(echo "$OUT47B" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+if [ -n "$ID47A" ] && [ -n "$ID47B" ] && [ "$ID47A" != "$ID47B" ] \
+   && [ -f "$T44/_studio/zhurnal/_INFRA-git/zayavki/$ID47A.md" ] \
+   && [ -f "$T44/_studio/zhurnal/_INFRA-git/zayavki/$ID47B.md" ]
+then echo "  ✅ ловушка 47: тёзка не затёрта — второй файл получил отдельное имя (-2)"
+else echo "  ❌ ТЁЗКА ЗАТЕРЛА ПЕРВУЮ ЗАЯВКУ: A=$ID47A B=$ID47B"; FAIL=1
+fi
+rm -rf "$T44"
+
+# ── ЛОВУШКА 48: `zayavki` печатает созданную заявку и строку охвата; пустая папка → rc=0, «заявок нет» ──
+T48=$(mktemp -d)
+git init -q -b main "$T48"
+git -C "$T48" config user.email fixture@test; git -C "$T48" config user.name fixture
+mkdir -p "$T48/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T48/_generator/tools/"
+echo baza > "$T48/f.txt"; git -C "$T48" add -A; git -C "$T48" commit -qm baza
+OUT48_EMPTY=$(GIT_ZONA_REPO="$T48" python3 "$T48/_generator/tools/git_zona.py" zayavki 2>&1); RC48_EMPTY=$?
+GIT_ZONA_REPO="$T48" python3 "$T48/_generator/tools/git_zona.py" zayavka "заявка для ловушки сорок восемь" >/dev/null 2>&1
+OUT48=$(GIT_ZONA_REPO="$T48" python3 "$T48/_generator/tools/git_zona.py" zayavki 2>&1)
+if echo "$OUT48_EMPTY" | grep -q "заявок нет" && [ "$RC48_EMPTY" = "0" ] \
+   && echo "$OUT48" | grep -qF "заявка для ловушки сорок восемь" \
+   && echo "$OUT48" | grep -q "Охват: заявок открыто"
+then echo "  ✅ ловушка 48: zayavki печатает заявку и строку охвата; пустая папка — rc=0, «заявок нет»"
+else echo "  ❌ ZAYAVKI НЕ ПЕЧАТАЕТ ПРАВИЛЬНО: пусто=[$OUT48_EMPTY] заполнено=[$OUT48]"; FAIL=1
+fi
+
+# ── ЛОВУШКА 49: 🔴 zayavki из WORKTREE видит заявку главной папки (настоящий git worktree) ──
+git -C "$T48" branch rabota49
+git -C "$T48" worktree add -q "$T48-wt" rabota49 >/dev/null 2>&1
+OUT49=$(cd "$T48-wt" && env -u GIT_ZONA_REPO python3 "$T48/_generator/tools/git_zona.py" zayavki 2>&1)
+if echo "$OUT49" | grep -qF "заявка для ловушки сорок восемь"
+then echo "  ✅ ловушка 49: zayavki из worktree видит заявку главной рабочей копии"
+else echo "  ❌ СЛЕПАЯ ЗОНА WORKTREE: zayavki из worktree заявку не увидела — см. $OUT49"; FAIL=1
+fi
+git -C "$T48" worktree remove --force "$T48-wt" >/dev/null 2>&1 || true
+rm -rf "$T48" "$T48-wt"
+
+# ── ЛОВУШКА 50: `zayavka-zakryt` без --rezultat и с плейсхолдером — отказ, файл на месте ──
+T50=$(mktemp -d)
+git init -q -b main "$T50"
+git -C "$T50" config user.email fixture@test; git -C "$T50" config user.name fixture
+mkdir -p "$T50/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T50/_generator/tools/"
+echo baza > "$T50/f.txt"; git -C "$T50" add -A; git -C "$T50" commit -qm baza
+OUT50=$(GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka "заявка ловушки пятьдесят" 2>&1)
+ID50=$(echo "$OUT50" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka-zakryt "$ID50" >/dev/null 2>&1 || true
+GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka-zakryt "$ID50" --rezultat "<что вышло>" >/dev/null 2>&1 || true
+if [ -f "$T50/_studio/zhurnal/_INFRA-git/zayavki/$ID50.md" ]
+then echo "  ✅ ловушка 50: закрытие без --rezultat и с плейсхолдером отказало, файл на месте"
+else echo "  ❌ ЗАКРЫТИЕ БЕЗ РЕЗУЛЬТАТА ПРОШЛО — файл исчез без сказанного результата"; FAIL=1
+fi
+
+# ── ЛОВУШКА 51: `zayavka-zakryt` переносит в sdelano/ и дописывает ЗАКРЫТО: ──
+GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka-zakryt "$ID50" --rezultat "живой прогон ловушки 51" >/dev/null 2>&1
+DST51="$T50/_studio/zhurnal/_INFRA-git/zayavki/sdelano/$ID50.md"
+if [ ! -f "$T50/_studio/zhurnal/_INFRA-git/zayavki/$ID50.md" ] && [ -f "$DST51" ] \
+   && grep -q '^ЗАКРЫТО: ' "$DST51"
+then echo "  ✅ ловушка 51: zayavka-zakryt перенесла в sdelano/ и дописала ЗАКРЫТО:"
+else echo "  ❌ ЗАКРЫТИЕ НЕ ПЕРЕНЕСЛО ФАЙЛ ИЛИ НЕ ДОПИСАЛО ЗАКРЫТО: — см. $DST51"; FAIL=1
+fi
+
+# ── ЛОВУШКА 52: `--zastryala` дописывает ЗАСТРЯЛА: и НЕ переносит ──
+OUT52=$(GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka "trap fifty two zastryala test" 2>&1)
+ID52=$(echo "$OUT52" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
+GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka-zakryt "$ID52" --zastryala "конфликт слияния, merge --abort сделан" >/dev/null 2>&1
+FILE52="$T50/_studio/zhurnal/_INFRA-git/zayavki/$ID52.md"
+if [ -f "$FILE52" ] && grep -q '^ЗАСТРЯЛА: ' "$FILE52" \
+   && [ ! -f "$T50/_studio/zhurnal/_INFRA-git/zayavki/sdelano/$ID52.md" ]
+then echo "  ✅ ловушка 52: --zastryala дописала ЗАСТРЯЛА: и НЕ перенесла файл"
+else echo "  ❌ --ZASTRYALA СЛОМАНА: файл перенесён или строка не дописана — $FILE52"; FAIL=1
+fi
+
+# ── ЛОВУШКА (нет такой заявки → rc=1 и список id) ──
+RC52B=0
+OUT52B=$(GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka-zakryt no-such-id-52 --rezultat "x" 2>&1) || RC52B=$?
+if [ "$RC52B" != "0" ] && echo "$OUT52B" | grep -q "Нет такой заявки" \
+   && echo "$OUT52B" | grep -qF "$ID52"
+then echo "  ✅ ловушка 52б: несуществующий id — rc≠0 и список существующих id"
+else echo "  ❌ НЕСУЩЕСТВУЮЩИЙ ID НЕ ДАЛ ОТКАЗ СО СПИСКОМ: rc=$RC52B — $OUT52B"; FAIL=1
+fi
+rm -rf "$T50"
+
+# ── ЛОВУШКА 53: `doctor` печатает число заявок и возраст старейшей ──
+T53=$(mktemp -d)
+git init -q -b main "$T53"
+git -C "$T53" config user.email fixture@test; git -C "$T53" config user.name fixture
+mkdir -p "$T53/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$TOOLS/check_incidenty.py" "$T53/_generator/tools/"
+echo baza > "$T53/f.txt"; git -C "$T53" add -A; git -C "$T53" commit -qm baza
+GIT_ZONA_REPO="$T53" python3 "$T53/_generator/tools/git_zona.py" zayavka "заявка для доктора" >/dev/null 2>&1
+OUT53=$(GIT_ZONA_REPO="$T53" python3 "$T53/_generator/tools/git_zona.py" doctor 2>&1)
+if echo "$OUT53" | grep -qE "заявок открыто: 1, старейшей [0-9]+ ч"
+then echo "  ✅ ловушка 53: doctor печатает число открытых заявок и возраст старейшей"
+else echo "  ❌ DOCTOR НЕ ПЕЧАТАЕТ ЗАЯВКИ: см. вывод"; FAIL=1
+fi
+rm -rf "$T53"
+
+# ── ЛОВУШКА 54: `merge` ветки, вычекаученной в рабочей папке, — отказ; --vsyo-ravno "причина" проводит; голый --vsyo-ravno — отказ ──
+T54=$(mktemp -d)
+git init -q -b main "$T54"
+git -C "$T54" config user.email fixture@test; git -C "$T54" config user.name fixture
+mkdir -p "$T54/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T54/_generator/tools/"
+echo baza > "$T54/f.txt"; git -C "$T54" add -A; git -C "$T54" commit -qm baza
+git -C "$T54" branch feature54
+git -C "$T54" worktree add -q "$T54-wt" feature54 >/dev/null 2>&1
+echo feat > "$T54-wt/g.txt"; git -C "$T54-wt" add g.txt; git -C "$T54-wt" commit -qm feat
+RC54A=0
+GIT_ZONA_REPO="$T54" python3 "$T54/_generator/tools/git_zona.py" merge feature54 >/dev/null 2>&1 || RC54A=$?
+RC54B=0
+GIT_ZONA_REPO="$T54" python3 "$T54/_generator/tools/git_zona.py" merge feature54 --vsyo-ravno >/dev/null 2>&1 || RC54B=$?
+V54=$(git -C "$T54" log --oneline HEAD..feature54 | wc -l | tr -d ' ')
+GIT_ZONA_REPO="$T54" python3 "$T54/_generator/tools/git_zona.py" merge feature54 --vsyo-ravno "проверка ловушки 54" >/dev/null 2>&1
+V54B=$(git -C "$T54" log --oneline HEAD..feature54 | wc -l | tr -d ' ')
+if [ "$RC54A" = "1" ] && [ "$V54" != "0" ] && [ "$RC54B" = "2" ] && [ "$V54B" = "0" ]
+then echo "  ✅ ловушка 54: merge ветки с живой рабочей папкой — отказ; голый --vsyo-ravno — отказ; с причиной — влито"
+else echo "  ❌ MERGE НЕ ЗАЩИЩАЕТ ЖИВУЮ РАБОЧУЮ ПАПКУ: rc_no_flag=$RC54A rc_bare=$RC54B впереди_после=$V54B"; FAIL=1
+fi
+git -C "$T54" worktree remove --force "$T54-wt" >/dev/null 2>&1 || true
+rm -rf "$T54" "$T54-wt"
+
+# ── ЛОВУШКА 55: `merge` из песочницы — отказ (эмуляция FUSE, как у ловушки 3/10) ──
+T55=$(mktemp -d)
+git init -q -b main "$T55"
+git -C "$T55" config user.email fixture@test; git -C "$T55" config user.name fixture
+mkdir -p "$T55/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T55/_generator/tools/"
+echo baza > "$T55/f.txt"; git -C "$T55" add -A; git -C "$T55" commit -qm baza
+git -C "$T55" checkout -q -b feature55
+echo feat > "$T55/g.txt"; git -C "$T55" add g.txt; git -C "$T55" commit -qm feat
+git -C "$T55" checkout -q main
+if GIT_ZONA_REPO="$T55" python3 - "$TOOLS/git_zona.py" >/dev/null 2>&1 <<'PY'
+import sys, importlib.util, argparse
+spec = importlib.util.spec_from_file_location("gz", sys.argv[1])
+gz = importlib.util.module_from_spec(spec); spec.loader.exec_module(gz)
+gz.in_sandbox = lambda: True
+ns = argparse.Namespace(branch="feature55", zone=None, abort=False, cont=False, vsyo_ravno=None)
+sys.exit(0 if gz.cmd_merge(ns) == 3 else 1)
+PY
+then echo "  ✅ ловушка 55: merge из песочницы отказывает (rc=3), обхода нет"
+else echo "  ❌ MERGE ПИШЕТ ИЗ ПЕСОЧНИЦЫ — sandbox-отказ на merge обойдён"; FAIL=1
+fi
+rm -rf "$T55"
 
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
