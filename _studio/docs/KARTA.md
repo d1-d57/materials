@@ -551,6 +551,8 @@
 
 **`_studio/zhurnal/2026-08-11_dveri-discipliny/kod_zapusk-samodostatochen.md`** (стартовый блок генератора самодостаточен (worktree add перед cd) + стенд фикстуры dvizhok догоняет хук)
 
+**`_studio/zhurnal/2026-08-11_dovodka-L2/kod_tipologia-slajdov.md`** (Типология слайдов по корпусу шести дек: какие бывают ВИДЫ слайдов по назначению и какая раскладка блоков у каждого вида — вход для генератора и фазы 2)
+
 
 
 
