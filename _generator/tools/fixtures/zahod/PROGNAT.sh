@@ -6,7 +6,7 @@
 # Запуск:  sh _generator/tools/fixtures/zahod/PROGNAT.sh
 # Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
 #
-# ЛОВУШЕК ДВАДЦАТЬ ШЕСТЬ (задание требовало не менее девяти):
+# ЛОВУШЕК ДВАДЦАТЬ ДЕВЯТЬ (задание требовало не менее девяти):
 #   1. 🔴 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ ФАЙЛАХ — главная ловушка фикстуры:
 #      она сторожит не поломку, а излишнюю строгость, от которой линтер отключат.
 #      ⚠ С 08.08 — с одним ОБЪЯВЛЕННЫМ вычетом: З10 (см. ловушку 24 и докстринг
@@ -63,6 +63,10 @@
 #      этом случае в файл не уходило ничего, и молчание было неотличимо от
 #      «здесь ничего не требуется» — цена — три потерянных хода за сутки
 #      (`UROKI-FABRIKE.md` арки `2026-08-07_arhitektura-slajdov`, урок 11).
+#  28. 🔴 З11 (заход `dveri-discipliny`, Ш3) — синтетический здоровый заход БЕЗ
+#      секции «## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ» — красный, поимённо.
+#  29. 🔴 З11 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ — оба калибровочных захода без
+#      секции краснеют по З11 поимённо (тот же приём, что у ловушки 25 для З10).
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
 REPO_ROOT=$(cd "$TOOLS/../.." && pwd)
@@ -90,6 +94,11 @@ krasnet() {  # <описание> <ожидаемый_код> <файл>
 sobrat_zdorovyj() {  # <путь>
   cat > "$1" <<'MD'
 # Канал исполнителя — test (проба фикстуры)
+
+## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ
+
+1. Владелец подтвердил: делаем X, ровно тем способом, что описан ниже.
+2. Владелец подтвердил: живой прогон обязателен, фикстуры одной не хватит.
 
 ## КОНТРАКТ ЗОНЫ (обязателен)
 - **МЕСТО РАБОТЫ:** worktree захода; проверить, что на месте — `git branch --show-current` обязано дать `test-branch`.
@@ -142,21 +151,22 @@ MD
 echo "── ловушка 1: 🔴 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ ФАЙЛАХ — rc=0 И пустой вывод"
 LIVE1="$REPO_ROOT/_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_tirazh-ocheredi.md"
 LIVE2="$REPO_ROOT/_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_ochered-domov.md"
-# 🔴 ОДНО ОБЪЯВЛЕННОЕ ИСКЛЮЧЕНИЕ — З10 (08.08.2026). Оба калибровочных захода
-# написаны ДО того, как блок §0.1 ГИТ-КОНТУР стал обязательным, и он у них
-# действительно отсутствует: красное З10 на них ИСТИННОЕ, а закон калибровки
-# запрещает ЛОЖНОЕ. Поэтому здесь проверяется молчание по всем проверкам КРОМЕ
-# З10, а сами эти файлы служат З10 живым положительным контролем (ловушка 24).
+# 🔴 ДВА ОБЪЯВЛЕННЫХ ИСКЛЮЧЕНИЯ — З10 (08.08.2026) и З11 (11.08.2026). Оба
+# калибровочных захода написаны ДО того, как блок §0.1 ГИТ-КОНТУР и секция ЧТО
+# ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ стали обязательными, и они у них действительно
+# отсутствуют: красное З10/З11 на них ИСТИННОЕ, а закон калибровки запрещает
+# ЛОЖНОЕ. Поэтому здесь проверяется молчание по всем проверкам КРОМЕ З10 и З11,
+# а сами эти файлы служат обеим живым положительным контролем (ловушки 24 и 28).
 # Строки-шапки `── <путь>` линтер печатает при любом выводе, они не находка.
 for LIVE in "$LIVE1" "$LIVE2"; do
   [ -f "$LIVE" ] || { echo "❌ ЛОВУШКА 1: живой файл не найден — $LIVE"; exit 1; }
   OUT=$(python3 "$P" "$LIVE" 2>&1) || true
-  KROME=$(echo "$OUT" | grep -v '^── ' | grep -v 'З10' | grep -v '^[[:space:]]*$' || true)
+  KROME=$(echo "$OUT" | grep -v '^── ' | grep -v 'З10' | grep -v 'З11' | grep -v '^[[:space:]]*$' || true)
   [ -z "$KROME" ] || {
-    echo "❌ ЛОВУШКА 1: линтер НЕ МОЛЧИТ (сверх объявленного З10) на признанном хорошим живом заходе — $LIVE. Вывод:"
+    echo "❌ ЛОВУШКА 1: линтер НЕ МОЛЧИТ (сверх объявленных З10/З11) на признанном хорошим живом заходе — $LIVE. Вывод:"
     echo "$KROME"; exit 1; }
 done
-echo "  ✅ ловушка 1: оба живых калибровочных захода — молчат по всем проверкам, кроме объявленной З10"
+echo "  ✅ ловушка 1: оба живых калибровочных захода — молчат по всем проверкам, кроме объявленных З10/З11"
 
 echo "── ловушка 2: положительный контроль на синтетическом здоровом заходе"
 sobrat_zdorovyj "$T/kod_zdorovyj.md"
@@ -407,6 +417,7 @@ echo "── ловушка 17: --vlit ВЕТКА — в заходе есть �
 R17="$T/repo17"; sobrat_repo "$R17"
 OUT17=$(GIT_ZONA_REPO="$R17" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba17 \
     --branch proba17-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka 2>&1)
 RC17=$?
 [ "$RC17" -eq 0 ] || {
@@ -422,7 +433,8 @@ echo "  ✅ ловушка 17: --vlit даёт §0.1 с merge и проверк�
 echo "── ловушка 18: без --vlit при нуле невлитых — «вливать нечего, проверено»"
 R18="$T/repo18"; sobrat_repo "$R18"
 OUT18=$(GIT_ZONA_REPO="$R18" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba18 \
-    --branch proba18-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1)
+    --branch proba18-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1)
 RC18=$?
 [ "$RC18" -eq 0 ] || {
   echo "❌ ЛОВУШКА 18: bootstrap_zahod.py без --vlit упал при нуле невлитых (rc=$RC18). Вывод:"
@@ -439,7 +451,8 @@ R19="$T/repo19"; sobrat_repo "$R19"
     && git -c user.email=proba@proba -c user.name=proba commit -q -m extra \
     && git checkout -q main )
 OUT19=$(GIT_ZONA_REPO="$R19" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba19 \
-    --branch proba19-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1)
+    --branch proba19-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1)
 RC19=$?
 [ "$RC19" -eq 0 ] || {
   echo "❌ ЛОВУШКА 19: генератор ОТКАЗАЛ при невлитой ветке без --vlit (rc=$RC19) — сторож обязан "
@@ -455,6 +468,7 @@ echo "── ловушка 20: заход, собранный с --vlit, не �
 R20="$T/repo20"; sobrat_repo "$R20"
 OUT20B=$(GIT_ZONA_REPO="$R20" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba20 \
     --branch proba20-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka 2>&1) || {
   echo "❌ ЛОВУШКА 20: bootstrap_zahod.py с --vlit упал при сборке. Вывод:"; echo "$OUT20B"; exit 1; }
 F20="$R20/_studio/zhurnal/proba/kod_proba20.md"
@@ -491,7 +505,8 @@ echo "  ✅ ловушка 22: здоровый заход — З9 молчит"
 echo "── ловушка 23: 🔴 З9 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ — свежесобранный bootstrap_zahod.py-скелет молчит"
 R23="$T/repo23"; sobrat_repo "$R23"
 OUT23B=$(GIT_ZONA_REPO="$R23" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba23 \
-    --branch proba23-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1) || true
+    --branch proba23-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F23="$R23/_studio/zhurnal/proba/kod_proba23.md"
 [ -f "$F23" ] || {
   echo "❌ ЛОВУШКА 23: bootstrap_zahod.py не собрал файл — $F23. Вывод:"; echo "$OUT23B"; exit 1; }
@@ -510,7 +525,8 @@ echo "   объявлен НЕПРИМЕНИМЫМ явно, а не молча�
 # было неисполнимо буквально и молчало об этом.
 R24="$T/repo24"; sobrat_repo "$R24"
 OUT24A=$(GIT_ZONA_REPO="$R24" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24app \
-    --branch proba24app-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app 2>&1) || true
+    --branch proba24app-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F24A="$R24/_studio/zhurnal/proba/kod_proba24app.md"
 [ -f "$F24A" ] || {
   echo "❌ ЛОВУШКА 24: bootstrap_zahod.py --kanal app не собрал файл — $F24A. Вывод:"
@@ -527,7 +543,8 @@ echo "  ✅ ловушка 24а: канал app — требование явн�
 # починка Г5 не смеет тихо отключить требование там, где оно работает.
 R24B="$T/repo24b"; sobrat_repo "$R24B"
 OUT24B=$(GIT_ZONA_REPO="$R24B" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24term \
-    --branch proba24term-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1) || true
+    --branch proba24term-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F24B="$R24B/_studio/zhurnal/proba/kod_proba24term.md"
 [ -f "$F24B" ] || {
   echo "❌ ЛОВУШКА 24б: bootstrap_zahod.py --kanal terminal не собрал файл. Вывод:"
@@ -556,6 +573,7 @@ echo "── ловушка 26: З10 — генератор с тремя сло
 R26="$T/repo26"; sobrat_repo "$R26"
 OUT26B=$(GIT_ZONA_REPO="$R26" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba26 \
     --branch proba26-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka --kommitit 'зона `_generator/tools/dummy-zone/fake.py`' \
     --zakryt 'погасить `zahod/test-vetka`' 2>&1) || {
   echo "❌ ЛОВУШКА 26: bootstrap_zahod.py с тремя слотами упал. Вывод:"; echo "$OUT26B"; exit 1; }
@@ -574,7 +592,8 @@ echo "── ловушка 27: З10 — незаполненный слот к�
 # ОБА конца: генератор обязан ПОСТАВИТЬ маркер, линтер — на нём покраснеть.
 R27="$T/repo27"; sobrat_repo "$R27"
 OUT27B=$(GIT_ZONA_REPO="$R27" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba27 \
-    --branch proba27-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal 2>&1) || {
+    --branch proba27-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
   echo "❌ ЛОВУШКА 27: bootstrap_zahod.py без слотов 2-3 упал (обязан собирать и предупреждать). Вывод:"
   echo "$OUT27B"; exit 1; }
 F27="$R27/_studio/zhurnal/proba/kod_proba27.md"
@@ -589,5 +608,32 @@ echo "$OUT27" | grep -q "❌ З10: слот «ЗАКОММИТИТЬ ПО ХОД
 echo "$OUT27" | grep -q "❌ З10: слот «ЗАКРЫТЬ ПОСЛЕ»" || {
   echo "❌ ЛОВУШКА 27: З10 не назвал пустой слот 3 поимённо. Вывод:"; echo "$OUT27"; exit 1; }
 echo "  ✅ ловушка 27: пустые слоты — маркер в файле, предупреждение в консоли, З10 краснеет поимённо"
+
+# ── ловушка 28: З11 (заход dveri-discipliny) — синтетический заход без секции ──
+echo "── ловушка 28: 🔴 З11 — синтетический здоровый заход БЕЗ секции ЧТО ФИНАЛИЗИРОВАНО"
+sobrat_zdorovyj "$T/kod_z11.md"
+python3 -c "
+p = '$T/kod_z11.md'
+t = open(p, encoding='utf-8').read()
+old = '''## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ
+
+1. Владелец подтвердил: делаем X, ровно тем способом, что описан ниже.
+2. Владелец подтвердил: живой прогон обязателен, фикстуры одной не хватит.
+
+'''
+assert old in t, 'якорь секции ЧТО ФИНАЛИЗИРОВАНО разъехался с фикстурой'
+t = t.replace(old, '')
+open(p, 'w', encoding='utf-8').write(t)
+"
+krasnet "нет секции ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ" "З11" "$T/kod_z11.md"
+
+echo "── ловушка 29: 🔴 З11 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ на ЖИВЫХ файлах — заход без секции краснеет"
+for LIVE in "$LIVE1" "$LIVE2"; do
+  OUT29=$(python3 "$P" "$LIVE" 2>&1) || true
+  echo "$OUT29" | grep -q "❌ З11: нет секции" || {
+    echo "❌ ЛОВУШКА 29: З11 не покраснел на живом заходе без секции — $LIVE. Вывод:"
+    echo "$OUT29"; exit 1; }
+done
+echo "  ✅ ловушка 29: оба живых захода без секции краснеют по З11 поимённо"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

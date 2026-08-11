@@ -39,6 +39,11 @@ unset $(git rev-parse --local-env-vars) 2>/dev/null || true
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
 mkdir -p "$T/arka"
+# Ш1.4 (заход `dveri-discipliny`): по умолчанию дневник арки несёт отсечку на
+# СЕГОДНЯ — большинству ловушек ниже отсечка не по теме, и без неё они красили
+# бы sdelat_handoff.py по чужой причине (предусловие Ш1.4, не то, что ловушка
+# заявляет). Ловушки самой отсечки (ниже) переопределяют файл под себя точечно.
+printf '<!-- РАЗНЕСЕНО ДО СЮДА: %s -->\n' "$(date +%Y-%m-%d)" > "$T/arka/SESSIYA.md"
 
 Z="$TOOLS/zakryt_sessiyu.py"
 H="$TOOLS/sdelat_handoff.py"
@@ -104,13 +109,56 @@ echo "── ловушки sdelat_handoff.py"
 
 # 4. пропущено обязательное поле --gde
 krasnet "хэндофф без --gde" python3 "$H" "$T/arka" \
-  --chto-delaem "x" --pervyj-hod "y" --gotovo "z"
+  --chto-delaem "x" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3
+
+# 4а. Ш1.1 — обязательный --finalizirovano (заход `dveri-discipliny`)
+krasnet "хэндофф без --finalizirovano" python3 "$H" "$T/arka" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --vopros в1 --vopros в2 --vopros в3
+
+# 4б. Ш1.1 — --finalizirovano меньше трёх раз тоже отказ
+krasnet "хэндофф с --finalizirovano×2 (меньше трёх)" python3 "$H" "$T/arka" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 \
+  --vopros в1 --vopros в2 --vopros в3
+
+# 4в. Ш1.2 — обязательный --vopros
+krasnet "хэндофф без --vopros" python3 "$H" "$T/arka" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3
+
+# 4г. Ш1.4 — предусловие «дневник разнесён»: SESSIYA.md ЕСТЬ, но БЕЗ отсечки
+mkdir -p "$T/arka-bez-otsechki"
+printf 'просто текст дневника, отсечки нет\n' > "$T/arka-bez-otsechki/SESSIYA.md"
+krasnet "хэндофф без отсечки в SESSIYA.md" python3 "$H" "$T/arka-bez-otsechki" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3
+
+# 4д. Ш1.4 — SESSIYA.md отсутствует вовсе
+krasnet "хэндофф без файла SESSIYA.md" python3 "$H" "$T/net-takoj-papki-dlya-dnevnika" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3
+
+# 4е. Ш1.4 — отсечка ЕСТЬ, но датой РАНЬШЕ сегодня (вчерашний разнос не считается)
+mkdir -p "$T/arka-stalaya-otsechka"
+printf '<!-- РАЗНЕСЕНО ДО СЮДА: 2000-01-01 -->\n' > "$T/arka-stalaya-otsechka/SESSIYA.md"
+krasnet "хэндофф со вчерашней отсечкой" python3 "$H" "$T/arka-stalaya-otsechka" \
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3
+echo "  ✅ ловушки 4а-4е: --finalizirovano/--vopros обязательны, отсечка на сегодня обязательна"
 
 # 5. поверх существующего файла
 ZAVTRA=$(python3 -c "import datetime;print((datetime.date.today()+datetime.timedelta(days=1)).isoformat())")
 : > "$T/arka/HANDOFF-$ZAVTRA.md"
 krasnet "хэндофф поверх существующего" python3 "$H" "$T/arka" \
-  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z"
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3
 rm -f "$T/arka/HANDOFF-$ZAVTRA.md"
 
 echo "── положительный контроль: здоровый вход обязан пройти"
@@ -133,7 +181,11 @@ JSONL
 # СВОИМ последним ходом (часть A.1) — чтобы позитивный контроль ниже остался
 # позитивным, дневник арки заранее покрывает единственную реплику norma.jsonl
 # (идентификатор сессии — первые 4 символа имени файла: "norm").
-printf '%s\n' '<!-- РЕПЛИКИ РАЗНЕСЕНЫ: Snorm-В001 -->' > "$T/arka/SESSIYA.md"
+# Отсечка Ш1.4 дописывается ЖЕ строкой: этот `printf` перезаписывает файл
+# целиком (`>`), а положительный контроль sdelat_handoff.py ниже (после
+# zakryt_sessiyu.py) снова требует отсечку на сегодня в ЭТОМ ЖЕ файле.
+printf '%s\n%s\n' '<!-- РЕПЛИКИ РАЗНЕСЕНЫ: Snorm-В001 -->' \
+  "<!-- РАЗНЕСЕНО ДО СЮДА: $(date +%Y-%m-%d) -->" > "$T/arka/SESSIYA.md"
 python3 "$Z" "$T/arka" --transcript "$T/norma.jsonl" >/dev/null
 VYG=$(ls "$T/arka"/VYGRUZKA-*.md 2>/dev/null | head -1)
 [ -n "$VYG" ] || { echo "❌ ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ: выгрузка не создана"; exit 1; }
@@ -144,20 +196,36 @@ grep -q "число" "$VYG" || { echo "❌ метка «число» не про
 echo "  ✅ выгрузка собрана, реплика владельца на месте, вопросы и обещания выделены"
 
 python3 "$H" "$T/arka" --chto-delaem "задача" --gde "Cowork" \
-  --pervyj-hod "интервью" --gotovo "критерий" >/dev/null
+  --pervyj-hod "интервью" --gotovo "критерий" \
+  --finalizirovano "решили делать X" --finalizirovano "решили НЕ делать Y" \
+  --finalizirovano "бюджет прежний" \
+  --vopros "Задача — X. Верно?" --vopros "Начинаем с интервью. Так?" \
+  --vopros "Критерий — тот самый. Принимаем?" >/dev/null
 HAN=$(ls "$T/arka"/HANDOFF-*.md 2>/dev/null | head -1)
 [ -n "$HAN" ] || { echo "❌ ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ: хэндофф не создан"; exit 1; }
 grep -q "ГДЕ ЭТО ЗАПУСКАТЬ" "$HAN" || { echo "❌ в хэндоффе нет раздела «где запускать»"; exit 1; }
 grep -q "ИНТЕРВЬЮ, а не работа" "$HAN" || { echo "❌ в хэндоффе нет вшитого интервью"; exit 1; }
 grep -q "СТАРТОВАЯ СТРОКА" "$HAN" || { echo "❌ в хэндоффе нет стартовой строки для нового чата"; exit 1; }
 grep -q "Открой файл" "$HAN" || { echo "❌ стартовая строка не называет файл входа"; exit 1; }
-echo "  ✅ хэндофф собран: «где запускать», интервью и стартовая строка на месте"
+# Ш1.1: секция ЧТО ФИНАЛИЗИРОВАНО — ПОСЛЕ стартовой строки, ДО «ПЕРВЫЙ ХОД».
+grep -q "ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ" "$HAN" || {
+  echo "❌ ЛОВУШКА: в хэндоффе нет секции ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ"; exit 1; }
+grep -q "решили делать X" "$HAN" || {
+  echo "❌ ЛОВУШКА: содержимое --finalizirovano не попало в хэндофф"; exit 1; }
+# Ш1.2/Ш1.3: вопросы из --vopros на месте, ЧЕТЫРЁХ ШАБЛОННЫХ БОЛЬШЕ НЕТ.
+grep -q "Начинаем с интервью. Так?" "$HAN" || {
+  echo "❌ ЛОВУШКА: вопрос из --vopros не попал в раздел ПЕРВЫЙ ХОД"; exit 1; }
+grep -q "изменилось со вчера" "$HAN" && {
+  echo "❌ ЛОВУШКА: шаблонный вопрос «изменилось со вчера» всё ещё вшит (Ш1.3 не выполнена)"; exit 1; }
+echo "  ✅ хэндофф собран: «где запускать», ЧТО ФИНАЛИЗИРОВАНО, вопросы из --vopros, шаблонных вопросов нет"
 
 # 7. РУКОПИСНЫЙ ФАЙЛ НЕ ПЕРЕЗАПИСЫВАЕТСЯ ДАЖЕ С --zamenit.
 # Цена: в рукописном хэндоффе может лежать знание, которое никуда больше не уехало.
 printf '%s\n' "# написан руками, маркера генератора нет" > "$T/arka/RUCHNOJ.md"
 krasnet "--zamenit поверх рукописного файла" python3 "$H" "$T/arka" --imya RUCHNOJ.md \
-  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" --zamenit
+  --chto-delaem "x" --gde "g" --pervyj-hod "y" --gotovo "z" \
+  --finalizirovano ф1 --finalizirovano ф2 --finalizirovano ф3 \
+  --vopros в1 --vopros в2 --vopros в3 --zamenit
 
 # ═══════════════════════════════════════════════════════════════════════════
 # ЛОВУШКИ dnevnik.py — гейт полноты дневника
