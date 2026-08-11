@@ -517,5 +517,5 @@ $ git --no-optional-locks rev-list --left-right --count origin/arka/mat-kostyak.
 **КОММИТ:** зона идёт двумя ходами, и хэш первого вписывается вторым — иначе строка называла бы коммит, которого в момент письма ещё нет (выдуманный хэш хуже отсутствующего).
 - ход 1: `git-uborka: план, четыре урока фабрике, семь пунктов очереди и отчёт захода` — хэш вписан ниже вторым ходом
 - ход 2: `git-uborka: хэш первого хода вписан в строку КОММИТ отчёта`
-- хэши: ХОД1 = `(вписывается ходом 2)` · ХОД2 = `(последний коммит ветки, виден в git log -1)`
-- `python3 _generator/tools/git_zona.py check --zone _studio/zhurnal/_INFRA-git/kod_git-uborka.md` → результат ниже, после коммита
+- хэши: ХОД1 = `b4a5d36` · ХОД2 = последний коммит ветки (`git --no-optional-locks log -1 --format=%h`)
+- `python3 _generator/tools/git_zona.py check --zone _studio/zhurnal/_INFRA-git/kod_git-uborka.md` → ✅ (Г1, вывод в отчёте ниже)
