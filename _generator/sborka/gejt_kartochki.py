@@ -34,7 +34,9 @@ kartochka-i-sborka). Скриптовый слой Я1 §6, дословно:
   # exit 0 — зелёный, 1 — красный
 """
 import argparse
+import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 SBORKA = Path(__file__).resolve().parent
@@ -119,6 +121,12 @@ NE_PROVERYAYU_VSEGDA = (
     "matematika_iz и zamer_tempa — покрытие ленты и замер темпа (долги Д51/Д38, "
     "поля порождаются, но гейта на них ещё нет)",
     "верен ли акцент и та ли это вообще лекция — только человек (Я1 §6)",
+    "Г-3, вторая половина («список ОБЯЗАТЕЛЕН при двух и более пунктах») — "
+    "«сколько понятий несёт блок» суждение, не машинный признак (заход "
+    "zakony-v-gejt); ловится только «список из одного пункта запрещён»",
+    "все двенадцать законов фазы 2 (А6/А8/А9/А10/Г-1/Г-2/Г-3/Г-6/Г-7/Г-8/Г-12/Г-15) "
+    "печатаются ЖЁЛТЫМ, а не красным — держатся без исключений на ОДНОЙ лекции "
+    "(teorkat-vvedenie/L2, 18 карточек), не на всём корпусе фабрики",
 )
 
 
@@ -277,14 +285,231 @@ def _check_vvodit_opiraetsya(sid, params, faza):
     return []
 
 
+# Заход zakony-v-gejt (2026-08-12, `FAZA-2-PROCEDURA.md §1.1`/§1.1-тер): одиннадцать
+# законов фазы 2 держатся БЕЗ ИСКЛЮЧЕНИЙ на живой деке (18 карточек
+# teorkat-vvedenie/L2) — владелец признал их годными в гейт 12.08. Плюс Г-3
+# (двенадцатая, тем же интервью, переформулирована с Г-8: два однотипных несущих
+# блока сливаются в один список) — но у Г-3 машинно проверяется только ПОЛОВИНА
+# правила («список из одного пункта запрещён»); вторая половина («список
+# обязателен при двух и более пунктах») не вычисляется без оценки смысла текста
+# («сколько понятий несёт блок» — суждение, не признак) и объявлена в
+# NE_PROVERYAYU_VSEGDA. А2 и А5 ОТМЕНЕНЫ владельцем 12.08 — не вносятся ни в
+# каком виде (см. заход).
+#
+# 🔴 ПОРОГ ВКЛЮЧЕНИЯ — эти законы НИКОГДА не красят гейт. Дословно заход:
+# «закон, у которого на живой деке появился нарушитель, выдаёт ЖЁЛТОЕ, а не
+# красное, и печатает, на каком слайде». Причина: «держится без исключений»
+# проверено на 18 карточках ОДНОЙ лекции 12.08, не на всём корпусе фабрики —
+# новый закон обязан начинать жизнь жёлтым, а не ломать сборку немедленно.
+# Нарушители Г-1/Г-7/Г-6/Г-2/Г-12/Г-8/А6/А8/А9/Г-15 на сегодняшней L2 — 0 (см.
+# отчёт захода); А10 и Г-3 краснеют жёлтым на `inyekcii` — находка, уже названная
+# в `AKSIOMY-RAZMETKI.md §7а`/`FAZA-2-PROCEDURA.md §1.1-тер`, не новая.
+STATUSNYE_TIPY = ("opredelenie", "utverzhdenie", "primer")  # bloki.TIPY_BLOKOV минус narrativ/dokazatelstvo/itog/uprazhnenie
+
+ZHANROVYJ_YARLYK_RE = {
+    "opredelenie": re.compile(r"^\*\*Определение\s*\("),
+    "utverzhdenie": re.compile(r"^\*\*Утверждение\s*\("),
+    "primer": re.compile(r"^\*\*Пример\s*\("),
+}
+ZHANROVYJ_YARLYK_ANY_RE = re.compile(r"\*\*(?:Определение|Утверждение|Пример)\s*\(")
+DOKAZATELSTVO_YARLYK_RE = re.compile(r"^\*Доказательство\b")
+POLE_VREZKA_RE = re.compile(r"^>\s*поле:", re.M)
+
+
+def zakon_a6(sid, sections):
+    """А6: слайд из одного блока — блок обязан быть [narrativ]."""
+    b = sections["matematika"]
+    if len(b) == 1 and b[0].tip != "narrativ":
+        return ["%s: единственный блок слайда — [%s] «%s», должен быть [narrativ]"
+                % (sid, b[0].tip, b[0].mysl)]
+    return []
+
+
+def zakon_a8(sid, sections):
+    """А8: [dokazatelstvo] — последний блок слайда."""
+    b = sections["matematika"]
+    return ["%s: [dokazatelstvo] «%s» стоит не последним блоком" % (sid, blk.mysl)
+            for i, blk in enumerate(b) if blk.tip == "dokazatelstvo" and i != len(b) - 1]
+
+
+def zakon_a9(sid, sections):
+    """А9: [opredelenie] — первое среди статусных блоков (не narrativ, не
+    dokazatelstvo). Нарратив ПЕРЕД определением стоять может — речь о порядке
+    среди СТАТУСНЫХ, не среди всех блоков (AKSIOMY-RAZMETKI.md §А9)."""
+    stat = [blk for blk in sections["matematika"] if blk.tip in STATUSNYE_TIPY]
+    if not stat or not any(blk.tip == "opredelenie" for blk in stat):
+        return []
+    if stat[0].tip != "opredelenie":
+        return ["%s: [opredelenie] не первый среди статусных блоков (первый — [%s] «%s»)"
+                % (sid, stat[0].tip, stat[0].mysl)]
+    return []
+
+
+def zakon_a10(sid, sections):
+    """А10: [narrativ] не стоит между двумя ненарративными блоками."""
+    b = sections["matematika"]
+    return ["%s: [narrativ] «%s» стоит между [%s] и [%s]" % (sid, b[i].mysl, b[i-1].tip, b[i+1].tip)
+            for i in range(1, len(b) - 1)
+            if b[i].tip == "narrativ" and b[i-1].tip != "narrativ" and b[i+1].tip != "narrativ"]
+
+
+def zakon_g1(sid, sections):
+    """Г-1: несущий блок (тип ≠ narrativ) в «Математике» открывается жанровым
+    ярлыком — «**Определение (…)**» / «**Утверждение (…)**» / «**Пример (…)**» /
+    «*Доказательство…*». 🔴 ТОЛЬКО в «Математике» — на экране («Текст слайда —
+    сжато») жанровым словом не открывается ни один блок (ZAMER-BLOKOV-L2.md Г-1:
+    0 из 22 несущих на экране), проверка там сломает деку целиком (заход)."""
+    out = []
+    for blk in sections["matematika"]:
+        if blk.tip == "narrativ":
+            continue
+        telo = blk.telo.lstrip()
+        pat = ZHANROVYJ_YARLYK_RE.get(blk.tip, DOKAZATELSTVO_YARLYK_RE)
+        if not pat.match(telo):
+            out.append("%s: несущий блок [%s] «%s» не открывается жанровым ярлыком в «Математике»"
+                        % (sid, blk.tip, blk.mysl))
+    return out
+
+
+def zakon_g2(sid, sections):
+    """Г-2: у каждого блока «Математики» ровно одна врезка «> поле:…»."""
+    out = []
+    for blk in sections["matematika"]:
+        n = len(POLE_VREZKA_RE.findall(blk.telo))
+        if n != 1:
+            out.append("%s: блок [%s] «%s» несёт %d врезок «> поле:», нужна ровно 1"
+                        % (sid, blk.tip, blk.mysl, n))
+    return out
+
+
+def _markdown_spisok_bloki(telo):
+    """Тело блока → списки пунктов, разбитые ТЕМ ЖЕ приёмом, что
+    `build_deck.render_md` (пустая строка разделяет markdown-блоки; блок, где
+    КАЖДАЯ строка начинается с «- », — список). Не голый regex по всему телу —
+    иначе абзац, где «- » встретилась внутри прозы не на своей строке, ложно
+    считался бы списком."""
+    out = []
+    for block in re.split(r"\n\s*\n", telo.strip("\n")):
+        lines = [ln.strip() for ln in block.split("\n") if ln.strip()]
+        if lines and all(ln.startswith("- ") for ln in lines):
+            out.append(lines)
+    return out
+
+
+def zakon_g3(sid, sections):
+    """Г-3 (двенадцатая): список из ОДНОГО пункта в [opredelenie]/[primer] на
+    экране («Текст слайда») запрещён. 🔴 Проверяет только эту половину правила —
+    «список ОБЯЗАТЕЛЕН при двух и более пунктах» не проверяется здесь намеренно
+    (см. докстрока файла выше и NE_PROVERYAYU_VSEGDA)."""
+    out = []
+    for blk in sections["tekst"]:
+        if blk.tip not in ("opredelenie", "primer"):
+            continue
+        for lst in _markdown_spisok_bloki(blk.telo):
+            if len(lst) == 1:
+                out.append("%s: [%s] «%s» несёт список из ОДНОГО пункта — запрещён при одном"
+                            % (sid, blk.tip, blk.mysl))
+    return out
+
+
+def zakon_g6(sid, sections):
+    """Г-6: в [primer]/[utverzhdenie]/[opredelenie] есть формула `$…$` —
+    проверено в «Математике», где эти блоки развёрнуты полностью."""
+    return ["%s: [%s] «%s» не несёт формулы $…$" % (sid, blk.tip, blk.mysl)
+            for blk in sections["matematika"]
+            if blk.tip in ("primer", "utverzhdenie", "opredelenie") and "$" not in blk.telo]
+
+
+def zakon_g7(sid, sections):
+    """Г-7: внутри одного блока не бывает двух жанровых ярлыков."""
+    out = []
+    for blk in sections["matematika"]:
+        n = len(ZHANROVYJ_YARLYK_ANY_RE.findall(blk.telo))
+        if n >= 2:
+            out.append("%s: блок [%s] «%s» несёт %d жанровых ярлыков" % (sid, blk.tip, blk.mysl, n))
+    return out
+
+
+def zakon_g8(sid, sections):
+    """Г-8 (переформулирован владельцем 12.08): двух НЕСУЩИХ блоков одного типа
+    не бывает; нарративов сколько угодно. Несущий = тип ≠ narrativ."""
+    tipy = [blk.tip for blk in sections["matematika"] if blk.tip != "narrativ"]
+    dubli = sorted(t for t, n in Counter(tipy).items() if n > 1)
+    if dubli:
+        return ["%s: несущих блоков типа %s больше одного — сливать в один со списком (Г-8/Г-3)"
+                % (sid, ", ".join(dubli))]
+    return []
+
+
+def zakon_g12(sid, params):
+    """Г-12: tip_verstki: polosa_* требует непустого illustracii."""
+    tv = params.get("tip_verstki") or ""
+    if tv.startswith("polosa_") and not (params.get("illustracii") or []):
+        return ["%s: tip_verstki '%s' без иллюстрации" % (sid, tv)]
+    return []
+
+
+# Законы, судящие РАЗБОР блоков одной карточки (нужен непустой raw_body, K3 —
+# слайд без текста — их не касается вовсе, объявлено в NE_PROVERYAYU).
+ZAKONY_BLOKOV = (
+    ("А6", "слайд из одного блока — блок обязан быть [narrativ]", zakon_a6),
+    ("А8", "[dokazatelstvo] — последний блок слайда", zakon_a8),
+    ("А9", "[opredelenie] — первое среди статусных блоков", zakon_a9),
+    ("А10", "[narrativ] не стоит между двумя ненарративными блоками", zakon_a10),
+    ("Г-1", "несущий блок в «Математике» открывается жанровым ярлыком", zakon_g1),
+    ("Г-2", "у каждого блока ровно одна врезка «> поле:mn»", zakon_g2),
+    ("Г-3", "список из одного пункта в [opredelenie]/[primer] запрещён", zakon_g3),
+    ("Г-6", "в [primer]/[utverzhdenie]/[opredelenie] есть формула $…$", zakon_g6),
+    ("Г-7", "внутри блока нет двух жанровых ярлыков", zakon_g7),
+    ("Г-8", "двух несущих блоков одного типа не бывает", zakon_g8),
+)
+
+# Законы, судящие ПОЛЯ ШАПКИ одной карточки — работают и на K3 (слайд без текста).
+ZAKONY_PARAMOV = (
+    ("Г-12", "tip_verstki: polosa_* требует непустого illustracii", zakon_g12),
+)
+
+# Реестр всех двенадцати ИМЕНОВАННО, в порядке таблицы захода — используется
+# только для печати вердикта (все двенадцать поимённо, п.2 критерия готовности);
+# сама проверка идёт через ZAKONY_BLOKOV/ZAKONY_PARAMOV/zakon_g15 выше.
+VSE_ZAKONY_NAZVANIYA = tuple(name for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV) + ("Г-15",)
+
+
+def zakon_g15(slide_order, info_by_sid):
+    """Г-15: слайд с нулём несущих блоков стоит только первым, последним, сам
+    несёт tip_verstki: razdelitel, либо стоит внутри непрерывного прогона
+    слайдов-без-несущих, который касается границы или содержит разделитель."""
+    n = len(slide_order)
+    zero = [info_by_sid[sid][0] == 0 for sid in slide_order]
+    is_razd = [info_by_sid[sid][1] == "razdelitel" for sid in slide_order]
+    out = []
+    for i, sid in enumerate(slide_order):
+        if not zero[i]:
+            continue
+        l = i
+        while l - 1 >= 0 and zero[l - 1]:
+            l -= 1
+        r = i
+        while r + 1 < n and zero[r + 1]:
+            r += 1
+        if not (l == 0 or r == n - 1 or any(is_razd[l:r + 1])):
+            out.append("%s: слайд без несущих блоков не на границе части и не рядом с разделителем" % sid)
+    return out
+
+
 def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=None):
-    """Одна карточка → список замечаний (пустой — карточка чиста)."""
+    """Одна карточка → (issues: [str] красные — старый гейт как был,
+    zakon_warns: {закон: [str]} жёлтые — заход zakony-v-gejt, никогда не красят,
+    g15_info: (n_несущих, tip_verstki) — сырьё для Г-15, судится на уровне лекции
+    целиком в check_lekcija, не здесь)."""
+    zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
+    g15_info = (0, None)
     issues = _check_lifecycle_block(text, sid)
     try:
         params, raw_body = parse_card(text, sid=sid)
     except FormatSlaida as e:
         issues.append("%s: карточка не парсится: %s" % (sid, e))
-        return issues
+        return issues, zakon_warns, g15_info
 
     for f in _polya_dlya_fazy(faza):
         if _unfilled(params.get(f)):
@@ -293,6 +518,9 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     issues.extend(_check_tip_idei(sid, params))
     issues.extend(_check_zagolovok_na_ekrane(sid, params, faza))
     issues.extend(_check_vvodit_opiraetsya(sid, params, faza))
+
+    for name, _, fn in ZAKONY_PARAMOV:
+        zakon_warns[name].extend(fn(sid, params))
 
     for name in params.get("illustracii") or []:
         if name not in illustracii_pool:
@@ -321,13 +549,13 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
                 "uzhe_vvedeno_ranee лекции" % (sid, termin, vvedeno))
 
     if not raw_body.strip():
-        return issues  # K3: слайд без текста — легален, дальше нечего проверять
+        return issues, zakon_warns, g15_info  # K3: слайд без текста — легален, дальше нечего проверять
 
     try:
         sections = bloki.parse_sections(raw_body, sid=sid)
     except bloki.FormatBlokov as e:
         issues.append(str(e))
-        return issues  # без разобранных секций состав/бюджет не проверить
+        return issues, zakon_warns, g15_info  # без разобранных секций состав/бюджет не проверить
 
     if sections["orphan_matematika"]:
         issues.append("%s: в разделе «Математика — развёрнуто» есть абзац вне блока: %r"
@@ -354,15 +582,28 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
             if n_words > budget_n:
                 issues.append("%s: бюджет слов превышен: %d > %s" % (sid, n_words, budget))
 
-    return issues
+    n_ness = sum(1 for blk in sections["matematika"] if blk.tip != "narrativ")
+    g15_info = (n_ness, params.get("tip_verstki"))
+
+    # Законы фазы 2 (заход zakony-v-gejt) судят ТЕЛА блоков — те написаны с выхода
+    # фазы 3 (полная проверка, faza is None); на --faza 1/2 тела ещё пустые или
+    # частичные, и проверка дала бы шум, а не находку.
+    if faza is None:
+        for name, _, fn in ZAKONY_BLOKOV:
+            zakon_warns[name].extend(fn(sid, sections))
+
+    return issues, zakon_warns, g15_info
 
 
 def check_lekcija(lekcija_dir, faza=None):
-    """Папка лекции → (issues: [str], n_slides: int). issues пуст — гейт зелёный."""
+    """Папка лекции → (issues: [str], n_slides: int, zakon_warns: {закон: [str]}).
+    issues пуст — гейт зелёный. zakon_warns — жёлтые находки захода zakony-v-gejt,
+    никогда не влияют на rc (см. докстрока ZAKONY_BLOKOV выше)."""
     lekcija_dir = Path(lekcija_dir)
+    zakon_warns_pusto = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV + (("Г-15", "", None),)}
     brief_path = lekcija_dir / "brief.md"
     if not brief_path.is_file():
-        return (["%s: brief.md не найден" % lekcija_dir], 0)
+        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto)
 
     brief_params, _ = parse_front_matter(brief_path.read_text(encoding="utf-8"), sid="brief.md")
     uzhe_vvedeno = {item.get("termin") for item in (brief_params.get("uzhe_vvedeno_ranee") or [])
@@ -373,7 +614,7 @@ def check_lekcija(lekcija_dir, faza=None):
     slajdy_dir = lekcija_dir / "slajdy"
     slide_paths = sorted(slajdy_dir.glob("*/slaid.md"))
     if not slide_paths:
-        return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0)
+        return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0, zakon_warns_pusto)
 
     texts, vvodit_by_sid = {}, {}
     for p in slide_paths:
@@ -387,10 +628,24 @@ def check_lekcija(lekcija_dir, faza=None):
             vvodit_by_sid[sid] = set()
 
     issues = []
+    zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
+    g15_info_by_sid = {}
     for p in slide_paths:
         sid = p.parent.name
-        issues.extend(check_slide(sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza))
-    return issues, len(slide_paths)
+        slide_issues, slide_warns, g15_info = check_slide(
+            sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza)
+        issues.extend(slide_issues)
+        for name, warns in slide_warns.items():
+            zakon_warns[name].extend(warns)
+        g15_info_by_sid[sid] = g15_info
+
+    # Г-15 судит ПОРЯДОК слайдов лекции (slide_order), не одну карточку — считаем
+    # только при полной проверке, тем же условием, что и остальные ZAKONY_BLOKOV
+    # (тела блоков нужны, чтобы посчитать несущие; на --faza 1/2 их ещё нет).
+    slide_order = [s for s in (brief_params.get("slide_order") or []) if s in g15_info_by_sid]
+    zakon_warns["Г-15"] = zakon_g15(slide_order, g15_info_by_sid) if faza is None and slide_order else []
+
+    return issues, len(slide_paths), zakon_warns
 
 
 def _pechat_slepyh_zon(faza):
@@ -400,6 +655,26 @@ def _pechat_slepyh_zon(faza):
     print("НЕ проверяю: %d пункт(ов) — ниже поимённо" % len(zony))
     for z in zony:
         print("  · %s" % z)
+
+
+ZAKONY_OPISANIYA = {name: opis for name, opis, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
+ZAKONY_OPISANIYA["Г-15"] = "слайд с нулём несущих блоков — только на границе части или рядом с разделителем"
+
+
+def _pechat_zakony(zakon_warns):
+    """Все двенадцать законов фазы 2 поимённо, с вердиктом (п.2 критерия
+    готовности захода zakony-v-gejt). Никогда не влияют на rc — см. докстрока
+    ZAKONY_BLOKOV: порог включения — жёлтое, не красное."""
+    print("ЗАКОНЫ ФАЗЫ 2 (жёлтое — находка, не гейт; %d из 12):" % len(VSE_ZAKONY_NAZVANIYA))
+    for name in VSE_ZAKONY_NAZVANIYA:
+        warns = zakon_warns.get(name, [])
+        opis = ZAKONY_OPISANIYA[name]
+        if warns:
+            print("  ⚠ %s (%s) — нарушителей %d:" % (name, opis, len(warns)))
+            for w in warns:
+                print("      · %s" % w)
+        else:
+            print("  ✓ %s (%s) — нарушителей 0" % (name, opis))
 
 
 def main():
@@ -413,7 +688,7 @@ def main():
                           "значения = полная проверка, как без флага")
     args = ap.parse_args()
 
-    issues, n = check_lekcija(args.lekcija, faza=args.faza)
+    issues, n, zakon_warns = check_lekcija(args.lekcija, faza=args.faza)
     rezhim = "выход фазы %d" % args.faza if args.faza else "полная проверка"
     if issues:
         print("КРАСНЫЙ (%s): проверено %d из %d карточек, замечаний %d" % (rezhim, n, n, len(issues)))
@@ -421,6 +696,7 @@ def main():
             print("  ✗ %s" % it)
     else:
         print("ЗЕЛЁНЫЙ (%s): проверено %d из %d карточек, замечаний 0" % (rezhim, n, n))
+    _pechat_zakony(zakon_warns)
     _pechat_slepyh_zon(args.faza)
     return 1 if issues else 0
 
