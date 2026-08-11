@@ -20,7 +20,6 @@ slide_order:
   - fundamentalnaya-gruppa
   - teorema-brauera
   - itogi
-  - itog
 title: Функторы
 oblozhka_zagolovok: Введение в теорию категорий
 oblozhka_sub: Лекция 2
