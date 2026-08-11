@@ -416,6 +416,7 @@ podgotovit "$R1"
 # ловушки нет, выбор канала на исход не влияет.
 GIT_ZONA_REPO="$R1" python3 "$T/zvat.py" "$GEN" "$R1" \
     _studio/zhurnal/arka bez-wt --branch osnova --zone "_generator/" \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --kanal terminal --opisanie "проба обычного режима" > "$T/plain.txt" 2>&1 || true
 
 [ -f "$R1/_studio/zhurnal/arka/kod_bez-wt.md" ] \
@@ -432,6 +433,7 @@ cp "$T/gz-src.py" "$R2/_generator/tools/git_zona.py"
 # --kanal app: здесь проверяется РАБОЧАЯ ПАПКА (--worktree) — канал app.
 GIT_ZONA_REPO="$R2" python3 "$T/zvat.py" "$GEN" "$R2" \
     _studio/zhurnal/arka s-wt --branch zahod/proba --zone "_generator/" \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --worktree probnaya --kanal app > "$T/wt.txt" 2>&1 || true
 WT="$T/repo-wt-wt/probnaya"
 
@@ -583,6 +585,7 @@ for TEMA in "fixt-a&b" "fixt-a;b" "fixt-a*b" "fixt-a\$b" "fixt-a|b" "fixt-it's" 
     rm -rf "$R4"; podgotovit "$R4" > /dev/null 2>&1
     GIT_ZONA_REPO="$R4" python3 "$T/zvat.py" "$GEN" "$R4" \
         _studio/zhurnal/arka "$TEMA" --branch osnova --zone "_generator/" \
+        --finalizirovano "ф1" --finalizirovano "ф2" \
         --kanal terminal --opisanie "проба метасимволов" > "$T/meta.txt" 2>&1 || true
     S=$(sed -n '/^cd .*claude -p/,/^```$/p' "$T/meta.txt" | sed '$d')
     if [ -z "$S" ]; then
@@ -628,6 +631,7 @@ for WTN in "../../pobeg" ".skrytaya" "s probelom" "-flag"; do
     cp "$T/gz-src.py" "$R5/_generator/tools/git_zona.py"
     GIT_ZONA_REPO="$R5" python3 "$T/zvat.py" "$GEN" "$R5" \
         _studio/zhurnal/arka wtn --branch zahod/wtn-proba --zone "_generator/" \
+        --finalizirovano "ф1" --finalizirovano "ф2" \
         --worktree "$WTN" --kanal app --opisanie "проба имени папки" > "$T/wtn.txt" 2>&1 && G=proshlo || G=otkaz
     if [ "$G" = "otkaz" ]; then
         printf '  ✅ имя рабочей папки [%s] отвергнуто\n' "$WTN"
@@ -652,10 +656,12 @@ podgotovit "$R6"
 cp "$T/gz-src.py" "$R6/_generator/tools/git_zona.py"
 GIT_ZONA_REPO="$R6" python3 "$T/zvat.py" "$GEN" "$R6" \
     _studio/zhurnal/arka pervyj --branch zahod/pervaya --zone "_generator/" \
+    --finalizirovano "ф1" --finalizirovano "ф2" \
     --worktree obshaya --kanal app --opisanie "первый заход" > /dev/null 2>&1 || true
 if [ -d "$T/repo-vetka-wt/obshaya" ]; then
     if GIT_ZONA_REPO="$R6" python3 "$T/zvat.py" "$GEN" "$R6" \
         _studio/zhurnal/arka vtoroj --branch zahod/sovsem-drugaya --zone "_generator/" \
+        --finalizirovano "ф1" --finalizirovano "ф2" \
         --worktree obshaya --kanal app --opisanie "второй заход" > "$T/vetka.txt" 2>&1
     then
         echo "  ❌ ПАПКА НА ЧУЖОЙ ВЕТКЕ ВЗЯТА МОЛЧА — заход соврёт про ветку при зелёном выводе"
@@ -763,6 +769,7 @@ printf '%s\n' '{{ТЕМА}} {{МОДЕЛЬ}} {{ВЕТКА}}' 'ЗОНА: {{ЗОН
     > "$R3/_studio/zhurnal/_TEMPLATE-zahod.md"
 if GIT_ZONA_REPO="$R3" python3 "$T/zvat.py" "$GEN" "$R3" \
         _studio/zhurnal/arka net-yakorya --branch osnova --zone "_generator/" \
+        --finalizirovano "ф1" --finalizirovano "ф2" \
         --kanal terminal --opisanie "проба без якоря" > "$T/net-yak.txt" 2>&1
 then
     echo "  ❌ ШАБЛОН БЕЗ ЯКОРЯ ПРОШЁЛ — заход уедет без строки про счётчик, молча"; FAIL=1
