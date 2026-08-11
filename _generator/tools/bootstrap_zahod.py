@@ -58,6 +58,7 @@ import check_zahod  # noqa: E402
 import check_sborki  # noqa: E402
 import korni  # noqa: E402
 import schet_nezakrytogo  # noqa: E402
+import modeli  # noqa: E402
 
 REPO_ROOT = korni.REPO  # .../materials — единая формула на все инструменты
 # Шаблон захода — один на репозиторий, у ИНФРА-корня реестра. Папку арки
@@ -611,7 +612,12 @@ def main(argv):
     p.add_argument("tema", help="короткий слаг темы → имя файла kod_<тема>.md")
     p.add_argument("--branch", required=True, help="ветка, на которой работает заход")
     p.add_argument("--zone", required=True, help="пути зоны (что МОЖНО менять), одной строкой")
-    p.add_argument("--model", default="Sonnet", help="модель (по умолчанию Sonnet)")
+    p.add_argument("--model", default="sonnet",
+                   help="модель — свободный ввод (sonnet/Sonnet/opus/Opus 5/haiku/"
+                        "fable/готовый ARN), разбирает `modeli.razobrat` (по "
+                        "умолчанию sonnet → Sonnet 5); принимаются также устаревшие "
+                        "имена таблицы (Opus 4.8, Sonnet 4.6) и ARN application-"
+                        "inference-profile целиком")
     # ФЛАГ, а не третий позиционный: позиционных уже два, и третий сделал бы
     # «описание не задано» неотличимым от «аргументы поехали» — опечатка в
     # порядке молча родила бы `kod_<описание>.md`. Флаг необязателен по природе
@@ -660,6 +666,18 @@ def main(argv):
                         "«## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ», её проверяет З11 "
                         "`check_zahod.py`")
     a = p.parse_args(argv)
+
+    # 🔴 Ш2 (заход `dveri-discipliny`) — разбор модели ДО любой записи на диск
+    # (тот же приём fail-fast, что у --finalizirovano/validate_slug ниже): под
+    # Bedrock слово в --model разворачивается в id без ключа и падает
+    # AccessDenied — отказ на нераспознаваемом вводе обязан случиться ЗДЕСЬ, не
+    # в терминале владельца после того, как заход уже собран. Таблица имя→ARN
+    # живёт ОДНИМ домом в `modeli.py`, а не в переменных окружения.
+    try:
+        model_kanon, model_arn = modeli.razobrat(a.model)
+    except ValueError as e:
+        print(f"ОШИБКА: {e}", file=sys.stderr)
+        return 1
 
     # 🔴 Ш2.1 (заход `dveri-discipliny`) — ДВЕРЬ: без --finalizirovano×2 заход
     # физически не собирается. Проверка ДО validate_slug (fail fast, до любой
@@ -1094,7 +1112,7 @@ def main(argv):
         .replace(ЯКОРЬ_FINALIZIROVANO, ЗАМЕНА_FINALIZIROVANO)
         .replace(ЯКОРЬ_MARKER, ЗАМЕНА_MARKER)
         .replace("{{ТЕМА}}", a.tema)
-        .replace("{{МОДЕЛЬ}}", a.model)
+        .replace("{{МОДЕЛЬ}}", model_kanon)
         .replace("{{ВЕТКА}}", a.branch)
         .replace("{{ЗОНА}}", zone)
         .replace("{{КОНТРАКТ_МЕСТО}}", mesto)
@@ -1168,8 +1186,8 @@ def main(argv):
     print(f"═══ конец check_sborki.py на {dst.name} ═══")
 
     print()
+    print(f"Модель: {model_kanon} → {model_arn}")
     if a.kanal == "terminal":
-        model_l = a.model.lower()
         prompt_text = (
             f"Твой заход — файл {dst}. Прочитай ТОЛЬКО его и то, что он "
             "называет; остальной проект не изучай. План/вопросы/отчёт пиши в этот "
@@ -1189,7 +1207,7 @@ def main(argv):
         # цитирует под POSIX sh, а zsh с ней согласен.
         terminal_line = (
             f'cd {shlex.quote(str(rabochaya))} && claude -p --verbose '
-            f'--output-format stream-json --model {shlex.quote(model_l)} '
+            f'--output-format stream-json --model {shlex.quote(model_arn)} '
             f'--dangerously-skip-permissions {shlex.quote(prompt_text)} '
             f'< /dev/null 2>&1 | tee {shlex.quote(log_path)} '
             f'| python3 -u -c {POKAZ_POTOKA}'
@@ -1240,7 +1258,7 @@ def main(argv):
         print(" здесь, а не пишется по памяти: правило жило в каноне и всё равно забывалось.)")
         print()
         print("```")
-        print(f"Модель: {a.model} — <одна фраза почему; см. шапку захода>.")
+        print(f"Модель: {model_kanon} — <одна фраза почему; см. шапку захода>.")
         print()
         # 🔴 `rabochaya` — МЕСТО РАБОТЫ ДЛЯ КОДА (в worktree-режиме это папка
         # worktree), а НЕ место файла: `dst` печатается отдельной строкой ниже и
