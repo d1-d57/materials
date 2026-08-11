@@ -6,11 +6,14 @@ uroven: 7
 otvet: 225
 proverka: Mantel [n^2/4]=225; perebor maksimuma na 6 vershinah podtverdil formulu, 2026-07-30
 status: gotova
-istochnik: podborka na vozobnovlenie
+istochnik: klassika (teorema Mantelya); prishla iz oblachnogo chata v "podborke na vozobnovlenie", pervoistochnik ne zafiksirovan
 ---
 
 ## Условие
 В классе 30 учеников, и никакие трое из них не дружат попарно. Какое наибольшее число пар друзей может быть в классе?
+
+## Подсказка
+Ответ здесь состоит из двух половин, и одной мало. Нужна оценка «больше нельзя» И пример, на котором столько пар достигается. Начните с примера: попробуйте малые случаи — четыре человека, шесть, восемь — и поймите, как устроен наилучший пример. Оценку стройте уже под него.
 
 ## Ответ
 225.

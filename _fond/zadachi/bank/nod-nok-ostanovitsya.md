@@ -6,7 +6,7 @@ uroven: 7
 bez_otveta: da
 proverka: proizvedenie sohranyaetsya, summa ne ubyvaet, ravenstvo tolko pri delimosti — perebor a,b<60, 2026-08-06
 status: gotova
-istochnik: kandidatskij nabor "Zanyatie 4"
+istochnik: klassika (NOD+NOK, monotonnaya velichina); prishla iz oblachnogo chata v nabore "Zanyatie 4", pervoistochnik ne zafiksirovan
 ---
 
 ## Условие
