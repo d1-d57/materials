@@ -687,6 +687,7 @@ cp "$REPO/.githooks/pre-commit" "$R7/.githooks/pre-commit"
 cp "$TOOLS/check_tool_contract.py" "$R7/_generator/tools/check_tool_contract.py"
 cp "$TOOLS/check_uroki.py" "$R7/_generator/tools/check_uroki.py"
 cp "$TOOLS/check_ves.py" "$R7/_generator/tools/check_ves.py"
+cp "$TOOLS/check_marker.py" "$R7/_generator/tools/check_marker.py"
 chmod +x "$R7/.githooks/pre-commit"
 
 # Флаг красный/зелёный — файл на диске, не переменная окружения: хук зовёт

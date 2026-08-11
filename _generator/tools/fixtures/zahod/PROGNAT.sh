@@ -6,7 +6,7 @@
 # Запуск:  sh _generator/tools/fixtures/zahod/PROGNAT.sh
 # Ожидание: ФИКСТУРЫ ЗЕЛЁНЫЕ, exit 0.
 #
-# ЛОВУШЕК ТРИДЦАТЬ ОДНА (задание требовало не менее девяти):
+# ЛОВУШЕК ТРИДЦАТЬ ТРИ (задание требовало не менее девяти):
 #   1. 🔴 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ НА ЖИВЫХ ФАЙЛАХ — главная ловушка фикстуры:
 #      она сторожит не поломку, а излишнюю строгость, от которой линтер отключат.
 #      ⚠ С 08.08 — с одним ОБЪЯВЛЕННЫМ вычетом: З10 (см. ловушку 24 и докстринг
@@ -72,6 +72,12 @@
 #  31. 🔴 (заход `modeli-arn`) та же команда НЕ несёт «--model sonnet» словом —
 #      регрессия на `model_l = a.model.lower()`, единственную причину, по
 #      которой ARN раньше случайно проезжал невредимым.
+#  32. 🔴 (заход `zapusk-samodostatochen`, урок 12) --worktree в песочнице — блок
+#      несёт СТРОКУ `git_zona.py worktree add` РАНЬШЕ строки `cd … && claude` в
+#      ТОМ ЖЕ блоке ```` ``` ````, а не только «строка где-то есть».
+#  33. 🔴 (заход `zapusk-samodostatochen`, урок 12) --worktree НЕ задан — строки
+#      `worktree add` в выводе нет вовсе (регрессия: лишняя строка вреднее
+#      отсутствующей — так решил владелец на интервью).
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
 REPO_ROOT=$(cd "$TOOLS/../.." && pwd)
@@ -664,5 +670,50 @@ echo "$OUT30" | grep -q -- "--model sonnet" && {
   echo "  под Bedrock это AccessDenied. Вывод:"
   echo "$OUT30"; exit 1; }
 echo "  ✅ ловушка 31: «--model sonnet» словом в команде отсутствует"
+
+# ── ловушки 32-33: урок 12 — worktree add ПЕРЕД стартовой командой, в ОДНОМ блоке ──
+# 🔴 ЖИВОЙ ПРОГОН bootstrap_zahod.py на реальном объекте, не пересказ. `_v_pesochnice()`
+# определяет песочницу через `/proc/mounts` (`git_zona.in_sandbox`), которого на
+# машине, где гоняется эта фикстура, нет вовсе — значит настоящую песочницу
+# отсюда не воспроизвести, и обёртка подменяет ТОЛЬКО эту одну функцию, оставляя
+# весь остальной боевой код `bootstrap_zahod.py` нетронутым (импорт по пути, не
+# копия — иначе ловушка проверяла бы саму себя).
+cat > "$T/zvat_sand.py" <<PY
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("bz", "$TOOLS/bootstrap_zahod.py")
+bz = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(bz)
+bz._v_pesochnice = lambda: True
+sys.exit(bz.main(sys.argv[1:]) or 0)
+PY
+
+echo "── ловушка 32: 🔴 --worktree в песочнице — worktree add РАНЬШЕ cd … && claude, в одном блоке"
+R32="$T/repo32"; sobrat_repo "$R32"
+OUT32=$(GIT_ZONA_REPO="$R32" python3 "$T/zvat_sand.py" _studio/zhurnal/proba proba32 \
+    --branch proba32-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" --worktree sand32 2>&1) || {
+  echo "❌ ЛОВУШКА 32: bootstrap_zahod.py --worktree в песочнице упал. Вывод:"; echo "$OUT32"; exit 1; }
+IDX_ADD=$(echo "$OUT32" | grep -n "git_zona.py worktree add" | head -1 | cut -d: -f1)
+IDX_CD=$(echo "$OUT32" | grep -n "&& claude " | head -1 | cut -d: -f1)
+[ -n "$IDX_ADD" ] || {
+  echo "❌ ЛОВУШКА 32: строки «worktree add» в выводе нет вовсе. Вывод:"; echo "$OUT32"; exit 1; }
+[ -n "$IDX_CD" ] || {
+  echo "❌ ЛОВУШКА 32: строки «cd … && claude» в выводе нет вовсе. Вывод:"; echo "$OUT32"; exit 1; }
+[ "$IDX_ADD" -lt "$IDX_CD" ] || {
+  echo "❌ ЛОВУШКА 32: «worktree add» стоит НЕ РАНЬШЕ «cd … && claude» (строки $IDX_ADD/$IDX_CD) — "
+  echo "  урок 12 не закрыт, cd упадёт раньше, чем папка заведена. Вывод:"; echo "$OUT32"; exit 1; }
+echo "  ✅ ловушка 32: «worktree add» (строка $IDX_ADD) РАНЬШЕ «cd … && claude» (строка $IDX_CD)"
+
+echo "── ловушка 33: 🔴 --worktree НЕ задан — строки «worktree add» в выводе нет вовсе"
+R33="$T/repo33"; sobrat_repo "$R33"
+OUT33=$(GIT_ZONA_REPO="$R33" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba33 \
+    --branch proba33-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
+  echo "❌ ЛОВУШКА 33: bootstrap_zahod.py без --worktree упал. Вывод:"; echo "$OUT33"; exit 1; }
+echo "$OUT33" | grep -q "worktree add" && {
+  echo "❌ ЛОВУШКА 33: строка «worktree add» напечаталась без --worktree — лишняя "
+  echo "  команда там вреднее отсутствующей (решение владельца на интервью). Вывод:"
+  echo "$OUT33"; exit 1; }
+echo "  ✅ ловушка 33: без --worktree строки «worktree add» нет"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
