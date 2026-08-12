@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 65
 tip_verstki: polosa_gorizontalnaya
-liniya: 58
+liniya: 82
 matematika_iz: [Векторные пространства]
 illustracii: [izomorfizmy-primery]
 vvodit: [изоморфизм векторных пространств]
@@ -31,10 +31,11 @@ opiraetsya_na:
   - {termin: линейное отображение, vvedeno: vektornye-prostranstva}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 38
-mezhstrochye: 1.3
-otstup_bloka: 14
+kegl_px: 37
+mezhstrochye: 1.422
+otstup_bloka: 19.8
 obosnovanie_verstki: было пусто в правой полосе — тип сменён на горизонтальную, полоса получила иллюстрацию с примерами. Кегль 38 сохранён, вместимость добрана межстрочьем
+podbor_avto: 2e8b46c64157|kegl_px=37|mezhstrochye=1.422|otstup_bloka=19.8|liniya=82
 ---
 
 ## Математика — развёрнуто
