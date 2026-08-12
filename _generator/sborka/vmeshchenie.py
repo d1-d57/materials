@@ -381,6 +381,22 @@ _JS_SOLVE = r"""
     return rec;
   }
 
+  // 🔴 ОБРЕЗ ПО ШИРИНЕ (тот же дефект, что высота, другая ось). Неразрывный атом
+  // — формула KaTeX, длинное слово — шире колонки уезжает за правый край, а
+  // `scrollHeight<=clientHeight` при этом ЗЕЛЁН: перенос не случается, высота не
+  // растёт. Найдено ГЛАЗАМИ на собранной Л2 при зелёном гейте вмещения.
+  // Зависит и от кегля, и от liniya, поэтому считается внутри пробы, но только
+  // когда проба влезла по высоте (иначе она всё равно отброшена).
+  function perelivX() {
+    let mx = 0;
+    for (const el of zone.querySelectorAll('p, li, div')) {
+      if (el.querySelector('p, li, div')) continue;   // только листья
+      const over = el.scrollWidth - el.clientWidth;
+      if (over > mx) mx = over;
+    }
+    return mx;
+  }
+
   const textLen = zone.textContent.replace(/\s+/g, ' ').trim().length;
   const memo = new Map();
   const trials = [];
@@ -400,11 +416,14 @@ _JS_SOLVE = r"""
     if (grid && liniya != null) grid.style.setProperty('--liniya', liniya + '%');
     const sh = zone.scrollHeight, ch = zone.clientHeight;
     const fill = ch ? (100 * sh / ch) : null;
-    const fits = fill != null && fill <= 100;
+    const vysotaOk = fill != null && fill <= 100;
+    // порог 4px — субпиксельный шум KaTeX (см. gejt_vmeshcheniya.PORAG_SHIRINY)
+    const perX = vysotaOk ? perelivX() : 0;
+    const fits = vysotaOk && perX <= 4;
     const typ = fits ? tipografika() : null;
     const ch2 = fits ? chertezh(liniya) : null;
     const rec = {kegl, lh, blokKoef, blok: blokPx, liniya, scrollHeight: sh, clientHeight: ch,
-                 clipped: sh > ch, fill, fits, typ, dyhanie: typ ? typ.dyhanie : null,
+                 clipped: sh > ch, fill, fits, pereliv_x: perX, typ, dyhanie: typ ? typ.dyhanie : null,
                  chertezh_ploshchad: ch2 ? ch2.ploshchad : null,
                  chertezh_podpis_min: ch2 ? ch2.podpis_min : null,
                  chertezh_panelej: ch2 ? ch2.panels : 0};
@@ -730,6 +749,24 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
       // вычетом padding'а `.zone.copy`, т.е. ровно та ширина, по которой
       // браузер реально переносит строки.
       const cw = zone.clientWidth;
+      // 🔴 ОБРЕЗ ПО ШИРИНЕ. Высота — не единственная ось, по которой
+      // `overflow:hidden` съедает текст: неразрывный атом (формула KaTeX, длинное
+      // слово) шире колонки уезжает за правый край, а `scrollHeight<=clientHeight`
+      // при этом ЗЕЛЁН — перенос строки просто не случается, высота не растёт.
+      // Найдено глазами на собранной Л2: три слайда ехали за край при зелёном
+      // гейте (`centr-gruppy` +252px, `vektornye-prostranstva` +724px,
+      // `zamena-bazisa` +93px). Лечится НЕ типографикой: атом 1544px в зону
+      // 825px не влезет ни на одном кегле — автор обязан разбить строку, потому
+      // это и гейт, а не ещё одна ручка солвера.
+      let perelivX = 0, perelivChto = null;
+      for (const el of zone.querySelectorAll('p, li, div')) {
+        if (el.querySelector('p, li, div')) continue;   // только листья
+        const over = el.scrollWidth - el.clientWidth;
+        if (over > perelivX) {
+          perelivX = over;
+          perelivChto = (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 50);
+        }
+      }
       // Э2.1: `clientWidth/clientHeight` включают padding (`.zone.copy` — 46/64px),
       // а строки переносятся по КОНТЕНТНОЙ ширине и укладываются в КОНТЕНТНУЮ
       // высоту. Смете нужен контентный бокс, поэтому padding вычитается здесь,
@@ -763,7 +800,8 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
               kegl_px: isFinite(keglPx) ? keglPx : null,
               fill: ch ? (100 * sh / ch) : null,
               content_fill: ch ? (100 * contentExtent / ch) : null,
-              n_blocks: blocks.length, dyhanie: dyhanie};
+              n_blocks: blocks.length, dyhanie: dyhanie,
+              pereliv_x: perelivX, pereliv_chto: perelivChto};
     }
     """
     r = page.evaluate(js, {"kegl": kegl, "lh": lh, "blok": blok})
