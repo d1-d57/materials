@@ -32,11 +32,11 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 kegl_px: 37
-mezhstrochye: 1.422
-otstup_bloka: 19.8
+mezhstrochye: 1.496
+otstup_bloka: 23.6
 obosnovanie_verstki: горизонтальная полоса сменена на вертикальную по прямому указанию владельца — так текст влезает. Кегль 38, межстрочье дышащее, картинка держит полную высоту полосы
 zagolovok_snyat_namerenno: da
-podbor_avto: 40f98b7a5723|kegl_px=37|mezhstrochye=1.422|otstup_bloka=19.8|liniya=74.68
+podbor_avto: 33614bed89eb|kegl_px=37|mezhstrochye=1.496|otstup_bloka=23.6|liniya=74.68
 ---
 
 ## Математика — развёрнуто
@@ -59,21 +59,24 @@ podbor_avto: 40f98b7a5723|kegl_px=37|mezhstrochye=1.422|otstup_bloka=19.8|liniya
 
 ## Текст слайда — сжато
 ### [narrativ] отображение раскладывается по базису и становится матрицей
+
 Выберем базисы в $V$ и $W\text{.}$ Тогда линейное $A\colon V\to W$ записывается матрицей $(a_{ij})\text{:}$
 
 {.formula} $Ae_j=\sum_i a_{ij}e_i$
 
 ### [utverzhdenie] выбор базиса задаёт функтор
-Построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}$ где $\mathbf{Mat}\colon$ объекты — числа, $\mathbf{Mat}(n,m)$ — матрицы размера $m\times n$
 
-{.formula} $F\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}\qquad FV=\dim V\text{,}\qquad FA=(a_{ij})$
+{@2} Построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}$ где $\mathbf{Mat}\colon$ объекты — числа, $\mathbf{Mat}(n,m)$ — матрицы размера $m\times n$
 
-{.formula} $F(A\circ B)=FA\cdot FB\text{,}\qquad F1_V=E$
+{@2 .formula} $F\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}\qquad FV=\dim V\text{,}\qquad FA=(a_{ij})$
+
+{@2 .formula} $F(A\circ B)=FA\cdot FB\text{,}\qquad F1_V=E$
 
 ### [narrativ] замена базиса связывает два функтора
-Другой выбор базисов даёт другой функтор; связывают их матрицы перехода
 
-{.formula} $GA=M_W\cdot FA\cdot M_V^{-1}$
+{@3} Другой выбор базисов даёт другой функтор; связывают их матрицы перехода
+
+{@3 .formula} $GA=M_W\cdot FA\cdot M_V^{-1}$
 
 ## Правки
 - 2026-08-12 · 🔴 **перед формальной частью добавлена словесная рамка** «построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}$» — в обоих разделах. Дословно: *«Теперь замена базиса. Выберем базис, тогда линейное отображение записывается матрицей. Категория. У нас есть функтор. Но опять, мы хотим — надо, может быть, сказать словами чуть-чуть. То, что рассмотрим функтор, построим функтор из вект-из в матрицы. Если есть место»*. Условие «если есть место» проверено: `tip_verstki: polosa_vertikalnaya`, `liniya: 66` — тексту отдано 66 % ширины, рядом стоит `kvadrat-zameny-bazisa`, поэтому взята РОВНО одна строка, и она вплетена в существующую строку про $\mathbf{Mat}$, а не добавлена отдельным абзацем. Цель функтора теперь названа словами ДО того, как появляется $F$: раньше стрелка $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}$ впервые возникала внутри формулы

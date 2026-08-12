@@ -27,7 +27,7 @@ minuty: 7
 vazhnost: opornyj
 byudzhet_slov: 90
 tip_verstki: polosa_gorizontalnaya
-liniya: 75.4
+liniya: 67
 matematika_iz: [Категория]
 illustracii: [funktor-na-podmnozhestvah]
 vvodit: [функтор]
@@ -35,9 +35,10 @@ opiraetsya_na:
   - {termin: категория, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 37
-mezhstrochye: 1.2
-otstup_bloka: 8.5
+kegl_px: 32
+mezhstrochye: 1.15
+otstup_bloka: 5.5
+verstka_reshena: da
 podbor_avto: 48fe12f05130|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=75.4
 ---
 ## Математика — развёрнуто

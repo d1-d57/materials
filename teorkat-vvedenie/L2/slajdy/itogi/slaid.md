@@ -34,7 +34,7 @@ obosnovanie_verstki: новый слайд с текстовыми итогам�
 kegl_px: 41
 mezhstrochye: 1.57
 otstup_bloka: 30.3
-podbor_avto: 895e3e6cc05b|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
+podbor_avto: de7127e6bc70|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 ---
 
 ## Математика — развёрнуто
@@ -48,6 +48,7 @@ podbor_avto: 895e3e6cc05b|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 
 ## Текст слайда — сжато
 ### [narrativ] что мы видели
+
 - конструкции сравнивают **вместе с действием на** $\mathcal C(A,B)$
 - совпадать на объектах и быть разными — бывает: $\mathrm{Id}\not\cong(-)^*\text{,}$ хотя $V\cong V^*\text{;}$ а $\mathrm{Id}\cong(-)^{**}$
 - конструкции бывают запрещены — и запрет доказывается одним приёмом

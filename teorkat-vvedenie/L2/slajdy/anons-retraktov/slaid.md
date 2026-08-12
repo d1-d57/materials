@@ -35,10 +35,10 @@ opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: [ретракт, фундаментальная группа]
 status: v_deke
-kegl_px: 39
+kegl_px: 41
 mezhstrochye: 1.57
-otstup_bloka: 28.9
-podbor_avto: 847a7948dac1|kegl_px=39|mezhstrochye=1.57|otstup_bloka=28.9
+otstup_bloka: 30.3
+podbor_avto: 204b730b03b6|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 ---
 ## Математика — развёрнуто
 ### [narrativ] куда мы идём — инструмент вместо изоморфизма, и топология в конце
@@ -48,6 +48,7 @@ podbor_avto: 847a7948dac1|kegl_px=39|mezhstrochye=1.57|otstup_bloka=28.9
 
 ## Текст слайда — сжато
 ### [narrativ] куда мы идём — инструмент вместо изоморфизма, и топология в конце
+
 **Теорема Брауэра о неподвижной точке** — известное утверждение топологии, доказательство было чисто аналитическим
 
 Эйленберг и Маклейн переписали его алгебраически — с этого началась теория категорий

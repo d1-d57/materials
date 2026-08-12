@@ -33,10 +33,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: иллюстрация снята («непонятно в принципе нарисовано»), владелец просил отдать освободившееся место тексту и заголовку — только текст. Типографику подбирает солвер
-kegl_px: 38
-mezhstrochye: 1.2
-otstup_bloka: 8.7
-podbor_avto: adbf471a76bf|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
+kegl_px: 39
+mezhstrochye: 1.348
+otstup_bloka: 16.9
+podbor_avto: fd65d9873017|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9
 ---
 
 ## Математика — развёрнуто
@@ -60,18 +60,21 @@ podbor_avto: adbf471a76bf|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
 
 ## Текст слайда — сжато
 ### [opredelenie] двойственное пространство
+
 {.formula} $V^*=\{\varphi\colon V\to\mathbb R\ \text{линейное}\}=\mathbf{Vect}_{\mathbb R}(V,\mathbb R)$
 
 ### [primer] чем бывают функционалы
-- на $\mathbb R^3\colon$ $(x_1,x_2,x_3)\mapsto 3x_1-x_2$
+
+{@2} - на $\mathbb R^3\colon$ $(x_1,x_2,x_3)\mapsto 3x_1-x_2$
 - на многочленах: $p\mapsto p(0)$ и $p\mapsto\int_0^1p$
 
 ### [utverzhdenie] двойственность — функтор
-$(-)^*\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Vect}^{\mathrm{iso}}\text{,}$ $V\mapsto V^*$
 
-Изоморфизм $f\colon V\to W$ и функционал $\psi\in V^*$ дают
+{@3} $(-)^*\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Vect}^{\mathrm{iso}}\text{,}$ $V\mapsto V^*$
 
-{.formula} $f^*\colon V^*\to W^*\text{,}\qquad f^*(\psi)=\psi\circ f^{-1}$
+{@3} Изоморфизм $f\colon V\to W$ и функционал $\psi\in V^*$ дают
+
+{@3 .formula} $f^*\colon V^*\to W^*\text{,}\qquad f^*(\psi)=\psi\circ f^{-1}$
 
 ## Правки
 - 2026-08-12 · 🔴 **строка с линейной структурой на $V^*$ СНЯТА с экрана.** Дословно: *«по поводу первого вопроса я согласен. Я согласен, что нужно сделать — убрать эту строку в 30 слайде, просто убрать, как устроено сложение и умножение на функционалах. Это мы уже много раз проговаривали»*. Ушла формула $(\varphi+\psi)(v)=\varphi(v)+\psi(v)$, $(c\varphi)(v)=c\varphi(v)$; в «Математике» она заменена отсылкой, потому что операции переехали в ОБЩЕМ виде на `vektornye-prostranstva` («две функции на одном множестве складываются поточечно и умножаются на скаляр») — та правка сделана этим же заходом. Определение $V^*=\mathbf{Vect}_{\mathbb R}(V,\mathbb R)$ на месте: его владелец хвалил отдельно

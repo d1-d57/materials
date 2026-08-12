@@ -36,7 +36,7 @@ mezhstrochye: 1.2
 otstup_bloka: 8.5
 obosnovanie_verstki: среднее текста плюс новая иллюстрация со сложением векторов — вертикальная полоса. Полоса на месте, вместимость добрана типографикой, кегль поднят до 40
 zagolovok_snyat_namerenno: da
-podbor_avto: 66ccdff31ffd|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68.99
+podbor_avto: c5eb4b4f70f4|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68.99
 ---
 
 ## Математика — развёрнуто
@@ -55,6 +55,7 @@ podbor_avto: 66ccdff31ffd|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68
 
 ## Текст слайда — сжато
 ### [opredelenie] векторные пространства и линейные отображения
+
 **Векторное пространство** над $\mathbb R$ — множество $V$ с операциями $+\colon V\times V\to V$ и $\cdot\colon\mathbb R\times V\to V\text{,}$ для которых
 
 {.formula} $u+v=v+u\text{,}\quad (u+v)+w=u+(v+w)$
@@ -66,7 +67,8 @@ podbor_avto: 66ccdff31ffd|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68
 {.formula} $\lambda(u+v)=\lambda u+\lambda v\text{,}\quad (\lambda+\mu)v=\lambda v+\mu v$
 
 ### [primer] какие бывают векторные пространства
-- наборы $(x_1,\dots,x_n)\colon$ $\mathbb R^n$ и $\mathbb C^n$ — $(x_i)+(y_i)=(x_i+y_i)\text{,}$ $\lambda(x_i)=(\lambda x_i)$
+
+{@2} - наборы $(x_1,\dots,x_n)\colon$ $\mathbb R^n$ и $\mathbb C^n$ — $(x_i)+(y_i)=(x_i+y_i)\text{,}$ $\lambda(x_i)=(\lambda x_i)$
 - параллельные переносы пространства
 - функции на одном множестве: многочлены степени $\le n$ и $\mathbb R^X=\{f\colon X\to\mathbb R\}$ при конечном $X$ — $(f+g)(x)=f(x)+g(x)\text{,}$ $(\lambda f)(x)=\lambda\,f(x)$
 

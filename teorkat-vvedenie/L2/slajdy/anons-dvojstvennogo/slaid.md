@@ -35,10 +35,10 @@ opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: [двойственное пространство, канонический изоморфизм]
 status: v_deke
-kegl_px: 40
-mezhstrochye: 1.496
-otstup_bloka: 25.5
-podbor_avto: 6fb229ccb2fc|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5
+kegl_px: 41
+mezhstrochye: 1.57
+otstup_bloka: 30.3
+podbor_avto: ef2cb728b5d7|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 ---
 ## Математика — развёрнуто
 ### [narrativ] куда мы идём — конструкция $V\mapsto V^*$ и чего ей не хватает
@@ -48,6 +48,7 @@ podbor_avto: 6fb229ccb2fc|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5
 
 ## Текст слайда — сжато
 ### [narrativ] куда мы идём — конструкция $V\mapsto V^*$ и чего ей не хватает
+
 Для векторных пространств есть конструкции, аналогичные комбинаторным видам
 
 Одна из них сопоставляет пространству $V$ его **двойственное** пространство $V^*$

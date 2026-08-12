@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 50
 tip_verstki: polosa_vertikalnaya
-liniya: 71.83
+liniya: 68.99
 matematika_iz: [Центр группы]
 illustracii: [centr-i-ego-obraz]
 vvodit: []
@@ -35,7 +35,7 @@ mezhstrochye: 1.348
 otstup_bloka: 16.9
 obosnovanie_verstki: среднее текста плюс иллюстрация — вертикальная полоса. Полоса подвинута с 67 на 66: этого хватило, чтобы поднять кегль до 40 при дышащем межстрочье, слайд перестал резаться
 zagolovok_snyat_namerenno: da
-podbor_avto: 887fcbe3f8e6|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9|liniya=71.83
+podbor_avto: acb93abea025|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9|liniya=68.99
 ---
 
 ## Математика — развёрнуто
@@ -58,21 +58,24 @@ podbor_avto: 887fcbe3f8e6|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9|liniya
 
 ## Текст слайда — сжато
 ### [utverzhdenie] функтора центра не существует
+
 $G\mapsto Z(G)$ до функтора $\mathbf{Grp}\to\mathbf{Grp}$ **не продолжается**
 
 Есть половина на объектах, нет $\mathbf{Grp}(G,H)\to\mathbf{Grp}(ZG,ZH)$
 
 ### [primer] две группы, два гомоморфизма и тождественная композиция
-$Z(\mathbb Z_2)=\mathbb Z_2\text{,}$ а $Z(S_3)=\{e\}$
 
-$s\colon\mathbb Z_2\to S_3\text{,}$ $1\mapsto(1\,2)\text{,}$ и $\mathrm{sgn}\colon S_3\to\mathbb Z_2\colon$ $\mathrm{sgn}\circ s=\mathrm{id}$
+{@2} $Z(\mathbb Z_2)=\mathbb Z_2\text{,}$ а $Z(S_3)=\{e\}$
+
+{@2} $s\colon\mathbb Z_2\to S_3\text{,}$ $1\mapsto(1\,2)\text{,}$ и $\mathrm{sgn}\colon S_3\to\mathbb Z_2\colon$ $\mathrm{sgn}\circ s=\mathrm{id}$
 
 ### [dokazatelstvo] функтор дал бы тождество через тривиальную группу
-Предположим, что функтор $Z$ существует. Тогда
 
-{.formula} $Z(\mathrm{sgn})\circ Z(s)=\mathrm{id}_{\mathbb Z_2}\colon\quad\mathbb Z_2\to\{e\}\to\mathbb Z_2$
+{@3} Предположим, что функтор $Z$ существует. Тогда
 
-**Противоречие**
+{@3 .formula} $Z(\mathrm{sgn})\circ Z(s)=\mathrm{id}_{\mathbb Z_2}\colon\quad\mathbb Z_2\to\{e\}\to\mathbb Z_2$
+
+{@3} **Противоречие**
 
 ## Правки
 - 2026-08-12 · 🔴 **правки надиктовки «Сборка 3»: доказательство и пример приведены к той же рамке, что на `inyekcii`** — *«теперь с центром группы. Ну то же самое. То есть надо как бы структуру какую-то навести»*. Стало: «Предположим, что существует функтор… Придём к противоречию» → выкладка → слово **«Противоречие»**. Он сам заметил, что фраза «пусть существует функтор» здесь была, а на инъекциях её не было (*«на втором, например, в центре группы у тебя здесь есть, а тут этого нет фразы»*) — теперь оба слайда идут одним ходом. Снята фраза «роль пустого множества играет тривиальная группа»: тот же осуждённый жанр «идея доказательства словами», а разница видна из выкладки. Пример переписан порядком «рассмотрим группы… рассмотрим вложение и знак», отсылка «та же пара, что на инъекциях» уехала в голос
