@@ -32,9 +32,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: горизонтальная полоса по прямому указанию владельца: у неё большой запас по высоте и её можно двигать. Текста мало — кегль поднят до канонного потолка 44, полоса оставлена во всю высоту. Заголовок обязателен: без него непонятно, о чём слайд
-kegl_px: 44
-mezhstrochye: 1.4
-otstup_bloka: 20
+kegl_px: 35
+mezhstrochye: 1.496
+otstup_bloka: 22.3
+podbor_avto: 99d27cc4ba9c|kegl_px=35|mezhstrochye=1.496|otstup_bloka=22.3
 ---
 
 ## Математика — развёрнуто

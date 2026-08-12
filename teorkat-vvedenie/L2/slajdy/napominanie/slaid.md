@@ -32,9 +32,10 @@ bez_opredeleniya_namerenno: []
 status: v_deke
 zagolovok_snyat_namerenno: da
 obosnovanie_verstki: иллюстрация снята по указанию владельца («на первом слайде не должно быть никакой картинки»), полосы без картинки не бывает — значит только текст. Типографику подбирает солвер
-kegl_px: 41
-mezhstrochye: 1.57
-otstup_bloka: 30.3
+kegl_px: 38
+mezhstrochye: 1.348
+otstup_bloka: 16.5
+podbor_avto: 9d18c1e51f23|kegl_px=38|mezhstrochye=1.348|otstup_bloka=16.5
 ---
 
 ## Математика — развёрнуто

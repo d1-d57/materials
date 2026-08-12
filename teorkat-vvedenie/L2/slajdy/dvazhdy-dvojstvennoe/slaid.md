@@ -33,9 +33,10 @@ bez_opredeleniya_namerenno: []
 status: v_deke
 zagolovok_snyat_namerenno: da
 obosnovanie_verstki: среднее текста плюс конкретный квадрат для V и W — вертикальная полоса. Полоса расширена с 66 до 54 (квадрат при узкой полосе висел в пустоте), а освободившийся запас текста отдан кеглю: 38 → 44, канонный потолок. Слайд не резался ни до, ни после
-kegl_px: 44
-mezhstrochye: 1.45
-otstup_bloka: 24
+kegl_px: 37
+mezhstrochye: 1.274
+otstup_bloka: 12.3
+podbor_avto: f52d6410358e|kegl_px=37|mezhstrochye=1.274|otstup_bloka=12.3
 ---
 
 ## Математика — развёрнуто

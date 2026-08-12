@@ -31,10 +31,11 @@ opiraetsya_na:
   - {termin: ретракт, vvedeno: retrakt}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 38
-mezhstrochye: 1.3
-otstup_bloka: 14
+kegl_px: 35
+mezhstrochye: 1.422
+otstup_bloka: 18.8
 obosnovanie_verstki: среднее текста и ДВЕ иллюстрации — вертикальная полоса. Полоса сдвинута с 66 на 70: при 66 текст влезал только на поджатом межстрочье 1.2, при 70 — дышит на 1.3
+podbor_avto: 950934d4dee4|kegl_px=35|mezhstrochye=1.422|otstup_bloka=18.8
 ---
 
 ## Математика — развёрнуто
