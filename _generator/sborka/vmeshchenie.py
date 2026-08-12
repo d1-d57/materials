@@ -637,7 +637,14 @@ def podobrat_slide(page, html_path, axis, iters=8, steps=6, text_len_chars=None,
         # диапазон кандидатов, вычисленный от зоны целиком (не от base),
         # т.к. base сам может быть вне зоны (баг s08: 92 > потолка 82).
         lo, hi = zones["liniya_%s" % axis]
-        cfg["liniya_steps"] = [round(lo + (hi - lo) * k / 6, 2) for k in range(7)]
+        # 25 точек, а не 7: с семью шаг по зоне выходил ~10 п.п., и солвер
+        # ПЕРЕПРЫГИВАЛ решение там, где оно есть. Замерено 2026-08-12: на
+        # `moral-estestvennosti` и `fundamentalnaya-gruppa` он объявлял отказ
+        # («пол чертежа не взят ни одной пробой»), тогда как при liniya 68.99 и
+        # 77.52 текст влезает и чертёж берёт пол базы — обе точки лежат МЕЖДУ
+        # узлами грубой сетки. Отказ солвера читается как «править рисунок»,
+        # то есть грубость сетки посылала работу не туда.
+        cfg["liniya_steps"] = [round(lo + (hi - lo) * k / 24, 2) for k in range(25)]
 
     result = page.evaluate(_JS_SOLVE, cfg)
     if result.get("error"):
