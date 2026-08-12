@@ -339,7 +339,11 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
             sluzh = SKELETON / "sluzhebnye"
             params = {
                 "tip_verstki": "vizitka",
-                "illustracii": [],
+                # опциональный per-лекция override: `vizitka_illustracii` в brief.md —
+                # если назван, vizitka() рисует ТОЛЬКО эту иллюстрацию во весь слайд
+                # (см. tipy.py:vizitka), канон sluzhebnye/ не читается вовсе. Пусто по
+                # умолчанию — поведение для всех лекций без этого поля не меняется.
+                "illustracii": _spisok(meta.get("vizitka_illustracii")),
                 "photo_html": read_text(sluzh / "vizitka-photo.html").strip(),
                 "qr_html": read_text(sluzh / "vizitka-qr.html").strip(),
             }

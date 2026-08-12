@@ -339,6 +339,13 @@ def vizitka(sid, p, text_html):
     `<img src="data:...">`): deck.py читает их с диска и кладёт в `photo_html`/
     `qr_html` (заход vizitka-i-oblozhka, В1). Раскладка (251×260, 250×250) не
     менялась — она уже совпадала с каноном."""
+    ills = p.get("illustracii") or []
+    if ills:
+        # override: вся визитка — одна иллюстрация во весь слайд (см. deck.py:
+        # plan_sluzhebnyh, поле `vizitka_illustracii`), канон sluzhebnye/ не рисуется.
+        css = "#%s{ background:var(--board); } #%s .full{ position:absolute; inset:0; }" % (sid, sid)
+        body = '<div class="full">%s</div>' % _ill_zone(ills, axis="row", cls="", pad=0)
+        return css, body
     z = p.get("zagolovok_na_ekrane", "Про меня")
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
            "grid-template-columns:410px 56px 1fr; grid-template-rows:107px 1fr; } "
