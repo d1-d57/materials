@@ -9,11 +9,20 @@
 //
 // Формулы ищутся ТОЧНО там же и ТЕМ ЖЕ регекспом, что их найдёт рендерер
 // (render_inline_md, _generator/build_deck.py — /\$(.+?)\$/, без DOTALL,
-// не отличает $$ от $), и ТОЛЬКО внутри раздела "## Текст слайда — сжато"
-// каждой карточки — граница раздела та же, что _generator/sborka/bloki.py:
-// _split_sections (^##\s+(.+?)\s*$ до следующего такого заголовка). Раздел
-// «Математика — развёрнуто» НЕ сканируется: он не попадает на экран
-// (bloki.render_section_markdown берёт только раздел «Текст слайда — сжато»).
+// не отличает $$ от $), внутри ДВУХ разделов карточки — "## Текст слайда — сжато"
+// и "## Математика — развёрнуто"; граница раздела та же, что
+// _generator/sborka/bloki.py: _split_sections (^##\s+(.+?)\s*$ до следующего
+// такого заголовка).
+//
+// Раздел «Математика» добавлен 2026-08-12: прежде он не сканировался с
+// обоснованием «не попадает на экран», и для деки это верно — но `lenta.py`
+// показывает его двумя вкладками из трёх, и на первой же ленте Л2 вышло 362
+// ⟦MISSING-MATH⟧. Причина двойная, обе лечатся здесь: формул этого раздела в
+// кэше не было ВОВСЕ, а сами они написаны в display-виде $$…$$, на котором
+// inline-регексп рендерера ловит `$x` и сбивает парность — после чего между
+// формулами захватывается обычный текст (17 обломков → 133 ложных «формулы»).
+// Поэтому $$…$$ приводится к $…$ ТЕМ ЖЕ ходом и здесь, и в `lenta.py`
+// (_normalize_display): кэш и рендерер обязаны видеть один и тот же tex.
 //
 // Рендерер — вендоренный _generator/vendor/katex/katex.min.js (в git, не
 // node_modules чужой лекции: тот не отслеживается, и git clean стирает
@@ -36,16 +45,23 @@ const lekcija = path.resolve(REPO, lekcijaArg);
 const slajdyDir = path.join(lekcija, 'slajdy');
 
 const TEKST_HEADING = 'Текст слайда — сжато';
+const MATEM_HEADING = 'Математика — развёрнуто';
+const HEADINGS = [TEKST_HEADING, MATEM_HEADING];
 const SECTION_RE = /^##\s+(.+?)\s*$/gm;
 const FORMULA_RE = /\$(.+?)\$/g;
 
-function extractTekstSection(raw) {
+// $$tex$$ → $tex$: inline-регексп рендерера display-обёртку не знает.
+function normalizeDisplay(s) {
+  return s.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => '$' + tex.trim() + '$');
+}
+
+function extractSection(raw, heading) {
   const matches = [...raw.matchAll(SECTION_RE)];
   for (let i = 0; i < matches.length; i++) {
-    if (matches[i][1].trim() === TEKST_HEADING) {
+    if (matches[i][1].trim() === heading) {
       const start = matches[i].index + matches[i][0].length;
       const end = i + 1 < matches.length ? matches[i + 1].index : raw.length;
-      return raw.slice(start, end);
+      return normalizeDisplay(raw.slice(start, end));
     }
   }
   return '';
@@ -57,11 +73,12 @@ const sids = fs.readdirSync(slajdyDir).filter(
 const formulas = new Map();  // tex → [sid, ...] (для сообщения об ошибке — где искать)
 for (const sid of sids) {
   const raw = fs.readFileSync(path.join(slajdyDir, sid, 'slaid.md'), 'utf8');
-  const tekst = extractTekstSection(raw);
-  for (const m of tekst.matchAll(FORMULA_RE)) {
-    const tex = m[1];
-    if (!formulas.has(tex)) formulas.set(tex, []);
-    formulas.get(tex).push(sid);
+  for (const heading of HEADINGS) {
+    for (const m of extractSection(raw, heading).matchAll(FORMULA_RE)) {
+      const tex = m[1];
+      if (!formulas.has(tex)) formulas.set(tex, []);
+      formulas.get(tex).push(sid);
+    }
   }
 }
 
@@ -85,7 +102,8 @@ fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, 'katex.json'), JSON.stringify(cache, null, 0), 'utf8');
 
 console.log('katex ' + (katex.version || '(версия не объявлена)'));
-console.log('карточек: ' + sids.length + ', уникальных формул в разделе «' + TEKST_HEADING + '»: ' + formulas.size);
+console.log('карточек: ' + sids.length + ', уникальных формул в разделах «'
+            + HEADINGS.join('» + «') + '»: ' + formulas.size);
 console.log('отрендерено: ' + Object.keys(cache).length + ' из ' + formulas.size);
 if (bad.length) {
   console.log('НЕ отрендерено ' + bad.length + ':');

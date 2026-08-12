@@ -18,6 +18,7 @@ kartochka-i-sborka; конструкция — Я2 §4.3): «владелец с
 """
 import argparse
 import html as _html
+import re
 import sys
 from pathlib import Path
 
@@ -57,10 +58,23 @@ def _load_slides(lekcija_dir):
     return lekcija_params, out
 
 
+_DISPLAY_RE = re.compile(r"\$\$(.+?)\$\$", re.S)
+
+
+def _normalize_display(telo):
+    """$$tex$$ → $tex$. Раздел «Математика — развёрнуто» пишется display-формулами,
+    а render_inline_md знает только inline /\\$(.+?)\\$/: на `$$` он ловит `$x` и
+    сбивает парность, после чего текст МЕЖДУ формулами уезжает в ⟦MISSING-MATH⟧
+    (на первой ленте Л2 — 17 обломков и 133 ложные «формулы» вдобавок). Тот же ход
+    делает `kesh_formul.js`; ключи кэша и запросы рендерера обязаны совпадать."""
+    return _DISPLAY_RE.sub(lambda m: "$" + m.group(1).strip() + "$", telo)
+
+
 def _blocks_html(blocks, math):
     if not blocks:
         return '<p class="pusto">(текста нет)</p>'
-    return "\n".join(render_body(b.telo, acc_tag="span", math=math) for b in blocks if b.telo.strip())
+    return "\n".join(render_body(_normalize_display(b.telo), acc_tag="span", math=math)
+                     for b in blocks if b.telo.strip())
 
 
 def _vkladka_potokom(slides, math):
