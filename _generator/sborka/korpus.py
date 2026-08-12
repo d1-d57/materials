@@ -197,6 +197,30 @@ def _track_span_px(tracks, start, end):
     return sum(span)
 
 
+def panelej_v_polose(deck_src_dir, sid):
+    """Сколько ПАНЕЛЕЙ ИЛЛЮСТРАЦИИ реально стоит в полосе этого слайда базы —
+    по разметке `slides/<sid>.html`, а не по CSS.
+
+    Зачем отдельная функция: `.rail` в этих деках несёт ДВА разных смысла —
+    полосу с чертежом (`<div class="panel p1 ill-box">` внутри) и просто
+    декоративную заливку `background:var(--board)` без содержимого. Для зоны
+    солвера это противоположные случаи: во втором «доля иллюстрации» — не
+    иллюстрация, а поля страницы, и её нельзя предъявлять как пример
+    допустимой узости полосы.
+
+    Цена ошибки замерена: без этой проверки потолок `liniya_vertical` = 92
+    держался ровно на четырёх слайдах Л1 (`s02`/`s09`/`s11`/`s12`), где панелей
+    НОЛЬ, а `rail` — полоска 116px заливки. Солвер, дойдя до этого потолка,
+    оставлял живому чертежу 115px из 1440 — то есть прятал картинку, формально
+    оставаясь внутри «зоны, снятой с базы». Среди слайдов базы, где картинка
+    ЕСТЬ, самая узкая вертикальная полоса — 197px (`buffon/sl-interval`),
+    типичная — 317px."""
+    f = deck_src_dir / "slides" / ("%s.html" % sid)
+    if not f.exists():
+        return None
+    return len(re.findall(r'class="panel\b', f.read_text(encoding="utf-8")))
+
+
 def liniya_equiv_for_slide(rules_for_slide):
     """Иллюстрация в этом корпусе — не переменная `--liniya` (её тут нет,
     корпус собран РУЧНЫМ 2D CSS-гридом, sverstat.py), а класс `.board`/`.rail`
@@ -302,8 +326,16 @@ def analyze_deck(path):
     # `.grid` ↔ `.board`/`.rail`, см. докстринг `liniya_equiv_for_slide`).
     for sid, slot in per_slide.items():
         res = liniya_equiv_for_slide(rules_by_slide.get(sid, []))
-        if res is not None:
-            slot["liniya"], slot["axis"] = res
+        if res is None:
+            continue
+        # полоса без панели иллюстрации — не полоса, а поля страницы: в
+        # статистику `liniya` не идёт (см. докстринг `panelej_v_polose`)
+        pan = panelej_v_polose(path.parent, sid)
+        slot["panelej"] = pan
+        if pan == 0:
+            continue
+        slot["liniya"], slot["axis"] = res
+        slot["ill_px"] = (CANVAS_W if res[1] == "vertical" else CANVAS_H) * (100.0 - res[0]) / 100.0
     return n_rules, per_slide
 
 
@@ -357,6 +389,12 @@ def corpus_stats():
                  if "blok" in s and s.get("kegl")]
     liniya_h = [s["liniya"] for s in all_slides.values() if s.get("axis") == "horizontal"]
     liniya_v = [s["liniya"] for s in all_slides.values() if s.get("axis") == "vertical"]
+    # бокс иллюстрации в PX, а не в долях: пол «ниже этого картинку не видно»
+    # физический и от оси не зависит по смыслу, тогда как доля зависит (8% по
+    # ширине это 115px, 8% по высоте — 65px). Считается только по слайдам базы,
+    # где панель иллюстрации реально есть, — см. `panelej_v_polose`.
+    ill_h = [s["ill_px"] for s in all_slides.values() if s.get("axis") == "horizontal"]
+    ill_v = [s["ill_px"] for s in all_slides.values() if s.get("axis") == "vertical"]
 
     return {
         "правил_обработано_по_декам": per_deck_rules,
@@ -368,6 +406,8 @@ def corpus_stats():
         "blok_koef_k_keglyu": summarize(blok_koef),
         "liniya_equiv_horizontal_pct": summarize(liniya_h),
         "liniya_equiv_vertical_pct": summarize(liniya_v),
+        "boks_illustracii_horizontal_px": summarize(ill_h),
+        "boks_illustracii_vertical_px": summarize(ill_v),
     }
 
 
