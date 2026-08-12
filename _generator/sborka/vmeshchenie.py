@@ -95,6 +95,32 @@ def pol_boksa_kartinki(corpus, axis):
     return max(ILL_FLOOR_ABS_PX, stat["p5"] - _MARGIN * span)
 
 
+def norma_chertezha(corpus):
+    """Пол САМОГО ЧЕРТЕЖА: {площадь px², минимальная подпись px, медиана площади}.
+
+    Зачем отдельно от `pol_boksa_kartinki`: тот меряет ПОЛОСУ, отведённую под
+    картинку, а не картинку. Полоса может быть широкой, а чертёж в ней —
+    крошечным, если пропорции `viewBox` не совпали с полосой
+    (`preserveAspectRatio="xMidYMid meet"` вписывает по меньшему коэффициенту).
+    Ровно это и случилось на Л2 при зелёных гейтах: чертёж 3 тыс. px² при норме
+    базы 40–574 тыс. и подписи 1.9px при минимуме базы 11.9px (живой кадр
+    2026-08-12) — солвер оптимизировал вмещение ТЕКСТА, картинки не видя вовсе.
+    Прямое требование владельца 12.08: «разрешить solverу двигать линию и
+    посмотреть, как он оптимизирует всю картинку… solver должен принимать
+    решение на этапе сборки уже после того, как картинки есть».
+
+    Числа — p5 корпуса БЕЗ запаса (`margin=0`) и без абсолютных рельсов: рельс
+    здесь пришлось бы взять из общих соображений, а владелец потребовал считать
+    «из базы существующих, где мы делали это просто глазами». Распределение
+    площадей вдобавок сильно скошено (p5=40k, медиана=98k, p95=574k) — запас в
+    15% размаха увёл бы пол в минус."""
+    pl = corpus.get("ploshchad_chertezha_px2")
+    pod = corpus.get("podpis_min_px")
+    return {"ploshchad": pl["p5"] if pl else None,
+            "ploshchad_median": pl["median"] if pl else None,
+            "podpis_min": pod["p5"] if pod else None}
+
+
 def _potolok_liniya_po_polu_kartinki(corpus, axis):
     """Пол бокса в px → потолок `liniya` (доли текста) в процентах.
 
@@ -220,7 +246,8 @@ def build_kegl_grid(zones, steps=7):
 
 
 # ─────────────────────── Э3: веса мягких (кубических) штрафов ───────────────────────
-WEIGHTS = {"liniya": 0.8, "kegl": 0.6, "lh": 0.6, "blok": 0.4, "edge": 0.5, "dyhanie": 0.6}
+WEIGHTS = {"liniya": 0.8, "kegl": 0.6, "lh": 0.6, "blok": 0.4, "edge": 0.5, "dyhanie": 0.6,
+           "chertezh": 0.8}
 EPS_KEGL = 1.0        # px — полоса ε на тай-брейке «кегль между похожими» (Э2 захода solver-v3-dyhanie)
 EPS_PENALTY = 0.15    # доля от минимального штрафа — полоса ε на уровне «похожесть на корпус»
 
@@ -310,6 +337,50 @@ _JS_SOLVE = r"""
     return {orphanCount, edgeStd, lineCount: edges.length, dyhanie};
   }
 
+  // Холст канона — 1440×810; одиночный слайд может быть отмасштабирован CSS
+  // (`transform:scale` в дек-виде), поэтому все px нормируются к холсту, иначе
+  // площадь чертежа поехала бы в квадрате масштаба.
+  const slideRect = slide ? slide.getBoundingClientRect() : null;
+  const scale = (slideRect && slideRect.width) ? (slideRect.width / cfg.canvas_w) : 1;
+
+  // Сам ЧЕРТЁЖ, а не полоса под него. Зависит ТОЛЬКО от liniya (кегль текста
+  // панель не двигает), поэтому мемоизация по liniya — не по всей четвёрке.
+  const memoChert = new Map();
+  function chertezh(liniya) {
+    const key = String(liniya);
+    if (memoChert.has(key)) return memoChert.get(key);
+    let ploshchad = null, podpisMin = null, panels = 0;
+    for (const pan of document.querySelectorAll('.panel')) {
+      const svg = pan.querySelector('svg');
+      if (!svg) continue;
+      const vb = (svg.getAttribute('viewBox') || '').trim().split(/\s+/);
+      const r = pan.getBoundingClientRect();
+      if (vb.length !== 4 || r.width < 1 || r.height < 1) continue;
+      const vw = parseFloat(vb[2]), vh = parseFloat(vb[3]);
+      if (!(vw > 0) || !(vh > 0)) continue;
+      panels++;
+      const bw = r.width / scale, bh = r.height / scale;
+      const k = Math.min(bw / vw, bh / vh);   // preserveAspectRatio="xMidYMid meet"
+      const s = (vw * k) * (vh * k);
+      if (ploshchad == null || s < ploshchad) ploshchad = s;
+      // Кегль читается ВЫЧИСЛЕННЫМ (getComputedStyle), не регекспом по файлу:
+      // класс бьёт атрибут `font-size` (`_illustracii/DISCIPLINA.md`), а в базе
+      // кегль задан инлайном у всех 103 подписей — регексп поверил бы файлу и
+      // на новом рисунке с классовым кеглем промолчал. Величина — в единицах
+      // viewBox, поэтому в px холста переводится тем же k.
+      for (const t of svg.querySelectorAll('text, tspan')) {
+        if (!(t.textContent || '').trim()) continue;
+        const fs = parseFloat(getComputedStyle(t).fontSize);
+        if (!isFinite(fs) || fs <= 0) continue;
+        const eff = fs * k;
+        if (podpisMin == null || eff < podpisMin) podpisMin = eff;
+      }
+    }
+    const rec = {ploshchad: ploshchad, podpis_min: podpisMin, panels: panels};
+    memoChert.set(key, rec);
+    return rec;
+  }
+
   const textLen = zone.textContent.replace(/\s+/g, ' ').trim().length;
   const memo = new Map();
   const trials = [];
@@ -331,8 +402,12 @@ _JS_SOLVE = r"""
     const fill = ch ? (100 * sh / ch) : null;
     const fits = fill != null && fill <= 100;
     const typ = fits ? tipografika() : null;
+    const ch2 = fits ? chertezh(liniya) : null;
     const rec = {kegl, lh, blokKoef, blok: blokPx, liniya, scrollHeight: sh, clientHeight: ch,
-                 clipped: sh > ch, fill, fits, typ, dyhanie: typ ? typ.dyhanie : null};
+                 clipped: sh > ch, fill, fits, typ, dyhanie: typ ? typ.dyhanie : null,
+                 chertezh_ploshchad: ch2 ? ch2.ploshchad : null,
+                 chertezh_podpis_min: ch2 ? ch2.podpis_min : null,
+                 chertezh_panelej: ch2 ? ch2.panels : 0};
     trials.push(rec);
     memo.set(key, rec);
     return rec;
@@ -421,7 +496,48 @@ def _fill_band_penalty(fill):
     return d / 10.0  # нормировка — единицы штрафа сравнимы с z-score-штрафами
 
 
-def _select_lexicograficheski(fitting, corpus, axis, text_len_chars):
+def _chertezh_ok(t, norma):
+    """Проба удовлетворяет полу базы по САМОМУ ЧЕРТЕЖУ? Слайд без панелей —
+    вопрос не про него, `True`."""
+    if not t.get("chertezh_panelej"):
+        return True
+    s, pod = t.get("chertezh_ploshchad"), t.get("chertezh_podpis_min")
+    if norma.get("ploshchad") is not None and s is not None and s < norma["ploshchad"]:
+        return False
+    if norma.get("podpis_min") is not None and pod is not None and pod < norma["podpis_min"]:
+        return False
+    return True
+
+
+def _chertezh_penalty(t, norma):
+    """Мягкий штраф «чертёж мелковат» — односторонний: крупнее нормы не грех.
+
+    Нормируется на норму базы, чтобы единица штрафа была сравнима с
+    z-score-штрафами остальных ручек; кубическая выпуклость — та же, что у них
+    (Кнут–Пласс: слегка мелко почти бесплатно, вдвое мельче — дорого).
+
+    Подпись входит МЯГКО, а не только жёстким фильтром `_chertezh_ok`, ровно
+    потому, что фильтр самоотключается, когда его не проходит НИ ОДНА проба (а
+    иначе солвер отказал бы там, где отказывать не за что). Без мягкого
+    слагаемого в этом случае выбор становился безразличен к подписи: на `retrakt`
+    солвер поднимал liniya 58 → 75.4 и ронял подпись 14.0 → 8.0px, потому что
+    площадь при этом оставалась у медианы базы и платить было нечем (замерено
+    2026-08-12 живым прогоном, до этой строки)."""
+    if not t.get("chertezh_panelej"):
+        return 0.0
+    p = 0.0
+    med = norma.get("ploshchad_median")
+    s = t.get("chertezh_ploshchad")
+    if med and s is not None and s < med:
+        p += WEIGHTS["chertezh"] * (((med - s) / med) ** 3)
+    pol = norma.get("podpis_min")
+    pod = t.get("chertezh_podpis_min")
+    if pol and pod is not None and pod < pol:
+        p += WEIGHTS["chertezh"] * (((pol - pod) / pol) ** 3)
+    return p
+
+
+def _select_lexicograficheski(fitting, corpus, axis, text_len_chars, norma=None):
     """Э2 захода solver-v3-dyhanie: порядок уровней ПЕРЕСТАВЛЕН — похожесть на
     корпус выше максимизации кегля (было наоборот: старый уровень 2 сразу
     брал самый крупный кегль, похожесть служила лишь для выбора СРЕДИ них —
@@ -447,11 +563,22 @@ def _select_lexicograficheski(fitting, corpus, axis, text_len_chars):
         return _line_chars_estimate(t["kegl"], None, lc, text_len_chars)
 
     diag = {}
+    norma = norma or {}
     readable = [t for t in fitting
                 if (lambda ch: ch is None or ch <= LINE_LEN_HARD_MAX)(line_chars(t))]
     pool = readable if readable else fitting
     diag["читаемых_по_длине_строки"] = len(readable)
     diag["всего_влезших"] = len(fitting)
+    # Уровень 2б: пол САМОГО ЧЕРТЕЖА — фильтр, как и длина строки, и с той же
+    # оговоркой «если не осталось никого — не отсекаем молча, а отмечаем в
+    # диагностике». Ужать чертёж ниже нормы базы солвер не вправе даже ценой
+    # красивого текста: именно так на Л2 подпись съехала до 1.9px при зелёных
+    # гейтах (см. `norma_chertezha`).
+    vidno = [t for t in pool if _chertezh_ok(t, norma)]
+    diag["проходят_пол_чертежа"] = len(vidno)
+    diag["пол_чертежа_нарушен_всеми"] = bool(pool) and not vidno
+    if vidno:
+        pool = vidno
     diag["лучший_кегль_среди_всех_влезших"] = max(t["kegl"] for t in pool)  # для критерия 2: что отвергли
 
     def penalty(t):
@@ -466,6 +593,7 @@ def _select_lexicograficheski(fitting, corpus, axis, text_len_chars):
         p += _cube_penalty(_zscore(t.get("dyhanie"), DYHANIE_STAT), WEIGHTS["dyhanie"])
         edge = t.get("typ", {}).get("edgeStd", 0) or 0
         p += WEIGHTS["edge"] * ((edge / max(t["kegl"], 1)) ** 3)
+        p += _chertezh_penalty(t, norma)
         return p
 
     scored = [(penalty(t), t) for t in pool]
@@ -499,7 +627,8 @@ def podobrat_slide(page, html_path, axis, iters=8, steps=6, text_len_chars=None,
     rungi = build_rungi(zones, steps=steps)
 
     cfg = {"kegl_floor": zones["kegl"][0], "iters": iters, "rungi": rungi, "liniya_steps": [None],
-           "kegl_grid": build_kegl_grid(zones), "blok_floor_px": BLOK_FLOOR_PX}
+           "kegl_grid": build_kegl_grid(zones), "blok_floor_px": BLOK_FLOOR_PX,
+           "canvas_w": korpus.CANVAS_W}
     if axis:
         # базовый liniya читается в JS с самого элемента; шаги строим уже
         # после первого прохода, когда знаем liniyaBase — делаем это в два
@@ -524,7 +653,14 @@ def podobrat_slide(page, html_path, axis, iters=8, steps=6, text_len_chars=None,
     # снаружи; `text_len_chars` как параметр остаётся ТОЛЬКО на случай, если
     # вызывающий код заранее знает более точное число (не используется CLI).
     measured_len = result.get("text_len") or text_len_chars or 1200
-    chosen, diag = _select_lexicograficheski(fitting, corpus, axis, measured_len)
+    norma = norma_chertezha(corpus)
+    chosen, diag = _select_lexicograficheski(fitting, corpus, axis, measured_len, norma)
+    if chosen is not None:
+        diag["норма_чертежа"] = norma
+        diag["чертёж_выбранного"] = {
+            "площадь_px2": chosen.get("chertezh_ploshchad"),
+            "подпись_min_px": chosen.get("chertezh_podpis_min"),
+            "панелей": chosen.get("chertezh_panelej")}
     otstuplenie = False
     if chosen is None:
         # Э3 захода solver-vmeshcheniya, «отступление»: ни одна проба внутри
@@ -773,6 +909,17 @@ def main():
                 print("ОТКАЗ: ни одна проба не влезла внутри жёстких зон Э1.", file=sys.stderr)
                 b.close()
                 return 1
+            d = res["diagnostics"]
+            if d.get("пол_чертежа_нарушен_всеми"):
+                # Разделитель тут ни при чём: пол не берётся НИ при каком liniya,
+                # значит дефект в самом рисунке (пропорции viewBox / кегль
+                # подписи), и лечится он в `_illustracii/`, а не солвером.
+                ch, n = d.get("чертёж_выбранного", {}), d.get("норма_чертежа", {})
+                print("⚠ ПОЛ ЧЕРТЕЖА НЕ ВЗЯТ НИ ОДНОЙ ПРОБОЙ: площадь %s px² (норма базы ≥%s), "
+                      "подпись %s px (норма ≥%s). Разделитель не поможет — править рисунок."
+                      % (round(ch.get("площадь_px2") or 0), n.get("ploshchad"),
+                         round(ch.get("подпись_min_px") or 0, 1), n.get("podpis_min")),
+                      file=sys.stderr)
             if args.primenit:
                 apply_to_card(args.primenit, res["chosen"])
                 print("применено в карточку: %s" % args.primenit, file=sys.stderr)

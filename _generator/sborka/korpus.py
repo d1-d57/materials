@@ -221,6 +221,85 @@ def panelej_v_polose(deck_src_dir, sid):
     return len(re.findall(r'class="panel\b', f.read_text(encoding="utf-8")))
 
 
+_PANEL_RE = re.compile(r'class="panel ([\w-]+)[^"]*" data-ill="([^"]+)"')
+_VIEWBOX_RE = re.compile(r'viewBox="([^"]+)"')
+_FS_STYLE_RE = re.compile(r'style="[^"]*font-size:\s*([\d.]+)px')
+_FS_ATTR_RE = re.compile(r'font-size="([\d.]+)"')
+_TEXT_TAG_RE = re.compile(r"<(?:text|tspan)\b([^>]*)>")
+
+
+def _kegli_podpisej(svg_text):
+    """Кегли подписей рисунка В ЕДИНИЦАХ `viewBox`. Инлайновый `style` сильнее
+    атрибута `font-size` — так и в браузере (`_illustracii/DISCIPLINA.md`: класс
+    бьёт атрибут, поэтому крупное задают стилем; цена ошибки там же — распоряжение
+    владельца «в 2–3 раза крупнее» молча не исполнилось при зелёных гейтах)."""
+    out = []
+    for m in _TEXT_TAG_RE.finditer(svg_text):
+        a = m.group(1)
+        st = _FS_STYLE_RE.search(a)
+        at = _FS_ATTR_RE.search(a)
+        if st:
+            out.append(float(st.group(1)))
+        elif at:
+            out.append(float(at.group(1)))
+    return out
+
+
+def chertezhi_slajda(deck_src_dir, sid, rules_for_slide):
+    """Живые чертежи этого слайда базы: [(площадь px², минимальная подпись px,
+    типичная подпись px)] — то, что физически видит зал на холсте 1440×810.
+
+    Зачем это отдельно от `liniya`/`ill_px`: доля полосы и её размер в px НЕ
+    говорят, велик ли САМ ЧЕРТЁЖ. В базе панель ставилась вручную ВНУТРИ полосы
+    (`.pN{position:absolute;width;height}`) и её пропорции подгонялись под
+    `viewBox` — замер 21 панели трёх деков: чертёж заполняет свою панель на
+    99.9–100%, а вокруг панели свободно остаётся доска. Новая система такой
+    ручки не имеет: панель растягивается на всю полосу (`tipy._ill_zone`,
+    `flex:1 1 0`), и чертёж вписывается в неё `preserveAspectRatio="xMidYMid
+    meet"` — то есть при несовпадении пропорций мельчает, а полоса пустует.
+    Поэтому сравнимые с базой величины — АБСОЛЮТНАЯ площадь чертежа и кегль его
+    подписи ПОСЛЕ вписывания, а не «доля бокса», которой в базе нет вовсе.
+
+    Цена отсутствия этого замера (найдено живым кадром 2026-08-12, Л2): на трёх
+    слайдах чертёж вышел 3–40 тыс. px² при норме базы 40–574 тыс., а подписи —
+    1.9–7.4px при минимуме базы 11.9px. Все гейты при этом были зелёными: они
+    проверяли, что иллюстрация ЕСТЬ и что полоса не уже пола, но не то, видно ли
+    нарисованное."""
+    f = deck_src_dir / "slides" / ("%s.html" % sid)
+    if not f.exists():
+        return []
+    by_class = {}
+    for sel, decl in rules_for_slide:
+        if "width" in decl and "height" in decl:
+            by_class[sel] = decl
+    out = []
+    for pm in _PANEL_RE.finditer(f.read_text(encoding="utf-8")):
+        cls, ill = pm.group(1), pm.group(2)
+        decl = next((d for s, d in by_class.items() if ("." + cls) in s), None)
+        svg = deck_src_dir / "illustrations" / ("%s.svg" % ill)
+        if decl is None or not svg.exists():
+            continue
+        bw, bh = as_px(decl["width"]), as_px(decl["height"])
+        if not bw or not bh:
+            continue
+        t = svg.read_text(encoding="utf-8")
+        vb = _VIEWBOX_RE.search(t)
+        if not vb:
+            continue
+        parts = vb.group(1).split()
+        if len(parts) != 4:
+            continue
+        vw, vh = float(parts[2]), float(parts[3])
+        if vw <= 0 or vh <= 0:
+            continue
+        k = min(bw / vw, bh / vh)   # preserveAspectRatio="xMidYMid meet"
+        kegli = sorted(x * k for x in _kegli_podpisej(t))
+        out.append({"ploshchad": (vw * k) * (vh * k),
+                    "podpis_min": kegli[0] if kegli else None,
+                    "podpis_med": statistics.median(kegli) if kegli else None})
+    return out
+
+
 def liniya_equiv_for_slide(rules_for_slide):
     """Иллюстрация в этом корпусе — не переменная `--liniya` (её тут нет,
     корпус собран РУЧНЫМ 2D CSS-гридом, sverstat.py), а класс `.board`/`.rail`
@@ -336,6 +415,8 @@ def analyze_deck(path):
             continue
         slot["liniya"], slot["axis"] = res
         slot["ill_px"] = (CANVAS_W if res[1] == "vertical" else CANVAS_H) * (100.0 - res[0]) / 100.0
+        # сам ЧЕРТЁЖ, а не полоса под него — см. докстринг `chertezhi_slajda`
+        slot["chertezhi"] = chertezhi_slajda(path.parent, sid, rules_by_slide.get(sid, []))
     return n_rules, per_slide
 
 
@@ -395,6 +476,12 @@ def corpus_stats():
     # где панель иллюстрации реально есть, — см. `panelej_v_polose`.
     ill_h = [s["ill_px"] for s in all_slides.values() if s.get("axis") == "horizontal"]
     ill_v = [s["ill_px"] for s in all_slides.values() if s.get("axis") == "vertical"]
+    # сам ЧЕРТЁЖ (не полоса под него) — от оси не зависит: «видно ли нарисованное»
+    # вопрос физический, а панели базы стояли внутри полос обеих ориентаций
+    chert = [c for s in all_slides.values() for c in (s.get("chertezhi") or [])]
+    ploshchad = [c["ploshchad"] for c in chert]
+    podpis_min = [c["podpis_min"] for c in chert if c["podpis_min"] is not None]
+    podpis_med = [c["podpis_med"] for c in chert if c["podpis_med"] is not None]
 
     return {
         "правил_обработано_по_декам": per_deck_rules,
@@ -408,6 +495,10 @@ def corpus_stats():
         "liniya_equiv_vertical_pct": summarize(liniya_v),
         "boks_illustracii_horizontal_px": summarize(ill_h),
         "boks_illustracii_vertical_px": summarize(ill_v),
+        "chertezhej_zamereno": len(chert),
+        "ploshchad_chertezha_px2": summarize(ploshchad),
+        "podpis_min_px": summarize(podpis_min),
+        "podpis_med_px": summarize(podpis_med),
     }
 
 
@@ -421,7 +512,9 @@ def main():
     for name, s in (("кегль", report["кегль_px"]), ("lh", report["lh_отношение_к_кеглю"]),
                      ("blok", report["blok_px"]), ("blok/kegl", report["blok_koef_k_keglyu"]),
                      ("liniya гориз", report["liniya_equiv_horizontal_pct"]),
-                     ("liniya верт", report["liniya_equiv_vertical_pct"])):
+                     ("liniya верт", report["liniya_equiv_vertical_pct"]),
+                     ("площадь черт.", report["ploshchad_chertezha_px2"]),
+                     ("подпись min", report["podpis_min_px"])):
         if s:
             print("  %-14s n=%-4d p5=%-8s медиана=%-8s p95=%s" % (name, s["n"], s["p5"], s["median"], s["p95"]),
                   file=sys.stderr)
