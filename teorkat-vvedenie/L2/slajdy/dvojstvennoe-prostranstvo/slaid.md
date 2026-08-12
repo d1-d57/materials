@@ -33,9 +33,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: иллюстрация снята («непонятно в принципе нарисовано»), владелец просил отдать освободившееся место тексту и заголовку — только текст. Типографику подбирает солвер
-kegl_px: 41
-mezhstrochye: 1.57
-otstup_bloka: 30.3
+kegl_px: 38
+mezhstrochye: 1.2
+otstup_bloka: 8.7
+podbor_avto: adbf471a76bf|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
 ---
 
 ## Математика — развёрнуто

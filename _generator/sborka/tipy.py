@@ -64,9 +64,22 @@ def _esc(s):
 
 
 def _zagolovok_html(p):
+    """🔴 Формулы в заголовке РЕНДЕРЯТСЯ, а не эскейпятся. Найдено глазами на
+    собранной Л2: `zagolovok_na_ekrane: Изоморфизм $V$ и $V^*$` выводился на экран
+    как «ИЗОМОРФИЗМ $V$ И $V^*$» — доллары и каретка буквально, при зелёных гейтах
+    (никакой из них в заголовок не смотрит). Заголовок такого слайда продиктован
+    владельцем именно с математикой, так что запретить формулу нельзя — надо её
+    рендерить. Кэш формул кладёт сюда компилятор (`slaid.py`/`deck.py`) в
+    `p['_math']`: второго рендерера не заводится, зовётся тот же
+    `render_inline_md`, что и для тела. Кэша нет (служебные слайды, обложка) —
+    старое поведение, эскейп."""
     z = p.get("zagolovok_na_ekrane")
     if not z:
         return ""
+    math = p.get("_math")
+    if math and "$" in z:
+        from formaty import render_inline_md   # он же настраивает sys.path до _generator
+        return '<div class="zagolovok">%s</div>' % render_inline_md(z, math, acc_tag="span")
     return '<div class="zagolovok">%s</div>' % _esc(z)
 
 

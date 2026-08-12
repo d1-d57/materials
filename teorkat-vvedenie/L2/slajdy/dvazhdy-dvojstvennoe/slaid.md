@@ -36,7 +36,7 @@ obosnovanie_verstki: среднее текста плюс конкретный �
 kegl_px: 37
 mezhstrochye: 1.274
 otstup_bloka: 12.3
-podbor_avto: f52d6410358e|kegl_px=37|mezhstrochye=1.274|otstup_bloka=12.3
+podbor_avto: 39a9389ab48d|kegl_px=37|mezhstrochye=1.274|otstup_bloka=12.3
 ---
 
 ## Математика — развёрнуто

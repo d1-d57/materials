@@ -35,6 +35,10 @@ opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: [ретракт, фундаментальная группа]
 status: v_deke
+kegl_px: 39
+mezhstrochye: 1.57
+otstup_bloka: 28.9
+podbor_avto: 847a7948dac1|kegl_px=39|mezhstrochye=1.57|otstup_bloka=28.9
 ---
 ## Математика — развёрнуто
 ### [narrativ] куда мы идём — инструмент вместо изоморфизма, и топология в конце

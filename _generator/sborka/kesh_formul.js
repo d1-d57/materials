@@ -55,6 +55,27 @@ function normalizeDisplay(s) {
   return s.replace(/\$\$([\s\S]+?)\$\$/g, (_, tex) => '$' + tex.trim() + '$');
 }
 
+// 🔴 Формулы бывают НЕ ТОЛЬКО в разделах тела: `zagolovok_na_ekrane` в шапке
+// рендерится тем же `render_inline_md` (tipy._zagolovok_html), а сканер шапку не
+// читал — и заголовок с формулой уходил в `⟦MISSING-MATH⟧`. Сегодня на Л2 это не
+// видно СЛУЧАЙНО: `dvojstvennyj-bazis` несёт `$V$` и `$V^*$` ещё и в теле, так
+// что кэш их подобрал оттуда. Уберут из тела — заголовок сломается молча, потому
+// что `check_no_missing_math` смотрит только в `body_html`. Границы шапки — те
+// же, что у `formaty`: сперва отрезается блок «что дальше» (LIFECYCLE_RE),
+// потом шапка между `---`.
+function extractZagolovok(raw) {
+  const bezLifecycle = raw.replace(/^<!--[\s\S]*?-->\s*/, '');
+  const fm = /^---\r?\n([\s\S]*?)\r?\n---/.exec(bezLifecycle);
+  if (!fm) return '';
+  const m = /^zagolovok_na_ekrane:[ \t]*(.*)$/m.exec(fm[1]);
+  if (!m) return '';
+  let z = m[1].trim();
+  if ((z.startsWith('"') && z.endsWith('"')) || (z.startsWith("'") && z.endsWith("'"))) {
+    z = z.slice(1, -1);
+  }
+  return z;
+}
+
 function extractSection(raw, heading) {
   const matches = [...raw.matchAll(SECTION_RE)];
   for (let i = 0; i < matches.length; i++) {
@@ -73,8 +94,10 @@ const sids = fs.readdirSync(slajdyDir).filter(
 const formulas = new Map();  // tex → [sid, ...] (для сообщения об ошибке — где искать)
 for (const sid of sids) {
   const raw = fs.readFileSync(path.join(slajdyDir, sid, 'slaid.md'), 'utf8');
-  for (const heading of HEADINGS) {
-    for (const m of extractSection(raw, heading).matchAll(FORMULA_RE)) {
+  const kuski = HEADINGS.map((h) => extractSection(raw, h));
+  kuski.push(extractZagolovok(raw));
+  for (const kusok of kuski) {
+    for (const m of kusok.matchAll(FORMULA_RE)) {
       const tex = m[1];
       if (!formulas.has(tex)) formulas.set(tex, []);
       formulas.get(tex).push(sid);
@@ -103,7 +126,7 @@ fs.writeFileSync(path.join(outDir, 'katex.json'), JSON.stringify(cache, null, 0)
 
 console.log('katex ' + (katex.version || '(версия не объявлена)'));
 console.log('карточек: ' + sids.length + ', уникальных формул в разделах «'
-            + HEADINGS.join('» + «') + '»: ' + formulas.size);
+            + HEADINGS.join('» + «') + '» и в `zagolovok_na_ekrane`: ' + formulas.size);
 console.log('отрендерено: ' + Object.keys(cache).length + ' из ' + formulas.size);
 if (bad.length) {
   console.log('НЕ отрендерено ' + bad.length + ':');

@@ -3,7 +3,7 @@
 <line class="s-thin" x1="118" y1="44" x2="1758" y2="44"/><path class="s-ar-m" d="M1758,40 l9,4 -9,4 z"/>
 <path class="s-line" d="M118,64 H1744 A20,20 0 0,1 1744,104 H118"/>
 <path class="s-ar-m" d="M118,100 l-9,4 9,4 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="950" y="95" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:22px">A</tspan></text>
+<text class="s-txt-m" x="950" y="95" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:28px">A</tspan></text>
 <line class="s-dash" x1="1767" y1="130" x2="118" y2="130"/><path class="s-ar-a" d="M118,126 l-9,4 9,4 z"/>
 <text class="s-txt-m" x="950" y="164" text-anchor="middle" style="font-size:32px">r</text>
 <text class="s-txt" x="50" y="107" text-anchor="middle" style="font-size:62px">A</text>
@@ -12,7 +12,7 @@
 <line class="s-thin" x1="118" y1="270" x2="1758" y2="270"/><path class="s-ar-m" d="M1758,266 l9,4 -9,4 z"/>
 <path class="s-line" d="M118,290 H1744 A20,20 0 0,1 1744,330 H118"/>
 <path class="s-ar-m" d="M118,326 l-9,4 9,4 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="950" y="321" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:22px">FA</tspan></text>
+<text class="s-txt-m" x="950" y="321" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:28px">FA</tspan></text>
 <line class="s-dash" x1="1767" y1="356" x2="118" y2="356"/><path class="s-ar-a" d="M118,352 l-9,4 9,4 z"/>
 <text class="s-txt-m" x="950" y="390" text-anchor="middle" style="font-size:32px">Fr</text>
 <text class="s-txt" x="50" y="333" text-anchor="middle" style="font-size:62px">FA</text>

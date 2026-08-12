@@ -27,7 +27,7 @@ minuty: 6
 vazhnost: osnovnoj
 byudzhet_slov: 85
 tip_verstki: polosa_gorizontalnaya
-liniya: 58
+liniya: 75.4
 matematika_iz: []
 illustracii: [funktor-funkcii-na-mnozhestve]
 vvodit: [категория векторных пространств с изоморфизмами]
@@ -37,6 +37,10 @@ opiraetsya_na:
   - {termin: изоморфизм векторных пространств, vvedeno: izomorfizm}
 bez_opredeleniya_namerenno: [эквивалентность категорий]
 status: v_deke
+kegl_px: 39
+mezhstrochye: 1.274
+otstup_bloka: 12.9
+podbor_avto: 68b869df9413|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya=75.4
 ---
 ## Математика — развёрнуто
 ### [opredelenie] категория Vect^iso — та, в которой идёт весь акт
@@ -56,23 +60,19 @@ status: v_deke
 
 ## Текст слайда — сжато
 ### [opredelenie] категория Vect^iso — та, в которой идёт весь акт
-{.formula} $\mathrm{Ob}\,\mathbf{Vect}^{\mathrm{iso}}=\{V\mid V\ \text{векторное пространство}\}$
+{.formula} $\mathrm{Ob}\,\mathbf{Vect}^{\mathrm{iso}}=\{V\ \text{векторное пространство}\}$
 
 {.formula} $\mathbf{Vect}^{\mathrm{iso}}(V,W)=\{f\colon V\to W\mid f\ \text{изоморфизм}\}$
 
 ### [primer] функтор «конечное множество ↦ функции на нём»
-Докажем, что конструкция $A\mapsto\mathbb R^A$ продолжается до функтора:
+$FA=\mathbb R^A$ продолжается до функтора $F\colon\mathbf{FinSet}^{\mathrm{bij}}\to\mathbf{Vect}^{\mathrm{iso}}\text{:}$
 
-$F\colon\mathbf{FinSet}^{\mathrm{bij}}\to\mathbf{Vect}^{\mathrm{iso}}\text{,}$ $FA=\mathbb R^A=\{f\colon A\to\mathbb R\}$
-
-Биекция $\sigma\colon A\to B$ задаёт $F\sigma\colon\mathbb R^A\to\mathbb R^B\text{:}$
-
-{.formula} $(F\sigma)(f)(b)=f\big(\sigma^{-1}(b)\big)\text{,}\qquad (F\sigma)(f)=f\circ\sigma^{-1}$
+{.formula} $(F\sigma)(f)(b)=f\big(\sigma^{-1}(b)\big)\text{,}\quad\text{то есть}\quad (F\sigma)(f)=f\circ\sigma^{-1}$
 
 ### [dokazatelstvo] проверим, что $F$ — функтор
 {.formula} $\big(F(\tau\circ\sigma)\big)(f)=f\circ\sigma^{-1}\circ\tau^{-1}=(F\tau)\big((F\sigma)(f)\big)$
 
-{.formula} $(F1_A)(f)=f\circ 1_A=f\ \Longrightarrow\ F1_A=1_{\mathbb R^A}$
+{.formula} $(F1_A)(f)=f\ \Longrightarrow\ F1_A=1_{\mathbb R^A}$
 
 ## Правки
 - 2026-08-12 · 🔴 **перед буквой $F$ добавлена словесная рамка** «докажем, что конструкция $A\mapsto\mathbb R^A$ продолжается до функтора» — в обоих разделах. Дословно: *«Всё хорошо, мне нравится, как записано. То есть оно очень скупо у тебя написано. Если там не предполагается на слайде „категории, в которой мы работаем“ никаких иллюстраций — я бы чуть больше расписал бы, например, перед буквой $F$ сказал: рассмотрим функтор из финсет в векторные пространства. Или, скажем так: докажем, что конструкция $A$ переходит в $\mathbb R$ в степени $A$ продолжается до функтора»*. ⚠ **УСЛОВИЕ ЕГО ПРАВКИ НЕ ВЫПОЛНЕНО, и молчать об этом нельзя:** он поставил её под «если не предполагается никаких иллюстраций», а иллюстрация ЗДЕСЬ ЕСТЬ — `funktor-funkcii-na-mnozhestve` в шапке, рисуется параллельно. Места на слайде меньше, чем он считал, поэтому взята КОРОТКАЯ форма: одна строка вместо абзаца, и выбрана вторая из двух его формулировок (первая, «рассмотрим функтор из финсет в вект», дублировала бы стрелку $\mathbf{FinSet}^{\mathrm{bij}}\to\mathbf{Vect}^{\mathrm{iso}}$, стоящую строкой ниже, — а вторая говорит то, чего в формулах нет: что продолжение ещё надо доказать). Хочет полный абзац — тогда решать про иллюстрацию, это к владельцу

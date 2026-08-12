@@ -1,0 +1,25 @@
+<svg viewBox="0 0 1800 258" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block" role="img" aria-label="Два яруса. Вверху два трёхэлементных множества X и Y, в каждом три точки — сиреневая, синяя и зелёная; стрелка сигма переименовывает: в X точки идут в порядке сиреневая, синяя, зелёная, а в Y — зелёная, сиреневая, синяя. Внизу два пространства функций: эр в степени икс и эр в степени игрек. Каждое изображено не точками, а тройкой столбиков на общем основании — это одна функция, а высота столбика есть её значение в соответствующей точке. Столбиков ровно три, столько же, сколько точек вверху; каждый столбик залит цветом своей точки и стоит ровно под ней. Высоты явно разные: у сиреневой низкий, у синей самый высокий, у зелёной средний. Справа те же три высоты стоят в другом порядке — ровно так, как сигма переставила цвета: значения поехали за именами, сами значения не изменились. Между пространствами стрелка эф сигма идёт в ту же сторону, что и сигма. Две короткие пунктирные стрелки, обе подписанные эр в степени прочерк, ведут от каждого множества вниз к его пространству функций и замыкают квадрат из четырёх стрелок">
+<ellipse class="s-thin" cx="300" cy="58" rx="108" ry="20"/><ellipse class="s-thin" cx="1500" cy="58" rx="108" ry="20"/>
+<circle class="s-node s-node-c1" cx="230" cy="58" r="7"/><circle class="s-node s-node-c2" cx="300" cy="58" r="7"/><circle class="s-node s-node-c3" cx="370" cy="58" r="7"/>
+<circle class="s-node s-node-c3" cx="1430" cy="58" r="7"/><circle class="s-node s-node-c1" cx="1500" cy="58" r="7"/><circle class="s-node s-node-c2" cx="1570" cy="58" r="7"/>
+<line class="s-line" x1="418" y1="58" x2="1384" y2="58"/><path class="s-ar-m" d="M1384,54 l9,4 -9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="901" y="40" text-anchor="middle" style="font-size:24px">σ</text>
+<text class="s-txt" x="300" y="28" text-anchor="middle" style="font-size:30px">X</text>
+<text class="s-txt" x="1500" y="28" text-anchor="middle" style="font-size:30px">Y</text>
+<line class="s-dash" x1="265" y1="82" x2="265" y2="104"/><path class="s-ar-a" d="M261,104 L265,113 L269,104 z"/>
+<line class="s-dash" x1="1535" y1="82" x2="1535" y2="104"/><path class="s-ar-a" d="M1531,104 L1535,113 L1539,104 z"/>
+<text class="s-txt-m" x="252" y="104" text-anchor="end" style="font-size:24px">ℝ<tspan dy="-8" style="font-size:22px">(−)</tspan></text>
+<text class="s-txt-m" x="1548" y="104" style="font-size:24px">ℝ<tspan dy="-8" style="font-size:22px">(−)</tspan></text>
+<line class="s-thin" x1="205" y1="212" x2="395" y2="212"/>
+<line class="s-thin" x1="1405" y1="212" x2="1595" y2="212"/>
+<rect class="s-line" x="213" y="176" width="34" height="36" style="fill:var(--p1)"/>
+<rect class="s-line" x="283" y="124" width="34" height="88" style="fill:var(--p2)"/>
+<rect class="s-line" x="353" y="150" width="34" height="62" style="fill:var(--p3)"/>
+<rect class="s-line" x="1413" y="150" width="34" height="62" style="fill:var(--p3)"/>
+<rect class="s-line" x="1483" y="176" width="34" height="36" style="fill:var(--p1)"/>
+<rect class="s-line" x="1553" y="124" width="34" height="88" style="fill:var(--p2)"/>
+<line class="s-line" x1="410" y1="176" x2="1381" y2="176"/><path class="s-ar-m" d="M1381,172 l9,4 -9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="900" y="160" text-anchor="middle" style="font-size:24px">Fσ</text>
+<text class="s-txt" x="300" y="248" text-anchor="middle" style="font-size:30px">ℝ<tspan dy="-11" style="font-size:22px">X</tspan></text>
+<text class="s-txt" x="1500" y="248" text-anchor="middle" style="font-size:30px">ℝ<tspan dy="-11" style="font-size:22px">Y</tspan></text>
+</svg>

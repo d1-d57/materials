@@ -59,16 +59,68 @@ TOLKO_TEKST_PAD_X, TOLKO_TEKST_PAD_Y = 192, 128  # `tipy.tolko_tekst`: grid padd
 # `zamer_smety.py` через `vmeshchenie.izmerit`, проба типа `tolko_tekst`
 # (`zamer_smety.py:211`), сверяется ловушкой 37 каждым коммитом. Сама формула
 # сметы НЕ менялась — обновлена калибровка под изменившийся CSS.
-# ⚠ ОХВАТ, две слепые зоны, обе объявлены:
-#   1) на калибровочной L2 заголовок пуст у 15 карточек из 15 (`grep -c
-#      'zagolovok_na_ekrane: ""' teorkat-vvedenie/L2/slajdy/*/slaid.md`) — ветка
-#      калибровкой не проверена, как и до этого захода;
-#   2) НОВАЯ: у заголовка теперь ДВЕ роли, а константа одна. Типы с иллюстрацией
-#      (`polosa_*`, `kompozit`) берут узкую роль --t-frametitle-n: 64 × 1.4 + 28 =
-#      117.6px, то есть смета завышает их цену на ~11px. Разводить константу по
-#      типу слайда — это правка МОДЕЛИ сметы, а её этот заход трогать не мог
-#      (§2: солвер не трогаем); переподбор идёт следующим заходом, там и место.
+# ⚠ ОХВАТ: на калибровочной L2 (дата данных 2026-08-08) заголовок был пуст у 15
+# карточек из 15 — ветка калибровкой не проверялась вовсе. С 2026-08-12 заголовки
+# есть у 12 карточек из 23, и обе объявленные тогда слепые зоны закрыты ниже.
 ZAGOLOVOK_PX = 128.99
+
+# 🔴 ДВЕ РОЛИ ЗАГОЛОВКА, а не одна константа. `tipy._zag_uzkij` включает узкую
+# роль темы (`--t-frametitle-n`, 64/1.4) на всех типах с иллюстрацией; широкую
+# (`--t-frametitle`, 76/1.333) берёт только полнотекстовый `tolko_tekst`. Одна
+# константа завышала цену заголовка узких типов на 11.67px — слепая зона была
+# объявлена здесь же и закрыта заходом dovodka-l2-fazy-2-3.
+#   python3 _generator/sborka/zamer_smety.py --geometriya   → zagolovok_po_tipam
+# Дата данных 2026-08-12.
+# (кегль, высота строки в px) — кегль нужен для ширины, высота строки для цены.
+ZAG_ROL = {"polosa_gorizontalnaya": (64.0, 89.6), "polosa_vertikalnaya": (64.0, 89.6),
+           "kompozit": (64.0, 89.6), "tolko_tekst": (76.0, 101.31)}
+ZAG_ROL_DEFAULT = (76.0, 101.31)   # роль без узкого переопределения
+ZAG_OTBIVKA_PX = 28.0              # `.zagolovok{margin-bottom:28px}` (tipy.GLOBAL_CSS)
+
+# 🔴 ПЕРЕНОС ЗАГОЛОВКА. Смета считала заголовок ОДНОЙ строкой всегда, а на живой
+# Л2 два из двенадцати переносятся в две («Двойственное пространство» на
+# `tolko_tekst`, «Естественный изоморфизм» на узкой вертикальной полосе) — и это
+# занижение на 1.3–2.4 строки, то есть в ОПАСНУЮ сторону: занижение прячет
+# переполнение. Средней ширины знака здесь не хватает — у дисплейного шрифта
+# `Cormorant Garamond` разброс `ширина/кегль` по живым заголовкам 0.598…0.700, а
+# граница «одна строка или две» лежит РОВНО внутри этого интервала. Поэтому
+# ширина считается по таблице глифов: сумма воспроизвела живую строку с точностью
+# 1.6% в сторону ЗАВЫШЕНИЯ (безопасную) и угадала число строк на всех 12
+# заголовках корпуса, оба переноса включительно.
+#   python3 _generator/sborka/zamer_smety.py --geometriya   → glif_zagolovka
+# Дата данных 2026-08-12; шрифт `100px "Cormorant Garamond", Forum, serif`.
+GLIF_ZAG = {
+    'А': 71.1, 'Б': 58.2, 'В': 58.2, 'Г': 52.2, 'Д': 71.6, 'Е': 54.7, 'Ё': 54.7,
+    'Ж': 100.6, 'З': 52.9, 'И': 76.6, 'Й': 76.6, 'К': 66.4, 'Л': 71.1, 'М': 85.0,
+    'Н': 76.2, 'О': 76.6, 'П': 74.8, 'Р': 54.9, 'С': 66.9, 'Т': 64.0, 'У': 62.0,
+    'Ф': 78.3, 'Х': 64.9, 'Ц': 73.3, 'Ч': 63.4, 'Ш': 105.4, 'Щ': 105.8, 'Ъ': 67.0,
+    'Ы': 87.3, 'Ь': 56.6, 'Э': 64.2, 'Ю': 104.3, 'Я': 61.2,
+    'A': 71.1, 'B': 58.2, 'C': 68.3, 'D': 70.0, 'E': 54.7, 'F': 51.8, 'G': 72.5,
+    'H': 76.2, 'I': 33.9, 'J': 33.3, 'K': 65.3, 'L': 54.1, 'M': 85.0, 'N': 73.2,
+    'O': 76.6, 'P': 54.9, 'Q': 76.6, 'R': 68.9, 'S': 50.7, 'T': 64.0, 'U': 70.1,
+    'V': 66.2, 'W': 91.8, 'X': 64.9, 'Y': 61.6, 'Z': 60.2,
+    '0': 47.7, '1': 33.2, '2': 40.2, '3': 39.2, '4': 45.4, '5': 40.9, '6': 46.5,
+    '7': 42.9, '8': 48.9, '9': 46.5,
+    ' ': 23.4, ',': 22.2, '.': 20.4, ';': 22.9, ':': 20.4, '!': 25.7, '?': 33.6,
+    '-': 32.3, '—': 83.0, '–': 51.5, '«': 46.8, '»': 46.8, '(': 30.9, ')': 30.9,
+    '[': 27.4, ']': 27.4, '*': 44.8, '/': 34.8, '+': 39.8, '=': 46.8, '&': 70.9,
+    '№': 86.3, '%': 57.4,
+}
+GLIF_ZAG_SREDNIJ = 58.96   # средняя непробельного — падение назад для знака вне таблицы
+
+
+def strok_zagolovka(tekst, tip_verstki, W):
+    """Текст заголовка + тип вёрстки + ширина зоны → (строк, цена в px).
+
+    Заголовок `text-transform:uppercase` — считается ВЕРХНИЙ регистр, тот, что
+    на экране. Пустой заголовок стоит НОЛЬ, а не одну строку."""
+    if not tekst or not str(tekst).strip():
+        return 0, 0.0
+    kegl, stroka = ZAG_ROL.get(tip_verstki, ZAG_ROL_DEFAULT)
+    # таблица на 100px → ширина при своём кегле
+    shirina = sum(GLIF_ZAG.get(c, GLIF_ZAG_SREDNIJ) for c in str(tekst).upper()) / 100.0 * kegl
+    n = max(1, math.ceil(shirina / W - 1e-9)) if W > 0 else 1
+    return n, n * stroka + ZAG_OTBIVKA_PX
 
 # ── Э2.2. ТРИ КОНСТАНТЫ ШРИФТА (`zamer_smety.py --konstanty teorkat-vvedenie/L2`)
 # k_znak — средняя ширина знака, делённая на кегль. n=14 слайдов, разброс НУЛЕВОЙ
@@ -220,6 +272,7 @@ class _ZonaParser(HTMLParser):
         self._v_ul = None
         self._zagolovok = False
         self.est_zagolovok = False
+        self.zagolovok_tekst = ""   # нужен для расчёта ПЕРЕНОСА заголовка
         self._lst_depth = None    # глубина открытия .lst (display:block внутри абзаца)
         self._acc_depth = None    # глубина открытия .acc (жирный — шире обычного)
 
@@ -342,7 +395,16 @@ class _ZonaParser(HTMLParser):
             self._stack.pop()
 
     def handle_data(self, data):
-        if self._zona_depth is None or self._zagolovok:
+        if self._zona_depth is None:
+            return
+        if self._zagolovok:
+            # текст заголовка нужен целиком, включая ГЛИФЫ формулы (заголовок
+            # `dvojstvennyj-bazis` — «Изоморфизм $V$ и $V^*$»): на экран
+            # переносится то, что видно, а не исходный TeX. Внутри `span.katex`
+            # берётся та же ветка `.katex-html`, что и для тела, — `.katex-mathml`
+            # рядом несёт дубль для скринридеров.
+            if self._katex_depth is None or self._html_depth is not None:
+                self.zagolovok_tekst += data
             return
         if self._katex_depth is not None:
             if self._html_depth is not None:
@@ -363,7 +425,9 @@ class _ZonaParser(HTMLParser):
 
 
 def _bloki_slajda(slide_path):
-    """Карточка → (params, блоки зоны). Браузер НЕ нужен."""
+    """Карточка → (sid, params, блоки зоны, текст заголовка на экране).
+    Браузер НЕ нужен. Текст заголовка — не «есть/нет»: он нужен, чтобы посчитать
+    ПЕРЕНОС (`strok_zagolovka`), а пустая строка и означает «заголовка нет»."""
     sid, html = compile_slide_html(slide_path)
     p = _ZonaParser()
     p.feed(html)
@@ -373,7 +437,7 @@ def _bloki_slajda(slide_path):
     if md.is_dir():
         md = md / "slaid.md"
     params, _ = parse_card(md.read_text(encoding="utf-8"), sid=sid)
-    return sid, params, p.bloki, p.est_zagolovok
+    return sid, params, p.bloki, " ".join(p.zagolovok_tekst.split())
 
 
 # ═════════════════════════ ФОРМУЛА СМЕТЫ (Э2.3) ═════════════════════════
@@ -387,7 +451,7 @@ def _chislo(params, key, default):
 
 def smeta_slajda(slide_path):
     """Одна карточка → смета. Чистый питон, без браузера."""
-    sid, params, bloki, est_zag = _bloki_slajda(slide_path)
+    sid, params, bloki, zag_tekst = _bloki_slajda(slide_path)
     tip = params.get("tip_verstki")
     liniya = _chislo(params, "liniya", None)
     W, H = geometriya(tip, liniya)
@@ -415,7 +479,9 @@ def smeta_slajda(slide_path):
     # каждой карточке с заголовком. Вердикт «влезает» при этом был верен, и
     # потому расхождение не кричало (нашёл верификатор §3: кластер −1.33/−1.34/
     # −1.35 на `demo-karta` и `zhivoj-teorkat`).
-    vysota_px = ZAGOLOVOK_PX if est_zag else 0.0
+    # Цена берётся по РОЛИ и с учётом ПЕРЕНОСА (`strok_zagolovka`), а не одной
+    # константой: см. её докстринг и замер выше.
+    zag_strok, vysota_px = strok_zagolovka(zag_tekst, tip, W)
     strok = vysota_px / stroka_px
     detali = []
     prev = None

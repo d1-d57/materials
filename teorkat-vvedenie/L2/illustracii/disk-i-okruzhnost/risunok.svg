@@ -1,28 +1,28 @@
-<svg viewBox="0 0 400 400" role="img" aria-label="Сверху окружность S1 и диск D2 крупными буквами: стрелка вложения i идёт вправо, дуга композиции разворачивается у диска и возвращается стрелкой в окружность с пометкой тождественная, пунктирная стрелка r возвращается снизу. Две длинные вертикальные пунктирные стрелки, обе подписаны пи-один, ведут к нижней диаграмме. Снизу такая же по устройству диаграмма для целых чисел и единичной группы, её дуга помечена как не тождественная">
-<text class="s-txt-m" x="195" y="34" text-anchor="middle" font-size="20" style="font-size:20px">i</text>
+<svg viewBox="18 0 372 388" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block" role="img" aria-label="Сверху окружность S1 и диск D2 крупными буквами: стрелка вложения i идёт вправо, дуга композиции разворачивается у диска и возвращается стрелкой в окружность с пометкой тождественная, пунктирная стрелка r возвращается снизу. Две длинные вертикальные пунктирные стрелки, обе подписаны пи-один, ведут к нижней диаграмме. Снизу такая же по устройству диаграмма для целых чисел и единичной группы, её дуга помечена как не тождественная">
+<text class="s-txt-m" x="195" y="34" text-anchor="middle" font-size="22" style="font-size:22px">i</text>
 <line class="s-thin" x1="87" y1="48" x2="305" y2="48"/>
 <path class="s-ar-m" d="M305,44 l9,4 -9,4 z"/>
 <text class="s-txt" x="48" y="100" text-anchor="middle" font-size="40" style="font-size:40px">S¹</text>
 <text class="s-txt" x="352" y="100" text-anchor="middle" font-size="40" style="font-size:40px">D²</text>
 <path class="s-line" d="M87,76 H300 A14,14 0 0,1 300,104 H87"/>
 <path class="s-ar-m" d="M87,100 L78,104 L87,108 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="195" y="97" text-anchor="middle" font-size="20" style="font-size:20px">id</text>
+<text class="s-txt-m" x="195" y="97" text-anchor="middle" font-size="22" style="font-size:22px">id</text>
 <line class="s-dash" x1="305" y1="132" x2="87" y2="132"/>
 <path class="s-ar-a" d="M87,128 l-9,4 9,4 z"/>
-<text class="s-txt-m" x="195" y="152" text-anchor="middle" font-size="20" style="font-size:20px">r</text>
+<text class="s-txt-m" x="195" y="152" text-anchor="middle" font-size="22" style="font-size:22px">r</text>
 <line class="s-dash" x1="48" y1="178" x2="48" y2="268"/>
 <path class="s-ar-a" d="M44,268 l4,9 4,-9 z"/>
 <line class="s-dash" x1="352" y1="178" x2="352" y2="268"/>
 <path class="s-ar-a" d="M348,268 l4,9 4,-9 z"/>
-<text class="s-txt-m" x="58" y="228" font-size="20" style="font-size:20px">π₁</text>
-<text class="s-txt-m" x="362" y="228" font-size="20" style="font-size:20px">π₁</text>
+<text class="s-txt-m" x="58" y="228" font-size="22" style="font-size:22px">π₁</text>
+<text class="s-txt-m" x="362" y="228" font-size="22" style="font-size:22px">π₁</text>
 <line class="s-thin" x1="87" y1="288" x2="305" y2="288"/>
 <path class="s-ar-m" d="M305,284 l9,4 -9,4 z"/>
 <text class="s-txt" x="48" y="332" text-anchor="middle" font-size="40" style="font-size:40px">ℤ</text>
 <text class="s-txt" x="352" y="332" text-anchor="middle" font-size="40" style="font-size:40px">{e}</text>
 <path class="s-line" d="M87,316 H300 A14,14 0 0,1 300,344 H87"/>
 <path class="s-ar-m" d="M87,340 L78,344 L87,348 z" style="fill:var(--ink)"/>
-<text class="s-txt-m" x="195" y="337" text-anchor="middle" font-size="20" style="font-size:20px">≠ id</text>
+<text class="s-txt-m" x="195" y="337" text-anchor="middle" font-size="22" style="font-size:22px">≠ id</text>
 <line class="s-dash" x1="305" y1="372" x2="87" y2="372"/>
 <path class="s-ar-a" d="M87,368 l-9,4 9,4 z"/>
 </svg>

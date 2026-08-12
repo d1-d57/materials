@@ -36,6 +36,10 @@ opiraetsya_na:
   - {termin: двойственное пространство, vvedeno: dvojstvennoe-prostranstvo}
 bez_opredeleniya_namerenno: []
 status: v_deke
+kegl_px: 35
+mezhstrochye: 1.2
+otstup_bloka: 8.1
+podbor_avto: 20fcd0fbc4fc|kegl_px=35|mezhstrochye=1.2|otstup_bloka=8.1
 ---
 ## Математика — развёрнуто
 ### [opredelenie] двойственный базис — координаты как функционалы

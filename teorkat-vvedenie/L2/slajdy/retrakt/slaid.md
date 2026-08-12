@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 60
 tip_verstki: polosa_gorizontalnaya
-liniya: 62.82
+liniya: 67.85
 matematika_iz: [Ретракт]
 illustracii: [funktor-perenosit-retrakt]
 vvodit: [ретракция, сечение, ретракт]
@@ -33,10 +33,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: 🔴 12.08 владелец разрешил развилку В5 в пользу картинки, и вёрстка вернулась к полосе. Диаграмма двухъярусная и широкая (перенос всего чертежа вниз), поэтому полоса ГОРИЗОНТАЛЬНАЯ, а не вертикальная: в узкой колонке два яруса встанут друг на друга и вертикальная связь пропадёт. Заголовок «Ретракты» крупным остаётся — он был отдельным требованием 08.08 и картинкой не отменён. Типографику подбирает солвер
-kegl_px: 39
+kegl_px: 35
 mezhstrochye: 1.274
-otstup_bloka: 12.9
-podbor_avto: 8aa0f527ff6b|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya=62.82
+otstup_bloka: 11.6
+podbor_avto: ae1f4068bb9e|kegl_px=35|mezhstrochye=1.274|otstup_bloka=11.6|liniya=67.85
 ---
 
 ## Математика — развёрнуто
@@ -62,10 +62,11 @@ podbor_avto: 8aa0f527ff6b|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya
 
 ## Текст слайда — сжато
 ### [opredelenie] язык ретракта
-Пусть $s\colon A\to B$ и $r\colon B\to A$ дают $r\circ s=\mathrm{id}_A\text{.}$ Тогда $r$ — **ретракция**, $s$ — **сечение**, $A$ — **ретракт** объекта $B$
+$s\colon A\to B$ и $r\colon B\to A$ с $r\circ s=\mathrm{id}_A\colon$ $r$ — **ретракция**, $s$ — **сечение**, $A$ — **ретракт** $B$
 
 ### [primer] в каких случаях подобъект оказывается ретрактом
-Когда у вложения $A$ в $B$ найдётся $r$?
+Когда у вложения $A\hookrightarrow B$ найдётся $r$?
+
 - $\mathbf{Set}$ и $\mathbf{Vect}\colon$ всегда
 - $\mathbf{Grp}\colon$ ровно когда $B=N\rtimes A$
 - $\mathbf{Top}\colon$ общего ответа нет — нужен инструмент

@@ -213,7 +213,69 @@ def zamer_geometrii(page, tmp):
     p = Path(tmp) / "s.html"
     p.write_text(html, encoding="utf-8")
     out["zagolovok_px"] = round(vmeshchenie.izmerit(page, p)["zagolovok_h"], 2)
+
+    # 🔴 У заголовка ДВЕ роли, а не одна: `tipy._zag_uzkij` включает
+    # `--t-frametitle-n` (64/1.4) на всех типах с иллюстрацией, а полнотекстовый
+    # `tolko_tekst` берёт широкую `--t-frametitle` (76/1.333). Смета до этого
+    # знала одну константу и завышала цену заголовка узких типов на ~11px —
+    # слепая зона была ОБЪЯВЛЕНА в `smeta.py` и здесь закрывается замером.
+    # Снимается цена СТРОКИ (`line-height`) и отбивка (`margin-bottom`), а не
+    # высота пробного заголовка целиком: на узкой зоне проба сама переносится в
+    # две строки, и «высота» замерила бы не роль, а длину пробного текста.
+    for tip in TIPY_S_TEKSTOM:
+        md = _kartochka(tmp, "z_zag_%s" % tip, tip, 50, zagolovok="Замер")
+        _, html = compile_slide_html(md)
+        p.write_text(html, encoding="utf-8")
+        page.goto("file://" + p.resolve().as_posix())
+        page.wait_for_timeout(80)
+        out.setdefault("zagolovok_po_tipam", {})[tip] = page.evaluate(_JS_ZAG_ROL)
+
+    # 🔴 ПЕРЕНОС заголовка. Одной цены за строку недостаточно: на живой Л2 два
+    # заголовка из двенадцати переносятся в ДВЕ строки («Двойственное
+    # пространство», «Естественный изоморфизм»), и смета их считала одной —
+    # занижение на 1.3–2.4 строки, то есть в опасную сторону (пропуск
+    # переполнения). Считать перенос средней шириной знака нельзя: у дисплейного
+    # шрифта разброс `ширина/кегль` по живым заголовкам 0.598–0.700, а граница
+    # «одна строка или две» лежит РОВНО в этом интервале. Поэтому снимается
+    # таблица ширин глифов (canvas `measureText` на 100px, тот же шрифт, что
+    # применён к `.zagolovok`) — сумма по таблице воспроизвела ширину живой
+    # строки с точностью 1.6% в сторону завышения (безопасную) и угадала число
+    # строк на всех 12 заголовках корпуса.
+    ALFAVIT = ("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+               "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+               "0123456789"
+               " ,.;:!?-—–«»()[]*/+=&№%")
+    out["glif_zagolovka"] = page.evaluate(_JS_GLIFY, ALFAVIT)
     return out
+
+
+_JS_ZAG_ROL = r"""
+() => {
+  const zone = document.querySelector('.zone.t-body');
+  const zag = zone && zone.querySelector('.zagolovok');
+  if (!zag) return {error: 'заголовка нет на пробе'};
+  const cs = getComputedStyle(zag);
+  const pz = getComputedStyle(zone);
+  const okr = (x) => Math.round(x * 100) / 100;
+  return {kegl: parseFloat(cs.fontSize), stroka_px: okr(parseFloat(cs.lineHeight)),
+          otbivka_px: okr(parseFloat(cs.marginBottom)),
+          W: okr(zone.clientWidth - parseFloat(pz.paddingLeft) - parseFloat(pz.paddingRight))};
+}
+"""
+
+# Заголовок `text-transform:uppercase` — меряем ВЕРХНИЙ регистр, тот, что на экране.
+_JS_GLIFY = r"""
+(chars) => {
+  const zag = document.querySelector('.zagolovok');
+  if (!zag) return {error: 'заголовка нет на пробе'};
+  const cs = getComputedStyle(zag);
+  const cv = document.createElement('canvas').getContext('2d');
+  cv.font = cs.fontStyle + ' ' + cs.fontWeight + ' 100px ' + cs.fontFamily;
+  const t = {};
+  for (const ch of chars) t[ch] = Math.round(cv.measureText(ch).width * 100) / 100;
+  return {font: cv.font, na_100px: t};
+}
+"""
 
 
 def zamer_konstant(page, lekcija):

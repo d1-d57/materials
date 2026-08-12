@@ -34,6 +34,7 @@ obosnovanie_verstki: новый слайд с текстовыми итогам�
 kegl_px: 41
 mezhstrochye: 1.57
 otstup_bloka: 30.3
+podbor_avto: 895e3e6cc05b|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 ---
 
 ## Математика — развёрнуто

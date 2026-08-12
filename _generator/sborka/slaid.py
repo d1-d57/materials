@@ -99,8 +99,12 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
     lekcija_dir = slide_path.parents[2]
     math = load_math_cache(lekcija_dir)
     body_html = render_body(body_md, acc_tag=acc_tag, math=math, sid=sid)
-    check_no_missing_math(body_html, sid, lekcija_dir)
+    # формулы бывают и в `zagolovok_na_ekrane` (tipy._zagolovok_html) — тот же кэш
+    params["_math"] = math
     css, slide_html = compile_tip(sid, params, body_html)
+    # 🔴 проверка ПОСЛЕ compile_tip, а не только по `body_html`: заголовок слайда
+    # тоже рендерит формулы, и по телу его брак не виден.
+    check_no_missing_math(slide_html, sid, lekcija_dir)
     # 🔴 БЕЗ `data-scenes` движок (`scenesOf`, engine.js) считает слайд односценовым
     # безусловно, и БЕЗ порождённого каскада (`{{SCENE_CASCADE}}`) правило
     # `[data-scene-from]{opacity:0}` (base.css) ничем не переопределяется — пропуск

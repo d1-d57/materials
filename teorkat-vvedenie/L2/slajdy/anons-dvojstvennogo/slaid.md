@@ -35,6 +35,10 @@ opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: [двойственное пространство, канонический изоморфизм]
 status: v_deke
+kegl_px: 40
+mezhstrochye: 1.496
+otstup_bloka: 25.5
+podbor_avto: 6fb229ccb2fc|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5
 ---
 ## Математика — развёрнуто
 ### [narrativ] куда мы идём — конструкция $V\mapsto V^*$ и чего ей не хватает

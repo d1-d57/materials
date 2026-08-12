@@ -69,8 +69,12 @@ def _compile_one(slide_path_str):
     lekcija_dir = slide_path.parents[2]
     math = load_math_cache(lekcija_dir)
     body_html = render_body(body_md, acc_tag="span", math=math, sid=sid)
-    check_no_missing_math(body_html, sid, lekcija_dir)
+    # формулы бывают и в `zagolovok_na_ekrane` (tipy._zagolovok_html) — тот же кэш
+    params["_math"] = math
     css, html = compile_tip(sid, params, body_html)
+    # 🔴 проверка ПОСЛЕ compile_tip, а не только по `body_html`: заголовок слайда
+    # тоже рендерит формулы, и по телу его брак не виден.
+    check_no_missing_math(html, sid, lekcija_dir)
     n_scenes = max_scenes(html)
     return (sid, params.get("tip_verstki"), params.get("status", "v_deke"),
             params["illustracii"], css, html, n_scenes)
@@ -444,6 +448,7 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     sluzhebnye = plan_sluzhebnyh(meta, {s: tip_by_sid[s] for s in slide_order}, zanyatye_sid=have)
     for sid, params, tekst_md in sluzhebnye:
         body_html = render_body(tekst_md, acc_tag="span", math=math, sid=sid) if tekst_md else ""
+        params["_math"] = math
         css, html = compile_tip(sid, params, body_html)
         by_id[sid] = (params["tip_verstki"], "v_deke", params["illustracii"],
                        css, html, max_scenes(html))

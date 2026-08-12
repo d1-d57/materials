@@ -34,6 +34,12 @@ from vmeshchenie import izmerit  # noqa: E402
 # стоит в `deck.py:_podobrat_tipografiku` — пропуск ДО вызова измерителя.
 T_BODY_RE = re.compile(r'class="[^"]*\bt-body\b[^"]*"')
 
+# 🔴 Порог обреза по ШИРИНЕ, px. Не ноль: `scrollWidth`/`clientWidth` целые, и
+# субпиксельная вёрстка (KaTeX ставит дроби) регулярно даёт 1–2px шума на
+# заведомо влезающих строках. Живые обрезы Л2 были +93…+724px — на два порядка
+# выше шума, так что порог различает их без спора.
+PORAG_SHIRINY = 4
+
 
 def check_slide(page, html_path):
     """Один скомпилированный слайд → (ok: bool, fill: float, clipped: bool)."""
@@ -68,17 +74,27 @@ def main():
             r = check_slide(page, html)
             fill = r["fill"]
             clipped = fill is not None and fill > 100
-            status = "❌ ОБРЕЗАНО" if clipped else "✅ влезло"
-            print("%s  %-40s заполнение %.1f%%" % (status, html, fill if fill is not None else -1))
-            if clipped:
-                bad.append((html, fill))
+            perelivX = r.get("pereliv_x") or 0
+            plohо = clipped or perelivX > PORAG_SHIRINY
+            status = "❌ ОБРЕЗАНО" if plohо else "✅ влезло"
+            hvost = ("  ⟵ за правый край +%dpx: %s" % (perelivX, r.get("pereliv_chto"))
+                     if perelivX > PORAG_SHIRINY else "")
+            print("%s  %-40s заполнение %.1f%%%s"
+                  % (status, html, fill if fill is not None else -1, hvost))
+            if plohо:
+                bad.append((html, fill, perelivX, r.get("pereliv_chto")))
         b.close()
 
     if bad:
         print("\nГЕЙТ КРАСНЫЙ: %d слайд(ов) обрезано:" % len(bad), file=sys.stderr)
-        for html, fill in bad:
-            print("  %s — заполнение %.1f%%, не влезает %.1f%% высоты зоны"
-                  % (html, fill, fill - 100), file=sys.stderr)
+        for html, fill, perelivX, chto in bad:
+            if fill is not None and fill > 100:
+                print("  %s — заполнение %.1f%%, не влезает %.1f%% высоты зоны"
+                      % (html, fill, fill - 100), file=sys.stderr)
+            if perelivX > PORAG_SHIRINY:
+                print("  %s — уезжает за правый край на %dpx: «%s». Кегль тут не спасёт: "
+                      "неразрывный атом шире колонки — разбить строку в карточке"
+                      % (html, perelivX, chto), file=sys.stderr)
         return 1
     print("\nГЕЙТ ЗЕЛЁНЫЙ: все %d слайд(ов) с текстом влезли (%d без текстовой зоны — не мерены)."
           % (len(args.html) - skipped, skipped))

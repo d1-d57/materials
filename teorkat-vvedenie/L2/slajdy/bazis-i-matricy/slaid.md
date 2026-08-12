@@ -33,8 +33,9 @@ bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: иллюстрация снята как бессмысленная, текста среднее — по доктрине «среднее без картинки» это только текст, полосы быть не должно. Типографику подбирает солвер
 kegl_px: 38
-mezhstrochye: 1.274
-otstup_bloka: 12.6
+mezhstrochye: 1.2
+otstup_bloka: 8.7
+podbor_avto: 6b7d14c1504f|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
 ---
 
 ## Математика — развёрнуто

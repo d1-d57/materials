@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 78
 tip_verstki: polosa_vertikalnaya
-liniya: 66.15
+liniya: 68.99
 matematika_iz: [Векторные пространства]
 illustracii: [vektory-na-ploskosti]
 vvodit: [векторное пространство, линейное отображение]
@@ -31,12 +31,12 @@ opiraetsya_na:
   - {termin: категория, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 39
-mezhstrochye: 1.274
-otstup_bloka: 12.9
+kegl_px: 37
+mezhstrochye: 1.2
+otstup_bloka: 8.5
 obosnovanie_verstki: среднее текста плюс новая иллюстрация со сложением векторов — вертикальная полоса. Полоса на месте, вместимость добрана типографикой, кегль поднят до 40
 zagolovok_snyat_namerenno: da
-podbor_avto: 1427fd46a8f7|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya=66.15
+podbor_avto: 66ccdff31ffd|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68.99
 ---
 
 ## Математика — развёрнуто
@@ -57,9 +57,13 @@ podbor_avto: 1427fd46a8f7|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya
 ### [opredelenie] векторные пространства и линейные отображения
 **Векторное пространство** над $\mathbb R$ — множество $V$ с операциями $+\colon V\times V\to V$ и $\cdot\colon\mathbb R\times V\to V\text{,}$ для которых
 
-{.formula} $u+v=v+u\text{,}\quad (u+v)+w=u+(v+w)\text{,}\quad v+0=v\text{,}\quad \forall v\ \exists\,(-v)\colon\ v+(-v)=0$
+{.formula} $u+v=v+u\text{,}\quad (u+v)+w=u+(v+w)$
 
-{.formula} $\lambda(\mu v)=(\lambda\mu)v\text{,}\quad 1\cdot v=v\text{,}\quad \lambda(u+v)=\lambda u+\lambda v\text{,}\quad (\lambda+\mu)v=\lambda v+\mu v$
+{.formula} $v+0=v\text{,}\quad \forall v\ \exists\,(-v)\colon\ v+(-v)=0$
+
+{.formula} $\lambda(\mu v)=(\lambda\mu)v\text{,}\quad 1\cdot v=v$
+
+{.formula} $\lambda(u+v)=\lambda u+\lambda v\text{,}\quad (\lambda+\mu)v=\lambda v+\mu v$
 
 ### [primer] какие бывают векторные пространства
 - наборы $(x_1,\dots,x_n)\colon$ $\mathbb R^n$ и $\mathbb C^n$ — $(x_i)+(y_i)=(x_i+y_i)\text{,}$ $\lambda(x_i)=(\lambda x_i)$
