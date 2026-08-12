@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1900 394" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block" role="img" aria-label="Один и тот же чертёж, повторённый двумя ярусами. Вверху объекты A и B: тонкая стрелка s ведёт от A к B, пунктирная стрелка r возвращается от B к A, а между ними жирная дуга выходит из A, разворачивается полукругом у B и возвращается стрелкой в тот же A — она помечена как тождественная стрелка объекта A. Две пунктирные стрелки, обе подписанные F, ведут от A и от B вниз. Внизу — тот же чертёж буква в букву для образов: объекты F от A и F от B, стрелки F от s и F от r и такая же жирная дуга, возвращающаяся в F от A и помеченная тождественной стрелкой объекта F от A">
+<text class="s-txt-m" x="950" y="32" text-anchor="middle" style="font-size:32px">s</text>
+<line class="s-thin" x1="118" y1="44" x2="1758" y2="44"/><path class="s-ar-m" d="M1758,40 l9,4 -9,4 z"/>
+<path class="s-line" d="M118,64 H1744 A20,20 0 0,1 1744,104 H118"/>
+<path class="s-ar-m" d="M118,100 l-9,4 9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="950" y="95" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:22px">A</tspan></text>
+<line class="s-dash" x1="1767" y1="130" x2="118" y2="130"/><path class="s-ar-a" d="M118,126 l-9,4 9,4 z"/>
+<text class="s-txt-m" x="950" y="164" text-anchor="middle" style="font-size:32px">r</text>
+<text class="s-txt" x="50" y="107" text-anchor="middle" style="font-size:62px">A</text>
+<text class="s-txt" x="1844" y="107" text-anchor="middle" style="font-size:62px">B</text>
+<text class="s-txt-m" x="950" y="258" text-anchor="middle" style="font-size:32px">Fs</text>
+<line class="s-thin" x1="118" y1="270" x2="1758" y2="270"/><path class="s-ar-m" d="M1758,266 l9,4 -9,4 z"/>
+<path class="s-line" d="M118,290 H1744 A20,20 0 0,1 1744,330 H118"/>
+<path class="s-ar-m" d="M118,326 l-9,4 9,4 z" style="fill:var(--ink)"/>
+<text class="s-txt-m" x="950" y="321" text-anchor="middle" style="font-size:32px">id<tspan dy="5" style="font-size:22px">FA</tspan></text>
+<line class="s-dash" x1="1767" y1="356" x2="118" y2="356"/><path class="s-ar-a" d="M118,352 l-9,4 9,4 z"/>
+<text class="s-txt-m" x="950" y="390" text-anchor="middle" style="font-size:32px">Fr</text>
+<text class="s-txt" x="50" y="333" text-anchor="middle" style="font-size:62px">FA</text>
+<text class="s-txt" x="1844" y="333" text-anchor="middle" style="font-size:62px">FB</text>
+<line class="s-dash" x1="50" y1="123" x2="50" y2="269"/><path class="s-ar-a" d="M46,269 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="63" y="206" style="font-size:32px">F</text>
+<line class="s-dash" x1="1844" y1="123" x2="1844" y2="269"/><path class="s-ar-a" d="M1840,269 l4,9 4,-9 z"/>
+<text class="s-txt-m" x="1857" y="206" style="font-size:32px">F</text>
+</svg>

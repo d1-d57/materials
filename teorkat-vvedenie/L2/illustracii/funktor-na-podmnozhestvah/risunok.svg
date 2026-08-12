@@ -1,0 +1,22 @@
+<svg viewBox="0 0 840 208" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%;display:block" role="img" aria-label="Два яруса. Вверху множества X и Y, по четыре точки; стрелка сигма переименовывает — сиреневая и синяя точки X стоят на первых двух местах, а в Y те же сиреневая и синяя стоят на двух последних. Внизу те же множества как P2 от X и P2 от Y, по шесть безымянных точек, между ними стрелка P2 от сигма. В каждом нижнем множестве выделена ровно одна точка, и к ней сходятся две пунктирные линии от сиреневой и синей точек своего верхнего множества: эта точка и есть та пара. Две вертикальные стрелки, обе подписаны P2, ведут от верхнего яруса к нижнему и замыкают квадрат из четырёх стрелок">
+<ellipse class="s-thin" cx="152" cy="54" rx="74" ry="23"/><ellipse class="s-thin" cx="688" cy="54" rx="74" ry="23"/>
+<ellipse class="s-thin" cx="152" cy="152" rx="100" ry="25"/><ellipse class="s-thin" cx="688" cy="152" rx="100" ry="25"/>
+<line class="s-dash" x1="98" y1="62" x2="104" y2="144"/><line class="s-dash" x1="134" y1="62" x2="104" y2="144"/>
+<line class="s-dash" x1="706" y1="62" x2="736" y2="144"/><line class="s-dash" x1="742" y1="62" x2="736" y2="144"/>
+<line class="s-line" x1="234" y1="54" x2="606" y2="54"/><path class="s-ar-m" d="M606,50 l9,4 -9,4 z" style="fill:var(--ink)"/>
+<line class="s-line" x1="260" y1="152" x2="580" y2="152"/><path class="s-ar-m" d="M580,148 l9,4 -9,4 z" style="fill:var(--ink)"/>
+<line class="s-line" x1="152" y1="80" x2="152" y2="115"/><path class="s-ar-m" d="M148,115 l4,9 4,-9 z" style="fill:var(--ink)"/>
+<line class="s-line" x1="688" y1="80" x2="688" y2="115"/><path class="s-ar-m" d="M684,115 l4,9 4,-9 z" style="fill:var(--ink)"/>
+<circle class="s-node s-node-c1" cx="98" cy="54" r="5"/><circle class="s-node s-node-c2" cx="134" cy="54" r="5"/><circle class="s-node" cx="170" cy="54" r="5"/><circle class="s-node" cx="206" cy="54" r="5"/>
+<circle class="s-node" cx="634" cy="54" r="5"/><circle class="s-node" cx="670" cy="54" r="5"/><circle class="s-node s-node-c1" cx="706" cy="54" r="5"/><circle class="s-node s-node-c2" cx="742" cy="54" r="5"/>
+<circle class="s-node" cx="72" cy="152" r="5"/><circle class="s-node-a" cx="104" cy="152" r="5"/><circle class="s-node" cx="136" cy="152" r="5"/><circle class="s-node" cx="168" cy="152" r="5"/><circle class="s-node" cx="200" cy="152" r="5"/><circle class="s-node" cx="232" cy="152" r="5"/>
+<circle class="s-node" cx="608" cy="152" r="5"/><circle class="s-node" cx="640" cy="152" r="5"/><circle class="s-node" cx="672" cy="152" r="5"/><circle class="s-node" cx="704" cy="152" r="5"/><circle class="s-node-a" cx="736" cy="152" r="5"/><circle class="s-node" cx="768" cy="152" r="5"/>
+<text class="s-txt" x="152" y="20" text-anchor="middle" font-size="23" style="font-size:23px">X</text>
+<text class="s-txt" x="688" y="20" text-anchor="middle" font-size="23" style="font-size:23px">Y</text>
+<text class="s-txt" x="152" y="199" text-anchor="middle" font-size="23" style="font-size:23px">P₂(X)</text>
+<text class="s-txt" x="688" y="199" text-anchor="middle" font-size="23" style="font-size:23px">P₂(Y)</text>
+<text class="s-txt-m" x="420" y="42" text-anchor="middle" font-size="19" style="font-size:19px">σ</text>
+<text class="s-txt-m" x="420" y="140" text-anchor="middle" font-size="19" style="font-size:19px">P₂(σ)</text>
+<text class="s-txt-m" x="163" y="104" font-size="19" style="font-size:19px">P₂</text>
+<text class="s-txt-m" x="677" y="104" text-anchor="end" font-size="19" style="font-size:19px">P₂</text>
+</svg>
