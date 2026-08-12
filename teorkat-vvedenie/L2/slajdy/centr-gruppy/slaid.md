@@ -23,18 +23,19 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 50
 tip_verstki: polosa_vertikalnaya
-liniya: 66
+liniya: 40.58
 matematika_iz: [Центр группы]
 illustracii: [centr-i-ego-obraz]
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 40
-mezhstrochye: 1.35
-otstup_bloka: 16
+kegl_px: 37
+mezhstrochye: 1.2
+otstup_bloka: 8.5
 obosnovanie_verstki: среднее текста плюс иллюстрация — вертикальная полоса. Полоса подвинута с 67 на 66: этого хватило, чтобы поднять кегль до 40 при дышащем межстрочье, слайд перестал резаться
 zagolovok_snyat_namerenno: da
+podbor_avto: 887fcbe3f8e6|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=40.58
 ---
 
 ## Математика — развёрнуто

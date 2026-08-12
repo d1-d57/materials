@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 45
 tip_verstki: polosa_gorizontalnaya
-liniya: 58
+liniya: 52.75
 matematika_iz: [Теорема Брауэра]
 illustracii: [luch-brauera]
 vvodit: []
@@ -32,10 +32,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: горизонтальная полоса по прямому указанию владельца: у неё большой запас по высоте и её можно двигать. Текста мало — кегль поднят до канонного потолка 44, полоса оставлена во всю высоту. Заголовок обязателен: без него непонятно, о чём слайд
-kegl_px: 35
-mezhstrochye: 1.496
-otstup_bloka: 22.3
-podbor_avto: 99d27cc4ba9c|kegl_px=35|mezhstrochye=1.496|otstup_bloka=22.3
+kegl_px: 36
+mezhstrochye: 1.274
+otstup_bloka: 12.0
+podbor_avto: 99d27cc4ba9c|kegl_px=36|mezhstrochye=1.274|otstup_bloka=12.0|liniya=52.75
 ---
 
 ## Математика — развёрнуто

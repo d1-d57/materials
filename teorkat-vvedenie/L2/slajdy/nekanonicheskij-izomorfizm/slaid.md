@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 50
 tip_verstki: polosa_gorizontalnaya
-liniya: 82
+liniya: 62.82
 matematika_iz: [Для $V^*$ канонического нет]
 illustracii: [kvadrat-so-skalyarom]
 vvodit: []
@@ -34,10 +34,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: текста меньше всех в деке — по прямому указанию владельца вертикальная полоса сменена на горизонтальную. Пустоту, которую даёт мало текста, добираю кеглем до канонного потолка 44, как владелец и предлагал («или увеличим кегль»); полоса сохраняет полную высоту под картинку
-kegl_px: 39
-mezhstrochye: 1.496
-otstup_bloka: 24.9
-podbor_avto: e15befa5787b|kegl_px=39|mezhstrochye=1.496|otstup_bloka=24.9|liniya=82
+kegl_px: 38
+mezhstrochye: 1.274
+otstup_bloka: 12.6
+podbor_avto: 807bf0f50404|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=62.82
 ---
 
 ## Математика — развёрнуто

@@ -23,7 +23,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 60
 tip_verstki: polosa_gorizontalnaya
-liniya: 62
+liniya: 62.82
 matematika_iz: [Ретракт]
 illustracii: [funktor-perenosit-retrakt]
 vvodit: [ретракция, сечение, ретракт]
@@ -33,9 +33,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: 🔴 12.08 владелец разрешил развилку В5 в пользу картинки, и вёрстка вернулась к полосе. Диаграмма двухъярусная и широкая (перенос всего чертежа вниз), поэтому полоса ГОРИЗОНТАЛЬНАЯ, а не вертикальная: в узкой колонке два яруса встанут друг на друга и вертикальная связь пропадёт. Заголовок «Ретракты» крупным остаётся — он был отдельным требованием 08.08 и картинкой не отменён. Типографику подбирает солвер
-kegl_px: 38
-mezhstrochye: 1.2
-otstup_bloka: 8.7
+kegl_px: 39
+mezhstrochye: 1.274
+otstup_bloka: 12.9
+podbor_avto: 8aa0f527ff6b|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9|liniya=62.82
 ---
 
 ## Математика — развёрнуто

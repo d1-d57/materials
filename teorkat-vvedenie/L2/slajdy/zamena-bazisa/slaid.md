@@ -23,7 +23,7 @@ minuty: 8
 vazhnost: opornyj
 byudzhet_slov: 75
 tip_verstki: polosa_vertikalnaya
-liniya: 66
+liniya: 71.83
 matematika_iz: [Дважды двойственное]
 illustracii: [kvadrat-zameny-bazisa]
 vvodit: [матрица линейного отображения]
@@ -31,11 +31,12 @@ opiraetsya_na:
   - {termin: базис, vvedeno: bazis-i-matricy}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 38
-mezhstrochye: 1.35
-otstup_bloka: 16
+kegl_px: 39
+mezhstrochye: 1.348
+otstup_bloka: 16.9
 obosnovanie_verstki: горизонтальная полоса сменена на вертикальную по прямому указанию владельца — так текст влезает. Кегль 38, межстрочье дышащее, картинка держит полную высоту полосы
 zagolovok_snyat_namerenno: da
+podbor_avto: 40f98b7a5723|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9|liniya=71.83
 ---
 
 ## Математика — развёрнуто

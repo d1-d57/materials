@@ -23,7 +23,7 @@ minuty: 6
 vazhnost: osnovnoj
 byudzhet_slov: 75
 tip_verstki: polosa_gorizontalnaya
-liniya: 58
+liniya: 75.4
 matematika_iz: [Категория]
 illustracii: [kompoziciya-perestanovok]
 vvodit: [категория]
@@ -31,10 +31,11 @@ opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
 zagolovok_snyat_namerenno: da
-kegl_px: 36
-mezhstrochye: 1.25
-otstup_bloka: 10
+kegl_px: 37
+mezhstrochye: 1.2
+otstup_bloka: 8.5
 obosnovanie_verstki: текста много, иллюстрации нет — по доктрине «текст во весь слайд». tolko_tekst не подошёл: его поле grid ложится поверх поля зоны и съедает 128px высоты, слайд резался на 167%. Заголовок снят как переключатель «по соображениям места» — только так текст влезает при кегле 36 и дышащем межстрочье
+podbor_avto: 5b20e73e380b|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=75.4
 ---
 
 ## Математика — развёрнуто
