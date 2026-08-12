@@ -66,7 +66,11 @@ $s\colon A\to B$ и $r\colon B\to A\text{,}$ причём $r\circ s=\mathrm{id}_
 Тогда $r$ — **ретракция**, $s$ — **сечение**, $A$ — **ретракт** объекта $B$
 
 ### [primer] в каких случаях подобъект оказывается ретрактом
-заполнить
+Когда у вложения $A$ в $B$ найдётся $r$?
+
+- $\mathbf{Set}$ и $\mathbf{Vect}\colon$ всегда
+- $\mathbf{Grp}\colon$ ровно когда $B=N\rtimes A$
+- $\mathbf{Top}\colon$ общего ответа нет — нужен инструмент
 
 ### [utverzhdenie] ретракт переживает функтор
 $A$ ретракт $B$ $\Rightarrow$ $FA$ ретракт $FB\colon$ $Fr\circ Fs=F(r\circ s)=\mathrm{id}_{FA}$
