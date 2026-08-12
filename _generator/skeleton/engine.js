@@ -139,6 +139,104 @@ function scaleSlide(slide, pad = 0.997) {  /* max screen, no frame margins */
   slide.style.transform =
     'scale(' + Math.min(innerWidth / W, innerHeight / H) * pad + ')';
 }
+
+/* ---- ВЫЛЕТ ФОНА ЗА КАДР (доводка Л2, Ф1а) ----
+   Летербокс сделали цветом холста (base.css, Ш3) — и осталась вторая половина
+   того же дефекта: на слайде с полосой зелёная панель обрывалась ровно на кромке
+   кадра, номер слайда внизу лежал на бежевом ПОД зелёной полосой, и кадр всё
+   равно читался границей. Здесь поля дописываются: каждая точка поля берёт цвет
+   той точки слайда, что стоит над ней (или сбоку от неё).
+   Раскраска снимается с ЖИВОГО DOM, а не повторяет типы вёрстки из tipy.py:
+   девять типов (polosa_gorizontalnaya, polosa_vertikalnaya, kompozit, vizitka…)
+   пришлось бы описать вторым, независимым списком — и он молча отстал бы от
+   первого на следующем новом типе. Правило простое и типов не знает: элемент с
+   непрозрачным фоном, дотянувшийся до кромки кадра, продолжает свой цвет наружу
+   по этой кромке; коснулся двух кромок — заполняет и угол.
+   ::before читается отдельно, потому что линейка между текстом и картинкой
+   (_linija_ill) — именно псевдоэлемент, и на слайде с ВЕРТИКАЛЬНОЙ полосой без
+   неё поле сверху получалось двухцветным, но без разделителя.
+   Порядок обхода = порядок DOM = порядок отрисовки: вложенный фон ложится
+   поверх фона родителя, как и в самом слайде. */
+const bleed = document.createElement('div');
+bleed.id = 'bleed';
+const bleedBands = document.createElement('div');
+bleedBands.style.cssText = 'position:absolute;inset:0';
+const bleedUzor = document.createElement('div');
+bleedUzor.id = 'bleed-uzor';
+bleed.appendChild(bleedBands);
+bleed.appendChild(bleedUzor);
+/* ПЕРВЫМ ребёнком body, а не последним: слой обязан лежать выше фона body и ниже
+   #stage, а у позиционированных соседей с z-index:auto порядок отрисовки = порядок
+   DOM. Приписанный в конец (как #lect-zone ниже) он закрыл бы собою слайд. */
+document.body.insertBefore(bleed, document.body.firstChild);
+/* «rgba(…, 0)» — это ПРОЗРАЧНО, и именно такую строку отдаёт getComputedStyle
+   для фона по умолчанию: без этой проверки поля залились бы чёрным. */
+const isOpaque = c => !!c && c !== 'transparent' && !/,\s*0\s*\)\s*$/.test(c);
+function bleedOff() {
+  bleed.style.display = 'none';
+  slides.forEach(s => {
+    s.style.removeProperty('--uzor-sz');
+    s.style.removeProperty('--uzor-x');
+    s.style.removeProperty('--uzor-y');
+  });
+}
+function paintBleed(slide) {
+  const r = slide.getBoundingClientRect();
+  const k = r.width / W || 1;                    // масштаб кадра → локальные px
+  const padT = r.top, padB = innerHeight - r.bottom,
+        padL = r.left, padR = innerWidth - r.right;
+  bleed.style.display = '';
+  bleedBands.textContent = '';
+  const eps = 1.5;                               // pad 0.997 в scaleSlide даёт дробную щель
+  const put = (x, y, w, h, bg, op) => {
+    if (w <= .5 || h <= .5) return;
+    const d = document.createElement('div');
+    d.style.cssText = 'position:absolute;left:' + x + 'px;top:' + y + 'px;width:' +
+      w + 'px;height:' + h + 'px;background:' + bg + ';opacity:' + op;
+    bleedBands.appendChild(d);
+  };
+  const spill = (q, bg, op) => {
+    const onT = q.top <= r.top + eps, onB = q.bottom >= r.bottom - eps;
+    const onL = q.left <= r.left + eps, onR = q.right >= r.right - eps;
+    const x0 = onL ? 0 : q.left, x1 = onR ? innerWidth : q.right;
+    const y0 = onT ? 0 : q.top,  y1 = onB ? innerHeight : q.bottom;
+    if (onT) put(x0, 0, x1 - x0, padT, bg, op);
+    if (onB) put(x0, r.bottom, x1 - x0, padB, bg, op);
+    if (onL) put(0, y0, padL, y1 - y0, bg, op);
+    if (onR) put(r.right, y0, padR, y1 - y0, bg, op);
+  };
+  [slide].concat(Array.from(slide.querySelectorAll('*'))).forEach((el, i) => {
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none') return;
+    const op = parseFloat(cs.opacity);
+    /* Прозрачное наружу не лезет — но у САМОГО слайда (i === 0) opacity в этот
+       момент 0 всегда: идёт анимация deck-in, и paintBleed зовётся на её первом
+       кадре. Без исключения фон слайда не дописывался НИКОГДА, и на слайде со
+       сплошным зелёным холстом (обложка, разделитель, финал) поле оставалось
+       бежевым. Опасности нет: анимация кончается на opacity 1. */
+    if (i > 0 && !(op > .02)) return;
+    const q = el.getBoundingClientRect();
+    if (q.width < .5 || q.height < .5) return;
+    if (isOpaque(cs.backgroundColor)) spill(q, cs.backgroundColor, 1);
+    const ps = getComputedStyle(el, '::before');
+    if (ps.content === 'none' || !isOpaque(ps.backgroundColor)) return;
+    const pw = parseFloat(ps.width), ph = parseFloat(ps.height);
+    if (!(pw > .5) || !(ph > .5)) return;
+    const pl = parseFloat(ps.left) || 0, pt = parseFloat(ps.top) || 0;
+    spill({ left:  q.left + pl * k, right:  q.left + (pl + pw) * k,
+            top:   q.top  + pt * k, bottom: q.top  + (pt + ph) * k },
+          ps.backgroundColor, parseFloat(ps.opacity) || 1);
+  });
+  /* Узор — растр: за собственным краем картинки ничего нет, продлить его нельзя.
+     Поэтому он растягивается на всё ОКНО, а кадр показывает середину (переменные
+     читает uzor.css). Слайд со своим сплошным фоном перекрывает узор по замыслу —
+     у него computed background-image = none, и снаружи узора тоже не будет. */
+  slide.style.setProperty('--uzor-sz', (innerWidth / k) + 'px ' + (innerHeight / k) + 'px');
+  slide.style.setProperty('--uzor-x', (-padL / k) + 'px');
+  slide.style.setProperty('--uzor-y', (-padT / k) + 'px');
+  bleedUzor.style.display =
+    getComputedStyle(slide).backgroundImage === 'none' ? 'none' : '';
+}
 function showSingle(i, k) {
   cur = Math.max(0, Math.min(slides.length - 1, i));
   scene = k === undefined ? 1 : k;
@@ -158,6 +256,7 @@ function showSingle(i, k) {
   const s = slides[cur];
   fitAll(s);
   scaleSlide(s);
+  paintBleed(s);
   updateProgress();
 }
 function next() {
@@ -191,6 +290,7 @@ addEventListener('touchend', e => {
 }, {passive: true});
 function showOverview() {
   const deck = document.getElementById('deck');
+  bleedOff();                       /* в обзоре кадра нет — дописывать нечего */
   deck.style.display = 'grid';
   deck.style.gridTemplateColumns = 'repeat(2, 1fr)';
   deck.style.gap = '24px'; deck.style.padding = '24px';
@@ -223,6 +323,7 @@ function toggleFullscreen() {
 const Q = new URLSearchParams(location.search);
 const only = Q.get('only');
 function exportFrame() {
+  bleedOff();                       /* экспорт — ровно кадр W×H, без полей */
   document.getElementById('hint').style.display = 'none';
   lectZone.style.display = 'none'; lectProgress.style.display = 'none';
   lectNumber.style.display = 'none';
