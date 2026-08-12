@@ -29,7 +29,7 @@ title: Функторы
 oblozhka_zagolovok: Введение в теорию категорий
 oblozhka_sub: Лекция 2
 oblozhka_dateplace: среда, 12 августа 2026
-oblozhka_illustracii: pustoj-kvadrat
+oblozhka_illustracii: oblozhka-diagramma
 finalnyj_zagolovok: Спасибо за внимание
 dlya_kogo: старшеклассники и программисты; линейную алгебру и группы знают, топологию не знают вовсе
 zhanr: kategornaya_algebra
