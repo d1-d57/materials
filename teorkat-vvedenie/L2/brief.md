@@ -7,7 +7,9 @@ slide_order:
   - funktor
   - razdelitel-estestvennost
   - vektornye-prostranstva
+  - anons-dvojstvennogo
   - izomorfizm
+  - kategoriya-vect-iso
   - bazis-i-matricy
   - zamena-bazisa
   - dvojstvennoe-prostranstvo
@@ -32,8 +34,8 @@ dlya_kogo: старшеклассники и программисты; лине�
 zhanr: kategornaya_algebra
 dlitelnost_minut: 120
 zamer_tempa: заполнить
-skvoznaya_liniya: функтор переводит коммутативную диаграмму в коммутативную — и потому запрещает конструкции, для которых внизу такого равенства быть не может
-byudzhet: {slajdov: 20, slov_vsego: 939, illustracij: 12}
+skvoznaya_liniya: конструкции в математике изучают изнутри — их сравнивают между собой; две конструкции могут совпадать на объектах и всё равно быть разными; а иногда конструкции запрещены вовсе. Все три тезиса объявлены на первом слайде без конкретики и возвращаются по ходу лекции с примерами
+byudzhet: {slajdov: 22, slov_vsego: 1029, illustracij: 13}
 uzhe_vvedeno_ranee:
   - {termin: функтор, gde: лекция 1, kachestvo: определение дано и на Л2 напоминается}
   - {termin: биекция, gde: лекция 1, kachestvo: рабочий термин всей Л1}
