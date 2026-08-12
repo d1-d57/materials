@@ -31,6 +31,8 @@ oblozhka_sub: Лекция 2
 oblozhka_dateplace: среда, 12 августа 2026
 oblozhka_illustracii: oblozhka-diagramma
 finalnyj_zagolovok: Спасибо за внимание
+finalnyj_illustracii: oblozhka-diagramma
+vizitka_illustracii: vizitka-celikom
 dlya_kogo: старшеклассники и программисты; линейную алгебру и группы знают, топологию не знают вовсе
 zhanr: kategornaya_algebra
 dlitelnost_minut: 120
