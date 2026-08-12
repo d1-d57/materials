@@ -13,6 +13,7 @@ slide_order:
   - dvojstvennyj-bazis
   - nekanonicheskij-izomorfizm
   - dvazhdy-dvojstvennoe
+  - moral-estestvennosti
   - razdelitel-retrakty
   - inyekcii
   - centr-gruppy
@@ -31,7 +32,7 @@ zhanr: kategornaya_algebra
 dlitelnost_minut: 120
 zamer_tempa: заполнить
 skvoznaya_liniya: функтор переводит коммутативную диаграмму в коммутативную — и потому запрещает конструкции, для которых внизу такого равенства быть не может
-byudzhet: {slajdov: 18, slov_vsego: 700, illustracij: 11}
+byudzhet: {slajdov: 19, slov_vsego: 740, illustracij: 11}
 uzhe_vvedeno_ranee:
   - {termin: функтор, gde: лекция 1, kachestvo: определение дано и на Л2 напоминается}
   - {termin: биекция, gde: лекция 1, kachestvo: рабочий термин всей Л1}
