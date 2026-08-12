@@ -18,6 +18,7 @@ slide_order:
   - dvazhdy-dvojstvennoe
   - moral-estestvennosti
   - razdelitel-retrakty
+  - anons-retraktov
   - inyekcii
   - centr-gruppy
   - retrakt
