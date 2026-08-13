@@ -611,6 +611,18 @@
 
 **`_studio/zhurnal/2026-08-11_dovodka-L2/kod_dovodka-pered-lekciej.md`** (Срочная доводка дека L2 перед лекцией: полосы до края экрана, воздух между блоками, правки слайдов 4/5/9/10, обложка из PDF, сцены, блоки последними)
 
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/PLAN.md`** (план арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/TZ.md`** (контракт арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/SESSIYA.md`** (дневник арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/NAVIGATOR.md`** (навигатор арки 2026-08-13_skill-mat-teksta (ориентация, читается первым): Скилл математического текста при движке build_doc.py: иерархия блоков, регистр, гейты; переезд движка в disciplina)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/UROKI-FABRIKE.md`** (уроки арки 2026-08-13_skill-mat-teksta с ценой, вход закрывающей сессии)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_yadro-blokov.md`** (Ф1 арки: свести словарь и парсер блоков в одно ядро, на котором сидят оба движка (doc и слайды))
+
 
 
 
