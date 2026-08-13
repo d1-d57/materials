@@ -611,7 +611,79 @@
 
 **`_studio/zhurnal/2026-08-11_dovodka-L2/kod_dovodka-pered-lekciej.md`** (Срочная доводка дека L2 перед лекцией: полосы до края экрана, воздух между блоками, правки слайдов 4/5/9/10, обложка из PDF, сцены, блоки последними)
 
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/HANDOFF-2026-08-14.md`** (Хэндофф в сессию 2026-08-14: стратегическая сессия — заход на пересборку генератора под типологию фазы 2 + список мелочей)
 
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/PLAN.md`** (план арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/TZ.md`** (контракт арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/SESSIYA.md`** (дневник арки 2026-08-13_skill-mat-teksta)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/NAVIGATOR.md`** (навигатор арки 2026-08-13_skill-mat-teksta (ориентация, читается первым): Скилл математического текста при движке build_doc.py: иерархия блоков, регистр, гейты; переезд движка в disciplina)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/UROKI-FABRIKE.md`** (уроки арки 2026-08-13_skill-mat-teksta с ценой, вход закрывающей сессии)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_tipologia-odna-os.md`** (одна типологическая ось Т1-Т6 вместо tip_idei+tip_slaida, расширение рамок по семи непопавшим карточкам L2, жёсткие гейты фазы 2)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_sceny-iz-blokov.md`** (сцены генерируются из границ блоков; ручной {@N} — override с обоснованием; гейт запрета утверждение+доказательство в одной сцене; потолок трёх блоков)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_mikrotipografika-melochi.md`** (микротипографика (переносы, text-wrap, цифры), класс акцента, токен трекинга, починка обрезанного узла углов, обновление адресов каталога)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_yadro-blokov.md`** (Ф1 арки: свести словарь и парсер блоков в одно ядро, на котором сидят оба движка (doc и слайды))
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/PLAN.md`** (план арки 2026-08-13_nositeli-zahoda)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/TZ.md`** (контракт арки 2026-08-13_nositeli-zahoda)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/SESSIYA.md`** (дневник арки 2026-08-13_nositeli-zahoda)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/NAVIGATOR.md`** (навигатор арки 2026-08-13_nositeli-zahoda (ориентация, читается первым): носители дисциплины заходов: стартовое сообщение из stdout в файл-заход + клауза линтера)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/UROKI-FABRIKE.md`** (уроки арки 2026-08-13_nositeli-zahoda с ценой, вход закрывающей сессии)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/kod_nositel-startovogo.md`** (заход: стартовое сообщение владельцу ложится секцией в НАЧАЛО файла-захода + клауза З13 линтера входа)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/kod_nositel-start.md`** (заход: стартовое сообщение владельцу ложится секцией в НАЧАЛО файла-захода + клауза З13 линтера входа)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/kod_nositel.md`** (заход: стартовое сообщение владельцу секцией в НАЧАЛО файла-захода, клауза З13 и вырезание секции из анализа линтеров)
+
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_inventar-defektov.md`** (Ф2 арки: инвентарь дефектов по живым лентам — три класса, поимённо, с ценой; код не правится)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/kod_probnyj-nositel.md`** (проба: пробный заход для критерия готовности захода nositel)
+
+**`_studio/zhurnal/2026-08-13_nositeli-zahoda/kod_probnyj-nositel-t.md`** (проба: пробный заход канала terminal для критерия готовности захода nositel)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/PLAN.md`** (план арки 2026-08-13_vynos-korpusa)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/TZ.md`** (контракт арки 2026-08-13_vynos-korpusa)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/SESSIYA.md`** (дневник арки 2026-08-13_vynos-korpusa)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/NAVIGATOR.md`** (навигатор арки 2026-08-13_vynos-korpusa (ориентация, читается первым): вынос корпуса инцидентов из materials в disciplina: технические документы живут рядом со скиллом)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/UROKI-FABRIKE.md`** (уроки арки 2026-08-13_vynos-korpusa с ценой, вход закрывающей сессии)
+
+**`_studio/zhurnal/2026-08-13_vynos-korpusa/kod_vynos-korpusa.md`** (заход: вынос корпуса инцидентов (9 файлов, 764 КБ) из materials в disciplina/korpus + перенаправление ссылок домов и документов)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_tipologia-dochistka.md`** (слить Т5 в Т4 и назвать Нарративный; закрыть долги porodit_slaid — пример после утверждения и Т6 в CLI)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_rebra-blokov.md`** (рёбра между блоками: доказательство и пример получают адресата, граф строит эти рёбра, гейт требует их, пустота перестаёт быть зелёной)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/PLAN.md`** (план арки 2026-08-13_arhitektura-doma)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/TZ.md`** (контракт арки 2026-08-13_arhitektura-doma)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/SESSIYA.md`** (дневник арки 2026-08-13_arhitektura-doma)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/NAVIGATOR.md`** (навигатор арки 2026-08-13_arhitektura-doma (ориентация, читается первым): универсальная архитектура дома скилла: ресёрч по репозиториям, стандарт, генератор карты инструментов, разведение записей)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/UROKI-FABRIKE.md`** (уроки арки 2026-08-13_arhitektura-doma с ценой, вход закрывающей сессии)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/kod_arhitektura-doma.md`** (заход: универсальная архитектура дома скилла — ресёрч по репозиториям, СТANDART-DOMA.md, генератор карты инструментов, разведение 156 записей на два дома)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/kod_dobivka-spornyh.md`** (заход: разбор 74 спорных по АДРЕСУ первоисточника, правило «запись в оба дома копией», дочистка приёмки (З6-регексп, ресёрч в git))
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_vid-blokov-issledovanie.md`** (исследование: вывести типографические критерии, оценить численно и выбрать схему визуального разделения блоков — линейка центрального, кегль доказательства, тихий заголовок)
 
 
 ## §7. Модель памяти
