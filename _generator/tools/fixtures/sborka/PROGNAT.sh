@@ -614,10 +614,12 @@ vals = {
     "kommentarij_lektoru: заполнить": "kommentarij_lektoru: X", "minuty: заполнить": "minuty: 1",
     "vazhnost: заполнить": "vazhnost: opornyj", "byudzhet_slov: заполнить": "byudzhet_slov: 10",
     "tip_verstki: заполнить": "tip_verstki: tolko_tekst", "liniya: заполнить": "liniya: 50",
-    # решения ФАЗЫ 1 (заход format-kartochki-faza-1): тип идеи из закрытого списка
+    # решения ФАЗЫ 1 (заход format-kartochki-faza-1, поле переименовано заходом
+    # tipologia-odna-os): тип слайда из закрытого списка (Т4 — единственный блок
+    # [narrativ] «завязка» ниже структурно ложится в его раскладку без правок)
     # и центральный блок, чья мысль обязана резолвиться в блок «Математики».
     # Мысль «завязка» ставят те же ловушки ниже, когда пишут настоящее тело.
-    "tip_idei: заполнить": "tip_idei: narrative",
+    "tip_slaida: заполнить": "tip_slaida: Т4",
     "centralnyj_blok: заполнить": "centralnyj_blok: завязка",
 }
 for sid in sids:
@@ -683,7 +685,7 @@ python3 "$SBORKA/bootstrap_lekcii.py" "$L29" >/dev/null
 OUT29F=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) && {
   echo "❌ ЛОВУШКА 29: --faza 1 на свежепорождённой (нетронутой) карточке ЗЕЛЁНЫЙ — решений фазы 1 нет, а гейт их не требует:"
   echo "$OUT29F"; exit 1; }
-for TREB in "tip_idei" "centralnyj_blok" "незаполненной мыслью"; do
+for TREB in "tip_slaida" "centralnyj_blok" "незаполненной мыслью"; do
   echo "$OUT29F" | grep -q "$TREB" || {
     echo "❌ ЛОВУШКА 29: --faza 1 покраснел, но не поимённо на «$TREB»:"; echo "$OUT29F"; exit 1; }
 done
@@ -702,10 +704,13 @@ from pathlib import Path
 p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
 t = p.read_text(encoding="utf-8")
 for old, new in (("nazvanie: заполнить", "nazvanie: Завязка"),
-                 ("tip_idei: заполнить", "tip_idei: narrative"),
+                 ("tip_slaida: заполнить", "tip_slaida: Т1"),
                  ("zachem: заполнить", "zachem: зритель должен увидеть, зачем всё это"),
                  ("minuty: заполнить", "minuty: 6"),
-                 ("centralnyj_blok: заполнить", "centralnyj_blok: завязка")):
+                 ("centralnyj_blok: заполнить", "centralnyj_blok: само понятие"),
+                 # Т1 — содержательный тип (не служебный/Т4/Т5), связей не освобождён:
+                 # реалистичное решение фазы 1 — назвать хоть что-то вводимое.
+                 ("vvodit: []", "vvodit: [само понятие]")):
     t = t.replace(old, new)
 for razdel in ("## Математика — развёрнуто", "## Текст слайда — сжато"):
     t = t.replace("%s\n### [narrativ] заполнить\nзаполнить" % razdel,
@@ -713,12 +718,12 @@ for razdel in ("## Математика — развёрнуто", "## Текс�
 p.write_text(t, encoding="utf-8")
 PY
 OUT29G=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L29" 2>&1) || {
-  echo "❌ ЛОВУШКА 29: план фазы 1 принят целиком (тип идеи, блоки с мыслью, центральный), а --faza 1 всё равно красный:"
+  echo "❌ ЛОВУШКА 29: план фазы 1 принят целиком (тип слайда, блоки с мыслью, центральный), а --faza 1 всё равно красный:"
   echo "$OUT29G"; exit 1; }
 OUT29P=$(python3 "$SBORKA/gejt_kartochki.py" "$L29" 2>&1) && {
   echo "❌ ЛОВУШКА 29: полный гейт на карточке с одним лишь планом фазы 1 дал rc=0 — поля Ф2/Ф3 не проверяются:"
   echo "$OUT29P"; exit 1; }
-echo "  ✅ ловушка 29: свежая карточка — --faza 1 красный поимённо (tip_idei, центральный блок, мысль блока), с охватом и слепыми зонами; принятый план фазы 1 — зелёный, полный гейт всё ещё красный"
+echo "  ✅ ловушка 29: свежая карточка — --faza 1 красный поимённо (tip_slaida, центральный блок, мысль блока), с охватом и слепыми зонами; принятый план фазы 1 — зелёный, полный гейт всё ещё красный"
 
 echo "── ловушка 30: 🔴 Р3 — солвер встроен в deck.py: явный kegl/liniya переживает сборку"
 L30="$T/lek30"
@@ -978,7 +983,7 @@ import re, sys
 from pathlib import Path
 p = Path(sys.argv[1]) / "slajdy" / "s01" / "slaid.md"
 t = re.sub(r"^<!--.*?-->\s*", "", p.read_text(encoding="utf-8"), flags=re.S)
-for pole in ("tip_idei", "centralnyj_blok", "matematika_iz"):
+for pole in ("tip_slaida", "centralnyj_blok", "matematika_iz"):
     t = re.sub(r"^%s:.*\n" % pole, "", t, flags=re.M)
 t = t.replace("nazvanie: заполнить", "nazvanie: Живое название")
 p.write_text(t, encoding="utf-8")
@@ -986,7 +991,7 @@ PY
 cp -R "$L35" "$T/lek35-do"
 OUT35=$(python3 "$SBORKA/bootstrap_lekcii.py" "$L35" --migraciya 2>&1) || {
   echo "❌ ЛОВУШКА 35: миграция упала:"; echo "$OUT35"; exit 1; }
-for POLE in "tip_idei" "centralnyj_blok" "matematika_iz"; do
+for POLE in "tip_slaida" "centralnyj_blok" "matematika_iz"; do
   grep -q "^$POLE:" "$L35/slajdy/s01/slaid.md" || {
     echo "❌ ЛОВУШКА 35: после миграции в шапке нет поля $POLE:"; echo "$OUT35"; exit 1; }
 done
@@ -1116,5 +1121,31 @@ done
 echo "$OUT41" | grep -q "12 из 12" || {
   echo "❌ ЛОВУШКА 41: сводка не называет охват «12 из 12» законов:"; echo "$OUT41"; exit 1; }
 echo "  ✅ ловушка 41: двенадцать законов фазы 2 — каждый ловит свой кривой вход поимённо, rc=0 (жёлтое не красит гейт)"
+
+echo "── ловушка 42: 🔴 заход tipologia-odna-os, Э3 — жёсткий гейт состава УМЕЕТ КРАСНЕТЬ"
+# Клауза 3 критерия готовности захода: зелёный гейт, который ни на чём не
+# краснеет, — не гейт, а декорация. Фикстура tipologia-e3-negativ несёт три
+# карточки, КАЖДАЯ нарушает РОВНО одну из трёх красных клауз Э3 (недостающий
+# обязательный блок / лишний блок вне раскладки / нарушенный порядок) и
+# ничего больше — изоляция та же, что у ловушки 41 для законов фазы 2.
+L42="$SBORKA/../tools/fixtures/sborka/tipologia-e3-negativ"
+OUT42=$(python3 "$SBORKA/gejt_kartochki.py" "$L42" 2>&1) && {
+  echo "❌ ЛОВУШКА 42: фикстура Э3 (три заведомо неправильные карточки) дала rc=0 — гейт состава не краснеет вовсе:"
+  echo "$OUT42"; exit 1; }
+echo "$OUT42" | grep -q "проверено 3 из 3" || {
+  echo "❌ ЛОВУШКА 42: вердикт без охвата «проверено 3 из 3»:"; echo "$OUT42"; exit 1; }
+echo "$OUT42" | grep -q "nedostayushchij: тип Т3 — не хватает обязательного блока \[dokazatelstvo\]" || {
+  echo "❌ ЛОВУШКА 42: клауза «недостающий обязательный блок» не сработала на nedostayushchij:"
+  echo "$OUT42"; exit 1; }
+echo "$OUT42" | grep -q "lishnij: тип Т1 — блок(и) вне раскладки: dokazatelstvo" || {
+  echo "❌ ЛОВУШКА 42: клауза «лишний блок вне раскладки» не сработала на lishnij:"
+  echo "$OUT42"; exit 1; }
+echo "$OUT42" | grep -q "poryadok: тип Т3 — нарушен порядок блоков" || {
+  echo "❌ ЛОВУШКА 42: клауза «нарушенный порядок» не сработала на poryadok:"
+  echo "$OUT42"; exit 1; }
+echo "$OUT42" | grep -q "замечаний 3" || {
+  echo "❌ ЛОВУШКА 42: ожидалось РОВНО три замечания (по одному на карточку), сводка другая:"
+  echo "$OUT42"; exit 1; }
+echo "  ✅ ловушка 42: три негативные фикстуры Э3 — каждая красит СВОЮ клаузу поимённо, rc≠0, замечаний ровно 3"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"

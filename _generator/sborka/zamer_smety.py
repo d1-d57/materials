@@ -51,7 +51,7 @@ KARTOCHKA = """---
 imya: %(sid)s
 nazvanie: Замер
 zagolovok_na_ekrane: %(zagolovok)s
-tip_idei: narrative
+tip_slaida: Т4
 zachem: замер геометрии зоны
 akcent: замер
 centralnyj_blok: замер

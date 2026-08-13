@@ -1,6 +1,8 @@
 <!--
-ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода zakony-v-gejt — не порождена
-bootstrap_lekcii.py, писана руками ради изоляции одного закона на карточку).
+ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода tipologia-odna-os, Э3 — не порождена
+bootstrap_lekcii.py, писана руками ради изоляции: тип Т3 с [primer] ПЕРЕД
+[utverzhdenie] (у Т3 utverzhdenie обязан быть первым — раскладка, не украшение)
+обязан красить гейт клаузой «нарушенный порядок»).
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -13,13 +15,13 @@ bootstrap_lekcii.py, писана руками ради изоляции одн�
 ФАЗА 6 (сборка и QA): x :: python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html
 -->
 ---
-imya: zk-g1
-nazvanie: zk-g1
+imya: poryadok
+nazvanie: poryadok
 zagolovok_na_ekrane: ""
-tip_slaida: NE_KLASSIFICIROVAN
-zachem: фикстура закона
-akcent: фикстура закона
-centralnyj_blok: perechislenie
+tip_slaida: Т3
+zachem: фикстура Э3 — нарушенный порядок блоков
+akcent: фикстура
+centralnyj_blok: утверждение не первым
 kommentarij_lektoru: ""
 minuty: 5
 vazhnost: opornyj
@@ -35,22 +37,30 @@ status: v_deke
 ---
 
 ## Математика — развёрнуто
-### [narrativ] заход
-Заход.
+### [primer] пример раньше утверждения
+**Пример (раз).** формула $x=1$.
 
 > поле:mn мораль
 
-### [opredelenie] без ярлыка
-Без ярлыка вовсе. формула $x=1$.
+### [utverzhdenie] утверждение не первым
+**Утверждение (два).** формула $x=1$.
+
+> поле:mn мораль
+
+### [dokazatelstvo] доказательство
+*Доказательство.* формула $x=1$.
 
 > поле:mn мораль
 
 ## Текст слайда — сжато
-### [narrativ] заход
-Заход.
+### [primer] пример раньше утверждения
+Текст. формула $x=1$.
 
-### [opredelenie] без ярлыка
+### [utverzhdenie] утверждение не первым
+Текст. формула $x=1$.
+
+### [dokazatelstvo] доказательство
 Текст. формула $x=1$.
 
 ## Правки
-- фикстура
+- фикстура Э3

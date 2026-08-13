@@ -43,8 +43,9 @@ SBORKA = Path(__file__).resolve().parent
 sys.path.insert(0, str(SBORKA))
 from formaty import (parse_card, parse_front_matter, OBYAZATELNYE_POLYA, ZAPOLNIT,  # noqa: E402
                       FormatSlaida, strip_lifecycle_block, FAZA_STROKA_RE,
-                      TIPY_IDEI, TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ, CENTRALNYJ_PERECHISLENIE)
+                      TIPY_SLAJDA, TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ, CENTRALNYJ_PERECHISLENIE)
 import bloki  # noqa: E402
+import tipy_slajdov  # noqa: E402
 
 
 # Заглушка, доехавшая до зрителя (POMARKI-2026-08-09 §4, разбор centr-gruppy):
@@ -91,7 +92,7 @@ def _unfilled(val):
 # важность и бюджет слов остаются за Ф2 — на них Ф1 не смотрит.
 # Остальные значения `--faza` явной спецификации не несут и сознательно падают на
 # полную проверку — минимум, а не гадание за несуществующее требование.
-FAZA_POLYA = {1: ("imya", "nazvanie", "zachem", "tip_idei", "minuty")}
+FAZA_POLYA = {1: ("imya", "nazvanie", "zachem", "tip_slaida", "minuty")}
 
 # Р1б (П0: «дисциплина, невозможная игнорировать физически») — блок «что дальше»
 # обязан быть в КАЖДОЙ карточке (`bootstrap_lekcii.py` его вшивает) и называть
@@ -206,16 +207,76 @@ def _check_zapolnit_v_tele(sid, sections, faza):
     return issues
 
 
-def _check_tip_idei(sid, params):
-    """Гейт выхода Ф1, строка 1: «у каждого слайда назван тип идеи». Пустоту ловит
-    `_polya_dlya_fazy`; здесь — ЗНАЧЕНИЕ против закрытого списка."""
-    tip = params.get("tip_idei")
-    if _unfilled(tip) or tip in TIPY_IDEI:
+def _check_tip_slaida(sid, params):
+    """Гейт выхода Ф1, строка 1: «у каждого слайда назван тип». Пустоту ловит
+    `_polya_dlya_fazy`; здесь — ЗНАЧЕНИЕ против закрытого списка (заход
+    tipologia-odna-os: одна ось `tip_slaida` вместо `tip_idei`+Т1-Т5 раздельно)."""
+    tip = params.get("tip_slaida")
+    if _unfilled(tip) or tip in TIPY_SLAJDA:
         return []
-    return ["%s: tip_idei '%s' не из закрытого списка. Допустимы: %s. ⚠ Список закрыт, "
-            "но НЕ окончателен (fazy-1-2-plan.md §2): слайд, не ложащийся ни в один тип, — "
-            "повод обсудить НОВЫЙ тип с владельцем, а не подобрать ближайший"
-            % (sid, tip, ", ".join(TIPY_IDEI))]
+    return ["%s: tip_slaida '%s' не из закрытого списка. Допустимы: %s. ⚠ Список закрыт, "
+            "но НЕ окончателен: слайд, не ложащийся по СОСТАВУ ни в один тип, — повод "
+            "обсудить РАСШИРЕНИЕ типологии с владельцем (временно — %s), а не подобрать "
+            "ближайшую полку"
+            % (sid, tip, ", ".join(TIPY_SLAJDA), tipy_slajdov.NE_KLASSIFICIROVAN)]
+
+
+# Заход tipologia-odna-os, Э3 — ЖЁСТКИЙ гейт: состав блоков карточки обязан
+# соответствовать раскладке заявленного `tip_slaida`. Владелец дословно: «жёсткость
+# нужна ИМЕННО здесь — экзотическая раскладка почти всегда значит, что автор забыл
+# блок, дописал лишний или переставил порядок, и это должно быть запрещено машиной».
+# Три КРАСНЫХ исхода в одной проверке (недостающий обязательный / лишний блок вне
+# раскладки / нарушенный порядок) — три ветки одного и того же
+# `tipy_slajdov.proverit_sostav`, см. его докстроку про verdict.
+def _check_sostav_tipa(sid, params, sections):
+    tip = params.get("tip_slaida")
+    if _unfilled(tip) or tip not in tipy_slajdov.TIPY:
+        # незаполненное поле красит _polya_dlya_fazy, значение вне закрытого
+        # списка — _check_tip_slaida; Т6/NE_KLASSIFICIROVAN сюда не попадают
+        # намеренно (у Т6 состав задаёт геометрия, не эта раскладка; на
+        # NE_KLASSIFICIROVAN раскладку сверять нечем — это и есть смысл значения)
+        return []
+    actual = [b.tip for b in sections["matematika"]]
+    verdikt, detail = tipy_slajdov.proverit_sostav(tip, actual)
+    if verdikt == "OK":
+        return []
+    opis = tipy_slajdov.opisanie(tip)
+    if verdikt == "MISSING":
+        return ["%s: тип %s — не хватает обязательного блока [%s]. Раскладка: %s"
+                % (sid, tip, detail, opis)]
+    if verdikt == "EXTRA":
+        return ["%s: тип %s — блок(и) вне раскладки: %s. Раскладка: %s. Слайд, не "
+                "ложащийся ни в один тип по составу, — повод обсудить РАСШИРЕНИЕ "
+                "типологии с владельцем, а не подобрать ближайшую полку"
+                % (sid, tip, detail, opis)]
+    return ["%s: тип %s — нарушен порядок блоков (%s). Раскладка: %s"
+            % (sid, tip, detail, opis)]
+
+
+# Заход tipologia-odna-os, Э3 — ЖЁЛТЫЙ (не красит rc): у Т1 слот `primer`
+# необязателен, но пропуск примера на определении молча неотличим от осознанного
+# решения (цена: на лекции 2 прошла череда определений без примеров именно поэтому).
+# Поле-освобождение — по образцу `primer_snyat_namerenno: <почему>`; есть — жёлтый
+# гаснет, нет — горит.
+PRIMER_SNYAT_POLE = "primer_snyat_namerenno"
+
+
+def _check_primer_t1(sid, params, sections):
+    if params.get("tip_slaida") != "Т1":
+        return []
+    if any(b.tip == "primer" for b in sections["matematika"]):
+        return []
+    if not _unfilled(params.get(PRIMER_SNYAT_POLE)):
+        return []
+    return ["%s: тип Т1 без примера и без поля '%s' — заполни поле обоснованием "
+            "(почему пример снят), либо добавь блок [primer]" % (sid, PRIMER_SNYAT_POLE)]
+
+
+def _check_ne_klassificirovan(sid, params):
+    if params.get("tip_slaida") == tipy_slajdov.NE_KLASSIFICIROVAN:
+        return ["%s: tip_slaida не назначен (%s) — ждёт решения владельца"
+                % (sid, tipy_slajdov.NE_KLASSIFICIROVAN)]
+    return []
 
 
 def _check_centralnyj_blok(sid, params, sections):
@@ -259,29 +320,30 @@ def _check_centralnyj_blok(sid, params, sections):
 # check_slide) работает и на пустом списке, но пустой список НИЧЕГО не проверяет —
 # «зелёный от промаха мимо входа», тот же класс, что уже стоит в каноне.
 #
-# Развилка «выбери и обоснуй» (задание Ф1, пункт 1): слайд типа narrativ/divider
-# может законно ничего не вводить. Решение — НЕ отдельный маркер-заглушка (третий
-# формат сверх уже существующего `CENTRALNYJ_PERECHISLENIE`), а условие «оба поля
-# пусты ОДНОВРЕМЕННО» плюс полное освобождение типов идеи, с которых связей не
-# требуют (TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ — служебные плюс `narrative`).
+# Развилка «выбери и обоснуй» (задание Ф1, пункт 1): слайд служебного типа/чисто
+# нарративного типа может законно ничего не вводить. Решение — НЕ отдельный
+# маркер-заглушка (третий формат сверх уже существующего `CENTRALNYJ_PERECHISLENIE`),
+# а условие «оба поля пусты ОДНОВРЕМЕННО» плюс полное освобождение типов, с которых
+# связей не требуют (TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ — служебные плюс Т4/Т5).
 # Подробное обоснование — `## ПЛАН` захода.
 #
 # 🔴 Заход svedenie-i-smeta, Э1.4: освобождение было УЖЕ ЗДЕСЬ ОПИСАНО строкой выше
 # («слайд типа narrativ/divider может законно ничего не вводить»), но в коде стоял
 # список одних лишь служебных типов — и `--faza 1` красил `napominanie` и `itog`.
 # Разошлись не правило и код, а комментарий и его же реализация; чинится списком,
-# а не текстом комментария. Цена и список — `formaty.py`.
+# а не текстом комментария. Цена и список — `formaty.py`. Заход tipologia-odna-os
+# перевёл список на новую ось (Т6 + Т4/Т5), семантика та же.
 def _check_vvodit_opiraetsya(sid, params, faza):
     if faza != 1:
         return []
-    if params.get("tip_idei") in TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ:
+    if params.get("tip_slaida") in TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ:
         return []
     if not (params.get("vvodit") or params.get("opiraetsya_na")):
         return ["%s: vvodit и opiraetsya_na пусты одновременно — выход фазы 1 обязан "
                 "решить, что слайд вводит и на что опирается (единственная машинная "
                 "проверка порядка понятий, У12); типы %s освобождены (служебным нечего "
-                "вводить, narrative — вступление/итог), иначе заполни хотя бы одно поле"
-                % (sid, ", ".join(TIPY_IDEI_BEZ_TREBOVANIYA_SVYAZEJ))]
+                "вводить, Т4/Т5 — вступление/итог), иначе заполни хотя бы одно поле"
+                % (sid, ", ".join(TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ))]
     return []
 
 
@@ -501,23 +563,26 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     """Одна карточка → (issues: [str] красные — старый гейт как был,
     zakon_warns: {закон: [str]} жёлтые — заход zakony-v-gejt, никогда не красят,
     g15_info: (n_несущих, tip_verstki) — сырьё для Г-15, судится на уровне лекции
-    целиком в check_lekcija, не здесь)."""
+    целиком в check_lekcija, не здесь; tip_zheltye: [str] жёлтые находки захода
+    tipologia-odna-os — Т1 без примера и без обоснования, NE_KLASSIFICIROVAN)."""
     zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
     g15_info = (0, None)
+    tip_zheltye = []
     issues = _check_lifecycle_block(text, sid)
     try:
         params, raw_body = parse_card(text, sid=sid)
     except FormatSlaida as e:
         issues.append("%s: карточка не парсится: %s" % (sid, e))
-        return issues, zakon_warns, g15_info
+        return issues, zakon_warns, g15_info, tip_zheltye
 
     for f in _polya_dlya_fazy(faza):
         if _unfilled(params.get(f)):
             issues.append("%s: обязательное поле '%s' не заполнено" % (sid, f))
 
-    issues.extend(_check_tip_idei(sid, params))
+    issues.extend(_check_tip_slaida(sid, params))
     issues.extend(_check_zagolovok_na_ekrane(sid, params, faza))
     issues.extend(_check_vvodit_opiraetsya(sid, params, faza))
+    tip_zheltye.extend(_check_ne_klassificirovan(sid, params))
 
     for name, _, fn in ZAKONY_PARAMOV:
         zakon_warns[name].extend(fn(sid, params))
@@ -549,13 +614,13 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
                 "uzhe_vvedeno_ranee лекции" % (sid, termin, vvedeno))
 
     if not raw_body.strip():
-        return issues, zakon_warns, g15_info  # K3: слайд без текста — легален, дальше нечего проверять
+        return issues, zakon_warns, g15_info, tip_zheltye  # K3: слайд без текста — легален, дальше нечего проверять
 
     try:
         sections = bloki.parse_sections(raw_body, sid=sid)
     except bloki.FormatBlokov as e:
         issues.append(str(e))
-        return issues, zakon_warns, g15_info  # без разобранных секций состав/бюджет не проверить
+        return issues, zakon_warns, g15_info, tip_zheltye  # без разобранных секций состав/бюджет не проверить
 
     if sections["orphan_matematika"]:
         issues.append("%s: в разделе «Математика — развёрнуто» есть абзац вне блока: %r"
@@ -566,6 +631,9 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
 
     for m in bloki.check_composition(sections):
         issues.append("%s: состав блоков не совпадает — %s" % (sid, m))
+
+    issues.extend(_check_sostav_tipa(sid, params, sections))
+    tip_zheltye.extend(_check_primer_t1(sid, params, sections))
 
     issues.extend(_check_zapolnit_v_tele(sid, sections, faza))
     issues.extend(_check_centralnyj_blok(sid, params, sections))
@@ -592,18 +660,22 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
         for name, _, fn in ZAKONY_BLOKOV:
             zakon_warns[name].extend(fn(sid, sections))
 
-    return issues, zakon_warns, g15_info
+    return issues, zakon_warns, g15_info, tip_zheltye
 
 
 def check_lekcija(lekcija_dir, faza=None):
-    """Папка лекции → (issues: [str], n_slides: int, zakon_warns: {закон: [str]}).
-    issues пуст — гейт зелёный. zakon_warns — жёлтые находки захода zakony-v-gejt,
-    никогда не влияют на rc (см. докстрока ZAKONY_BLOKOV выше)."""
+    """Папка лекции → (issues: [str], n_slides: int, zakon_warns: {закон: [str]},
+    tip_zheltye: [str], tip_counter: Counter). issues пуст — гейт зелёный.
+    zakon_warns — жёлтые находки захода zakony-v-gejt, tip_zheltye — жёлтые
+    находки захода tipologia-odna-os (Т1 без примера, NE_KLASSIFICIROVAN); ни те,
+    ни другие не влияют на rc. tip_counter — распределение `tip_slaida` по живым
+    карточкам (клауза 4 критерия готовности захода tipologia-odna-os: печатать
+    ДО/ПОСЛЕ, нулевую клетку называть явно)."""
     lekcija_dir = Path(lekcija_dir)
     zakon_warns_pusto = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV + (("Г-15", "", None),)}
     brief_path = lekcija_dir / "brief.md"
     if not brief_path.is_file():
-        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto)
+        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto, [], Counter())
 
     brief_params, _ = parse_front_matter(brief_path.read_text(encoding="utf-8"), sid="brief.md")
     uzhe_vvedeno = {item.get("termin") for item in (brief_params.get("uzhe_vvedeno_ranee") or [])
@@ -614,9 +686,11 @@ def check_lekcija(lekcija_dir, faza=None):
     slajdy_dir = lekcija_dir / "slajdy"
     slide_paths = sorted(slajdy_dir.glob("*/slaid.md"))
     if not slide_paths:
-        return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0, zakon_warns_pusto)
+        return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0,
+                 zakon_warns_pusto, [], Counter())
 
     texts, vvodit_by_sid = {}, {}
+    tip_counter = Counter()
     for p in slide_paths:
         sid = p.parent.name
         text = p.read_text(encoding="utf-8")
@@ -624,19 +698,24 @@ def check_lekcija(lekcija_dir, faza=None):
         try:
             params, _ = parse_card(text, sid=sid)
             vvodit_by_sid[sid] = set(params.get("vvodit") or [])
+            tip = params.get("tip_slaida")
+            tip_counter[tip if not _unfilled(tip) else "(не заполнено)"] += 1
         except FormatSlaida:
             vvodit_by_sid[sid] = set()
+            tip_counter["(не парсится)"] += 1
 
     issues = []
     zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
+    tip_zheltye = []
     g15_info_by_sid = {}
     for p in slide_paths:
         sid = p.parent.name
-        slide_issues, slide_warns, g15_info = check_slide(
+        slide_issues, slide_warns, g15_info, slide_tip_zheltye = check_slide(
             sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza)
         issues.extend(slide_issues)
         for name, warns in slide_warns.items():
             zakon_warns[name].extend(warns)
+        tip_zheltye.extend(slide_tip_zheltye)
         g15_info_by_sid[sid] = g15_info
 
     # Г-15 судит ПОРЯДОК слайдов лекции (slide_order), не одну карточку — считаем
@@ -645,7 +724,7 @@ def check_lekcija(lekcija_dir, faza=None):
     slide_order = [s for s in (brief_params.get("slide_order") or []) if s in g15_info_by_sid]
     zakon_warns["Г-15"] = zakon_g15(slide_order, g15_info_by_sid) if faza is None and slide_order else []
 
-    return issues, len(slide_paths), zakon_warns
+    return issues, len(slide_paths), zakon_warns, tip_zheltye, tip_counter
 
 
 def _pechat_slepyh_zon(faza):
@@ -677,18 +756,42 @@ def _pechat_zakony(zakon_warns):
             print("  ✓ %s (%s) — нарушителей 0" % (name, opis))
 
 
+def _pechat_tipologiya(tip_zheltye, tip_counter):
+    """Заход tipologia-odna-os: Counter распределения по `tip_slaida` (клауза 4
+    критерия готовности — нулевую клетку называть явно) + жёлтые находки (Т1 без
+    примера/обоснования, NE_KLASSIFICIROVAN) — печатается ВСЕГДА, включая зелёный
+    прогон, тем же принципом, что и `_pechat_zakony`/`_pechat_slepyh_zon`."""
+    print("ТИПОЛОГИЯ (tip_slaida) — распределение:")
+    for tip in tuple(sorted(tipy_slajdov.TIPY)) + (tipy_slajdov.TIP_SLUZHEBNYJ, tipy_slajdov.NE_KLASSIFICIROVAN):
+        n = tip_counter.get(tip, 0)
+        pometka = " ⚠ мёртвая или непокрытая клетка — назвать в отчёте" if n == 0 else ""
+        print("  · %s: %d%s" % (tip, n, pometka))
+    for k, n in sorted(tip_counter.items()):
+        if k not in tipy_slajdov.TIPY and k not in (tipy_slajdov.TIP_SLUZHEBNYJ, tipy_slajdov.NE_KLASSIFICIROVAN):
+            print("  ⚠ %s: %d (вне закрытого списка/не заполнено)" % (k, n))
+    ne_klass_n = tip_counter.get(tipy_slajdov.NE_KLASSIFICIROVAN, 0)
+    print("ТИПОЛОГИЯ (жёлтое — находка, не гейт; %d):" % len(tip_zheltye))
+    if tip_zheltye:
+        for w in tip_zheltye:
+            print("  ⚠ %s" % w)
+    else:
+        print("  ✓ нарушителей 0")
+    print("  · %s несёт %d карточк(а/и) из %d — норма: ровно 1"
+          % (tipy_slajdov.NE_KLASSIFICIROVAN, ne_klass_n, sum(tip_counter.values())))
+
+
 def main():
     ap = argparse.ArgumentParser(description="Гейт карточек лекции — краснеет и не пропускает дальше")
     ap.add_argument("lekcija", help="путь к папке лекции (несёт brief.md + slajdy/)")
     ap.add_argument("--faza", type=int, default=None,
                      help="требования зависят от фазы, на выходе которой стоит карточка; "
-                          "--faza 1 = выход интервью (тип идеи, имя/название, идея одной "
+                          "--faza 1 = выход интервью (тип слайда, имя/название, идея одной "
                           "фразой в zachem, минуты, размеченные блоки с мыслью, ровно один "
                           "центральный блок — ТЕЛО блоков ещё не пишется); остальные "
                           "значения = полная проверка, как без флага")
     args = ap.parse_args()
 
-    issues, n, zakon_warns = check_lekcija(args.lekcija, faza=args.faza)
+    issues, n, zakon_warns, tip_zheltye, tip_counter = check_lekcija(args.lekcija, faza=args.faza)
     rezhim = "выход фазы %d" % args.faza if args.faza else "полная проверка"
     if issues:
         print("КРАСНЫЙ (%s): проверено %d из %d карточек, замечаний %d" % (rezhim, n, n, len(issues)))
@@ -697,6 +800,7 @@ def main():
     else:
         print("ЗЕЛЁНЫЙ (%s): проверено %d из %d карточек, замечаний 0" % (rezhim, n, n))
     _pechat_zakony(zakon_warns)
+    _pechat_tipologiya(tip_zheltye, tip_counter)
     _pechat_slepyh_zon(args.faza)
     return 1 if issues else 0
 

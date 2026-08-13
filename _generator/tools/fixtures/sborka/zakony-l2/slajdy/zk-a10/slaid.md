@@ -16,7 +16,7 @@ bootstrap_lekcii.py, писана руками ради изоляции одн�
 imya: zk-a10
 nazvanie: zk-a10
 zagolovok_na_ekrane: ""
-tip_idei: narrative
+tip_slaida: NE_KLASSIFICIROVAN
 zachem: фикстура закона
 akcent: фикстура закона
 centralnyj_blok: perechislenie

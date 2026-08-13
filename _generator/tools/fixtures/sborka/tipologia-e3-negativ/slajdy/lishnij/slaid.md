@@ -1,6 +1,8 @@
 <!--
-ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода zakony-v-gejt — не порождена
-bootstrap_lekcii.py, писана руками ради изоляции одного закона на карточку).
+ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода tipologia-odna-os, Э3 — не порождена
+bootstrap_lekcii.py, писана руками ради изоляции: тип Т1 С [dokazatelstvo]
+(слота под него в Т1 сознательно нет — п.3 интервью) обязан красить гейт
+клаузой «лишний блок вне раскладки»).
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -13,13 +15,13 @@ bootstrap_lekcii.py, писана руками ради изоляции одн�
 ФАЗА 6 (сборка и QA): x :: python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html
 -->
 ---
-imya: zk-g1
-nazvanie: zk-g1
+imya: lishnij
+nazvanie: lishnij
 zagolovok_na_ekrane: ""
-tip_slaida: NE_KLASSIFICIROVAN
-zachem: фикстура закона
-akcent: фикстура закона
-centralnyj_blok: perechislenie
+tip_slaida: Т1
+zachem: фикстура Э3 — лишний блок вне раскладки
+akcent: фикстура
+centralnyj_blok: определение с лишним доказательством
 kommentarij_lektoru: ""
 minuty: 5
 vazhnost: opornyj
@@ -35,22 +37,22 @@ status: v_deke
 ---
 
 ## Математика — развёрнуто
-### [narrativ] заход
-Заход.
+### [opredelenie] определение с лишним доказательством
+**Определение (раз).** формула $x=1$.
 
 > поле:mn мораль
 
-### [opredelenie] без ярлыка
-Без ярлыка вовсе. формула $x=1$.
+### [dokazatelstvo] лишнее
+*Доказательство.* формула $x=1$.
 
 > поле:mn мораль
 
 ## Текст слайда — сжато
-### [narrativ] заход
-Заход.
+### [opredelenie] определение с лишним доказательством
+Текст. формула $x=1$.
 
-### [opredelenie] без ярлыка
+### [dokazatelstvo] лишнее
 Текст. формула $x=1$.
 
 ## Правки
-- фикстура
+- фикстура Э3
