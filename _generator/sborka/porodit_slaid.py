@@ -61,6 +61,26 @@ def _pechat_ne_proveryayu():
         print("  · %s" % p)
 
 
+def _slots_dlya(tip_slaida):
+    """Раскладка для порождения. Т6 не несёт ключа в `tipy_slajdov.TIPY` намеренно
+    (заход tipologia-dochistka, Э3 — состав ему задаёт геометрия `tipy.py`, не эта
+    раскладка), но материал для тела ему всё равно нужен: `tipy_slajdov.SLOTS_SLUZHEBNYJ`
+    даёт минимальную раскладку (один central narrativ) БЕЗ регистрации в реестре —
+    путь Т6 не идёт в `tipy_slajdov.proverit_sostav`/гейт состава, только сюда."""
+    if tip_slaida == tipy_slajdov.TIP_SLUZHEBNYJ:
+        return tipy_slajdov.SLOTS_SLUZHEBNYJ
+    return tipy_slajdov.TIPY[tip_slaida]["slots"]
+
+
+def _opisanie_dlya(tip_slaida, slots):
+    """Как `tipy_slajdov.opisanie(tip_slaida)`, но по явно переданным слотам — та
+    функция делает `TIPY[tip_slaida]` и упала бы `KeyError` на Т6 (нет ключа в
+    TIPY намеренно, см. `_slots_dlya`)."""
+    central = next(s for s in slots if s.central)
+    chasti = [s.bukva + ("" if s.required else "?") for s in slots]
+    return "%s: %s — центральный %s" % (tip_slaida, " · ".join(chasti), central.bukva)
+
+
 def _parse_tip_mysl(znachenie, flag):
     if ":" not in znachenie:
         raise PorozhdenieOtkaz(
@@ -77,21 +97,30 @@ def _parse_tip_mysl(znachenie, flag):
     return tip, mysl
 
 
-def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva):
-    """Раскладывает пришедший запрос по слотам `tipy_slajdov.TIPY[tip_slaida]`.
+def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
+                          vspomogatelnye_posle=()):
+    """Раскладывает пришедший запрос по слотам `_slots_dlya(tip_slaida)` (обычный
+    тип — `tipy_slajdov.TIPY[tip_slaida]["slots"]`, Т6 — `SLOTS_SLUZHEBNYJ`).
     Возвращает [(tip, mysl)] в порядке слотов раскладки — заполненные слоты несут
     запрошенную мысль, необязательные незаполненные несут `NE_ZAPOLNYAEM` дважды
     (в мысли и в теле — решает `_body_dlya`). Кидает `PorozhdenieOtkaz` на первом
-    нарушении, с указанием правила и раскладки типа целиком."""
-    slots = tipy_slajdov.TIPY[tip_slaida]["slots"]
-    central = tipy_slajdov.central_slot(tip_slaida)
+    нарушении, с указанием правила и раскладки типа целиком.
+
+    🔴 `vspomogatelnye_posle` (заход tipologia-dochistka, Э2) — тот же формат
+    (tip, mysl), но `_polozhit` целится в ПОСЛЕДНИЙ слот этого типа по раскладке,
+    а не в первый: у Т2 `primer` встречается ДВАЖДЫ (слот «до» utverzhdenie и
+    «после»), и до этого захода CLI мог попасть только в первый («до») — молча,
+    без единого сообщения, даже когда автор просил «после». Обычный
+    `--vspomogatelnyj` продолжает целиться в первый слот — поведение не изменилось."""
+    slots = _slots_dlya(tip_slaida)
+    opisanie = _opisanie_dlya(tip_slaida, slots)
+    central = next(s for s in slots if s.central)
     tip_c, mysl_c = centralnyj
     if tip_c != central.tip:
         raise PorozhdenieOtkaz(
             "запрет: у типа %s центральным блоком просят не [%s] (тип запроса: [%s]). "
             "Раскладка %s — что сделать вместо: смени --tip или смени тип центрального "
-            "блока на '%s:<мысль>'" % (tip_slaida, central.tip, tip_c,
-                                        tipy_slajdov.opisanie(tip_slaida), central.tip))
+            "блока на '%s:<мысль>'" % (tip_slaida, central.tip, tip_c, opisanie, central.tip))
 
     # заполнено[i] — список (tip, mysl) для i-го слота raskladki, в порядке запроса
     zapolneno = [[] for _ in slots]
@@ -101,14 +130,14 @@ def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, doka
     idx_central = next(i for i, s in enumerate(slots) if s.central)
     zapolneno[idx_central].append((tip_c, mysl_c))
 
-    def _polozhit(tip_bloka, mysl, flag):
+    def _polozhit(tip_bloka, mysl, flag, posle=False):
         idxs = idx_po_tipu.get(tip_bloka)
         if not idxs:
             raise PorozhdenieOtkaz(
                 "запрет: раскладка %s не предусматривает блок типа [%s] (%s='%s'). "
                 "Раскладка %s — что сделать вместо: убери этот блок или смени --tip"
-                % (tip_slaida, tip_bloka, flag, mysl, tipy_slajdov.opisanie(tip_slaida)))
-        i = idxs[0]
+                % (tip_slaida, tip_bloka, flag, mysl, opisanie))
+        i = idxs[-1] if posle else idxs[0]
         slot = slots[i]
         if not slot.multi and zapolneno[i]:
             raise PorozhdenieOtkaz(
@@ -116,12 +145,13 @@ def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, doka
                 "«если там два несущих примера/определения — объединить в один блок и "
                 "поставить список». Раскладка %s — что сделать вместо: слей мысли '%s' "
                 "и '%s' в ОДИН блок со списком"
-                % (tip_bloka, tip_slaida, tipy_slajdov.opisanie(tip_slaida),
-                   zapolneno[i][0][1], mysl))
+                % (tip_bloka, tip_slaida, opisanie, zapolneno[i][0][1], mysl))
         zapolneno[i].append((tip_bloka, mysl))
 
     for tip_v, mysl_v in vspomogatelnye:
         _polozhit(tip_v, mysl_v, "--vspomogatelnyj")
+    for tip_v, mysl_v in vspomogatelnye_posle:
+        _polozhit(tip_v, mysl_v, "--vspomogatelnyj-posle", posle=True)
     for mysl_n in narrativy:
         _polozhit("narrativ", mysl_n, "--narrativ")
     for mysl_d in dokazatelstva:
@@ -133,7 +163,7 @@ def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, doka
             "запрет: у типа %s не задан обязательный блок [%s]. Раскладка %s — "
             "что сделать вместо: добавь блок этого типа (для Т3 --dokazatelstvo обязателен, "
             "в отличие от Т2)"
-            % (tip_slaida, ", ".join(nedostayushchie), tipy_slajdov.opisanie(tip_slaida)))
+            % (tip_slaida, ", ".join(nedostayushchie), opisanie))
 
     itog = []
     for i, s in enumerate(slots):
@@ -156,7 +186,7 @@ def _body_dlya(bloki_itog):
 
 
 def sostavit_kartochku(imya, tip_slaida, bloki_itog):
-    idx_central = next(i for i, s in enumerate(tipy_slajdov.TIPY[tip_slaida]["slots"]) if s.central)
+    idx_central = next(i for i, s in enumerate(_slots_dlya(tip_slaida)) if s.central)
     mysl_c = bloki_itog[idx_central][1]
     lifecycle = LIFECYCLE_TMPL % {"imya": imya}
     text = SLIDE_CARD_TMPL % {"imya": imya, "zap": formaty.ZAPOLNIT,
@@ -167,12 +197,20 @@ def sostavit_kartochku(imya, tip_slaida, bloki_itog):
     return text
 
 
-def porodit(lekcija_dir, imya, tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva):
-    if tip_slaida not in tipy_slajdov.TIPY:
+# Типы, допустимые для --tip: содержательные (tipy_slajdov.TIPY) плюс служебный
+# Т6 (заход tipologia-dochistka, Э3 — до него --tip Т6 не знал вовсе; Т6 в машинерию
+# слотов не идёт намеренно, см. `_slots_dlya`, но CLI обязан уметь его породить).
+TIPY_DOPUSTIMYE = sorted(tipy_slajdov.TIPY) + [tipy_slajdov.TIP_SLUZHEBNYJ]
+
+
+def porodit(lekcija_dir, imya, tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
+            vspomogatelnye_posle=()):
+    if tip_slaida not in TIPY_DOPUSTIMYE:
         raise PorozhdenieOtkaz(
             "тип '%s' неизвестен. Допустимы: %s"
-            % (tip_slaida, ", ".join(sorted(tipy_slajdov.TIPY))))
-    bloki_itog = _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva)
+            % (tip_slaida, ", ".join(TIPY_DOPUSTIMYE)))
+    bloki_itog = _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
+                                       vspomogatelnye_posle=vspomogatelnye_posle)
     text = sostavit_kartochku(imya, tip_slaida, bloki_itog)
 
     lekcija_dir = Path(lekcija_dir)
@@ -276,10 +314,17 @@ def main():
                      "или сверяет раскладку существующей деки (--sverit)")
     ap.add_argument("lekcija", help="путь к папке лекции")
     ap.add_argument("--imya", help="id слайда (папка slajdy/<imya>/)")
-    ap.add_argument("--tip", choices=sorted(tipy_slajdov.TIPY), help="тип слайда Т1..Т5")
+    ap.add_argument("--tip", choices=TIPY_DOPUSTIMYE, help="тип слайда Т1..Т4, Т6")
     ap.add_argument("--centralnyj", help="'tip:мысль' центрального блока")
     ap.add_argument("--vspomogatelnyj", action="append", default=[],
-                     help="'tip:мысль' вспомогательного несущего блока (можно повторять)")
+                     help="'tip:мысль' вспомогательного несущего блока (можно повторять); "
+                          "при нескольких слотах одного типа в раскладке (Т2 primer) "
+                          "целится в ПЕРВЫЙ по раскладке — для последнего см. "
+                          "--vspomogatelnyj-posle")
+    ap.add_argument("--vspomogatelnyj-posle", action="append", default=[],
+                     help="как --vspomogatelnyj, но целится в ПОСЛЕДНИЙ слот этого типа "
+                          "по раскладке — у Т2 'primer:...' сюда встанет ПОСЛЕ utverzhdenie, "
+                          "не до (заход tipologia-dochistka, Э2)")
     ap.add_argument("--narrativ", action="append", default=[],
                      help="мысль нарративного блока (можно повторять)")
     ap.add_argument("--dokazatelstvo", action="append", default=[],
@@ -305,8 +350,10 @@ def main():
                                     "(для сверки деки без порождения — флаг --sverit)")
         centralnyj = _parse_tip_mysl(args.centralnyj, "--centralnyj")
         vspomogatelnye = [_parse_tip_mysl(v, "--vspomogatelnyj") for v in args.vspomogatelnyj]
+        vspomogatelnye_posle = [_parse_tip_mysl(v, "--vspomogatelnyj-posle")
+                                 for v in args.vspomogatelnyj_posle]
         rc = porodit(args.lekcija, args.imya, args.tip, centralnyj, vspomogatelnye,
-                     args.narrativ, args.dokazatelstvo)
+                     args.narrativ, args.dokazatelstvo, vspomogatelnye_posle=vspomogatelnye_posle)
         _pechat_ne_proveryayu()
         return rc
     except PorozhdenieOtkaz as e:
