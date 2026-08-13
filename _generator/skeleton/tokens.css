@@ -71,6 +71,10 @@
   --t-block-title: 38px; --lh-block-title: 1.208;/* .sty:188  12/14,5pt — заголовок врезки */
   --t-block-body: 37px;  --lh-block-body: 1.261; /* .sty:189  11,5/14,5pt — тело врезки */
   --lh-small: 1.211;                             /* .sty:190  9,5/11,5pt — интерлиньяж подписи к --t-small */
+  --ls-caption: 0;         /* трекинг роли подпись (КАТАЛОГ §3.2 «токенов трекинга нет вовсе»,
+                              §4 кандидат). Дефолт 0 = поведение не меняется ни на одном слайде,
+                              ручка появляется. Заход mikrotipografika-melochi, Э5. Откат: удалить
+                              строку и letter-spacing в base.css .t-small. */
   --t-instr-name: 68px;  --lh-instr-name: 1.256; /* .sty:191  21,5/27pt — имя преподавателя (визитка) */
   --t-instr-role: 27px;  --lh-instr-role: 1.214; /* .sty:192  8,4/10,2pt — роль преподавателя */
   --t-instr-body: 34px;  --lh-instr-body: 1.250; /* .sty:193  10,8/13,5pt — текст визитки */
