@@ -54,7 +54,11 @@ mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
 cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" "$TOOLS/check_zahod.py" \
    "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$TOOLS/korni.py" \
    "$TOOLS/check_sborki.py" "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" \
-   "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$T/_generator/tools/"
+   "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
+   "$T/_generator/tools/"
+# `modeli.py` — импорт верхнего уровня в `bootstrap_zahod.py`; без него временная
+# копия падает `ModuleNotFoundError`, и красной оказывается фикстура, а не проверка
+# (тот же класс, что в `fixtures/korni` и `fixtures/git_zona`; чинено 14.08).
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
 cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
 

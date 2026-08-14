@@ -65,7 +65,16 @@ cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
    "$TOOLS/check_zahod.py" "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" \
    "$TOOLS/check_incidenty.py" "$TOOLS/git_zona.py" "$TOOLS/check_sborki.py" \
    "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
+   "$TOOLS/modeli.py" \
    "$T/_generator/tools/"
+# 🔴 `modeli.py` в списке — не украшение: `bootstrap_zahod.py` импортирует его
+# на верхнем уровне, и под временной копией без него падает
+# `ModuleNotFoundError: No module named 'modeli'`. Красной от этого была не
+# проверка, а сама фикстура — и красной на baseline, без чьих-либо правок.
+# ЦЕНА 14.08: каждый коммит и каждое слияние захода `konflikty` прошли с
+# `--no-verify` «чужой долг: фикстура korni красна» — семь обходов подряд, и
+# ровно та дыра, сквозь которую перестают смотреть на остальные ворота.
+# Тот же класс уже был починен в `fixtures/git_zona` (там же и комментарий).
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
 cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
 

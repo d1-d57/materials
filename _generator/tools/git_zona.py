@@ -2794,6 +2794,7 @@ def cmd_merge(args):
     # может идти чужой заход, и merge притащит недоделанное. `poteri`/`doctor`
     # это уже печатают, `cmd_merge` про это молчал и вливал.
     put_wt = worktree_branches().get(branch)
+    otlozhennyj_incident = None
     if put_wt:
         if not args.vsyo_ravno:
             print(f"\n⛔ `{branch}` вычекаучена в рабочей папке — не сливаю:\n"
@@ -2804,8 +2805,18 @@ def cmd_merge(args):
             return 1
         print(f"\n⚠ --vsyo-ravno: сливаю `{branch}` несмотря на живую рабочую папку "
               f"{put_wt}. Причина: {args.vsyo_ravno}")
-        log_incident(f"merge {branch}: сливаю ветку с живой рабочей папкой --vsyo-ravno",
-                     f"причина: {args.vsyo_ravno} — работа папки {put_wt} могла разойтись")
+        # 🔴 СТРОКА АВТОЛОГА КЛАДЁТСЯ ОТЛОЖЕННО, ПОСЛЕ `git merge`, А НЕ ЗДЕСЬ.
+        # `INCIDENTY.md` почти всегда сам участвует в слиянии, и запись делает
+        # его грязным ровно МЕЖДУ проверкой «грязное ∩ сливаемое» (выше) и самим
+        # merge. Git отказывает словами «Your local changes to the following
+        # files would be overwritten by merge», то есть `--vsyo-ravno` не мог
+        # пройти НИКОГДА, а причина отказа выглядела как чужая грязь — хотя
+        # грязь своя же и секундной давности. ЦЕНА 14.08: заход `dolgi-nol` встал
+        # на первом ходе §0.1, два прогона merge вхолостую и разбор по коду;
+        # обошёл он это не флагом, а сняв рабочую папку сливаемой ветки.
+        otlozhennyj_incident = (
+            f"merge {branch}: сливаю ветку с живой рабочей папкой --vsyo-ravno",
+            f"причина: {args.vsyo_ravno} — работа папки {put_wt} могла разойтись")
 
     # 🔴 Ш7 (`ochered-zayavok`): merge пишет в `.git` — из песочницы отказ, как
     # у всех пишущих команд. ПОСЛЕ предпросмотра и проверок зоны/грязи (Cowork
@@ -2821,6 +2832,8 @@ def cmd_merge(args):
         return 2
 
     r = git("merge", "--no-edit", branch, check=False)
+    if otlozhennyj_incident:
+        log_incident(*otlozhennyj_incident)   # см. «отложенно» выше: до merge — нельзя
     if r.returncode == 0:
         print(f"\n✅ Влито без конфликтов: {git('log', '-1', '--oneline').stdout.strip()}")
         _obyavit_ne_vstroennoe(novye_instrumenty)
