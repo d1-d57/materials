@@ -56,7 +56,33 @@ TOOLS = Path(__file__).resolve().parent
 # `git log`/`git show` в Г3 читают ИМЕННО `REPO`, а фикстуры кладут артефакты
 # вне боевого репозитория; тестировать «тот же коммит» на боевом дереве —
 # писать в него тестовые коммиты, чего гейт делать не смеет.
-REPO = Path(os.environ.get("PRIYOMKA_REPO") or (TOOLS.parent.parent))
+def _resolve_repo():
+    """Репозиторий по МЕСТУ ВЫЗОВА (`cwd`), а не по расположению файла инструмента.
+
+    🔴 ЗАЧЕМ (заход `gejty-ne-tuda`, П3 — та же болезнь, что уже вылечена в
+    `git_zona.py._resolve_repo`, и лечится тем же приёмом). `TOOLS.parent.parent`
+    — это расположение САМОГО ФАЙЛА `priyomka.py`. Приёмку зовут абсолютным
+    путём (в том числе к копии инструмента в рабочей папке захода: именно так
+    исполнитель проверяет свою правку ДО влития), а судить она обязана то
+    дерево, СТОЯ В КОТОРОМ её позвали. Поймано живым прогоном: приёмка,
+    запущенная ИЗ ГЛАВНОЙ папки копией инструмента из worktree, гоняла Г0 по
+    worktree — и красила зону, которая в главной папке чиста. Гейт, меряющий
+    не то дерево, делает приёмку декоративной, а вердикт — случайным.
+    `PRIYOMKA_REPO` остаётся приоритетным безусловно: это дверь фикстур
+    (`fixtures/priyomka/PROGNAT.sh` и другие выставляют её на каждый вызов),
+    и их поведение здесь не меняется.
+    """
+    override = os.environ.get("PRIYOMKA_REPO")
+    if override:
+        return Path(override)
+    r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--show-toplevel"],
+                       capture_output=True, text=True)
+    if r.returncode == 0 and r.stdout.strip():
+        return Path(r.stdout.strip())
+    return TOOLS.parent.parent   # не git-дерево или git не ответил — прежнее поведение
+
+
+REPO = _resolve_repo()
 
 # 🔴 ТРИ ИСХОДА КОДА ВОЗВРАТА (Рычаг 3): 0 — принято, 1 — ГЕЙТ КРАСНЫЙ
 # (отчёт забракован), 2 — ПОЗВАЛИ НЕВЕРНО (нет аргумента, файла не существует).
@@ -120,9 +146,31 @@ def izvlech_zonu(tekst: str):
     путём — и потому ВСЕГДА проверялась как пустая (полностью проверена),
     Г0 давал ✅ по ПРАВИЛЬНОМУ ВИДУ, но по НЕПРАВИЛЬНОЙ ПРИЧИНЕ. Поймано на
     живом прогоне приёмки по собственному отчёту этого захода.
+
+    🔴 ПЛЕЙСХОЛДЕР `<зона>` — НЕ ЗОНА (заход `gejty-ne-tuda`, П1, замер 14.08).
+    Шаблонная строка §4 стоит в КАЖДОМ заходе выше отчёта («check --zone
+    <зона>»), и первое совпадение по файлу — всегда она. До П1 это было
+    безобидно ровно потому, что `git_zona.py check` зеленел на несуществующей
+    зоне: Г0 печатал «--zone <зона> → ✅» и означал «проверять было нечего».
+    Живой замер: и `kod_vynos-2.md`, и `kod_kanon-put.md` приняты с таким Г0.
+    С П1 та же строка стала бы честным красным — на КАЖДОМ заходе, то есть
+    гейт из всегда-зелёного превратился бы во всегда-красный, а это тот же
+    декоративный гейт с другим знаком. Поэтому: угловые скобки пропускаем и
+    берём следующее совпадение, а если конкретного нет — зону называет
+    КОНТРАКТ (первый путь, лежащий внутри этого репозитория; абсолютные пути
+    второго репозитория `check --zone` судить не может — их судит Г10).
     """
-    m = re.search(r'git_zona\.py\s+check\s+--zone\s+([^\s`]+)', tekst)
-    return m.group(1) if m else None
+    for m in re.finditer(r'git_zona\.py\s+check\s+--zone\s+([^\s`]+)', tekst):
+        kandidat = m.group(1)
+        if not kandidat.startswith("<"):
+            return kandidat
+    m_kontrakt = KONTRAKTNAYA_ZONA_RE.search(tekst)
+    if m_kontrakt:
+        for put in re.findall(r'`([^`]+)`', m_kontrakt.group(1)):
+            put = put.strip()
+            if put and not put.startswith("/") and not put.startswith("~"):
+                return put
+    return None
 
 
 def fmt_time(mtime: float) -> str:
@@ -146,19 +194,71 @@ def gate_g0(zona: str):
     return True, f"git_zona.py check --zone {zona} → ✅\n{vyvod}" if vyvod else f"git_zona.py check --zone {zona} → ✅"
 
 
-def gate_g1(stroka_kommit):
+HESH_RE = re.compile(r'^[0-9a-f]{6,40}$')
+
+
+def hashi_stroki_kommit(stroka_kommit):
+    """Хэши из строки `**КОММИТ:**` — сперва из backticks, потом голым поиском.
+
+    🔴 ПОЧЕМУ НЕ «ВСЕ ГОЛЫЕ ТОКЕНЫ» (заход `gejty-ne-tuda`, П2). `\\b[0-9a-f]
+    {6,40}\\b` матчит не только хэши, но и обычные слова из букв a-f: «decade»,
+    «faded», «beefed». Гейт, который краснеет на прозе отчёта, обходят вместе
+    со всей защитой (цена уже оплачена: 28 обходов `--no-verify` из 56 срывов
+    коммита). В живых отчётах хэш всегда в backticks — по ним и берём; голый
+    поиск остаётся ОТКАТОМ ровно в прежней форме «первый попавшийся», чтобы
+    отчёты старой формы судились как раньше.
+    """
+    v_backticks = [h for h in re.findall(r'`([^`]+)`', stroka_kommit)
+                   if HESH_RE.match(h.strip())]
+    if v_backticks:
+        return [h.strip() for h in v_backticks]
+    m = re.search(r'\b[0-9a-f]{6,40}\b', stroka_kommit)
+    return [m.group(0)] if m else []
+
+
+def gde_khash(khash, korni):
+    """(корень, первая строка `git show --stat`) первого репозитория, где хэш есть."""
+    for koren in korni:
+        r = subprocess.run(["git", "--no-optional-locks", "show", "--stat", khash],
+                            cwd=koren, capture_output=True, text=True)
+        if r.returncode == 0:
+            return koren, (r.stdout.splitlines()[0] if r.stdout else "")
+    return None, None
+
+
+def gate_g1(stroka_kommit, zona_stroka=""):
+    """Хэш(и) отчёта существуют — в ЛЮБОМ из репозиториев, названных заходом.
+
+    🔴 ЗАЧЕМ ДВА РЕПОЗИТОРИЯ (заход `gejty-ne-tuda`, П2; замер приёмки 14.08 на
+    отчёте `vynos-2`). Заход был двухрепозиторным ПО ЗАДАНИЮ, и его главный
+    коммит лёг во второй репозиторий: Г1 печатал «хэш 60501f2 не найден в
+    репозитории», хотя коммит существовал и виден одной командой в `disciplina`.
+    Гейт искал только в `materials` — то есть краснел на здоровой работе ровно
+    там, где заданием и было велено работать в двух репозиториях.
+    Список репозиториев гейт НЕ угадывает и НЕ хардкодит: его называет строка
+    `ЗОНА (можно менять):` контракта — тот же источник, что у Г10
+    (`repozitorii_zony`), значит два гейта не разъедутся между собой.
+    """
     if not stroka_kommit:
         return False, "строка **КОММИТ:** не найдена в отчёте"
-    m = re.search(r'\b[0-9a-f]{6,40}\b', stroka_kommit)
-    if not m:
+    hashi = hashi_stroki_kommit(stroka_kommit)
+    if not hashi:
         return False, f"в строке КОММИТ нет хэша: {stroka_kommit!r}"
-    khash = m.group(0)
-    r = subprocess.run(["git", "--no-optional-locks", "show", "--stat", khash],
-                        cwd=REPO, capture_output=True, text=True)
-    if r.returncode != 0:
-        return False, f"хэш {khash} не найден в репозитории (git show --stat упал, код {r.returncode})"
-    pervaya = r.stdout.splitlines()[0] if r.stdout else ""
-    return True, f"хэш {khash} существует: {pervaya}"
+    korni = repozitorii_zony(zona_stroka)
+    najdeno, propali = [], []
+    for khash in hashi:
+        koren, pervaya = gde_khash(khash, korni)
+        if koren is None:
+            propali.append(khash)
+        else:
+            najdeno.append(f"{khash} — в `{koren.name}`: {pervaya}")
+    imena = ", ".join(k.name for k in korni)
+    if propali:
+        return False, ("хэш(и) " + ", ".join(propali) + " не найдены НИ В ОДНОМ из "
+                       f"репозиториев зоны ({imena}) — искали `git show --stat <хэш>` в каждом"
+                       + ("\nнайденные: " + " · ".join(najdeno) if najdeno else ""))
+    return True, f"хэшей {len(najdeno)}, каждый найден (репозитории зоны: {imena}):\n" + \
+                 "\n".join("   " + n for n in najdeno)
 
 
 def gate_g2(stroka_artefakt):
@@ -171,19 +271,74 @@ def gate_g2(stroka_artefakt):
     return True, f"путь заполнен: {put_chast}", put_chast
 
 
-def git_commit_time(put_otnositelnyj: str):
-    """Время последнего коммита, тронувшего путь. None — путь не в git."""
-    r = subprocess.run(["git", "--no-optional-locks", "log", "-1", "--format=%ct", "--", put_otnositelnyj],
-                        cwd=REPO, capture_output=True, text=True)
+def git_commit_time(put_otnositelnyj: str, vetka=None):
+    """Время последнего коммита, тронувшего путь. None — путь не в git.
+
+    🔴 `vetka` (заход `gejty-ne-tuda`, П3). Приёмку гоняют из ГЛАВНОЙ папки, а
+    она стоит на своей ветке (`arka/mat-kostyak`); работа захода лежит на ветке
+    захода. Без имени ветки `git log -1 -- <путь>` смотрит только историю
+    текущего HEAD, для файла с ветки захода отдаёт пусто — и гейт проваливался
+    в mtime, по которому код ВСЕГДА старше файла-захода (отчёт дописывается
+    последним ходом). Красное выходило на каждом worktree-заходе с кодовым
+    артефактом, то есть почти на каждом.
+    """
+    argv = ["git", "--no-optional-locks", "log", "-1", "--format=%ct"]
+    if vetka:
+        argv.append(vetka)
+    argv += ["--", put_otnositelnyj]
+    r = subprocess.run(argv, cwd=REPO, capture_output=True, text=True)
     stroka = r.stdout.strip()
     return int(stroka) if stroka else None
 
 
+def _git_out(koren, *args):
+    r = subprocess.run(["git", "--no-optional-locks", *args],
+                        cwd=koren, capture_output=True, text=True)
+    return r.stdout.strip() if r.returncode == 0 else ""
+
+
+def to_zhe_derevo(koren: Path) -> bool:
+    """True — `koren` это рабочая папка ТОГО ЖЕ репозитория, что `REPO`.
+
+    Сверяется общий каталог `.git` (`rev-parse --git-common-dir`): у worktree он
+    указывает на `.git` основной папки. Командой, а не догадкой по имени папки —
+    имя `materials-wt/<заход>` это соглашение, а не гарантия.
+    """
+    a = _git_out(koren, "rev-parse", "--git-common-dir")
+    b = _git_out(REPO, "rev-parse", "--git-common-dir")
+    if not a or not b:
+        return False
+    return (Path(koren) / a).resolve() == (Path(REPO) / b).resolve()
+
+
 def otnositelno_repo(put: Path):
+    """Путь относительно репозитория — включая РАБОЧИЕ ПАПКИ того же репозитория.
+
+    🔴 ЗАЧЕМ (заход `gejty-ne-tuda`, П3). Заходы сегодня worktree-шные, и
+    артефактом кодового захода оказывается путь вида
+    `…/materials-wt/<заход>/_generator/tools/<файл>`. Он НЕ `relative_to(REPO)`,
+    и прежняя версия честно отвечала «вне репозитория» — после чего Г3 считал
+    артефакт непроверяемым по git и падал в mtime (см. `git_commit_time`).
+    Рабочая папка — то же дерево и тот же `.git`, значит и путь в нём тот же:
+    приводим его к репозиторно-относительному.
+    """
     try:
         return str(put.relative_to(REPO))
     except ValueError:
-        return None  # путь вне репозитория (например, фикстура во /tmp)
+        pass
+    katalog = put if put.is_dir() else put.parent
+    if not katalog.exists():
+        return None
+    verhushka = _git_out(katalog, "rev-parse", "--show-toplevel")
+    if not verhushka:
+        return None  # путь вне git вообще (например, фикстура во /tmp)
+    koren = Path(verhushka)
+    if not to_zhe_derevo(koren):
+        return None  # чужой репозиторий — его судит не этот гейт
+    try:
+        return str(put.resolve().relative_to(koren.resolve()))
+    except ValueError:
+        return None
 
 
 def artefakt_v_zone(put_otn: str, zona: str) -> bool:
@@ -201,7 +356,7 @@ def v_kommite(put_otn: str, khash: str) -> bool:
     return r.returncode == 0 and bool(r.stdout.strip())
 
 
-def gate_g3(put_str, zahod_path: Path, zona: str, khash):
+def gate_g3(put_str, zahod_path: Path, zona: str, khash, vetka=None):
     """Свежесть/консистентность артефакта — ДВЕ РАЗНЫЕ ветки (часть B тиража).
 
     🔴 ПОЧЕМУ ВЕТВЛЕНИЕ. Артефакт внутри ЗОНЫ ЭТОГО ЖЕ захода (кодовый файл вроде
@@ -266,26 +421,47 @@ def gate_g3(put_str, zahod_path: Path, zona: str, khash):
     put_otn_src = otnositelno_repo(zahod_path)
     art_t = git_commit_time(put_otn_art) if put_otn_art else None
     src_t = git_commit_time(put_otn_src) if put_otn_src else None
+    # 🔴 ВТОРАЯ ПОПЫТКА — ПО ВЕТКЕ ЗАХОДА (заход `gejty-ne-tuda`, П3). Приёмка
+    # идёт из главной папки, стоящей на ДРУГОЙ ветке: по её HEAD пути с ветки
+    # захода не видно вовсе, и оба времени приходят пустыми. Имя ветки называет
+    # контракт зоны; чего в ней нет — так и печатается словами, а не красится
+    # молча в mtime-красное.
+    otkuda_vremya = "коммит-время (HEAD)"
+    if vetka and (art_t is None or src_t is None):
+        if art_t is None and put_otn_art:
+            art_t = git_commit_time(put_otn_art, vetka)
+        if src_t is None and put_otn_src:
+            src_t = git_commit_time(put_otn_src, vetka)
+        otkuda_vremya = f"коммит-время (ветка {vetka})"
     if art_t is None or src_t is None:
-        # Артефакт вне репозитория или ещё не закоммичен — коммит-время
-        # недоступно, единственный оставшийся ориентир — mtime на диске.
+        # Коммит-время недоступно (артефакт вне git, не закоммичен, ветки нет
+        # или пути в ней нет) — единственный оставшийся ориентир — mtime, и
+        # ПРИЧИНА называется вслух: «сверено по mtime» и «сверено по коммиту» —
+        # разные утверждения, и различать их обязан читатель, а не догадка.
+        chego_net = ("артефакта" if art_t is None else "") + \
+                    (" и " if art_t is None and src_t is None else "") + \
+                    ("файла-захода" if src_t is None else "")
+        pochemu = (f"коммит-время недоступно для {chego_net}: вне git, не закоммичено "
+                   + (f"или пути нет в ветке `{vetka}`" if vetka
+                      else "или ветка захода не названа в контракте")
+                   + " — сверка по mtime")
         art_m, src_m = p.stat().st_mtime, zahod_path.stat().st_mtime
         if art_m < src_m:
             return False, (f"артефакт {p} СТАРШЕ файла-захода по mtime "
-                            f"(коммит-время недоступно: артефакт вне git или не закоммичен) — "
+                            f"({pochemu}) — "
                             f"(артефакт: {fmt_time(art_m)}, файл-заход: {fmt_time(src_m)}) "
                             f"[ветка: вне зоны, mtime]")
         return True, (f"артефакт не старше файла-захода по mtime "
-                       f"(коммит-время недоступно: артефакт вне git или не закоммичен) "
+                       f"({pochemu}) "
                        f"[ветка: вне зоны, mtime]")
     if art_t < src_t:
         return False, (f"артефакт {p} СТАРШЕ файла-захода по коммит-времени — сборка молча "
                         f"не запускалась или артефакт не доехал в тот же коммит "
                         f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)}) "
-                        f"[ветка: вне зоны, коммит-время]")
+                        f"[ветка: вне зоны, {otkuda_vremya}]")
     return True, (f"артефакт не старше файла-захода по коммит-времени "
                    f"(артефакт: {fmt_time(art_t)}, файл-заход: {fmt_time(src_t)}) "
-                   f"[ветка: вне зоны, коммит-время]")
+                   f"[ветка: вне зоны, {otkuda_vremya}]")
 
 
 def gate_g4(tekst):
@@ -869,12 +1045,21 @@ def izvlech_vetku(tekst: str):
     «ветки нет» на исправной работе.
     Резерв — checkout-режим захода, где `--branch` не встречается вовсе: там
     генератор пишет «обязано быть `<ветка>`».
+
+    🔴 ХВОСТОВАЯ ПУНКТУАЦИЯ СРЕЗАЕТСЯ (заход `gejty-ne-tuda`, П3, ⚠). Первое
+    `--branch` в файле — в СТАРТОВОМ СООБЩЕНИИ владельца, где команда стоит
+    внутри фразы: «…worktree add kanon-put --branch zahod/kanon-put, затем
+    чтение захода». Запятая уезжала В СОСТАВ имени, и печать жизни ветки
+    честно сообщала «Ветки `zahod/kanon-put,` нет среди 20 проверяемых» — то
+    есть вердикт о живой ветке подменялся вердиктом об опечатке разбора. В
+    именах веток этого репозитория `,;:.` не встречается (`zahod/<слаг>`),
+    поэтому срез хвостовой пунктуации ничего законного не портит.
     """
     m = re.search(r'--branch\s+([^\s`]+)', tekst)
     if m:
-        return m.group(1)
+        return m.group(1).rstrip(",;:.")
     m = re.search(r'обязано быть\s+`([^`]+)`', tekst)
-    return m.group(1) if m else None
+    return m.group(1).rstrip(",;:.") if m else None
 
 
 def pechat_zhizni_vetki(vetka):
@@ -982,15 +1167,30 @@ def main() -> int:
     stroka_kommit = pole_otcheta(otchet_dlya_polej, "КОММИТ")
     stroka_artefakt = pole_otcheta(otchet_dlya_polej, "АРТЕФАКТ")
 
+    # Зона КОНТРАКТА (не `--zone`) — она называет второй репозиторий; её читают
+    # Г1 (где искать хэш) и Г10 (какие репозитории судить). Один источник на оба.
+    m_zona_kontrakt = KONTRAKTNAYA_ZONA_RE.search(tekst)
+    zona_kontrakta = m_zona_kontrakt.group(1) if m_zona_kontrakt else ""
+    vetka_zahoda = izvlech_vetku(tekst)
+
     gates = []
-    m_khash_glob = re.search(r'\b[0-9a-f]{6,40}\b', stroka_kommit) if stroka_kommit else None
-    khash = m_khash_glob.group(0) if m_khash_glob else None
+    # 🔴 ДЛЯ Г3 НУЖЕН ХЭШ ИЗ **НАШЕГО** РЕПОЗИТОРИЯ (заход `gejty-ne-tuda`, П2).
+    # У двухрепозиторного захода строка КОММИТ несёт несколько хэшей, и первый
+    # может оказаться чужим (`disciplina — 60501f2 · materials — 4102456`).
+    # Г3 сверяет «артефакт входит в коммит» командой в REPO — чужой хэш дал бы
+    # там ложное красное на здоровой работе.
+    hashi = hashi_stroki_kommit(stroka_kommit) if stroka_kommit else []
+    khash = next((h for h in hashi
+                  if subprocess.run(["git", "--no-optional-locks", "cat-file", "-e", h + "^{commit}"],
+                                    cwd=REPO, capture_output=True, text=True).returncode == 0),
+                 hashi[0] if hashi else None)
 
     gates.append(("Г0 зона доехала в git", *gate_g0(zona)))
-    gates.append(("Г1 хэш коммита существует", *gate_g1(stroka_kommit)))
+    gates.append(("Г1 хэш коммита существует", *gate_g1(stroka_kommit, zona_kontrakta)))
     g2_ok, g2_msg, g2_put = gate_g2(stroka_artefakt)
     gates.append(("Г2 строка АРТЕФАКТ заполнена", g2_ok, g2_msg))
-    gates.append(("Г3 артефакт не старше источника", *gate_g3(g2_put if g2_ok else None, zahod_path, zona, khash)))
+    gates.append(("Г3 артефакт не старше источника",
+                  *gate_g3(g2_put if g2_ok else None, zahod_path, zona, khash, vetka_zahoda)))
     gates.append(("Г4 секции отчёта заполнены", *gate_g4(tekst)))
     gates.append(("Г5 уроки исполнителя имеют ЦЕНА:", *gate_g5(tekst)))
     g6_ok, g6_msg, g6_sovpadeniya = gate_g6(arka)
@@ -1004,10 +1204,10 @@ def main() -> int:
     gates.append(("Л1 заявка Cowork открыта дольше 24 ч", *gate_l1()))
     # Г10 — накопление git-долга. Зона берётся из КОНТРАКТА (а не из `--zone`):
     # там перечислены ВСЕ пути, включая абсолютные во втором репозитории, и
-    # именно они говорят гейту, какие репозитории судить.
-    m_zona_kontrakt = KONTRAKTNAYA_ZONA_RE.search(tekst)
+    # именно они говорят гейту, какие репозитории судить (`zona_kontrakta`
+    # снята выше — тот же текст читает Г1, чтобы гейты не разъехались).
     gates.append(("Г10 накопление git-долга (судит репозиторий, не исполнителя)",
-                  *gate_g10(m_zona_kontrakt.group(1) if m_zona_kontrakt else "")))
+                  *gate_g10(zona_kontrakta)))
 
     print("═══ МАШИННЫЕ ГЕЙТЫ ═══")
     krasnyh = 0
@@ -1102,7 +1302,7 @@ def main() -> int:
             print("\n-- Соблюдение границ зоны (часть C1, печать) --")
             print(f"   {granicy_zony(tekst, m_khash.group(0))}")
 
-    pechat_zhizni_vetki(izvlech_vetku(tekst))
+    pechat_zhizni_vetki(vetka_zahoda)
 
     print("\n-- Чек-лист оставшихся шагов канона --")
     print(CHEKLIST)

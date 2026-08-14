@@ -1900,13 +1900,69 @@ def cmd_clean(args):
     return 1
 
 
+def zona_sushchestvuet(zone):
+    """Сама зона — до её чистоты. `(ok, зона_для_dirty, сообщение)`.
+
+    🔴 ЗАЧЕМ (заход `gejty-ne-tuda`, П1; замер приёмки 2026-08-14). `dirty()`
+    фильтрует строки `git status --porcelain` префиксом `in_zone(path, zone)`.
+    Зона, которой на диске нет (опечатка в имени), и зона в ЧУЖОМ репозитории
+    (`--zone ~/Documents/GitHub/disciplina`) ни с одной строкой не совпадают —
+    строк ноль, и `check` печатал «✅ работа доехала в git, вне git ничего нет»
+    с `rc=0`. То есть первый гейт ритуала приёмки, с которого начинается приём
+    КАЖДОГО отчёта, был зелен на пустом месте: «проверено» и «проверять было
+    нечего» выглядели одинаково.
+
+    ⚠ ЗАКОННЫЕ СЛУЧАИ, КОТОРЫЕ ОБЯЗАНЫ ОСТАТЬСЯ ЗЕЛЁНЫМИ:
+      · зона существует и ПУСТА (папка без изменений) — пустоту судит `dirty()`,
+        не эта проверка;
+      · зона, которую заход СНОСИТ: на диске её уже нет, но git о ней помнит
+        (`git ls-files`) — там есть настоящая работа (удаления), и решать
+        обязан `dirty()`, а не отказ «зоны нет».
+    Резолв относительной зоны — от КОРНЯ РЕПОЗИТОРИЯ, а не от `cwd`: зона по
+    смыслу репозиторно-относительна (`_generator/tools/`), и именно так её
+    подставляют все гейты. Обе стороны сравнения резолвятся (`.resolve()`) —
+    иначе фикстурный `GIT_ZONA_REPO=/tmp/…` против macOS-реального
+    `/private/tmp/…` дал бы ложное «зона в другом репозитории».
+    """
+    if not zone:
+        return True, zone, None
+    p = Path(zone).expanduser()
+    if not p.is_absolute():
+        p = REPO / p
+    p = p.resolve()
+    koren = REPO.resolve()
+    try:
+        rel = p.relative_to(koren)
+    except ValueError:
+        return False, zone, (f"❌ зона в другом репозитории — проверь его отдельно.\n"
+                             f"   зона:        {p}\n"
+                             f"   репозиторий: {koren}\n"
+                             f"   → там свой git: `cd {p}` и `git status --porcelain`, "
+                             f"этот инструмент судит только своё дерево.")
+    rel_str = str(rel)
+    if rel_str == ".":
+        return True, None, None          # зона = корень репозитория ⇒ всё дерево
+    if not p.exists():
+        izvestno_git = git("ls-files", "--", rel_str, check=False).stdout.strip()
+        if not izvestno_git:
+            return False, zone, (f"❌ такой зоны здесь нет: {p}\n"
+                                 f"   ни на диске, ни в git (`git ls-files -- {rel_str}` пусто).\n"
+                                 f"   → опечатка в имени зоны: зелёный отсюда означал бы "
+                                 f"«проверять было нечего», а не «всё чисто».")
+    return True, rel_str, None
+
+
 def cmd_check(args):
     # 🔴 Печать ОБЯЗАТЕЛЬНА (Г3, `gejty-vrut`): молчаливая правильность
     # неотличима от молчаливой ошибки. `check --zone` — первый гейт приёмки,
     # и по этой строке видно, что он вообще смотрит на то дерево, что нужно.
     branch = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip() or "?"
     print(f"🔎 Репозиторий: {REPO} · ветка: {branch}")
-    rows = dirty(args.zone)
+    ok_zona, zona, beda = zona_sushchestvuet(args.zone)
+    if not ok_zona:
+        print(beda)
+        return 1
+    rows = dirty(zona)
     where = f"зона {args.zone}" if args.zone else "всё дерево"
     if not rows:
         print(f"✅ {where}: работа доехала в git, вне git ничего нет.")
