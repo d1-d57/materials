@@ -413,4 +413,201 @@ else echo "  ✅ судится ИНДЕКС: починка на диске п�
 fi
 cd "$T"
 
+# ══ РЫЧАГ 3: КОНТРАКТ ГЕЙТА ═══════════════════════════════════════════════════
+# Четыре класса, которыми гейт ломается НЕ переставая работать: он отвечает,
+# его читают — и читают неверно. Каждая пара ниже мутирует ровно одну переменную.
+
+# ── ПРОВЕРКА 14: 🔴 rc РАЗЛИЧАЕТ ТРИ ИСХОДА ──
+# Снаружи гейт виден ТОЛЬКО кодом возврата, и исходов там три: чисто (0), нашёл
+# дефект (1), позвали неверно (2). Пока кода 2 нет, «я опечатался в пути» и
+# «гейт нашёл нарушение» — одно и то же число, а не отработавший гейт читается
+# как зелёный. Проверка статическая: она видит ПРИСУТСТВИЕ различения, потому
+# что подать инструменту кривой вход = ИСПОЛНИТЬ его, а это закон 2 модуля.
+cat > "$T/rc_bad.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+import sys
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("put")
+    ns = ap.parse_args()
+    return 1 if ns.put.endswith(".md") else 0
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+cat > "$T/rc_ok.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+import os
+import sys
+RC_OK, RC_DEFECT, RC_MISUSE = 0, 1, 2
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("put")
+    ns = ap.parse_args()
+    if not os.path.exists(ns.put):
+        print("нет такого файла — позвали неверно")
+        return RC_MISUSE
+    return RC_DEFECT if ns.put.endswith(".md") else RC_OK
+if __name__ == "__main__":
+    sys.exit(main())
+PY
+# Модуль БЕЗ точки входа кода не отдаёт вовсе — требовать с него rc=2 значило бы
+# красить библиотеку за то, что она не CLI.
+cat > "$T/rc_biblioteka.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+def razobrat(argv):
+    return argparse.ArgumentParser().parse_args(argv)
+PY
+krasnoe "$T/rc_bad.py"        "инструмент завершается только 0/1 — «позвали неверно» неотличимо"
+zelenoe "$T/rc_ok.py"         "он же с явным кодом 2 на неверный вызов"
+zelenoe "$T/rc_biblioteka.py" "модуль без точки входа — кода возврата не отдаёт"
+
+# ── ПРОВЕРКА 15: 🔴 САМОЦИТИРОВАНИЕ СЛУЖЕБНОГО МАРКЕРА ──
+# Гейт ищет свой маркер в чужом тексте — и находит его в СВОЁМ, потому что своя
+# же документация этот маркер называет. Тот же класс уже оплачен в этом файле:
+# GNU_PAIRS склеены из половинок ровно потому, что линтер краснел на собственном
+# списке запрещённого. Здесь лекарство выдано механизмом, а не памятью автора.
+cat > "$T/echo_bad.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+MARKER = "## OTCHET-PROBA"
+# шапку ## OTCHET-PROBA ставят первой строкой отчёта
+def sudit(text):
+    return MARKER in text
+PY
+cat > "$T/echo_sklejka.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+MARKER = "## OTCHET" + "-PROBA"
+# шапку ## OTCHET-PROBA ставят первой строкой отчёта
+def sudit(text):
+    return MARKER in text
+PY
+cat > "$T/echo_chistyj.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+MARKER = "## OTCHET-PROBA"
+# шапку отчёта проверяем по константе выше, буквально её здесь не повторяем
+def sudit(text):
+    return MARKER in text
+PY
+krasnoe "$T/echo_bad.py"     "маркер, который гейт ищет, стоит буквально в его собственной прозе"
+zelenoe "$T/echo_sklejka.py" "тот же маркер, собранный из половинок"
+zelenoe "$T/echo_chistyj.py" "маркер есть, а эха в прозе нет — сам маркер не преступление"
+
+# ── ПРОВЕРКА 16: 🔴 ПРИПИСКА «НЕ ЧИТАН» НЕ ГЛУШИТ ГЕЙТ ──
+# Честная фраза «этот файл я не читал» в проверяемом тексте выключает проверку —
+# и гейт отключается ровно тем, кто должен был на нём попасться, причём тихо:
+# снаружи это неотличимо от «проверено, чисто». Непрочитанность — ПОВОД
+# проверить. Здоровая форма: ту же фразу гейт ЛОВИТ и о ней докладывает.
+cat > "$T/mute_bad.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+def sudit(text):
+    if "не читал" in text:
+        return []
+    return ["дефект"]
+PY
+cat > "$T/mute_ok.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+def sudit(text):
+    if "не читал" in text:
+        return ["приписка «не читал» не отменяет проверку — она её повод"]
+    return ["дефект"]
+PY
+krasnoe "$T/mute_bad.py" "фраза «не читал» в тексте молча выключает проверку"
+zelenoe "$T/mute_ok.py"  "та же фраза ловится и докладывается, а не глушит"
+
+# ── ПРОВЕРКА 17: 🔴 ПУСТОЙ ВХОД НЕ ДАЁТ МОЛЧАЛИВОГО ЗЕЛЁНОГО (Р5-3) ──
+# Гейт, которому дали пустой список или пустой файл, обязан не молчать зелёным:
+# молчаливый ноль на пустоте читается вызывающим как «проверено, всё хорошо»,
+# хотя проверено ровно ничто. Так пустой охват и опечатка в маске выглядят как
+# здоровый прогон.
+# 🔴 Вторая половина пары важнее первой: ПУСТОЙ РЕЗУЛЬТАТ (проверил и не нашёл)
+# обязан молчать (Р31), и выглядит он в коде ТОЧНО ТАК ЖЕ. Не различив две
+# пустоты, проверка объявила бы нарушением образцовое исполнение Р31 — на живом
+# корпусе так краснели check_marker.py и dnevnik.py.
+cat > "$T/pusto_spisok_bad.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("puti", nargs="*")
+    ns = ap.parse_args()
+    puti = ns.puti
+    if not puti:
+        return 0
+    return 1
+PY
+cat > "$T/pusto_fajl_bad.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import pathlib
+def main(p):
+    text = pathlib.Path(p).read_text(encoding="utf-8")
+    if not text:
+        return 0
+    return 1
+PY
+cat > "$T/pusto_ok.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("puti", nargs="*")
+    ns = ap.parse_args()
+    puti = ns.puti
+    if not puti:
+        print("не дано ни одного файла — проверять было нечего")
+        return 2
+    return 1
+PY
+cat > "$T/pusto_nahodki.py" <<'PY'
+# TOOL-CONTRACT: no-input
+# TOOL-CONTRACT: called-by-hand
+import argparse
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("puti", nargs="*")
+    ns = ap.parse_args()
+    puti = ns.puti
+    plohie = [p for p in puti if p.endswith(".tmp")]
+    if not plohie:
+        return 0
+    return 1
+PY
+krasnoe "$T/pusto_spisok_bad.py" "пустой СПИСОК от вызывающего даёт молчаливое зелёное"
+krasnoe "$T/pusto_fajl_bad.py"   "пустой ФАЙЛ даёт молчаливое зелёное"
+zelenoe "$T/pusto_ok.py"         "тот же пустой список: сказано вслух и возвращён код 2"
+zelenoe "$T/pusto_nahodki.py"    "пустой РЕЗУЛЬТАТ (проверил, не нашёл) молчит законно — Р31"
+
+# ── ПРОВЕРКА 18: 🔴 САМ ЛИНТЕР РАЗЛИЧАЕТ ТРИ ИСХОДА ──
+# Гейт над гейтами обязан выполнять свой же пункт 1 — иначе он ровно тот
+# инструмент, на который сам краснеет. Смотрим КОД ВОЗВРАТА, а не вывод: без
+# этого «отработал и промолчал» и «не отработал вовсе» здесь неотличимы.
+# `V=0; … || V=$?` — а не голый вызов: при `set -e` ненулевой rc убил бы фикстуру
+# на первом же ожидаемо-красном прогоне.
+rc_zhdyom() {   # $1 — ожидаемый код, $2 — что проверяем, дальше — аргументы линтера
+    ozhid=$1; chto=$2; shift 2
+    V=0
+    TOOL_CONTRACT_HOME="$T" $LINT "$@" > /dev/null 2>&1 || V=$?
+    if [ "$V" = "$ozhid" ]
+    then echo "  ✅ $chto → rc=$ozhid"
+    else echo "  ❌ $chto дал rc=$V вместо $ozhid — исход прочитают неверно"; FAIL=1
+    fi
+}
+rc_zhdyom 0 "здоровый файл"                       "$T/rc_ok.py"
+rc_zhdyom 1 "найден дефект"                       "$T/rc_bad.py"
+rc_zhdyom 2 "несуществующий путь (не находка!)"   "$T/net-takogo-fajla.py"
+rc_zhdyom 2 "вызов без единого пути (Р5-3)"
+rc_zhdyom 2 "неизвестный флаг"                    --takogo-flaga-net
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }

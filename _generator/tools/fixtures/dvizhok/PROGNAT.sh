@@ -399,7 +399,7 @@ podgotovit() {
 # Именно боевой код, а не его копия, — иначе фикстура проверяет саму себя.
 cat > "$T/zvat.py" <<'PY'
 import importlib.util, pathlib, sys
-gen, root, argv = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3:]
+gen, root, argv = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3:] + ["--intervyu", "da"]
 spec = importlib.util.spec_from_file_location("bz", gen / "tools" / "bootstrap_zahod.py")
 bz = importlib.util.module_from_spec(spec); spec.loader.exec_module(bz)
 bz.REPO_ROOT = root

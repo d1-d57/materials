@@ -51,7 +51,7 @@ cp "$REPO/_studio/zhurnal/2026-07-30_dovodka-fabriki/kod_registracia-bez-obhoda.
 Z="$T/_studio/zhurnal/proba-arka/kod_proba.md"
 ( cd "$T" && python3 _generator/tools/bootstrap_zahod.py _studio/zhurnal/proba-arka \
     proba --branch zahod/proba --zone "zona-proby/" --kanal app \
-    --finalizirovano "ф1" --finalizirovano "ф2" \
+    --finalizirovano "ф1" --finalizirovano "ф2" --intervyu da \
     --opisanie "фикстура раздела ГИГИЕНА" ) > "$T/gen.log" 2>&1
 if [ -f "$Z" ]; then ok "1. заход собрался"; else bad "1. заход НЕ собрался"; cat "$T/gen.log"; exit 1; fi
 
