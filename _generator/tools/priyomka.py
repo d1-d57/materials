@@ -155,22 +155,37 @@ def izvlech_zonu(tekst: str):
     Живой замер: и `kod_vynos-2.md`, и `kod_kanon-put.md` приняты с таким Г0.
     С П1 та же строка стала бы честным красным — на КАЖДОМ заходе, то есть
     гейт из всегда-зелёного превратился бы во всегда-красный, а это тот же
-    декоративный гейт с другим знаком. Поэтому: угловые скобки пропускаем и
-    берём следующее совпадение, а если конкретного нет — зону называет
-    КОНТРАКТ (первый путь, лежащий внутри этого репозитория; абсолютные пути
-    второго репозитория `check --zone` судить не может — их судит Г10).
+    декоративный гейт с другим знаком.
+
+    🔴 ПОРЯДОК ИСТОЧНИКОВ — ОТЧЁТ, ПОТОМ КОНТРАКТ, ПОТОМ ВЕСЬ ФАЙЛ. Поймано
+    живым прогоном приёмки ПО СОБСТВЕННОМУ отчёту этого захода: в §2 ЗАДАЧА
+    стояла ДЕМОНСТРАЦИОННАЯ команда «`check --zone nesushchestvuyushchaya-
+    papka-xyz`» (воспроизведение дефекта, ради которого заход и собран), и
+    поиск «первого совпадения по файлу» брал ЕЁ — то есть Г0 проверял зону из
+    примера, а не рабочую. Пока `check` зеленел на несуществующем, это было
+    невидимо. Поэтому источники берутся по убыванию достоверности:
+      1) `## ОТЧЁТ` — там строка §4 КОММИТ, которую исполнитель заполнил САМ;
+      2) `КОНТРАКТ ЗОНЫ` — первый путь внутри этого репозитория (абсолютные
+         пути второго репозитория `check --zone` судить не может, их судит Г10);
+      3) весь файл — прежнее поведение, для отчётов старой формы.
     """
-    for m in re.finditer(r'git_zona\.py\s+check\s+--zone\s+([^\s`]+)', tekst):
-        kandidat = m.group(1)
-        if not kandidat.startswith("<"):
-            return kandidat
+    def iz_teksta(kusok):
+        for m in re.finditer(r'git_zona\.py\s+check\s+--zone\s+([^\s`]+)', kusok or ""):
+            kandidat = m.group(1)
+            if not kandidat.startswith("<"):
+                return kandidat
+        return None
+
+    iz_otcheta = iz_teksta(sekciya(tekst, "ОТЧЁТ"))
+    if iz_otcheta:
+        return iz_otcheta
     m_kontrakt = KONTRAKTNAYA_ZONA_RE.search(tekst)
     if m_kontrakt:
         for put in re.findall(r'`([^`]+)`', m_kontrakt.group(1)):
             put = put.strip()
             if put and not put.startswith("/") and not put.startswith("~"):
                 return put
-    return None
+    return iz_teksta(tekst)
 
 
 def fmt_time(mtime: float) -> str:
