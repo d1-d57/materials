@@ -9,7 +9,7 @@
 """
 import re, sys, os, collections
 
-PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "KARTOTEKA-problem.md")
+PATH = os.path.expanduser("~/Documents/GitHub/disciplina/korpus/2026-07-30_dovodka-fabriki/KARTOTEKA-problem.md")
 PHASES = ["01-brief","02-reserch","03-matbaza","04-gibrid-istochnik","04.5-intervyu",
           "05-raskadrovka","06-tekst","07-verstka","08-sceny","09-illustracii",
           "10-sborka-qa","вне-фаз"]

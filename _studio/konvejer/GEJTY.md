@@ -97,7 +97,7 @@
 
 ### G16.9 · иллюстрация в KONTRAKT несёт ТЗ, а не просьбу (черновик, граница 4→5, фаза `04.5-intervyu/`)
 > 🔴 **Перенесено 2026-08-05** (заход `kod_dovodka-fazy-intervyu.md`) из черновика, оставленного заходом
-> `kod_kartoteka-intervyu.md` в `../zhurnal/2026-07-30_dovodka-fabriki/KARTOTEKA-problem.md` («Часть
+> `kod_kartoteka-intervyu.md` в `~/Documents/GitHub/disciplina/korpus/2026-07-30_dovodka-fabriki/KARTOTEKA-problem.md` («Часть
 > D-примечание»). Рычаг для урока-без-рычага `АНКЕТА G2` (6 уроков подкласса «иллюстрации без ТЗ»,
 > `04.5-intervyu/POKRYTIE.md`): «иллюстрация заказывается просьбой, а не описанием» — 34 фигуры → 11,
 > девять слайдов из пятнадцати без иллюстраций, включая все четыре заказанные.
