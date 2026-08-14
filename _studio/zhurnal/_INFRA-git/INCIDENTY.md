@@ -362,3 +362,5 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-14 18:34 · zahod/dolgi-nol · merge zahod/konflikty: сливаю ветку с живой рабочей папкой --vsyo-ravno · → причина: рабочая папка konflikty чиста (git status --porcelain пуст), её HEAD f9cf5f5 = ровно вливаемый коммит: живого незакоммиченного захода там нет — работа папки /Users/ivanyakovlev/Documents/GitHub/materials-wt/konflikty могла разойтись · статус: открыт
 - 2026-08-14 18:34 · zahod/dolgi-nol · merge zahod/konflikty не прошёл · → смотреть вывод команды и `doctor` · статус: открыт
 - 2026-08-14 18:36 · zahod/dolgi-nol · merge zahod/konflikty: конфликт в 2 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-14 18:38 · zahod/dolgi-nol · merge --continue: коммит слияния не прошёл · → смотреть вывод хука и `doctor` · статус: открыт
+- 2026-08-14 18:42 · zahod/dolgi-nol · vlit-v-osnovnuyu zahod/konflikty: конфликт в 1 путях · → разрешить конфликты, затем vlit-v-osnovnuyu --continue (или --abort) · статус: открыт
