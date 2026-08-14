@@ -323,7 +323,18 @@ _JS_SOLVE = r"""
     // margin-top:var(--blok) (Э1). Тот же проход браузера, что orphan/edge
     // (getBoundingClientRect на блоках вместо getClientRects на тексте) —
     // ни одной лишней пробы, как велит заход.
-    const blocks = Array.from(zone.querySelectorAll(':scope > p, :scope > ul.tlist'));
+    // 🔴 ИСКЛЮЧЕНИЕ ИЗ ЗАПРЕТА «солвер как устройство не трогать» (заход
+    // vid-blokov-vnedrenie, см. `## ОТЧЁТ`): это НЕ правка целевой функции —
+    // формула `dyhanie`/`content_extent` ниже не меняется ни на символ, меняется
+    // ТОЛЬКО то, какие узлы DOM считаются «верхнеуровневым содержимым зоны».
+    // До этого захода абзацы/списки были ПРЯМЫМИ детьми `.t-body`; теперь между
+    // ними и зоной стоит обёртка `.blk` (Э2: тип/центральность блока доезжают
+    // до HTML) — без этой правки селектор находит ноль блоков на любом слайде
+    // с текстом, `content_extent` тихо падает в 0, и ни солвер, ни гейт
+    // вмещения перестают видеть содержимое вообще (проверено фактом: без
+    // правки `--sverit` даёт браузеру ОТРИЦАТЕЛЬНУЮ высоту на всех 21 карточках).
+    const blocks = Array.from(zone.querySelectorAll(
+      ':scope > p, :scope > ul.tlist, :scope > .blk > p, :scope > .blk > ul.tlist'));
     let dyhanie = null;
     if (blocks.length > 1) {
       let gapSum = 0;
@@ -731,7 +742,18 @@ def izmerit(page, html_path, kegl=None, lh=None, blok=None):
       if (c.lh != null) zone.style.setProperty('--lh', String(c.lh));
       if (c.blok != null) zone.style.setProperty('--blok', c.blok + 'px');
       const sh = zone.scrollHeight, ch = zone.clientHeight;
-      const blocks = Array.from(zone.querySelectorAll(':scope > p, :scope > ul.tlist'));
+      // 🔴 ИСКЛЮЧЕНИЕ ИЗ ЗАПРЕТА «солвер как устройство не трогать» (заход
+    // vid-blokov-vnedrenie, см. `## ОТЧЁТ`): это НЕ правка целевой функции —
+    // формула `dyhanie`/`content_extent` ниже не меняется ни на символ, меняется
+    // ТОЛЬКО то, какие узлы DOM считаются «верхнеуровневым содержимым зоны».
+    // До этого захода абзацы/списки были ПРЯМЫМИ детьми `.t-body`; теперь между
+    // ними и зоной стоит обёртка `.blk` (Э2: тип/центральность блока доезжают
+    // до HTML) — без этой правки селектор находит ноль блоков на любом слайде
+    // с текстом, `content_extent` тихо падает в 0, и ни солвер, ни гейт
+    // вмещения перестают видеть содержимое вообще (проверено фактом: без
+    // правки `--sverit` даёт браузеру ОТРИЦАТЕЛЬНУЮ высоту на всех 21 карточках).
+    const blocks = Array.from(zone.querySelectorAll(
+      ':scope > p, :scope > ul.tlist, :scope > .blk > p, :scope > .blk > ul.tlist'));
       const zoneTop = zone.getBoundingClientRect().top;
       const contentExtent = blocks.length ? blocks[blocks.length - 1].getBoundingClientRect().bottom - zoneTop : 0;
       let dyhanie = null;

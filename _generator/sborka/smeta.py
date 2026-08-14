@@ -177,13 +177,41 @@ BLOK_DEFAULT = 26.0
 
 # ── Отступы, не выражаемые через `--blok` (`base.css`, прочитано, не угадано).
 LI_GAP_PX = 10.0        # `.tlist li + li{margin-top:10px}`
-OP_NEXT_GAP_PX = 4.0    # `.t-body p.op-def + p{margin-top:4px}` (и op-utv/op-task)
 LI_PAD_EM = 1.15        # `.tlist li{padding-left:1.15em}` — сужает строку пункта
-OP_FIRST_EM = 0.18      # `.t-body > p.op-*:first-child{margin-top:.18em}` — em СВОЕГО кегля
-OP_KEGL_EM = 0.80       # `.op-def,.op-utv,.op-task{font-size:.80em}` (base.css:193)
-OP_LH = 1.12            # там же: `line-height:1.12` — своя, не `--lh` зоны
+# `OP_*`/`OP_CLASSES` (`.op-def/.op-utv/.op-task`) снесены Э4 захода
+# vid-blokov-vnedrenie вместе с самим CSS — заменены блок-схемой (`BLK_H_*`,
+# `DOKAZ_*` ниже). Не использовались ни одной карточкой L2 на момент сноса.
 
-OP_CLASSES = ("op-def", "op-utv", "op-task")
+# ═══════════ БЛОК-СХЕМА (заход vid-blokov-vnedrenie, Э1) ═══════════
+# Дословно CSS `_generator/skeleton/base.css` (§4 `ITOG-shema.md`, заход
+# `vid-blokov-issledovanie`, ветка не влита — читана `git show`), с правками
+# владельца Э0: у доказательства снят сдвиг вправо (был `padding-left:1.200em`,
+# стало 0 — ширины блок-схема не касается), и слово-заголовок печатается ТАКЖЕ
+# у доказательства (было исключение по С5, владелец снял).
+BLK_H_KEGL_MIN_PX = 24.0     # `.blk-h{font-size:max(24px, 0.680em)}` — пол WCAG
+BLK_H_KEGL_EM = 0.680
+BLK_H_LH = 1.15              # `.blk-h{line-height:1.15}`
+BLK_H_MB_EM = 0.110          # `.blk-h{margin-bottom:.110em}` — em СВОЕГО кегля
+BLK_MARGIN_REDUCED = 0.75    # `calc(var(--blok) * 0.75)` у типов со словом-заголовком
+BLK_H_TIPY = ("opredelenie", "utverzhdenie", "primer", "dokazatelstvo")
+DOKAZ_KEGL_EM = 0.860        # `.blk[data-tip="dokazatelstvo"]{font-size:.860em}`
+DOKAZ_LH_MULT = 0.95         # `line-height:calc(var(--lh) * 0.95)` — от var(--lh) зоны
+
+# ── Обходной путь Э0.3/Э0.5 (см. `## ПЛАН`, развилка 3): зона отступов слайда
+# (`.zagolovok{margin-bottom:28px}`, `.zone.copy{padding:46px 64px}`) лежит в
+# `tipy.py` — вне зоны заявленной этому заходу. Вместо правки чужого файла
+# `.t-body` в `base.css` (моя зона) получает ОТРИЦАТЕЛЬНЫЙ `margin`, физически
+# «выезжая» в поле зоны изнутри — тот же визуальный эффект, без правки источника.
+# Величины подобраны перебором (прогонщик `progon.py`, лог `progon.log`,
+# рабочая папка), критерий — ноль переполнений, минимум цены кегля.
+T_BODY_MARGIN_TOP_PX = 26.0     # ≈ высота строки .blk-h при кегле 38 (Э0.3)
+T_BODY_MARGIN_SIDE_PX = 12.0    # Э0.5, лево/право поровну
+# 🔴 Низ (Э0.5) — БЫЛ 12.0, снят прогонщиком фактом: `.blk:last-of-type{
+# margin-bottom:…}` не уменьшает `scrollHeight` (тот же браузерный расчёт, на
+# котором стоит `gejt_vmeshcheniya.py`) — margin-bottom ПОСЛЕДНЕГО элемента
+# в скролл-контейнере в него не входит вовсе, приём — холостой. Ниже 0, а не
+# удалена: место в формуле осталось, вдруг найдётся рабочий приём позже.
+T_BODY_MARGIN_BOTTOM_PX = 0.0
 
 # 🔴 ПУСТЫЕ ТЕГИ. `HTMLParser` зовёт `handle_starttag` и на `<br>` (без слэша), а
 # парного `handle_endtag` не будет никогда. Стек глубины от этого съезжал НАВСЕГДА,
@@ -224,18 +252,31 @@ def _px(x):
 
 def geometriya(tip_verstki, liniya=None):
     """(W, H) контентного бокса текстовой зоны в px. Воспроизводит замер
-    `zamer_smety.py --geometriya` точно — см. `--proverit-geometriyu`."""
+    `zamer_smety.py --geometriya` ПЛЮС выигрыш отрицательных полей у `.blk`
+    (Э0.3/Э0.5, см. константы `T_BODY_MARGIN_*` выше) — этот выигрыш замер
+    `--geometriya` не знает (он снят ДО этого захода), поэтому прибавлен
+    отдельно, а не влит в `ZONA_PAD_*`; `--proverit-geometriyu` сверяет
+    только базовую часть, без прибавки.
+
+    🔴 Верхний выигрыш (Э0.3) сюда НЕ входит — `.zagolovok`/`.blk` внутри
+    `.zone.copy.t-body` (`tipy._text_zone`) СИБЛИНГИ ОДНОГО flex-контейнера,
+    margin флекс-элементов не схлопывается ни с чем: `.blk:first-of-type`
+    получает `margin-top` НАПРЯМУЮ (см. `base.css`), и это чистый сдвиг
+    ПОЗИЦИИ, а не рост доступной высоты `H` — моделируется в `_blk_zazor_px`
+    отрицательным зазором ПЕРВОГО блока, а не прибавкой к `H`."""
+    dw = T_BODY_MARGIN_SIDE_PX * 2
+    dh = T_BODY_MARGIN_BOTTOM_PX
     if tip_verstki == "polosa_gorizontalnaya":
         if liniya is None:
             raise ValueError("polosa_gorizontalnaya требует liniya")
-        return (HOLST_W - ZONA_PAD_X, _px(HOLST_H * liniya / 100.0) - ZONA_PAD_Y)
+        return (HOLST_W - ZONA_PAD_X + dw, _px(HOLST_H * liniya / 100.0) - ZONA_PAD_Y + dh)
     if tip_verstki == "polosa_vertikalnaya":
         if liniya is None:
             raise ValueError("polosa_vertikalnaya требует liniya")
-        return (_px(HOLST_W * liniya / 100.0) - ZONA_PAD_X, HOLST_H - ZONA_PAD_Y)
+        return (_px(HOLST_W * liniya / 100.0) - ZONA_PAD_X + dw, HOLST_H - ZONA_PAD_Y + dh)
     if tip_verstki == "tolko_tekst":
-        return (HOLST_W - TOLKO_TEKST_PAD_X - ZONA_PAD_X,
-                HOLST_H - TOLKO_TEKST_PAD_Y - ZONA_PAD_Y)
+        return (HOLST_W - TOLKO_TEKST_PAD_X - ZONA_PAD_X + dw,
+                HOLST_H - TOLKO_TEKST_PAD_Y - ZONA_PAD_Y + dh)
     raise ValueError("тип вёрстки %r текстовой зоны не имеет либо не поддержан сметой "
                      "(поддержаны: polosa_gorizontalnaya, polosa_vertikalnaya, tolko_tekst)"
                      % tip_verstki)
@@ -275,12 +316,26 @@ class _ZonaParser(HTMLParser):
         self.zagolovok_tekst = ""   # нужен для расчёта ПЕРЕНОСА заголовка
         self._lst_depth = None    # глубина открытия .lst (display:block внутри абзаца)
         self._acc_depth = None    # глубина открытия .acc (жирный — шире обычного)
+        # ── обёртка блока `.blk` (заход vid-blokov-vnedrenie, Э1/Э2). Прямой
+        # ребёнок зоны — глубина зависит от вложенности только через неё:
+        # верхний уровень БЛОКА (для `p`/`ul`) сдвинут на +1 против верхнего
+        # уровня ЗОНЫ, когда мы внутри открытого `.blk`.
+        self._blk_depth = None    # глубина, на которой открылся текущий .blk
+        self._blk_tip = None      # data-tip текущего .blk
+        self._blk_central = False # data-central="1" текущего .blk
+        self._blk_has_h = False   # встретилась ли .blk-h внутри текущего .blk
+        self._blk_first_seen = False  # был ли уже первый p/li текущего .blk
 
     # ── служебное
     @staticmethod
     def _klassy(attrs):
         d = dict(attrs)
         return (d.get("class") or "").split()
+
+    def _top_depth(self):
+        """Глубина, на которой ищутся верхнеуровневые `p`/`ul` — на единицу
+        глубже, если мы внутри открытого `.blk` (Э2: блоки доехали до HTML)."""
+        return (self._blk_depth + 1) if self._blk_depth is not None else (self._zona_depth + 1)
 
     def handle_starttag(self, tag, attrs):
         # пустой тег в стек НЕ кладём — закрывающего для него не придёт (см.
@@ -316,6 +371,21 @@ class _ZonaParser(HTMLParser):
             self.est_zagolovok = True
             return
 
+        # обёртка блока `.blk` — прямой ребёнок зоны (Э2). Псевдоэлемент
+        # линейки заменён настоящим `<span class="blk-rule">` (Э5, наследование
+        # сцены) — он сюда не попадает ни одной веткой ниже (не `p`/`ul`/`li`/
+        # `blk-h`) и молча пропускается, как любой нераспознанный тег.
+        if d == self._zona_depth + 1 and "blk" in kl:
+            self._blk_depth = d
+            self._blk_tip = dict(attrs).get("data-tip")
+            self._blk_central = dict(attrs).get("data-central") == "1"
+            self._blk_has_h = False
+            self._blk_first_seen = False
+            return
+        if self._blk_depth is not None and d == self._blk_depth + 1 and "blk-h" in kl:
+            self._blk_has_h = True
+            return
+
         if "acc" in kl and self._acc_depth is None:
             self._acc_depth = d
 
@@ -327,8 +397,9 @@ class _ZonaParser(HTMLParser):
             self._cur["lst"] += 1
             return
 
-        # верхний уровень зоны — прямые дети
-        if d == self._zona_depth + 1:
+        # верхний уровень зоны/блока — прямые дети (см. `_top_depth`)
+        top = self._top_depth()
+        if d == top:
             if tag == "ul":
                 self._ul_index += 1
                 self._v_ul = self._ul_index
@@ -350,6 +421,16 @@ class _ZonaParser(HTMLParser):
         # смета говорила «влезает, запас 4.16 строки», браузер обрезал текст.
         # Занижение — опасная сторона ошибки: это ПРОПУСК переполнения.
         self._cur = {"tip": tip, "segmenty": [[]], "klassy": kl, "ul": self._v_ul}
+        # блок-схема (Э1): `blk_tip`/`blk_central` — на КАЖДОМ абзаце блока (кегль
+        # доказательства действует на все его абзацы), `blk_first`/`blk_has_h` —
+        # только на первом (это порождает зазор block-to-block в `_zazor_px`).
+        if self._blk_depth is not None:
+            self._cur["blk_tip"] = self._blk_tip
+            self._cur["blk_central"] = self._blk_central
+            if not self._blk_first_seen:
+                self._blk_first_seen = True
+                self._cur["blk_first"] = True
+                self._cur["blk_has_h"] = self._blk_has_h
 
     def handle_startendtag(self, tag, attrs):
         """`<br/>` со слэшем. Базовый `HTMLParser` разворачивает его в пару
@@ -389,8 +470,11 @@ class _ZonaParser(HTMLParser):
         elif self._cur is not None and tag == self._cur["tip"]:
             self.bloki.append(self._cur)
             self._cur = None
-        elif tag == "ul" and self._v_ul is not None and d == self._zona_depth + 1:
+        elif tag == "ul" and self._v_ul is not None and d == self._top_depth():
             self._v_ul = None
+        # закрытие `.blk` — глубина совпадает с той, на которой он открылся
+        if self._blk_depth is not None and d == self._blk_depth:
+            self._blk_depth = None
         if self._stack:
             self._stack.pop()
 
@@ -496,14 +580,20 @@ def smeta_slajda(slide_path):
         # Считаем ПОСЕГМЕНТНО: `<br>` и `.lst` рвут строку принудительно, и
         # укладка через разрыв дала бы одну расчётную строку вместо трёх.
         segmenty = [s for s in b["segmenty"] if s] or [[]]
-        # `.op-def/.op-utv/.op-task` — свой кегль 0.8em и свой межстрочный 1.12
-        # (`base.css:192-193`): их строка НИЖЕ основной (34.05px против 58.06), и
-        # знаков в неё влезает по-другому. Одна `stroka_px` на все блоки завышала
-        # такой блок на 0.41 строки (Расхождение 3 верификатора §3).
-        est_op = any(k in OP_CLASSES for k in b["klassy"])
-        kegl_bloka = OP_KEGL_EM * kegl if est_op else kegl
-        stroka_bloka_px = (OP_LH * kegl_bloka) if est_op else stroka_px
-        shirina_bloka = (math.floor(shirina * kegl / kegl_bloka) if est_op else shirina)
+        # `.blk[data-tip="dokazatelstvo"]` — свой кегль 0.860em и свой
+        # межстрочный `calc(var(--lh)*0.95)` (Э1 захода vid-blokov-vnedrenie,
+        # §4 итога + правка Э0.1 владельца: сдвиг вправо снят, ширина не меняется).
+        # (замена снесённых Э4 `.op-def/.op-utv/.op-task` — та же механика,
+        # свой кегль/интерлиньяж блока сужает и строку, и укладку по ширине)
+        est_dokaz = b.get("blk_tip") == "dokazatelstvo"
+        if est_dokaz:
+            kegl_bloka = DOKAZ_KEGL_EM * kegl
+            stroka_bloka_px = DOKAZ_LH_MULT * lh * kegl_bloka
+        else:
+            kegl_bloka = kegl
+            stroka_bloka_px = stroka_px
+        shirina_bloka = (math.floor(shirina * kegl / kegl_bloka)
+                          if est_dokaz else shirina)
         n = sum(ulozhit(s, shirina_bloka) for s in segmenty)
         znakov = sum(sum(s) for s in b["segmenty"])
         # абзац, состоящий ровно из одной формулы, — «выносная»: её высота снята
@@ -565,27 +655,64 @@ def _zazor_px(prev, cur, blok_px, kegl):
     остаётся дробным: считается в px и делится на `stroka_px` уже вызывающим.
     Кегль в отношении `blok_koef / lh` сокращается — потому зазор от кегля не
     зависит, и это проверка, что формула ВЫВЕДЕНА, а не подогнана."""
+    if cur.get("blk_first"):
+        return _blk_zazor_px(prev, cur, blok_px, kegl)
     if prev is None:
-        # 🔴 Три правила `base.css` — БЕЗ комбинатора, они срабатывают и на ПЕРВОМ
-        # ребёнке зоны, и margin там не схлопывается (у зоны есть padding-top):
+        # 🔴 Недостижимо для скомпилированного слайда после Э2 (каждый верхний
+        # абзац принадлежит какому-то `.blk`, значит несёт `blk_first` и уходит
+        # выше) — оставлено защитным запасным ходом, не мёртвый код в смысле
+        #「никогда не читается」, а в смысле「для живых карточек не читается」.
+        # Правила `base.css` — БЕЗ комбинатора, срабатывают и на ПЕРВОМ ребёнке
+        # зоны, margin там не схлопывается (у зоны есть padding-top):
         #   `.t-body ul.tlist{margin-top:var(--blok)}`     (base.css:26)
         #   `.t-body p.formula{margin-top:var(--blok)}`    (base.css:187)
-        #   `.t-body p.op-*{margin-top:var(--blok)}`, но `:first-child` → .18em
-        # Раньше первый блок безусловно получал 0. Доказательство одной карточкой
-        # (верификатор §3): `napominanie` — единственная в L2, чья зона начинается
-        # с `<ul>`; её расхождение было ровно −0.42 строки = 26/58.06 = 0.448, и
-        # с этой правкой она даёт 7.96 против браузерных 7.94.
-        if any(k in OP_CLASSES for k in cur["klassy"]):
-            # `.18em` — от СОБСТВЕННОГО кегля элемента (0.8em), не от кегля зоны
-            return OP_FIRST_EM * OP_KEGL_EM * kegl
         if cur["tip"] == "li" or "formula" in cur["klassy"]:
             return blok_px
         return 0.0
     if cur["tip"] == "li" and prev["tip"] == "li" and prev.get("ul") == cur.get("ul"):
         return LI_GAP_PX                      # `.tlist li + li`
-    if cur["tip"] == "p" and any(k in OP_CLASSES for k in prev["klassy"]):
-        return OP_NEXT_GAP_PX                 # `.t-body p.op-* + p`
     return blok_px                            # `p + p`, `ul.tlist`, `ul.tlist + p`
+
+
+def _blk_h_kegl_px(kegl):
+    return max(BLK_H_KEGL_MIN_PX, BLK_H_KEGL_EM * kegl)
+
+
+def _blk_zazor_px(prev, cur, blok_px, kegl):
+    """Зазор ПЕРЕД ПЕРВЫМ абзацем блока `.blk` (Э1/Э2 захода vid-blokov-vnedrenie)
+    — отдельно от `_zazor_px` (тот считает зазоры ВНУТРИ блока, между его
+    собственными абзацами, — правила `base.css` там не меняются).
+
+    CSS: `.blk + .blk{margin-top:var(--blok)}`, у типов со словом-заголовком
+    `calc(var(--blok)*0.75)` (§4 итога + Э0.2: доказательство теперь тоже
+    получает слово). `.blk` — ФЛЕКС-ЭЛЕМЕНТ `.zone.copy.t-body` (`tipy.
+    _text_zone` кладёт `.zagolovok` и КАЖДЫЙ `.blk` прямыми детьми ОДНОГО
+    `display:flex;flex-direction:column` контейнера) — margin флекс-элементов
+    НЕ СХЛОПЫВАЕТСЯ ни с контейнером, ни друг с другом:
+      · между блоками (prev есть) — margin ПРЕДЫДУЩЕГО блока снизу всегда 0
+        (не объявлен), зазор = margin-top ЭТОГО блока без остатка (как и было);
+      · у САМОГО ПЕРВОГО `.blk` `+`-комбинатор не срабатывает, но `base.css`
+        даёт ему СВОЙ `margin-top:-{T_BODY_MARGIN_TOP_PX}px` (`:first-of-type`,
+        Э0.3/Э0.5) — тоже НЕ схлопывается ни с чем, применяется КАК ЕСТЬ.
+    Схлопывание — только ВНУТРИ `.blk` (обычная раскладка, не флекс):
+    `.blk-h`.margin-bottom с margin-top первого абзаца тела — единственное
+    место, где нужен `max`, не `+`."""
+    is_first_blk = prev is None
+    blk_margin = (-T_BODY_MARGIN_TOP_PX if is_first_blk else
+                  (blok_px * BLK_MARGIN_REDUCED if cur.get("blk_has_h") else blok_px))
+    # зазор ВНУТРИ первого абзаца/`<li>`, если бы блока не было (`.formula`/
+    # `.tlist` безусловны — см. комментарий в `_zazor_px`; обычный абзац — 0).
+    # ВНУТРИ `.blk` (обычная раскладка) он НЕ схлопывается с margin-top
+    # самого `.blk` (флекс-элемент не пускает margin детей наружу) — просто
+    # добавляет высоту содержимому блока, отдельно от `blk_margin`.
+    inner = blok_px if (cur["tip"] == "li" or "formula" in cur["klassy"]) else 0.0
+    if not cur.get("blk_has_h"):
+        return blk_margin + inner
+    # с `.blk-h`: margin-top `.blk` (флекс, без схлопывания) → строка
+    # заголовка (своя высота) → margin-bottom заголовка СХЛОПЫВАЕТСЯ с
+    # margin-top первого абзаца тела (оба — обычные соседи внутри `.blk`)
+    gap_after_h = max(_blk_h_kegl_px(kegl) * BLK_H_MB_EM, inner)
+    return blk_margin + _blk_h_kegl_px(kegl) * BLK_H_LH + gap_after_h
 
 
 # ═════════════════════════ Э2.6. ОБРАТНЫЙ ХОД ═════════════════════════
@@ -710,12 +837,22 @@ def proverit_geometriyu():
         print("замер не отработал (rc=%d):\n%s" % (r.returncode, r.stderr[-2000:]), file=sys.stderr)
         return 2
     d = json.loads(r.stdout)["geometriya"]
+    # 🔴 Замер (`zamer_smety.py`) читает `.zone.copy.clientWidth/Height` — свои
+    # padding сама зона не меняет НИ ОДНОЙ строкой этого захода (та CSS — в
+    # `tipy.py`, вне зоны, см. `## ПЛАН` развилка 3). Прибавка `T_BODY_MARGIN_*`
+    # (Э0.3/Э0.5) — намеренная и ЖИВЁТ ТОЛЬКО в `geometriya()`, замер её не
+    # знает и знать не может (мерит другой элемент, `.zagolovok`/`.blk` внутри
+    # него — флекс-сиблинги, см. докстринг `geometriya`). Сравниваем БАЗОВУЮ
+    # часть, вычитая прибавку здесь же, а не подмешивая замер задним числом.
+    dw = T_BODY_MARGIN_SIDE_PX * 2
+    dh = T_BODY_MARGIN_BOTTOM_PX
     plohih, vsego = 0, 0
     for tip, rows in d["tipy"].items():
         for row in rows:
             vsego += 1
             liniya = row["liniya"] if tip.startswith("polosa_") else None
             W, H = geometriya(tip, liniya)
+            W, H = W - dw, H - dh
             ok = (abs(W - row["W"]) < 0.51 and abs(H - row["H"]) < 0.51)
             if not ok:
                 plohih += 1
