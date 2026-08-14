@@ -247,8 +247,128 @@ def check_composition(sections):
     return issues
 
 
+# ═══════════════════════════ Э1/Э2 захода `sceny-iz-blokov` (2026-08-14) ═══════════════════════════
+# Сцены раньше проставлял разметчик руками — тегом `{@N}` в начале абзаца/списка
+# (см. докстроку модуля выше: этот файл тег не разбирает, он живёт в `telo` как
+# обычный текст и уходит в `build_deck.render_md`/`_attrs_from_tag` без изменений).
+# Владелец после лекции 2: «разбиение на сцены совпало с разбиением на блоки — и
+# самое простое решение — так и делать всегда». Отсюда — новое поведение
+# `render_section_markdown` ниже: сцена ПОРОЖДАЕТСЯ границей блока по умолчанию,
+# разметчик тег не пишет вовсе (Э1). Ручной `{@N}` остаётся законным ИСКЛЮЧЕНИЕМ
+# (Э2) — но раз он живёт как исключение, а не как второй параллельный слой, его
+# присутствие ПЕРЕБИВАЕТ автоматику для ВСЕЙ карточки целиком: смешивать в одной
+# карточке порождённые и ручные номера сцен значило бы завести два источника
+# истины разом (порождённый {@3} на блоке 3 и ручной {@2} на абзаце внутри него —
+# что из них правда?). Гейт (`gejt_kartochki.py`) требует поле-обоснование
+# `sceny_vruchnuyu` у любой карточки, где авто выключилась этим путём.
+_LEADING_TAG_RE = re.compile(r"^\{([^}|]*)\}(.*)$", re.S)
+
+
+def _tag_tokens(first_line):
+    """Первая строка абзаца → список токенов ведущего тега `{...}` (та же позиция,
+    что `build_deck.SCENE_PREFIX`), или None — абзац тега не несёт."""
+    m = _LEADING_TAG_RE.match(first_line)
+    return m.group(1).split() if m else None
+
+
+def _has_scene_token(tokens):
+    return any(t.startswith("@") for t in (tokens or ()))
+
+
+def _live_paragraphs(telo):
+    """Тело блока → его абзацы ТЕМ ЖЕ приёмом, что `build_deck.render_md` делит
+    текст на markdown-блоки (пустая строка — разделитель) — иначе смещение тега
+    на абзаце разойдётся с тем, что реально увидит рендер."""
+    return [p for p in re.split(r"\n\s*\n", telo.strip("\n")) if p.strip()]
+
+
+def block_has_manual_scene(block):
+    """Блок несёт РУЧНОЙ тег сцены (ведущий, с `@`-токеном) хотя бы в одном своём
+    абзаце. `{fill@N|…}`/`{blur@N|…}`/инлайн `{@N|текст}` сюда не попадают — это
+    другая, инлайн-форма (не ведущий тег абзаца), она уживается с автоматикой."""
+    for para in _live_paragraphs(block.telo):
+        first_line = para.split("\n", 1)[0].strip()
+        if _has_scene_token(_tag_tokens(first_line)):
+            return True
+    return False
+
+
+def has_manual_scenes(blocks):
+    """Хоть один блок раздела несёт ручной тег сцены — Э2: автоматика для ВСЕЙ
+    карточки выключается целиком, `render_section_markdown` возвращает тела
+    блоков дословно (ручная разметка работает, как и раньше)."""
+    return any(block_has_manual_scene(b) for b in blocks if b.telo.strip())
+
+
+def _inject_scene(paragraph, scene_num):
+    """Вставить `@scene_num` в ведущий тег абзаца — если тег уже есть (например,
+    `{.formula}`), сцена ДОБАВЛЯЕТСЯ первым токеном, а не заменяет чужой; если
+    тега нет вовсе — заводится новый `{@N}`."""
+    lines = paragraph.split("\n")
+    first = lines[0]
+    m = _LEADING_TAG_RE.match(first)
+    if m:
+        tokens = m.group(1).split()
+        rest = m.group(2)
+        lines[0] = "{%s}%s" % (" ".join(["@%d" % scene_num] + tokens), rest)
+    else:
+        lines[0] = ("{@%d} %s" % (scene_num, first)) if first else "{@%d}" % scene_num
+    return "\n".join(lines)
+
+
+def _auto_tag_block(block, scene_num):
+    """Тело блока → то же тело, где КАЖДЫЙ абзац получил `{@scene_num}` — не
+    только первый: иначе абзацы 2+ того же блока остались бы видны с первой сцены
+    (тег в build_deck.py — свойство абзаца, не всего блока сразу)."""
+    return "\n\n".join(_inject_scene(p, scene_num) for p in _live_paragraphs(block.telo))
+
+
+def block_start_scenes(blocks):
+    """[Block] (живые, telo непуст) → [int] сцена ПОЯВЛЕНИЯ каждого блока —
+    Э3 гейту нужна ровно эта величина (сравнить сцену `dokazatelstvo` со сценой
+    более раннего несущего блока), не полная раскладка тегов внутри блока.
+
+    Автоматический режим (нет ручных тегов): сцена блока = его порядковый номер
+    (1-индексация, ровно то же соответствие, что порождает `render_section_markdown`
+    ниже) — считать этот случай отдельно от чтения тегов дешевле и не ошибается
+    никогда, раз это и есть источник истины для авто-режима.
+    Ручной режим: сцена блока = тег ПЕРВОГО абзаца (абзац без тега виден с первой
+    сцены — как и блок вовсе без разметки), более поздние теги того же блока на
+    его СОБСТВЕННУЮ сцену появления не влияют."""
+    live = [b for b in blocks if b.telo.strip()]
+    if not has_manual_scenes(live):
+        return list(range(1, len(live) + 1))
+    scenes = []
+    for b in live:
+        paras = _live_paragraphs(b.telo)
+        scene = 1
+        tokens = _tag_tokens(paras[0].split("\n", 1)[0].strip()) if paras else None
+        for t in (tokens or ()):
+            if t.startswith("@"):
+                num = t[1:].split("-", 1)[0]
+                if num:
+                    scene = int(num)
+                break
+        scenes.append(scene)
+    return scenes
+
+
 def render_section_markdown(blocks):
     """[Block] → плоский markdown (тела блоков через пустую строку) — то, что
     компилятор (`formaty.render_body`) скармливает `render_md`. Заголовки блоков
-    (`### [tip] мысль`) на экран НИКОГДА не выводятся (Я1 §2, §4) — только текст."""
-    return "\n\n".join(b.telo for b in blocks if b.telo.strip())
+    (`### [tip] мысль`) на экран НИКОГДА не выводятся (Я1 §2, §4) — только текст.
+
+    Заход `sceny-iz-blokov` (Э1): по умолчанию КАЖДЫЙ блок начиная со ВТОРОГО
+    получает автоматический тег `{@K}` (K — порядковый номер блока, 1-индексация)
+    на каждом своём абзаце — новый блок и есть новая сцена, разметчик тег не
+    пишет вовсе. Первый блок тега не несёт: он и так виден с первой сцены
+    (`build_deck.scene_cascade_css` — тег на сцене 1 нужен только чтобы блок потом
+    УШЁЛ по `data-scene-until`, не чтобы появиться). Раздел несёт ХОТЯ БЫ ОДИН
+    ручной тег (Э2, `has_manual_scenes`) — автоматика выключается для ВСЕЙ
+    карточки, тела блоков возвращаются дословно, как до этого захода."""
+    live = [b for b in blocks if b.telo.strip()]
+    if has_manual_scenes(live):
+        return "\n\n".join(b.telo for b in live)
+    return "\n\n".join(
+        b.telo if i == 1 else _auto_tag_block(b, i)
+        for i, b in enumerate(live, start=1))

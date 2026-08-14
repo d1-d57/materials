@@ -126,10 +126,20 @@ TIPY_SLAJDA = tuple(sorted(tipy_slajdov.TIPY)) + (tipy_slajdov.TIP_SLUZHEBNYJ,
 # ограничивать освобождение одним Т4 значило бы завести различие, которого
 # исходное правило не проводило.
 #
-# 🔴 Освобождение ПЕРМИССИВНО, а не запретительно: слайд Т4/Т5, который реально
+# 🔴 Освобождение ПЕРМИССИВНО, а не запретительно: слайд Т4, который реально
 # на что-то опирается, поля заполняет (в живой L2 так и сделано — `teorema-brauera`,
 # opiraetsya_na непуст). Освобождение снимает ТРЕБОВАНИЕ, а не возможность.
-TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ = (tipy_slajdov.TIP_SLUZHEBNYJ, "Т4", "Т5")
+#
+# Заход sceny-iz-blokov (2026-08-14): список выведен из `tipy_slajdov.TIPY`, а не
+# зашит именем типа — тип «чисто нарративный» это тип, ВСЕ слоты которого narrativ
+# (сегодня это ровно Т4). Раньше здесь стояли буквально "Т4", "Т5" — заход
+# tipologia-dochistka слил Т5 в Т4, и хвост "Т5" остался жить строкой отдельно от
+# реестра ещё день; больше так разъехаться не может, список читается из TIPY.
+_TIPY_CHISTO_NARRATIVNYE = tuple(
+    tip for tip, opisanie in tipy_slajdov.TIPY.items()
+    if all(slot.tip == "narrativ" for slot in opisanie["slots"])
+)
+TIPY_SLAJDA_BEZ_TREBOVANIYA_SVYAZEJ = (tipy_slajdov.TIP_SLUZHEBNYJ,) + _TIPY_CHISTO_NARRATIVNYE
 
 # Спецзначение `centralnyj_blok` — те самые 6 слайдов из 201, где центра нет по
 # существу (списки однородных пунктов: набор задач, меню будущих тем). Гейт выхода

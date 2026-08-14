@@ -66,7 +66,7 @@ $f\colon V\to W$ **линейно**, если $f(\lambda v)=\lambda f(v)$ и $f(
 
 ### [primer] непохожие пространства оказываются изоморфными
 
-{@2} - $\mathbb C$ и $\mathbb R^2\colon$ $x+iy\mapsto(x,y)$
+- $\mathbb C$ и $\mathbb R^2\colon$ $x+iy\mapsto(x,y)$
 - многочлены степени $\le n$ и $\mathbb R^{n+1}\colon$ $a_0+a_1x+\dots+a_nx^n\mapsto(a_0,a_1,\dots,a_n)$
 - $\mathbb R^X$ при $|X|=n$ и $\mathbb R^n\colon$ $f\mapsto(f(x_1),\dots,f(x_n))$
 
