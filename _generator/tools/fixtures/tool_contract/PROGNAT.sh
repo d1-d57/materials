@@ -34,6 +34,14 @@ mkdir -p "$T/fixtures/tool_contract"
 LINT="python3 $TOOLS/check_tool_contract.py"
 FAIL=0
 
+# Число ловушек — СЧИТАЕТСЯ прогоном, а не объявляется шапкой (`KONSTITUCIYA
+# §10`, тот же приём, что в фикстуре zahod). Ловушка здесь — вызов `krasnoe`,
+# `zelenoe` или `rc_zhdyom`: каждый проверяет ровно одну сторону одной
+# проверки. `|| true` — не украшение: при `set -e` греп с нулём совпадений
+# уронил бы прогон молча, и «ловушек нет» стало бы «фикстура не запускалась».
+LOVUSHEK=$(grep -cE '^(krasnoe|zelenoe|rc_zhdyom) ' "$0" || true)
+echo "ловушек в этом прогоне: $LOVUSHEK  ← grep -cE '^(krasnoe|zelenoe|rc_zhdyom) ' $0"
+
 # Пробный дом фикстур пуст ⇒ ни baseline, ни охват пробных имён не покрывают.
 # Каждая проверка мутируется в обе стороны на ОДНОЙ паре файлов.
 krasnoe() {   # $1 — файл-нарушитель, $2 — что проверяем
@@ -90,6 +98,53 @@ PY
 krasnoe "$T/gnu_bad.py" "GNU-изм в печатаемой строке"
 zelenoe "$T/gnu_ok.py"  "тот же смысл через python3 -c"
 zelenoe "$T/gnu_doc.py" "GNU-изм только в комментарии и докстринге"
+
+# ── ПРОВЕРКА 1b: кириллический диапазон в шелл-контексте ──
+# Дом: `zahody` КРТ-033 («regex с кириллицей матчится по-разному на BSD/macOS»)
+# и КРТ-РАЗН-21. ЗАМЕР 15.08, `/usr/bin/grep` владельца, файл из четырёх строк
+# («Привет», «мир», «ясно», «zzz»), эталон — питоновский `re.search`:
+#   LC_ALL=C → матчит ТРИ строки вместо одной (побайтово, ЛОЖЬ);
+#   LC_ALL=C.UTF-8 / ru_RU.UTF-8 → одна, верно; на GNU grep приёмки — падение
+#   «Invalid collation character». Питоновский `re` верен везде.
+# 🔴 ПАРА ЗДЕСЬ НЕСЁТ ГЛАВНОЕ: сторож обязан РАЗЛИЧАТЬ шелл и питон. Красящий
+# оба покрасит каждый питоновский regex репозитория, где вся проза русская, —
+# и его отключат в тот же день вместе со всем контрактом (Р31).
+# 🔴 Образцы-нарушители СОБИРАЮТСЯ ИЗ ПОЛОВИНОК по той же причине, что GNU-измы
+# выше: буквальный диапазон в этом файле покрасил бы саму фикстуру — проверка
+# «переносимость» судит и `.sh`.
+python3 - "$T" <<'PY'
+import sys, pathlib
+T = pathlib.Path(sys.argv[1])
+kir = "[" + "А" + "-" + "Я" + "]"          # склейка: буквального диапазона в файле нет
+(T / "kir_bad.py").write_text(
+    "# TOOL-CONTRACT: no-input\n"
+    "import subprocess\n"
+    "def schitat(p):\n"
+    f'    return subprocess.run(["grep", "-cE", "{kir}", p], capture_output=True)\n',
+    encoding="utf-8")
+(T / "kir_ok.py").write_text(
+    "# TOOL-CONTRACT: no-input\n"
+    "# TOOL-CONTRACT: called-by-hand\n"
+    "import re\n"
+    "def schitat(text):\n"
+    f'    return len(re.findall(r"{kir}", text))\n',
+    encoding="utf-8")
+# Шелл-файл: тот же диапазон, но проверять его должен ТОТ ЖЕ кластер
+# «переносимость» — на не-`.py` `judge()` пускает только его.
+(T / "kir_bad.sh").write_text(
+    "#!/bin/sh\n"
+    f"grep -cE '{kir}' src.md\n", encoding="utf-8")
+# Тот же диапазон внутри питоновского однострочника В ШЕЛЛЕ — здоровая форма,
+# ради которой проверка и различает случаи (объявленная слепая зона).
+(T / "kir_ok.sh").write_text(
+    "#!/bin/sh\n"
+    f"python3 -c \"import re; print(len(re.findall(r'{kir}', open('src.md').read())))\"\n",
+    encoding="utf-8")
+PY
+krasnoe "$T/kir_bad.py" "кириллический диапазон в аргументах grep"
+zelenoe "$T/kir_ok.py"  "тот же диапазон в питоновском re"
+krasnoe "$T/kir_bad.sh" "кириллический диапазон в шелл-фикстуре"
+zelenoe "$T/kir_ok.sh"  "тот же диапазон внутри python3 -c в шелле"
 
 # ── ПРОВЕРКА 2: --no-optional-locks ──
 # ЦЕНА 21.07: голое чтение git берёт .git/index.lock и роняет чужой коммит —
