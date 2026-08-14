@@ -1,0 +1,16 @@
+/* вариант: l=Л3-srednyaya · d=Д2-0.90 · z=З2-0.68 · s=С-net · o=О2-polovina */
+
+.blk { position: relative; }
+.blk + .blk { margin-top: var(--blok); }
+
+.blk-h { display: none; }
+
+.blk[data-central="1"] { padding-left: 0.000em; }
+.blk[data-central="1"]::before {
+  content: ''; position: absolute; left: -0.710em;
+  top: 0.000em; bottom: 0.000em;
+  width: 0.110em; background: var(--rule); opacity: 0.55; }
+
+
+.blk[data-tip="dokazatelstvo"] { font-size: 0.900em; line-height: calc(var(--lh) * 0.950);
+                                 padding-left: 1.200em; }
