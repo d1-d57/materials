@@ -360,15 +360,20 @@ def main():
     ap.add_argument("--imya", help="id слайда (папка slajdy/<imya>/)")
     ap.add_argument("--tip", choices=TIPY_DOPUSTIMYE, help="тип слайда Т1..Т4, Т6")
     ap.add_argument("--centralnyj", help="'tip:мысль' центрального блока")
+    # 🔴 Справка обязана описывать ТО ЖЕ поведение, что рантайм (найдено ПОСЛЕ-
+    # верификатором дочистки-2, п.8). Здесь стояло «целится в ПЕРВЫЙ по раскладке»
+    # — верно до Д8 и ложно после: флаг берёт первый СВОБОДНЫЙ слот, поэтому два
+    # повтора занимают оба слота Т2. Рантайм печатал правду, справка врала; автор
+    # читает справку.
     ap.add_argument("--vspomogatelnyj", action="append", default=[],
                      help="'tip:мысль' вспомогательного несущего блока (можно повторять); "
-                          "при нескольких слотах одного типа в раскладке (Т2 primer) "
-                          "целится в ПЕРВЫЙ по раскладке — для последнего см. "
-                          "--vspomogatelnyj-posle")
+                          "целится в ПЕРВЫЙ СВОБОДНЫЙ слот этого типа, поэтому два повтора "
+                          "занимают оба слота Т2 (primer до и после utverzhdenie); в какой "
+                          "слот лёг блок — печатается вслух")
     ap.add_argument("--vspomogatelnyj-posle", action="append", default=[],
-                     help="как --vspomogatelnyj, но целится в ПОСЛЕДНИЙ слот этого типа "
-                          "по раскладке — у Т2 'primer:...' сюда встанет ПОСЛЕ utverzhdenie, "
-                          "не до (заход tipologia-dochistka, Э2)")
+                     help="как --vspomogatelnyj, но целится в ПОСЛЕДНИЙ свободный слот этого "
+                          "типа — у Т2 'primer:...' сюда встанет ПОСЛЕ utverzhdenie, не до, "
+                          "даже когда первый слот свободен (заход tipologia-dochistka, Э2)")
     ap.add_argument("--narrativ", action="append", default=[],
                      help="мысль нарративного блока (можно повторять)")
     ap.add_argument("--dokazatelstvo", action="append", default=[],
