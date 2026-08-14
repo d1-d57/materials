@@ -524,8 +524,14 @@ cd - >/dev/null
 # 🔴 `--kanal` теперь ОБЯЗАТЕЛЕН (linter-zahoda, часть B) и структурный линтер
 # входа (`STRUCTURAL_CHECKS`, тот же заход) уже требует ЗОНУ backtick-путями —
 # без обоих ловушка проверяла бы отказ бутстрапа, а не тираж формата очереди.
+# 🔴 `--intervyu` ОБЯЗАТЕЛЕН с ветки `nositeli-gen` (дверь интервью). Тем
+# коммитом фикстуры dvizhok/gigiena/korni/register_doc дописали, а ЭТУ забыли —
+# ловушки 17 и 22 краснели «bootstrap не создал заход» на совершенно здоровом
+# генераторе, то есть сигнал показывал не то, что сломано. Найдено заходом
+# `git-kontur` 14.08 при проверке своей же зоны на baseline.
 python3 "$T17/_generator/tools/bootstrap_zahod.py" arka proba17 \
     --branch fixture-branch --zone '`moya-zona/tool.py`' --kanal terminal \
+    --intervyu da \
     --finalizirovano "ф1" --finalizirovano "ф2" \
     --opisanie "фикстура: заход несёт формат очереди" > /dev/null 2>&1 || true
 if [ -f "$T17/arka/kod_proba17.md" ]; then
@@ -767,7 +773,14 @@ T22=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
 mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
 cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
-   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$T22/_generator/tools/"
+   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
+   "$TOOLS/modeli.py" "$T22/_generator/tools/"
+# 🔴 `modeli.py` в списке — не украшение: `bootstrap_zahod.py` импортирует его
+# верхним уровнем, и без файла падает на ИМПОРТЕ. Тогда ловушка печатает
+# «файла-захода в основной папке нет» и «worktree не заведён» — то есть
+# обвиняет две ПРОВЕРЯЕМЫЕ ею вещи в поломке, которой нет, и указывает
+# исполнителя чинить здоровый код. У ловушки 17 файл в списке есть, у этой
+# забыли (найдено заходом `git-kontur` 14.08).
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T22/_studio/zhurnal/"
 cd "$T22"
 git init -q .
@@ -777,7 +790,7 @@ git add -A >/dev/null; git commit -qm baseline >/dev/null
 cd - >/dev/null
 python3 "$T22/_generator/tools/bootstrap_zahod.py" _studio/zhurnal/proba22 proba22t \
     --branch fixture-branch22 --zone "_studio/zhurnal/proba22/" --worktree proba22wt \
-    --kanal app \
+    --kanal app --intervyu da \
     --finalizirovano "ф1" --finalizirovano "ф2" \
     --opisanie "фикстура: файл в основной, worktree для кода" > /dev/null 2>&1 || true
 [ -f "$T22/_studio/zhurnal/proba22/kod_proba22t.md" ] \
@@ -1781,5 +1794,70 @@ then echo "  ✅ ловушка 55: merge из песочницы отказыв
 else echo "  ❌ MERGE ПИШЕТ ИЗ ПЕСОЧНИЦЫ — sandbox-отказ на merge обойдён"; FAIL=1
 fi
 rm -rf "$T55"
+
+# ── ЛОВУШКА 56: 🔴 `vlit-v-osnovnuyu` — ВЛИТИЕ В ОСНОВНУЮ, А НЕ В СЕБЯ ──
+#
+# ЧТО СТОРОЖИТ. Дефект устройства, из-за которого система буксовала (замер
+# 14.08.2026): слот «ВЛИТЬ» вливал ветку В СВОЮ рабочую ветку, влитие в основную
+# было ходом приёмки, а приёмка из песочницы в `.git` писать не может — она
+# оставляла заявку, заявку исполнял следующий заход, и он снова вливал в себя.
+# Лестница: 13 невлитых веток в `materials`, цепочка из пяти внутри последней,
+# 84 невывезенных коммита; генератор в ОСНОВНОЙ папке не знал о собственных
+# улучшениях (`grep -c 'zadanie-subagentu'` → 0).
+#
+# Ловушка держит ОБЕ половины устройства, и каждая проверена мутацией:
+#   а) влитие из worktree попадает в ОСНОВНУЮ ветку (обе ветки достижимы из неё),
+#      а рабочая папка соседа при этом не трогается;
+#   б) ветка, заведённая ПОСЛЕ влития, отпочкована от основной — то есть уже
+#      содержит обе влитые ветки, и лестница не начинает расти заново;
+#   в) отказ на живой рабочей папке действует и для СВОЕЙ ветки тоже — без этого
+#      субагент, стоящий в папке захода, молча влил бы в основную сам себя
+#      (поймано прогоном ДО первого боевого вызова: `worktree_branches()`
+#      исключает папку вызывающего, и проверка проходила мимо).
+T56=$(mktemp -d)
+git init -q -b main "$T56"
+git -C "$T56" config user.email fixture@test; git -C "$T56" config user.name fixture
+mkdir -p "$T56/_generator/tools"
+cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T56/_generator/tools/"
+echo baza > "$T56/f.txt"; git -C "$T56" add -A; git -C "$T56" commit -qm baza
+git -C "$T56" branch feat56a
+git -C "$T56" branch feat56b
+git -C "$T56" worktree add -q "$T56-wtA" feat56a >/dev/null 2>&1
+echo a > "$T56-wtA/a.txt"; git -C "$T56-wtA" add a.txt; git -C "$T56-wtA" commit -qm "работа A"
+git -C "$T56" worktree add -q "$T56-wtB" feat56b >/dev/null 2>&1
+echo b > "$T56-wtB/b.txt"; git -C "$T56-wtB" add b.txt; git -C "$T56-wtB" commit -qm "работа B"
+
+# (в) СВОЯ ветка на живой папке — отказ без причины. Зовём ИЗ wtB про feat56b.
+RC56C=0
+(cd "$T56-wtB" && GIT_ZONA_REPO="$T56-wtB" python3 "$T56/_generator/tools/git_zona.py" \
+    vlit-v-osnovnuyu feat56b >/dev/null 2>&1) || RC56C=$?
+
+# (а) влитие обеих веток в ОСНОВНУЮ, вызов из рабочей папки B
+(cd "$T56-wtB" && GIT_ZONA_REPO="$T56-wtB" python3 "$T56/_generator/tools/git_zona.py" \
+    vlit-v-osnovnuyu feat56a --vsyo-ravno "ловушка 56" >/dev/null 2>&1)
+(cd "$T56-wtB" && GIT_ZONA_REPO="$T56-wtB" python3 "$T56/_generator/tools/git_zona.py" \
+    vlit-v-osnovnuyu feat56b --vsyo-ravno "ловушка 56" >/dev/null 2>&1)
+A_V_MAIN=0; git -C "$T56" merge-base --is-ancestor feat56a main && A_V_MAIN=1
+B_V_MAIN=0; git -C "$T56" merge-base --is-ancestor feat56b main && B_V_MAIN=1
+# рабочая папка соседа не тронута: стоит на своей ветке и файла чужой ветки не получила
+WTA_VETKA=$(git -C "$T56-wtA" rev-parse --abbrev-ref HEAD)
+WTA_CHISTO=1; [ -e "$T56-wtA/b.txt" ] && WTA_CHISTO=0
+
+# (б) ветка, заведённая ПОСЛЕ влития, отпочкована от основной
+(cd "$T56" && GIT_ZONA_REPO="$T56" python3 "$T56/_generator/tools/git_zona.py" \
+    worktree add posle56 --branch zahod/posle56 >/dev/null 2>&1)
+POSLE_A=0; git -C "$T56" merge-base --is-ancestor feat56a zahod/posle56 && POSLE_A=1
+POSLE_B=0; git -C "$T56" merge-base --is-ancestor feat56b zahod/posle56 && POSLE_B=1
+
+if [ "$RC56C" = "1" ] && [ "$A_V_MAIN" = "1" ] && [ "$B_V_MAIN" = "1" ] \
+   && [ "$WTA_VETKA" = "feat56a" ] && [ "$WTA_CHISTO" = "1" ] \
+   && [ "$POSLE_A" = "1" ] && [ "$POSLE_B" = "1" ]
+then echo "  ✅ ловушка 56: влитие идёт в ОСНОВНУЮ (обе ветки в main), папка соседа цела, ветка после влития отпочкована от основной, своя живая папка тоже под отказом"
+else echo "  ❌ ВЛИТИЕ В ОСНОВНУЮ СЛОМАНО: rc_своя=$RC56C a_в_main=$A_V_MAIN b_в_main=$B_V_MAIN папка_соседа=$WTA_VETKA/$WTA_CHISTO после_a=$POSLE_A после_b=$POSLE_B"; FAIL=1
+fi
+git -C "$T56" worktree remove --force "$T56-wtA" >/dev/null 2>&1 || true
+git -C "$T56" worktree remove --force "$T56-wtB" >/dev/null 2>&1 || true
+git -C "$T56" worktree remove --force "$T56/../$(basename "$T56")-wt/posle56" >/dev/null 2>&1 || true
+rm -rf "$T56" "$T56-wtA" "$T56-wtB" "$T56-wt"
 
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
