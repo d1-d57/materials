@@ -105,6 +105,50 @@ MARKER_CALLED_BY_HAND = "TOOL-CONTRACT: called-by-hand"
 MARKER_COVERS = "TOOL-CONTRACT-COVERS:"
 HELP_TIMEOUT = 10  # секунд: `--help` обязан быть мгновенным, зависший процесс — тоже дефект контракта
 
+# ── КОНТРАКТ ГЕЙТА (рычаг 3) ──────────────────────────────────────────────────
+# Три исхода вызова. Снаружи гейт виден ТОЛЬКО кодом возврата: «чисто»,
+# «нашёл дефект» и «позвали неверно» обязаны различаться, иначе вызывающий
+# (хук, шаг сборки, исполнитель) читает упавший гейт как зелёный.
+RC_OK, RC_DEFECT, RC_MISUSE = 0, 1, 2
+# Тот же признак «инструмент разбирает вход», что и у check_input_fixture, —
+# вынесен, чтобы два пункта контракта судили ОДНО И ТО ЖЕ множество файлов.
+INPUT_RE = re.compile(r"\bargparse\b|\bsys\.argv\b|\bargv\b")
+
+# Длина иголки, ниже которой самоцитирование не судим: `"#"`, `"\n"`, `"git "`
+# встречаются в прозе любого файла, и «совпало» там ничего не значит.
+MIN_NEEDLE = 8
+# Что считается СЛУЖЕБНЫМ МАРКЕРОМ: заголовок, флаг, html-комментарий, фенса,
+# версальный токен с двоеточием. Обычное слово маркером НЕ считается, и это
+# сужение оплачено сплошным прогоном: без него краснели `worktree `, `инцидент`,
+# `живая точка вызова` — то есть словарь, а не разметка; совпадение такого слова
+# с прозой не значит ничего, а ложное красное на трёх инструментах из четырёх
+# гейт хоронит (KONSTITUCIYA §11а). ЦЕНА СУЖЕНИЯ, названная прямо: маркер
+# кириллической фразой (`Флаг закрыт:` в sostoyanie.py) проверка ПРОПУСКАЕТ.
+MARKER_SHAPE_RE = re.compile(r"^\s*(#{1,6}\s|--\w|<!--|```|\*\*)"
+                             r"|[A-ZА-ЯЁ][A-ZА-ЯЁ0-9_-]{3,}\s*[:\-]")
+# Имена, за которыми стоит СЫРОЙ ТЕКСТ проверяемого файла. Сужение НАМЕРЕННОЕ и
+# оплачено ложным красным на самом этом файле: `"--no-optional-locks" not in vals`
+# ищет флаг в СПИСКЕ АРГУМЕНТОВ, а докстринг git_lines этот флаг называет — то
+# есть по «иголка встречается в собственной прозе» линтер краснел бы на здоровом
+# коде, где никакого самоцитирования нет. Иголку в тексте и иголку в структуре
+# надо различать, и различаются они хвостом — тем, ГДЕ ищут.
+# Односимвольные и служебные имена (`s`, `out`, `raw`) сюда НЕ входят — тоже по
+# живому ложному красному: в `check_optional_locks` через `s` ходят строки
+# ШЕЛЛ-КОМАНД, вынутых из проверяемого файла, докстринг же `git_lines` этот флаг
+# просто называет — совпасть они не могут никогда, а линтер краснел.
+TEXT_HAYSTACKS = {"text", "tekst", "src", "content", "soderzhimoe", "ln", "line",
+                  "stroka", "body", "docstring", "proza"}
+# Методы, которыми ищут: первый аргумент — иголка.
+NEEDLE_METHODS = {"find", "index", "count", "startswith", "endswith", "search",
+                  "match", "fullmatch", "findall", "finditer", "split", "partition"}
+# Честная приписка «я это не читал». Она — ПОВОД проверить, а не освобождение от
+# проверки: гейт, который на неё замолкает, выключается ровно тем, кто должен был
+# бы попасться. Собрано из половинок по той же причине, что и GNU_PAIRS выше.
+MUTE_PAIRS = [("не", "чита"), ("не", "провер"), ("не", "смотре"), ("не", "сверя"),
+              ("без", "проверк"), ("not", "read"), ("not", "checked")]
+MUTE_RE = re.compile("|".join([a + r"\s+" + b for a, b in MUTE_PAIRS]
+                              + ["unverified", "unchecked"]), re.IGNORECASE)
+
 
 def check_help(path):
     """`<инструмент> --help` обязан дать rc=0 и непустой вывод.
@@ -210,7 +254,10 @@ def baseline_names():
 def fixture_coverage():
     """{фикстура: {покрытые имена файлов}}.
 
-    Охват объявляет САМА фикстура строкой `# TOOL-CONTRACT-COVERS: a.py b.py`.
+    Охват объявляет САМА фикстура строкой-шапкой: решётка, маркер MARKER_COVERS,
+    имена файлов через пробел. Маркер здесь НЕ выписан буквально — он собирается
+    из константы, иначе эта самая строка документации попадала бы под собственный
+    поиск (проверка «самоцитирование маркера» ловит ровно такую пару).
     Это и есть лечение зазора «триггер уже охвата»: пока охват жил в голове
     автора, хук поднимал фикстуру git_zona только на правку git_zona.py, хотя
     ловушка 14 внутри неё сторожит три bootstrap_*.
@@ -341,6 +388,270 @@ def shell_commands(tree):
             for sub in ast.walk(arg):
                 if isinstance(sub, ast.Constant) and isinstance(sub.value, str):
                     yield sub.value, getattr(sub, "lineno", node.lineno)
+
+
+def call_name(func):
+    """`sys.exit` / `os.remove` / `print` — имя вызываемого одной строкой."""
+    if isinstance(func, ast.Attribute):
+        owner = func.value.id if isinstance(func.value, ast.Name) else ""
+        return f"{owner}.{func.attr}" if owner else func.attr
+    return func.id if isinstance(func, ast.Name) else ""
+
+
+def base_name(node):
+    """Имя, в котором лежит haystack: у `ln.lstrip().startswith(x)` это `ln`."""
+    while isinstance(node, (ast.Call, ast.Attribute, ast.Subscript)):
+        node = node.func if isinstance(node, ast.Call) else node.value
+    return node.id if isinstance(node, ast.Name) else ""
+
+
+def module_constants(tree):
+    """`{ИМЯ: значение}` для присваиваний ВЕРХНЕГО УРОВНЯ (строки и целые).
+
+    Нужна, потому что и маркер, и код возврата приличный инструмент держит
+    константой (`MARKER_NO_INPUT`, `RC_MISUSE`), а не литералом по месту. Гейт,
+    умеющий только литералы, объявил бы такой инструмент нарушителем — это ровно
+    «гейт бьёт по своим», после чего его отключают (Р31).
+    """
+    out = {}
+    if tree is None:
+        return out
+    def zapomnit(target, value):
+        if not (isinstance(target, ast.Name) and isinstance(value, ast.Constant)):
+            return
+        val = value.value
+        if isinstance(val, (str, int)) and not isinstance(val, bool):
+            out[target.id] = val
+
+    for node in getattr(tree, "body", []):
+        if not isinstance(node, ast.Assign):
+            continue
+        for t in node.targets:
+            # `RC_OK, RC_DEFECT, RC_MISUSE = 0, 1, 2` — ровно та форма, которой
+            # объявляют набор кодов возврата; не разобрав её, проверка «три
+            # исхода» краснела на инструменте, где все три кода на месте
+            # (поймано первым же прогоном на самом этом файле).
+            if isinstance(t, ast.Tuple) and isinstance(node.value, ast.Tuple):
+                for tt, vv in zip(t.elts, node.value.elts):
+                    zapomnit(tt, vv)
+            else:
+                zapomnit(t, node.value)
+    return out
+
+
+def str_value(node, consts):
+    """Строковое значение узла: литерал или имя модульной константы."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.Name):
+        v = consts.get(node.id)
+        return v if isinstance(v, str) else None
+    return None
+
+
+def int_value(node, consts):
+    """Целое значение узла: литерал или имя модульной константы."""
+    if isinstance(node, ast.Constant) and isinstance(node.value, int) \
+            and not isinstance(node.value, bool):
+        return node.value
+    if isinstance(node, ast.Name):
+        v = consts.get(node.id)
+        return v if isinstance(v, int) and not isinstance(v, bool) else None
+    return None
+
+
+def needles(node, consts):
+    """Строки, которые инструмент ИЩЕТ, и место поиска: `(иголка, строка, стог)`.
+
+    Формы: `X in text`, `text.find(X)`, `re.search(X, text)`, `ln.split(X)`.
+    Ходит по ЛЮБОМУ поддереву — так один механизм кормит и самоцитирование
+    маркера, и глушилку «не читан».
+    """
+    for sub in ast.walk(node):
+        if isinstance(sub, ast.Compare) and \
+                any(isinstance(o, (ast.In, ast.NotIn)) for o in sub.ops):
+            v = str_value(sub.left, consts)
+            if v is not None:
+                yield v, sub.lineno, base_name(sub.comparators[0])
+        elif isinstance(sub, ast.Call) and sub.args:
+            name = sub.func.attr if isinstance(sub.func, ast.Attribute) else \
+                sub.func.id if isinstance(sub.func, ast.Name) else ""
+            if name not in NEEDLE_METHODS:
+                continue
+            v = str_value(sub.args[0], consts)
+            if v is None:
+                continue
+            # `re.search(X, text)` — стог вторым аргументом; `text.find(X)` — слева
+            hay = sub.args[1] if len(sub.args) > 1 else \
+                sub.func.value if isinstance(sub.func, ast.Attribute) else None
+            yield v, sub.lineno, base_name(hay) if hay is not None else ""
+
+
+def prose_lines(text, tree):
+    """`(номер, текст)` для строк ДОКУМЕНТАЦИИ — комментариев и докстрингов.
+
+    Ровно дополнение `code_lines()`: там документация выбрасывается как «не
+    исполняется», здесь она и есть предмет — самоцитирование живёт именно в ней.
+    """
+    doc = docstring_lines(tree)
+    comments = {}
+    if tree is not None:
+        try:
+            comments = {t.start[0]: t.start[1]
+                        for t in tokenize.generate_tokens(io.StringIO(text).readline)
+                        if t.type == tokenize.COMMENT}
+        except (tokenize.TokenError, SyntaxError, IndentationError, ValueError):
+            comments = {}
+    out = []
+    for n, ln in enumerate(text.splitlines(), 1):
+        if n in doc:
+            out.append((n, ln))
+        elif n in comments:
+            out.append((n, ln[comments[n]:]))
+    return out
+
+
+def rc_functions(tree, consts=None):
+    """Функции, чей `return N` — КОД ВОЗВРАТА, а не число.
+
+    `main` по имени, всё, что само зовёт `sys.exit(...)`, и всё, что возвращает
+    литеральные 1 или 2. Сужение НАМЕРЕННОЕ: без него «пустой вход даёт зелёное»
+    краснело бы на честном `if not items: return 0` внутри счётчика — а там ноль
+    это сумма, а не исход вызова.
+    """
+    consts = consts or {}
+    out = []
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if node.name == "main":
+            out.append(node)
+            continue
+        codes, exits = set(), False
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Call) and call_name(sub.func) in ("sys.exit", "exit"):
+                exits = True
+            elif isinstance(sub, ast.Return) and sub.value is not None:
+                v = int_value(sub.value, consts)
+                if v is not None:
+                    codes.add(v)
+        if exits or {RC_DEFECT, RC_MISUSE} & codes:
+            out.append(node)
+    return out
+
+
+def exit_codes(tree, consts):
+    """Коды, которыми инструмент РЕАЛЬНО умеет завершиться."""
+    codes = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and call_name(node.func) in ("sys.exit", "exit"):
+            codes.add(int_value(node.args[0], consts) if node.args else RC_OK)
+    for fn in rc_functions(tree, consts):
+        for node in ast.walk(fn):
+            if isinstance(node, ast.Return) and node.value is not None:
+                codes.add(int_value(node.value, consts))
+    return {c for c in codes if c is not None}
+
+
+def has_entry(text, tree):
+    """У файла есть точка входа: он кому-то ОТДАЁТ код возврата."""
+    if re.search(r"__name__\s*==", text):
+        return True
+    return any(isinstance(n, ast.Call) and call_name(n.func) in ("sys.exit", "exit")
+               for n in ast.walk(tree))
+
+
+def green_body(stmts):
+    """Ветка означает «всё хорошо, дальше не смотрим»: пустой возврат, ноль,
+    `True`, `continue`, `pass` — и НИ ОДНОГО слова владельцу."""
+    if not stmts:
+        return False
+    for node in stmts:
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Call) and call_name(sub.func) in ("print", "warn"):
+                return False
+    last = stmts[-1]
+    if isinstance(last, (ast.Continue, ast.Pass)):
+        return True
+    if not isinstance(last, ast.Return):
+        return False
+    if last.value is None:
+        return True
+    v = last.value
+    if isinstance(v, (ast.List, ast.Tuple, ast.Set)) and not v.elts:
+        return True
+    if isinstance(v, ast.Dict) and not v.keys:
+        return True
+    return isinstance(v, ast.Constant) and v.value in (0, True, "", None)
+
+
+READ_METHODS = {"read_text", "read", "read_bytes", "readlines"}
+
+
+def input_names(fn):
+    """Имена, в которых лежит ВХОД, ДАННЫЙ ВЫЗЫВАЮЩИМ: список путей из разбора
+    аргументов (`paths = a.paths`, `sys.argv`) и содержимое файла (`.read_text()`).
+
+    🔴 Сужение до этих двух источников — не лень, а РАЗДЕЛЕНИЕ ДВУХ ПУСТОТ,
+    которые иначе стравливают Р5-3 и Р31 лбами. «Пустой вход» (нечего было
+    проверять) и «пустой результат» (проверил и не нашёл) выглядят в коде
+    ОДИНАКОВО — `if not X: return 0`, — а означают противоположное: первое обязано
+    сказать, второе обязано молчать. Отличить их можно только по происхождению X.
+    ЦЕНА, найденная сплошным прогоном ДО этого сужения: краснели
+    `check_marker.py` (`if not broken`) и `dnevnik.py` (`if not nepokrytye`) —
+    то есть образцовое исполнение Р31 объявлялось нарушением Р5-3.
+    ЦЕНА СУЖЕНИЯ, названная прямо: вход, пропущенный через фильтр (`targets = [p
+    for p in paths if …]`), проверка уже не считает входом и пропускает.
+    """
+    ns, out = set(), set()
+    for node in ast.walk(fn):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call) \
+                and call_name(node.value.func).endswith("parse_args"):
+            ns.update(t.id for t in node.targets if isinstance(t, ast.Name))
+    for node in ast.walk(fn):
+        if not isinstance(node, ast.Assign):
+            continue
+        tgt = {t.id for t in node.targets if isinstance(t, ast.Name)}
+        if not tgt:
+            continue
+        for sub in ast.walk(node.value):
+            if isinstance(sub, ast.Attribute) and (
+                    sub.attr == "argv"
+                    or (isinstance(sub.value, ast.Name) and sub.value.id in ns)):
+                out |= tgt
+            elif isinstance(sub, ast.Call) and isinstance(sub.func, ast.Attribute) \
+                    and sub.func.attr in READ_METHODS:
+                out |= tgt
+    return out
+
+
+def emptiness_test(node):
+    """Имя, о пустоте которого спрашивают: `not X`, `len(X) == 0`, `X == []`,
+    `X == ""`. Не тест на пустоту — `None`.
+
+    Флаги режима (`if a.staged`) сюда НЕ попадают намеренно: «нечего судить,
+    потому что режим такой» и «дали пустоту» — разные вещи, и молчаливое зелёное
+    законно только в первом случае (Р31 против Р5-3).
+    """
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        inner = node.operand
+        if isinstance(inner, ast.Call) and call_name(inner.func) == "len" \
+                and inner.args:
+            return base_name(inner.args[0])
+        if isinstance(inner, (ast.Name, ast.Attribute, ast.Subscript)):
+            return base_name(inner)
+        return None
+    if isinstance(node, ast.Compare) and len(node.ops) == 1 \
+            and isinstance(node.ops[0], ast.Eq):
+        left, right = node.left, node.comparators[0]
+        if isinstance(left, ast.Call) and call_name(left.func) == "len" \
+                and left.args and int_value(right, {}) == 0:
+            return base_name(left.args[0])
+        if isinstance(right, (ast.List, ast.Tuple, ast.Set)) and not right.elts:
+            return base_name(left)
+        if isinstance(right, ast.Constant) and right.value == "":
+            return base_name(left)
+    return None
 
 
 # ── ПРОВЕРКИ ──────────────────────────────────────────────────────────────────
@@ -524,6 +835,146 @@ def check_live_trigger(path, text, tree, ctx):
             f"либо подключи живую точку вызова, либо объяви инструмент по вызову"]
 
 
+def check_rc_outcomes(path, text, tree, ctx):
+    """🔴 РЫЧАГ 3, пункт 1. Снаружи гейт виден ТОЛЬКО кодом возврата, и трёх
+    исходов там обязано быть три: чисто (0), нашёл дефект (1), позвали неверно
+    (2 — нет аргумента, нет файла, неизвестный флаг). Пока кода 2 нет, «гейт
+    упал, потому что я дал ему несуществующий путь» и «гейт нашёл дефект»
+    снаружи ОДНО И ТО ЖЕ число, а «гейт вообще не отработал» читается как
+    зелёное — то есть проверка выключается опечаткой в вызове, и никто этого
+    не видит.
+
+    🔴 ЧЕГО ЭТА ПРОВЕРКА НЕ ДОКАЗЫВАЕТ, и это НЕ придирка к формулировке:
+    она видит ПРИСУТСТВИЕ различения в тексте, а не то, что коды расставлены
+    по верным веткам. Проверить последнее можно было бы только ЗАПУСТИВ
+    инструмент с кривым входом — ровно то, что запрещает закон 2 модуля, и
+    запрещает не из перестраховки: `bootstrap_arka.py --help` проглотил флаг
+    как имя арки и создал папку-сироту. Присутствие защиты вместо её работы —
+    та же сделка, что у check_sandbox_guard; работу держит фикстура.
+
+    argparse отдаёт rc=2 сам, но ТОЛЬКО на неизвестный флаг: «нет аргумента» и
+    «файла не существует» — на инструменте, и именно они молча превращаются в 1.
+    Требуем кода 2, а не кода 1: гейтом инструмент быть не обязан (bootstrap_*
+    законно живёт на 0/2), а вот отличить «позвали неверно» обязан любой.
+    """
+    if "fixtures" in path.parts:
+        return []
+    if not INPUT_RE.search(text) or not has_entry(text, tree):
+        return []
+    codes = exit_codes(tree, module_constants(tree))
+    if RC_MISUSE in codes:
+        return []
+    est = ", ".join(str(c) for c in sorted(codes)) or "ни одного"
+    return [f"инструмент разбирает вход и отдаёт код возврата, но кода "
+            f"{RC_MISUSE} («позвали неверно»: нет аргумента, нет файла, "
+            f"неизвестный флаг) среди его исходов нет — есть {est}; снаружи "
+            f"неверный вызов неотличим от «чисто» ({RC_OK}) или «нашёл "
+            f"дефект» ({RC_DEFECT})"]
+
+
+def check_marker_echo(path, text, tree, ctx):
+    """🔴 РЫЧАГ 3, пункт 2. Служебный маркер, который инструмент ИЩЕТ в чужом
+    тексте, стоит буквально в его собственной документации — и гейт находит сам
+    себя: документация о маркере либо краснит свой же файл, либо (хуже) даёт
+    ему поблажку, которую маркер и раздаёт. Лечение известно и уже применено в
+    этом файле: GNU_PAIRS и SHELL_PAIRS склеены из половинок, потому что иначе
+    линтер краснел на собственном списке запрещённого (поймано первой же
+    калибровкой). Здесь тот же приём выдан МЕХАНИЗМОМ, а не памятью автора.
+
+    Судим только иголки длиной от MIN_NEEDLE и только те, что ищут в СЫРОМ
+    ТЕКСТЕ (TEXT_HAYSTACKS): иголка в списке аргументов — не самоцитирование,
+    см. ложное красное на `--no-optional-locks` в комментарии к TEXT_HAYSTACKS.
+    """
+    consts = module_constants(tree)
+    prose = prose_lines(text, tree)
+    seen, bad = set(), []
+    for value, _, hay in needles(tree, consts):
+        if len(value.strip()) < MIN_NEEDLE or value in seen:
+            continue
+        if hay not in TEXT_HAYSTACKS or not MARKER_SHAPE_RE.search(value):
+            continue
+        for n, s in prose:
+            if value in s:
+                seen.add(value)
+                bad.append((n, value))
+                break
+    return [f"строка {n}: служебный маркер «{v}», который инструмент ИЩЕТ в "
+            f"проверяемом тексте, стоит буквально в его собственной прозе — "
+            f"гейт находит сам себя; собирай маркер из половинок, как GNU_PAIRS"
+            for n, v in sorted(bad)]
+
+
+def check_mute_phrase(path, text, tree, ctx):
+    """🔴 РЫЧАГ 3, пункт 3. Честная приписка «этот файл я не читал» / «не
+    проверял» в проверяемом тексте ВЫКЛЮЧАЕТ проверку. Так гейт отключается
+    ровно тем, кто должен был на нём попасться, и отключается тихо: снаружи это
+    неотличимо от «проверено, чисто». Непрочитанность — ПОВОД проверить, а не
+    освобождение от проверки.
+
+    Красим только ГЛУШИЛКУ: фраза в условии, чья ветка молчит и возвращает
+    «всё хорошо» (green_body). Гейт, который ту же фразу ЛОВИТ и о ней
+    докладывает, — здоровый и обязан пройти; без этого различения проверка
+    краснела бы на честных гейтах, сторожащих эту самую приписку.
+    """
+    consts = module_constants(tree)
+    bad = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.If):
+            test, body = node.test, node.body
+        elif isinstance(node, ast.IfExp):
+            test, body = node.test, [ast.Return(value=node.body)]
+        else:
+            continue
+        hits = [v for v, _, _ in needles(test, consts) if MUTE_RE.search(v)]
+        if hits and green_body(body):
+            bad.append((node.lineno, hits[0][:40]))
+    return [f"строка {n}: приписка «{v}» ГЛУШИТ проверку — ветка молча "
+            f"возвращает «чисто»; непрочитанность это повод проверить, а не "
+            f"освобождение от проверки" for n, v in sorted(set(bad))]
+
+
+def check_empty_green(path, text, tree, ctx):
+    """🔴 РЫЧАГ 3, пункт 4 (Р5-3 дословно). Гейт, которому дали пустой файл или
+    пустой список, обязан НЕ МОЛЧАТЬ ЗЕЛЁНЫМ: молчаливый ноль на пустоте — это
+    «проверено, всё хорошо» на языке вызывающего, хотя проверено ровно ничто.
+    Так пустой охват, опечатка в маске и не собравшийся список выглядят как
+    здоровый прогон.
+
+    Судим ТОЛЬКО функции, чей возврат — код (rc_functions), только пустоту
+    ВХОДА, ДАННОГО ВЫЗЫВАЮЩИМ (input_names — там же цена сужения и два живых
+    ложных красных), и только МОЛЧАЛИВУЮ ветку: сказать «нечего проверять:
+    0 файлов» и вернуть 0 — законно, это уже не молчание. Тест на РЕЖИМ
+    (`if a.staged: return 0`) под проверку не подпадает — пустой staged обязан
+    молчать (Р31), и путать эти два случая значило бы стравить два правила лбами.
+    """
+    consts = module_constants(tree)
+    bad = []
+    for fn in rc_functions(tree, consts):
+        inputs = input_names(fn)
+        for node in ast.walk(fn):
+            if not isinstance(node, ast.If):
+                continue
+            name = emptiness_test(node.test)
+            if not name or name not in inputs:
+                continue
+            if not green_body(node.body):
+                continue
+            last = node.body[-1]
+            green = isinstance(last, ast.Return) and last.value is not None \
+                and int_value(last.value, consts) == RC_OK
+            if not green:
+                green = any(isinstance(s, ast.Call)
+                            and call_name(s.func) in ("sys.exit", "exit")
+                            and s.args and int_value(s.args[0], consts) == RC_OK
+                            for s in ast.walk(node))
+            if green:
+                bad.append(node.lineno)
+    return [f"строка {n}: пустой вход даёт МОЛЧАЛИВОЕ зелёное (rc={RC_OK} без "
+            f"единого слова) — «проверено ничто» уезжает к вызывающему как "
+            f"«проверено, чисто» (Р5-3); скажи, что проверять было нечего, или "
+            f"верни {RC_MISUSE}" for n in sorted(set(bad))]
+
+
 CHECKS = [
     ("переносимость", check_gnuisms),
     ("--no-optional-locks", check_optional_locks),
@@ -531,6 +982,10 @@ CHECKS = [
     ("запрет записи из песочницы", check_sandbox_guard),
     ("кривой вход", check_input_fixture),
     ("живая точка вызова", check_live_trigger),
+    ("три исхода rc", check_rc_outcomes),
+    ("самоцитирование маркера", check_marker_echo),
+    ("глушилка «не читан»", check_mute_phrase),
+    ("пустой вход = зелёное", check_empty_green),
 ]
 
 
@@ -580,8 +1035,15 @@ def judge(targets, verbose=False):
 
 
 def read_targets(paths, staged):
-    """Собрать `(путь, текст, только_эти_строки)`. В режиме хука — ИЗ ИНДЕКСА."""
-    out, bad = [], 0
+    """Собрать `(путь, текст, только_эти_строки)`. В режиме хука — ИЗ ИНДЕКСА.
+
+    Возвращает `(цели, сколько_раз_позвали_неверно)`. Несуществующий или
+    нечитаемый путь — это НЕ дефект инструмента, а неверный вызов, и уезжает он
+    кодом RC_MISUSE: раньше он считался наравне с находками и превращался в
+    rc=1, то есть «я опечатался в пути» и «гейт нашёл нарушение» выглядели
+    снаружи одинаково (пункт 1 контракта, рычаг 3).
+    """
+    out, misuse = [], 0
     for p in paths:
         if staged:
             text = staged_text(p)
@@ -593,9 +1055,10 @@ def read_targets(paths, staged):
             try:
                 out.append((path, path.read_text(encoding="utf-8"), None))
             except (OSError, UnicodeDecodeError) as e:
-                print(f"❌ {path}: не читается ({e.__class__.__name__})")
-                bad += 1
-    return out, bad
+                print(f"❌ {path}: не читается ({e.__class__.__name__}) — "
+                      f"позвали неверно")
+                misuse += 1
+    return out, misuse
 
 
 def main(argv=None):
@@ -618,7 +1081,7 @@ def main(argv=None):
             if names & covered:
                 print(script.relative_to(REPO) if REPO and REPO in script.parents
                       else script)
-        return 0
+        return RC_OK
 
     if a.staged:
         paths = staged_paths()
@@ -627,10 +1090,19 @@ def main(argv=None):
     else:
         paths = a.paths
     if not paths:
-        return 0
+        # Пустой staged — законная пустота хука: судить нечего, и молчать тут
+        # ОБЯЗАНО (Р31). Пустота во всех остальных режимах — Р5-3: гейт, которому
+        # не дали ни одного файла, не смеет ответить молчаливым зелёным, иначе
+        # опечатка в вызове читается как «проверено, чисто».
+        if a.staged:
+            return RC_OK
+        print("❌ не дано ни одного файла — проверять нечего. Это НЕ «чисто»: "
+              "пустой вход и пройденная проверка обязаны выглядеть по-разному "
+              "(Р5-3). Укажи пути или позови с --all/--staged.")
+        return RC_MISUSE
 
-    targets, bad = read_targets(paths, a.staged)
-    bad += judge(targets, verbose=a.verbose or not a.staged)
+    targets, misuse = read_targets(paths, a.staged)
+    bad = judge(targets, verbose=a.verbose or not a.staged)
 
     if a.all:
         # Реальный запуск `--help` — ТОЛЬКО в полном аудите (`--all`), не в
@@ -657,14 +1129,20 @@ def main(argv=None):
                 print(f"   {shown}: {reason}")
             bad += len(help_bad)
 
+    if misuse:
+        # Неверный вызов ПЕРЕБИВАЕТ находки: пока не ясно, что именно проверяли,
+        # число дефектов ничего не значит — и уж точно не значит «чисто».
+        print(f"\n❌ Позвали неверно ({misuse}): указанного файла нет или он не "
+              f"читается. Это rc={RC_MISUSE}, а не находка гейта.")
+        return RC_MISUSE
     if bad:
         print(f"\n❌ Контракт инструмента нарушен ({bad}). "
               f"Правила и цены — {CANON} §5.")
         print("   Правило кажется кривым — чинить надо ПРОВЕРКУ, а не обходить гейт.")
-        return 1
+        return RC_DEFECT
     if not a.staged:
         print(f"✅ Контракт держится: проверено {len(targets)} из {len(targets)}.")
-    return 0
+    return RC_OK
 
 
 if __name__ == "__main__":
