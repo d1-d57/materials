@@ -12,7 +12,7 @@
 ⚠️ СТОП-ФЛАГ: это СПЕКИ процесса (пакеты `DOK`/`ZAHOD`/`PRIMERY`), НЕ прогон реальной лекции. Вкусовую развилку, не закрытую явно в этом заходе, — ФЛАГ владельцу в `## ВОПРОСЫ` + пометка в самом пакете, НЕ решай молча. Реальный вкус проверится на «многогранниках» (следующая сессия).
 
 ### 0. ПЕРВЫЙ ХОД
-Рабочая папка `/Users/ivanyakovlev/Documents/GitHub/materials`. Пути: Read/Grep/Glob — host `…/materials/…`; bash — mount `/sessions/practical-exciting-ritchie/mnt/materials/…`.
+Рабочая папка `/Users/ivanyakovlev/Documents/GitHub/materials`. Пути: Read/Grep/Glob — host `…/materials/…`; bash — mount `/Users/ivanyakovlev/Documents/GitHub/materials/…`.
 **Git НЕ покрывает `_studio/` (untracked) → СРАЗУ tar-снапшот** папки `_studio/konvejer/` в `_studio/zhurnal/2026-07-10_sborka-konvejera/snap_faza1_pre.tar` (не zip). Прочитай ТОЛЬКО:
 - ЦЕЛЬ-МОДЕЛЬ: `_studio/docs/spravka/FAZA-1-REDESIGN.md`;
 - ГРУНТОВКА КАРТОЧЕК: `_studio/zhurnal/2026-07-10_sborka-konvejera/distillat-catalan-kartochki.md` (карточный граф Каталана: узел/карта/нить/дисциплина; ВАЖНЫЙ нюанс — `rasskaz‖skelet` у Каталана = пост-нарративный разрез, ≠ пред-нарративный «математика‖научпоп»);

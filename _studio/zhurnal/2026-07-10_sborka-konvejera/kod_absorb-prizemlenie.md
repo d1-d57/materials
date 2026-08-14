@@ -9,7 +9,7 @@
 КОНТЕКСТ. Дельта kurs-fabrika вычленена (`delta-kursfabrika.md`). Владелец одобрил: приземлить курс-уровневую методологию в `_studio`, потом (отдельным шагом) удалить репо. ЦЕЛЬ этого захода: ПЕРЕНЕСТИ переносимое в `_studio` + зарегистрировать. Приёмка — по отчёту + гейту.
 
 ### 0. ПЕРВЫЙ ХОД
-Рабочая папка `/Users/ivanyakovlev/Documents/GitHub`. Пути: Read/Write/Edit — host; bash — mount (`/sessions/practical-exciting-ritchie/mnt/...`). Прочитай ТОЛЬКО:
+Рабочая папка `/Users/ivanyakovlev/Documents/GitHub`. Пути: Read/Write/Edit — host; bash — mount (`/Users/ivanyakovlev/Documents/GitHub/...`). Прочитай ТОЛЬКО:
 - `/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-07-10_sborka-konvejera/delta-kursfabrika.md` — ЧТО тащить и КУДА (главный источник);
 - источники в kurs-fabrika (переносимое, дословно): `/Users/ivanyakovlev/Documents/GitHub/kurs-fabrika/PLAYBOOK.md` (§3 циферблаты, §4 профили), `/Users/ivanyakovlev/Documents/GitHub/kurs-fabrika/PROMPT-programma-kursa.md` (заход «программа курса»), `/Users/ivanyakovlev/Documents/GitHub/kurs-fabrika/CHECKLIST.md` (Ф0–Ф8, взять Ф2/Ф7/Ф8);
 - дом-правила: `/Users/ivanyakovlev/Documents/GitHub/materials/_studio/docs/KONSTITUCIYA.md` (§14 «не плодить документы»), `_studio/docs/KARTA.md` (индекс/регистрация), `_studio/docs/pochemu-i-videnie/RESHENIYA.md` (Р18 лекция=курс — рамка);
