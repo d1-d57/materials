@@ -48,21 +48,27 @@ from slaid import compile_slide_html  # noqa: E402
 # строк, а её ровно воспроизводящая формула — и `--proverit-geometriyu` каждый
 # раз доказывает, что она воспроизводит замер без единого пикселя расхождения.
 HOLST_W, HOLST_H = 1440, 810      # viewport деки (`deck.py`, `vmeshchenie`)
-ZONA_PAD_X, ZONA_PAD_Y = 128, 92  # `.zone.copy{padding:46px 64px}` (base/tipy), снято замером
-TOLKO_TEKST_PAD_X, TOLKO_TEKST_PAD_Y = 192, 128  # `tipy.tolko_tekst`: grid padding 64px 96px
+# `.zone.copy{padding:4px 18px 12px 18px}` (tipy.py, заход polya-i-uzor Э1/Э2) —
+# X = лево+право = 18+18, Y = верх+низ = 4+12. Снято замером (`zamer_smety.py
+# --geometriya`, дата данных 2026-08-14): client_w 1440 → W 1404 (=1440-36),
+# client_h 122 → H 106 (=122-16) на liniya=15 `polosa_gorizontalnaya`.
+ZONA_PAD_X, ZONA_PAD_Y = 36, 16
+# `tipy.tolko_tekst`: grid padding 24px 96px (X=96*2, Y=24*2) — ПОВЕРХ .zone.copy
+# внутри. Y была 128 и это уже разошлось с кодом ДО этого захода (грид давно
+# 24px, не 64px — Ф1б доводки Л2 сменила число, смету не тронув); поймано и
+# закрыто здесь же заодно с честной геометрией. X=192 верна и не менялась.
+TOLKO_TEKST_PAD_X, TOLKO_TEKST_PAD_Y = 192, 48
 
 # Цена заголовка на экране (`zagolovok_na_ekrane`) — он стоит ВНУТРИ зоны
 # (`tipy._text_zone`) и съедает её высоту изнутри.
-# БЫЛО 78.44 = 44px × 1.15 + margin 28px. СТАЛО 128.99 = var(--t-frametitle) 76px
-# × var(--lh-frametitle) 1.333 + margin 28px — заголовок перевешен на роль темы
-# `frametitle` (заход primenenie-vizuala, Ш2). Число не вписано от руки: это
-# `zamer_smety.py` через `vmeshchenie.izmerit`, проба типа `tolko_tekst`
-# (`zamer_smety.py:211`), сверяется ловушкой 37 каждым коммитом. Сама формула
-# сметы НЕ менялась — обновлена калибровка под изменившийся CSS.
-# ⚠ ОХВАТ: на калибровочной L2 (дата данных 2026-08-08) заголовок был пуст у 15
-# карточек из 15 — ветка калибровкой не проверялась вовсе. С 2026-08-12 заголовки
-# есть у 12 карточек из 23, и обе объявленные тогда слепые зоны закрыты ниже.
-ZAGOLOVOK_PX = 128.99
+# БЫЛО 128.99 = var(--t-frametitle) 76px × var(--lh-frametitle) 1.333 + margin
+# 28px. СТАЛО 104.99 = та же пара + margin 4px (`.zagolovok{margin-bottom:4px}`,
+# заход polya-i-uzor Э1) — заголовок сам не менялся, короче стал только отступ
+# под ним. Число не вписано от руки: `zamer_smety.py --geometriya` →
+# `zagolovok_px`, дата данных 2026-08-14, сверяется ловушкой 37 каждым коммитом.
+# ⚠ ОХВАТ: на калибровочной L2 заголовок есть у 12 карточек из 23 (дата данных
+# 2026-08-12, обе слепые зоны закрыты доводкой Л2-фазы-2-3).
+ZAGOLOVOK_PX = 104.99
 
 # 🔴 ДВЕ РОЛИ ЗАГОЛОВКА, а не одна константа. `tipy._zag_uzkij` включает узкую
 # роль темы (`--t-frametitle-n`, 64/1.4) на всех типах с иллюстрацией; широкую
@@ -75,7 +81,7 @@ ZAGOLOVOK_PX = 128.99
 ZAG_ROL = {"polosa_gorizontalnaya": (64.0, 89.6), "polosa_vertikalnaya": (64.0, 89.6),
            "kompozit": (64.0, 89.6), "tolko_tekst": (76.0, 101.31)}
 ZAG_ROL_DEFAULT = (76.0, 101.31)   # роль без узкого переопределения
-ZAG_OTBIVKA_PX = 28.0              # `.zagolovok{margin-bottom:28px}` (tipy.GLOBAL_CSS)
+ZAG_OTBIVKA_PX = 4.0               # `.zagolovok{margin-bottom:4px}` (tipy.GLOBAL_CSS)
 
 # 🔴 ПЕРЕНОС ЗАГОЛОВКА. Смета считала заголовок ОДНОЙ строкой всегда, а на живой
 # Л2 два из двенадцати переносятся в две («Двойственное пространство» на
@@ -197,21 +203,11 @@ BLK_H_TIPY = ("opredelenie", "utverzhdenie", "primer", "dokazatelstvo")
 DOKAZ_KEGL_EM = 0.860        # `.blk[data-tip="dokazatelstvo"]{font-size:.860em}`
 DOKAZ_LH_MULT = 0.95         # `line-height:calc(var(--lh) * 0.95)` — от var(--lh) зоны
 
-# ── Обходной путь Э0.3/Э0.5 (см. `## ПЛАН`, развилка 3): зона отступов слайда
-# (`.zagolovok{margin-bottom:28px}`, `.zone.copy{padding:46px 64px}`) лежит в
-# `tipy.py` — вне зоны заявленной этому заходу. Вместо правки чужого файла
-# `.t-body` в `base.css` (моя зона) получает ОТРИЦАТЕЛЬНЫЙ `margin`, физически
-# «выезжая» в поле зоны изнутри — тот же визуальный эффект, без правки источника.
-# Величины подобраны перебором (прогонщик `progon.py`, лог `progon.log`,
-# рабочая папка), критерий — ноль переполнений, минимум цены кегля.
-T_BODY_MARGIN_TOP_PX = 26.0     # ≈ высота строки .blk-h при кегле 38 (Э0.3)
-T_BODY_MARGIN_SIDE_PX = 12.0    # Э0.5, лево/право поровну
-# 🔴 Низ (Э0.5) — БЫЛ 12.0, снят прогонщиком фактом: `.blk:last-of-type{
-# margin-bottom:…}` не уменьшает `scrollHeight` (тот же браузерный расчёт, на
-# котором стоит `gejt_vmeshcheniya.py`) — margin-bottom ПОСЛЕДНЕГО элемента
-# в скролл-контейнере в него не входит вовсе, приём — холостой. Ниже 0, а не
-# удалена: место в формуле осталось, вдруг найдётся рабочий приём позже.
-T_BODY_MARGIN_BOTTOM_PX = 0.0
+# Обходной путь Э0.3/Э0.5 (отрицательные margin на `.blk`, компенсировавшие
+# поля `tipy.py`, пока тот был вне зоны) СНЯТ заходом polya-i-uzor: `tipy.py`
+# теперь в зоне, поля ужаты честно в самом источнике (`ZONA_PAD_*`/`ZAG_OTBIVKA_PX`
+# выше), константы `T_BODY_MARGIN_*` и их прибавка в `geometriya()`/
+# `_blk_zazor_px` больше не нужны — геометрия и так верна без коррекции.
 
 # 🔴 ПУСТЫЕ ТЕГИ. `HTMLParser` зовёт `handle_starttag` и на `<br>` (без слэша), а
 # парного `handle_endtag` не будет никогда. Стек глубины от этого съезжал НАВСЕГДА,
@@ -252,31 +248,22 @@ def _px(x):
 
 def geometriya(tip_verstki, liniya=None):
     """(W, H) контентного бокса текстовой зоны в px. Воспроизводит замер
-    `zamer_smety.py --geometriya` ПЛЮС выигрыш отрицательных полей у `.blk`
-    (Э0.3/Э0.5, см. константы `T_BODY_MARGIN_*` выше) — этот выигрыш замер
-    `--geometriya` не знает (он снят ДО этого захода), поэтому прибавлен
-    отдельно, а не влит в `ZONA_PAD_*`; `--proverit-geometriyu` сверяет
-    только базовую часть, без прибавки.
-
-    🔴 Верхний выигрыш (Э0.3) сюда НЕ входит — `.zagolovok`/`.blk` внутри
-    `.zone.copy.t-body` (`tipy._text_zone`) СИБЛИНГИ ОДНОГО flex-контейнера,
-    margin флекс-элементов не схлопывается ни с чем: `.blk:first-of-type`
-    получает `margin-top` НАПРЯМУЮ (см. `base.css`), и это чистый сдвиг
-    ПОЗИЦИИ, а не рост доступной высоты `H` — моделируется в `_blk_zazor_px`
-    отрицательным зазором ПЕРВОГО блока, а не прибавкой к `H`."""
-    dw = T_BODY_MARGIN_SIDE_PX * 2
-    dh = T_BODY_MARGIN_BOTTOM_PX
+    `zamer_smety.py --geometriya` без коррекций: заход polya-i-uzor снял обход
+    Э0.3/Э0.5 (отрицательные margin на `.blk`) и ужал поля честно в источнике
+    (`tipy.py`), так что `ZONA_PAD_*`/`TOLKO_TEKST_PAD_*` уже отражают реальную
+    геометрию сами по себе — `--proverit-geometriyu` сверяет эту функцию с
+    замером БЕЗ прибавки, что и требуется."""
     if tip_verstki == "polosa_gorizontalnaya":
         if liniya is None:
             raise ValueError("polosa_gorizontalnaya требует liniya")
-        return (HOLST_W - ZONA_PAD_X + dw, _px(HOLST_H * liniya / 100.0) - ZONA_PAD_Y + dh)
+        return (HOLST_W - ZONA_PAD_X, _px(HOLST_H * liniya / 100.0) - ZONA_PAD_Y)
     if tip_verstki == "polosa_vertikalnaya":
         if liniya is None:
             raise ValueError("polosa_vertikalnaya требует liniya")
-        return (_px(HOLST_W * liniya / 100.0) - ZONA_PAD_X + dw, HOLST_H - ZONA_PAD_Y + dh)
+        return (_px(HOLST_W * liniya / 100.0) - ZONA_PAD_X, HOLST_H - ZONA_PAD_Y)
     if tip_verstki == "tolko_tekst":
-        return (HOLST_W - TOLKO_TEKST_PAD_X - ZONA_PAD_X + dw,
-                HOLST_H - TOLKO_TEKST_PAD_Y - ZONA_PAD_Y + dh)
+        return (HOLST_W - TOLKO_TEKST_PAD_X - ZONA_PAD_X,
+                HOLST_H - TOLKO_TEKST_PAD_Y - ZONA_PAD_Y)
     raise ValueError("тип вёрстки %r текстовой зоны не имеет либо не поддержан сметой "
                      "(поддержаны: polosa_gorizontalnaya, polosa_vertikalnaya, tolko_tekst)"
                      % tip_verstki)
@@ -691,14 +678,15 @@ def _blk_zazor_px(prev, cur, blok_px, kegl):
     НЕ СХЛОПЫВАЕТСЯ ни с контейнером, ни друг с другом:
       · между блоками (prev есть) — margin ПРЕДЫДУЩЕГО блока снизу всегда 0
         (не объявлен), зазор = margin-top ЭТОГО блока без остатка (как и было);
-      · у САМОГО ПЕРВОГО `.blk` `+`-комбинатор не срабатывает, но `base.css`
-        даёт ему СВОЙ `margin-top:-{T_BODY_MARGIN_TOP_PX}px` (`:first-of-type`,
-        Э0.3/Э0.5) — тоже НЕ схлопывается ни с чем, применяется КАК ЕСТЬ.
+      · у САМОГО ПЕРВОГО `.blk` `+`-комбинатор не срабатывает и `base.css`
+        ему больше ничего не даёт (обход Э0.3/Э0.5 снят заходом polya-i-uzor,
+        верхнее поле честно ужато в `tipy.py` — см. `ZONA_PAD_Y` выше) —
+        margin-top первого `.blk` = 0, как у любого элемента без правила.
     Схлопывание — только ВНУТРИ `.blk` (обычная раскладка, не флекс):
     `.blk-h`.margin-bottom с margin-top первого абзаца тела — единственное
     место, где нужен `max`, не `+`."""
     is_first_blk = prev is None
-    blk_margin = (-T_BODY_MARGIN_TOP_PX if is_first_blk else
+    blk_margin = (0.0 if is_first_blk else
                   (blok_px * BLK_MARGIN_REDUCED if cur.get("blk_has_h") else blok_px))
     # зазор ВНУТРИ первого абзаца/`<li>`, если бы блока не было (`.formula`/
     # `.tlist` безусловны — см. комментарий в `_zazor_px`; обычный абзац — 0).
@@ -837,22 +825,17 @@ def proverit_geometriyu():
         print("замер не отработал (rc=%d):\n%s" % (r.returncode, r.stderr[-2000:]), file=sys.stderr)
         return 2
     d = json.loads(r.stdout)["geometriya"]
-    # 🔴 Замер (`zamer_smety.py`) читает `.zone.copy.clientWidth/Height` — свои
-    # padding сама зона не меняет НИ ОДНОЙ строкой этого захода (та CSS — в
-    # `tipy.py`, вне зоны, см. `## ПЛАН` развилка 3). Прибавка `T_BODY_MARGIN_*`
-    # (Э0.3/Э0.5) — намеренная и ЖИВЁТ ТОЛЬКО в `geometriya()`, замер её не
-    # знает и знать не может (мерит другой элемент, `.zagolovok`/`.blk` внутри
-    # него — флекс-сиблинги, см. докстринг `geometriya`). Сравниваем БАЗОВУЮ
-    # часть, вычитая прибавку здесь же, а не подмешивая замер задним числом.
-    dw = T_BODY_MARGIN_SIDE_PX * 2
-    dh = T_BODY_MARGIN_BOTTOM_PX
+    # Замер (`zamer_smety.py`) читает `.zone.copy.clientWidth/Height` минус её
+    # СОБСТВЕННЫЙ computed padding (`content_w`/`content_h` в `vmeshchenie.
+    # izmerit`) — живая величина, снятая с текущего CSS напрямую, без прибавок.
+    # `geometriya()` (заход polya-i-uzor снял обход Э0.3/Э0.5) считает то же
+    # самое из `ZONA_PAD_*`/`TOLKO_TEKST_PAD_*` — сравниваем как есть.
     plohih, vsego = 0, 0
     for tip, rows in d["tipy"].items():
         for row in rows:
             vsego += 1
             liniya = row["liniya"] if tip.startswith("polosa_") else None
             W, H = geometriya(tip, liniya)
-            W, H = W - dw, H - dh
             ok = (abs(W - row["W"]) < 0.51 and abs(H - row["H"]) < 0.51)
             if not ok:
                 plohih += 1

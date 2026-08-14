@@ -30,6 +30,15 @@ ILL_PAD = 28
 # в каждом handler'е. Подключается `slaid.py`/`deck.py` РЯДОМ с пер-слайдовым `css`.
 GLOBAL_CSS = (
     ".zone.board{ background:var(--board); } "
+    # ФОН ИЛЛЮСТРАЦИИ — ПРОЗРАЧНЫЙ (владелец, интервью 2026-08-14, заход
+    # polya-i-uzor Э3, дословно): «фон иллюстрации должен быть прозрачен, сейчас
+    # это зелёный прямоугольник и он перекрывает, разрезает паттерн». `.ill-row` —
+    # класс, который `_ill_zone` ставит ТОЛЬКО контейнеру с реальной картинкой
+    # (пустая полоса без иллюстраций — `<div class="zone board"></div>`, без
+    # `ill-row` — этого правила не видит и остаётся закрашенной, как и раньше:
+    # это не про иллюстрацию, её там нет). Три класса специфичностью (0,3,0)
+    # осознанно перебивают `.zone.board` (0,2,0) выше — не порядок в файле.
+    ".zone.board.ill-row{ background:none; } "
     # ВОЗДУХ — В ПРОМЕЖУТКИ МЕЖДУ БЛОКАМИ, А НЕ В ПОЛЯ (доводка Л2, Ф1б).
     # Владелец дословно: «дыхание должно быть не за счёт полей сверху и снизу, а
     # дыхание между блоками. Это сущностная вещь». Замерено на собранной Л2
@@ -46,7 +55,7 @@ GLOBAL_CSS = (
     # влезло.
     # Переполнение эта правка не создаёт: когда запаса нет, space-between не
     # добавляет ничего (лишнего места нет по определению).
-    ".zone.copy{ padding:46px 64px; display:flex; flex-direction:column; "
+    ".zone.copy{ padding:4px 18px 12px 18px; display:flex; flex-direction:column; "
     "justify-content:space-between; } "
     ".zone.copy > *{ flex:0 0 auto; } "
     # Заголовок слайда — РОЛЬ темы `frametitle`, а не своё число и свой цвет
@@ -60,7 +69,7 @@ GLOBAL_CSS = (
     # у нас это `_zag_uzkij` на трёх типах ниже.
     ".zagolovok{ font-family:var(--font-display); text-transform:uppercase; "
     "font-size:var(--t-frametitle); line-height:var(--lh-frametitle); "
-    "margin-bottom:28px; color:var(--accent); } "
+    "margin-bottom:4px; color:var(--accent); } "
     # ---- визитка: текст канона (sluzhebnye/vizitka.md) несёт {.bullets} и
     # <a class="tg-link">; правила дословно с sluzhebnye/style.css (заход
     # vizitka-i-oblozhka, В1) — без них render_body роняет карточку гейтом
@@ -131,7 +140,7 @@ def _text_zone(sid, p, text_html, cls="copy"):
             % (cls, _kegl_style(p), _zagolovok_html(p), text_html))
 
 
-def _ill_zone(ills, axis, cls="board", pad=None):
+def _ill_zone(ills, axis, cls="board", pad=None, pad_bottom=None):
     """axis: 'row' — бок о бок (для горизонтальной полосы, где полоса делится по
     ВЫСОТЕ и картинка занимает её по ШИРИНЕ); 'col' — стопкой (для вертикальной
     полосы, где картинка занимает зону по ВЫСОТЕ). Я1 Э2, правило дословно.
@@ -141,10 +150,16 @@ def _ill_zone(ills, axis, cls="board", pad=None):
     в 0×0 (найдено этим же прогоном на живом кадре — полоса была голубой заливкой без
     единого пикселя картинки, притом что `data-ill` был в порядке).
 
-    `pad` — отступ полосы внутрь; по умолчанию общий `ILL_PAD`. Обложка передаёт 0:
-    там полоса сама и есть свободное поле кадра, а 28px с двух сторон срезали у
-    квадратного рисунка 56px из 250 доступных — почти четверть (заход `zakrytie-l2`,
-    Ш3; замер на живом кадре: панель 1384×194 в полосе высотой 250)."""
+    `pad` — отступ полосы внутрь (верх/право/лево); по умолчанию общий `ILL_PAD`.
+    Обложка передаёт 0: там полоса сама и есть свободное поле кадра, а 28px с двух
+    сторон срезали у квадратного рисунка 56px из 250 доступных — почти четверть
+    (заход `zakrytie-l2`, Ш3; замер на живом кадре: панель 1384×194 в полосе
+    высотой 250).
+
+    `pad_bottom` — отдельный низ (по умолчанию = `pad`). Владелец, интервью
+    2026-08-14: «иллюстрация в нижней полосе должна прижиматься к нижнему краю» —
+    заход polya-i-uzor, Э2-низ; ручка нужна только `polosa_gorizontalnaya`, у
+    остальных типов низ равен верху/бокам, как и было."""
     n = len(ills)
     if n < 1 or n > MAX_ILL:
         raise TipVerstki("иллюстраций в полосе %d — допустимо 1..%d (Я1 Э2)" % (n, MAX_ILL))
@@ -152,6 +167,8 @@ def _ill_zone(ills, axis, cls="board", pad=None):
     panels = "".join(
         '<div class="panel" data-ill="%s" style="flex:1 1 0;min-width:0;min-height:0"></div>'
         % _esc(s) for s in ills)
+    p = ILL_PAD if pad is None else pad
+    pb = p if pad_bottom is None else pad_bottom
     # 🔴 `height:100%` — БЕЗУСЛОВНО, не только «на всякий случай». В гриде (пер-долевые
     # типы 1–2) родитель растягивает ребёнка по умолчанию (CSS Grid, align-items:stretch
     # контейнера), и без явного правила это работало «случайно». В `position:absolute`
@@ -160,9 +177,9 @@ def _ill_zone(ills, axis, cls="board", pad=None):
     # по своей ширине и вылезал за нижний край холста, потому что `ill-row` держал auto-
     # высоту вместо заданных 250px. Явный `height:100%` делает оба случая одинаковыми.
     return ('<div class="zone %s ill-row" style="display:flex;flex-direction:%s;'
-            'align-items:stretch;justify-content:center;gap:%dpx;padding:%dpx;'
+            'align-items:stretch;justify-content:center;gap:%dpx;padding:%dpx %dpx %dpx %dpx;'
             'height:100%%;box-sizing:border-box">%s</div>'
-            % (cls, flex_dir, ILL_GAP, ILL_PAD if pad is None else pad, panels))
+            % (cls, flex_dir, ILL_GAP, p, p, pb, p, panels))
 
 
 def _zag_uzkij(sid):
@@ -244,7 +261,9 @@ def polosa_gorizontalnaya(sid, p, text_html):
     # центровка и размер догоняют это сами (flex + object-fit:contain), своего числа
     # у картинки нет. Остальным типам ILL_PAD оставлен: у вертикальной полосы тот же
     # отступ работает по ширине, а претензия была только к горизонтальной.
-    ill = _ill_zone(ills, axis="row", pad=14) if ills else '<div class="zone board"></div>'
+    # Э2-низ (владелец, интервью 2026-08-14): полоса лежит на нижней кромке слайда,
+    # низ прижат к краю (pad_bottom=0) — верх/бока остаются 14px (Ф1б доводки Л2).
+    ill = _ill_zone(ills, axis="row", pad=14, pad_bottom=0) if ills else '<div class="zone board"></div>'
     body = '<div class="grid" style="--liniya:%g%%">%s%s</div>' % (liniya, text, ill)
     return css, body
 
