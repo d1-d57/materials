@@ -59,6 +59,10 @@ cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" "$TOOLS/check_zahod.py" 
 # `modeli.py` — импорт верхнего уровня в `bootstrap_zahod.py`; без него временная
 # копия падает `ModuleNotFoundError`, и красной оказывается фикстура, а не проверка
 # (тот же класс, что в `fixtures/korni` и `fixtures/git_zona`; чинено 14.08).
+# 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ (заход `kanon-put`, 14.08): без неё
+# `bootstrap_zahod.py` ОТКАЗЫВАЕТСЯ собирать заход. Дерево объявляет
+# каноническим себя — оно существует, подмены путей не будет.
+printf '# синтетика фикстуры\n%s\n' "$T" > "$T/_generator/tools/KANON-KOREN"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
 cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
 

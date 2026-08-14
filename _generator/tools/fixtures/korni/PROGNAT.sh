@@ -75,6 +75,11 @@ cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
 # `--no-verify` «чужой долг: фикстура korni красна» — семь обходов подряд, и
 # ровно та дыра, сквозь которую перестают смотреть на остальные ворота.
 # Тот же класс уже был починен в `fixtures/git_zona` (там же и комментарий).
+# 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ (заход `kanon-put`, 14.08): без неё
+# `bootstrap_zahod.py` ОТКАЗЫВАЕТСЯ собирать заход — он больше не пишет в файл
+# путь от места запуска. Одноразовое дерево объявляет каноническим себя: оно
+# существует, значит подмена путей не делается вовсе и поведение прежнее.
+printf '# синтетика фикстуры\n%s\n' "$T" > "$T/_generator/tools/KANON-KOREN"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T/_studio/zhurnal/"
 cp -r "$TOOLS/../../_studio/zhurnal/_TEMPLATE-arka" "$T/_studio/zhurnal/_TEMPLATE-arka"
 

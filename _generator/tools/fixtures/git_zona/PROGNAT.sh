@@ -513,6 +513,11 @@ trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
 cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
    "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" "$T17/_generator/tools/"
+# 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ (заход `kanon-put`, 14.08): без неё
+# `bootstrap_zahod.py` ОТКАЗЫВАЕТСЯ собирать заход — путь в секции-носителе
+# больше не берётся от места запуска. Поддельный репозиторий объявляет
+# каноническим СЕБЯ: он существует, значит подмены путей не будет вовсе.
+printf '# синтетика фикстуры\n%s\n' "$T17" > "$T17/_generator/tools/KANON-KOREN"
 cp "$TOOLS/../../_studio/zhurnal/_TEMPLATE-zahod.md" "$T17/_studio/zhurnal/"
 cd "$T17"
 git init -q .
@@ -775,6 +780,7 @@ mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
 cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
    "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
    "$TOOLS/modeli.py" "$T22/_generator/tools/"
+printf '# синтетика фикстуры (см. пояснение у ловушки 17)\n%s\n' "$T22" > "$T22/_generator/tools/KANON-KOREN"
 # 🔴 `modeli.py` в списке — не украшение: `bootstrap_zahod.py` импортирует его
 # верхним уровнем, и без файла падает на ИМПОРТЕ. Тогда ловушка печатает
 # «файла-захода в основной папке нет» и «worktree не заведён» — то есть
