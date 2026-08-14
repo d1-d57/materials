@@ -55,7 +55,7 @@ def _compile_one(slide_path_str):
     for p in (str(sb), str(gen)):
         if p not in _sys.path:
             _sys.path.insert(0, p)
-    from formaty import parse_slide, render_body, check_no_missing_math
+    from formaty import render_slide_blocks, check_no_missing_math
     from tipy import compile_tip
     from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
     from slaid import load_math_cache  # noqa: E402  (Э5 захода solver-vmeshcheniya)
@@ -63,12 +63,11 @@ def _compile_one(slide_path_str):
     slide_path = _Path(slide_path_str)
     sid = slide_path.parent.name
     text = slide_path.read_text(encoding="utf-8")
-    params, body_md = parse_slide(text, sid=sid)
-    params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
     lekcija_dir = slide_path.parents[2]
     math = load_math_cache(lekcija_dir)
-    body_html = render_body(body_md, acc_tag="span", math=math, sid=sid)
+    params, body_html = render_slide_blocks(text, sid=sid, acc_tag="span", math=math)
+    params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     # формулы бывают и в `zagolovok_na_ekrane` (tipy._zagolovok_html) — тот же кэш
     params["_math"] = math
     css, html = compile_tip(sid, params, body_html)

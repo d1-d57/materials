@@ -266,12 +266,76 @@ body.blanked #stage { visibility: hidden; }
 .formula .katex{font-size:1.1em}
 .katex{font-size:1.0em;white-space:nowrap}
 
-.op-def,.op-utv,.op-task{font-family:var(--font-display);text-transform:uppercase;
-  letter-spacing:.055em;line-height:1.12;font-size:.80em}
-.t-body p.op-def,.t-body p.op-utv,.t-body p.op-task{margin-top:var(--blok)}
-.t-body p.op-def + p,.t-body p.op-utv + p,.t-body p.op-task + p{margin-top:4px}
-.op-def{color:var(--cgreen)}
-.op-utv{color:var(--mustard)}
-.op-task{color:var(--brick)}
-.t-body > p.op-def:first-child,.t-body > p.op-utv:first-child,
-.t-body > p.op-task:first-child{margin-top:.18em}
+/* ═══════════ БЛОК-СХЕМА (заход vid-blokov-vnedrenie). §4 итога исследования
+   `vid-blokov-issledovanie` (ветка не влита, читана `git show`) + правки
+   владельца Э0: у доказательства снят сдвиг вправо (был padding-left:1.200em,
+   стало 0, кегль/интерлиньяж остаются), слово-заголовок печатается ТАКЖЕ у
+   доказательства (прежний запрет С5 владелец отменил, увидев кадры).
+
+   Разметка, которую эмитит генератор (`formaty.render_slide_blocks`):
+     <div class="blk" data-tip="opredelenie" data-central="0|1">
+       <div class="blk-h" data-scene-from="…">определение</div>  ← статусные типы И доказательство
+       <span class="blk-rule" data-scene-from="…"></span>        ← только у data-central="1"
+       …тела блока как раньше…
+     </div>
+   Нарратив строки-заголовка НЕ получает НИКОГДА (правило С1).
+
+   Линейка — НЕ псевдоэлемент `::before` (тот не может нести `data-scene-from`,
+   Э5 итога §6 развилка 6: заголовок и линейка обязаны наследовать сцену
+   первого содержательного элемента блока, иначе видны раньше содержимого) —
+   настоящий `<span class="blk-rule">`, общий каскад сцен обслуживает её так
+   же, как любой другой узел, без единой строки в build_deck.py. ── */
+.blk{position:relative}
+.blk + .blk{margin-top:var(--blok)}
+/* строка-заголовка платится ЧАСТЬЮ отступа сверху и половиной воздуха снизу.
+   Трогать отступ сверху целиком нельзя: заголовок начнёт читаться хвостом
+   предыдущего блока (признак П8 итога, расхождение 1 в §3). */
+.blk + .blk[data-tip="opredelenie"],
+.blk + .blk[data-tip="utverzhdenie"],
+.blk + .blk[data-tip="primer"],
+.blk + .blk[data-tip="dokazatelstvo"]{margin-top:calc(var(--blok) * 0.75)}
+
+.blk-h{font-size:max(24px, 0.680em);line-height:1.15;
+       color:var(--steel);margin-bottom:0.110em;
+       font-family:var(--font-body);letter-spacing:.01em}
+
+.blk-rule{position:absolute;left:-0.710em;top:0;bottom:0;
+          width:0.110em;background:var(--rule);opacity:0.55}
+
+.blk[data-tip="dokazatelstvo"]{font-size:0.860em;
+                                line-height:calc(var(--lh) * 0.95);
+                                padding-left:0}
+
+/* Э0.3/Э0.5 (владелец, интервью 2026-08-14): отступ под заголовком слайда и
+   поля зоны со всех четырёх сторон ужимаются. CSS-источник обоих отступов
+   (`.zagolovok{margin-bottom:28px}`, `.zone.copy{padding:46px 64px}`) лежит в
+   `tipy.py` — вне зоны, заявленной этому заходу (см. `## ПЛАН`, развилка 3).
+   🔴 `.zagolovok` И тело — ПРЯМЫЕ дети ОДНОГО div'а `.zone.copy.t-body`
+   (`tipy._text_zone`, `%s%s` вставляет оба разом) — не отдельные соседи под
+   общим контейнером, как казалось на первый взгляд; и этот div — `display:
+   flex; flex-direction:column`, а поля margin флекс-элементов НЕ схлопываются
+   ни с контейнером, ни друг с другом. Отсюда — правка не на `.t-body` целиком
+   (та сдвинула бы ВЕСЬ бокс зоны, включая заголовок, относительно СОБСТВЕННОЙ
+   сетки — не «выедает» поле, а расшатывает позицию), а на самих `.blk`
+   (каждый — свой флекс-элемент ВНУТРИ уже отступленного бокса):
+     `.blk:first-of-type` — тянет ПЕРВЫЙ блок к заголовку/к верху зоны;
+     `.blk` (горизонталь) — у КАЖДОГО блока своя auto-ширина в кросс-оси,
+       отрицательные левое/правое поля равномерно раздвигают её у всех;
+     `.blk:last-of-type` — тянет ПОСЛЕДНИЙ блок к низу зоны.
+   Величины — `smeta.T_BODY_MARGIN_*`, подобраны перебором (см. рабочую папку
+   `podbor-margin.md`), здесь те же числа, не переоткрыты заново. */
+.blk:first-of-type{margin-top:-26px}
+.blk{margin-left:-12px;margin-right:-12px}
+/* Низ (Э0.5-низ) — ПОПРОБОВАН `.blk:last-of-type{margin-bottom:…}` и СНЯТ:
+   `scrollHeight` (тот же, что смотрит `gejt_vmeshcheniya.py`) не учитывает
+   отрицательный margin-bottom последнего элемента вовсе — прогонщик застал
+   это фактом (после `--zanovo` переполнение осталось РОВНО на прежнюю
+   величину, будто правки не было). Это НЕ то же самое, что «поля зоны снизу»
+   владельца — тот пункт (иллюстрация в нижней полосе) про контейнер
+   иллюстрации, который в `tipy.py`, вне зоны; см. `## ОТЧЁТ`. */
+
+/* `.op-def/.op-utv/.op-task` (цветное прописное слово в потоке) снесены Э4
+   захода vid-blokov-vnedrenie — заменены блок-схемой выше (`.blk-h`+
+   `.blk-rule`). Классы не встречались НИ В ОДНОЙ карточке L2 (грепнуто перед
+   сносом), ни в одном другом .py/.css этого репозитория — проверено грепом
+   на диске в момент сноса. */

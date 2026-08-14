@@ -31,7 +31,7 @@ GENERATOR = SBORKA.parent
 SKELETON = GENERATOR / "skeleton"
 sys.path.insert(0, str(SBORKA))
 sys.path.insert(0, str(GENERATOR))
-from formaty import parse_slide, render_body, FormatSlaida, check_no_missing_math  # noqa: E402
+from formaty import render_slide_blocks, FormatSlaida, check_no_missing_math  # noqa: E402
 from tipy import compile_tip, TipVerstki, GLOBAL_CSS  # noqa: E402
 from build_deck import max_scenes, scene_cascade_css  # noqa: E402  (READ-ONLY импорт, Я6)
 
@@ -86,19 +86,18 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
         slide_path = slide_path / "slaid.md"
     sid = slide_path.parent.name
     text = _read(slide_path)
-    params, body_md = parse_slide(text, sid=sid)
+    acc_tag = "span"
+    # lekcija_dir = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция> (тот же
+    # расчёт, что ниже для illustrations_dir по умолчанию)
+    lekcija_dir = slide_path.parents[2]
+    math = load_math_cache(lekcija_dir)
+    params, body_html = render_slide_blocks(text, sid=sid, acc_tag=acc_tag, math=math)
     # `illustracii` в шапке — ИМЕНА ФАЙЛОВ (Э1: "ИМЕНА файлов из illustrations/"), а
     # `data-ill`/id шаблона везде дальше — stem без расширения (движок ищет
     # `#ill-<stem>`). Нормализация ЗДЕСЬ, один раз, а не по месту в каждом типе —
     # иначе typy.py и load_illustrations разъезжаются в написании имени (нашёл сам
     # этим же прогоном: .svg долетал до data-ill, шаблон не находился, панель пустая).
     params["illustracii"] = [Path(s).stem for s in (params.get("illustracii") or [])]
-    acc_tag = "span"
-    # lekcija_dir = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция> (тот же
-    # расчёт, что ниже для illustrations_dir по умолчанию)
-    lekcija_dir = slide_path.parents[2]
-    math = load_math_cache(lekcija_dir)
-    body_html = render_body(body_md, acc_tag=acc_tag, math=math, sid=sid)
     # формулы бывают и в `zagolovok_na_ekrane` (tipy._zagolovok_html) — тот же кэш
     params["_math"] = math
     css, slide_html = compile_tip(sid, params, body_html)

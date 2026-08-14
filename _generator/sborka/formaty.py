@@ -253,6 +253,67 @@ def parse_slide(text, sid="?"):
     return params, body_md
 
 
+# ═══════════ БЛОК-СХЕМА (заход vid-blokov-vnedrenie, Э2/Э5) ═══════════
+# Слово-заголовок печатается у статусных типов И у доказательства (Э0.2
+# владельца отменил прежний запрет С5); у нарратива — НИКОГДА (С1 в силе).
+BLK_SLOVO = {"opredelenie": "определение", "utverzhdenie": "утверждение",
+             "primer": "пример", "dokazatelstvo": "доказательство"}
+
+# сцена ПЕРВОГО элемента тела блока — на неё `.blk-h` и линейка (`.blk-rule`,
+# см. докстринг ниже) наследуют `data-scene-from` (Э5, §6 развилка 6 итога):
+# иначе метка блока показывается сразу, а содержимое — только со своей сцены.
+FIRST_SCENE_RE = re.compile(r'^\s*<[a-zA-Z][^>]*\bdata-scene-from="(\d+)"')
+
+
+def render_slide_blocks(text, sid="?", acc_tag="span", math=None):
+    """.md слайда → (params, HTML тела), где тело — СТРУКТУРА блоков (Э2 итога,
+    §5 п.1-3): `<div class="blk" data-tip="…" data-central="0|1">`, обёрнутая
+    вокруг результата `render_body` КАЖДОГО блока по отдельности — проверено на
+    макете (итог §5 п.2): поблочный рендер даёт тот же HTML, что рендер тела
+    разом, на 21 карточке из 23. `centralnyj_blok` шапки → `data-central` по
+    совпадению текста мысли блока (§5 п.3; на живой L2 работает 23 из 23).
+
+    Линейка центрального блока — НЕ псевдоэлемент `::before` (тот не может
+    нести `data-scene-from`, см. `## ПЛАН`, развилка 4), а настоящий
+    `<span class="blk-rule">`: тот же приём, что и `.blk-h`, — общий каскад
+    сцен (`build_deck.py`, НЕ трогается) обслуживает обоих узлов бесплатно.
+
+    Тело пустое (K3) → ("", params) — тот же случай, что у `parse_slide`."""
+    params, raw_body = parse_card(text, sid)
+    if not raw_body.strip():
+        return params, ""
+    sections = bloki.parse_sections(raw_body, sid=sid)
+    blocks = bloki.blocks_for_render(sections["tekst"])
+    if not blocks:
+        return params, ""
+    central_mysl = params.get("centralnyj_blok")
+    central_ok = bool(central_mysl) and central_mysl != CENTRALNYJ_PERECHISLENIE
+    parts = []
+    for b in blocks:
+        inner = render_body(b.telo, acc_tag=acc_tag, math=math, sid=sid)
+        m = FIRST_SCENE_RE.match(inner)
+        scene = m.group(1) if m else None
+        # правило С1 (итог §1): нарратив НЕ помечается ничем и никогда — даже
+        # если он и есть центральный блок карточки (живой пример — `itogi`:
+        # единственный блок слайда narrativ, `centralnyj_blok` совпадает с его
+        # мыслью, средств на кадре тем не менее НОЛЬ).
+        is_central = (central_ok and b.tip != "narrativ"
+                      and b.mysl.strip() == str(central_mysl).strip())
+        piece = ['<div class="blk" data-tip="%s"%s>'
+                 % (b.tip, ' data-central="1"' if is_central else "")]
+        slovo = BLK_SLOVO.get(b.tip)
+        if slovo:
+            piece.append('<div class="blk-h"%s>%s</div>'
+                          % (' data-scene-from="%s"' % scene if scene else "", slovo))
+        if is_central:
+            piece.append('<span class="blk-rule"%s></span>'
+                          % (' data-scene-from="%s"' % scene if scene else ""))
+        piece.append(inner)
+        piece.append("</div>")
+        parts.append("".join(piece))
+    return params, "\n".join(parts)
+
+
 def render_body(body_md, acc_tag="span", math=None, sid=None):
     """markdown тела (уже плоский, после `parse_slide`/`bloki.render_section_markdown`)
     → HTML. `math` — кэш формул KaTeX (Э5 захода solver-vmeshcheniya: подключён к

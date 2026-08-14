@@ -250,5 +250,19 @@ def check_composition(sections):
 def render_section_markdown(blocks):
     """[Block] → плоский markdown (тела блоков через пустую строку) — то, что
     компилятор (`formaty.render_body`) скармливает `render_md`. Заголовки блоков
-    (`### [tip] мысль`) на экран НИКОГДА не выводятся (Я1 §2, §4) — только текст."""
+    (`### [tip] мысль`) на экран НИКОГДА не выводятся (Я1 §2, §4) — только текст.
+
+    🔴 НЕ ТРОГАТЬ (заход vid-blokov-vnedrenie, §5 итога п.1): её зовёт
+    `gejt_kartochki.py` для счёта слов, и там нужен именно плоский текст —
+    структура блоков там не нужна и не тестировалась."""
     return "\n\n".join(b.telo for b in blocks if b.telo.strip())
+
+
+def blocks_for_render(blocks):
+    """[Block] → [Block] с непустым `telo`, в порядке появления — тот же отбор,
+    что `render_section_markdown` (пустые блоки на экран не идут ни в каком
+    виде), но БЕЗ склейки в один markdown: каждый блок остаётся структурой
+    (тип + мысль + тело) — заход `vid-blokov-vnedrenie`, §5 итога п.1, «вторая
+    функция, отдающая блоки СТРУКТУРОЙ». Вызывающая сторона (`formaty.py`)
+    оборачивает КАЖДЫЙ блок отдельно, вокруг результата `render_body`."""
+    return [b for b in blocks if b.telo.strip()]
