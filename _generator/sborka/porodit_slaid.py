@@ -97,8 +97,22 @@ def _parse_tip_mysl(znachenie, flag):
     return tip, mysl
 
 
+def _zametka_o_slote(tip_slaida, tip_bloka, mysl, flag, idxs, vzyat):
+    """Строка «в какой слот лёг блок и каким флагом просить соседний» — Д8
+    дочистки-2 захода pravila-kadra. Печатается ТОЛЬКО когда тип встречается в
+    раскладке больше одного раза, то есть ровно там, где выбор слота неочевиден
+    и раньше делался молча."""
+    nomer = idxs.index(vzyat) + 1
+    posledniy = (vzyat == idxs[-1])
+    sosed = ("--vspomogatelnyj (берёт первый свободный слот этого типа)" if posledniy
+             else "--vspomogatelnyj-posle (берёт последний свободный слот этого типа)")
+    return ("ℹ %s: [%s] «%s» лёг в слот %d из %d, что раскладка отводит этому типу "
+            "(запрошен флагом %s). Нужен ДРУГОЙ слот того же типа — просите его "
+            "флагом %s" % (tip_slaida, tip_bloka, mysl, nomer, len(idxs), flag, sosed))
+
+
 def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
-                          vspomogatelnye_posle=()):
+                          vspomogatelnye_posle=(), zametki=None):
     """Раскладывает пришедший запрос по слотам `_slots_dlya(tip_slaida)` (обычный
     тип — `tipy_slajdov.TIPY[tip_slaida]["slots"]`, Т6 — `SLOTS_SLUZHEBNYJ`).
     Возвращает [(tip, mysl)] в порядке слотов раскладки — заполненные слоты несут
@@ -110,10 +124,27 @@ def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, doka
     (tip, mysl), но `_polozhit` целится в ПОСЛЕДНИЙ слот этого типа по раскладке,
     а не в первый: у Т2 `primer` встречается ДВАЖДЫ (слот «до» utverzhdenie и
     «после»), и до этого захода CLI мог попасть только в первый («до») — молча,
-    без единого сообщения, даже когда автор просил «после». Обычный
-    `--vspomogatelnyj` продолжает целиться в первый слот — поведение не изменилось."""
+    без единого сообщения, даже когда автор просил «после».
+
+    🔴 Д8 ДОЧИСТКИ-2 (заход pravila-kadra): ОБЫЧНЫЙ ФЛАГ УМЕЕТ АДРЕСОВАТЬ ОБА
+    СЛОТА, и молчаливой подстановки первого больше нет. Долг был назван двумя
+    заходами подряд: отдельный флаг «после» завели, а обычный по-прежнему бил
+    ТОЛЬКО в `idxs[0]`, поэтому два `--vspomogatelnyj primer:…` подряд падали на
+    «два несущих блока одного типа — слей в один блок» ровно там, где у раскладки
+    свободен второй слот того же типа. Совет был неверен по существу: сливать было
+    не нужно, нужно было положить во второй слот.
+
+    Теперь `_polozhit` берёт ПЕРВЫЙ СВОБОДНЫЙ слот этого типа (`posle=True` —
+    последний свободный). Отсюда:
+      · два `--vspomogatelnyj primer:…` у Т2 занимают оба слота, «до» и «после»;
+      · совет «слей в один блок» выдаётся ТОЛЬКО когда свободного слота этого типа
+        в раскладке действительно нет, — то есть когда он верен;
+      · попадание в многослотовый тип ПЕЧАТАЕТСЯ (`_zametka_o_slote`): автор видит,
+        в какой слот лёг блок и каким флагом просить соседний. Молчание было
+        половиной дефекта, и оно снято даже в успешном случае."""
     slots = _slots_dlya(tip_slaida)
     opisanie = _opisanie_dlya(tip_slaida, slots)
+    zametki = [] if zametki is None else zametki
     central = next(s for s in slots if s.central)
     tip_c, mysl_c = centralnyj
     if tip_c != central.tip:
@@ -137,16 +168,23 @@ def _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, doka
                 "запрет: раскладка %s не предусматривает блок типа [%s] (%s='%s'). "
                 "Раскладка %s — что сделать вместо: убери этот блок или смени --tip"
                 % (tip_slaida, tip_bloka, flag, mysl, opisanie))
-        i = idxs[-1] if posle else idxs[0]
-        slot = slots[i]
-        if not slot.multi and zapolneno[i]:
+        # Д8: свободный слот, а не всегда первый/последний. `multi`-слот считается
+        # свободным всегда (в него кладут сколько угодно — так устроен narrativ).
+        svobodnye = [i for i in idxs if slots[i].multi or not zapolneno[i]]
+        if not svobodnye:
+            zanyaty = [z[0][1] for z in (zapolneno[i] for i in idxs) if z]
             raise PorozhdenieOtkaz(
                 "запрет: два НЕСУЩИХ блока одного типа [%s] на слайде %s — владелец: "
                 "«если там два несущих примера/определения — объединить в один блок и "
-                "поставить список». Раскладка %s — что сделать вместо: слей мысли '%s' "
-                "и '%s' в ОДИН блок со списком"
-                % (tip_bloka, tip_slaida, opisanie, zapolneno[i][0][1], mysl))
+                "поставить список». Раскладка %s отводит типу [%s] слот(ов): %d, и все "
+                "заняты (%s) — что сделать вместо: слей '%s' с одной из них в ОДИН блок "
+                "со списком"
+                % (tip_bloka, tip_slaida, opisanie, tip_bloka, len(idxs),
+                   ", ".join("'%s'" % z for z in zanyaty), mysl))
+        i = svobodnye[-1] if posle else svobodnye[0]
         zapolneno[i].append((tip_bloka, mysl))
+        if len(idxs) > 1:
+            zametki.append(_zametka_o_slote(tip_slaida, tip_bloka, mysl, flag, idxs, i))
 
     for tip_v, mysl_v in vspomogatelnye:
         _polozhit(tip_v, mysl_v, "--vspomogatelnyj")
@@ -209,8 +247,14 @@ def porodit(lekcija_dir, imya, tip_slaida, centralnyj, vspomogatelnye, narrativy
         raise PorozhdenieOtkaz(
             "тип '%s' неизвестен. Допустимы: %s"
             % (tip_slaida, ", ".join(TIPY_DOPUSTIMYE)))
+    zametki = []
     bloki_itog = _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
-                                       vspomogatelnye_posle=vspomogatelnye_posle)
+                                       vspomogatelnye_posle=vspomogatelnye_posle, zametki=zametki)
+    # Д8: выбор слота при многослотовом типе — вслух, ДО любого вывода о карточке.
+    # Молчаливая подстановка первого слота и была половиной дефекта: автор просил
+    # «пример после утверждения», получал «до» и не узнавал об этом ниоткуда.
+    for z in zametki:
+        print(z)
     text = sostavit_kartochku(imya, tip_slaida, bloki_itog)
 
     lekcija_dir = Path(lekcija_dir)

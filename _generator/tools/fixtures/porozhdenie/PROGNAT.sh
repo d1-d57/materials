@@ -116,13 +116,77 @@ echo "$OUT" | grep -q "НЕ проверяю:" || {
   echo "❌ --sverit: блок слепых зон не напечатан:"; echo "$OUT"; exit 1; }
 echo "  ✅ --sverit: свежая карточка сверена как ЛЁГ, охват и слепые зоны напечатаны"
 
-echo "── живая дека L2: --sverit не падает, печатает охват 18 из 18"
+echo "── живая дека L2: --sverit не падает, печатает охват по ВСЕМ карточкам"
+# 🔴 ЧИСЛО СЧИТАЕТСЯ, А НЕ ВПИСЫВАЕТСЯ (KONSTITUCIYA §10). Здесь стояло «18 из 18»
+# литералом, и ловушка молча покраснела, когда лекция доросла до 23 карточек: сама
+# сверка была в полном порядке, врал ориентир. Это ровно тот случай, против которого
+# правило и заведено, — и найден он тем, что ловушка встала на пути новой (Д8
+# дочистки-2 pravila-kadra), которая из-за неё не исполнялась вовсе.
+N_L2=$(ls -d "$REPO_ROOT"/teorkat-vvedenie/L2/slajdy/*/ | wc -l | tr -d ' ')
+# 🔴 READ-ONLY СВЕРЯЕТСЯ СЛЕПКОМ ДО/ПОСЛЕ, А НЕ ЧИСТОТОЙ РАБОЧЕГО ДЕРЕВА.
+# Здесь стоял `git status --porcelain -- teorkat-vvedenie/L2 | grep -q .`, и он
+# краснел на ЛЮБОЙ грязи в лекции — в том числе на той, что оставил солвер при
+# обычной сборке дека минутой раньше (`deck.py` дописывает kegl_px/liniya в
+# карточки, это его работа). Ловушка обвиняла `--sverit` в чужой правке. Плюс
+# `git status` не read-only сам: он переписывает индекс и берёт `.git/index.lock`
+# (CLAUDE.md п.5), то есть фикстура могла уронить параллельный коммит. Слепок
+# хэшей отвечает ровно на заданный вопрос — тронул ли файлы ЭТОТ прогон.
+DO_L2=$(find "$REPO_ROOT/teorkat-vvedenie/L2/slajdy" -name slaid.md -exec shasum {} \; | sort)
 OUT=$(python3 "$P" "$REPO_ROOT/teorkat-vvedenie/L2" --sverit 2>&1) || {
   echo "❌ --sverit на живой L2 упал:"; echo "$OUT"; exit 1; }
-echo "$OUT" | grep -q "сверено 18 карточек из 18" || {
-  echo "❌ --sverit на живой L2: охват не 18 из 18:"; echo "$OUT"; exit 1; }
-echo "  ✅ живая L2: --sverit отработал, охват 18 из 18, дека не тронута (READ-ONLY)"
-git -C "$REPO_ROOT" --no-optional-locks status --porcelain -- teorkat-vvedenie/L2 | grep -q . && {
-  echo "❌ ЖИВАЯ ДЕКА ИЗМЕНЕНА прогоном --sverit — READ-ONLY нарушен"; exit 1; }
+echo "$OUT" | grep -q "сверено $N_L2 карточек из $N_L2" || {
+  echo "❌ --sverit на живой L2: охват не $N_L2 из $N_L2 (столько карточек лежит на диске):"
+  echo "$OUT"; exit 1; }
+POSLE_L2=$(find "$REPO_ROOT/teorkat-vvedenie/L2/slajdy" -name slaid.md -exec shasum {} \; | sort)
+[ "$DO_L2" = "$POSLE_L2" ] || {
+  echo "❌ ЖИВАЯ ДЕКА ИЗМЕНЕНА прогоном --sverit — READ-ONLY нарушен. Разошлись:"
+  printf '%s\n' "$DO_L2" > "$T/do.txt"; printf '%s\n' "$POSLE_L2" > "$T/posle.txt"
+  diff "$T/do.txt" "$T/posle.txt"; exit 1; }
+echo "  ✅ живая L2: --sverit отработал, охват $N_L2 из $N_L2 (число снято с диска), карточки побайтово те же (READ-ONLY, слепок до/после)"
+
+echo "── Д8 дочистки-2 (pravila-kadra): ОБА слота [primer] у Т2 доступны обычным флагом"
+# Долг назван двумя заходами подряд: `--vspomogatelnyj-posle` завели, а обычный
+# флаг по-прежнему бил ТОЛЬКО в первый слот — «после» через него не запросить, и
+# второй такой же запрос падал на «слей в один блок» там, где слот был свободен.
+LD8="$T/lek-d8"
+OUT=$(python3 "$P" "$LD8" --imya dva-primera --tip Т2 \
+  --centralnyj "utverzhdenie:главное" \
+  --vspomogatelnyj "primer:пример ДО" \
+  --vspomogatelnyj "primer:пример ПОСЛЕ" 2>&1) || {
+  echo "❌ Д8: два --vspomogatelnyj primer у Т2 не породились — обычный флаг всё ещё бьёт в один слот:"
+  echo "$OUT"; exit 1; }
+# порядок в файле обязан быть раскладочный: П(до) · У(центральный) · П(после)
+POR=$(grep -n "^### \[\(primer\|utverzhdenie\)\]" "$LD8/slajdy/dva-primera/slaid.md" | head -3 | sed 's/.*### //' | tr '\n' '|')
+[ "$POR" = "[primer] пример ДО|[utverzhdenie] главное|[primer] пример ПОСЛЕ|" ] || {
+  echo "❌ Д8: примеры легли не в те слоты — порядок в карточке: $POR"; exit 1; }
+echo "$OUT" | grep -q "лёг в слот 1 из 2" || {
+  echo "❌ Д8: молчаливая подстановка слота вернулась — нет заметки про слот 1 из 2:"
+  echo "$OUT"; exit 1; }
+echo "$OUT" | grep -q "vspomogatelnyj-posle" || {
+  echo "❌ Д8: заметка не называет флаг, которым просить соседний слот:"; echo "$OUT"; exit 1; }
+echo "  ✅ Д8: два обычных --vspomogatelnyj занимают ОБА слота Т2, порядок раскладочный, слот назван вслух"
+
+echo "── Д8: ОДИН обычный флаг у многослотового типа — тоже не молчит"
+OUT=$(python3 "$P" "$T/lek-d8b" --imya odin --tip Т2 \
+  --centralnyj "utverzhdenie:главное" --vspomogatelnyj "primer:единственный" 2>&1) || {
+  echo "❌ Д8: одиночный запрос упал:"; echo "$OUT"; exit 1; }
+echo "$OUT" | grep -q "лёг в слот 1 из 2.*vspomogatelnyj-posle" || {
+  echo "❌ Д8: одиночный --vspomogatelnyj у Т2 подставил слот МОЛЧА (это и был дефект):"
+  echo "$OUT"; exit 1; }
+echo "  ✅ Д8: одиночный запрос печатает, в какой слот лёг и каким флагом просить второй"
+
+echo "── Д8: совет «слей в один блок» выдаётся ТОЛЬКО когда свободного слота нет"
+krasnet "три primer на Т2 (слотов два) — отказ с ВЕРНЫМ советом" "все \
+заняты" \
+  "$T/lek-d8c" --imya tri --tip Т2 --centralnyj "utverzhdenie:У" \
+  --vspomogatelnyj "primer:A" --vspomogatelnyj "primer:B" --vspomogatelnyj "primer:C"
+
+echo "── Д8: --vspomogatelnyj-posle не сломан — по-прежнему метит в ПОСЛЕДНИЙ слот"
+OUT=$(python3 "$P" "$T/lek-d8d" --imya posle --tip Т2 \
+  --centralnyj "utverzhdenie:У" --vspomogatelnyj-posle "primer:только после" 2>&1) || {
+  echo "❌ Д8: --vspomogatelnyj-posle упал:"; echo "$OUT"; exit 1; }
+echo "$OUT" | grep -q "лёг в слот 2 из 2" || {
+  echo "❌ Д8: --vspomogatelnyj-posle перестал метить в последний слот:"; echo "$OUT"; exit 1; }
+echo "  ✅ Д8: --vspomogatelnyj-posle цел (заход tipologia-dochistka, Э2, не сломан)"
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
