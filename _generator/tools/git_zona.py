@@ -2548,7 +2548,7 @@ def cmd_adopt(args):
     return 0
 
 
-def _obyavit_ne_vstroennoe(novye_instrumenty):
+def _obyavit_ne_vstroennoe(novye_instrumenty, koren=None):
     """Ш2-бис (заход `instrument-podklyuchen`, 2026-08-08). Вызывается ПОСЛЕ
     успешного слияния. Печатает, что приехало нового, и для каждого — встроено
     ли оно (та же проверка «живая точка вызова или маркер», что несёт
@@ -2556,15 +2556,23 @@ def _obyavit_ne_vstroennoe(novye_instrumenty):
 
     🔴 ПЕЧАТЬ, НЕ ОТКАЗ (см. докстринг `cmd_merge`) — отказ здесь оставил бы
     принятую работу невлитой, то есть ровно ту болезнь, которую весь заход
-    лечит. Владелец решает, встраивать сейчас или записать долгом."""
+    лечит. Владелец решает, встраивать сейчас или записать долгом.
+
+    `koren` — рабочая копия, В КОТОРОЙ файлы оказались после слияния. По
+    умолчанию `REPO` (случай `merge`: влили в СЕБЯ, файлы здесь). У
+    `vlit-v-osnovnuyu` дерево другое — главная папка, — и без параметра
+    проверка искала бы приехавшие файлы не там: печатала бы «на диске его нет»
+    на каждом новом инструменте при совершенно здоровом слиянии.
+    """
     if not novye_instrumenty:
         return
+    koren = koren or REPO
     print(f"\n═══ Новых исполняемых файлов в этом слиянии: {len(novye_instrumenty)} ═══")
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import check_tool_contract as ctc  # noqa: E402 — путь вставлен строкой выше
     ne_vstroeno = []
     for rel in sorted(novye_instrumenty):
-        p = REPO / rel
+        p = koren / rel
         if not p.is_file():
             print(f"   ⚠ {rel} — приехал файлом слияния, но на диске его нет "
                   f"(конфликт/переименование?), пропускаю проверку")
@@ -3216,7 +3224,17 @@ def cmd_vyvezti(args):
 
     branches = [head]
     if args.zahody:
-        others = [b.strip().lstrip("* ") for b in git("branch").stdout.splitlines()]
+        # 🔴 ИМЕНА БЕРЁМ `--format`, А НЕ ОБРЕЗКОЙ УКРАШЕНИЙ. `git branch` метит
+        # ветку, вычекаученную в ДРУГОЙ рабочей папке, префиксом `+` — а прежний
+        # `lstrip("* ")` его не снимал, и такая строка не начиналась с `zahod/`,
+        # то есть молча выпадала из вывоза. Замер 14.08 на живом репозитории: из
+        # 26 локальных `zahod/*` пропускались 24 — ВСЕ, кроме двух без рабочей
+        # папки. Это ровно те ветки, у которых единственная копия на диске:
+        # заход работает в worktree по построению (`GIT-disciplina §4`), значит
+        # флаг `--zahody` не вывозил как раз то, ради чего его звали, и говорил
+        # при этом «Вывезено — локально-только коммитов не осталось».
+        others = [b.strip() for b in
+                  git("branch", "--format=%(refname:short)").stdout.splitlines()]
         branches += sorted(b for b in others if b.startswith("zahod/") and b != head)
 
     # 🔴 fetch ПЕРВЫМ действием, даже в предпросмотре (как у `opublikovat`
@@ -3287,6 +3305,330 @@ def cmd_vyvezti(args):
     for b, n in posle:
         if n:
             print(f"   {b}: {n}")
+    return 1
+
+
+# ══════ ВЛИТИЕ В ОСНОВНУЮ ВЕТКУ — второй, ОТДЕЛЬНЫЙ вид слияния ══════
+#
+# 🔴 ЗАЧЕМ ОТДЕЛЬНАЯ ПОДКОМАНДА, А НЕ ФЛАГ К `merge` (решено заходом
+# `git-kontur`, 14.08.2026; развилку поставил сам заход, выбор объяснён здесь).
+#
+# ДЕФЕКТ УСТРОЙСТВА, КОТОРЫЙ ЭТО ЛЕЧИТ. Слот «ВЛИТЬ ПЕРЕД РАБОТОЙ» каждого
+# захода вливал названную ветку В СВОЮ рабочую ветку. Влитие в основную было
+# ходом приёмки — а приёмка живёт в песочнице Cowork и в `.git` писать НЕ МОЖЕТ:
+# она оставляет заявку, заявку исполняет следующий заход, и он снова вливает в
+# себя. Получалась ЛЕСТНИЦА: работа копилась в последней ветке цепочки, основная
+# не получала ничего. Замер 14.08: в `materials` 13 невлитых веток, цепочка из
+# пяти (`nositel → nositeli-gen → rychagi → rychagi-2 → rychagi-3`) целиком
+# внутри последней, 84 коммита не вывезены; в `disciplina` — 2 и 8. Ничего не
+# потеряно, но и не действует: `grep -c 'zadanie-subagentu'` по генератору в
+# ОСНОВНОЙ папке давал 0 — каждый следующий заход собирался СТАРЫМ инструментом,
+# не знающим о собственных улучшениях.
+#
+# ПОЧЕМУ НЕ ФЛАГ. `cmd_merge` весь построен вокруг «текущая ветка в ЭТОЙ рабочей
+# копии»: `head` из `rev-parse HEAD`, грязь из `dirty()` по `REPO`, лок из
+# `git_dir()` этой папки, `--abort`/`--continue` — тоже здесь. Влитие в основную
+# меняет ВСЕ четыре: другое рабочее дерево, другой индекс, другой лок, другой
+# HEAD. Флаг превратил бы каждую из этих строк в развилку внутри функции, которую
+# канон объявил «единственной законной дверью» и которой пользуются все заходы, —
+# цена ошибки легла бы на общий путь. Отдельная подкоманда не трогает работающий
+# путь ни строкой, а её имя выдаётся субагенту гит-контура КАК ПРАВО («тебе можно
+# `vlit-v-osnovnuyu` и `vyvezti`, и ничего сверх»).
+#
+# ПОЧЕМУ ЭТО БЕЗОПАСНО ПРИ ЖИВЫХ СОСЕДЯХ. Операция меняет файлы ГЛАВНОЙ папки —
+# там основная ветка и стоит. Соседние worktree стоят на СВОИХ ветках, их рабочие
+# деревья не трогаются вовсе. Опасностей ровно три, и все три закрыты ниже
+# механизмом: грязь главной папки (считается В НЕЙ, а не здесь), её `index.lock`
+# (у неё свой), и чужая/отцепленная ветка в ней (отказ, а не влитие куда попало).
+
+
+def osnovnaya_vetka():
+    """(имя основной ветки, None) либо (None, причина) — СНЯТО КОМАНДОЙ.
+
+    🔴 ИМЯ НЕ ВПИСЫВАЕТСЯ В КОД. `arka/mat-kostyak` в `materials` и `main` в
+    `disciplina` — разные, и захардкоженное имя сделало бы подкоманду
+    однорепозиторной ровно в тот момент, когда её зовут во втором репозитории.
+    Определение, работающее в обоих: основная ветка — та, что стоит в ГЛАВНОЙ
+    рабочей копии (`glavnaya_rabochaya()`), а не в worktree-ответвлении.
+    Отцепленный HEAD там — это НЕ имя ветки, и вливать в него нельзя: отказ.
+    """
+    glav = glavnaya_rabochaya()
+    r = git_tam(glav, "rev-parse", "--abbrev-ref", "HEAD", check=False)
+    if r.returncode != 0:
+        return None, f"главная рабочая копия {glav} не отвечает на rev-parse"
+    name = r.stdout.strip()
+    if not name or name == "HEAD":
+        return None, (f"в главной рабочей копии {glav} ОТЦЕПЛЕННЫЙ HEAD — "
+                      f"имени основной ветки нет, вливать не во что")
+    return name, None
+
+
+def _git_dir_tam(cwd):
+    """Личный служебный каталог ДРУГОЙ рабочей копии (её `index.lock` живёт там).
+
+    У каждой рабочей копии он свой: ждать СВОЙ лок, собираясь писать в ЧУЖОЕ
+    дерево, — значит не ждать ничего (`wait_for_lock` это уже знает про себя,
+    см. её докстроку; здесь тот же факт, но про соседа).
+    """
+    r = git_tam(cwd, "rev-parse", "--git-dir", check=False)
+    p = Path(r.stdout.strip() or ".git")
+    return p if p.is_absolute() else Path(cwd) / p
+
+
+def _zhdat_lok_tam(gitdir, limit=LOCK_WAIT_SEC):
+    """Тот же ретрай с отступом, что у `wait_for_lock`, но по ЧУЖОМУ каталогу.
+
+    Лок не удаляем никогда и здесь: в главной папке коммитит владелец, и снести
+    лок у работающего git — испортить его индекс.
+    """
+    lock = Path(gitdir) / "index.lock"
+    if not lock.exists():
+        return True
+    print(f"⏳ {lock} занят — в главной папке кто-то коммитит. Жду до {limit} с…")
+    waited, step = 0, 2
+    while waited < limit:
+        time.sleep(step)
+        waited += step
+        if not lock.exists():
+            print(f"   лок отпущен через {waited} с — продолжаю.")
+            return True
+    print(f"⛔ Лок главной папки держат дольше {limit} с. Ничего не делаю.\n"
+          "   Это НЕ поломка: рядом идёт длинный коммит. Подожди и повтори ту же\n"
+          "   команду. Лок руками НЕ удалять.")
+    return False
+
+
+def _gryaz_tam(cwd):
+    """[(код, путь)] вне git в ДРУГОЙ рабочей копии — её грязь, не своя."""
+    r = git_tam(cwd, "status", "--porcelain", "--untracked-files=all", check=False)
+    rows = []
+    for line in r.stdout.splitlines():
+        if not line.strip():
+            continue
+        path = line[3:].strip()
+        if path.startswith('"') and path.endswith('"'):
+            path = path[1:-1].encode().decode("unicode_escape").encode("latin-1").decode("utf-8")
+        rows.append((line[:2], path))
+    return rows
+
+
+def _vse_rabochie_papki():
+    """{ветка: путь} по ВСЕМ рабочим папкам, включая СВОЮ.
+
+    🔴 ПОЧЕМУ НЕ `worktree_branches()` — НАЙДЕНО СОБСТВЕННЫМ ПРОГОНОМ ДО ПЕРВОГО
+    БОЕВОГО ВЫЗОВА. Та функция нарочно исключает папку вызывающего: для `merge`
+    это верно, там своя ветка — это `head`, и её защищает отдельная проверка
+    «сливать в себя нечего». Здесь цель ДРУГАЯ (основная ветка), поэтому своя
+    ветка перестаёт быть целью и становится обычным источником — и отказ
+    «вычекаучена в рабочей папке» на ней НЕ срабатывал: субагент, стоящий в
+    папке захода, молча влил бы в основную СВОЮ ЖЕ ветку вместе с
+    недокоммиченным состоянием вокруг. Проверено на синтетическом репозитории:
+    вызов без `--vsyo-ravno` проходил там, где обязан был отказать.
+
+    Главная папка в исключении не нуждается: ветка, стоящая в ней, — это и есть
+    основная, а влитие основной в себя отсекается раньше отдельной проверкой.
+    """
+    res, path = {}, None
+    for line in git("worktree", "list", "--porcelain", check=False).stdout.splitlines():
+        if line.startswith("worktree "):
+            path = line[len("worktree "):].strip()
+        elif line.startswith("branch ") and path:
+            res[line[len("branch "):].strip().replace("refs/heads/", "", 1)] = path
+            path = None
+    return res
+
+
+def cmd_vlit_v_osnovnuyu(args):
+    """Влить ветку в ОСНОВНУЮ ветку, в главной рабочей папке.
+
+    Отличие от `merge` в одной фразе: `merge` вливает в ТЕБЯ, эта — в ОСНОВНУЮ.
+    Полное «зачем» и почему это отдельная подкоманда — в комментарии выше.
+
+    Конфликт НЕ разрешает, как и `merge`: печатает пути и останавливается.
+    Дальше `vlit-v-osnovnuyu --continue` или `--abort` — обе работают в ГЛАВНОЙ
+    папке, а не здесь; своих одноимённых хвостов у `merge` они не трогают.
+    """
+    glav = glavnaya_rabochaya()
+    gd = _git_dir_tam(glav)
+
+    # --abort / --continue: хвосты незаконченного слияния В ГЛАВНОЙ ПАПКЕ.
+    if args.abort or args.cont:
+        if in_sandbox():
+            return refuse_write("vlit-v-osnovnuyu --abort/--continue",
+                                suggest="vlit-v-osnovnuyu "
+                                        + ("--abort" if args.abort else "--continue"))
+        if not (gd / "MERGE_HEAD").exists():
+            print(f"⚠ В главной папке {glav} незаконченного слияния нет — "
+                  "отменять/продолжать нечего.")
+            return 1
+        if args.abort:
+            r = git_tam(glav, "merge", "--abort", check=False)
+            if r.returncode != 0:
+                print(f"❌ merge --abort в главной папке упал (rc={r.returncode}):\n"
+                      f"   {r.stderr.strip()}")
+                return 1
+            print(f"✅ Слияние в главной папке отменено, дерево вернулось к состоянию до него.")
+            return 0
+        unmerged = [l for l in git_tam(glav, "diff", "--name-only",
+                                       "--diff-filter=U").stdout.splitlines() if l]
+        if unmerged:
+            print(f"⛔ Ещё {len(unmerged)} путей с неразрешённым конфликтом — не завершаю:")
+            for p in unmerged:
+                print(f"   {p}")
+            return 1
+        if not _zhdat_lok_tam(gd):
+            return 2
+        r = git_tam(glav, "commit", "--no-edit", check=False)
+        if r.returncode != 0:
+            out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+            print(f"❌ merge-коммит в главной папке упал (rc={r.returncode}):")
+            for l in (out[-5:] or ["(вывод пуст)"]):
+                print(f"   {l}")
+            log_incident("vlit-v-osnovnuyu --continue: коммит слияния не прошёл",
+                         "смотреть вывод хука и `doctor` в главной папке")
+            return 1
+        print(f"✅ Слияние завершено: "
+              f"{git_tam(glav, 'log', '-1', '--oneline').stdout.strip()}")
+        return 0
+
+    if not args.branch:
+        sys.exit("❌ Нужна ветка: `git_zona.py vlit-v-osnovnuyu <ветка> [--zone <путь>]`")
+    branch = args.branch
+    if git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}",
+           check=False).returncode != 0:
+        sys.exit(f"❌ Ветки нет: {branch}")
+
+    osn, err = osnovnaya_vetka()
+    if err:
+        print(f"⛔ {err}.\n"
+              "   Вливать в основную не во что — поставь главную папку на её ветку\n"
+              "   и повтори. Ничего не сделано.")
+        log_incident("vlit-v-osnovnuyu: основной ветки нет", err)
+        return 1
+    if osn == branch:
+        print(f"❌ `{branch}` — это и есть основная ветка. Сливать нечего.")
+        return 1
+    if (gd / "MERGE_HEAD").exists():
+        print(f"⛔ В главной папке {glav} уже идёт незаконченное слияние — второе не начинаю.\n"
+              "   Завершить: `vlit-v-osnovnuyu --continue` · отменить: `--abort`")
+        return 1
+
+    base = git_tam(glav, "merge-base", osn, branch).stdout.strip()
+    commits = [l for l in git_tam(glav, "log", "--oneline",
+                                  f"{osn}..{branch}").stdout.splitlines() if l]
+    touched = [l for l in git_tam(glav, "diff", "--name-only",
+                                  f"{osn}...{branch}").stdout.splitlines() if l]
+    novye_instrumenty = [l.split("\t", 1)[1] for l in
+                         git_tam(glav, "diff", "--name-status", "--diff-filter=A",
+                                 f"{base}...{branch}").stdout.splitlines()
+                         if l and (l.endswith(".py") or l.endswith(".sh"))]
+
+    # 🔴 ЦЕЛЬ ПЕЧАТАЕТСЯ ДО РАБОТЫ, ПАПКОЙ И ВЕТКОЙ. Команда пишет в дерево, в
+    # котором вызывающий не стоит, — единственный дешёвый способ не влить в
+    # неожиданное место — назвать его вслух раньше, чем что-то произошло.
+    print(f"═══ vlit-v-osnovnuyu: `{branch}` → `{osn}` ═══\n"
+          f"Главная рабочая папка: {glav}\n")
+    if not commits:
+        print(f"✅ Всё, что есть в `{branch}`, уже в `{osn}` — сливать нечего.")
+        return 0
+    print(f"База слияния: {base[:7]}  "
+          f"({git_tam(glav, 'log', '-1', '--format=%s', base).stdout.strip()})")
+    print(f"\nПриедет коммитов: {len(commits)}")
+    for l in commits:
+        print(f"   {l}")
+    print(f"\nЗатронет путей: {len(touched)}")
+    for p in touched[:40]:
+        print(f"   {p}")
+    if len(touched) > 40:
+        print(f"   … ещё {len(touched) - 40}")
+
+    if args.zone:
+        outside = [p for p in touched if not any(in_zone(p, z) for z in args.zone)]
+        if outside:
+            print(f"\n⛔ Слияние выходит за зон{'ы' if len(args.zone) > 1 else 'у'} "
+                  f"({', '.join(args.zone)}) — не сливаю НИЧЕГО.")
+            for p in outside[:20]:
+                print(f"     {p}")
+            if len(outside) > 20:
+                print(f"     … ещё {len(outside) - 20}")
+            log_incident(f"vlit-v-osnovnuyu {branch} выходит за зону",
+                         "назвать все зоны повторным --zone либо звать без --zone осознанно")
+            return 1
+
+    # 🔴 ГРЯЗЬ СЧИТАЕТСЯ В ГЛАВНОЙ ПАПКЕ, А НЕ ЗДЕСЬ. Это не педантизм: у
+    # worktree свой индекс и своё дерево, и «у меня чисто» не говорит ровно
+    # ничего о том, что слияние собирается переписать ТАМ. Проверка по своей
+    # грязи была бы зелёной ровно в опасном случае.
+    dirty_rows = _gryaz_tam(glav)
+    collision = sorted({p for _, p in dirty_rows if p in touched})
+    other = sorted({p for _, p in dirty_rows if p not in touched})
+    if collision:
+        print(f"\n⛔ В главной папке {len(collision)} путей ОДНОВРЕМЕННО грязные и "
+              "участвуют в слиянии — не сливаю:")
+        for p in collision:
+            print(f"   {p}")
+        print("   Сперва закоммить их (`commit --zone <зона> -m …` ИЗ ГЛАВНОЙ ПАПКИ)\n"
+              "   или откати — иначе слияние их затрёт.")
+        log_incident(f"vlit-v-osnovnuyu {branch}: грязь главной папки пересекается со сливаемым",
+                     "закоммитить или откатить эти пути в главной папке и повторить")
+        return 1
+    if other:
+        print(f"\n⚠ Вне слияния грязных путей в главной папке: {len(other)}. В merge-коммит "
+              "они НЕ поедут (индекс не трогаю), но и не защищены.")
+
+    put_wt = _vse_rabochie_papki().get(branch)
+    if put_wt:
+        svoya = Path(put_wt).resolve() == REPO.resolve()
+        if not args.vsyo_ravno:
+            print(f"\n⛔ `{branch}` вычекаучена в рабочей папке — не сливаю:\n"
+                  f"   {put_wt}{'   ← ЭТО ТВОЯ СОБСТВЕННАЯ ПАПКА' if svoya else ''}\n"
+                  + ("   Своя ветка не исключение: вокруг неё может лежать "
+                     "недокоммиченное,\n   и в основную уедет состояние, которого "
+                     "ты не собирался отдавать.\n" if svoya else
+                     "   Там может идти живой заход, и слияние притащит недоделанное.\n"
+                     "   Сперва спроси того, кто в ней работает, либо повтори с\n")
+                  + "   `--vsyo-ravno \"<причина>\"`.")
+            return 1
+        print(f"\n⚠ --vsyo-ravno: сливаю `{branch}` несмотря на живую рабочую папку "
+              f"{put_wt}. Причина: {args.vsyo_ravno}")
+        log_incident(f"vlit-v-osnovnuyu {branch}: ветка с живой рабочей папкой --vsyo-ravno",
+                     f"причина: {args.vsyo_ravno} — работа папки {put_wt} могла разойтись")
+
+    if in_sandbox():
+        return refuse_write("Влитие в основную ветку",
+                            suggest=f"vlit-v-osnovnuyu {branch}")
+
+    if not _zhdat_lok_tam(gd):
+        log_incident("vlit-v-osnovnuyu: лок главной папки держится дольше 90 с",
+                     "подождать и повторить ту же команду")
+        return 2
+
+    r = git_tam(glav, "merge", "--no-edit", branch, check=False)
+    if r.returncode == 0:
+        print(f"\n✅ Влито в `{osn}` без конфликтов: "
+              f"{git_tam(glav, 'log', '-1', '--oneline').stdout.strip()}")
+        _obyavit_ne_vstroennoe(novye_instrumenty, koren=glav)
+        return 0
+
+    conflicts = [l for l in git_tam(glav, "diff", "--name-only",
+                                    "--diff-filter=U").stdout.splitlines() if l]
+    if not conflicts:
+        out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
+        print(f"\n❌ Слияние не прошло (rc={r.returncode}):")
+        for l in (out[:5] or ["(вывод пуст)"]):
+            print(f"   {l}")
+        log_incident(f"vlit-v-osnovnuyu {branch} не прошло",
+                     "смотреть вывод команды и `doctor` в главной папке")
+        return 1
+    print(f"\n🔴 КОНФЛИКТ в {len(conflicts)} путях — слияние ОСТАНОВЛЕНО, "
+          "сама не разрешаю (это смысловое решение):")
+    for p in conflicts:
+        print(f"   {p}")
+    print("\n   Разрешает человек или исполнитель захода. Дальше:\n"
+          "     завершить — `git_zona.py vlit-v-osnovnuyu --continue`\n"
+          "     откатить целиком — `git_zona.py vlit-v-osnovnuyu --abort`")
+    log_incident(f"vlit-v-osnovnuyu {branch}: конфликт в {len(conflicts)} путях",
+                 "разрешить конфликты, затем vlit-v-osnovnuyu --continue (или --abort)")
     return 1
 
 
@@ -3404,6 +3746,21 @@ def main():
                     help="слить, даже если у ветки живая рабочая папка; ПРИЧИНА "
                          "обязательна и пишется в INCIDENTY")
     mg.set_defaults(func=cmd_merge)
+
+    vo = sub.add_parser("vlit-v-osnovnuyu",
+                        help="влить ветку в ОСНОВНУЮ ветку (в главной рабочей папке), "
+                             "а не в текущую — лечит лестницу невлитых веток")
+    vo.add_argument("branch", nargs="?", help="ветка-источник")
+    vo.add_argument("--zone", action="append",
+                    help="разрешённый префикс пути; можно повторять — слияние вне зон откажется")
+    vo.add_argument("--abort", action="store_true",
+                    help="откатить незаконченное слияние в главной папке")
+    vo.add_argument("--continue", dest="cont", action="store_true",
+                    help="завершить слияние в главной папке после разрешения конфликтов")
+    vo.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
+                    help="слить, даже если у ветки живая рабочая папка; ПРИЧИНА "
+                         "обязательна и пишется в INCIDENTY")
+    vo.set_defaults(func=cmd_vlit_v_osnovnuyu)
 
     op = sub.add_parser("opublikovat",
                         help="вывезти сайт из `sayt/` на витрину и в GitHub Pages; "
