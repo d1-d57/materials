@@ -890,7 +890,7 @@ assert cz.check_z6_chislo not in cz.SOFT_CHECKS, "З6 осталась и в SOF
 ' "$TOOLS" || { echo "❌ ЛОВУШКА 40: З6 не переведена в жёсткие"; exit 1; }
 echo "  ✅ ловушка 40: «18 карточек», «23 слайда», «все 23» краснеют; З6 в HARD_CHECKS"
 
-echo "── ловушка 41: 🔴 ДВЕРЬ ИНТЕРВЬЮ — без флага отказ, `net` печатает шесть вопросов, `da` вшивает строку"
+echo "── ловушка 41: 🔴 ДВЕРЬ ИНТЕРВЬЮ — без флага отказ, \`net\` печатает шесть вопросов, \`da\` вшивает строку"
 R41="$T/repo41"; sobrat_repo "$R41"
 # без флага — argparse обязан отказать, файла быть не должно
 OUT41A=$(GIT_ZONA_REPO="$R41" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba41a \
