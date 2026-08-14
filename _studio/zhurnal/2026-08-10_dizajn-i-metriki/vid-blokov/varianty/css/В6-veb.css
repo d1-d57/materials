@@ -1,0 +1,22 @@
+/* вариант: l=Л5-veb · d=Д4-0.80 · z=З3-0.78 · s=С-slovo · o=О1-sverh */
+
+.blk { position: relative; }
+.blk + .blk { margin-top: var(--blok); }
+
+.blk + .blk[data-tip="opredelenie"], .blk + .blk[data-tip="utverzhdenie"], .blk + .blk[data-tip="primer"] { margin-top: calc(var(--blok) * 1.000); }
+
+.blk-h { font-size: 0.780em; line-height: 1.15; color: var(--steel); opacity: 1.00;
+         margin-top: calc(var(--blok) * 0.500); margin-bottom: 0.250em;
+         font-family: var(--font-body); letter-spacing: .01em; }
+.h-mysl { display: none; }
+
+
+.blk[data-central="1"] { padding-left: 0.850em; }
+.blk[data-central="1"]::before {
+  content: ''; position: absolute; left: 0.000em;
+  top: 0.000em; bottom: 0.000em;
+  width: 0.250em; background: var(--rule); opacity: 1.00; }
+
+
+.blk[data-tip="dokazatelstvo"] { font-size: 0.800em; line-height: calc(var(--lh) * 0.930);
+                                 padding-left: 1.500em; }
