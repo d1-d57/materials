@@ -229,13 +229,49 @@ function paintBleed(slide) {
   });
   /* Узор — растр: за собственным краем картинки ничего нет, продлить его нельзя.
      Поэтому он растягивается на всё ОКНО, а кадр показывает середину (переменные
-     читает uzor.css). Слайд со своим сплошным фоном перекрывает узор по замыслу —
-     у него computed background-image = none, и снаружи узора тоже не будет. */
+     читает uzor.css). */
   slide.style.setProperty('--uzor-sz', (innerWidth / k) + 'px ' + (innerHeight / k) + 'px');
   slide.style.setProperty('--uzor-x', (-padL / k) + 'px');
   slide.style.setProperty('--uzor-y', (-padT / k) + 'px');
-  bleedUzor.style.display =
-    getComputedStyle(slide).backgroundImage === 'none' ? 'none' : '';
+  /* УГОЛ, А НЕ ОБЩИЙ ФОН (заход polya-i-uzor, Э4). Старая проверка смотрела на
+     computed background-image ВСЕГО .slide — верно только для служебных слайдов
+     со сплошным фоном на корневом узле. Там, где угол закрывает изнутри
+     непрозрачная ДОЧЕРНЯЯ зона (полоса иллюстрации, доска), .slide сам по себе
+     остаётся с узором, и bleedUzor рисовал полосу СНАРУЖИ кадра поверх заведомо
+     перекрытого изнутри угла — шов на границе кадра, а не на линии слайда.
+     Проверяем сам угол: элемент в пикселе угла и цепочка предков до .slide
+     включительно; непрозрачен кто-то из них — этому углу (и только ему) узор
+     снаружи не рисуем. Два угла — две независимые переменные (uzor.css), не
+     один общий display: у элемента #bleed-uzor один DOM-узел на оба слоя. */
+  const cornerBlocked = (x, y) => {
+    let el = document.elementFromPoint(x, y);
+    // `.slide` несёт `background:var(--paper)` БЕЗУСЛОВНО — цвет непрозрачен
+    // ВСЕГДА, у обычного слайда так же, как у служебного. Опаковость ЦВЕТА
+    // на самом `.slide` ничего не различает; признак служебного слайда —
+    // backgroundIMAGE==='none' (шорткод `background:var(--board)` в `tipy.py`
+    // сбрасывает и его). 🔴 Проверка `el===slide` обязана идти ПЕРВОЙ, до
+    // `isOpaque` — опаковость проверяется на промежуточных зонах ДО того, как
+    // обход дойдёт до `.slide`, иначе `isOpaque` срабатывает на самом `.slide`
+    // раньше, чем цикл успевает его различить, и угол блокируется ВЕЗДЕ —
+    // на всех 26 слайдах без исключения (нашёл верификатор фактом: обе
+    // переменные 'none' на каждом слайде, включая обычный текстовый без единой
+    // закрывающей зоны). Та же путаница цвет/картинка, что уже поймана ниже
+    // во фолбэке null — здесь тот же признак, применённый ко всей цепочке.
+    const slideBlocked = () => getComputedStyle(slide).backgroundImage === 'none';
+    if (!el) return slideBlocked();
+    while (el && el !== document.documentElement) {
+      if (el === slide) return slideBlocked();
+      if (isOpaque(getComputedStyle(el).backgroundColor)) return true;
+      el = el.parentElement;
+    }
+    return false;
+  };
+  const setCorner = (name, blocked) => {
+    if (blocked) bleedUzor.style.setProperty(name, 'none');
+    else bleedUzor.style.removeProperty(name);
+  };
+  setCorner('--uzor-tr-corner', cornerBlocked(r.right - eps, r.top + eps));
+  setCorner('--uzor-bl-corner', cornerBlocked(r.left + eps, r.bottom - eps));
 }
 function showSingle(i, k) {
   cur = Math.max(0, Math.min(slides.length - 1, i));
