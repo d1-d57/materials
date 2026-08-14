@@ -47,7 +47,13 @@ def main():
               ("схема", "  ".join("П%d" % i for i in range(1, 10))))
         for imya, v in FINAL.items():
             css = shema.overlay(v)
-            zamer.sobrat(progon.BAZA, css, os.path.join(progon.VAR, imya + ".html"))
+            # 🔴 Полную копию деки на КАЖДУЮ схему сюда НЕ пишем, и это не мелочь:
+            # первая редакция писала, и десять копий по 3,4 МБ уехали в коммит —
+            # причём с замерочной накладкой внутри, то есть открывший их увидел бы
+            # все 26 слайдов простынёй. В зоне остаются оверлеи (`varianty/css/`,
+            # килобайты) и два ЧИСТЫХ дека: выбранная схема и контроль.
+            open(os.path.join(progon.VAR, "css", imya + ".css"), "w",
+                 encoding="utf-8").write(css)
             kadry = ses.variant(css, progon.SNIMKI, os.path.join(progon.SNIM, imya))
             b, det = progon.ocenit(kadry, kontrol, shtrih, titry,
                                    ses.cena_v_kegle(), cena0)
