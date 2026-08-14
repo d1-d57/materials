@@ -75,6 +75,7 @@ def ocenit(kadry, kontrol, shtrih, titry, cena=None, cena_kontrolya=None):
     b["П6"], det["П6"] = priznaki.p6(kadry, titry)
     b["П7"], det["П7"] = priznaki.p7(kadry, NARRATIV_TOLKO)
     b["П8"], det["П8"] = priznaki.p8(kadry)
+    b["П9"], det["П9"] = priznaki.p9(kadry)
     return b, det
 
 
@@ -86,7 +87,7 @@ def summa(b):
 def stroka(imya, b, s, n):
     return "%-16s %s   %2d/%2d" % (
         imya, "  ".join((" –" if b["П%d" % i] is None else " %d" % b["П%d" % i])
-                        for i in range(1, 9)), s, n * 3)
+                        for i in range(1, 10)), s, n * 3)
 
 
 def main():
@@ -117,7 +118,7 @@ def main():
                ("4 · межблочный отступ", "o", list(shema.OTSTUP))]
 
         itog = {}
-        shapka = "%-16s %s   СУММА" % ("вариант", "  ".join("П%d" % i for i in range(1, 9)))
+        shapka = "%-16s %s   СУММА" % ("вариант", "  ".join("П%d" % i for i in range(1, 10)))
         for imya_osi, klyuch, znacheniya in osi:
             print("═══ ОСЬ %s ═══" % imya_osi)
             print(shapka)

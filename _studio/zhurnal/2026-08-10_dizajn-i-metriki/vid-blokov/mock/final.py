@@ -44,7 +44,7 @@ def main():
             oblast=(160, 180, 1280, 700))
         itog = {}
         print("%-16s %s   СУММА   цена кегля ср/худш %%" %
-              ("схема", "  ".join("П%d" % i for i in range(1, 9))))
+              ("схема", "  ".join("П%d" % i for i in range(1, 10))))
         for imya, v in FINAL.items():
             css = shema.overlay(v)
             zamer.sobrat(progon.BAZA, css, os.path.join(progon.VAR, imya + ".html"))
