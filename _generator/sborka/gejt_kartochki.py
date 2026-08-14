@@ -728,7 +728,11 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
         except ValueError:
             issues.append("%s: byudzhet_slov не число: %r" % (sid, budget))
         else:
-            flat = bloki.render_section_markdown(sections["tekst"])
+            # 🔴 НЕ `render_section_markdown`: та ставит автотеги сцен `{@K}`, и они
+            # попадали в счёт слов (16 карточек L2 из 23, +53 слова, на
+            # `fundamentalnaya-gruppa` вердикт переворачивался). Счёт идёт по тексту,
+            # который лектор произносит, — `bloki.render_section_for_word_count`.
+            flat = bloki.render_section_for_word_count(sections["tekst"])
             n_words = len(flat.split())
             if n_words > budget_n:
                 issues.append("%s: бюджет слов превышен: %d > %s" % (sid, n_words, budget))

@@ -2595,6 +2595,37 @@ def _obyavit_ne_vstroennoe(novye_instrumenty, koren=None):
               "его явно, не молчать.")
 
 
+def flagi_obhoda_sliyaniya(no_verify, obraz):
+    """Контракт `--no-verify` для КОММИТА СЛИЯНИЯ — тот же, что у `commit`.
+
+    ЦЕНА (14.08, заход konflikty): `merge --continue` звал `git commit --no-edit`
+    без единого законного обхода, а pre-commit гоняет ФИКСТУРЫ — то есть краснеет
+    на чужом долге (фикстура `korni` красна на baseline, воспроизведено `git stash`).
+    Голого git в этом репо нет; значит любое слияние при чужом красном
+    останавливалось совсем, и шесть спорных веток нельзя было даже начать
+    разрешать. Обход у `commit` для ровно этого случая существовал с урока 9 —
+    здесь его просто не было.
+
+    Возвращает `(флаги, rc)`: rc≠None — отказ, звать git уже не надо.
+    """
+    if no_verify == "":
+        print("⛔ `--no-verify` требует ПРИЧИНУ строкой сразу за флагом — обход,\n"
+              "   у которого не названо, что именно обходят, ничем не отличается\n"
+              "   от тихого. Образец:\n"
+              f"     {obraz}")
+        log_incident("--no-verify без причины", "назвать причину строкой сразу за флагом")
+        return [], 1
+    if no_verify:
+        print(f"⚠ --no-verify: pre-commit ОБОЙДЁН. Причина: {no_verify}\n"
+              "   Это законно только когда красное — ЧУЖОЕ (фикстура/гейт чужой зоны).\n"
+              "   Своя красная зона чинится, а не обходится. Обход записан в\n"
+              "   INCIDENTY.md — назвать его долгом в отчёте захода.")
+        log_incident(f"коммит слияния с --no-verify: {no_verify}",
+                     "назвать причину долгом в отчёте захода; своё красное — чинить")
+        return ["--no-verify"], None
+    return [], None
+
+
 def cmd_merge(args):
     """Влить ветку в ТЕКУЩУЮ — единственная законная дверь к слиянию.
 
@@ -2646,14 +2677,23 @@ def cmd_merge(args):
                 print(f"   {p}")
             print("   Разреши их и повтори `merge --continue`.")
             return 1
+        nv, rc = flagi_obhoda_sliyaniya(
+            getattr(args, "no_verify", None),
+            'merge --continue --no-verify "чужой долг: <что именно покраснело>"')
+        if rc is not None:
+            return rc
         if not wait_for_lock():
             return 2
-        r = git("commit", "--no-edit", check=False)
+        r = git("commit", "--no-edit", *nv, check=False)
         if r.returncode != 0:
             out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
             print(f"❌ merge-коммит упал (rc={r.returncode}):")
             for l in (out[-5:] or ["(вывод пуст)"]):
                 print(f"   {l}")
+            if not nv:
+                print("   Красное на ЧУЖОМ долге (фикстура/гейт чужой зоны) — обход законен,\n"
+                      "   но только с причиной:\n"
+                      '     merge --continue --no-verify "чужой долг: <что именно покраснело>"')
             log_incident("merge --continue: коммит слияния не прошёл",
                          "смотреть вывод хука и `doctor`")
             return 1
@@ -3476,14 +3516,23 @@ def cmd_vlit_v_osnovnuyu(args):
             for p in unmerged:
                 print(f"   {p}")
             return 1
+        nv, rc = flagi_obhoda_sliyaniya(
+            getattr(args, "no_verify", None),
+            'vlit-v-osnovnuyu --continue --no-verify "чужой долг: <что именно покраснело>"')
+        if rc is not None:
+            return rc
         if not _zhdat_lok_tam(gd):
             return 2
-        r = git_tam(glav, "commit", "--no-edit", check=False)
+        r = git_tam(glav, "commit", "--no-edit", *nv, check=False)
         if r.returncode != 0:
             out = (r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()
             print(f"❌ merge-коммит в главной папке упал (rc={r.returncode}):")
             for l in (out[-5:] or ["(вывод пуст)"]):
                 print(f"   {l}")
+            if not nv:
+                print("   Красное на ЧУЖОМ долге (фикстура/гейт чужой зоны) — обход законен,\n"
+                      "   но только с причиной:\n"
+                      '     vlit-v-osnovnuyu --continue --no-verify "чужой долг: <что покраснело>"')
             log_incident("vlit-v-osnovnuyu --continue: коммит слияния не прошёл",
                          "смотреть вывод хука и `doctor` в главной папке")
             return 1
@@ -3745,6 +3794,9 @@ def main():
     mg.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
                     help="слить, даже если у ветки живая рабочая папка; ПРИЧИНА "
                          "обязательна и пишется в INCIDENTY")
+    mg.add_argument("--no-verify", nargs="?", const="", metavar="ПРИЧИНА",
+                    help="с --continue: обойти pre-commit на КОММИТЕ СЛИЯНИЯ, когда "
+                         "красное — ЧУЖОЕ; ПРИЧИНА обязательна и пишется в INCIDENTY")
     mg.set_defaults(func=cmd_merge)
 
     vo = sub.add_parser("vlit-v-osnovnuyu",
@@ -3760,6 +3812,10 @@ def main():
     vo.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
                     help="слить, даже если у ветки живая рабочая папка; ПРИЧИНА "
                          "обязательна и пишется в INCIDENTY")
+    vo.add_argument("--no-verify", nargs="?", const="", metavar="ПРИЧИНА",
+                    help="с --continue: обойти pre-commit на КОММИТЕ СЛИЯНИЯ в главной "
+                         "папке, когда красное — ЧУЖОЕ; ПРИЧИНА обязательна и пишется "
+                         "в INCIDENTY")
     vo.set_defaults(func=cmd_vlit_v_osnovnuyu)
 
     op = sub.add_parser("opublikovat",
