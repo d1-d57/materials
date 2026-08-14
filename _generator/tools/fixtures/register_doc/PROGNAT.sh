@@ -157,7 +157,7 @@ fi
 # есть шаг A: регистрирует тот ход, у которого `docs/` открыт by construction.
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" proba \
     --branch fixture-branch --zone "moya-zona/" --kanal terminal \
-    --finalizirovano "ф1" --finalizirovano "ф2" \
+    --finalizirovano "ф1" --finalizirovano "ф2" --intervyu da \
     --opisanie "фикстурный заход: проверка регистрации тем же ходом" \
     > /dev/null 2>&1 || true
 if [ -f "$T/$ARKA/kod_proba.md" ]; then
@@ -174,7 +174,7 @@ fi
 # заглушкой: тихая выглядит как выполненная регистрация (прямой запрет задания).
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" bezopisania \
     --branch fixture-branch --zone "moya-zona/" --kanal terminal \
-    --finalizirovano "ф1" --finalizirovano "ф2" > /dev/null 2>&1 || true
+    --finalizirovano "ф1" --finalizirovano "ф2" --intervyu da > /dev/null 2>&1 || true
 V=$(grep -o 'описание не задано' "$T/_studio/docs/KARTA.md" | wc -l | tr -d ' ')
 [ "$V" = "1" ] && echo "  ✅ без --opisanie в индекс ушла ЯВНАЯ пометка, а не тишина" \
                || { echo "  ❌ ТИХАЯ ЗАГЛУШКА (вхождений пометки: $V) — пустая регистрация выглядит выполненной"; FAIL=1; }
@@ -308,7 +308,7 @@ fi
 # дописывание own_rel к a.zone» обязана красить ЭТУ ловушку.
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$ARKA" svoya-zona \
     --branch fixture-branch --zone "moya-zona/" --kanal terminal \
-    --finalizirovano "ф1" --finalizirovano "ф2" \
+    --finalizirovano "ф1" --finalizirovano "ф2" --intervyu da \
     --opisanie "фикстурный заход: своя зона содержит свой путь" \
     > /dev/null 2>&1 || true
 if [ -f "$T/$ARKA/kod_svoya-zona.md" ]; then

@@ -195,7 +195,7 @@ fi
 # ── ЛОВУШКА 5: bootstrap_zahod заводит заход в арке второго корня ──
 python3 "$T/_generator/tools/bootstrap_zahod.py" "$VTOROY/zhurnal/2026-08-06_proba" \
     proba --branch zahod/proba --zone "_generator/" --kanal terminal \
-    --finalizirovano "ф1" --finalizirovano "ф2" \
+    --finalizirovano "ф1" --finalizirovano "ф2" --intervyu da \
     --opisanie "фикстурный заход второго корня" > "$T/zahod.log" 2>&1 || true
 if [ -f "$T/$VTOROY/zhurnal/2026-08-06_proba/kod_proba.md" ]
 then echo "  ✅ bootstrap_zahod завёл заход в арке второго корня"
