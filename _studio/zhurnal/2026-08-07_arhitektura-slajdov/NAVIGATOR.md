@@ -41,7 +41,7 @@ status: АРКА ЗАКРЫТА 2026-08-09 — читать ZAKRYTIE-ARKI.md
 
 ## Внешние источники
 - корпус текстов 6 деков — `disciplina/skills/slajdy/references/texts-corpus.md` (5303 строки);
-- корпус инцидентов — `../2026-07-30_dovodka-fabriki/KARTOTEKA-problem.md` и соседи;
+- корпус инцидентов — `~/Documents/GitHub/disciplina/korpus/2026-07-30_dovodka-fabriki/KARTOTEKA-problem.md` и соседи;
 - погашенные скиллы-предки — `disciplina/arhiv-skillov/{html-slides-studio,content-studio}/`.
 
 ## Скиллы
