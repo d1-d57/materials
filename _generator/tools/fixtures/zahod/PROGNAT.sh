@@ -151,22 +151,18 @@ sobrat_zdorovyj() {  # <путь>
 - Отчёт пишется в файл ОСНОВНОЙ папки репозитория, по абсолютному пути — сам файл не коммитится.
 
 ## 0. ПЕРВЫЙ ХОД
-### 0.1 🔴 ГИТ-КОНТУР — ДО ВСЕГО ОСТАЛЬНОГО (три слота, пустых быть не должно)
+### 0.1 🔴 ГИТ-КОНТУР — ДО ВСЕГО ОСТАЛЬНОГО
 
-**0. ВЫЧИТАТЬ ОЧЕРЕДЬ.** Что просил сделать Cowork:
-    python3 _generator/tools/git_zona.py zayavki
+🔴 «ничего сверх задачи» относится к СОДЕРЖАНИЮ работы; git-контур §0.1 — законное исключение, он про состояние репозитория и исполняется целиком.
 
-**1. ВЛИТЬ ПЕРЕД РАБОТОЙ.** Пояснение слота.
+**1. ВЛИТЬ ПЕРЕД РАБОТОЙ — САМ, В ЭТОМ ОКНЕ.** Пояснение слота.
 
 вливать нечего, проверено командой `git branch --no-merged` при сборке: невлитых веток 0.
 
-**2. ЗАКОММИТИТЬ ПО ХОДУ.** Пояснение слота.
-
-- зона `_generator/tools/dummy.py`
-
-**3. ЗАКРЫТЬ ПОСЛЕ.** Пояснение слота.
-
-- гасить нечего: ветка захода закрывается приёмкой
+**2. ОСТАЛЬНОЙ КОНТУР — В СУБАГЕНТА, ОДНИМ ХОДОМ.** Очередь заявок (`git_zona.py zayavki`), что забрать в git и что погасить. Полный текст задания печатает команда:
+```
+python3 _generator/tools/bootstrap_zahod.py --zadanie-subagentu --kommitit 'зона' --zakryt 'ветку'
+```
 
 ## 2. ЗАДАЧА
 Сделать X, ровно по шагам.
@@ -281,7 +277,7 @@ open(p, 'w', encoding='utf-8').write(t)
 "
 krasnet "нет однозначной точки входа" "З5" "$T/kod_z5.md"
 
-echo "── ловушка 8: З6 (печать, не гейт) — число без соседней команды/адреса"
+echo "── ловушка 8: 🔴 З6 ЖЁСТКАЯ (с 14.08) — число без соседней команды/адреса роняет rc"
 sobrat_zdorovyj "$T/kod_z6.md"
 python3 -c "
 p = '$T/kod_z6.md'
@@ -299,14 +295,20 @@ assert len(filler) > 300, len(filler)
 t += '\n\n' + filler + '\n\n**Замерено: 128 инцидентов за сессию, свежая метрика, без ссылки на команду.**\n'
 open(p, 'w', encoding='utf-8').write(t)
 "
-OUT8=$(python3 "$P" "$T/kod_z6.md" 2>&1)
-RC8=$?
-[ "$RC8" -eq 0 ] || {
-  echo "❌ ЛОВУШКА 8: З6 — предупреждение НЕ должно ронять exit-код (rc=$RC8). Вывод:"
+# 🔴 `… && RC=0 || RC=$?`, а не голое присваивание: под `set -e` подстановка
+# команды с ненулевым кодом роняет ВЕСЬ скрипт на самом присваивании, и ловушка
+# умирает молча — без единого ❌ в выводе. Поймано ровно этим переводом З6 в
+# жёсткие: сообщение об ошибке не печаталось, а фикстура «просто обрывалась».
+OUT8=$(python3 "$P" "$T/kod_z6.md" 2>&1) && RC8=0 || RC8=$?
+# 🔴 С 14.08 З6 — ЖЁСТКАЯ (заход `nositeli-gen`, шаг 4): rc=1 и ❌, а не ⚠ и rc=0.
+# Перенос сделан ПОСЛЕ калибровки по живому корпусу (ловушки 39 и 40 сторожат обе
+# стороны сужения), поэтому здесь ожидание перевёрнуто намеренно, а не подогнано.
+[ "$RC8" -eq 1 ] || {
+  echo "❌ ЛОВУШКА 8: З6 стала жёсткой и ОБЯЗАНА ронять exit-код (получено rc=$RC8). Вывод:"
   echo "$OUT8"; exit 1; }
-echo "$OUT8" | grep -q "⚠ З6" || {
-  echo "❌ ЛОВУШКА 8: предупреждение З6 не напечатано. Вывод:"; echo "$OUT8"; exit 1; }
-echo "  ✅ ловушка 8: З6 напечатано предупреждением, rc=0 (не гейт)"
+echo "$OUT8" | grep -q "❌ З6" || {
+  echo "❌ ЛОВУШКА 8: З6 не напечатана как жёсткая (❌). Вывод:"; echo "$OUT8"; exit 1; }
+echo "  ✅ ловушка 8: З6 краснеет жёстко (❌, rc=1) на числе без соседней команды"
 
 echo "── ловушка 9: З7а — нет секции-заготовки (## УРОКИ ФАБРИКЕ)"
 sobrat_zdorovyj "$T/kod_z7a.md"
@@ -340,7 +342,7 @@ krasnet "нет формата очереди ДОМ:/ДОСТАВЛЕНО: в �
 
 echo "── ловушка 11: bootstrap_zahod.py без --kanal — заход НЕ собирается"
 mkdir -p "$T/arka11"
-OUT11=$(python3 "$TOOLS/bootstrap_zahod.py" "$T/arka11" proba11 --branch proba11-branch \
+OUT11=$(python3 "$TOOLS/bootstrap_zahod.py" --intervyu da "$T/arka11" proba11 --branch proba11-branch \
     --zone '`_generator/tools/proba-zona/fake.py`' 2>&1) && {
   echo "❌ ЛОВУШКА 11: bootstrap_zahod.py без --kanal собрал заход. Вывод:"; echo "$OUT11"; exit 1; }
 echo "$OUT11" | grep -q -- "--kanal" || {
@@ -465,7 +467,7 @@ MD
 
 echo "── ловушка 17: --vlit ВЕТКА — в заходе есть §0.1 с merge и проверкой фактом"
 R17="$T/repo17"; sobrat_repo "$R17"
-OUT17=$(GIT_ZONA_REPO="$R17" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba17 \
+OUT17=$(GIT_ZONA_REPO="$R17" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba17 \
     --branch proba17-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka 2>&1)
@@ -482,7 +484,7 @@ echo "  ✅ ловушка 17: --vlit даёт §0.1 с merge и проверк�
 
 echo "── ловушка 18: без --vlit при нуле невлитых — «вливать нечего, проверено»"
 R18="$T/repo18"; sobrat_repo "$R18"
-OUT18=$(GIT_ZONA_REPO="$R18" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba18 \
+OUT18=$(GIT_ZONA_REPO="$R18" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba18 \
     --branch proba18-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1)
 RC18=$?
@@ -500,7 +502,7 @@ R19="$T/repo19"; sobrat_repo "$R19"
     && echo x > extra.txt && git add extra.txt \
     && git -c user.email=proba@proba -c user.name=proba commit -q -m extra \
     && git checkout -q main )
-OUT19=$(GIT_ZONA_REPO="$R19" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba19 \
+OUT19=$(GIT_ZONA_REPO="$R19" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba19 \
     --branch proba19-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1)
 RC19=$?
@@ -516,7 +518,7 @@ echo "  ✅ ловушка 19: невлитая ветка — предупре�
 
 echo "── ловушка 20: заход, собранный с --vlit, не будит ложный З8"
 R20="$T/repo20"; sobrat_repo "$R20"
-OUT20B=$(GIT_ZONA_REPO="$R20" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba20 \
+OUT20B=$(GIT_ZONA_REPO="$R20" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba20 \
     --branch proba20-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka 2>&1) || {
@@ -554,7 +556,7 @@ echo "  ✅ ловушка 22: здоровый заход — З9 молчит"
 
 echo "── ловушка 23: 🔴 З9 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ — свежесобранный bootstrap_zahod.py-скелет молчит"
 R23="$T/repo23"; sobrat_repo "$R23"
-OUT23B=$(GIT_ZONA_REPO="$R23" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba23 \
+OUT23B=$(GIT_ZONA_REPO="$R23" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba23 \
     --branch proba23-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F23="$R23/_studio/zhurnal/proba/kod_proba23.md"
@@ -574,7 +576,7 @@ echo "   объявлен НЕПРИМЕНИМЫМ явно, а не молча�
 # только там заводится `log_path`). Требование, обязательное в каждом заходе,
 # было неисполнимо буквально и молчало об этом.
 R24="$T/repo24"; sobrat_repo "$R24"
-OUT24A=$(GIT_ZONA_REPO="$R24" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24app \
+OUT24A=$(GIT_ZONA_REPO="$R24" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba24app \
     --branch proba24app-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F24A="$R24/_studio/zhurnal/proba/kod_proba24app.md"
@@ -592,7 +594,7 @@ echo "  ✅ ловушка 24а: канал app — требование явн�
 # Regression guard: канал terminal обязан СОХРАНИТЬ исполнимую формулировку —
 # починка Г5 не смеет тихо отключить требование там, где оно работает.
 R24B="$T/repo24b"; sobrat_repo "$R24B"
-OUT24B=$(GIT_ZONA_REPO="$R24B" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba24term \
+OUT24B=$(GIT_ZONA_REPO="$R24B" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba24term \
     --branch proba24term-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || true
 F24B="$R24B/_studio/zhurnal/proba/kod_proba24term.md"
@@ -621,7 +623,7 @@ echo "  ✅ ловушка 25: оба живых захода без блока 
 
 echo "── ловушка 26: З10 — генератор с тремя слотами даёт заход, на котором З10 МОЛЧИТ"
 R26="$T/repo26"; sobrat_repo "$R26"
-OUT26B=$(GIT_ZONA_REPO="$R26" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba26 \
+OUT26B=$(GIT_ZONA_REPO="$R26" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba26 \
     --branch proba26-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" \
     --vlit zahod/test-vetka --kommitit 'зона `_generator/tools/dummy-zone/fake.py`' \
@@ -641,7 +643,7 @@ echo "── ловушка 27: З10 — незаполненный слот к�
 # молчание было неотличимо от «вливать/коммитить/гасить нечего». Ловушка сторожит
 # ОБА конца: генератор обязан ПОСТАВИТЬ маркер, линтер — на нём покраснеть.
 R27="$T/repo27"; sobrat_repo "$R27"
-OUT27B=$(GIT_ZONA_REPO="$R27" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba27 \
+OUT27B=$(GIT_ZONA_REPO="$R27" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba27 \
     --branch proba27-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
   echo "❌ ЛОВУШКА 27: bootstrap_zahod.py без слотов 2-3 упал (обязан собирать и предупреждать). Вывод:"
@@ -694,7 +696,7 @@ echo "  ✅ ловушка 29: оба живых захода без секци�
 # РЯДОМ со словом, а не вместо него.
 echo "── ловушка 30: --model sonnet — терминальная команда несёт ARN application-inference-profile"
 R30="$T/repo30"; sobrat_repo "$R30"
-OUT30=$(GIT_ZONA_REPO="$R30" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba30 \
+OUT30=$(GIT_ZONA_REPO="$R30" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba30 \
     --branch proba30-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" --model sonnet 2>&1) || {
   echo "❌ ЛОВУШКА 30: bootstrap_zahod.py --model sonnet упал. Вывод:"; echo "$OUT30"; exit 1; }
@@ -728,7 +730,7 @@ PY
 
 echo "── ловушка 32: 🔴 --worktree в песочнице — worktree add РАНЬШЕ cd … && claude, в одном блоке"
 R32="$T/repo32"; sobrat_repo "$R32"
-OUT32=$(GIT_ZONA_REPO="$R32" python3 "$T/zvat_sand.py" _studio/zhurnal/proba proba32 \
+OUT32=$(GIT_ZONA_REPO="$R32" python3 "$T/zvat_sand.py" --intervyu da _studio/zhurnal/proba proba32 \
     --branch proba32-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" --worktree sand32 2>&1) || {
   echo "❌ ЛОВУШКА 32: bootstrap_zahod.py --worktree в песочнице упал. Вывод:"; echo "$OUT32"; exit 1; }
@@ -745,7 +747,7 @@ echo "  ✅ ловушка 32: «worktree add» (строка $IDX_ADD) РАНЬ
 
 echo "── ловушка 33: 🔴 --worktree НЕ задан — строки «worktree add» в выводе нет вовсе"
 R33="$T/repo33"; sobrat_repo "$R33"
-OUT33=$(GIT_ZONA_REPO="$R33" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba33 \
+OUT33=$(GIT_ZONA_REPO="$R33" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba33 \
     --branch proba33-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
   echo "❌ ЛОВУШКА 33: bootstrap_zahod.py без --worktree упал. Вывод:"; echo "$OUT33"; exit 1; }
@@ -761,11 +763,8 @@ sobrat_zdorovyj "$T/kod_z12.md"
 python3 -c "
 p = '$T/kod_z12.md'
 t = open(p, encoding='utf-8').read()
-old = '''**0. ВЫЧИТАТЬ ОЧЕРЕДЬ.** Что просил сделать Cowork:
-    python3 _generator/tools/git_zona.py zayavki
-
-'''
-assert old in t, 'якорь строки вычитки разъехался с фикстурой'
+old = '(\`git_zona.py zayavki\`)'
+assert old in t, 'якорь вызова очереди разъехался с фикстурой'
 t = t.replace(old, '')
 open(p, 'w', encoding='utf-8').write(t)
 "
@@ -774,18 +773,18 @@ krasnet "нет строки ВЫЧИТАТЬ ОЧЕРЕДЬ" "З12" "$T/kod_z12
 echo "── ловушка 35: 🔴 З12 ПОЛОЖИТЕЛЬНЫЙ КОНТРОЛЬ — живые заходы без строки краснеют, а свежесобранный несёт её и молчит"
 for LIVE in "$LIVE1" "$LIVE2"; do
   OUT35=$(python3 "$P" "$LIVE" 2>&1) || true
-  echo "$OUT35" | grep -q "❌ З12: нет строки" || {
+  echo "$OUT35" | grep -q "❌ З12: " || {
     echo "❌ ЛОВУШКА 35: З12 не покраснел на живом заходе без строки вычитки — $LIVE. Вывод:"
     echo "$OUT35"; exit 1; }
 done
 R35="$T/repo35"; sobrat_repo "$R35"
-OUT35B=$(GIT_ZONA_REPO="$R35" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba35 \
+OUT35B=$(GIT_ZONA_REPO="$R35" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba35 \
     --branch proba35-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
   echo "❌ ЛОВУШКА 35: bootstrap_zahod.py упал при сборке свежего захода. Вывод:"; echo "$OUT35B"; exit 1; }
 F35="$R35/_studio/zhurnal/proba/kod_proba35.md"
 [ -f "$F35" ] || { echo "❌ ЛОВУШКА 35: заход не создан — $F35"; exit 1; }
-grep -q "ВЫЧИТАТЬ ОЧЕРЕДЬ" "$F35" || { echo "❌ ЛОВУШКА 35: свежесобранный заход не несёт строку вычитки"; exit 1; }
+grep -q "git_zona.py zayavki" "$F35" || { echo "❌ ЛОВУШКА 35: свежесобранный заход не несёт вызов очереди"; exit 1; }
 OUT35C=$(python3 "$P" "$F35" 2>&1) || true
 echo "$OUT35C" | grep -q "З12" && {
   echo "❌ ЛОВУШКА 35: З12 краснеет на свежесобранном заходе, несущем строку вычитки. Вывод:"
@@ -816,7 +815,7 @@ echo "  ✅ ловушка 37: оба живых захода без секци�
 
 echo "── ловушка 38: 🔴 З13 — генератор с секцией-носителем даёт заход, на котором З13 МОЛЧИТ"
 R38="$T/repo38"; sobrat_repo "$R38"
-OUT38B=$(GIT_ZONA_REPO="$R38" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba38 \
+OUT38B=$(GIT_ZONA_REPO="$R38" python3 "$TOOLS/bootstrap_zahod.py" --intervyu da _studio/zhurnal/proba proba38 \
     --branch proba38-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal terminal \
     --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
   echo "❌ ЛОВУШКА 38: bootstrap_zahod.py упал при сборке свежего захода. Вывод:"; echo "$OUT38B"; exit 1; }
@@ -829,5 +828,173 @@ echo "$OUT38" | grep -q "З13" && {
   echo "❌ ЛОВУШКА 38: З13 краснеет на свежесобранном заходе, несущем секцию (положительный контроль провален). Вывод:"
   echo "$OUT38"; exit 1; }
 echo "  ✅ ловушка 38: свежесобранный заход несёт секцию-носитель, З13 молчит"
+
+echo "── ловушка 39: 🔴 З6 ЛОЖНЫЕ КЛАССЫ МОЛЧАТ — пять классов, все с живого корпуса"
+# Калибровка 14.08 (заход `nositeli-gen`, шаг 4). До сужения З6 краснела на 11 из
+# 25 свежих `kod_*.md` и на КАЖДОМ свежесобранном заходе — на строке `Модель:
+# Sonnet 5`, которую вписывает сам генератор. Классы взяты с живых файлов, не
+# выдуманы; ловушка сторожит ОБА направления (здесь — молчание, ловушка 40 —
+# красное), потому что гейт, который только молчит, неотличим от выключенного.
+LOZHNYE39="Модель: Sonnet 5
+Модель: Opus 5
+Ф-1. Потолок несущих блоков — 2.
+Ф-2. Ровность по времени.
+часть 1 → часть 4 → часть 6 → часть 2
+Какие проверки становятся возможны на фазе 2
+вектор обязан равняться своему \$\\lambda^2\$-кратному"
+echo "$LOZHNYE39" | while IFS= read -r SPAN; do
+  [ -z "$SPAN" ] && continue
+  RES=$(python3 -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+import check_zahod as cz
+print("КРАСНОЕ" if cz._z6_chisla_faktov(sys.argv[2]) else "молчит")
+' "$TOOLS" "$SPAN")
+  [ "$RES" = "молчит" ] || {
+    echo "❌ ЛОВУШКА 39: З6 краснеет на ложном классе «$SPAN» — гейт красен на здоровом,"
+    echo "   а такой обходят --no-verify вместе со всей защитой."; exit 1; }
+done || exit 1
+echo "  ✅ ловушка 39: версия модели, идентификатор (Ф-1/Ф-2), порядковый номер, норматив и формула — молчат"
+
+echo "── ловушка 40: 🔴 З6 НАСТОЯЩЕЕ КРАСНЕЕТ и клауза ЖЁСТКАЯ (rc=1), а не печать"
+# Вторая половина того же гейта. «L2, 18 карточек» — ключевой случай: спан
+# начинается с идентификатора `L2`, и проверка «по спану целиком» его бы
+# пропустила. Судится КАЖДОЕ число, поэтому живое «18» краснеет, а `L2` — нет.
+NASTOYASHCHIE40="L2, 18 карточек
+Бюффон, 23 слайда
+все 23"
+echo "$NASTOYASHCHIE40" | while IFS= read -r SPAN; do
+  [ -z "$SPAN" ] && continue
+  RES=$(python3 -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+import check_zahod as cz
+print("КРАСНОЕ" if cz._z6_chisla_faktov(sys.argv[2]) else "молчит")
+' "$TOOLS" "$SPAN")
+  [ "$RES" = "КРАСНОЕ" ] || {
+    echo "❌ ЛОВУШКА 40: З6 МОЛЧИТ на настоящем числовом утверждении «$SPAN» —"
+    echo "   сужение съело то, ради чего клауза существует."; exit 1; }
+done || exit 1
+python3 -c '
+import sys
+sys.path.insert(0, sys.argv[1])
+import check_zahod as cz
+assert cz.check_z6_chislo in cz.HARD_CHECKS, "З6 не в HARD_CHECKS — клауза осталась печатью"
+assert cz.check_z6_chislo not in cz.SOFT_CHECKS, "З6 осталась и в SOFT_CHECKS"
+' "$TOOLS" || { echo "❌ ЛОВУШКА 40: З6 не переведена в жёсткие"; exit 1; }
+echo "  ✅ ловушка 40: «18 карточек», «23 слайда», «все 23» краснеют; З6 в HARD_CHECKS"
+
+echo "── ловушка 41: 🔴 ДВЕРЬ ИНТЕРВЬЮ — без флага отказ, `net` печатает шесть вопросов, `da` вшивает строку"
+R41="$T/repo41"; sobrat_repo "$R41"
+# без флага — argparse обязан отказать, файла быть не должно
+OUT41A=$(GIT_ZONA_REPO="$R41" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba41a \
+    --branch proba41-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) && {
+  echo "❌ ЛОВУШКА 41: генератор собрал заход БЕЗ --intervyu — двери нет. Вывод:"
+  echo "$OUT41A"; exit 1; }
+[ -f "$R41/_studio/zhurnal/proba/kod_proba41a.md" ] && {
+  echo "❌ ЛОВУШКА 41: файл создан при отказе без --intervyu"; exit 1; }
+# --intervyu net — шесть вопросов ДОСЛОВНО и отказ
+OUT41B=$(GIT_ZONA_REPO="$R41" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba41b \
+    --branch proba41-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
+    --intervyu net --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) && {
+  echo "❌ ЛОВУШКА 41: --intervyu net собрал заход вместо отказа"; exit 1; }
+[ -f "$R41/_studio/zhurnal/proba/kod_proba41b.md" ] && {
+  echo "❌ ЛОВУШКА 41: --intervyu net создал файл"; exit 1; }
+for VOPROS in "На выходе — ОДИН такой-то артефакт, верно?" \
+              "Заход НЕ трогает вот это и вот это — верно?" \
+              "Здесь два пути, беру первый" \
+              "Ты получишь X, но НЕ Y — этого достаточно?" \
+              "это твои слова?" \
+              "и она ещё не сделана — верно?"; do
+  echo "$OUT41B" | grep -qF "$VOPROS" || {
+    echo "❌ ЛОВУШКА 41: в отказе нет вопроса «$VOPROS» — вопросы обязаны быть ДОСЛОВНЫМИ"
+    echo "$OUT41B"; exit 1; }
+done
+# --intervyu da — файл есть и несёт строку-метку
+OUT41C=$(GIT_ZONA_REPO="$R41" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba41c \
+    --branch proba41-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
+    --intervyu da --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
+  echo "❌ ЛОВУШКА 41: --intervyu da не собрал заход. Вывод:"; echo "$OUT41C"; exit 1; }
+F41="$R41/_studio/zhurnal/proba/kod_proba41c.md"
+grep -q "ИНТЕРВЬЮ ПРОВЕДЕНО" "$F41" || {
+  echo "❌ ЛОВУШКА 41: заход собран, но строки «ИНТЕРВЬЮ ПРОВЕДЕНО» в нём нет"; exit 1; }
+echo "  ✅ ловушка 41: без флага — отказ; net — шесть вопросов дословно и файла нет; da — файл со строкой-меткой"
+
+echo "── ловушка 42: 🔴 ГИТ-КОНТУР — слот ВЛИТЬ остался в окне, остальное ушло за него"
+# Шаг 2 захода `nositeli-gen`. Замер: блок §0.1 был 28 строк, стал 18. Первая
+# редакция вставляла промпт субагента прямо в блок — он вырос до 53, то есть
+# вынос УДВОИЛ ровно то, что должен был сократить. Поэтому ловушка сторожит не
+# «есть ли субагент», а ДЛИНУ блока и то, что задание печатается КОМАНДОЙ.
+R42="$T/repo42"; sobrat_repo "$R42"
+OUT42B=$(GIT_ZONA_REPO="$R42" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba proba42 \
+    --branch proba42-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal app \
+    --intervyu da --kommitit "зона генератора" --zakryt "ветку zahod/x" \
+    --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
+  echo "❌ ЛОВУШКА 42: bootstrap_zahod.py упал. Вывод:"; echo "$OUT42B"; exit 1; }
+F42="$R42/_studio/zhurnal/proba/kod_proba42.md"
+N42=$(awk '/^### 0\.1/{f=1} f&&/^## /{exit} f{n++} END{print n+0}' "$F42")
+[ "$N42" -le 24 ] || {
+  echo "❌ ЛОВУШКА 42: блок §0.1 занимает $N42 строк — вынос контура обязан СОКРАЩАТЬ окно"
+  echo "   исполнителя, а не раздувать его (замер до выноса — 28 строк)."; exit 1; }
+[ "$(grep -c 'ВЛИТЬ ПЕРЕД РАБОТОЙ' "$F42")" = "1" ] || {
+  echo "❌ ЛОВУШКА 42: слот «ВЛИТЬ ПЕРЕД РАБОТОЙ» обязан остаться в окне ровно один раз —"
+  echo "   без влития инструмента на диске может не быть вовсе."; exit 1; }
+grep -q 'bootstrap_zahod.py --zadanie-subagentu' "$F42" || {
+  echo "❌ ЛОВУШКА 42: в блоке нет команды печати задания субагенту — остальной контур"
+  echo "   до исполнителя не доедет вовсе."; exit 1; }
+# команда обязана РАБОТАТЬ и нести три пункта + конкретику аналитика
+OUT42C=$(python3 "$TOOLS/bootstrap_zahod.py" --zadanie-subagentu \
+    --kommitit "зона генератора" --zakryt "ветку zahod/x" 2>&1) || {
+  echo "❌ ЛОВУШКА 42: команда --zadanie-subagentu упала. Вывод:"; echo "$OUT42C"; exit 1; }
+for PUNKT in "0. ВЫЧИТАТЬ ОЧЕРЕДЬ" "2. ЧТО ЗАБРАТЬ В GIT" "3. ЧТО ПОГАСИТЬ ПОСЛЕ" \
+             "git_zona.py zayavki" "зона генератора" "ветку zahod/x"; do
+  echo "$OUT42C" | grep -qF "$PUNKT" || {
+    echo "❌ ЛОВУШКА 42: задание субагенту не несёт «$PUNKT»"; echo "$OUT42C"; exit 1; }
+done
+echo "$OUT42C" | grep -q "НЕ коммить\|КОММИТИТЬ ТЕБЕ НЕЛЬЗЯ" || {
+  echo "❌ ЛОВУШКА 42: в задании нет запрета субагенту коммитить (контракт зоны)"; exit 1; }
+echo "  ✅ ловушка 42: блок §0.1 — $N42 строк (было 28), ВЛИТЬ на месте, задание печатает команда"
+
+echo "── ловушка 43: 🔴 ФРАЗА-ИСКЛЮЧЕНИЕ доехала в ОБА канала — и в файл, и в стартовый блок"
+# `disciplina-zahod §«НИЧЕГО СВЕРХ ЗАДАЧИ» И ГИТ-КОНТУР`: два обязательных
+# указания без объявленного приоритета — исполнитель либо нарушит запрет, либо
+# не выполнит контур, и ОБА исхода выглядят как добросовестная работа.
+for KANAL in app terminal; do
+  R43="$T/repo43$KANAL"; sobrat_repo "$R43"
+  OUT43=$(GIT_ZONA_REPO="$R43" python3 "$TOOLS/bootstrap_zahod.py" _studio/zhurnal/proba "proba43$KANAL" \
+      --branch proba43-branch --zone '_generator/tools/dummy-zone/fake.py' --kanal "$KANAL" \
+      --intervyu da --finalizirovano "ф1" --finalizirovano "ф2" 2>&1) || {
+    echo "❌ ЛОВУШКА 43: сборка на канале $KANAL упала. Вывод:"; echo "$OUT43"; exit 1; }
+  F43="$R43/_studio/zhurnal/proba/kod_proba43$KANAL.md"
+  [ "$(grep -c 'законное исключение' "$F43")" -ge 1 ] || {
+    echo "❌ ЛОВУШКА 43: канал $KANAL — фразы-исключения в файле нет вовсе"; exit 1; }
+  sed -n '/## СТАРТОВОЕ СООБЩЕНИЕ/,/^── /p' "$F43" | grep -q 'законное исключение' || {
+    echo "❌ ЛОВУШКА 43: канал $KANAL — фраза есть в файле, но НЕ в стартовом блоке;"
+    echo "   запрет «ничего сверх задачи» живёт именно там, и оговорка обязана стоять рядом с ним."
+    exit 1; }
+done
+echo "  ✅ ловушка 43: фраза-исключение и в файле, и в стартовом блоке — на обоих каналах"
+
+echo "── ловушка 44: 🔴 КАРТА ИНСТРУМЕНТОВ видит клаузу с пометкой в скобках (точка вызова)"
+# Шаг 5 захода `nositeli-gen`. Регэксп `GATE_ZAHOD_RE` и ловушка на него уже
+# починены в `disciplina` (коммит 30f22fe), но ТОЧКИ ВЫЗОВА у ловушки не было:
+# `--selftest` не звала ни одна фикстура и ни один хук. Инструмент без точки
+# вызова зелен ровно потому, что его никто не звал. Здесь она и заводится.
+# 🔴 МЯГКО по НАЛИЧИЮ соседнего репозитория, жёстко по результату: `disciplina`
+# — отдельный репозиторий рядом, и на машине, где его нет, отсутствие файла не
+# является поломкой `check_zahod.py`, которую сторожит эта фикстура.
+KARTA44="$HOME/Documents/GitHub/disciplina/tools/karta_instrumentov.py"
+if [ -f "$KARTA44" ]; then
+  OUT44=$(python3 "$KARTA44" --selftest 2>&1) || {
+    echo "❌ ЛОВУШКА 44: селфтест регэкспа карты КРАСНЫЙ — клауза с пометкой в скобках"
+    echo "   («# ── З6 (ПЕЧАТЬ, не гейт): …») пропадёт из карты молча. Вывод:"
+    echo "$OUT44"; exit 1; }
+  echo "$OUT44" | grep -q "клауза С пометкой в скобках видна" || {
+    echo "❌ ЛОВУШКА 44: селфтест не проверяет форму с пометкой в скобках"; exit 1; }
+  echo "  ✅ ловушка 44: селфтест карты зелёный и покрывает форму с пометкой в скобках"
+else
+  echo "  ○ ловушка 44: соседнего репозитория disciplina нет на этой машине — пропущено"
+fi
 
 echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"
