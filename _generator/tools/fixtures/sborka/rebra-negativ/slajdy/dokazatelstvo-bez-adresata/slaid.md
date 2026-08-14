@@ -1,12 +1,8 @@
 <!--
-ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода sceny-iz-blokov, Э3 — не порождена
-bootstrap_lekcii.py, писана руками ради изоляции: доказательство размечено НА
-ТОЙ ЖЕ сцене, что и утверждение, которое оно доказывает — гейт обязан краснеть
-Э3-клаузой. `sceny_vruchnuyu` заполнено НАРОЧНО, чтобы карточка НЕ красила Э2
-sceny-iz-blokov — изоляция та же, что у ловушки 42 (tipologia-e3-negativ) для
-трёх клауз Э3. `dokazatelstvo_opiraetsya_na` заполнено НАРОЧНО (заход
-kod_rebra-blokov.md, Э2) — изолирует от НОВОЙ клаузы «доказательство без
-адресата», иначе замечаний стало бы три вместо двух.
+ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода kod_rebra-blokov.md, Э2 — не порождена
+bootstrap_lekcii.py, писана руками ради изоляции: блок [dokazatelstvo] есть, а
+'dokazatelstvo_opiraetsya_na' пусто — гейт обязан краснеть Э2-клаузой «доказательство
+без адресата». Изоляция та же, что у ловушки 42 (tipologia-e3-negativ)/43 (sceny-negativ).
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -19,11 +15,11 @@ kod_rebra-blokov.md, Э2) — изолирует от НОВОЙ клаузы «
 ФАЗА 6 (сборка и QA): x :: python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html
 -->
 ---
-imya: dokazatelstvo-v-scene-predmeta
-nazvanie: dokazatelstvo-v-scene-predmeta
+imya: dokazatelstvo-bez-adresata
+nazvanie: dokazatelstvo-bez-adresata
 zagolovok_na_ekrane: ""
 tip_slaida: Т3
-zachem: фикстура Э3 — доказательство в сцене предмета
+zachem: фикстура Э2 — доказательство без адресата
 akcent: фикстура
 centralnyj_blok: утверждение
 kommentarij_lektoru: ""
@@ -37,9 +33,8 @@ illustracii: []
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
-dokazatelstvo_opiraetsya_na: [dokazatelstvo-v-scene-predmeta:utverzhdenie]
+dokazatelstvo_opiraetsya_na: []
 primer_dlya: []
-sceny_vruchnuyu: фикстура нарочно держит ручной тег {@1} на доказательстве — изолирует Э3 от Э2
 status: v_deke
 ---
 
@@ -57,7 +52,7 @@ status: v_deke
 Текст утверждения. формула $x=1$.
 
 ### [dokazatelstvo] доказательство
-{@1} Текст доказательства — тег СОВПАДАЕТ со сценой утверждения нарочно.
+Текст доказательства.
 
 ## Правки
-- фикстура Э3 sceny-iz-blokov
+- фикстура Э2 kod_rebra-blokov.md

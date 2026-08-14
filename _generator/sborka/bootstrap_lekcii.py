@@ -128,6 +128,8 @@ illustracii: []
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
+dokazatelstvo_opiraetsya_na: []
+primer_dlya: []
 status: v_deke
 ---
 %(body)s"""
@@ -139,10 +141,17 @@ status: v_deke
 # `centralnyj_blok` рядом с акцентом (что на нём главное), `matematika_iz` —
 # рядом с иллюстрациями, обе ссылки наружу карточки. Якоря нет в старой карточке
 # → поле дописывается в конец шапки, а не теряется.
+#
+# 🔴 Заход kod_rebra-blokov.md, Э5: `dokazatelstvo_opiraetsya_na`/`primer_dlya` — рёбра
+# графа блоков (Э1), рядом с `bez_opredeleniya_namerenno` (тот же кластер «связи термина»,
+# см. `SLIDE_CARD_TMPL`). Врач захода — «рёбра проставляет порождение, а не человек»: поле
+# рождается СРАЗУ, а не заводится пустым и забытым, как было у прежней (нерабочей) попытки.
 NOVYE_POLYA_SLAJDA = (
     ("tip_slaida", "zagolovok_na_ekrane", ZAPOLNIT),
     ("centralnyj_blok", "akcent", ZAPOLNIT),
     ("matematika_iz", "liniya", "[]"),
+    ("dokazatelstvo_opiraetsya_na", "bez_opredeleniya_namerenno", "[]"),
+    ("primer_dlya", "dokazatelstvo_opiraetsya_na", "[]"),
 )
 NOVYE_POLYA_LEKCII = (
     ("zamer_tempa", "dlitelnost_minut", ZAPOLNIT),

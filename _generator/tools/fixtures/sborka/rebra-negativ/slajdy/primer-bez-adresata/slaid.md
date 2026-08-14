@@ -1,10 +1,8 @@
 <!--
-ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода tipologia-odna-os, Э3 — не порождена
-bootstrap_lekcii.py, писана руками ради изоляции: тип Т1 С [dokazatelstvo]
-(слота под него в Т1 сознательно нет — п.3 интервью) обязан красить гейт
-клаузой «лишний блок вне раскладки»). `dokazatelstvo_opiraetsya_na` заполнено
-НАРОЧНО (заход kod_rebra-blokov.md, Э2) — изолирует от НОВОЙ клаузы «доказательство
-без адресата», иначе замечаний стало бы два вместо одного.
+ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода kod_rebra-blokov.md, Э2 — не порождена
+bootstrap_lekcii.py, писана руками ради изоляции: блок [primer] есть, а
+'primer_dlya' пусто — гейт обязан дать ЖЁЛТУЮ (не красную) Э2-клаузу «пример без
+адресата». Изоляция та же, что у соседней карточки этой фикстуры.
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -17,13 +15,13 @@ bootstrap_lekcii.py, писана руками ради изоляции: тип
 ФАЗА 6 (сборка и QA): x :: python3 _generator/sborka/deck.py <лекция> -o <лекция>/dist/index.html
 -->
 ---
-imya: lishnij
-nazvanie: lishnij
+imya: primer-bez-adresata
+nazvanie: primer-bez-adresata
 zagolovok_na_ekrane: ""
 tip_slaida: Т1
-zachem: фикстура Э3 — лишний блок вне раскладки
+zachem: фикстура Э2 — пример без адресата
 akcent: фикстура
-centralnyj_blok: определение с лишним доказательством
+centralnyj_blok: определение
 kommentarij_lektoru: ""
 minuty: 5
 vazhnost: opornyj
@@ -35,28 +33,28 @@ illustracii: []
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
-dokazatelstvo_opiraetsya_na: [lishnij:opredelenie]
+dokazatelstvo_opiraetsya_na: []
 primer_dlya: []
 status: v_deke
 ---
 
 ## Математика — развёрнуто
-### [opredelenie] определение с лишним доказательством
+### [opredelenie] определение
 **Определение (раз).** формула $x=1$.
 
 > поле:mn мораль
 
-### [dokazatelstvo] лишнее
-*Доказательство.* формула $x=1$.
+### [primer] пример
+**Пример (раз).** формула $x=1$.
 
 > поле:mn мораль
 
 ## Текст слайда — сжато
-### [opredelenie] определение с лишним доказательством
-Текст. формула $x=1$.
+### [opredelenie] определение
+Текст определения. формула $x=1$.
 
-### [dokazatelstvo] лишнее
-Текст. формула $x=1$.
+### [primer] пример
+Текст примера. формула $x=1$.
 
 ## Правки
-- фикстура Э3
+- фикстура Э2 kod_rebra-blokov.md

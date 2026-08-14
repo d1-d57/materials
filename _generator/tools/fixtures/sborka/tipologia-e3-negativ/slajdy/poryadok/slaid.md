@@ -2,7 +2,9 @@
 ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода tipologia-odna-os, Э3 — не порождена
 bootstrap_lekcii.py, писана руками ради изоляции: тип Т3 с [primer] ПЕРЕД
 [utverzhdenie] (у Т3 utverzhdenie обязан быть первым — раскладка, не украшение)
-обязан красить гейт клаузой «нарушенный порядок»).
+обязан красить гейт клаузой «нарушенный порядок»). `dokazatelstvo_opiraetsya_na`
+заполнено НАРОЧНО (заход kod_rebra-blokov.md, Э2) — изолирует от НОВОЙ клаузы
+«доказательство без адресата», иначе замечаний стало бы два вместо одного.
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -33,6 +35,8 @@ illustracii: []
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
+dokazatelstvo_opiraetsya_na: [poryadok:utverzhdenie]
+primer_dlya: []
 status: v_deke
 ---
 
