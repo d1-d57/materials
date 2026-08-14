@@ -1,0 +1,598 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeCategoryTheoryFixed}[2026/08/03 Category-theory Beamer theme v6 fixed]
+
+% =============================================================================
+% БЫСТРЫЙ СТАРТ
+% =============================================================================
+% Ожидаемая структура проекта:
+%
+%   presentation.tex
+%   beamerthemeCategoryTheoryFixed.sty
+%   fonts/                      IBM Plex Sans, Cormorant, STIX Two Math
+%   assets/                     bl-bg.png, tr-bg.png, green-bg.png
+%                               cover.png, photo.png, qr.png
+%   pic/                        иллюстрации лекции
+%
+% Используйте XeLaTeX или LuaLaTeX. Для правильного положения TikZ-слоёв
+% презентацию нужно собрать два раза.
+%
+% Основные настройки в преамбуле:
+%
+%   \usetheme{CategoryTheoryFixed}
+%   \CategorySetIllustrationPercents{38}{44} % справа, снизу
+%   \CategorySetPanelBleed{0.45cm}           % вылет зелёной текстуры
+%
+% Полностью текстовый слайд:
+%
+%   \begin{cttextframe}{ЗАГОЛОВОК}
+%     Текст слайда
+%   \end{cttextframe}
+%
+% Иллюстрация справа. illustration задаёт процент ширины слайда:
+%
+%   \begin{ctrightframe}[illustration=36]{ЗАГОЛОВОК}{%
+%     \includegraphics[width=.9\linewidth]{pic/figure.png}%
+%   }
+%     Текст слайда
+%   \end{ctrightframe}
+%
+% Иллюстрация снизу. illustration задаёт процент высоты слайда:
+%
+%   \begin{ctbottomframe}[illustration=40]{ЗАГОЛОВОК}{%
+%     \includegraphics[height=.25\paperheight]{pic/figure.png}%
+%   }
+%     Текст слайда
+%   \end{ctbottomframe}
+%
+% Слайд преподавателя. Фото и QR-код передаются как обычные аргументы,
+% поэтому их пути можно менять без редактирования темы:
+%
+%   \begin{ctinstructorframe}
+%     {ИМЯ ПРЕПОДАВАТЕЛЯ}
+%     {роль или короткое описание}
+%     {\includegraphics[width=\linewidth]{assets/photo.png}}
+%     {\includegraphics[width=\linewidth]{assets/qr.png}}
+%     Информация о преподавателе
+%   \end{ctinstructorframe}
+%
+% Остальные команды настройки:
+%   \CategoryTitleFrame
+%   \CategorySetMargins{left}{right}
+%   \CategorySetVerticalPositions{title-top}{body-top}
+%   \CategorySetRightIllustrationPercent{percent}
+%   \CategorySetBottomIllustrationPercent{percent}
+%   \CategorySetAssetPath{path}
+%   \CategorySetBackgroundImages{bottom-left}{top-right}{green-panel}
+%
+% Команды, уже определённые темой и не требующие объявления в лекции:
+%   \RightPic{pic/figure.png}
+%   \BottomPic[height]{pic/figure.png}
+%   \LectureCoverFrame
+%   \LectureClosingFrame
+% =============================================================================
+
+\RequirePackage{iftex}
+\ifPDFTeX
+  \PackageError{beamerthemeCategoryTheory}
+    {This theme requires XeLaTeX or LuaLaTeX}
+    {Compile with xelatex or lualatex.}
+\fi
+
+\RequirePackage{fontspec}
+\RequirePackage{unicode-math}
+\RequirePackage{xparse}
+\RequirePackage{tikz}
+\RequirePackage{graphicx}
+\RequirePackage{ragged2e}
+
+% -----------------------------------------------------------------------------
+% Paths
+% -----------------------------------------------------------------------------
+\providecommand{\CategoryThemeRoot}{.}
+\newcommand{\CategoryAssetPath}{\CategoryThemeRoot/assets}
+\newcommand{\CategoryFontPath}{\CategoryThemeRoot/fonts}
+
+\newcommand{\CategorySetAssetPath}[1]{%
+  \renewcommand{\CategoryAssetPath}{#1}%
+}
+
+\newcommand{\CategoryBottomLeftPattern}{\CategoryAssetPath/bl-bg.png}
+\newcommand{\CategoryTopRightPattern}{\CategoryAssetPath/tr-bg.png}
+\newcommand{\CategoryGreenPanelImage}{\CategoryAssetPath/green-bg.png}
+\newcommand{\CategoryCoverImage}{\CategoryAssetPath/cover.png}
+
+\newcommand{\CategorySetBackgroundImages}[3]{%
+  \renewcommand{\CategoryBottomLeftPattern}{#1}%
+  \renewcommand{\CategoryTopRightPattern}{#2}%
+  \renewcommand{\CategoryGreenPanelImage}{#3}%
+}
+
+\newcommand{\CategorySetCoverImage}[1]{%
+  \renewcommand{\CategoryCoverImage}{#1}%
+}
+
+% -----------------------------------------------------------------------------
+% Palette
+% -----------------------------------------------------------------------------
+\definecolor{CTIvory}{HTML}{F7F4EC}
+\definecolor{CTSage}{HTML}{C7D2C1}
+\definecolor{CTSageDark}{HTML}{708174}
+\definecolor{CTPlum}{HTML}{685774}
+\definecolor{CTTerracotta}{HTML}{B66752}
+\definecolor{CTCharcoal}{HTML}{303331}
+\definecolor{CTWhite}{HTML}{FFFEFB}
+
+% -----------------------------------------------------------------------------
+% Font system. Bundled fonts are preferred; portable fallbacks keep the theme
+% compilable when the fonts directory has not yet been copied.
+% -----------------------------------------------------------------------------
+\IfFileExists{\CategoryFontPath/IBMPlexSans-Regular.ttf}{%
+  \setsansfont{IBMPlexSans-Regular.ttf}[
+    Path=\CategoryFontPath/,
+    BoldFont=IBMPlexSans-SemiBold.ttf,
+    ItalicFont=IBMPlexSans-Italic.ttf,
+    BoldItalicFont=IBMPlexSans-SemiBoldItalic.ttf,
+    Ligatures=TeX
+  ]
+}{%
+  \setsansfont{DejaVu Sans}[Ligatures=TeX]
+}
+
+\IfFileExists{\CategoryFontPath/CormorantGaramond-SemiBold.ttf}{%
+  \newfontfamily\categorytitlefont{CormorantGaramond-SemiBold.ttf}[
+    Path=\CategoryFontPath/,
+    ItalicFont=CormorantGaramond-SemiBoldItalic.ttf,
+    Ligatures=TeX
+  ]
+}{%
+  \newfontfamily\categorytitlefont{DejaVu Serif}[Ligatures=TeX]
+}
+
+\IfFileExists{\CategoryFontPath/STIXTwoMath-Regular.ttf}{%
+  \setmathfont{STIXTwoMath-Regular.ttf}[Path=\CategoryFontPath/]
+}{%
+  \setmathfont{Latin Modern Math}
+}
+
+% -----------------------------------------------------------------------------
+% Global Beamer defaults
+% -----------------------------------------------------------------------------
+\mode<presentation>
+\useinnertheme{default}
+\useoutertheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{caption label separator}{: }
+
+\setbeamercolor{normal text}{fg=CTCharcoal,bg=CTIvory}
+\setbeamercolor{background canvas}{bg=CTIvory}
+\setbeamercolor{structure}{fg=CTPlum}
+\setbeamercolor{alerted text}{fg=CTTerracotta}
+\setbeamercolor{frametitle}{fg=CTPlum,bg=CTIvory}
+\setbeamercolor{title}{fg=CTPlum,bg=CTIvory}
+\setbeamercolor{subtitle}{fg=CTCharcoal,bg=CTIvory}
+\setbeamercolor{block title}{fg=CTWhite,bg=CTPlum}
+\setbeamercolor{block body}{fg=CTCharcoal,bg=CTIvory}
+\setbeamercolor{block title alerted}{fg=CTWhite,bg=CTTerracotta}
+\setbeamercolor{block body alerted}{fg=CTCharcoal,bg=CTIvory}
+\setbeamercolor{block title example}{fg=CTWhite,bg=CTSageDark}
+\setbeamercolor{block body example}{fg=CTCharcoal,bg=CTIvory}
+
+\setbeamerfont{normal text}{family=\sffamily,size*={13.2pt}{16.2pt}}
+\setbeamerfont{frametitle}{family=\categorytitlefont,size*={24pt}{32pt},series=\mdseries}
+\setbeamerfont{title}{family=\categorytitlefont,size*={35pt}{44pt},series=\mdseries}
+\setbeamerfont{subtitle}{family=\sffamily,size*={17pt}{21pt},series=\mdseries}
+\setbeamerfont{author}{family=\sffamily,size*={12.5pt}{15pt}}
+\setbeamerfont{date}{family=\sffamily,size*={10.5pt}{13pt}}
+\setbeamerfont{block title}{family=\sffamily,size*={12pt}{14.5pt},series=\bfseries}
+\setbeamerfont{block body}{family=\sffamily,size*={11.5pt}{14.5pt}}
+\setbeamerfont{caption}{family=\sffamily,size*={9.5pt}{11.5pt}}
+\setbeamerfont{instructor name}{family=\categorytitlefont,size*={21.5pt}{27pt}}
+\setbeamerfont{instructor role}{family=\sffamily,size*={8.4pt}{10.2pt}}
+\setbeamerfont{instructor body}{family=\sffamily,size*={10.8pt}{13.5pt}}
+
+\setbeamersize{text margin left=1.02cm,text margin right=1.02cm}
+\setbeamertemplate{itemize item}{%
+  \raisebox{0.20ex}{\color{CTPlum}\rule{0.42em}{0.42em}}%
+}
+\setbeamertemplate{itemize subitem}{%
+  \raisebox{0.20ex}{\color{CTSageDark}\rule{0.32em}{0.32em}}%
+}
+\setbeamertemplate{enumerate item}{\color{CTPlum}\insertenumlabel.}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamertemplate{itemize/enumerate body begin}{\setlength{\itemsep}{0.42em}}
+\setbeamertemplate{itemize/enumerate subbody begin}{\setlength{\itemsep}{0.25em}}
+
+% -----------------------------------------------------------------------------
+% Centralized geometry
+% -----------------------------------------------------------------------------
+\newlength{\CTMarginLeft}
+\newlength{\CTMarginRight}
+\newlength{\CTTitleTop}
+\newlength{\CTBodyTop}
+\newlength{\CTTitleBodyGap}
+\setlength{\CTMarginLeft}{1.02cm}
+\setlength{\CTMarginRight}{1.02cm}
+\setlength{\CTTitleTop}{0.48cm}
+\setlength{\CTBodyTop}{1.48cm}
+\setlength{\CTTitleBodyGap}{0.34cm}
+
+\newcommand{\CategorySetMargins}[2]{%
+  \setlength{\CTMarginLeft}{#1}%
+  \setlength{\CTMarginRight}{#2}%
+  \setbeamersize{text margin left=#1,text margin right=#2}%
+}
+
+\newcommand{\CategorySetVerticalPositions}[2]{%
+  \setlength{\CTTitleTop}{#1}%
+  \setlength{\CTBodyTop}{#2}%
+  % Приблизительная высота одной строки заголовка — 0.86 cm. Для
+  % многострочного заголовка minipage автоматически добавит новые строки.
+  \setlength{\CTTitleBodyGap}{\dimexpr#2-#1-.86cm\relax}%
+}
+
+% Global defaults. A frame can override either value with
+% [illustration=<percent>].
+\newcommand{\CategoryRightIllustrationPercent}{38}
+\newcommand{\CategoryBottomIllustrationPercent}{44}
+\newcommand{\CategorySetRightIllustrationPercent}[1]{%
+  \renewcommand{\CategoryRightIllustrationPercent}{#1}%
+}
+\newcommand{\CategorySetBottomIllustrationPercent}[1]{%
+  \renewcommand{\CategoryBottomIllustrationPercent}{#1}%
+}
+\newcommand{\CategorySetIllustrationPercents}[2]{%
+  \CategorySetRightIllustrationPercent{#1}%
+  \CategorySetBottomIllustrationPercent{#2}%
+}
+
+% The green texture deliberately extends beyond the page edge. The source PNG
+% has an asymmetric transparent margin, so the bleed is intentionally generous.
+\newlength{\CTPanelBleed}
+\setlength{\CTPanelBleed}{0.45cm}
+\newcommand{\CategorySetPanelBleed}[1]{%
+  \setlength{\CTPanelBleed}{#1}%
+}
+
+\pgfkeys{
+  /ctframe/.is family,
+  /ctframe,
+  illustration/.store in=\CTLocalIllustrationPercent
+}
+
+% Единые команды для математических иллюстраций. BottomPic увеличивает и
+% явно переданную высоту, поэтому все нижние картинки масштабируются одинаково.
+\newcommand{\RightPic}[1]{%
+  \includegraphics[
+    width=\linewidth,
+    height=.70\paperheight,
+    keepaspectratio
+  ]{#1}%
+}
+
+\newcommand{\BottomPic}[2][.28\paperheight]{%
+  \begingroup
+    \pgfmathsetlengthmacro{\CTBottomPicHeight}{1.10*(#1)}%
+    \includegraphics[
+      width=\linewidth,
+      height=\CTBottomPicHeight,
+      keepaspectratio
+    ]{#2}%
+  \endgroup
+}
+
+% -----------------------------------------------------------------------------
+% Backgrounds. Layer order:
+% ivory Beamer canvas -> green panel -> corner patterns -> slide content.
+% -----------------------------------------------------------------------------
+\newcommand{\CTOverlay}[1]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    #1
+  \end{tikzpicture}%
+}
+
+\newcommand{\CTFullPageImage}[1]{%
+  \IfFileExists{#1}{%
+    \node[anchor=center,inner sep=0pt] at (current page.center)
+      {\includegraphics[width=\paperwidth,height=\paperheight]{#1}};%
+  }{}%
+}
+
+\newcommand{\CTDrawPatternLayer}{%
+  \CTFullPageImage{\CategoryBottomLeftPattern}%
+  \CTFullPageImage{\CategoryTopRightPattern}%
+}
+
+\newcommand{\CTDecoratedBackground}{\CTOverlay{\CTDrawPatternLayer}}
+
+% The green PNG is anchored to the selected edge. Scaling its width or height
+% therefore moves the split from left to right or from bottom to top. Its
+% perpendicular dimension includes a small bleed beyond the slide boundary.
+\newcommand{\CTRightBackground}[1]{%
+  \CTOverlay{%
+    \IfFileExists{\CategoryGreenPanelImage}{%
+      \node[anchor=east,inner sep=0pt]
+        at ([xshift=\CTPanelBleed]current page.east) {%
+        \includegraphics[
+          width=\dimexpr#1+\CTPanelBleed\relax,
+          height=\dimexpr\paperheight+2\CTPanelBleed\relax
+        ]
+          {\CategoryGreenPanelImage}%
+      };%
+    }{%
+      \path[fill=CTSage]
+        ([xshift=-#1,yshift=-\CTPanelBleed]current page.south east)
+        rectangle
+        ([xshift=\CTPanelBleed,yshift=\CTPanelBleed]current page.north east);
+    }%
+    \CTDrawPatternLayer
+  }%
+}
+
+\newcommand{\CTBottomBackground}[1]{%
+  \CTOverlay{%
+    \IfFileExists{\CategoryGreenPanelImage}{%
+      \node[anchor=south,inner sep=0pt]
+        at ([yshift=-\CTPanelBleed]current page.south) {%
+        \includegraphics[
+          width=\dimexpr\paperwidth+2\CTPanelBleed\relax,
+          height=\dimexpr#1+\CTPanelBleed\relax
+        ]
+          {\CategoryGreenPanelImage}%
+      };%
+    }{%
+      \path[fill=CTSage]
+        ([xshift=-\CTPanelBleed,yshift=-\CTPanelBleed]current page.south west)
+        rectangle ([xshift=\CTPanelBleed,yshift=#1]current page.south east);
+    }%
+    \CTDrawPatternLayer
+  }%
+}
+
+% -----------------------------------------------------------------------------
+% Recurring overlay elements
+% -----------------------------------------------------------------------------
+\newcommand{\CTPageNumber}{%
+  \CTOverlay{%
+    \node[anchor=south east,inner sep=0pt]
+      at ([xshift=-.42cm,yshift=.28cm]current page.south east)
+      {\color{CTPlum}\fontsize{9.2pt}{10pt}\selectfont\insertframenumber};
+  }%
+}
+
+% Заголовок и текст находятся в одном minipage: при переносе заголовка
+% основной текст автоматически сдвигается вниз и больше не накладывается.
+\newcommand{\CTContentNode}[3]{%
+  \CTOverlay{%
+    \node[anchor=north west,inner sep=0pt,text width=#1,align=left]
+      at ([xshift=\CTMarginLeft,yshift=-\CTTitleTop]current page.north west)
+      {\begin{minipage}[t]{#1}
+         \RaggedRight
+         {\usebeamerfont{frametitle}\color{CTPlum}#2\par}
+         \vspace{\CTTitleBodyGap}
+         \usebeamerfont{normal text}\color{CTCharcoal}
+         #3
+       \end{minipage}};
+  }%
+}
+
+\newcommand{\CTIllustrationNode}[4]{%
+  \CTOverlay{%
+    \node[anchor=center,inner sep=0pt,text width=#3,align=center]
+      at ([xshift=#1,yshift=#2]current page.south west)
+      {\begin{minipage}{#3}
+         \centering
+         #4
+       \end{minipage}};
+  }%
+}
+
+% -----------------------------------------------------------------------------
+% Slide layouts
+% -----------------------------------------------------------------------------
+% 1) Fully textual
+\NewDocumentEnvironment{cttextframe}{ O{} m +b }{%
+  \begin{frame}[plain,#1]
+    \CTDecoratedBackground
+    \begingroup
+      \setbeamerfont{normal text}
+        {family=\sffamily,size*={12pt}{14.6pt}}%
+      \CTContentNode
+        {\dimexpr\paperwidth-\CTMarginLeft-\CTMarginRight\relax}
+        {#2}{#3}%
+    \endgroup
+    \CTPageNumber
+  \end{frame}
+}{}
+
+% 2) Illustration on the right
+% Per-frame use:
+%   \begin{ctrightframe}[illustration=36]{Title}{<illustration>}
+\NewDocumentEnvironment{ctrightframe}{ O{} m m +b }{%
+  \begingroup
+  \pgfkeys{/ctframe/.cd,
+    illustration=\CategoryRightIllustrationPercent,#1}%
+  \pgfmathsetlengthmacro{\CTPanelWidth}
+    {\CTLocalIllustrationPercent/100*\paperwidth}%
+  \pgfmathsetlengthmacro{\CTTextWidth}
+    {\paperwidth-\CTPanelWidth-\CTMarginLeft-.48cm}%
+  \pgfmathsetlengthmacro{\CTPanelCenterX}
+    {\paperwidth-.5*\CTPanelWidth}%
+  \pgfmathsetlengthmacro{\CTIllustrationWidth}
+    {\CTPanelWidth-.38cm}%
+  \begin{frame}[plain]
+    \CTRightBackground{\CTPanelWidth}
+    \begingroup
+      \setbeamerfont{frametitle}
+        {family=\categorytitlefont,size*={20pt}{28pt},series=\mdseries}%
+      \CTContentNode{\CTTextWidth}{#2}{#4}%
+    \endgroup
+    \CTIllustrationNode{\CTPanelCenterX}{0.50\paperheight}
+      {\CTIllustrationWidth}{#3}
+    \CTPageNumber
+  \end{frame}
+  \endgroup
+}{}
+
+% 3) Illustration below
+% Per-frame use:
+%   \begin{ctbottomframe}[illustration=42]{Title}{<illustration>}
+\NewDocumentEnvironment{ctbottomframe}{ O{} m m +b }{%
+  \begingroup
+  \pgfkeys{/ctframe/.cd,
+    illustration=\CategoryBottomIllustrationPercent,#1}%
+  \pgfmathsetlengthmacro{\CTPanelHeight}
+    {\CTLocalIllustrationPercent/100*\paperheight}%
+  \pgfmathsetlengthmacro{\CTPanelCenterY}{.5*\CTPanelHeight}%
+  \pgfmathsetlengthmacro{\CTBottomIllustrationWidth}
+    {\paperwidth-1.20cm}%
+  \begin{frame}[plain]
+    \CTBottomBackground{\CTPanelHeight}
+    \begingroup
+      \setbeamerfont{frametitle}
+        {family=\categorytitlefont,size*={20pt}{28pt},series=\mdseries}%
+      \CTContentNode
+        {\dimexpr\paperwidth-\CTMarginLeft-\CTMarginRight\relax}
+        {#2}{#4}%
+    \endgroup
+    \CTIllustrationNode{0.50\paperwidth}{\CTPanelCenterY}
+      {\CTBottomIllustrationWidth}{#3}
+    \CTPageNumber
+  \end{frame}
+  \endgroup
+}{}
+
+% -----------------------------------------------------------------------------
+% Welcome / title slide
+% -----------------------------------------------------------------------------
+\newcommand{\CategoryTitleFrame}{%
+  \begin{frame}[plain,noframenumbering]
+    \CTDecoratedBackground
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=west,inner sep=0pt,text width=.67\paperwidth,align=left]
+        at ([xshift=1.05cm,yshift=.60cm]current page.west)
+        {{\usebeamerfont{title}\color{CTPlum}\inserttitle}};
+      \node[anchor=north west,inner sep=0pt,text width=.64\paperwidth,align=left]
+        at ([xshift=1.07cm,yshift=-5.25cm]current page.north west)
+        {{\usebeamerfont{subtitle}\color{CTCharcoal}\insertsubtitle}};
+      \node[anchor=south west,inner sep=0pt,text width=.65\paperwidth,align=left]
+        at ([xshift=1.07cm,yshift=.80cm]current page.south west)
+        {{\usebeamerfont{author}\color{CTCharcoal}\insertauthor\par
+          \vspace{.18cm}\usebeamerfont{date}\color{CTSageDark}%
+          \insertinstitute\hfill\insertdate}};
+    \end{tikzpicture}
+  \end{frame}%
+}
+
+% Обложка лекции с фоном assets/cover.png. Текст берётся из стандартных
+% \title, \subtitle и \date, поэтому в файле лекции не нужны новые команды.
+\newcommand{\CTCoverBackground}{%
+  \IfFileExists{\CategoryCoverImage}{%
+    \CTOverlay{%
+      \node[anchor=center,inner sep=0pt] at (current page.center)
+        {\includegraphics[width=\paperwidth,height=\paperheight]
+          {\CategoryCoverImage}};%
+    }%
+  }{\CTDecoratedBackground}%
+}
+
+\newcommand{\LectureCoverFrame}{%
+  \begin{frame}[plain,noframenumbering]
+    \CTCoverBackground
+    \CTOverlay{%
+      \node[anchor=north west,inner sep=0pt,text width=.56\paperwidth,
+        align=left]
+        at ([xshift=1.05cm,yshift=-1.22cm]current page.north west)
+        {{\categorytitlefont\fontsize{31pt}{38pt}\selectfont
+          \color{CTPlum}\inserttitle}};
+      \node[anchor=north west,inner sep=0pt]
+        at ([xshift=1.08cm,yshift=-5.20cm]current page.north west)
+        {{\sffamily\fontsize{16pt}{19pt}\selectfont
+          \color{CTCharcoal}\insertsubtitle}};
+      \node[anchor=south west,inner sep=0pt]
+        at ([xshift=1.08cm,yshift=.73cm]current page.south west)
+        {{\sffamily\fontsize{10.5pt}{13pt}\selectfont
+          \color{CTSageDark}\insertdate}};
+    }%
+  \end{frame}%
+}
+
+\newcommand{\LectureClosingFrame}{%
+  \begin{frame}[plain,noframenumbering]
+    \CTCoverBackground
+    \CTOverlay{%
+      \node[anchor=west,inner sep=0pt,text width=.56\paperwidth,align=left]
+        at ([xshift=1.08cm]current page.west)
+        {{\categorytitlefont\fontsize{31pt}{38pt}\selectfont
+          \color{CTPlum}СПАСИБО\\[.2cm]ЗА ВНИМАНИЕ}};
+    }%
+  \end{frame}%
+}
+
+% -----------------------------------------------------------------------------
+% Instructor slide
+% Usage:
+% \begin{ctinstructorframe}{Name}{Role}{Photo}{QR} ...body... \end{...}
+% -----------------------------------------------------------------------------
+\NewDocumentEnvironment{ctinstructorframe}{ O{} m m m m +b }{%
+  \begin{frame}[plain,noframenumbering,#1]
+    \CTDecoratedBackground
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[
+        anchor=north west,
+        inner sep=5pt,
+        rounded corners=2pt,
+        draw=CTSageDark,
+        line width=.55pt,
+        fill=CTWhite,
+      text width=.225\paperwidth,
+        align=center
+      ] at ([xshift=.92cm,yshift=-.72cm]current page.north west)
+        {#4};
+
+      \node[anchor=north west,inner sep=0pt,text width=.60\paperwidth,align=left]
+        at ([xshift=5.10cm,yshift=-.72cm]current page.north west)
+        {{\usebeamerfont{instructor name}\color{CTPlum}#2}};
+
+      \node[anchor=north west,inner sep=0pt,text width=.65\paperwidth,align=left]
+        at ([xshift=5.10cm,yshift=-1.50cm]current page.north west)
+        {{\usebeamerfont{instructor role}\color{CTSageDark}#3}};
+
+      \draw[CTSageDark,opacity=.55,line width=.45pt]
+        ([xshift=5.10cm,yshift=-1.92cm]current page.north west) --
+        ([xshift=-1.02cm,yshift=-1.92cm]current page.north east);
+
+      \node[anchor=north west,inner sep=0pt,text width=.59\paperwidth,align=left]
+        at ([xshift=5.10cm,yshift=-2.16cm]current page.north west)
+        {\begin{minipage}[t]{.59\paperwidth}
+           \RaggedRight
+           \usebeamerfont{instructor body}\color{CTCharcoal}
+           #6
+         \end{minipage}};
+
+      \node[
+        anchor=south west,
+        inner sep=4pt,
+        rounded corners=2pt,
+        draw=CTSageDark,
+        line width=.55pt,
+        fill=CTWhite,
+        text width=.130\paperwidth,
+        align=center
+      ] at ([xshift=1.83cm,yshift=1.25cm]current page.south west)
+        {#5};
+    \end{tikzpicture}
+  \end{frame}
+}{}
+
+% -----------------------------------------------------------------------------
+% Fallback styling for ordinary Beamer frames
+% -----------------------------------------------------------------------------
+\setbeamertemplate{frametitle}{%
+  \vspace*{.30cm}%
+  \hspace*{.20cm}%
+  \usebeamerfont{frametitle}\color{CTPlum}\insertframetitle\par
+}
+
+\mode<all>
