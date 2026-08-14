@@ -128,6 +128,11 @@ NE_PROVERYAYU_VSEGDA = (
     "все двенадцать законов фазы 2 (А6/А8/А9/А10/Г-1/Г-2/Г-3/Г-6/Г-7/Г-8/Г-12/Г-15) "
     "печатаются ЖЁЛТЫМ, а не красным — держатся без исключений на ОДНОЙ лекции "
     "(teorkat-vvedenie/L2, 18 карточек), не на всём корпусе фабрики",
+    "Э3 (sceny-iz-blokov): 'доказательство не в сцене предмета' проверяется "
+    "консервативно ПО ТИПУ блока (не смеет делить сцену ни с одним более ранним "
+    "несущим блоком раздела) — рёбра `dokazatelstvo_opiraetsya_na`, которые "
+    "укажут точный предмет, ещё не заведены (заход kod_rebra-blokov.md); "
+    "проверка сузится, когда они появятся",
 )
 
 
@@ -349,6 +354,74 @@ def _check_vvodit_opiraetsya(sid, params, faza):
     return []
 
 
+# ═══════════════════════════ Заход `sceny-iz-blokov` (2026-08-14) ═══════════════════════════
+# Э1 сделал сцену производной от границы блока (по умолчанию), Э2 оставил ручной
+# `{@N}` законным исключением — но исключение обязано быть ВИДНЫМ, не молчаливым:
+# карточка, где хоть один блок раздела «Текст слайда» несёт ручной тег, обязана
+# нести поле-обоснование `sceny_vruchnuyu` (свободный текст «почему автоматика не
+# подходит»). Имя поля назначено заходом и не подлежит обсуждению (см. файл-заход
+# Э2). `formaty.py` для этого поля READ-ONLY (проверено при сборке захода:
+# валидации «неизвестное поле шапки» там нет — новое поле безопасно без правки).
+SCENY_VRUCHNUYU_POLE = "sceny_vruchnuyu"
+
+
+def _check_sceny_vruchnuyu(sid, params, sections):
+    if not bloki.has_manual_scenes(sections["tekst"]):
+        return []
+    if not _unfilled(params.get(SCENY_VRUCHNUYU_POLE)):
+        return []
+    return ["%s: раздел «Текст слайда — сжато» несёт ручной тег сцены {@N}, а поле "
+            "'%s' в шапке не заполнено — ручной тег ПЕРЕБИВАЕТ автоматику (Э1) и "
+            "обязан нести обоснование, иначе он неотличим от забытого (Э2 sceny-iz-blokov)"
+            % (sid, SCENY_VRUCHNUYU_POLE)]
+
+
+# Э3: «доказательство и то, что оно доказывает — никогда не в одной сцене»
+# (решение владельца, безусловное). Рёбра (`dokazatelstvo_opiraetsya_na`) заводит
+# ОТДЕЛЬНЫЙ заход `kod_rebra-blokov.md` и на сегодня их 0 на живой L2 (проверено
+# командой при сборке файла-захода) — без них проверяем по ТИПУ блока, как явно
+# разрешил файл-заход (не по ребру, и это НЕ повод стопориться): дока-зательство
+# не смеет делить сцену НИ С ОДНИМ более ранним НЕСУЩИМ (не narrativ) блоком
+# своего раздела. Это заведомо ШИРЕ точного «предмета доказательства» (тот один
+# конкретный блок, на который рёбра однажды укажут точно) — консервативно, без
+# ложных зелёных; рёбра появятся — проверку можно сузить до точного предмета.
+def _check_dokazatelstvo_scena(sid, sections):
+    live = [b for b in sections["tekst"] if b.telo.strip()]
+    scenes = bloki.block_start_scenes(live)
+    out = []
+    for i, b in enumerate(live):
+        if b.tip != "dokazatelstvo":
+            continue
+        for j in range(i):
+            subj = live[j]
+            if subj.tip == "narrativ" or scenes[j] != scenes[i]:
+                continue
+            out.append(
+                "%s: блок [dokazatelstvo] «%s» (сцена %d) — в той же сцене, что и "
+                "более ранний блок [%s] «%s» — доказательство обязано быть на "
+                "ДРУГОЙ сцене (Э3 sceny-iz-blokov; рёбер пока нет, проверено по типу "
+                "блока, не по предмету — см. ## ПЛАН файла-захода)"
+                % (sid, b.mysl, scenes[i], subj.tip, subj.mysl))
+    return out
+
+
+# Э4: «не больше трёх блоков на слайде» — ориентир качества владельца, ЖЁЛТЫЙ,
+# не гейт (две карточки живой L2 нарушают его законно уже сегодня). ОТДЕЛЬНЫЙ
+# поток `sceny_zheltye` (по образцу `tip_zheltye` захода tipologia-odna-os), а не
+# внутрь `ZAKONY_BLOKOV`: тот — явно закрытый список «двенадцати законов фазы 2»
+# ДРУГОГО захода (zakony-v-gejt), с зашитой цифрой 12 в докстроках/печати —
+# заводить туда тринадцатый закон чужой арки значит смешать две истории правок.
+POTOLOK_BLOKOV = 3
+
+
+def _check_potolok_blokov(sid, sections):
+    n = len([b for b in sections["tekst"] if b.telo.strip()])
+    if n > POTOLOK_BLOKOV:
+        return ["%s: %d блок(ов) на слайде — выше ориентира «не больше %d» (Э4 sceny-iz-blokov)"
+                % (sid, n, POTOLOK_BLOKOV)]
+    return []
+
+
 # Заход zakony-v-gejt (2026-08-12, `FAZA-2-PROCEDURA.md §1.1`/§1.1-тер): одиннадцать
 # законов фазы 2 держатся БЕЗ ИСКЛЮЧЕНИЙ на живой деке (18 карточек
 # teorkat-vvedenie/L2) — владелец признал их годными в гейт 12.08. Плюс Г-3
@@ -566,16 +639,19 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     zakon_warns: {закон: [str]} жёлтые — заход zakony-v-gejt, никогда не красят,
     g15_info: (n_несущих, tip_verstki) — сырьё для Г-15, судится на уровне лекции
     целиком в check_lekcija, не здесь; tip_zheltye: [str] жёлтые находки захода
-    tipologia-odna-os — Т1 без примера и без обоснования, NE_KLASSIFICIROVAN)."""
+    tipologia-odna-os — Т1 без примера и без обоснования, NE_KLASSIFICIROVAN;
+    sceny_zheltye: [str] жёлтые находки захода sceny-iz-blokov — Э4, потолок
+    трёх блоков на слайде)."""
     zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
     g15_info = (0, None)
     tip_zheltye = []
+    sceny_zheltye = []
     issues = _check_lifecycle_block(text, sid)
     try:
         params, raw_body = parse_card(text, sid=sid)
     except FormatSlaida as e:
         issues.append("%s: карточка не парсится: %s" % (sid, e))
-        return issues, zakon_warns, g15_info, tip_zheltye
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye
 
     for f in _polya_dlya_fazy(faza):
         if _unfilled(params.get(f)):
@@ -616,13 +692,13 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
                 "uzhe_vvedeno_ranee лекции" % (sid, termin, vvedeno))
 
     if not raw_body.strip():
-        return issues, zakon_warns, g15_info, tip_zheltye  # K3: слайд без текста — легален, дальше нечего проверять
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye  # K3: слайд без текста — легален, дальше нечего проверять
 
     try:
         sections = bloki.parse_sections(raw_body, sid=sid)
     except bloki.FormatBlokov as e:
         issues.append(str(e))
-        return issues, zakon_warns, g15_info, tip_zheltye  # без разобранных секций состав/бюджет не проверить
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye  # без разобранных секций состав/бюджет не проверить
 
     if sections["orphan_matematika"]:
         issues.append("%s: в разделе «Математика — развёрнуто» есть абзац вне блока: %r"
@@ -639,6 +715,11 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
 
     issues.extend(_check_zapolnit_v_tele(sid, sections, faza))
     issues.extend(_check_centralnyj_blok(sid, params, sections))
+
+    # Заход sceny-iz-blokov: Э2/Э3 красят, Э4 — жёлтый (см. докстроки функций выше).
+    issues.extend(_check_sceny_vruchnuyu(sid, params, sections))
+    issues.extend(_check_dokazatelstvo_scena(sid, sections))
+    sceny_zheltye.extend(_check_potolok_blokov(sid, sections))
 
     budget = params.get("byudzhet_slov")
     if not _unfilled(budget):
@@ -662,22 +743,23 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
         for name, _, fn in ZAKONY_BLOKOV:
             zakon_warns[name].extend(fn(sid, sections))
 
-    return issues, zakon_warns, g15_info, tip_zheltye
+    return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye
 
 
 def check_lekcija(lekcija_dir, faza=None):
     """Папка лекции → (issues: [str], n_slides: int, zakon_warns: {закон: [str]},
-    tip_zheltye: [str], tip_counter: Counter). issues пуст — гейт зелёный.
-    zakon_warns — жёлтые находки захода zakony-v-gejt, tip_zheltye — жёлтые
-    находки захода tipologia-odna-os (Т1 без примера, NE_KLASSIFICIROVAN); ни те,
-    ни другие не влияют на rc. tip_counter — распределение `tip_slaida` по живым
-    карточкам (клауза 4 критерия готовности захода tipologia-odna-os: печатать
-    ДО/ПОСЛЕ, нулевую клетку называть явно)."""
+    tip_zheltye: [str], tip_counter: Counter, sceny_zheltye: [str]). issues пуст —
+    гейт зелёный. zakon_warns — жёлтые находки захода zakony-v-gejt, tip_zheltye —
+    жёлтые находки захода tipologia-odna-os (Т1 без примера, NE_KLASSIFICIROVAN),
+    sceny_zheltye — жёлтые находки захода sceny-iz-blokov (Э4, потолок трёх
+    блоков); ни одни из них не влияют на rc. tip_counter — распределение
+    `tip_slaida` по живым карточкам (клауза 4 критерия готовности захода
+    tipologia-odna-os: печатать ДО/ПОСЛЕ, нулевую клетку называть явно)."""
     lekcija_dir = Path(lekcija_dir)
     zakon_warns_pusto = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV + (("Г-15", "", None),)}
     brief_path = lekcija_dir / "brief.md"
     if not brief_path.is_file():
-        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto, [], Counter())
+        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto, [], Counter(), [])
 
     brief_params, _ = parse_front_matter(brief_path.read_text(encoding="utf-8"), sid="brief.md")
     uzhe_vvedeno = {item.get("termin") for item in (brief_params.get("uzhe_vvedeno_ranee") or [])
@@ -689,7 +771,7 @@ def check_lekcija(lekcija_dir, faza=None):
     slide_paths = sorted(slajdy_dir.glob("*/slaid.md"))
     if not slide_paths:
         return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0,
-                 zakon_warns_pusto, [], Counter())
+                 zakon_warns_pusto, [], Counter(), [])
 
     texts, vvodit_by_sid = {}, {}
     tip_counter = Counter()
@@ -709,15 +791,17 @@ def check_lekcija(lekcija_dir, faza=None):
     issues = []
     zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
     tip_zheltye = []
+    sceny_zheltye = []
     g15_info_by_sid = {}
     for p in slide_paths:
         sid = p.parent.name
-        slide_issues, slide_warns, g15_info, slide_tip_zheltye = check_slide(
+        slide_issues, slide_warns, g15_info, slide_tip_zheltye, slide_sceny_zheltye = check_slide(
             sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza)
         issues.extend(slide_issues)
         for name, warns in slide_warns.items():
             zakon_warns[name].extend(warns)
         tip_zheltye.extend(slide_tip_zheltye)
+        sceny_zheltye.extend(slide_sceny_zheltye)
         g15_info_by_sid[sid] = g15_info
 
     # Г-15 судит ПОРЯДОК слайдов лекции (slide_order), не одну карточку — считаем
@@ -726,7 +810,7 @@ def check_lekcija(lekcija_dir, faza=None):
     slide_order = [s for s in (brief_params.get("slide_order") or []) if s in g15_info_by_sid]
     zakon_warns["Г-15"] = zakon_g15(slide_order, g15_info_by_sid) if faza is None and slide_order else []
 
-    return issues, len(slide_paths), zakon_warns, tip_zheltye, tip_counter
+    return issues, len(slide_paths), zakon_warns, tip_zheltye, tip_counter, sceny_zheltye
 
 
 def _pechat_slepyh_zon(faza):
@@ -782,6 +866,18 @@ def _pechat_tipologiya(tip_zheltye, tip_counter):
           % (tipy_slajdov.NE_KLASSIFICIROVAN, ne_klass_n, sum(tip_counter.values())))
 
 
+def _pechat_sceny(sceny_zheltye):
+    """Заход sceny-iz-blokov: жёлтые находки Э4 (потолок трёх блоков) — печатается
+    ВСЕГДА, включая зелёный прогон, тем же принципом, что и соседние `_pechat_*`."""
+    print("СЦЕНЫ ИЗ БЛОКОВ (жёлтое — ориентир, не гейт; Э4, потолок %d блоков; %d):"
+          % (POTOLOK_BLOKOV, len(sceny_zheltye)))
+    if sceny_zheltye:
+        for w in sceny_zheltye:
+            print("  ⚠ %s" % w)
+    else:
+        print("  ✓ нарушителей 0")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Гейт карточек лекции — краснеет и не пропускает дальше")
     ap.add_argument("lekcija", help="путь к папке лекции (несёт brief.md + slajdy/)")
@@ -793,7 +889,8 @@ def main():
                           "значения = полная проверка, как без флага")
     args = ap.parse_args()
 
-    issues, n, zakon_warns, tip_zheltye, tip_counter = check_lekcija(args.lekcija, faza=args.faza)
+    issues, n, zakon_warns, tip_zheltye, tip_counter, sceny_zheltye = check_lekcija(
+        args.lekcija, faza=args.faza)
     rezhim = "выход фазы %d" % args.faza if args.faza else "полная проверка"
     if issues:
         print("КРАСНЫЙ (%s): проверено %d из %d карточек, замечаний %d" % (rezhim, n, n, len(issues)))
@@ -803,6 +900,7 @@ def main():
         print("ЗЕЛЁНЫЙ (%s): проверено %d из %d карточек, замечаний 0" % (rezhim, n, n))
     _pechat_zakony(zakon_warns)
     _pechat_tipologiya(tip_zheltye, tip_counter)
+    _pechat_sceny(sceny_zheltye)
     _pechat_slepyh_zon(args.faza)
     return 1 if issues else 0
 

@@ -84,12 +84,12 @@ krasnet "два вспомогательных primer на Т1 — отказ" "
   "$T/lek-zapret3" --imya s01 --tip Т1 --centralnyj "opredelenie:A" \
   --vspomogatelnyj "primer:B" --vspomogatelnyj "primer:C"
 
-echo "── запрет 4: у Т4/Т5 просят блок кроме [narrativ]"
+echo "── запрет 4: у Т4 просят блок кроме [narrativ]"
 krasnet "Т4 с вспомогательным primer — отказ" "не предусматривает блок" \
   "$T/lek-zapret4a" --imya s01 --tip Т4 --centralnyj "narrativ:переход" \
   --vspomogatelnyj "primer:X"
-krasnet "Т5 с доказательством — отказ" "не предусматривает блок" \
-  "$T/lek-zapret4b" --imya s01 --tip Т5 --centralnyj "narrativ:итог" \
+krasnet "Т4 с доказательством — отказ" "не предусматривает блок" \
+  "$T/lek-zapret4b" --imya s01 --tip Т4 --centralnyj "narrativ:итог" \
   --dokazatelstvo "Y"
 
 echo "── запрет 5: у Т3 не задано доказательство"
