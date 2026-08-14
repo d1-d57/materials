@@ -612,6 +612,28 @@
 **`_studio/zhurnal/2026-08-11_dovodka-L2/kod_dovodka-pered-lekciej.md`** (Срочная доводка дека L2 перед лекцией: полосы до края экрана, воздух между блоками, правки слайдов 4/5/9/10, обложка из PDF, сцены, блоки последними)
 
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/HANDOFF-2026-08-14.md`** (Хэндофф в сессию 2026-08-14: стратегическая сессия — заход на пересборку генератора под типологию фазы 2 + список мелочей)
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RESERCH-arhitektura.md`** (Ресёрч по 7 живым репозиториям: как устроена память проекта (инциденты/долги/развитие/дневник/карта), для стандарта дома скилла)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RESERCH-1-disciplina.md`** (Ресёрч Ф1: как устроена память проекта в репозитории disciplina (инциденты/долги/дом скилла))
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RESERCH-2-materials-studio.md`** (Ресёрч Ф1: память проекта в materials/_studio (журнал, борд, долги))
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RESERCH-3-malye-proekty.md`** (Ресёрч Ф1: память проекта в малых проектах materials (вне _studio))
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RESERCH-4-materials-vne-studio.md`** (Ресёрч Ф1: память проекта в materials вне _studio (корень, другие папки))
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/RAZVOD-156.md`** (Разведение 156 входных записей дома скилла на три списка: zahody/priyomka/spornye)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/VERIFIKATOR-razvod-156.md`** (Верификатор разведения 156 записей — проверка RAZVOD-156.md другим методом)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/srez-7.2-vhodnye-156.md`** (Срез §7.2: 156 входных записей дома скилла, исходный материал для разведения)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/table-zahody-65.md`** (Таблица 65 записей, отнесённых к дому zahody после разведения 156)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/table-priyomka-17.md`** (Таблица 17 записей, отнесённых к дому priyomka после разведения 156)
+
+**`_studio/zhurnal/2026-08-13_arhitektura-doma/table-spornye-74.md`** (Таблица 74 спорных записей, не разведённых по адресу — материал для дальнейшего разбора)
+
 
 **`_studio/zhurnal/2026-08-13_skill-mat-teksta/INVENTAR-defektov.md`** (Ф2: поимённый инвентарь дефектов по восьми лентам — три класса, 67 находок с адресами и цитатами, цена по классам и слепые зоны метода)
 
