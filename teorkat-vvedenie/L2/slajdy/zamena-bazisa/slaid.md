@@ -70,17 +70,17 @@ podbor_avto: 33614bed89eb|kegl_px=37|mezhstrochye=1.496|otstup_bloka=23.6|liniya
 
 ### [utverzhdenie] выбор базиса задаёт функтор
 
-{@2} Построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}$ где $\mathbf{Mat}\colon$ объекты — числа, $\mathbf{Mat}(n,m)$ — матрицы размера $m\times n$
+Построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}$ где $\mathbf{Mat}\colon$ объекты — числа, $\mathbf{Mat}(n,m)$ — матрицы размера $m\times n$
 
-{@2 .formula} $F\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}\qquad FV=\dim V\text{,}\qquad FA=(a_{ij})$
+{.formula} $F\colon\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}\text{,}\qquad FV=\dim V\text{,}\qquad FA=(a_{ij})$
 
-{@2 .formula} $F(A\circ B)=FA\cdot FB\text{,}\qquad F1_V=E$
+{.formula} $F(A\circ B)=FA\cdot FB\text{,}\qquad F1_V=E$
 
 ### [narrativ] замена базиса связывает два функтора
 
-{@3} Другой выбор базисов даёт другой функтор; связывают их матрицы перехода
+Другой выбор базисов даёт другой функтор; связывают их матрицы перехода
 
-{@3 .formula} $GA=M_W\cdot FA\cdot M_V^{-1}$
+{.formula} $GA=M_W\cdot FA\cdot M_V^{-1}$
 
 ## Правки
 - 2026-08-12 · 🔴 **перед формальной частью добавлена словесная рамка** «построим функтор $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}$» — в обоих разделах. Дословно: *«Теперь замена базиса. Выберем базис, тогда линейное отображение записывается матрицей. Категория. У нас есть функтор. Но опять, мы хотим — надо, может быть, сказать словами чуть-чуть. То, что рассмотрим функтор, построим функтор из вект-из в матрицы. Если есть место»*. Условие «если есть место» проверено: `tip_verstki: polosa_vertikalnaya`, `liniya: 66` — тексту отдано 66 % ширины, рядом стоит `kvadrat-zameny-bazisa`, поэтому взята РОВНО одна строка, и она вплетена в существующую строку про $\mathbf{Mat}$, а не добавлена отдельным абзацем. Цель функтора теперь названа словами ДО того, как появляется $F$: раньше стрелка $\mathbf{Vect}^{\mathrm{iso}}\to\mathbf{Mat}$ впервые возникала внутри формулы

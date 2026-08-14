@@ -72,7 +72,7 @@ podbor_avto: c5eb4b4f70f4|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68
 
 ### [primer] какие бывают векторные пространства
 
-{@2} - наборы $(x_1,\dots,x_n)\colon$ $\mathbb R^n$ и $\mathbb C^n$ — $(x_i)+(y_i)=(x_i+y_i)\text{,}$ $\lambda(x_i)=(\lambda x_i)$
+- наборы $(x_1,\dots,x_n)\colon$ $\mathbb R^n$ и $\mathbb C^n$ — $(x_i)+(y_i)=(x_i+y_i)\text{,}$ $\lambda(x_i)=(\lambda x_i)$
 - параллельные переносы пространства
 - функции на одном множестве: многочлены степени $\le n$ и $\mathbb R^X=\{f\colon X\to\mathbb R\}$ при конечном $X$ — $(f+g)(x)=f(x)+g(x)\text{,}$ $(\lambda f)(x)=\lambda\,f(x)$
 
