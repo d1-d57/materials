@@ -57,6 +57,16 @@ document.querySelectorAll('[data-ill]').forEach(box => {
     if (!svg.hasAttribute('preserveAspectRatio'))
       svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
   });
+  /* заход slajdy-media, М4: без этого панель с видео до нажатия play — чёрный
+     прямоугольник (preload="metadata" не обязан красить первый кадр). НЕ play():
+     это не автовоспроизведение, а разовый seek на кадр внутри анимации — тот
+     же приём, что и постер у видеохостингов. 20% длительности, не 0: у начала
+     анимации часто ничего не нарисовано. */
+  box.querySelectorAll('video').forEach(video => {
+    video.addEventListener('loadedmetadata', () => {
+      video.currentTime = Math.min(3, video.duration * 0.2);
+    }, {once: true});
+  });
 });
 
 /* ---- auto-fit: largest font that doesn't overflow the zone ---- */

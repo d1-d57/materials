@@ -589,7 +589,7 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
             if stem not in seen_ill:
                 seen_ill.add(stem)
                 all_ills.append(stem)
-    templates = load_ill(all_ills, illustrations_dir) if all_ills else ""
+    templates = load_ill(all_ills, illustrations_dir, out_dir=Path(out).parent) if all_ills else ""
 
     all_css = "\n".join(by_id[sid][3] for sid in order)
     sections = "\n".join(
