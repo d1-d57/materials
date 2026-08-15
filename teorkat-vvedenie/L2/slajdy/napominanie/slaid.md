@@ -38,10 +38,10 @@ primer_dlya: []
 status: v_deke
 zagolovok_snyat_namerenno: da
 obosnovanie_verstki: иллюстрация снята по указанию владельца («на первом слайде не должно быть никакой картинки»), полосы без картинки не бывает — значит только текст. Типографику подбирает солвер
-kegl_px: 39
-mezhstrochye: 1.496
-otstup_bloka: 24.9
-podbor_avto: 299cf5134b8e|kegl_px=39|mezhstrochye=1.496|otstup_bloka=24.9
+kegl_px: 41
+mezhstrochye: 1.57
+otstup_bloka: 30.3
+podbor_avto: 299cf5134b8e|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
 ---
 
 ## Математика — развёрнуто

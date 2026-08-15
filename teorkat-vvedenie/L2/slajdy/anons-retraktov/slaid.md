@@ -37,10 +37,10 @@ bez_opredeleniya_namerenno: [ретракт, фундаментальная гр
 dokazatelstvo_opiraetsya_na: []
 primer_dlya: []
 status: v_deke
-kegl_px: 41
-mezhstrochye: 1.57
-otstup_bloka: 30.3
-podbor_avto: 204b730b03b6|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
+kegl_px: 40
+mezhstrochye: 1.496
+otstup_bloka: 25.5
+podbor_avto: 204b730b03b6|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5
 ---
 ## Математика — развёрнуто
 ### [narrativ] куда мы идём — инструмент вместо изоморфизма, и топология в конце
