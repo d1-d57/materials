@@ -41,13 +41,23 @@ POLE_METKI = vmeshchenie.POLE_METKI
 POLE_NAMERENIYA = vmeshchenie.POLE_NAMERENIYA
 
 
-def _compile_one(slide_path_str):
-    """Воркер отдельного процесса: путь к .md → (sid, tip, status, illustracii-стемы,
-    css, html, n_scenes). `sid` — ИМЯ ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не
-    стем файла. `n_scenes` — Э8 захода kartochka-i-sborka: без него движок считает
-    слайд односценовым и пропуск (`{@N|…}`) не раскрывается НИКОГДА (см. slaid.py).
+def _compile_one(zadanie):
+    """Воркер отдельного процесса: (путь к .md, номер раздела) → (sid, tip, status,
+    illustracii-стемы, css, html, n_scenes). `sid` — ИМЯ ПАПКИ слайда
+    (`slajdy/<sid>/slaid.md`), не стем файла. `n_scenes` — Э8 захода
+    kartochka-i-sborka: без него движок считает слайд односценовым и пропуск
+    (`{@N|…}`) не раскрывается НИКОГДА (см. slaid.py).
     Импорты — ВНУТРИ функции: `ProcessPoolExecutor` на macOS стартует процессы
-    методом spawn, каждый воркер импортирует этот модуль заново с нуля."""
+    методом spawn, каждый воркер импортирует этот модуль заново с нуля.
+
+    🔴 Аргумент стал ПАРОЙ (заход sloi-i-obrez, Э1). Номер раздела — свойство не
+    карточки, а МЕСТА слайда в деке: он считается сквозным по разделителям в порядке
+    их следования и потому известен только здесь, снаружи карточки. Порядок известен
+    ДО компиляции (`slide_order` уже отфильтрован от резерва, а `_order` ниже
+    переставляет только обложку и финальный — «середину» не трогает), поэтому номер
+    можно посчитать заранее и не гонять второй проход. `None` — слайд не разделитель
+    либо рендерится в одиночку (`slaid.py`), где места в деке нет вовсе."""
+    slide_path_str, nomer_razdela = zadanie
     import sys as _sys
     from pathlib import Path as _Path
     sb = _Path(__file__).resolve().parent
@@ -70,6 +80,7 @@ def _compile_one(slide_path_str):
     params["illustracii"] = [_Path(s).stem for s in (params.get("illustracii") or [])]
     # формулы бывают и в `zagolovok_na_ekrane` (tipy._zagolovok_html) — тот же кэш
     params["_math"] = math
+    params["_nomer_razdela"] = nomer_razdela
     css, html = compile_tip(sid, params, body_html)
     # 🔴 проверка ПОСЛЕ compile_tip, а не только по `body_html`: заголовок слайда
     # тоже рендерит формулы, и по телу его брак не виден.
@@ -547,9 +558,18 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     if podbor:
         _podobrat_tipografiku(to_compile, zanovo=zanovo)
 
+    # Э1 захода sloi-i-obrez: номер раздела — СКВОЗНОЙ по разделителям в порядке их
+    # следования в деке. Считается здесь, потому что карточка своего места в деке не
+    # знает; `slide_order` на этой строке уже без резерва, а `_order` ниже переставляет
+    # только обложку и финальный, так что порядок разделителей между собой окончателен.
+    razdeliteli = [s for s in slide_order if tip_by_sid.get(s) == "razdelitel"]
+    nomer_razdela = {sid: i + 1 for i, sid in enumerate(razdeliteli)}
+
     ctx = mp.get_context("fork") if hasattr(os, "fork") else None
     with ProcessPoolExecutor(max_workers=jobs, mp_context=ctx) as ex:
-        results = list(ex.map(_compile_one, [str(p) for p in to_compile]))
+        results = list(ex.map(_compile_one,
+                              [(str(p), nomer_razdela.get(p.parent.name))
+                               for p in to_compile]))
 
     by_id = {sid: (tip, status, ills, css, html, n_scenes)
               for sid, tip, status, ills, css, html, n_scenes in results}
@@ -679,6 +699,27 @@ def main():
         print("ОШИБКА: %s" % e, file=sys.stderr)
         return 1
     print("собран дек: слайдов в деке %d, в резерве %d → %s" % (n, n_rezerv, out))
+
+    # 🔴 ГЕЙТ ВМЕЩЕНИЯ ЗОВЁТ САМА СБОРКА (Э4 захода sloi-i-obrez, решение владельца
+    # 2026-08-16 «гейт в сборку»). До этого гейт был объявлен `called-by-hand`, и
+    # `deck.py` его не звал вовсе: пересборка деки проходила, не проверяя ничего.
+    #
+    # СБОРКУ НЕ РОНЯЕМ, а печатаем громко и называем слайды поимённо. Решать, ронять
+    # ли, — не дело исполнителя (ограничитель Э4); развилка вынесена в `## ВОПРОСЫ`
+    # захода. Красный гейт при rc=0 — это осознанный выбор «сказать», а не недосмотр.
+    #
+    # Импорт ЗДЕСЬ, а не в шапке модуля: гейт тянет playwright и поднимает Chrome, а
+    # `deck.py` импортируют воркеры пула (`_compile_one`) — в шапке это означало бы
+    # импорт браузерного стека в каждом процессе.
+    from gejt_vmeshcheniya import proverit_dek
+    try:
+        proverit_dek(out)
+    except Exception as e:
+        # Гейт — проверка, а не условие существования деки: дек уже собран и лежит
+        # на диске. Нет Chrome / упал playwright — говорим об этом вслух и отдаём
+        # rc=0, иначе отсутствие браузера выглядело бы как брак вёрстки.
+        print("⚠ гейт вмещения не отработал: %s: %s" % (type(e).__name__, e),
+              file=sys.stderr)
     return 0
 
 
