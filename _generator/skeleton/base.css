@@ -145,6 +145,17 @@ body.blanked #stage { visibility: hidden; }
    на видео, канвас и 3D (аналитик, интервью 2026-08-16). */
 .panel > video { width: 100%; height: 100%; object-fit: contain; display: block; }
 
+/* Э3 (dochistka-pleera-i-vitriny): замена native controls — см. engine.js,
+   блок гидратации `video[controls]`. Один кружок play/pause в палитре темы,
+   тот же визуальный язык, что у `.lab-row` чуть ниже (тихий по умолчанию,
+   ярче при наведении на панель). */
+.video-ctl { position: absolute; left: 12px; bottom: 8px; z-index: 6;
+  width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--card); color: var(--ink);
+  font: 15px/1 "Noto Sans", sans-serif; display: flex; align-items: center; justify-content: center;
+  opacity: .6; transition: opacity .2s; }
+.video-ctl:hover, .panel:hover .video-ctl { opacity: 1; }
+
 /* лабораторная строка экспериментов (SIM-DESIGN §2) */
 /* кнопки-иконки на док-панели (правый нижний угол канваса; в узких — по центру) */
 .lab-row { position: absolute; right: 12px; bottom: 8px; z-index: 6;

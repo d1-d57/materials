@@ -67,6 +67,27 @@ document.querySelectorAll('[data-ill]').forEach(box => {
       video.currentTime = Math.min(3, video.duration * 0.2);
     }, {once: true});
   });
+  /* Э3 (dochistka-pleera-i-vitriny): нативная `controls`-панель — чёрная
+     полоса на всю ширину со значком звука (звука в роликах нет вовсе),
+     fullscreen и меню «три точки», чужеродная на бежево-зелёной теме и
+     видная ВСЕГДА (слайд стоит на паузе по умолчанию). Убрать `controls`
+     целиком нельзя — лектору нечем будет остановить ролик (47–77 c). Меняем
+     на одну кнопку play/pause в палитре темы, тем же языком, что у
+     `.lab-row`; сама функция «поставить на паузу» у лектора остаётся. */
+  box.querySelectorAll('video[controls]').forEach(video => {
+    video.removeAttribute('controls');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'video-ctl';
+    btn.textContent = '▶';
+    btn.setAttribute('aria-label', 'воспроизвести / пауза');
+    btn.addEventListener('click', () => {
+      if (video.paused) video.play(); else video.pause();
+    });
+    video.addEventListener('play', () => { btn.textContent = '❚❚'; });
+    video.addEventListener('pause', () => { btn.textContent = '▶'; });
+    box.appendChild(btn);
+  });
 });
 
 /* ---- auto-fit: largest font that doesn't overflow the zone ---- */
@@ -314,9 +335,14 @@ function showSingle(i, k) {
        syncHash пишет в адрес ту, которой на экране нет. */
     const eff = applyScene(s, active ? scene : scenesOf(s));   // park hidden at final
     if (active) scene = eff;
+    /* Э3 (dochistka-pleera-i-vitriny): раньше вход на слайд перематывал и
+       ЗАПУСКАЛ видео (`v.play()`) — тихий автоплей, который на прямой ссылке
+       браузер блокирует политикой (беззвучно), а на обычной навигации
+       стрелками уже НЕТ — ролик стартовал сам, хотя лектору нужно решать,
+       когда включать (owner: «autoplay мешает говорить»). Уходя со слайда —
+       по-прежнему ставим на паузу, чтобы ролик не играл фоном. */
     s.querySelectorAll('video').forEach(v => {
-      if (active) { v.currentTime = 0; const p = v.play(); p && p.catch(() => {}); }
-      else v.pause();
+      if (!active) v.pause();
     });
   });
   const s = slides[cur];
