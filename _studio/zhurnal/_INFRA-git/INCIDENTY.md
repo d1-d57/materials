@@ -240,3 +240,4 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/uroki-faz-1-2: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/zamykanie-reestrov: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/svedenie-arki: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-11 20:54 · zahod/zayavki-yadro · коммит с --no-verify: чужой долг: канон GIT-disciplina.md не описывает новые подкоманды zayavka/zayavki/zayavka-zakryt — обновление канона вне моей зоны (см. PROEKT.md §9: канон правит аналитик) · → назвать причину долгом в отчёте захода; своё красное — чинить · статус: открыт
