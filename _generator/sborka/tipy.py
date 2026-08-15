@@ -106,11 +106,16 @@ GLOBAL_CSS = (
     # фон САМОЙ картинки (уже обеспечено — `.panel{background:none}`, base.css).
     # Порядок слоёв дословно: «сначала рисовался шаблон — бежевый верх, зелёный
     # низ, потом прозрачный прямоугольник с непрозрачной иллюстрацией поверх,
-    # потом паттерн в углу» ⇒ фон зоны → узор → текст. Узор структурно и так
-    # ниже любого содержимого зоны (он background-image САМОГО `.slide`, красится
-    # первым; `.zone.board`/`.zone.copy` — дети `.slide`, красятся поверх) — само
-    # исчезновение этого правила ничего в порядке слоёв не переставляет, только
-    # возвращает подложке цвет.
+    # потом паттерн в углу» ⇒ фон зоны → узор → текст.
+    # 🔴 ЗДЕСЬ СТОЯЛО РАССУЖДЕНИЕ, КОТОРОЕ БЫЛО НЕВЕРНЫМ ДВА ЗАХОДА ПОДРЯД: будто
+    # узор «структурно и так ниже любого содержимого зоны, потому что он
+    # background-image самого `.slide`». Из этого следует ровно обратное тому, что
+    # тут написано: фон ПОТОМКА кладётся поверх фона предка, значит зелёная подложка
+    # накрывала узор — что владелец и увидел («вдоль нижней линии нарисован, а где
+    # начинается зелёная область — обрезается»). Порядок слоёв держит теперь не
+    # случайность каскада, а объявленный слой: `uzor.css` рисует узор в
+    # `.slide::after` (`z-index:1`) и поднимает содержимое зоны на `z-index:2`.
+    # Эта строка по-прежнему только возвращает подложке цвет.
     # ЗАГОЛОВОК НА МЕСТЕ, ОСТАТОК ЦЕНТРИРОВАН (заход pravila-kadra, Э3; разворот
     # доводки Л2 Ф1б ниже). `justify-content:space-between` разносило заголовок
     # и первый блок по КРАЯМ зоны — на плотных слайдах незаметно (запаса нет),
@@ -149,9 +154,27 @@ GLOBAL_CSS = (
     # (`margin-top/bottom:auto` выше) всё равно съедает разницу, когда контент не
     # переполнен, так что для типичного слайда ничего не меняется, а на грани
     # переполнения даёт формуле/строке лишние 8px (было 12, стало 4).
+    # 🔴 ТЕКСТОВАЯ ЗОНА БОЛЬШЕ НЕ РЕЖЕТ (заход sloi-i-obrez, Э2). Владелец,
+    # 2026-08-16: «было чёткое указание, чтобы нижняя линия… она часть фона, а текст
+    # поверх фона. Поэтому Z не должно обрезаться». `.zone` несёт `overflow:hidden`
+    # (base.css), и на грани переполнения он срезал последнюю строку по кромке зоны —
+    # то есть линия работала ножом, а не фоном. Здесь клип снят: перелившийся текст
+    # рисуется ПОВЕРХ линии и зелёной подложки (`uzor.css` поднимает содержимое зоны
+    # на `z-index:2`), а за кадр не убегает — `.slide{overflow:hidden}` цел.
+    #
+    # ⚠ Снято у `.zone.copy`, а НЕ у общего `.zone` в `base.css`, хотя дефект живёт
+    # там. Причина названа в самом `base.css:24`: тот файл инлайнит `build_deck.py`
+    # в деки buffon/dandelin/fibonacci — снятие клипа у общего `.zone` поменяло бы
+    # вид трёх чужих деков вне зоны этого захода. `.zone.board` клип сохраняет:
+    # картинке вылезать за свою полосу незачем.
+    #
+    # 🔴 ПОЧЕМУ ЭТО НЕ ПОДГОНКА ГЕОМЕТРИИ, которой чинили дважды. Предыдущий заход
+    # ужал нижнее поле 12px→4px и получил запас в сотую строки: формально влезло,
+    # а любая правка текста, шрифта или переносов возвращает обрез. Клип снят
+    # структурно — «влезло» перестало быть условием того, что текст ВИДЕН.
     ".zone.copy{ padding:" + str(ZONA_PAD_TOP) + "px 18px " + str(ZONA_PAD_BOTTOM) + "px "
     + str(X_TEKST) + "px; display:flex; flex-direction:column; "
-    "justify-content:flex-start; } "
+    "justify-content:flex-start; overflow:visible; } "
     ".zone.copy > *{ flex:0 0 auto; } "
     ".zone.copy > .zagolovok + *{ margin-top:auto; } "
     ".zone.copy > *:first-child:not(.zagolovok){ margin-top:auto; } "
@@ -190,6 +213,38 @@ GLOBAL_CSS = (
 
 class TipVerstki(Exception):
     pass
+
+
+def _bez_uzora(sid):
+    """Погасить слой узора на этом слайде (`uzor.css`, `.slide::after`).
+
+    Заход sloi-i-obrez, Э3. Нужен там, где кадр И ТАК закрыт целиком — сплошным
+    цветом (`_sploshnoj_fon` ниже) или полнокадровой картинкой (обложка, финальный:
+    у них `.bg` во весь `inset:0`). Узору там рисоваться не над чем.
+
+    🔴 ПОЧЕМУ НЕ «ПОДНЯТЬ КАРТИНКУ НАД УЗОРОМ», как сделано для `.panel`. Пробовано
+    этим же прогоном и отвергнуто ЗАМЕРОМ, а не рассуждением: `.bg` у обложки —
+    первый ребёнок слайда, а заголовок (`.thx`, `.title`) идёт после него и своего
+    `z-index` не несёт; поднятая картинка накрыла текст, и сверка кадров ДО/ПОСЛЕ
+    дала 28400 изменённых пикселей ровно в текстовой зоне обложки и 25005 — на
+    финальном. Гашение слоя такого побочного действия не имеет вовсе."""
+    return "#%s::after{ content:none; } " % sid
+
+
+def _sploshnoj_fon(sid, cvet):
+    """Служебный слайд со сплошным фоном: фон + ГАШЕНИЕ СЛОЯ УЗОРА, одним куском.
+
+    Заход sloi-i-obrez, Э3. До него гашение было ПОБОЧНЫМ действием шортката
+    `background:` — тот сбрасывает `background-image`, а узор как раз и висел
+    фоном самого `.slide`. Теперь узор — отдельный слой (`uzor.css`,
+    `.slide::after`), и шорткат его не трогает: не назови гашение явно, обложка
+    и разделитель получили бы узор поверх сплошного фона. Обе половины держатся
+    в ОДНОЙ функции нарочно, чтобы их нельзя было развести по разным местам и
+    забыть вторую — ровно так этот дефект и жил два захода подряд.
+
+    Полнокадровая КАРТИНКА (обложка/финальный) гасит узор тем же `_bez_uzora`,
+    просто без своей строки фона — фон там рисует сама картинка."""
+    return "#%s{ background:%s; } " % (sid, cvet) + _bez_uzora(sid)
 
 
 def _esc(s):
@@ -455,7 +510,8 @@ def oblozhka(sid, p, text_html):
     sub = p.get("sub")
     dateplace = p.get("dateplace")
     bg = p.get("bg_html", "")
-    css = ("#%s .bg{ position:absolute; inset:0; } "
+    css = (_bez_uzora(sid) +
+           "#%s .bg{ position:absolute; inset:0; } "
            "#%s .bg img{ width:100%%; height:100%%; object-fit:fill; display:block; } "
            "#%s .title{ position:absolute; left:%.1fpx; top:%.1fpx; width:%.1fpx; "
            "font-family:var(--font-display); font-size:%.1fpx; line-height:%.1fpx; "
@@ -496,7 +552,7 @@ def vizitka(sid, p, text_html):
     if ills:
         # override: вся визитка — одна иллюстрация во весь слайд (см. deck.py:
         # plan_sluzhebnyh, поле `vizitka_illustracii`), канон sluzhebnye/ не рисуется.
-        css = "#%s{ background:var(--board); } #%s .full{ position:absolute; inset:0; }" % (sid, sid)
+        css = _sploshnoj_fon(sid, "var(--board)") + "#%s .full{ position:absolute; inset:0; }" % sid
         body = '<div class="full">%s</div>' % _ill_zone(ills, axis="row", cls="", pad=0)
         return css, body
     z = p.get("zagolovok_na_ekrane", "Про меня")
@@ -577,7 +633,8 @@ def finalnyj(sid, p, text_html):
     parts = z.split(" ", 1)
     line1 = parts[0]
     line2 = parts[1] if len(parts) > 1 else ""
-    css = ("#%s .bg{ position:absolute; inset:0; } "
+    css = (_bez_uzora(sid) +
+           "#%s .bg{ position:absolute; inset:0; } "
            "#%s .bg img{ width:100%%; height:100%%; object-fit:fill; display:block; } "
            "#%s .thx{ position:absolute; left:%.1fpx; top:50%%; transform:translateY(-50%%); "
            "width:%.1fpx; font-family:var(--font-display); text-transform:uppercase; "
@@ -606,17 +663,32 @@ def razdelitel(sid, p, text_html):
     `green-bg.png` замерен пиксель-в-пиксель как `var(--board)` (см. `## ПЛАН`),
     `tr-bg`/`bl-bg` — прозрачные угловые виньетки, не панели, не подошли.
     Слота под иллюстрацию больше нет (оба живых разделителя Л2 несли
-    `illustracii: []` и до этой правки — регрессии нет)."""
+    `illustracii: []` и до этой правки — регрессии нет).
+
+    НОМЕР РАЗДЕЛА (Э1 захода sloi-i-obrez, претензия владельца 2026-08-16). Приходит
+    готовым числом в `_nomer_razdela` — считает его `deck.py`, потому что «какой это по
+    счёту раздел» есть свойство МЕСТА слайда в деке, а не карточки: карточка своего
+    соседства не знает, и вписанный в неё номер разъехался бы при первой же перестановке
+    разделов. Номера нет (одиночный рендер `slaid.py`, где деки вокруг нет) — строка не
+    рисуется вовсе, разделитель выглядит ровно как до правки."""
     z = p.get("zagolovok_na_ekrane", "")
+    nomer = p.get("_nomer_razdela")
     left_w = 1440 - RAZD_PANEL_W
-    css = ("#%s{ background:var(--paper); } "
+    css = (_sploshnoj_fon(sid, "var(--paper)") +
            "#%s .panel-r{ position:absolute; right:0; top:0; bottom:0; width:%.1fpx; "
            "background:var(--board); } "
            "#%s .head{ position:absolute; left:%.1fpx; top:0; bottom:0; width:%.1fpx; "
-           "display:flex; align-items:center; font-family:var(--font-display); "
-           "font-size:56px; line-height:1.18; color:var(--accent); }"
-           % (sid, sid, RAZD_PANEL_W, sid, OBL_TITLE_LEFT, left_w - OBL_TITLE_LEFT))
-    body = '<div class="panel-r"></div><div class="head">%s</div>' % _esc(z)
+           "display:flex; flex-direction:column; justify-content:center; "
+           "align-items:flex-start; font-family:var(--font-display); "
+           "font-size:56px; line-height:1.18; color:var(--accent); } "
+           # Номер — та же семья, что заголовок (шрифт и цвет), но вполовину мельче и
+           # приглушён: он подпись к разделу, а не второй заголовок рядом с ним.
+           "#%s .razd-num{ font-size:28px; line-height:1.18; opacity:.6; "
+           "letter-spacing:.06em; margin-bottom:10px; }"
+           % (sid, RAZD_PANEL_W, sid, OBL_TITLE_LEFT, left_w - OBL_TITLE_LEFT, sid))
+    nomer_html = ('<div class="razd-num">Раздел %d</div>' % nomer) if nomer else ""
+    body = ('<div class="panel-r"></div><div class="head">%s<div>%s</div></div>'
+            % (nomer_html, _esc(z)))
     return css, body
 
 
