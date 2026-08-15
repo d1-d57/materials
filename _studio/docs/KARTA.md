@@ -822,6 +822,7 @@
 **`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_pr_app.md`** (⚠ описание не задано)
 
 **`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_pr_terminal.md`** (⚠ описание не задано)
+**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_prZ.md`** (⚠ описание не задано)
 
 
 ## §7. Модель памяти
