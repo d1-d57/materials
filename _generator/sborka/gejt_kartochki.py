@@ -405,6 +405,28 @@ def _check_dokazatelstvo_scena(sid, sections):
     return out
 
 
+# Заход kod_rebra-blokov.md, Э2: пустота рёбер перестаёт быть незаметной. Доказательство
+# без адресата — дефект разметки (владелец назвал жёсткость здесь обязательной, поэтому
+# КРАСНЫЙ, в issues); пример без адресата — законный случай (иногда самостоятелен, выборка
+# одна лекция) — ЖЁЛТЫЙ, тем же потоком, что и NE_KLASSIFICIROVAN/Т1-без-примера.
+def _check_dokazatelstvo_adresat(sid, params, sections):
+    if not any(b.tip == "dokazatelstvo" for b in sections["matematika"]):
+        return []
+    if params.get("dokazatelstvo_opiraetsya_na"):
+        return []
+    return ["%s: блок [dokazatelstvo] без 'dokazatelstvo_opiraetsya_na' — неизвестно, что "
+            "доказывается (Э2 kod_rebra-blokov.md)" % sid]
+
+
+def _check_primer_adresat(sid, params, sections):
+    if not any(b.tip == "primer" for b in sections["matematika"]):
+        return []
+    if params.get("primer_dlya"):
+        return []
+    return ["%s: блок [primer] без 'primer_dlya' — пример не адресован ни одной цели "
+            "(Э2 kod_rebra-blokov.md)" % sid]
+
+
 # Э4: «не больше трёх блоков на слайде» — ориентир качества владельца, ЖЁЛТЫЙ,
 # не гейт (две карточки живой L2 нарушают его законно уже сегодня). ОТДЕЛЬНЫЙ
 # поток `sceny_zheltye` (по образцу `tip_zheltye` захода tipologia-odna-os), а не
@@ -720,6 +742,11 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     issues.extend(_check_sceny_vruchnuyu(sid, params, sections))
     issues.extend(_check_dokazatelstvo_scena(sid, sections))
     sceny_zheltye.extend(_check_potolok_blokov(sid, sections))
+
+    # Заход kod_rebra-blokov.md, Э2: адресат обязателен для dokazatelstvo (красный),
+    # желателен для primer (жёлтый).
+    issues.extend(_check_dokazatelstvo_adresat(sid, params, sections))
+    tip_zheltye.extend(_check_primer_adresat(sid, params, sections))
 
     budget = params.get("byudzhet_slov")
     if not _unfilled(budget):

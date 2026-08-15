@@ -25,11 +25,31 @@
 и элементы `slide_order` — одна и та же система идентификаторов: `imya` карточки слайда (обычно
 совпадает с именем папки `slajdy/<imya>/`, по докстроке `formaty.py`).
 
-ГРАФ ТЕРМИНОВ (виды связи 1–2 спецификации). Ребро Y→X значит «определение X пользуется Y» —
-берётся из `opiraetsya_na` ХОЗЯИНА термина X (слайда, где X встречается в `vvodit`), а не из
-любого использования X где угодно: только определение термина зависит от другого термина в
-смысле этого графа, иначе цикл означал бы «слайд использует термин» вместо «термин требует
-термин». Нарушение порядка — отдельная проверка, она НЕ ограничена хозяевами (см. ниже).
+ГРАФ ОДИН, А НЕ ДВА (заход kod_rebra-blokov.md, Э1, решение владельца 2026-08-15,
+дословно: «термин — это блок... можем просто вести стрелки к определениям — к местам, где
+они определяются»). Прежняя редакция вела граф терминов и граф утверждений раздельно —
+владелец разобрал это как дефект: связная компонента дробилась на кусок по терминам и кусок
+по доказательствам, и «этот кусок замкнут сам на себя» не было видно целиком ни в одном из
+них. Вершины единого графа (`build_graph`) — БЛОКИ, термин — метка на ребре, не вершина:
+
+  · термин, введённый В ЭТОЙ лекции (встречается в чьём-то `vvodit`) — вершина `sid`
+    карточки-хозяина;
+  · термин БЕЗ хозяина в лекции (использован, но не введён здесь) — вершина-заглушка,
+    сам термин своей текстовой формой (решение по «одной детали» Э1: это уже было
+    фактическим поведением графа терминов, здесь только названо официально);
+  · блок доказательства/примера — вершина `sid:tip` (`tip` ∈ `dokazatelstvo`, `primer`), а
+    не голый `sid`: G-8 гарантирует не больше одного блока каждого типа на карточку, но
+    карточка может нести до четырёх разных типов сразу, а `kategoriya-vect-iso` (мотивирующий
+    пример захода) целит доказательство в блок ТОЙ ЖЕ карточки — голый `sid` дал бы
+    самопетлю без содержания.
+
+Ребро Y→X значит «X зависит от Y» — для терминов берётся из `opiraetsya_na` ХОЗЯИНА термина X
+(слайда, где X встречается в `vvodit`), а не из любого использования X где угодно: только
+определение термина зависит от другого термина в смысле этого графа, иначе цикл означал бы
+«слайд использует термин» вместо «термин требует термин». Для доказательств/примеров — из
+`dokazatelstvo_opiraetsya_na`/`primer_dlya.tsel` карточки. Нарушение порядка — отдельная
+проверка для ТЕРМИНОВ, она НЕ ограничена хозяевами (см. ниже) и не относится к
+доказательствам/примерам (порядок блоков на ленте у них не специфицирован).
 
 НАРУШЕНИЕ ПОРЯДКА vs ЦИКЛ — разные проверки. Цикл — свойство графа терминов (граф ациклический
 или нет, вне позиций на ленте). Нарушение порядка — сравнение позиции РАБОЧЕГО использования
@@ -46,6 +66,8 @@ from pathlib import Path
 _SBORKA = Path(__file__).resolve().parents[1] / "sborka"
 sys.path.insert(0, str(_SBORKA))
 import formaty  # noqa: E402  (read-only импорт, см. докстроку; путь — как у gejt_kartochki.py)
+import bloki  # noqa: E402  (read-only импорт — та же карточка, что и gejt_kartochki.py читает
+# для состава блоков; здесь нужен для охвата Э2 и вершин-блоков Э1 kod_rebra-blokov.md)
 
 
 def _as_list(v):
@@ -84,7 +106,7 @@ def load_cards(card_paths):
     for p in card_paths:
         text = p.read_text(encoding="utf-8")
         try:
-            params, _ = formaty.parse_card(text, sid=str(p))
+            params, raw_body = formaty.parse_card(text, sid=str(p))
         except formaty.FormatSlaida as e:
             warnings.append("%s: не разобрана карточка — %s" % (p, e))
             continue
@@ -94,6 +116,8 @@ def load_cards(card_paths):
                              % (p, sid, cards[sid].get("_path")))
             continue
         params["_path"] = str(p)
+        params["_raw_body"] = raw_body  # Э2 kod_rebra-blokov.md: охват считается по блокам,
+        # не только по полям — граф обязан знать состав раздела «Математика»
         # Виды 3–4 (новые поля) parse_card не нормализует — делаем это здесь,
         # тем же приёмом, что formaty.parse_card применяет к своим спискам.
         params.setdefault("dokazatelstvo_opiraetsya_na", [])
@@ -106,16 +130,24 @@ def load_cards(card_paths):
     return cards, warnings
 
 
-def build_term_graph(cards):
-    """{id: params} → (host_of: {termin: [id,...]}, term_edges: {termin: {termin,...}}).
-
-    `term_edges[Y]` — множество терминов, чьё ОПРЕДЕЛЕНИЕ пользуется Y (см. докстроку модуля:
-    ребро строится только из `opiraetsya_na` ХОЗЯИНА, не любого использования)."""
+def build_graph(cards):
+    """{id: params} → (edges: {вершина: {вершина,...}}, host_of: {termin: [id,...]},
+    labels: {(Y, X): метка}). ЕДИНЫЙ граф блоков — Э1 kod_rebra-blokov.md, см. докстроку
+    модуля про три вида вершин. `labels` несёт термин/слово ребра — только для читаемого
+    сообщения о цикле, на сам поиск цикла не влияет."""
     host_of = {}
     for sid, params in cards.items():
         for t in _as_list(params.get("vvodit")):
             host_of.setdefault(t, []).append(sid)
-    term_edges = {}
+
+    edges, labels = {}, {}
+
+    def add_edge(y, x, label):
+        if y == x:
+            return  # самопетля не несёт цикла и не несёт смысла — не заводим
+        edges.setdefault(y, set()).add(x)
+        labels[(y, x)] = label
+
     for sid, params in cards.items():
         defined_here = _as_list(params.get("vvodit"))
         if not defined_here:
@@ -123,21 +155,62 @@ def build_term_graph(cards):
         for e in _as_list(params.get("opiraetsya_na")):
             if not isinstance(e, dict) or not e.get("termin"):
                 continue
-            y = e["termin"]
-            for x in defined_here:
-                if x != y:
-                    term_edges.setdefault(y, set()).add(x)
-    return host_of, term_edges
+            termin = e["termin"]
+            hosts = host_of.get(termin)
+            if hosts:
+                for hy in hosts:
+                    add_edge(hy, sid, termin)
+            else:
+                add_edge(termin, sid, termin)  # термин без хозяина в лекции — сам вершина-заглушка
 
-
-def build_statement_graph(cards):
-    """{id: params} → {id: {id,...}} — ребро Y→X: доказательство X пользуется Y."""
-    edges = {}
     for sid, params in cards.items():
+        target = "%s:dokazatelstvo" % sid
         for dep in _as_list(params.get("dokazatelstvo_opiraetsya_na")):
             if dep:
-                edges.setdefault(dep, set()).add(sid)
-    return edges
+                add_edge(dep, target, "доказывает")
+        p_target = "%s:primer" % sid
+        for e in _as_list(params.get("primer_dlya")):
+            if isinstance(e, dict) and e.get("tsel"):
+                add_edge(e["tsel"], p_target, "пример для")
+
+    return edges, host_of, labels
+
+
+def _matematika_blocks(params, sid):
+    """Карточка (params с `_raw_body`, положенным `load_cards`) → [bloki.Block,...] раздела
+    «Математика — развёрнуто», или [] (тела нет — K3, либо блоки не разбираются). Нужно для
+    охвата Э2: считать M (блоков dokazatelstvo/primer в лекции) можно только по составу
+    блоков, поля шапки этого не говорят."""
+    raw_body = params.get("_raw_body") or ""
+    if not raw_body.strip():
+        return []
+    try:
+        sections = bloki.parse_sections(raw_body, sid=sid)
+    except bloki.FormatBlokov:
+        return []
+    return sections["matematika"]
+
+
+def coverage(cards):
+    """{id: params} → {'dokazatelstvo': (N, M, [sid без адреса,...]),
+    'primer': (N, M, [...])}. M — блоков этого типа в лекции (верхняя граница возможных
+    рёбер, Э0 kod_rebra-blokov.md), N — из них с непустым адресом в шапке."""
+    out = {"dokazatelstvo": [0, 0, []], "primer": [0, 0, []]}
+    for sid, params in sorted(cards.items()):
+        tips = {b.tip for b in _matematika_blocks(params, sid)}
+        if "dokazatelstvo" in tips:
+            out["dokazatelstvo"][1] += 1
+            if _as_list(params.get("dokazatelstvo_opiraetsya_na")):
+                out["dokazatelstvo"][0] += 1
+            else:
+                out["dokazatelstvo"][2].append(sid)
+        if "primer" in tips:
+            out["primer"][1] += 1
+            if _as_list(params.get("primer_dlya")):
+                out["primer"][0] += 1
+            else:
+                out["primer"][2].append(sid)
+    return {k: tuple(v) for k, v in out.items()}
 
 
 def find_cycle(edges, nodes):
@@ -218,8 +291,8 @@ def find_order_violations(cards, position, host_of):
 
 def render(lecture_dir, cards, position, slide_order, brief_note, warnings):
     out = []
-    host_of, term_edges = build_term_graph(cards)
-    stmt_edges = build_statement_graph(cards)
+    edges, host_of, labels = build_graph(cards)
+    cov = coverage(cards)
 
     depends_on = {t: {e["termin"] for e in _as_list(cards[hosts[0]].get("opiraetsya_na"))
                        if isinstance(e, dict) and e.get("termin")}
@@ -265,20 +338,26 @@ def render(lecture_dir, cards, position, slide_order, brief_note, warnings):
                     "чиста, а потому что нечего читать (лекция ещё не на новом формате карточки).")
 
     out.append("")
-    out.append("── ЦИКЛЫ ──")
-    term_cycle = find_cycle(term_edges, host_of.keys())
-    if term_cycle:
-        out.append("✗ ЦИКЛ В ТЕРМИНАХ: " + " → ".join(term_cycle))
+    out.append("── ГРАФ БЛОКОВ (термины + доказательства + примеры одним проходом, Э1) ──")
+    nodes = set(edges) | {x for xs in edges.values() for x in xs}
+    cycle = find_cycle(edges, nodes)
+    nd, md, missing_d = cov["dokazatelstvo"]
+    np_, mp, missing_p = cov["primer"]
+    if cycle:
+        metka = labels.get((cycle[0], cycle[1]), "")
+        out.append("✗ ЦИКЛ: " + " → ".join(cycle) + (" (%s)" % metka if metka else ""))
+    elif md and nd < md:
+        # Э2: пустота/неполнота охвата не печатается зелёным — даже когда циклов и так нет
+        out.append("⚠ циклов не найдено, но доказательств адресовано %d из %d, не все — "
+                    "без адреса: %s" % (nd, md, ", ".join(missing_d)))
     else:
-        out.append("✓ циклов в терминах нет (проверено %d терминов, %d рёбер зависимости)"
-                    % (len(host_of), sum(len(v) for v in term_edges.values())))
-    stmt_nodes = set(stmt_edges) | {x for xs in stmt_edges.values() for x in xs}
-    stmt_cycle = find_cycle(stmt_edges, stmt_nodes)
-    if stmt_cycle:
-        out.append("✗ ЦИКЛ В УТВЕРЖДЕНИЯХ: " + " → ".join(stmt_cycle))
+        out.append("✓ циклов нет (вершин %d, рёбер %d; доказательств адресовано %d из %d)"
+                    % (len(nodes), sum(len(v) for v in edges.values()), nd, md))
+    if mp and np_ < mp:
+        out.append("⚠ примеров адресовано %d из %d, не все — без адреса: %s"
+                    % (np_, mp, ", ".join(missing_p)))
     else:
-        out.append("✓ циклов в утверждениях нет (проверено %d связей «доказательство опирается»)"
-                    % n_utverzhdenie_links)
+        out.append("· примеров адресовано %d из %d" % (np_, mp))
 
     out.append("")
     out.append("── НАРУШЕНИЯ ЗАЯВЛЕННОГО ПОРЯДКА ──")
@@ -299,7 +378,7 @@ def render(lecture_dir, cards, position, slide_order, brief_note, warnings):
             out.append("✓ нарушений нет, проверено %d слайдов и %d связей «опирается на»"
                         % (len(cards), checked))
 
-    has_red = bool(term_cycle) or bool(stmt_cycle) or bool(violations)
+    has_red = bool(cycle) or bool(violations)
     return "\n".join(out) + "\n", (1 if has_red else 0)
 
 

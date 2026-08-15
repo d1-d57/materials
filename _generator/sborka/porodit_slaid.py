@@ -81,6 +81,59 @@ def _opisanie_dlya(tip_slaida, slots):
     return "%s: %s — центральный %s" % (tip_slaida, " · ".join(chasti), central.bukva)
 
 
+# Заход kod_rebra-blokov.md, Э5 — CLI-контракт для рёбер: адрес пишется ПОСЛЕ мысли блока
+# через '::', тем же ходом, каким сегодня пишется сама мысль (не отдельной правкой YAML
+# после порождения). У доказательства адрес — плоский список целей через запятую; у примера
+# — цель ОБЯЗАНА нести направление мотивации (do|posle, формат спецификации disciplina),
+# поэтому синтаксис на один уровень глубже: 'цель:do|posle'.
+def _extract_dokaz(dokazatelstva_raw, flag="--dokazatelstvo"):
+    """[строка,...] (возможно 'мысль::цель1,цель2') -> ([чистая мысль,...], [цель,...])."""
+    mysli, tseli = [], []
+    for raw in dokazatelstva_raw:
+        mysl = raw
+        if "::" in raw:
+            mysl, adres_s = raw.split("::", 1)
+            mysl = mysl.strip()
+            if not mysl:
+                raise PorozhdenieOtkaz("%s: мысль не может быть пустой (адрес после '::')" % flag)
+            found = [t.strip() for t in adres_s.split(",") if t.strip()]
+            if not found:
+                raise PorozhdenieOtkaz("%s: '::' есть, а адреса после него нет — либо назови "
+                                        "цель(и), либо убери '::'" % flag)
+            tseli.extend(found)
+        mysli.append(mysl)
+    return mysli, tseli
+
+
+def _extract_vspomogatelnye(znacheniya, flag):
+    """['primer:мысль::цель:do', 'utverzhdenie:мысль', ...] -> ([(tip, мысль),...],
+    [{tsel, napravlenie},...]) — адрес допустим ТОЛЬКО у primer (доказательство никогда не
+    вспомогательное, а прочим статусным типам граф Э1 ребра не заводит, см. ## ПЛАН файла-захода)."""
+    parsed, primer_tseli = [], []
+    for raw in znacheniya:
+        tip, mysl = _parse_tip_mysl(raw, flag)
+        if tip == "primer" and "::" in mysl:
+            mysl, adres_s = mysl.split("::", 1)
+            mysl = mysl.strip()
+            if not mysl:
+                raise PorozhdenieOtkaz("%s: мысль примера не может быть пустой (адрес после '::')" % flag)
+            for chunk in adres_s.split(","):
+                chunk = chunk.strip()
+                if not chunk:
+                    continue
+                if ":" not in chunk:
+                    raise PorozhdenieOtkaz(
+                        "%s: адрес примера '%s' требует форму 'цель:do|posle'" % (flag, chunk))
+                tsel, napr = chunk.split(":", 1)
+                tsel, napr = tsel.strip(), napr.strip()
+                if napr not in ("do", "posle"):
+                    raise PorozhdenieOtkaz(
+                        "%s: направление '%s' не 'do'/'posle' (цель %s)" % (flag, napr, tsel))
+                primer_tseli.append({"tsel": tsel, "napravlenie": napr})
+        parsed.append((tip, mysl))
+    return parsed, primer_tseli
+
+
 def _parse_tip_mysl(znachenie, flag):
     if ":" not in znachenie:
         raise PorozhdenieOtkaz(
@@ -185,7 +238,22 @@ def _body_dlya(bloki_itog):
             "## Правки\n- %s\n" % (blok_md, blok_md, formaty.ZAPOLNIT))
 
 
-def sostavit_kartochku(imya, tip_slaida, bloki_itog):
+def _yaml_dokaz_adresa(tseli):
+    return "\n" + "\n".join("  - %s" % t for t in tseli)
+
+
+def _yaml_primer_adresa(zapisi):
+    return "\n" + "\n".join("  - {tsel: %s, napravlenie: %s}" % (z["tsel"], z["napravlenie"])
+                             for z in zapisi)
+
+
+# Заход kod_rebra-blokov.md, Э5: «рёбра проставляет порождение, а не человек» — адрес
+# доказательства/примера пишется в ШАПКУ ТЕМ ЖЕ ходом, что и мысль блока (см. `_extract_dokaz`/
+# `_extract_vspomogatelnye` в `main()`), а не дописывается вручную после. Адрес — ОПЦИОНАЛЕН
+# (пустой `adresa` не трогает шаблонные `[]`): случай «связь неочевидна» остаётся за человеком
+# (задание Э5, «что должно остаться человеку»), просто он не единственный путь заполнения.
+def sostavit_kartochku(imya, tip_slaida, bloki_itog, adresa=None):
+    adresa = adresa or {}
     idx_central = next(i for i, s in enumerate(_slots_dlya(tip_slaida)) if s.central)
     mysl_c = bloki_itog[idx_central][1]
     lifecycle = LIFECYCLE_TMPL % {"imya": imya}
@@ -194,6 +262,14 @@ def sostavit_kartochku(imya, tip_slaida, bloki_itog):
     text = re.sub(r"^centralnyj_blok: .*$",
                   lambda m: "centralnyj_blok: %s" % mysl_c,
                   text, count=1, flags=re.M)
+    if adresa.get("dokazatelstvo"):
+        text = re.sub(r"^dokazatelstvo_opiraetsya_na: \[\]$",
+                      lambda m: "dokazatelstvo_opiraetsya_na:%s" % _yaml_dokaz_adresa(adresa["dokazatelstvo"]),
+                      text, count=1, flags=re.M)
+    if adresa.get("primer"):
+        text = re.sub(r"^primer_dlya: \[\]$",
+                      lambda m: "primer_dlya:%s" % _yaml_primer_adresa(adresa["primer"]),
+                      text, count=1, flags=re.M)
     return text
 
 
@@ -204,14 +280,14 @@ TIPY_DOPUSTIMYE = sorted(tipy_slajdov.TIPY) + [tipy_slajdov.TIP_SLUZHEBNYJ]
 
 
 def porodit(lekcija_dir, imya, tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
-            vspomogatelnye_posle=()):
+            vspomogatelnye_posle=(), adresa=None):
     if tip_slaida not in TIPY_DOPUSTIMYE:
         raise PorozhdenieOtkaz(
             "тип '%s' неизвестен. Допустимы: %s"
             % (tip_slaida, ", ".join(TIPY_DOPUSTIMYE)))
     bloki_itog = _razlozhit_po_slotam(tip_slaida, centralnyj, vspomogatelnye, narrativy, dokazatelstva,
                                        vspomogatelnye_posle=vspomogatelnye_posle)
-    text = sostavit_kartochku(imya, tip_slaida, bloki_itog)
+    text = sostavit_kartochku(imya, tip_slaida, bloki_itog, adresa=adresa)
 
     lekcija_dir = Path(lekcija_dir)
     slide_dir = lekcija_dir / "slajdy" / imya
@@ -320,15 +396,19 @@ def main():
                      help="'tip:мысль' вспомогательного несущего блока (можно повторять); "
                           "при нескольких слотах одного типа в раскладке (Т2 primer) "
                           "целится в ПЕРВЫЙ по раскладке — для последнего см. "
-                          "--vspomogatelnyj-posle")
+                          "--vspomogatelnyj-posle. Для primer — необязательный адрес "
+                          "'primer:мысль::цель:do|posle' (можно несколько целей через "
+                          "запятую) — рёбра рождаются вместе с карточкой (Э5 kod_rebra-blokov.md)")
     ap.add_argument("--vspomogatelnyj-posle", action="append", default=[],
                      help="как --vspomogatelnyj, но целится в ПОСЛЕДНИЙ слот этого типа "
                           "по раскладке — у Т2 'primer:...' сюда встанет ПОСЛЕ utverzhdenie, "
-                          "не до (заход tipologia-dochistka, Э2)")
+                          "не до (заход tipologia-dochistka, Э2); адрес '::цель:do|posle' — так же")
     ap.add_argument("--narrativ", action="append", default=[],
                      help="мысль нарративного блока (можно повторять)")
     ap.add_argument("--dokazatelstvo", action="append", default=[],
-                     help="мысль блока доказательства")
+                     help="мысль блока доказательства; необязательный адрес — "
+                          "'мысль::цель1,цель2' (id карточки/блока, на который опирается "
+                          "доказательство) — рёбра рождаются вместе с карточкой (Э5 kod_rebra-blokov.md)")
     ap.add_argument("--sverit", action="store_true",
                      help="БЕЗ порождения: сверить раскладку всех карточек <лекция> "
                           "с типологией по centralnyj_blok")
@@ -349,11 +429,14 @@ def main():
             raise PorozhdenieOtkaz("для порождения нужны --imya, --tip и --centralnyj "
                                     "(для сверки деки без порождения — флаг --sverit)")
         centralnyj = _parse_tip_mysl(args.centralnyj, "--centralnyj")
-        vspomogatelnye = [_parse_tip_mysl(v, "--vspomogatelnyj") for v in args.vspomogatelnyj]
-        vspomogatelnye_posle = [_parse_tip_mysl(v, "--vspomogatelnyj-posle")
-                                 for v in args.vspomogatelnyj_posle]
+        vspomogatelnye, primer_tseli_1 = _extract_vspomogatelnye(args.vspomogatelnyj, "--vspomogatelnyj")
+        vspomogatelnye_posle, primer_tseli_2 = _extract_vspomogatelnye(
+            args.vspomogatelnyj_posle, "--vspomogatelnyj-posle")
+        dokazatelstva, dokaz_tseli = _extract_dokaz(args.dokazatelstvo)
+        adresa = {"dokazatelstvo": dokaz_tseli, "primer": primer_tseli_1 + primer_tseli_2}
         rc = porodit(args.lekcija, args.imya, args.tip, centralnyj, vspomogatelnye,
-                     args.narrativ, args.dokazatelstvo, vspomogatelnye_posle=vspomogatelnye_posle)
+                     args.narrativ, dokazatelstva, vspomogatelnye_posle=vspomogatelnye_posle,
+                     adresa=adresa)
         _pechat_ne_proveryayu()
         return rc
     except PorozhdenieOtkaz as e:

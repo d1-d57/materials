@@ -1,6 +1,9 @@
 <!--
 ЧТО ДАЛЬШЕ С ЭТИМ ФАЙЛОМ (фикстура захода zakony-v-gejt — не порождена
 bootstrap_lekcii.py, писана руками ради изоляции одного закона на карточку).
+`dokazatelstvo_opiraetsya_na` заполнено НАРОЧНО (заход kod_rebra-blokov.md, Э2) —
+изолирует от НОВОЙ клаузы «доказательство без адресата», иначе ловушка 41 (rc=0
+обязателен на этой фикстуре) сломалась бы посторонним красным.
 ФАЗА 1 (интервью): x :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): x :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): x :: python3 _generator/sborka/smeta.py --byudzhet x x
@@ -31,6 +34,8 @@ illustracii: []
 vvodit: []
 opiraetsya_na: []
 bez_opredeleniya_namerenno: []
+dokazatelstvo_opiraetsya_na: [vne-fikstury:utverzhdenie]
+primer_dlya: []
 status: v_deke
 ---
 

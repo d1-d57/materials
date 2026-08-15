@@ -36,8 +36,27 @@ echo "── ФИКСТУРЫ ГРАФА ЗАВИСИМОСТЕЙ ──"
 # 1. Заведомый цикл в терминах (готовая фикстура рядом).
 pusk "cikl" "$HERE/cikl" 1
 
+# 1б. Заход kod_rebra-blokov.md, Э1: заведомый цикл через dokazatelstvo_opiraetsya_na —
+#     до Э1 граф терминов и граф утверждений строились раздельно, единый граф блоков
+#     обязан находить и такой цикл (критерий готовности, клауза 2).
+pusk "cikl-dokazatelstvo" "$HERE/cikl-dokazatelstvo" 1
+
 # 2. Законное раннее упоминание — не краснеет (готовая фикстура рядом).
 pusk "rannee-upominanie" "$HERE/rannee-upominanie" 0
+
+# 2б. Заход kod_rebra-blokov.md, Э2: связи пусты (dokazatelstvo без адреса) — граф обязан
+#     печатать охват «0 из 1», не голое «✓» без числа (критерий готовности, клауза 3).
+OUT_PUSTYE="$(python3 "$TOOL" "$HERE/pustye-svyazi" 2>&1)"
+echo "$OUT_PUSTYE" | grep -q "адресовано 0 из 1" || {
+  echo "  ✗ pustye-svyazi: не напечатан охват «0 из 1» — пустота выглядит проверкой"
+  echo "$OUT_PUSTYE"
+  OK=1
+}
+echo "$OUT_PUSTYE" | grep -qE "^✓ циклов нет" && {
+  echo "  ✗ pustye-svyazi: вердикт напечатан голым зелёным ✓ без охвата — та самая находка Э2"
+  OK=1
+}
+[ "$OK" = 0 ] 2>/dev/null && echo "  ✓ pustye-svyazi: охват «0 из 1» напечатан, не зелёным"
 
 # 3. Лекция без единой карточки нового формата — норма фазы 1, не трейсбек.
 mkdir -p "$TMP/pustaya-lekcia"
