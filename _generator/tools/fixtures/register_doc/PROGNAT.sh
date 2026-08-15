@@ -55,6 +55,7 @@ cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" "$TOOLS/check_zahod.py" 
    "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$TOOLS/korni.py" \
    "$TOOLS/check_sborki.py" "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" \
    "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
+   "$TOOLS/check_tool_contract.py" \
    "$T/_generator/tools/"
 # `modeli.py` — импорт верхнего уровня в `bootstrap_zahod.py`; без него временная
 # копия падает `ModuleNotFoundError`, и красной оказывается фикстура, а не проверка
