@@ -103,7 +103,6 @@ REPO = _resolve_repo()
 # фабрик их переезд обязан быть одной строкой реестра, а не поиском литерала.
 PLAN = REPO / korni.ПЛАН_REL
 LOCK_WAIT_SEC = 90
-INCIDENTY = REPO / korni.ИНЦИДЕНТЫ_REL
 
 # Заявки — почтовый ящик Cowork → заход (`ochered-zayavok/PROEKT.md`). Пути
 # ОТНОСИТЕЛЬНЫЕ: считаются не от `REPO`, а от `glavnaya_rabochaya()` через
@@ -376,19 +375,27 @@ def log_incident(symptom, hint):
     иначе корзина зашумит повторами одного и того же и читать её бросят.
     Лог не смеет ни ронять инструмент, ни менять его код возврата: любая ошибка
     записи молча глотается (это журнал, не гейт).
+
+    Путь СЧИТАЕТСЯ ЗДЕСЬ, а не берётся модульной константой от `REPO`: `REPO`
+    резолвится по `cwd` (`_resolve_repo()`), и в worktree это сама рабочая
+    папка захода, а не общая главная копия — каждый заход получал СВОЮ
+    несинхронную `INCIDENTY.md`, и её незакоммиченность блокировала
+    `zakryt-vetku` (см. `zakryt_odnu`). `glavnaya_rabochaya()` — тот же приём,
+    каким уже решена ровно эта задача для заявок (`zayavki_dir()`).
     """
+    incidenty = glavnaya_rabochaya() / korni.ИНЦИДЕНТЫ_REL
     try:
         branch = git("rev-parse", "--abbrev-ref", "HEAD", check=False).stdout.strip() or "?"
         stamp = time.strftime("%Y-%m-%d %H:%M")
-        if INCIDENTY.exists():
-            rows = [l for l in INCIDENTY.read_text(encoding="utf-8").splitlines()
+        if incidenty.exists():
+            rows = [l for l in incidenty.read_text(encoding="utf-8").splitlines()
                     if l.startswith("- ")]
             if rows and f" · {branch} · {symptom} · " in rows[-1] \
                     and rows[-1][2:12] == stamp[:10]:
                 return
         else:
-            INCIDENTY.parent.mkdir(parents=True, exist_ok=True)
-            INCIDENTY.write_text(
+            incidenty.parent.mkdir(parents=True, exist_ok=True)
+            incidenty.write_text(
                 "# INCIDENTY — сырые симптомы неуспешных коммитов (пишет сам git_zona.py)\n\n"
                 "> Входящая корзина, НЕ журнал уроков: при каждом неуспешном `commit`\n"
                 "> инструмент САМ дописывает сюда строку — в любом чате, без просьбы.\n"
@@ -396,7 +403,7 @@ def log_incident(symptom, hint):
                 "> уроком с ЦЕНОЙ; здесь у строки статус меняется на `→ ZHURNAL`.\n"
                 "> Формат: `- дата время · ветка · симптом · → подсказка · статус`.\n\n",
                 encoding="utf-8")
-        with open(INCIDENTY, "a", encoding="utf-8") as f:
+        with open(incidenty, "a", encoding="utf-8") as f:
             f.write(f"- {stamp} · {branch} · {symptom} · → {hint} · статус: открыт\n")
     except OSError:
         pass
