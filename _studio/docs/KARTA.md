@@ -804,8 +804,6 @@
 
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/VYGRUZKA-2026-08-15-5.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-10_dizajn-i-metriki)
 
-**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_vlitie-i-deploj.md`** (влитие ветки kadr-uzor-i-vmeshchenie и деплой: вывоз на origin + публикация деки L2 на витрину курса)
-
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_vlitie-i-publikaciya.md`** (влитие ветки kadr-uzor-i-vmeshchenie и публикация деки L2 на витрину курса)
 
 **`_studio/zhurnal/2026-08-14_rychagi-zahodov/kod_vyvoz-i-ochered.md`** (заход вывоза и уборки: влить восемь веток, починить маршрутизацию очереди заявок (18 одинаковых отказов с 12.08), забрать хвост Cowork в обоих репозиториях, погасить мусор песочницы)
