@@ -37,10 +37,10 @@ opiraetsya_na:
   - {termin: дважды двойственное пространство, vvedeno: dvazhdy-dvojstvennoe}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 36
-mezhstrochye: 1.2
-otstup_bloka: 8.3
-podbor_avto: 9bc7e421e464|kegl_px=36|mezhstrochye=1.2|otstup_bloka=8.3|liniya=66.15
+kegl_px: 38
+mezhstrochye: 1.274
+otstup_bloka: 12.6
+podbor_avto: 74a8d2208fb8|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=66.15
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] квадрат сходится при каждом $f$

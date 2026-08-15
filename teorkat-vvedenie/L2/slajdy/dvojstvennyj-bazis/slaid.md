@@ -39,7 +39,7 @@ status: v_deke
 kegl_px: 38
 mezhstrochye: 1.2
 otstup_bloka: 8.7
-podbor_avto: 026426aa3267|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
+podbor_avto: 0ef46fcbdb0d|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
 ---
 ## Математика — развёрнуто
 ### [opredelenie] двойственный базис — координаты как функционалы

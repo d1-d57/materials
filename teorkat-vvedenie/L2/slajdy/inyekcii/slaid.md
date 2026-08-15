@@ -27,7 +27,7 @@ minuty: 7
 vazhnost: opornyj
 byudzhet_slov: 55
 tip_verstki: polosa_gorizontalnaya
-liniya: 67.85
+liniya: 72.88
 matematika_iz: [Инъекции в палитру]
 illustracii: [vlozhenie-i-vozvrat]
 vvodit: [категория всех отображений]
@@ -41,7 +41,7 @@ mezhstrochye: 1.2
 otstup_bloka: 8.7
 obosnovanie_verstki: мало текста и он ложится длинной строкой — горизонтальная полоса по прямому указанию владельца. Полосу оставил во всю ширину (58%), текст влез поджатым межстрочьем без потери кегля
 zagolovok_snyat_namerenno: da
-podbor_avto: 562839c2f0e1|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=67.85
+podbor_avto: 562839c2f0e1|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=72.88
 ---
 
 ## Математика — развёрнуто

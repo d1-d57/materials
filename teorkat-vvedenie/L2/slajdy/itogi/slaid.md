@@ -35,10 +35,10 @@ opiraetsya_na: []
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: новый слайд с текстовыми итогами, иллюстрации не нужны — только текст. Типографику подбирает солвер
-kegl_px: 41
-mezhstrochye: 1.57
-otstup_bloka: 30.3
-podbor_avto: de7127e6bc70|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
+kegl_px: 40
+mezhstrochye: 1.496
+otstup_bloka: 25.5
+podbor_avto: de7127e6bc70|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5
 ---
 
 ## Математика — развёрнуто
