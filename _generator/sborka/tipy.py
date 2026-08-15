@@ -483,15 +483,35 @@ def vizitka(sid, p, text_html):
         body = '<div class="full">%s</div>' % _ill_zone(ills, axis="row", cls="", pad=0)
         return css, body
     z = p.get("zagolovok_na_ekrane", "Про меня")
+    # 🔴 ЗЕЛЁНАЯ ЗОНА ШИРЕ ФОТО, А ФОТО НЕ КАДРИРУЕТСЯ (Э3 захода vlitie-i-deka,
+    # 2026-08-15). Слово владельца по собранному деку: «кажется, на визитке
+    # обрезана моя фотография пополам… там вполне можно расширить зелёную зону,
+    # чтобы она влезала, всё поместится».
+    #
+    # ЗАМЕР, А НЕ ГЛАЗОМЕР. Картинка канона `sluzhebnye/vizitka-photo.html` —
+    # JPEG 448×448, отношение сторон 1.000 (снято разбором заголовка SOF).
+    # Рамка была 251×555, отношение 0.452. При `object-fit:cover` квадрат
+    # растягивается по высоте до 555 и обрезается по ширине 555→251, то есть
+    # ВИДНО 45 % кадра — «обрезана пополам» буквально, а не фигурой речи.
+    #
+    # ⇒ Рамка делается КВАДРАТНОЙ по стороне картинки (448 — её родной размер,
+    # без апскейла), а колонка доски расширяется ровно настолько, чтобы поля
+    # слева и справа от фото остались прежними (81 и 78). Кадрирование не
+    # трогается вовсе: `cover` на рамке, совпадающей с отношением сторон
+    # картинки, не срезает ничего.
+    FOTO = 448                      # сторона картинки канона = сторона рамки
+    FOTO_L, FOTO_R = 81, 78         # поля доски слева/справа от фото — прежние
+    DOSKA = FOTO_L + FOTO + FOTO_R  # 607 вместо 410
+    FOTO_T = (810 - FOTO) // 2      # 810 = высота холста деки; фото по центру доски
     css = ("#%s .grid{ position:absolute; inset:0; display:grid; "
-           "grid-template-columns:410px 56px 1fr; grid-template-rows:107px 1fr; } "
+           "grid-template-columns:%dpx 56px 1fr; grid-template-rows:107px 1fr; } "
            "#%s .board{ grid-area:1/1/3/2; background:var(--board); position:relative; } "
            # 74px было подобрано под Forum; Cormorant Garamond шире — «Про меня» переставало
            # влезать в доску 410px, вторая строка ложилась на фото (замер: 374px при 74px,
            # 329px при 64px, доступно 374px). Кегль взят из перенесённой шкалы —
            # --t-frametitle-n, заголовок узкой колонки (.sty:428,454 → 20pt).
            "#%s .brd-title{ position:absolute; left:36px; top:34px; font-size:var(--t-frametitle-n); } "
-           "#%s .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:555px; } "
+           "#%s .p-photo{ position:absolute; left:%dpx; top:%dpx; width:%dpx; height:%dpx; } "
            "#%s .p-photo img{ width:100%%; height:100%%; object-fit:cover; } "
            # 🔴 ОБЪЕДИНЕНИЕ ДВУХ ПРИНЯТЫХ ВЕТОК (слияние sluzhebnye-slajdy, 2026-08-15).
            # Ветка sluzhebnye-slajdy убрала из визитки код-квадрат — это её принятая
@@ -511,7 +531,7 @@ def vizitka(sid, p, text_html):
            # Прежние 18px возвращаются явным override — вид визитки не меняется
            # ни на пиксель.
            "#%s .copy{ grid-area:2/3; padding-left:18px; }"
-           % (sid, sid, sid, sid, sid, sid))
+           % (sid, DOSKA, sid, sid, sid, FOTO_L, FOTO_T, FOTO, FOTO, sid, sid))
     photo_raw = p.get("photo_html", "")
     photo_html = ('<div class="panel p-photo">%s</div>' % photo_raw) if photo_raw else ""
     body = ('<div class="grid">'
