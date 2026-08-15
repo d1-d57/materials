@@ -109,7 +109,23 @@ LOCK_WAIT_SEC = 90
 # `zayavki_dir()` (см. рядом с `glavnaya_rabochaya()` — она определена ниже).
 ZAYAVKI_DIR = "_studio/zhurnal/_INFRA-git/zayavki"
 ZAYAVKI_SDELANO = ZAYAVKI_DIR + "/sdelano"
+# ВТОРОЙ ДОМ очереди. До 15.08 дом был ровно один — эта же папка, — и заявка,
+# которую гит-контур исполнить НЕ ВПРАВЕ, возвращалась в неё же и доставалась
+# следующему контуру. `…T0311` собрала так 18 одинаковых отказов от 18 разных
+# контуров за трое суток (`disciplina/doma/meta/POKRYTIE.md §11`). Лежит ВНУТРИ
+# `zayavki/` не по лени: `_zayavki_otkrytyye()` глобит `*.md` без рекурсии, и
+# переадресованная заявка исчезает из очереди контура ПО ПОСТРОЕНИЮ — отдельного
+# фильтра, который можно забыть обновить, не заводится.
+ZAYAVKI_NA_ZAHOD = ZAYAVKI_DIR + "/na-zahod"
 POSTOYANNYE = "_studio/zhurnal/_INFRA-git/POSTOYANNYE.md"
+
+# Род работы у заявки — чем сортировать НА ВХОДЕ, до того как исполнитель
+# прочитает текст и потратит проход очереди. Значения латиницей, как у
+# `СРОЧНОСТЬ:`. `?` — законное состояние старой заявки, заведённой до поля.
+RODY = ("git-operaciya", "pravka-koda")
+# Сторож повтора: сколько `ЗАСТРЯЛА:` подряд означают неверный АДРЕС, а не
+# занятость исполнителя. Три — порог из §11; он же назван в критерии захода.
+STOROZH_POROG = 3
 
 
 def in_sandbox():
@@ -1121,6 +1137,17 @@ def zayavki_dir():
     return p
 
 
+def zayavki_na_zahod_dir():
+    """Второй дом — заявки, которым нужен заход-разработчик, а не гит-контур.
+
+    Считается от той же ГЛАВНОЙ рабочей копии и по той же причине, что
+    `zayavki_dir()`: переадресованную заявку читает и заход из своего worktree.
+    Папку НЕ создаёт на пустом месте — иначе `zayavki` заводила бы её у каждого,
+    кто просто посмотрел очередь, и пустой каталог уезжал бы в git мусором.
+    """
+    return glavnaya_rabochaya() / ZAYAVKI_NA_ZAHOD
+
+
 def vetka_vychekauchena(name):
     """Стоит ли ветка в КАКОЙ-ЛИБО рабочей папке, включая основную.
 
@@ -1574,9 +1601,11 @@ def cmd_zayavka(args):
     avtor = "sandbox" if in_sandbox() else "host"
     arka = args.arka or "не названа"
     srochnost = args.srochnost or "obychnaya"
+    rod = getattr(args, "rod", None) or "?"
     (d / name).write_text(
         f"ЗАЯВКА: {time.strftime('%Y-%m-%dT%H:%M')} · автор: {avtor} · арка: {arka}\n"
-        f"СРОЧНОСТЬ: {srochnost}\n\n"
+        f"СРОЧНОСТЬ: {srochnost}\n"
+        f"РОД: {rod}\n\n"
         f"{text}\n",
         encoding="utf-8")
     zid = name[:-3]
@@ -1584,8 +1613,40 @@ def cmd_zayavka(args):
     return 0
 
 
+_SHAPKA_KLYUCHI = ("ЗАЯВКА:", "СРОЧНОСТЬ:", "РОД:", "ЗАСТРЯЛА:", "ЗАКРЫТО:",
+                   "ПЕРЕАДРЕСОВАНА:")
+
+
+def _pole_shapki(lines, klyuch, po_umolchaniyu="?"):
+    """Значение `КЛЮЧ: …` из шапки заявки. Нет ключа — `по_умолчанию`.
+
+    Отсутствие поля НЕ ошибка: заявки, заведённые до появления `РОД:`, обязаны
+    читаться как были. Гейт, который на них покраснеет, сломает четыре живые
+    заявки ради поля, которого в них не могло быть.
+    """
+    for l in lines:
+        if l.startswith(klyuch):
+            return l[len(klyuch):].strip() or po_umolchaniyu
+    return po_umolchaniyu
+
+
+def _pervaya_soderzhatelnaya(lines):
+    """Первая строка ТЕКСТА просьбы — не строка шапки и не строка журнала.
+
+    Раньше здесь стояло `lines[2:]`, то есть «шапка ровно две строки». С
+    появлением `РОД:` шапка выросла, и срез напечатал бы саму шапку вместо
+    просьбы. Считаем по ключам, а не по числу строк, — тогда следующее поле
+    ничего не сломает.
+    """
+    for l in lines:
+        s = l.strip()
+        if s and not any(s.startswith(k) for k in _SHAPKA_KLYUCHI):
+            return s
+    return ""
+
+
 def _zayavki_otkrytyye():
-    """[(id, путь, возраст_ч, срочность, первая_строка_текста)] по возрасту."""
+    """[(id, путь, возраст_ч, срочность, род, первая_строка_текста)] по возрасту."""
     d = zayavki_dir()
     if not d.is_dir():
         return []
@@ -1598,27 +1659,130 @@ def _zayavki_otkrytyye():
         except OSError:
             continue
         lines = text.splitlines()
-        srochnost = "?"
-        for l in lines:
-            if l.startswith("СРОЧНОСТЬ:"):
-                srochnost = l[len("СРОЧНОСТЬ:"):].strip()
-                break
-        pervaya = next((l.strip() for l in lines[2:] if l.strip()), "")
+        srochnost = _pole_shapki(lines, "СРОЧНОСТЬ:")
+        rod = _pole_shapki(lines, "РОД:")
+        pervaya = _pervaya_soderzhatelnaya(lines)
         vozrast_ch = max(0, int((time.time() - p.stat().st_mtime) / 3600))
-        rows.append((p.stem, p, vozrast_ch, srochnost, pervaya))
+        rows.append((p.stem, p, vozrast_ch, srochnost, rod, pervaya))
     rows.sort(key=lambda r: -r[2])
     return rows
 
 
+# ───────────────── сторож повтора: три отказа подряд = неверный адрес ─────────
+#
+# Рычаг к §11 `disciplina/doma/meta/POKRYTIE.md`. До него `ЗАСТРЯЛА:` была
+# записью в файл, которую НИКТО НЕ СЧИТАЛ, — заявка могла копить отказы
+# бесконечно, и ничто во всей фабрике от этого не краснело («правило без того,
+# чем краснеть»). Замер, ради которого сторож заведён: `…T0311` — 18 отказов,
+# `…T0359` — 17, закрыто из четырёх заявок ноль.
+
+_SLOVO = re.compile(r"[а-яёa-z0-9_]+")
+
+
+def _slova_otkaza(stroka):
+    """Множество слов отказа без даты, регистра и коротких служебных слов."""
+    telo = stroka.split("·", 1)[1] if "·" in stroka else stroka
+    return {w for w in _SLOVO.findall(telo.lower()) if len(w) > 3}
+
+
+def _shodstvo(a, b):
+    """Жаккар двух множеств слов, 0..1. Пусто с обеих сторон — считаем 1.0."""
+    if not a and not b:
+        return 1.0
+    if not a or not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+def _stroki_zastryala(text):
+    return [l for l in text.splitlines() if l.startswith("ЗАСТРЯЛА:")]
+
+
+def storozh_povtora(p):
+    """(краснеет, диагноз) по одному файлу заявки.
+
+    Краснеет на `STOROZH_POROG` отказах подряд. Порог считается по ХВОСТУ, а
+    не по всему файлу: `ЗАКРЫТО:` посередине означало бы, что заявку однажды
+    исполнили и завели заново, — старые отказы к нынешнему адресу отношения
+    не имеют.
+
+    «Одинаковость» отказов печатается ЧИСЛОМ (`KONSTITUCIYA §10`), а не
+    утверждается словом, но порогом НЕ является: три отказа подряд — это уже
+    неверный адрес, как бы по-разному они ни были сформулированы. Сходство
+    здесь — диагноз для читателя, а не условие срабатывания.
+    """
+    try:
+        text = p.read_text(encoding="utf-8")
+    except OSError as e:
+        return False, f"файл не прочитан: {e}"
+
+    hvost = text.split("ЗАКРЫТО:")[-1]
+    otkazy = _stroki_zastryala(hvost)
+    n = len(otkazy)
+    if n < STOROZH_POROG:
+        return False, f"отказов подряд {n}, порог {STOROZH_POROG} — молчу"
+
+    posledniye = otkazy[-STOROZH_POROG:]
+    mnozhestva = [_slova_otkaza(s) for s in posledniye]
+    pary = [(i, j) for i in range(len(mnozhestva)) for j in range(i + 1, len(mnozhestva))]
+    shodstva = [_shodstvo(mnozhestva[i], mnozhestva[j]) for i, j in pary]
+    sredneye = sum(shodstva) / len(shodstva) if shodstva else 0.0
+    obshchiye = set.intersection(*mnozhestva) if mnozhestva else set()
+
+    diag = [
+        f"отказов подряд: {n} (порог {STOROZH_POROG})",
+        f"сходство последних {STOROZH_POROG} отказов: {sredneye * 100:.0f}%",
+        f"общих слов в них: {len(obshchiye)}"
+        + (f" — {', '.join(sorted(obshchiye)[:8])}" if obshchiye else ""),
+        f"первый отказ: {otkazy[0][:110]}",
+        f"последний:    {otkazy[-1][:110]}",
+    ]
+    return True, "\n".join("      " + s for s in diag)
+
+
+def _peradresovannyye():
+    """[(id, путь)] из второго дома — переадресованные, по имени."""
+    d = zayavki_na_zahod_dir()
+    if not d.is_dir():
+        return []
+    return [(p.stem, p) for p in sorted(d.glob("*.md")) if p.is_file()]
+
+
+def _storozh_po_ocheredi():
+    """[(id, путь, диагноз)] по ОТКРЫТОЙ очереди — на ком сторож краснеет."""
+    krasnyye = []
+    for zid, p, _v, _s, _r, _t in _zayavki_otkrytyye():
+        krasneet, diag = storozh_povtora(p)
+        if krasneet:
+            krasnyye.append((zid, p, diag))
+    return krasnyye
+
+
 def cmd_zayavki(args):
-    """Печать очереди — read-only, работает откуда угодно (в т.ч. из worktree)."""
+    """Печать очереди — read-only, работает откуда угодно (в т.ч. из worktree).
+
+    🔴 rc=1, когда сторож повтора нашёл заявку с `STOROZH_POROG`+ отказами
+    подряд. Печать сама по себе рычагом не была: восемнадцать контуров подряд
+    прочитали очередь и ни один не увидел, что читает один и тот же тупик.
+    Красный код возврата у команды, которую контур зовёт ПЕРВЫМ ходом, — это
+    то, чего нельзя не заметить.
+    """
     otkrytyye = _zayavki_otkrytyye()
     if not otkrytyye:
         print("✅ заявок нет")
     else:
         print(f"Открытых заявок: {len(otkrytyye)}\n")
-        for zid, _p, vozrast_ch, srochnost, pervaya in otkrytyye:
-            print(f"   · {zid}  ({vozrast_ch} ч, {srochnost})\n     {pervaya}")
+        for zid, _p, vozrast_ch, srochnost, rod, pervaya in otkrytyye:
+            print(f"   · {zid}  ({vozrast_ch} ч, {srochnost}, род: {rod})\n     {pervaya}")
+
+    peradres = _peradresovannyye()
+    if peradres:
+        print(f"\n── ждут захода-разработчика ({ZAYAVKI_NA_ZAHOD}) ──")
+        print("   Гит-контуру их брать НЕ НАДО: он их исполнить не вправе.\n")
+        for zid, p in peradres:
+            prichina = _pole_shapki(p.read_text(encoding="utf-8").splitlines(),
+                                    "ПЕРЕАДРЕСОВАНА:", "причина не записана")
+            print(f"   · {zid}\n     {prichina}")
 
     postoyannyje = glavnaya_rabochaya() / POSTOYANNYE
     n_postoyannyh = 0
@@ -1629,8 +1793,107 @@ def cmd_zayavki(args):
         print(f"\n── {POSTOYANNYE} ──\n")
         print(soderzhimoje.rstrip())
 
+    zavisshiye = _storozh_po_ocheredi()
+    for zid, _p, diag in zavisshiye:
+        print(f"\n🔴 СТОРОЖ ПОВТОРА: {zid} — заявка адресована не тому исполнителю")
+        print(diag)
+        print(f"      Три отказа подряд — признак не занятости исполнителя, а НЕВЕРНОГО АДРЕСА.")
+        print(f"      Дверь: git_zona.py zayavka-peredat {zid} --pochemu \"<кому и почему>\"")
+
     print(f"\nОхват: заявок открыто {len(otkrytyye)}, "
-          f"постоянных исключений {n_postoyannyh}")
+          f"переадресовано {len(peradres)}, "
+          f"постоянных исключений {n_postoyannyh}, "
+          f"сторож краснеет на {len(zavisshiye)}")
+    return 1 if zavisshiye else 0
+
+
+def cmd_zayavka_storozh(args):
+    """Сторож повтора на живом объекте: rc=1 — красное, rc=0 — молчит.
+
+    Без `id` — по всей открытой очереди. С `id` — по одной заявке, и она
+    ищется В ОБОИХ домах: заявка, уехавшая в `na-zahod/`, обязана давать
+    ЗЕЛЁНОЕ с указанием, куда легла, а не «нет такой заявки». Иначе
+    «сторож замолчал» было бы неотличимо от «сторож потерял объект».
+    """
+    if not args.id:
+        zavisshiye = _storozh_po_ocheredi()
+        vsego = len(_zayavki_otkrytyye())
+        for zid, _p, diag in zavisshiye:
+            print(f"🔴 {zid} — адресована не тому исполнителю")
+            print(diag)
+        if not zavisshiye:
+            print("✅ сторож молчит: заявок с "
+                  f"{STOROZH_POROG}+ отказами подряд нет")
+        print(f"\nОхват: проверено {vsego} из {vsego} открытых заявок, "
+              f"краснеет {len(zavisshiye)}")
+        return 1 if zavisshiye else 0
+
+    p = zayavki_dir() / f"{args.id}.md"
+    if not p.is_file():
+        vtoroy = zayavki_na_zahod_dir() / f"{args.id}.md"
+        if vtoroy.is_file():
+            prichina = _pole_shapki(vtoroy.read_text(encoding="utf-8").splitlines(),
+                                    "ПЕРЕАДРЕСОВАНА:", "причина не записана")
+            print(f"✅ сторож молчит: {args.id} больше не в очереди гит-контура")
+            print(f"   лежит: {vtoroy}")
+            print(f"   {prichina}")
+            print("\nОхват: проверена 1 заявка из 1 названной, краснеет 0")
+            return 0
+        print(f"⛔ Нет такой заявки ни в очереди, ни во втором доме: {args.id}")
+        return 1
+
+    krasneet, diag = storozh_povtora(p)
+    if krasneet:
+        print(f"🔴 {args.id} — адресована не тому исполнителю")
+        print(diag)
+        print(f"      Дверь: git_zona.py zayavka-peredat {args.id} --pochemu \"<кому и почему>\"")
+    else:
+        print(f"✅ сторож молчит: {args.id} — {diag}")
+    print(f"\nОхват: проверена 1 заявка из 1 названной, "
+          f"краснеет {1 if krasneet else 0}")
+    return 1 if krasneet else 0
+
+
+def cmd_zayavka_peredat(args):
+    """Переадресовать заявку во ВТОРОЙ ДОМ — заходу-разработчику.
+
+    Не «закрыть» и не «отказать»: заявка жива, но лежит там, где её МОГУТ
+    исполнить. Только host-side — перенос файла есть `unlink`.
+    """
+    if in_sandbox():
+        return refuse_write("переадресация заявки",
+                            suggest=f"zayavka-peredat {args.id or '<id>'} "
+                                    f"--pochemu \"<кому и почему>\"")
+
+    pochemu = (args.pochemu or "").strip()
+    if _est_plejsholder(pochemu):
+        print("⛔ Причина пустая или осталась плейсхолдером `<...>` — напиши, "
+              "КОМУ заявка адресуется и почему гит-контур её не исполнит.")
+        return 1
+
+    p = zayavki_dir() / f"{args.id}.md"
+    if not p.is_file():
+        vtoroy = zayavki_na_zahod_dir() / f"{args.id}.md"
+        if vtoroy.is_file():
+            print(f"✅ Уже переадресована, ничего не делаю: {vtoroy}")
+            return 0
+        suschie = sorted(q.stem for q in zayavki_dir().glob("*.md"))
+        print(f"⛔ Нет такой заявки: {args.id}")
+        if suschie:
+            print("   Существующие:")
+            for s in suschie:
+                print(f"     {s}")
+        return 1
+
+    stamp = time.strftime("%Y-%m-%dT%H:%M")
+    with open(p, "a", encoding="utf-8") as f:
+        f.write(f"ПЕРЕАДРЕСОВАНА: {stamp} · {pochemu}\n")
+
+    d = zayavki_na_zahod_dir()
+    d.mkdir(parents=True, exist_ok=True)
+    p.rename(d / p.name)
+    print(f"✅ Заявка переадресована во второй дом: {d / p.name}")
+    print("   Из очереди гит-контура она ушла; сторож на ней замолчит.")
     return 0
 
 
@@ -1812,10 +2075,15 @@ def cmd_doctor(args):
     # место, где владелец видит очередь, ни о чём не спрашивая.
     otkrytyye = _zayavki_otkrytyye()
     if otkrytyye:
-        starejshaya = max(v for _, _, v, _, _ in otkrytyye)
+        starejshaya = max(v for _, _, v, _, _, _ in otkrytyye)
         print(f"заявок открыто: {len(otkrytyye)}, старейшей {starejshaya} ч")
     else:
         print("✅ заявок нет")
+    zavisshiye = _storozh_po_ocheredi()
+    if zavisshiye:
+        print(f"🔴 сторож очереди: заявок с {STOROZH_POROG}+ отказами подряд — "
+              f"{len(zavisshiye)} ({', '.join(z for z, _, _ in zavisshiye)}); "
+              f"разбор — git_zona.py zayavka-storozh")
 
     print("\nПоследние коммиты:")
     for l in git("log", "-5", "--oneline").stdout.splitlines():
@@ -3799,11 +4067,29 @@ def main():
     za.add_argument("--srochnost", choices=["obychnaya", "blokiruet", "postoyannaya"],
                     default="obychnaya", help="по умолчанию obychnaya")
     za.add_argument("--arka", help="арка-источник (необязателен)")
+    za.add_argument("--rod", choices=list(RODY),
+                    help="род работы: git-operaciya | pravka-koda. Не назван — "
+                         "пишется `?`, и сортировать очередь на входе нечем")
     za.set_defaults(func=cmd_zayavka)
 
     zi = sub.add_parser("zayavki",
-                        help="что лежит в очереди — read-only, работает откуда угодно")
+                        help="что лежит в очереди — read-only; rc=1, если сторож "
+                             "нашёл заявку с тремя отказами подряд")
     zi.set_defaults(func=cmd_zayavki)
+
+    zs = sub.add_parser("zayavka-storozh",
+                        help=f"сторож повтора: {STOROZH_POROG}+ отказов подряд = "
+                             f"неверный адрес; rc=1 краснеет (read-only)")
+    zs.add_argument("id", nargs="?",
+                    help="id одной заявки; без него — по всей очереди")
+    zs.set_defaults(func=cmd_zayavka_storozh)
+
+    zp = sub.add_parser("zayavka-peredat",
+                        help="переадресовать заявку заходу-разработчику "
+                             "(второй дом na-zahod/); только host-side")
+    zp.add_argument("id", help="id заявки (имя файла без .md)")
+    zp.add_argument("--pochemu", help="кому адресуется и почему контур не исполнит")
+    zp.set_defaults(func=cmd_zayavka_peredat)
 
     zz = sub.add_parser("zayavka-zakryt",
                         help="закрыть заявку: --rezultat (перенос в sdelano/) или "

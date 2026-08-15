@@ -471,8 +471,14 @@ echo "  ✅ ловушка 16: разрешённое место названо 
 sobrat_repo() {  # <путь>
   R="$1"
   mkdir -p "$R/_studio/zhurnal/proba" "$R/_studio/docs" "$R/_generator/tools/dummy-zone"
-  cp "$TOOLS/../_studio/zhurnal/_TEMPLATE-zahod.md" "$R/_studio/zhurnal/_TEMPLATE-zahod.md" 2>/dev/null \
-    || cp "$REPO_ROOT/_studio/zhurnal/_TEMPLATE-zahod.md" "$R/_studio/zhurnal/_TEMPLATE-zahod.md"
+  # Шаблон берётся ОТ КОРНЯ РЕПОЗИТОРИЯ, одним путём и без отката. Прежде здесь
+  # стояло `cp "$TOOLS/../_studio/…" 2>/dev/null || cp "$REPO_ROOT/_studio/…"`, и
+  # первая половина была МЁРТВОЙ: `$TOOLS` — это `_generator/tools`, значит
+  # `$TOOLS/..` — `_generator`, а каталога `_generator/_studio/` в репозитории нет
+  # и не было. Половина падала ВСЕГДА, `2>/dev/null` съедал её жалобу, работал
+  # всегда откат. Опасно это не лишней строкой, а тем, что при поломке ВТОРОГО
+  # пути читатель видел бы «есть же запасной вариант» — которого нет.
+  cp "$REPO_ROOT/_studio/zhurnal/_TEMPLATE-zahod.md" "$R/_studio/zhurnal/_TEMPLATE-zahod.md"
   : > "$R/_generator/tools/dummy-zone/fake.py"
   # 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ — БЕЗ НЕЁ ГЕНЕРАТОР ОТКАЗЫВАЕТСЯ СОБИРАТЬ
   # (заход `kanon-put`, 14.08), и посыпались бы ВСЕ ловушки, которые зовут
