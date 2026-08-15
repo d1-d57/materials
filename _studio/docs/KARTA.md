@@ -767,6 +767,26 @@
 
 **`_studio/zhurnal/2026-08-14_rychagi-zahodov/kod_granicy-poiska.md`** (⚠ описание не задано)
 
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-2.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-3.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-4.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-5.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/HANDOFF-2026-08-16.md`** (Хэндофф в сессию 2026-08-16)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_sluzhebnye-slajdy.md`** (обложка, финальный слайд и разделители по геометрии дизайнеров (две зоны); визитка без QR и через солвер)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-6.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-14_rychagi-zahodov/VYGRUZKA-2026-08-15-7.md`** (Выгрузка сессии 2026-08-15 — сырьё для дневника арки 2026-08-14_rychagi-zahodov)
+
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_vlitie-i-deka.md`** (влить четыре принятые ветки арки в основную, погасить отработавшие рабочие папки, собрать деку L2 в dist и починить фото на визитке)
+
 
 ## §7. Модель памяти
 Две памяти: **долгая** (дома `docs/`) vs **локальная** (папка арки `zhurnal/<арка>/`). Долгую читаем раз на входе в арку, дальше на дистиллятах. Один дом на сущность; durable из арки → по домам при закрытии. «Осталось только в дневнике — не существует.» Механика — `kak-delat/ARKA.md`.
