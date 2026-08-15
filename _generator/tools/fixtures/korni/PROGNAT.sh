@@ -65,8 +65,16 @@ cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
    "$TOOLS/check_zahod.py" "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" \
    "$TOOLS/check_incidenty.py" "$TOOLS/git_zona.py" "$TOOLS/check_sborki.py" \
    "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
-   "$TOOLS/modeli.py" \
+   "$TOOLS/modeli.py" "$TOOLS/check_tool_contract.py" \
    "$T/_generator/tools/"
+# 🔴 `check_tool_contract.py` в списке — ТОТ ЖЕ КЛАСС, что `modeli.py` строкой
+# ниже, и пойман он на baseline этого захода, ДО единой правки шва: `check_zahod.py`
+# импортирует его на верхнем уровне (строка 84), под временной копией без него
+# падает `ModuleNotFoundError: No module named 'check_tool_contract'`, и через
+# него — весь `bootstrap_zahod.py`. Красной от этого была не проверка, а сама
+# фикстура: ловушки 5 и 6 давали ❌ на чистом `HEAD`, без чьих-либо правок.
+# Класс повторяется каждый раз, когда инструмент из списка обзаводится новым
+# импортом: список копирования — ручной, а зависимость — нет.
 # 🔴 `modeli.py` в списке — не украшение: `bootstrap_zahod.py` импортирует его
 # на верхнем уровне, и под временной копией без него падает
 # `ModuleNotFoundError: No module named 'modeli'`. Красной от этого была не
@@ -424,6 +432,56 @@ else
     echo "  ❌ MERGE НЕ ПЕЧАТАЕТ ГОТОВУЮ СТРОКУ — зону приходится собирать руками"; FAIL=1
     cat "$T/merge.txt"
 fi
+
+# ── ЛОВУШКА 9: ДОМ ШАБЛОНОВ — репозиторий ИНСТРУМЕНТОВ, а не `GIT_ZONA_REPO` ──
+# 🔴 ВОСПРОИЗВОДИТ ЖИВОЙ СЛУЧАЙ 2026-08-15, а не выдуманный: инструменты лежат
+# в `materials`, а `GIT_ZONA_REPO` показывает на `disciplina`, где
+# `_TEMPLATE-zahod.md` нет ВОВСЕ (`bootstrap_zahod.py` падал «шаблон не
+# найден»), а лежащая копия `_TEMPLATE-arka` протухла — несла греп-гейт
+# `^ЦЕНА: `, из-за которого на арке `2026-07-25_lekcia-1` тринадцать уроков из
+# девятнадцати получили ложный зелёный; в `materials` он починен 06.08, до
+# копии починка не доехала.
+# Пока `шаблон()` собирался от `REPO`, дом шаблонов переезжал вместе с
+# переменной — то есть КАЖДЫЙ обслуживаемый репозиторий обязан был держать свою
+# копию шаблонов, а копии расходятся МОЛЧА: разъезд виден не в момент разъезда,
+# а через неделю, на собранном по протухшему шаблону заходе.
+# Здесь дерево `GIT_ZONA_REPO` заведомо БЕЗ шаблонов — журнал есть, шаблонов в
+# нём нет (ровно состояние `disciplina`), и проверяются ОБЕ половины: ответ
+# лежит внутри дерева ИНСТРУМЕНТОВ и файл по нему СУЩЕСТВУЕТ. Одной первой
+# половины мало: путь можно вернуть верный и в дерево без файла.
+# 🔴 `pwd -P` обязателен: macOS кладёт `mktemp -d` в `/var/folders/…`, где
+# `/var` — симлинк на `/private/var`. `Path(__file__).resolve()` внутри
+# `korni.py` даёт написание через `/private`, а `$T` несёт написание через
+# `/var`; сравнение без `pwd -P` не совпало бы НИКОГДА и ловушка краснела бы
+# всегда — то есть сторожила бы симлинк, а не шов. Тот же класс уже оплачен в
+# `kanonizirovat_tekst()` (комментарий «у одного корня бывает два написания»).
+TR=$(cd "$T" && pwd -P)
+NET_SHABLONOV="$T/net-shablonov"
+mkdir -p "$NET_SHABLONOV/_studio/zhurnal"     # журнал есть, `_TEMPLATE-*` в нём нет
+for IMYA in _TEMPLATE-zahod.md _TEMPLATE-arka; do
+    OTVET=$(GIT_ZONA_REPO="$NET_SHABLONOV" python3 - "$T" "$IMYA" <<'PY'
+import sys, importlib.util, pathlib
+t, имя = pathlib.Path(sys.argv[1]), sys.argv[2]
+s = importlib.util.spec_from_file_location("k", t / "_generator/tools/korni.py")
+m = importlib.util.module_from_spec(s); s.loader.exec_module(m)
+п = m.шаблон(имя)
+print(f"{п}|{'da' if п.exists() else 'net'}")
+PY
+) || OTVET="|net"
+    PUT=${OTVET%|*}
+    EST=${OTVET##*|}
+    case "$PUT" in
+        "$TR"/*)
+            if [ "$EST" = da ]
+            then echo "  ✅ дом шаблонов: $IMYA взят из репозитория ИНСТРУМЕНТОВ и существует"
+            else echo "  ❌ ПУТЬ ВНУТРИ ИНСТРУМЕНТОВ, НО ФАЙЛА НЕТ — $IMYA: $PUT"; FAIL=1
+            fi ;;
+        "$NET_SHABLONOV"/*)
+            echo "  ❌ ДОМ ШАБЛОНОВ УЕХАЛ ЗА GIT_ZONA_REPO — $IMYA взят из дерева без шаблонов: $PUT"; FAIL=1 ;;
+        *)
+            echo "  ❌ ШАБЛОН НЕ ИЗ ИНСТРУМЕНТОВ И НЕ ИЗ GIT_ZONA_REPO — $IMYA: $PUT"; FAIL=1 ;;
+    esac
+done
 
 if [ "$FAIL" = 0 ]
 then echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0
