@@ -454,3 +454,5 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-15 18:21 · arka/mat-kostyak · план выходит за зону _studio · → пересобрать план по зоне: plan --zone, или чужое не трогать · статус: открыт
 - 2026-08-15 18:23 · arka/mat-kostyak · vlit-v-osnovnuyu zahod/vid-blokov-vnedrenie выходит за зону · → назвать все зоны повторным --zone либо звать без --zone осознанно · статус: открыт
 - 2026-08-15 20:28 · arka/mat-kostyak · коммит прошёл не целиком: пути не доехали или коммиты упали · → смотреть вывод команды и `doctor` · статус: открыт
+- 2026-08-15 20:31 · arka/mat-kostyak · vlit-v-osnovnuyu zahod/shablony-odin-dom выходит за зону · → назвать все зоны повторным --zone либо звать без --zone осознанно · статус: открыт
+- 2026-08-15 20:32 · arka/mat-kostyak · vlit-v-osnovnuyu zahod/shablony-odin-dom: ветка с живой рабочей папкой --vsyo-ravno · → причина: рабочая папка простаивает: 0 файлов правлено за 6ч, живой заход рядом только ../materials-wt/vyvoz (назван заходом поимённо); ветка в списке на влитие и на гашение — работа папки /Users/ivanyakovlev/Documents/GitHub/materials-wt/shablony могла разойтись · статус: открыт
