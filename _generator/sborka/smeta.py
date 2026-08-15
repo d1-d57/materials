@@ -60,10 +60,14 @@ HOLST_W, HOLST_H = 1440, 810      # viewport деки (`deck.py`, `vmeshchenie`)
 # (`X_SLUZH`/`DELTA_TEKST`) сделали бы таких копий четыре. Импорт снимает вопрос:
 # поле меняется в ОДНОМ месте, смета следует за ним автоматически, а
 # `--proverit-geometriyu` по-прежнему доказывает совпадение с живым замером.
-from tipy import X_TEKST as _TIPY_X_TEKST, TOLKO_TEKST_PAD_PRAVO as _TIPY_PAD_PRAVO  # noqa: E402
-# `.zone.copy{padding:4px X_TEKST 12px 18px}`: X = лево+право = X_TEKST + 18,
-# Y = верх+низ = 4+12. Проверяется замером (`zamer_smety.py --geometriya`).
-ZONA_PAD_X, ZONA_PAD_Y = _TIPY_X_TEKST + 18, 16
+from tipy import (X_TEKST as _TIPY_X_TEKST, TOLKO_TEKST_PAD_PRAVO as _TIPY_PAD_PRAVO,
+                   ZONA_PAD_TOP as _TIPY_PAD_TOP, ZONA_PAD_BOTTOM as _TIPY_PAD_BOTTOM)  # noqa: E402
+# `.zone.copy{padding:ZONA_PAD_TOP X_TEKST ZONA_PAD_BOTTOM 18px}`: X = лево+право =
+# X_TEKST + 18, Y = верх+низ. И то, и другое — импорт из `tipy.py` (Д5 дочистки-2,
+# заход kadr-uzor-i-vmeshchenie Э3 довёл Y до того же приёма, что уже был у X):
+# литерала здесь больше нет, поле меняется в ОДНОМ месте. Проверяется замером
+# (`zamer_smety.py --geometriya`).
+ZONA_PAD_X, ZONA_PAD_Y = _TIPY_X_TEKST + 18, _TIPY_PAD_TOP + _TIPY_PAD_BOTTOM
 # `tipy.tolko_tekst`: grid padding `24px TOLKO_TEKST_PAD_PRAVO 24px 0` (X = 0 слева
 # + столько справа, Y = 24*2). Y была 128 и это уже разошлось с кодом ДО захода
 # polya-i-uzor (грид давно 24px, не 64px — Ф1б доводки Л2 сменила число, смету не
