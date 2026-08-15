@@ -3,7 +3,7 @@
 gejt_kartochki.py краснеет на отсутствии этого блока или неполном наборе фаз).
 Формат строки: ФАЗА N (имя фазы): что делается :: команда.
 
-ФАЗА 1 (интервью): назвать nazvanie/tip_slaida (типы — tipy_slajdov.TIPY, плюс служебный Т6 и NE_KLASSIFICIROVAN)/zachem (идея одной фразой)/minuty, разметить блоки в ОБОИХ разделах — ### [tip] мысль, тела ещё пустые — назвать centralnyj_blok и заполнить vvodit/opiraetsya_na (какие термины слайд вводит и на какие уже введённые опирается — единственная машинная проверка порядка понятий; служебный Т6 и чисто нарративный Т4 освобождены) :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
+ФАЗА 1 (интервью): назвать nazvanie/tip_slaida (типы — tipy_slajdov.TIPY, плюс служебный Т6 и NE_KLASSIFICIROVAN)/zachem (идея одной фразой)/minuty, разметить блоки в ОБОИХ разделах — ### [tip] мысль, тела ещё пустые — назвать centralnyj_blok и заполнить vvodit/opiraetsya_na (какие термины слайд вводит и на какие уже введённые опирается — единственная машинная проверка порядка понятий; служебный Т6 и чисто нарративные Т4/Т5 освобождены) :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): решить tip_verstki/liniya/akcent/vazhnost/byudzhet_slov/zagolovok_na_ekrane в шапке (zagolovok_na_ekrane — пустая строка легальна, слайд может быть без заголовка на экране, но пометку 'заполнить' обязана снять здесь), написать тела блоков «Математика — развёрнуто» по разметке фазы 1 :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): УЗНАТЬ БЮДЖЕТ В СТРОКАХ ДО ТОГО, КАК ТЕКСТ НАПИСАН — сколько строк даёт выбранная пара tip_verstki/liniya и сколько блоков в них влезет; браузер не нужен :: python3 _generator/sborka/smeta.py --byudzhet <tip_verstki> <liniya>
 ФАЗА 3 (текст слайдов): написать «Текст слайда — сжато» тем же составом блоков, что в «Математике» :: python3 _generator/sborka/gejt_kartochki.py <лекция>
@@ -27,22 +27,19 @@ minuty: 8
 vazhnost: osnovnoj
 byudzhet_slov: 58
 tip_verstki: polosa_vertikalnaya
-liniya: 66.15
+liniya: 68.99
 matematika_iz: [Фундаментальная группа]
 illustracii: [namotka-petli, disk-i-okruzhnost]
 vvodit: []
 opiraetsya_na:
   - {termin: ретракт, vvedeno: retrakt}
 bez_opredeleniya_namerenno: []
-dokazatelstvo_opiraetsya_na: []
-primer_dlya:
-  - {tsel: fundamentalnaya-gruppa:utverzhdenie, napravlenie: do}
 status: v_deke
 kegl_px: 38
-mezhstrochye: 1.274
-otstup_bloka: 12.6
+mezhstrochye: 1.2
+otstup_bloka: 8.7
 obosnovanie_verstki: среднее текста и ДВЕ иллюстрации — вертикальная полоса. Полоса сдвинута с 66 на 70: при 66 текст влезал только на поджатом межстрочье 1.2, при 70 — дышит на 1.3
-podbor_avto: d423dd521574|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=66.15
+podbor_avto: 896c798cd2b6|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=68.99
 ---
 
 ## Математика — развёрнуто

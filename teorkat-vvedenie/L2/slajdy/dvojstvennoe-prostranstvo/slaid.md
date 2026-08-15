@@ -41,9 +41,9 @@ primer_dlya:
 status: v_deke
 obosnovanie_verstki: иллюстрация снята («непонятно в принципе нарисовано»), владелец просил отдать освободившееся место тексту и заголовку — только текст. Типографику подбирает солвер
 kegl_px: 39
-mezhstrochye: 1.348
-otstup_bloka: 16.9
-podbor_avto: fd65d9873017|kegl_px=39|mezhstrochye=1.348|otstup_bloka=16.9
+mezhstrochye: 1.274
+otstup_bloka: 12.9
+podbor_avto: f671a4f9336f|kegl_px=39|mezhstrochye=1.274|otstup_bloka=12.9
 ---
 
 ## Математика — развёрнуто

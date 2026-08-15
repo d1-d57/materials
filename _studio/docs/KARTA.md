@@ -744,6 +744,8 @@
 
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/podbor-e2.md`** (Таблица перебора Э2 (боковые/нижнее поля), заход polya-i-uzor)
 
+**`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kadry/perebor-d5.md`** (Д5 дочистки-2 pravila-kadra: таблица перебора двух вертикалей (12 кандидатов), метод замера и обоснование выбранных чисел)
+
 
 **`_studio/zhurnal/2026-08-14_rychagi-zahodov/kod_konflikty.md`** (заход: разрешить 6 конфликтов слияния по существу — за каждым живая развилка в чужой подсистеме, а не расхождение текстов)
 

@@ -376,6 +376,55 @@ def _check_sceny_vruchnuyu(sid, params, sections):
             % (sid, SCENY_VRUCHNUYU_POLE)]
 
 
+# ═══════════ Д6 дочистки-2 захода `pravila-kadra` (2026-08-14) ═══════════
+# «СЦЕНА = БЛОК» ПЕРЕСТАЁТ БЫТЬ СОГЛАШЕНИЕМ И СТАНОВИТСЯ ИНВАРИАНТОМ С ГЕЙТОМ.
+# Требование владельца после регрессии Д4, дословно: «это должно быть железно
+# вписано в генератор, сцены = блоки, чтобы не было никаких разногласий».
+#
+# До этого правило было ПОВЕДЕНИЕМ ПО УМОЛЧАНИЮ: авто-режим расставлял сцены по
+# блокам, ручные теги его перебивали, и НИКТО не сверял одно с другим. Поэтому
+# поломка прошла молча: `blocks_for_render` перестала тегировать, рендер получил
+# тела без сцен, 14 слайдов из 26 схлопнулись в один — и все гейты остались
+# зелёными, потому что смотрели на текст и на кадры, а сцены живут в атрибутах.
+#
+# 🔴 ПОЧЕМУ ПРОВЕРКА ЧИТАЕТ `fakticheskie_sceny`, А НЕ `block_start_scenes`.
+# Соседняя `block_start_scenes` отвечает «на какой сцене блок ДОЛЖЕН появиться» и
+# в авто-режиме возвращает `1..N` по одному числу блоков, не заглядывая в теги, —
+# то есть во время Д4 она была бы ЗЕЛЁНОЙ и регрессию не поймала бы. Гейт, который
+# не поймал бы того, ради чего заведён, не считается заведённым: сверяем число
+# блоков с тем, что РЕАЛЬНО уходит в рендер (`bloki.fakticheskie_sceny` читает
+# теги обратно из выхода `blocks_for_render`).
+#
+# Исключение ровно одно и оно уже существует: карточка с явным полем-обоснованием
+# `sceny_vruchnuyu` (сегодня такая одна — `inyekcii`). Там разметчик осознанно
+# развёл сцены не по блокам, и это его право; молчаливого исключения нет.
+#
+# Ручной тег БЕЗ обоснования проверка пропускает НАРОЧНО: его уже красит Э2
+# (`_check_sceny_vruchnuyu`) той же строкой про то же поле, и вторая красная
+# строка на одну причину — не строгость, а шум; красный список, где половина
+# строк дублирует другую половину, перестают читать. Значит инвариант судит
+# ровно АВТО-режим — тот самый, в котором сломался Д4.
+def _check_scena_ravna_bloku(sid, params, sections):
+    live = bloki.blocks_for_render(sections["tekst"])
+    if not live:
+        return []
+    if not _unfilled(params.get(SCENY_VRUCHNUYU_POLE)):
+        return []          # осознанная ручная раскладка — законное исключение
+    if bloki.has_manual_scenes(sections["tekst"]):
+        return []          # ручной тег БЕЗ обоснования уже покрашен Э2 — не дублируем
+    n_scen = bloki.fakticheskie_sceny(sections["tekst"])
+    n_blokov = len(live)
+    if n_scen == n_blokov:
+        return []
+    return ["%s: сцен %d, живых блоков %d — инвариант «сцена = блок» нарушен "
+            "(Д6 pravila-kadra; владелец: «сцены = блоки, чтобы не было никаких "
+            "разногласий»). Считано по тому тексту, который уходит в рендер "
+            "(bloki.blocks_for_render), а не по намерению карточки. Что сделать: "
+            "либо разметка блоков и сцен приведена в соответствие, либо в шапке "
+            "заполнено поле-обоснование '%s' — молчаливого исключения нет"
+            % (sid, n_scen, n_blokov, SCENY_VRUCHNUYU_POLE)]
+
+
 # Э3: «доказательство и то, что оно доказывает — никогда не в одной сцене»
 # (решение владельца, безусловное). Рёбра (`dokazatelstvo_opiraetsya_na`) заводит
 # ОТДЕЛЬНЫЙ заход `kod_rebra-blokov.md` и на сегодня их 0 на живой L2 (проверено
@@ -663,17 +712,22 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     целиком в check_lekcija, не здесь; tip_zheltye: [str] жёлтые находки захода
     tipologia-odna-os — Т1 без примера и без обоснования, NE_KLASSIFICIROVAN;
     sceny_zheltye: [str] жёлтые находки захода sceny-iz-blokov — Э4, потолок
-    трёх блоков на слайде)."""
+    трёх блоков на слайде; n_scen: int — сколько сцен карточка РЕАЛЬНО отдаёт
+    рендеру, Д6 дочистки-2: сумма этих чисел по лекции печатается числом, и её
+    падение видно сразу, без разглядывания кадров)."""
     zakon_warns = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV}
     g15_info = (0, None)
     tip_zheltye = []
     sceny_zheltye = []
+    # 1, а не 0: слайд без текста (K3) и нераспарсенная карточка всё равно
+    # показываются одной сценой — так их считает и движок (`engine.js:scenesOf`).
+    n_scen = 1
     issues = _check_lifecycle_block(text, sid)
     try:
         params, raw_body = parse_card(text, sid=sid)
     except FormatSlaida as e:
         issues.append("%s: карточка не парсится: %s" % (sid, e))
-        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye, n_scen
 
     for f in _polya_dlya_fazy(faza):
         if _unfilled(params.get(f)):
@@ -714,13 +768,13 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
                 "uzhe_vvedeno_ranee лекции" % (sid, termin, vvedeno))
 
     if not raw_body.strip():
-        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye  # K3: слайд без текста — легален, дальше нечего проверять
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye, n_scen  # K3: слайд без текста — легален, дальше нечего проверять
 
     try:
         sections = bloki.parse_sections(raw_body, sid=sid)
     except bloki.FormatBlokov as e:
         issues.append(str(e))
-        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye  # без разобранных секций состав/бюджет не проверить
+        return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye, n_scen  # без разобранных секций состав/бюджет не проверить
 
     if sections["orphan_matematika"]:
         issues.append("%s: в разделе «Математика — развёрнуто» есть абзац вне блока: %r"
@@ -742,6 +796,9 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
     issues.extend(_check_sceny_vruchnuyu(sid, params, sections))
     issues.extend(_check_dokazatelstvo_scena(sid, sections))
     sceny_zheltye.extend(_check_potolok_blokov(sid, sections))
+    # Д6 дочистки-2 (pravila-kadra): инвариант «сцена = блок» + число для суммы.
+    issues.extend(_check_scena_ravna_bloku(sid, params, sections))
+    n_scen = bloki.fakticheskie_sceny(sections["tekst"])
 
     # Заход kod_rebra-blokov.md, Э2: адресат обязателен для dokazatelstvo (красный),
     # желателен для primer (жёлтый).
@@ -774,7 +831,7 @@ def check_slide(sid, text, illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=N
         for name, _, fn in ZAKONY_BLOKOV:
             zakon_warns[name].extend(fn(sid, sections))
 
-    return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye
+    return issues, zakon_warns, g15_info, tip_zheltye, sceny_zheltye, n_scen
 
 
 def check_lekcija(lekcija_dir, faza=None):
@@ -790,7 +847,7 @@ def check_lekcija(lekcija_dir, faza=None):
     zakon_warns_pusto = {name: [] for name, _, _ in ZAKONY_BLOKOV + ZAKONY_PARAMOV + (("Г-15", "", None),)}
     brief_path = lekcija_dir / "brief.md"
     if not brief_path.is_file():
-        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto, [], Counter(), [])
+        return (["%s: brief.md не найден" % lekcija_dir], 0, zakon_warns_pusto, [], Counter(), [], {})
 
     brief_params, _ = parse_front_matter(brief_path.read_text(encoding="utf-8"), sid="brief.md")
     uzhe_vvedeno = {item.get("termin") for item in (brief_params.get("uzhe_vvedeno_ranee") or [])
@@ -802,7 +859,7 @@ def check_lekcija(lekcija_dir, faza=None):
     slide_paths = sorted(slajdy_dir.glob("*/slaid.md"))
     if not slide_paths:
         return (["%s: нет карточек в %s (ищу */slaid.md)" % (lekcija_dir, slajdy_dir)], 0,
-                 zakon_warns_pusto, [], Counter(), [])
+                 zakon_warns_pusto, [], Counter(), [], {})
 
     texts, vvodit_by_sid = {}, {}
     tip_counter = Counter()
@@ -824,9 +881,11 @@ def check_lekcija(lekcija_dir, faza=None):
     tip_zheltye = []
     sceny_zheltye = []
     g15_info_by_sid = {}
+    sceny_by_sid = {}
     for p in slide_paths:
         sid = p.parent.name
-        slide_issues, slide_warns, g15_info, slide_tip_zheltye, slide_sceny_zheltye = check_slide(
+        (slide_issues, slide_warns, g15_info, slide_tip_zheltye,
+         slide_sceny_zheltye, slide_n_scen) = check_slide(
             sid, texts[sid], illustracii_pool, uzhe_vvedeno, vvodit_by_sid, faza=faza)
         issues.extend(slide_issues)
         for name, warns in slide_warns.items():
@@ -834,6 +893,7 @@ def check_lekcija(lekcija_dir, faza=None):
         tip_zheltye.extend(slide_tip_zheltye)
         sceny_zheltye.extend(slide_sceny_zheltye)
         g15_info_by_sid[sid] = g15_info
+        sceny_by_sid[sid] = slide_n_scen
 
     # Г-15 судит ПОРЯДОК слайдов лекции (slide_order), не одну карточку — считаем
     # только при полной проверке, тем же условием, что и остальные ZAKONY_BLOKOV
@@ -841,7 +901,8 @@ def check_lekcija(lekcija_dir, faza=None):
     slide_order = [s for s in (brief_params.get("slide_order") or []) if s in g15_info_by_sid]
     zakon_warns["Г-15"] = zakon_g15(slide_order, g15_info_by_sid) if faza is None and slide_order else []
 
-    return issues, len(slide_paths), zakon_warns, tip_zheltye, tip_counter, sceny_zheltye
+    return (issues, len(slide_paths), zakon_warns, tip_zheltye, tip_counter,
+            sceny_zheltye, sceny_by_sid)
 
 
 def _pechat_slepyh_zon(faza):
@@ -897,9 +958,16 @@ def _pechat_tipologiya(tip_zheltye, tip_counter):
           % (tipy_slajdov.NE_KLASSIFICIROVAN, ne_klass_n, sum(tip_counter.values())))
 
 
-def _pechat_sceny(sceny_zheltye):
+def _pechat_sceny(sceny_zheltye, sceny_by_sid):
     """Заход sceny-iz-blokov: жёлтые находки Э4 (потолок трёх блоков) — печатается
-    ВСЕГДА, включая зелёный прогон, тем же принципом, что и соседние `_pechat_*`."""
+    ВСЕГДА, включая зелёный прогон, тем же принципом, что и соседние `_pechat_*`.
+
+    🔴 СУММА СЦЕН ПО ЛЕКЦИИ — ЧИСЛОМ (Д6 дочистки-2 захода pravila-kadra).
+    Регрессия Д4 (сумма 50 → 28, четырнадцать слайдов схлопнулись в одну сцену)
+    прошла и приёмку, и верификатора именно потому, что этого числа нигде не
+    печаталось: оба смотрели на текст и на кадры, а сцены живут в атрибутах.
+    Число берётся из `bloki.fakticheskie_sceny` — по тегам ТОГО текста, который
+    уходит в рендер, а не по намерению карточки."""
     print("СЦЕНЫ ИЗ БЛОКОВ (жёлтое — ориентир, не гейт; Э4, потолок %d блоков; %d):"
           % (POTOLOK_BLOKOV, len(sceny_zheltye)))
     if sceny_zheltye:
@@ -907,6 +975,11 @@ def _pechat_sceny(sceny_zheltye):
             print("  ⚠ %s" % w)
     else:
         print("  ✓ нарушителей 0")
+    if sceny_by_sid:
+        odnoscenovyh = [s for s, n in sceny_by_sid.items() if n == 1]
+        print("  · СУММА СЦЕН ПО ЛЕКЦИИ: %d (карточек %d, из них односценовых %d%s)"
+              % (sum(sceny_by_sid.values()), len(sceny_by_sid), len(odnoscenovyh),
+                 (": " + ", ".join(sorted(odnoscenovyh))) if odnoscenovyh else ""))
 
 
 def main():
@@ -920,8 +993,8 @@ def main():
                           "значения = полная проверка, как без флага")
     args = ap.parse_args()
 
-    issues, n, zakon_warns, tip_zheltye, tip_counter, sceny_zheltye = check_lekcija(
-        args.lekcija, faza=args.faza)
+    (issues, n, zakon_warns, tip_zheltye, tip_counter,
+     sceny_zheltye, sceny_by_sid) = check_lekcija(args.lekcija, faza=args.faza)
     rezhim = "выход фазы %d" % args.faza if args.faza else "полная проверка"
     if issues:
         print("КРАСНЫЙ (%s): проверено %d из %d карточек, замечаний %d" % (rezhim, n, n, len(issues)))
@@ -931,7 +1004,7 @@ def main():
         print("ЗЕЛЁНЫЙ (%s): проверено %d из %d карточек, замечаний 0" % (rezhim, n, n))
     _pechat_zakony(zakon_warns)
     _pechat_tipologiya(tip_zheltye, tip_counter)
-    _pechat_sceny(sceny_zheltye)
+    _pechat_sceny(sceny_zheltye, sceny_by_sid)
     _pechat_slepyh_zon(args.faza)
     return 1 if issues else 0
 

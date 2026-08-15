@@ -55,5 +55,22 @@ if [ "$OK" = 0 ]; then
   fi
 fi
 
+# ── Д4 дочистки-2 (pravila-kadra): сумма сцен печатается ВСЕГДА и умеет краснеть ──
+# Регрессия сцен прошла приёмку и верификатора, потому что на КАДРЕ её не видно:
+# кадр показывает последнюю сцену, и схлопнутый слайд выглядит как здоровый.
+# Значит скриншотер обязан отдавать не только PNG, но и число.
+grep -q "СЦЕНЫ ПО ДЕКЕ: сумма" "$TMP/zhivoj_dist.out" || {
+  echo "  ✗ sceny_pechat: сумма сцен не напечатана на успешном прогоне"; OK=1; }
+[ "$OK" = 0 ] && echo "  ✓ sceny_pechat: сумма сцен напечатана числом на зелёном прогоне"
+
+SUMMA=$(sed -n 's/.*СЦЕНЫ ПО ДЕКЕ: сумма \([0-9]*\).*/\1/p' "$TMP/zhivoj_dist.out" | head -1)
+# порог ВЫШЕ факта — гейт обязан покраснеть; порог по факту — обязан молчать
+pusk "sceny_gejt_krasnyj" 1 -- "$KOREN" --dist "$ZHIVOJ_DIST" --out "$TMP/out5" \
+  --scen-ne-menshe "$((SUMMA + 1))"
+grep -q "СЦЕНЫ ПОТЕРЯНЫ" "$TMP/sceny_gejt_krasnyj.out" || {
+  echo "  ✗ sceny_gejt_krasnyj: rc=1 есть, но без вердикта «СЦЕНЫ ПОТЕРЯНЫ»"; OK=1; }
+pusk "sceny_gejt_zelenyj" 0 -- "$KOREN" --dist "$ZHIVOJ_DIST" --out "$TMP/out6" \
+  --scen-ne-menshe "$SUMMA"
+
 echo "── ИТОГ: $([ $OK = 0 ] && echo 'всё как ожидалось' || echo 'ЕСТЬ РАСХОЖДЕНИЯ')"
 exit $OK

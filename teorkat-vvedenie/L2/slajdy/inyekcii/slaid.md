@@ -3,7 +3,7 @@
 gejt_kartochki.py краснеет на отсутствии этого блока или неполном наборе фаз).
 Формат строки: ФАЗА N (имя фазы): что делается :: команда.
 
-ФАЗА 1 (интервью): назвать nazvanie/tip_slaida (типы — tipy_slajdov.TIPY, плюс служебный Т6 и NE_KLASSIFICIROVAN)/zachem (идея одной фразой)/minuty, разметить блоки в ОБОИХ разделах — ### [tip] мысль, тела ещё пустые — назвать centralnyj_blok и заполнить vvodit/opiraetsya_na (какие термины слайд вводит и на какие уже введённые опирается — единственная машинная проверка порядка понятий; служебный Т6 и чисто нарративный Т4 освобождены) :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
+ФАЗА 1 (интервью): назвать nazvanie/tip_slaida (типы — tipy_slajdov.TIPY, плюс служебный Т6 и NE_KLASSIFICIROVAN)/zachem (идея одной фразой)/minuty, разметить блоки в ОБОИХ разделах — ### [tip] мысль, тела ещё пустые — назвать centralnyj_blok и заполнить vvodit/opiraetsya_na (какие термины слайд вводит и на какие уже введённые опирается — единственная машинная проверка порядка понятий; служебный Т6 и чисто нарративные Т4/Т5 освобождены) :: python3 _generator/sborka/gejt_kartochki.py --faza 1 <лекция>
 ФАЗА 2 (раскадровка): решить tip_verstki/liniya/akcent/vazhnost/byudzhet_slov/zagolovok_na_ekrane в шапке (zagolovok_na_ekrane — пустая строка легальна, слайд может быть без заголовка на экране, но пометку 'заполнить' обязана снять здесь), написать тела блоков «Математика — развёрнуто» по разметке фазы 1 :: python3 _generator/sborka/gejt_kartochki.py --faza 2 <лекция>
 ФАЗА 2.5 (смета вмещения): УЗНАТЬ БЮДЖЕТ В СТРОКАХ ДО ТОГО, КАК ТЕКСТ НАПИСАН — сколько строк даёт выбранная пара tip_verstki/liniya и сколько блоков в них влезет; браузер не нужен :: python3 _generator/sborka/smeta.py --byudzhet <tip_verstki> <liniya>
 ФАЗА 3 (текст слайдов): написать «Текст слайда — сжато» тем же составом блоков, что в «Математике» :: python3 _generator/sborka/gejt_kartochki.py <лекция>
@@ -27,24 +27,21 @@ minuty: 7
 vazhnost: opornyj
 byudzhet_slov: 55
 tip_verstki: polosa_gorizontalnaya
-liniya: 62.82
+liniya: 72.88
 matematika_iz: [Инъекции в палитру]
 illustracii: [vlozhenie-i-vozvrat]
 vvodit: [категория всех отображений]
 opiraetsya_na:
   - {termin: функтор, vvedeno: kategoriya}
 bez_opredeleniya_namerenno: []
-dokazatelstvo_opiraetsya_na: [inyekcii:utverzhdenie]
-primer_dlya:
-  - {tsel: inyekcii:utverzhdenie, napravlenie: do}
 sceny_vruchnuyu: "утверждение и пример раскрываются ОДНИМ кликом нарочно — порядок блоков перестроен по прямому требованию владельца (абстрактный запрет + сразу его наглядный контрпример как один смысловой шаг, доказательство — отдельным шагом); автоматика «блок=сцена» это объединение разводит, найдено ПОСЛЕ-верификатором захода sceny-iz-blokov 2026-08-14"
 status: v_deke
-kegl_px: 36
+kegl_px: 38
 mezhstrochye: 1.2
-otstup_bloka: 8.3
+otstup_bloka: 8.7
 obosnovanie_verstki: мало текста и он ложится длинной строкой — горизонтальная полоса по прямому указанию владельца. Полосу оставил во всю ширину (58%), текст влез поджатым межстрочьем без потери кегля
 zagolovok_snyat_namerenno: da
-podbor_avto: 562839c2f0e1|kegl_px=36|mezhstrochye=1.2|otstup_bloka=8.3|liniya=62.82
+podbor_avto: 562839c2f0e1|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=72.88
 ---
 
 ## Математика — развёрнуто
