@@ -23,6 +23,7 @@ kompilyator-slajda, раскладка обновлена Э6 захода karto
 """
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -50,30 +51,63 @@ def _read(p):
     return p.read_text(encoding="utf-8")
 
 
-def load_illustrations(stems, illustrations_dir):
+def _esc_attr(s):
+    """Значение HTML-атрибута в двойных кавычках — экранировать амперсанд и сами
+    кавычки (путь на диске их не несёт сегодня, но `video src="…"` — атрибут, и
+    молчаливое доверие пути было бы дырой на будущее, не только сегодняшним
+    удобством)."""
+    return s.replace("&", "&amp;").replace('"', "&quot;")
+
+
+def load_illustrations(stems, illustrations_dir, out_dir=None):
     """<stem> → <template id="ill-<stem>">…</template>. Пул иллюстраций (Э5 захода
     kartochka-i-sborka, раскладка Я2): `<лекция>/illustracii/<stem>/risunok.svg`
     (или `risunok.html`) — ПАПКА на иллюстрацию, не плоский файл; рядом с рисунком
-    в той же папке лежит `zakaz.md` (человеку/гейту, компилятор его не читает)."""
+    в той же папке лежит `zakaz.md` (человеку/гейту, компилятор его не читает).
+
+    🔴 Третий вид — `video.mp4` (заход slajdy-media, М3). Владелец решил: видео
+    файлом РЯДОМ с декой, не base64 внутрь (7.9 МБ на четыре ролика — вес, а не
+    вкус). Поэтому видео НЕ инлайнится текстом, как svg/html: шаблон несёт
+    `<video src="…">` с путём, ОТНОСИТЕЛЬНЫМ каталогу итогового HTML (`out_dir`),
+    вычисленным `os.path.relpath` от реального расположения файла на диске —
+    число не подбирается, а следует из geometрии вызова. `out_dir=None` (сборка,
+    не пишущая на диск известный путь, — например замер солвера) даёт путь
+    относительно самого `illustrations_dir`, что для рабочих целей достаточно,
+    раз итоговый файл в этом случае никто не открывает как страницу."""
     out = []
     for stem in stems:
         base = Path(stem).stem  # illustracii может нести "s06-a.svg" — имя ФАЙЛА (Э1)
         folder = illustrations_dir / base
         svg = folder / "risunok.svg"
         html = folder / "risunok.html"
+        video = folder / "video.mp4"
         if svg.is_file():
             content = _read(svg)
         elif html.is_file():
             content = _read(html)
+        elif video.is_file():
+            # 🔴 `.resolve()` ОБЯЗАТЕЛЕН на обеих сторонах — не только на видео.
+            # Найдено живым прогоном: `/tmp` на macOS сам symlink на `/private/tmp`,
+            # `render.py` открывает файл через `Path(...).resolve()` → `file://…`
+            # РЕЗОЛВНУТым путём, а `os.path.relpath` от НЕрезолвнутого `out_dir`
+            # считает смещение по чужой точке отсчёта — браузер получил
+            # `file:///private/Users/...` вместо `file:///Users/...` и 404 на видео,
+            # хотя `os.path.relpath` отработал без единой ошибки (тихий брак, не
+            # исключение). Внутри самого репозитория (`dist/`, `sayt/`) путь не
+            # симлинк и резолв ничего не меняет — правка защищает превью в /tmp.
+            baza = (out_dir if out_dir is not None else illustrations_dir).resolve()
+            rel = os.path.relpath(video.resolve(), baza)
+            content = ('<video src="%s" controls preload="metadata"></video>'
+                       % _esc_attr(rel))
         else:
             raise FormatSlaida(
-                "иллюстрация '%s' не найдена в %s (ни risunok.svg, ни risunok.html)"
-                % (base, folder))
+                "иллюстрация '%s' не найдена в %s (ни risunok.svg, ни risunok.html, "
+                "ни video.mp4)" % (base, folder))
         out.append('<template id="ill-%s">%s</template>' % (base, content))
     return "\n".join(out)
 
 
-def compile_slide_html(slide_path, illustrations_dir=None, title=None):
+def compile_slide_html(slide_path, illustrations_dir=None, title=None, out_dir=None):
     """.md слайда → (sid, полный самодостаточный HTML документа). `sid` — имя
     ПАПКИ слайда (`slajdy/<sid>/slaid.md`), не стем файла.
 
@@ -117,7 +151,7 @@ def compile_slide_html(slide_path, illustrations_dir=None, title=None):
         # slide_path = <лекция>/slajdy/<sid>/slaid.md → parents[2] = <лекция>
         illustrations_dir = slide_path.parents[2] / "illustracii"
     stems = params["illustracii"]
-    templates = load_illustrations(stems, illustrations_dir) if stems else ""
+    templates = load_illustrations(stems, illustrations_dir, out_dir=out_dir) if stems else ""
 
     fonts_css = _read(SKELETON / "fonts" / "faces.css")
     # 🔴 БЕЗ ЭТОГО (Э5 захода solver-vmeshcheniya, найдено живым прогоном): формула
@@ -195,13 +229,13 @@ def main():
     ap.add_argument("--kadr", action="store_true", help="снять PNG-кадр рядом с HTML")
     args = ap.parse_args()
 
+    out = Path(args.out)
     try:
-        sid, doc = compile_slide_html(args.slide)
+        sid, doc = compile_slide_html(args.slide, out_dir=out.parent)
     except (FormatSlaida, TipVerstki) as e:
         print("ОШИБКА: %s" % e, file=sys.stderr)
         return 1
 
-    out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8")
     print("собрано: %s → %s" % (sid, out))

@@ -4,7 +4,9 @@ canvas: 1440x810
 slide_order:
   - napominanie
   - kategoriya
+  - kompoziciya-strelok
   - funktor
+  - funktor-sohranyaet-kompoziciyu
   - razdelitel-estestvennost
   - vektornye-prostranstva
   - anons-dvojstvennogo
@@ -12,6 +14,7 @@ slide_order:
   - kategoriya-vect-iso
   - bazis-i-matricy
   - zamena-bazisa
+  - zamena-bazisa-estestvennost
   - dvojstvennoe-prostranstvo
   - dvojstvennyj-bazis
   - nekanonicheskij-izomorfizm
@@ -20,6 +23,7 @@ slide_order:
   - razdelitel-retrakty
   - anons-retraktov
   - inyekcii
+  - inyekciya-i-sechenie
   - centr-gruppy
   - retrakt
   - fundamentalnaya-gruppa
