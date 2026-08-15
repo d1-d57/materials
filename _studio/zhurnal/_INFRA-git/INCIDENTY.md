@@ -240,3 +240,4 @@ Cowork записал ссылки `SPEKA + знак секции + «Ступе
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/uroki-faz-1-2: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/zamykanie-reestrov: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
 - 2026-08-11 05:00 · arka/mat-kostyak · merge zahod/svedenie-arki: конфликт в 1 путях · → разрешить конфликты, затем merge --continue (или merge --abort) · статус: открыт
+- 2026-08-11 17:02 · zahod/zapusk-samodostatochen · коммит с --no-verify: чужой долг: fixtures/git_zona/PROGNAT.sh уже красный на неправленном дереве (ЧАСТЬ D СЛОМАНА / worktree не заведён) — не связан с dvizhok/worktree-block правкой этого захода · → назвать причину долгом в отчёте захода; своё красное — чинить · статус: открыт
