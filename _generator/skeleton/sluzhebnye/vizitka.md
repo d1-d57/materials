@@ -1,3 +1,10 @@
+---
+tip_verstki: vizitka
+kegl_px: 41
+mezhstrochye: 1.57
+otstup_bloka: 30.3
+podbor_avto: db19070788c8|kegl_px=41|mezhstrochye=1.57|otstup_bloka=30.3
+---
 {.bullets}
 - Закончил <b>Матфак ВШЭ</b>
 - Работаю в <b>179</b> школе

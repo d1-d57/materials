@@ -264,6 +264,103 @@ def _podobrat_tipografiku(to_compile, zanovo=False):
     return podobrano, propushcheno
 
 
+def _wrap_vizitka_html(sid, css, slide_html):
+    """Тот же самодостаточный HTML-документ, что `slaid.compile_slide_html`
+    (READ-ONLY, Я6) собирает для обычной карточки — но без обращения к ней:
+    та зовёт `formaty.render_slide_blocks`, которая ждёт структуру блоков
+    (`### [tip] мысль`), а тело `sluzhebnye/vizitka.md` — плоский markdown
+    (`render_body`, как и было). Нужен для солвера визитки (заход
+    sluzhebnye-slajdy, Э4) — те же токены/база/шрифты/движок, что у любого
+    слайда, чтобы `_JS_SOLVE` (vmeshchenie.py) видел `.zone.t-body` как обычно."""
+    from tipy import GLOBAL_CSS
+    from build_deck import scene_cascade_css
+    fonts_css = (SKELETON / "fonts" / "faces.css").read_text(encoding="utf-8")
+    katex_css = (SKELETON / "katex.css").read_text(encoding="utf-8")
+    tokens_css = (SKELETON / "tokens.css").read_text(encoding="utf-8")
+    base_css = (SKELETON / "base.css").read_text(encoding="utf-8").replace(
+        "{{SCENE_CASCADE}}", scene_cascade_css(1))
+    engine_js = (SKELETON / "engine.js").read_text(encoding="utf-8")
+    return """<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>%(sid)s</title>
+<style>
+%(fonts)s
+%(katex)s
+%(tokens)s
+%(base)s
+%(global_css)s
+%(css)s
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+<section class="slide" id="%(sid)s" data-scenes="1">
+%(slide)s
+</section>
+</div></div>
+<div id="hint">← → листать · F — экран · B — чёрный</div>
+<script>%(engine)s</script>
+</body>
+</html>
+""" % {"sid": sid, "fonts": fonts_css, "katex": katex_css, "tokens": tokens_css,
+       "base": base_css, "global_css": GLOBAL_CSS, "css": css, "slide": slide_html,
+       "engine": engine_js}
+
+
+def _podobrat_vizitku(zanovo=False):
+    """Проводит `sluzhebnye/vizitka.md` через ТОТ ЖЕ солвер, что и обычные
+    карточки (заход sluzhebnye-slajdy, Э4 — владелец: «я бы её довёл до идеала
+    с помощью солвера»). Раньше это было структурно невозможно: служебные
+    слайды порождаются `build()` уже ПОСЛЕ шага `_podobrat_tipografiku` (см.
+    ниже, П2) и вообще не читаются с диска как карточка — `plan_sluzhebnyh`
+    строит `params` в питоне. Чиню тем же приёмом, что и обычная карточка
+    (`reshenie_o_podbore` + `vmeshchenie.podobrat_slide` + `apply_to_card`), но
+    ОТДЕЛЬНЫМ проходом: `vizitka.md` — ОДИН файл в зоне захода, общий на все
+    деки, трогать карточки лекции (вне зоны) для этого не нужно.
+
+    🔴 Вызывается БЕЗУСЛОВНО, не за флагом `--bez-podbora`: тот флаг защищает
+    карточки ЛЕКЦИИ (вне зоны) от случайной правки солвером — здесь трогается
+    только файл ЗОНЫ, `reshenie_o_podbore` сама держит повторный вызов
+    дешёвым (текст не менялся → пропуск)."""
+    from formaty import parse_card
+    sluzh = SKELETON / "sluzhebnye"
+    vizitka_path = sluzh / "vizitka.md"
+    text = vizitka_path.read_text(encoding="utf-8")
+    params, telo = parse_card(text, sid="vizitka")
+    nado, prichina = reshenie_o_podbore(params, vmeshchenie.otpechatok(telo), zanovo=zanovo)
+    if not nado:
+        print("подбор визитки: пропущен, %s" % prichina, file=sys.stderr)
+        return
+    print("подбор визитки: %s" % prichina, file=sys.stderr)
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError as e:
+        raise SystemExit(
+            "playwright не установлен — подбор визитки недоступен (%s)" % e)
+    from formaty import render_body
+    from tipy import compile_tip
+    body_html = render_body(telo, acc_tag="span")
+    css, slide_html = compile_tip("vizitka", dict(params, illustracii=[]), body_html)
+    doc = _wrap_vizitka_html("vizitka", css, slide_html)
+    import tempfile
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(channel="chrome", headless=True)
+        page = browser.new_page(viewport={"width": 1440, "height": 810}, device_scale_factor=1)
+        try:
+            with tempfile.TemporaryDirectory() as tmp:
+                html_path = Path(tmp) / "vizitka.html"
+                html_path.write_text(doc, encoding="utf-8")
+                res = vmeshchenie.podobrat_slide(page, html_path, axis=None)
+        finally:
+            browser.close()
+    if res["chosen"] is None:
+        raise SystemExit("подбор визитки: ни одна проба не влезла внутри жёстких зон")
+    vmeshchenie.apply_to_card(vizitka_path, res["chosen"])
+    print("подбор визитки: kegl=%.1f" % res["chosen"]["kegl"], file=sys.stderr)
+
+
 # ─────────────── П2 захода tri-provodki: служебные слайды ───────────────
 # Обложка, визитка и финальный слайд УЖЕ УМЕЮТ рисоваться (`tipy.oblozhka`,
 # `tipy.vizitka`, `tipy.finalnyj` — все три принимают `zagolovok_na_ekrane` и
@@ -327,6 +424,12 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
     est_tipy = set(tipy_na_diske.values())
     zanyatye = set(zanyatye_sid) | set(tipy_na_diske)
     plan = []
+    from formaty import parse_card  # noqa: E402 — тот же приём импорта-внутри, что в build()
+    sluzh = SKELETON / "sluzhebnye"
+    # фон дизайнеров (`cover-bg.html`, `<img>` с cover.png внутри) — ОДИН на обложку
+    # и финал, читается один раз (заход sluzhebnye-slajdy, Э1/Э2). Слота под
+    # ИЛЛЮСТРАЦИЮ у этих двух типов больше нет — диаграмма впечатана в сам фон.
+    bg_html = read_text(sluzh / "cover-bg.html").strip()
     for tip, vykl, pole_z, pole_ill in SLUZHEBNYE:
         if tip in est_tipy:
             continue                      # автор завёл сам — дубля не будет
@@ -335,7 +438,14 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
         sid = tip if tip not in zanyatye else tip + "-avto"
         zanyatye.add(sid)
         if tip == "vizitka":
-            sluzh = SKELETON / "sluzhebnye"
+            # `sluzhebnye/vizitka.md` теперь настоящая КАРТОЧКА (шапка `tip_verstki:
+            # vizitka`, заход sluzhebnye-slajdy Э4) — читаем её `parse_card`, не сырым
+            # текстом, чтобы забрать решение солвера (`kegl_px`/`mezhstrochye`/
+            # `otstup_bloka`/метку `podbor_avto`), если оно уже записано
+            # `_podobrat_vizitku` (см. `build()`). QR-слота больше нет (владелец:
+            # «убирается совсем») — `qr_html` не читаем и не передаём.
+            karta_text = read_text(sluzh / "vizitka.md")
+            karta_params, telo = parse_card(karta_text, sid="vizitka")
             params = {
                 "tip_verstki": "vizitka",
                 # опциональный per-лекция override: `vizitka_illustracii` в brief.md —
@@ -344,14 +454,18 @@ def plan_sluzhebnyh(meta, tipy_na_diske, zanyatye_sid=()):
                 # умолчанию — поведение для всех лекций без этого поля не меняется.
                 "illustracii": _spisok(meta.get("vizitka_illustracii")),
                 "photo_html": read_text(sluzh / "vizitka-photo.html").strip(),
-                "qr_html": read_text(sluzh / "vizitka-qr.html").strip(),
             }
-            plan.append((sid, params, read_text(sluzh / "vizitka.md")))
+            for k in ("kegl_px", "mezhstrochye", "otstup_bloka"):
+                if karta_params.get(k) is not None:
+                    params[k] = karta_params[k]
+            plan.append((sid, params, telo))
             continue
         zagolovok = meta.get(pole_z)
         if tip == "oblozhka" and not zagolovok:
             zagolovok = meta.get("title", "")
         params = {"tip_verstki": tip, "illustracii": _spisok(meta.get(pole_ill))}
+        if tip in ("oblozhka", "finalnyj"):
+            params["bg_html"] = bg_html
         if zagolovok:
             params["zagolovok_na_ekrane"] = zagolovok
         if tip == "oblozhka":
@@ -448,6 +562,10 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     from build_deck import max_scenes  # noqa: E402  (READ-ONLY импорт, Я6)
     from slaid import load_math_cache
     math = load_math_cache(src)
+    # визитка — своим, ОТДЕЛЬНЫМ проходом солвера (заход sluzhebnye-slajdy, Э4):
+    # см. `_podobrat_vizitku`, безусловно, не за `--bez-podbora` (тот флаг — про
+    # карточки ЛЕКЦИИ, вне зоны; здесь трогается только файл зоны).
+    _podobrat_vizitku(zanovo=zanovo)
     sluzhebnye = plan_sluzhebnyh(meta, {s: tip_by_sid[s] for s in slide_order}, zanyatye_sid=have)
     for sid, params, tekst_md in sluzhebnye:
         body_html = render_body(tekst_md, acc_tag="span", math=math, sid=sid) if tekst_md else ""

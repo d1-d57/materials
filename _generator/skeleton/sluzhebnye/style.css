@@ -30,9 +30,11 @@
    заголовок доски уезжал второй строкой на фото — см. тот же фикс в sborka/tipy.py. */
 #sl-vizitka .brd-title { position: absolute; left: 36px; top: 34px;
   font-size: var(--t-frametitle-n, 74px); text-align: left; }
-#sl-vizitka .p-photo { position: absolute; left: 81px; top: 174px; width: 251px; height: 260px; }
+/* QR убран совсем (заход sluzhebnye-slajdy, Э4, решение владельца безусловное) —
+   освободившееся место отдано фото: высота выросла до прежнего нижнего края
+   QR-панели (479+250=729, 729-174=555), не изобретённое число. */
+#sl-vizitka .p-photo { position: absolute; left: 81px; top: 174px; width: 251px; height: 555px; }
 #sl-vizitka .p-photo img { object-fit: cover; }
-#sl-vizitka .p-qr { position: absolute; left: 81px; top: 479px; width: 250px; height: 250px; }
 #sl-vizitka .copy { grid-area: 2 / 3;
   font-family: var(--font-body, 'Glacial Indifference','Noto Sans',sans-serif);
   letter-spacing: .15em; line-height: 1.537; }

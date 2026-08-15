@@ -335,54 +335,73 @@ def tolko_tekst(sid, p, text_html):
 
 
 # ───────────────────────── 7. oblozhka ─────────────────────────
-def oblozhka(sid, p, text_html):
-    """`sub`/`dateplace` — необязательные вторая/третья строка обложки
-    (`sluzhebnye/oblozhka.html`: `?SUB{SUB}`/`?DATEPLACE{DATEPLACE}`, заход
-    vizitka-i-oblozhka, В2); числа CSS дословно из `sluzhebnye/style.css`.
+# 🔴 Геометрия дизайнеров дословно (заход sluzhebnye-slajdy, Э1) — беамер-тема
+# курса, `.sty` `\LectureCoverFrame`/`\LectureClosingFrame` (район строк 496-528).
+# Коэффициент пересчёта см/pt → px нашего холста 1440×810: `aspectratio=169`
+# беспримесного beamer даёт paperwidth=16см/paperheight=9см (1440/16=810/9=90),
+# 1pt=2,54/72см ⇒ 90·2,54/72=3,175 px/pt РОВНО. Число не изобретено — то же самое
+# 3,175 px/pt уже несёт `tokens.css` (READ-ONLY, вне зоны, сверено, не тронуто).
+_PX_PT = 3.175  # px на 1pt (=90 px/см), см. докстринг выше
+OBL_TITLE_LEFT, OBL_TITLE_TOP, OBL_TITLE_W = 94.5, 109.8, 806.4   # 1.05см/1.22см/.56×1440
+OBL_SUB_LEFT, OBL_SUB_TOP = 97.2, 468.0                             # 1.08см/5.20см
+OBL_DATE_LEFT, OBL_DATE_BOTTOM = 97.2, 65.7                         # 1.08см/.73см
 
-    🔴 `.art` — ЕДИНСТВЕННОЕ место, где число НЕ из `sluzhebnye/style.css`, и вот
-    почему (заход `zakrytie-l2`, Ш3). Канон там задаёт `bottom:46px; height:250px`,
-    и эти же значения стояли здесь — то есть расхождения с каноном не было вовсе.
-    Дефект в другом: канон снят с обложки Л1, где мотив ШИРОКИЙ и в полосу 250px
-    ложится сам. Квадратный рисунок в такой полосе упирается в высоту и рисуется
-    маркой — замер на живом кадре Л2: панель 1384×194 при ширине зоны 1440.
-    Поэтому высота здесь — доля кадра, а не абсолют, и доля выбрана НЕ на глаз:
-    три канонные строки занимают 169–522 из 810 (тот же замер), ниже них свободны
-    288px, и это жёсткий потолок — двигать строки запрещено. `height:30%` (243px)
-    при `bottom:3%` (24px) ставит верх полосы на 543 — ровно те же ~20px просвета
-    под третьей строкой, что и раньше, а рисунок растёт со 194 до 243 (+25%).
-    Больше на этой обложке не даёт геометрия текста, а не выбор числа.
-    Вместе с `pad=0` (см. `_ill_zone`) полоса отдаётся рисунку целиком."""
+
+def oblozhka(sid, p, text_html):
+    """Фон `cover.png` во весь кадр (`bg_html` — `sluzhebnye/cover-bg.html`,
+    читает `deck.py:plan_sluzhebnyh`), текст в левой зоне. Слотов те же три,
+    что были: заголовок, подзаголовок (`sub`), дата/место (`dateplace`) —
+    иллюстрации больше нет: диаграмма впечатана в сам фон, `.sty` у
+    `\\LectureCoverFrame` слота под картинку не несёт вовсе.
+
+    Числа — `.sty:LectureCoverFrame`: title `xshift=1.05cm,yshift=-1.22cm`,
+    `text width=.56\\paperwidth`, `fontsize{31pt}{38pt}`, `CTPlum`; sub
+    `xshift=1.08cm,yshift=-5.20cm`, `fontsize{16pt}{19pt}`, `CTCharcoal`; date
+    `xshift=1.08cm,yshift=.73cm от south`, `fontsize{10.5pt}{13pt}`, `CTSageDark`.
+    Ширина у sub/date в `.sty` не задана (однострочный расчёт дизайнера) — даю ту
+    же `.56×paperwidth`, что у title, чтобы длинный текст не наехал на зелёную
+    панель справа; это МОЁ добавление, не число дизайнера."""
     z = p.get("zagolovok_na_ekrane", "")
     sub = p.get("sub")
     dateplace = p.get("dateplace")
-    ills = p.get("illustracii") or []
-    css = ("#%s{ background:var(--board); } "
-           "#%s .wrap{ position:absolute; inset:0; display:grid; "
-           "grid-template-rows:1fr auto 1.7fr; align-items:center; padding:0 130px; } "
-           "#%s .head{ grid-row:2; } "
-           "#%s .head .t-display{ font-size:96px; } "
-           "#%s .sub{ font-family:var(--font-body); "
-           "text-align:center; color:var(--ink); font-size:32px; letter-spacing:.04em; margin-top:36px; } "
-           "#%s .sub2{ font-size:22px; margin-top:14px; color:var(--ink); opacity:.78; line-height:1.5; } "
-           "#%s .art{ position:absolute; left:0; right:0; bottom:3%%; height:30%%; }"
-           % (sid, sid, sid, sid, sid, sid, sid))
-    art = ('<div class="art">%s</div>' % _ill_zone(ills, axis="row", cls="", pad=0)
-           if ills else "")
+    bg = p.get("bg_html", "")
+    css = ("#%s .bg{ position:absolute; inset:0; } "
+           "#%s .bg img{ width:100%%; height:100%%; object-fit:fill; display:block; } "
+           "#%s .title{ position:absolute; left:%.1fpx; top:%.1fpx; width:%.1fpx; "
+           "font-family:var(--font-display); font-size:%.1fpx; line-height:%.1fpx; "
+           "color:var(--accent); } "
+           "#%s .sub{ position:absolute; left:%.1fpx; top:%.1fpx; width:%.1fpx; "
+           "font-family:var(--font-body); font-size:%.1fpx; line-height:%.1fpx; "
+           "color:var(--ink); } "
+           "#%s .dateplace{ position:absolute; left:%.1fpx; bottom:%.1fpx; width:%.1fpx; "
+           "font-family:var(--font-body); font-size:%.1fpx; line-height:%.1fpx; "
+           "color:var(--steel); }"
+           % (sid, sid,
+              sid, OBL_TITLE_LEFT, OBL_TITLE_TOP, OBL_TITLE_W, 31 * _PX_PT, 38 * _PX_PT,
+              sid, OBL_SUB_LEFT, OBL_SUB_TOP, OBL_TITLE_W, 16 * _PX_PT, 19 * _PX_PT,
+              sid, OBL_DATE_LEFT, OBL_DATE_BOTTOM, OBL_TITLE_W, 10.5 * _PX_PT, 13 * _PX_PT))
     sub_html = '<div class="sub">%s</div>' % _esc(sub) if sub else ""
-    dateplace_html = '<div class="sub sub2">%s</div>' % _esc(dateplace) if dateplace else ""
-    body = ('<div class="wrap"><div class="head"><div class="t-display">%s</div>%s%s</div></div>%s'
-            % (_esc(z), sub_html, dateplace_html, art))
+    dateplace_html = '<div class="dateplace">%s</div>' % _esc(dateplace) if dateplace else ""
+    body = ('<div class="bg">%s</div><div class="title">%s</div>%s%s'
+            % (bg, _esc(z), sub_html, dateplace_html))
     return css, body
 
 
 # ───────────────────────── 8. vizitka ─────────────────────────
 def vizitka(sid, p, text_html):
-    """Фото и QR — не иллюстрации лекции (не через `data-ill`/пул `illustracii/`),
-    а готовый HTML канона (`sluzhebnye/vizitka-photo.html`/`vizitka-qr.html`,
-    `<img src="data:...">`): deck.py читает их с диска и кладёт в `photo_html`/
-    `qr_html` (заход vizitka-i-oblozhka, В1). Раскладка (251×260, 250×250) не
-    менялась — она уже совпадала с каноном."""
+    """Фото — не иллюстрация лекции (не через `data-ill`/пул `illustracii/`),
+    а готовый HTML канона (`sluzhebnye/vizitka-photo.html`, `<img src="data:...">`):
+    deck.py читает его с диска и кладёт в `photo_html`. Ширина панели (251px)
+    не менялась — она уже совпадала с каноном.
+
+    🔴 QR убран совсем (заход sluzhebnye-slajdy, Э4, решение владельца
+    безусловное) — слот `.p-qr`/`qr_html` не читается. Освободившееся место
+    отдано фото: высота выросла с 260px до 555px, ровно до прежнего НИЖНЕГО
+    края QR-панели (top:479+height:250=729, 729-174=555) — не изобретённое
+    число, а старая граница, унаследованная у соседа. Кегль текстовой зоны
+    теперь читает солвер (`_kegl_style`, как у остальных типов) — раньше
+    визитка была ЖЁСТКОЙ вёрсткой и в подбор не входила структурно (см.
+    `## ПЛАН`/`deck.py:_podobrat_vizitku`)."""
     ills = p.get("illustracii") or []
     if ills:
         # override: вся визитка — одна иллюстрация во весь слайд (см. deck.py:
@@ -399,56 +418,78 @@ def vizitka(sid, p, text_html):
            # 329px при 64px, доступно 374px). Кегль взят из перенесённой шкалы —
            # --t-frametitle-n, заголовок узкой колонки (.sty:428,454 → 20pt).
            "#%s .brd-title{ position:absolute; left:36px; top:34px; font-size:var(--t-frametitle-n); } "
-           "#%s .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:260px; } "
+           "#%s .p-photo{ position:absolute; left:81px; top:174px; width:251px; height:555px; } "
            "#%s .p-photo img{ width:100%%; height:100%%; object-fit:cover; } "
-           "#%s .p-qr{ position:absolute; left:81px; top:479px; width:250px; height:250px; } "
-           "#%s .p-qr img{ width:100%%; height:100%%; } "
            "#%s .copy{ grid-area:2/3; }"
-           % (sid, sid, sid, sid, sid, sid, sid, sid))
+           % (sid, sid, sid, sid, sid, sid))
     photo_raw = p.get("photo_html", "")
-    qr_raw = p.get("qr_html", "")
     photo_html = ('<div class="panel p-photo">%s</div>' % photo_raw) if photo_raw else ""
-    qr_html = ('<div class="panel p-qr">%s</div>' % qr_raw) if qr_raw else ""
     body = ('<div class="grid">'
-            '<div class="zone board"><div class="brd-title t-display">%s</div>%s%s</div>'
-            '<div class="zone copy t-body">%s</div>'
-            '</div>' % (_esc(z), photo_html, qr_html, text_html))
+            '<div class="zone board"><div class="brd-title t-display">%s</div>%s</div>'
+            '<div class="zone copy t-body"%s>%s</div>'
+            '</div>' % (_esc(z), photo_html, _kegl_style(p), text_html))
     return css, body
 
 
 # ───────────────────────── 9. finalnyj (не «финальный» — имя словаря) ─────────────────────────
 def finalnyj(sid, p, text_html):
+    """Тот же фон, что у обложки (заход sluzhebnye-slajdy, Э2), текст слева, по
+    центру ВСЕЙ высоты кадра — `.sty:LectureClosingFrame`: `anchor=west` БЕЗ
+    yshift = центр `current page.west`, `xshift=1.08cm`, `text width=.56\\paperwidth`,
+    `fontsize{31pt}{38pt}`, `CTPlum` — те же числа, что title обложки (см. `oblozhka`).
+
+    `.sty` пишет текст ДВУМЯ строками буквально в исходнике беамера
+    (`СПАСИБО\\\\[.2cm]ЗА ВНИМАНИЕ`) — не переменной, а решением дизайнера
+    «первое слово / остаток» с зазором `.2cm`=18px. Слот `zagolovok_na_ekrane`
+    (`finalnyj_zagolovok` в `brief.md`) у нас — ОДНА строка; воспроизвожу то же
+    устройство разбивкой по ПЕРВОМУ пробелу + `text-transform:uppercase`
+    (дословных «СПАСИБО»/«ЗА ВНИМАНИЕ» в .sty без переменной нет — с нашим
+    текстом по умолчанию «Спасибо за внимание» разбивка даёт тот же результат)."""
     z = p.get("zagolovok_na_ekrane", "Спасибо за внимание")
-    ills = p.get("illustracii") or []
-    css = ("#%s{ background:var(--board); } "
-           "#%s .thx-wrap{ position:absolute; inset:0; display:grid; "
-           "grid-template-rows:%s; padding:0 120px 52px; } "
-           "#%s .thx-head{ align-self:center; justify-self:center; font-size:60px; } "
-           "#%s .thx-art{ min-height:0; }"
-           % (sid, sid, "186px 1fr" if ills else "1fr", sid, sid))
-    art = ('<div class="thx-art">%s</div>' % _ill_zone(ills, axis="row", cls="")
-           if ills else "")
-    body = ('<div class="thx-wrap"><div class="thx-head t-display">%s</div>%s</div>'
-            % (_esc(z), art))
+    bg = p.get("bg_html", "")
+    parts = z.split(" ", 1)
+    line1 = parts[0]
+    line2 = parts[1] if len(parts) > 1 else ""
+    css = ("#%s .bg{ position:absolute; inset:0; } "
+           "#%s .bg img{ width:100%%; height:100%%; object-fit:fill; display:block; } "
+           "#%s .thx{ position:absolute; left:%.1fpx; top:50%%; transform:translateY(-50%%); "
+           "width:%.1fpx; font-family:var(--font-display); text-transform:uppercase; "
+           "font-size:%.1fpx; line-height:%.1fpx; color:var(--accent); } "
+           "#%s .thx .l2{ display:block; margin-top:%.1fpx; }"  # \\[.2cm] — зазор СВЕРХ строки
+           % (sid, sid, sid, OBL_TITLE_LEFT, OBL_TITLE_W, 31 * _PX_PT, 38 * _PX_PT,
+              sid, 0.2 * 90))
+    thx_html = _esc(line1) + ('<span class="l2">%s</span>' % _esc(line2) if line2 else "")
+    body = '<div class="bg">%s</div><div class="thx">%s</div>' % (bg, thx_html)
     return css, body
 
 
-# ───────────────────────── 10. razdelitel (утверждён владельцем 2026-08-08) ─────────────────────────
+# ───────────────────────── 10. razdelitel (переверстан 2026-08-15, устройство обложки) ─────────────────────────
+# Ширина зелёной панели — НЕ на глаз: замер границы беж/зелень в `cover.png`
+# (переход пикселя на x=1131 из 1672, PIL-скан горизонтальной линии) = 32,36%
+# кадра — «панель примерно в треть кадра» из стартового сообщения владельца,
+# число снято, а не подобрано под фразу.
+RAZD_PANEL_W = 1440 * (1672 - 1131) / 1672  # ≈ 465.9px
+
+
 def razdelitel(sid, p, text_html):
+    """Разделитель получает устройство обложки (Э3, ГЛАВНОЕ решение владельца
+    этого захода): левая зона текста (`var(--paper)` — тот же бежевый, что фон
+    обложки) + панель справа (`var(--board)`). Панель — ОДНОГО цвета на все
+    разделители (владелец: единообразие важнее разнообразия), без картинки:
+    `green-bg.png` замерен пиксель-в-пиксель как `var(--board)` (см. `## ПЛАН`),
+    `tr-bg`/`bl-bg` — прозрачные угловые виньетки, не панели, не подошли.
+    Слота под иллюстрацию больше нет (оба живых разделителя Л2 несли
+    `illustracii: []` и до этой правки — регрессии нет)."""
     z = p.get("zagolovok_na_ekrane", "")
-    ills = p.get("illustracii") or []
-    css = ("#%s{ background:var(--board); } "
-           "#%s .head{ position:absolute; left:0; top:61px; width:100%%; "
-           "font-size:56px; line-height:1.18; }"
-           % (sid, sid))
-    if ills:
-        css += (" #%s .art{ position:absolute; left:28px; top:206px; right:28px; height:403px; }"
-                % sid)
-        art = '<div class="art">%s</div>' % _ill_zone(ills, axis="row", cls="")
-    else:
-        css += " #%s .head{ top:0; bottom:0; display:flex; align-items:center; justify-content:center; }" % sid
-        art = ""
-    body = '<div class="head t-display">%s</div>%s' % (_esc(z), art)
+    left_w = 1440 - RAZD_PANEL_W
+    css = ("#%s{ background:var(--paper); } "
+           "#%s .panel-r{ position:absolute; right:0; top:0; bottom:0; width:%.1fpx; "
+           "background:var(--board); } "
+           "#%s .head{ position:absolute; left:%.1fpx; top:0; bottom:0; width:%.1fpx; "
+           "display:flex; align-items:center; font-family:var(--font-display); "
+           "font-size:56px; line-height:1.18; color:var(--accent); }"
+           % (sid, sid, RAZD_PANEL_W, sid, OBL_TITLE_LEFT, left_w - OBL_TITLE_LEFT))
+    body = '<div class="panel-r"></div><div class="head">%s</div>' % _esc(z)
     return css, body
 
 
