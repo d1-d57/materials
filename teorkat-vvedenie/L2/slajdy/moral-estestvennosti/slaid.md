@@ -27,7 +27,7 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 70
 tip_verstki: polosa_vertikalnaya
-liniya: 66.15
+liniya: 77.52
 matematika_iz: [Для $V^*$ канонического нет]
 illustracii: [kvadrat-eta]
 vvodit: [естественный изоморфизм, естественное преобразование]
@@ -37,10 +37,10 @@ opiraetsya_na:
   - {termin: дважды двойственное пространство, vvedeno: dvazhdy-dvojstvennoe}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 36
-mezhstrochye: 1.2
-otstup_bloka: 8.3
-podbor_avto: 9bc7e421e464|kegl_px=36|mezhstrochye=1.2|otstup_bloka=8.3|liniya=66.15
+kegl_px: 38
+mezhstrochye: 1.274
+otstup_bloka: 12.6
+podbor_avto: 9bc7e421e464|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=77.52
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] квадрат сходится при каждом $f$

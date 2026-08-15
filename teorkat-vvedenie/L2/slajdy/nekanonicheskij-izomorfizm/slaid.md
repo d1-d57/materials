@@ -27,7 +27,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 50
 tip_verstki: polosa_gorizontalnaya
-liniya: 62.82
+liniya: 67.85
 matematika_iz: [Для $V^*$ канонического нет]
 illustracii: [kvadrat-so-skalyarom]
 vvodit: []
@@ -41,7 +41,7 @@ obosnovanie_verstki: текста меньше всех в деке — по п�
 kegl_px: 38
 mezhstrochye: 1.274
 otstup_bloka: 12.6
-podbor_avto: 23b368a50574|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=62.82
+podbor_avto: 23b368a50574|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=67.85
 ---
 
 ## Математика — развёрнуто

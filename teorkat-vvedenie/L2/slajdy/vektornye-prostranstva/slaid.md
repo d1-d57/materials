@@ -27,7 +27,7 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 78
 tip_verstki: polosa_vertikalnaya
-liniya: 68.99
+liniya: 74.68
 matematika_iz: [Векторные пространства]
 illustracii: [vektory-na-ploskosti]
 vvodit: [векторное пространство, линейное отображение]
@@ -36,11 +36,11 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 kegl_px: 37
-mezhstrochye: 1.2
-otstup_bloka: 8.5
+mezhstrochye: 1.274
+otstup_bloka: 12.3
 obosnovanie_verstki: среднее текста плюс новая иллюстрация со сложением векторов — вертикальная полоса. Полоса на месте, вместимость добрана типографикой, кегль поднят до 40
 zagolovok_snyat_namerenno: da
-podbor_avto: c5eb4b4f70f4|kegl_px=37|mezhstrochye=1.2|otstup_bloka=8.5|liniya=68.99
+podbor_avto: c5eb4b4f70f4|kegl_px=37|mezhstrochye=1.274|otstup_bloka=12.3|liniya=74.68
 ---
 
 ## Математика — развёрнуто
