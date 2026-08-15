@@ -29,5 +29,9 @@
   ssylka: matchings/
 
 - nazvanie: Введение в теорию категорий. Лекция 1
-  opisanie: Что такое комбинаторные виды
+  opisanie: Комбинаторные виды
   ssylka: teorkat/lekciya-1.html
+
+- nazvanie: Введение в теорию категорий. Лекция 2
+  opisanie: Функторы
+  ssylka: teorkat/lekciya-2.html
