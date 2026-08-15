@@ -227,6 +227,42 @@ function paintBleed(slide) {
             top:   q.top  + pt * k, bottom: q.top  + (pt + ph) * k },
           ps.backgroundColor, parseFloat(ps.opacity) || 1);
   });
+  /* 🔴 ПОЛНОКАДРОВЫЙ РАСТР — ВТОРОЙ ВИД ФОНА, КОТОРОГО ЦИКЛ ВЫШЕ НЕ ВИДИТ ВОВСЕ
+     (Д4 захода vlitie-i-deka, 2026-08-15). Цикл продлевает наружу только
+     непрозрачный background-COLOR. Обложка и финальный нарисованы иначе: их фон —
+     картинка дизайнеров (`sluzhebnye/cover-bg.html`, `<div class="bg"><img>`),
+     у которой background-color нет ни на одном узле. Наружу поэтому уезжал
+     единственный непрозрачный цвет в слайде — беж самого `.slide`
+     (`background:var(--paper)`), и зелёная панель с вертикальной линией
+     обрывались ровно на кромке кадра.
+     ЦЕНА: владелец открыл деку и сказал «структура обложки неправильная… линия
+     доходит не доверху, и зелёная линия тоже не доходит доверху». Замер, которым
+     это найдено: в окне 1440×900 слайд стоит y=46..854, а `#bleed` рисует ЧЕТЫРЕ
+     полосы, и все беж.
+     ⇒ Картинка дописывается наружу ТЕМ ЖЕ приёмом, что узор ниже, но с одним
+     отличием, и оно существенно: растягивается ТОЛЬКО та ось, по которой есть
+     поле. По второй оси отображение совпадает со слайдом пиксель в пиксель —
+     иначе вертикальная линия и край панели уехали бы относительно кадра, и на
+     границе поля появился бы шов. Дизайн обложки — вертикальные полосы, вдоль
+     поля они постоянны, поэтому растяжение по этой оси невидимо и точно. */
+  const polnokadrovyj = Array.from(slide.querySelectorAll('img')).find(im => {
+    const q = im.getBoundingClientRect();
+    return q.left <= r.left + eps && q.top <= r.top + eps &&
+           q.right >= r.right - eps && q.bottom >= r.bottom - eps &&
+           parseFloat(getComputedStyle(im).opacity) > .98;
+  });
+  if (polnokadrovyj) {
+    const rastyagX = padL > .5 || padR > .5, rastyagY = padT > .5 || padB > .5;
+    const d = document.createElement('div');
+    d.style.cssText = 'position:absolute;inset:0;background-repeat:no-repeat' +
+      ';background-image:url("' + polnokadrovyj.src + '")' +
+      ';background-size:' + (rastyagX ? innerWidth : r.width) + 'px ' +
+                            (rastyagY ? innerHeight : r.height) + 'px' +
+      ';background-position:' + (rastyagX ? 0 : r.left) + 'px ' +
+                                (rastyagY ? 0 : r.top) + 'px';
+    bleedBands.appendChild(d);   /* ПОСЛЕ цветных полос — ложится поверх бежа */
+  }
+
   /* Узор — растр: за собственным краем картинки ничего нет, продлить его нельзя.
      Поэтому он растягивается на всё ОКНО, а кадр показывает середину (переменные
      читает uzor.css). */
@@ -270,8 +306,19 @@ function paintBleed(slide) {
     if (blocked) bleedUzor.style.setProperty(name, 'none');
     else bleedUzor.style.removeProperty(name);
   };
-  setCorner('--uzor-tr-corner', cornerBlocked(r.right - eps, r.top + eps));
-  setCorner('--uzor-bl-corner', cornerBlocked(r.left + eps, r.bottom - eps));
+  /* 🔴 ВТОРАЯ ПОЛОВИНА ТОГО ЖЕ ДЕФЕКТА — И ОНА ОТ ТОЙ ЖЕ СЛЕПОТЫ К КАРТИНКЕ.
+     `cornerBlocked` доходит до `.slide` и решает по `slideBlocked()` —
+     «backgroundImage у слайда === none». У слайда с полнокадровым растром это
+     ЛОЖЬ: узор из `uzor.css` висит на `.slide` у ВСЕХ слайдов, значит угол не
+     считался закрытым никогда. Внутри кадра узор всё равно не виден — его
+     закрывает непрозрачная картинка, — а СНАРУЖИ, в поле, он рисовался. Ровно
+     «полурисуемый узор», который владелец назвал худшим из трёх исходов:
+     «если наносить сюда паттерн, он должен не перекрываться ничем, полностью
+     рисоваться; его можно вообще убрать, но если оставлять — то целиком».
+     ⇒ Полнокадровый растр закрывает ОБА угла по построению: узор снаружи не
+     рисуется вовсе. Из трёх исходов это второй законный — «не рисуется». */
+  setCorner('--uzor-tr-corner', !!polnokadrovyj || cornerBlocked(r.right - eps, r.top + eps));
+  setCorner('--uzor-bl-corner', !!polnokadrovyj || cornerBlocked(r.left + eps, r.bottom - eps));
 }
 function showSingle(i, k) {
   cur = Math.max(0, Math.min(slides.length - 1, i));

@@ -27,7 +27,7 @@ minuty: 5
 vazhnost: osnovnoj
 byudzhet_slov: 70
 tip_verstki: polosa_vertikalnaya
-liniya: 66.15
+liniya: 63.31
 matematika_iz: [Для $V^*$ канонического нет]
 illustracii: [kvadrat-eta]
 vvodit: [естественный изоморфизм, естественное преобразование]
@@ -40,9 +40,9 @@ dokazatelstvo_opiraetsya_na: []
 primer_dlya: []
 status: v_deke
 kegl_px: 38
-mezhstrochye: 1.274
-otstup_bloka: 12.6
-podbor_avto: 74a8d2208fb8|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=66.15
+mezhstrochye: 1.2
+otstup_bloka: 8.7
+podbor_avto: 74a8d2208fb8|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=63.31
 ---
 ## Математика — развёрнуто
 ### [utverzhdenie] квадрат сходится при каждом $f$
