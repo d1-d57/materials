@@ -35,12 +35,12 @@ opiraetsya_na:
   - {termin: базис, vvedeno: bazis-i-matricy}
 bez_opredeleniya_namerenno: []
 status: v_deke
-kegl_px: 37
+kegl_px: 40
 mezhstrochye: 1.496
-otstup_bloka: 23.6
+otstup_bloka: 25.5
 obosnovanie_verstki: горизонтальная полоса сменена на вертикальную по прямому указанию владельца — так текст влезает. Кегль 38, межстрочье дышащее, картинка держит полную высоту полосы
 zagolovok_snyat_namerenno: da
-podbor_avto: 33614bed89eb|kegl_px=37|mezhstrochye=1.496|otstup_bloka=23.6|liniya=74.68
+podbor_avto: 33614bed89eb|kegl_px=40|mezhstrochye=1.496|otstup_bloka=25.5|liniya=74.68
 ---
 
 ## Математика — развёрнуто

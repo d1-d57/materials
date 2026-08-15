@@ -38,10 +38,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: текста меньше всех в деке — по прямому указанию владельца вертикальная полоса сменена на горизонтальную. Пустоту, которую даёт мало текста, добираю кеглем до канонного потолка 44, как владелец и предлагал («или увеличим кегль»); полоса сохраняет полную высоту под картинку
-kegl_px: 38
-mezhstrochye: 1.274
-otstup_bloka: 12.6
-podbor_avto: 23b368a50574|kegl_px=38|mezhstrochye=1.274|otstup_bloka=12.6|liniya=62.82
+kegl_px: 40
+mezhstrochye: 1.422
+otstup_bloka: 21.4
+podbor_avto: 23b368a50574|kegl_px=40|mezhstrochye=1.422|otstup_bloka=21.4|liniya=62.82
 ---
 
 ## Математика — развёрнуто

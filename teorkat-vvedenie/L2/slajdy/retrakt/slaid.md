@@ -27,7 +27,7 @@ minuty: 5
 vazhnost: opornyj
 byudzhet_slov: 60
 tip_verstki: polosa_gorizontalnaya
-liniya: 75.4
+liniya: 67.85
 matematika_iz: [Ретракт]
 illustracii: [funktor-perenosit-retrakt]
 vvodit: [ретракция, сечение, ретракт]
@@ -40,7 +40,7 @@ obosnovanie_verstki: 🔴 12.08 владелец разрешил развилк
 kegl_px: 38
 mezhstrochye: 1.2
 otstup_bloka: 8.7
-podbor_avto: 050a6cf20f56|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=75.4
+podbor_avto: 050a6cf20f56|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7|liniya=67.85
 ---
 
 ## Математика — развёрнуто

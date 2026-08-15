@@ -36,10 +36,10 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 obosnovanie_verstki: иллюстрация снята как бессмысленная, текста среднее — по доктрине «среднее без картинки» это только текст, полосы быть не должно. Типографику подбирает солвер
-kegl_px: 39
-mezhstrochye: 1.422
-otstup_bloka: 20.9
-podbor_avto: bed2f7a952ab|kegl_px=39|mezhstrochye=1.422|otstup_bloka=20.9
+kegl_px: 38
+mezhstrochye: 1.57
+otstup_bloka: 28.1
+podbor_avto: bed2f7a952ab|kegl_px=38|mezhstrochye=1.57|otstup_bloka=28.1
 ---
 
 ## Математика — развёрнуто

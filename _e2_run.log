@@ -1,0 +1,30 @@
+=== кандидат pad_side=52 pad_bottom=46 (tag=e2-ps52-pb46) ===
+=== прогон 'e2-ps52-pb46': 21 слайдов измерено, 2 переполнено (своб. 0 / заперт. 2), суммарно 17.7 px ===
+  ❌ kategoriya                   +14.5    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +3.2     px  (verstka_reshena: da)
+цена кегля: средняя 0.75%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+=== кандидат pad_side=40 pad_bottom=32 (tag=e2-ps40-pb32) ===
+=== прогон 'e2-ps40-pb32': 21 слайдов измерено, 0 переполнено (своб. 0 / заперт. 0), суммарно 0.0 px ===
+цена кегля: средняя 0.50%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+=== кандидат pad_side=32 pad_bottom=24 (tag=e2-ps32-pb24) ===
+=== прогон 'e2-ps32-pb24': 21 слайдов измерено, 0 переполнено (своб. 0 / заперт. 0), суммарно 0.0 px ===
+цена кегля: средняя 0.25%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+=== кандидат pad_side=24 pad_bottom=16 (tag=e2-ps24-pb16) ===
+=== прогон 'e2-ps24-pb16': 21 слайдов измерено, 0 переполнено (своб. 0 / заперт. 0), суммарно 0.0 px ===
+цена кегля: средняя 0.50%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+=== кандидат pad_side=18 pad_bottom=12 (tag=e2-ps18-pb12) ===
+=== прогон 'e2-ps18-pb12': 21 слайдов измерено, 0 переполнено (своб. 0 / заперт. 0), суммарно 0.0 px ===
+цена кегля: средняя 0.13%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+таблица → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/podbor-e2.md
+ЛУЧШИЙ: pad_side=18 pad_bottom=12 -> {'pad_side': 18, 'pad_bottom': 12, 'tag': 'e2-ps18-pb12', 'n_svob': 0, 'n_zapert': 0, 'px_svob': 0, 'kegl_avg_pct': 0.13, 'kegl_worst_pct': 26.32, 'svob_slaidy': []}
+tipy.py оставлен на лучшей комбинации

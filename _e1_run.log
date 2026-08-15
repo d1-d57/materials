@@ -1,0 +1,106 @@
+=== кандидат pad_top=10 zag_mb=8 (tag=e1-pt10-mb8) ===
+=== прогон 'e1-pt10-mb8': 21 слайдов измерено, 2 переполнено (своб. 0 / заперт. 2), суммарно 33.6 px ===
+  ❌ kategoriya                   +20.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +13.2    px  (verstka_reshena: da)
+цена кегля: средняя 1.63%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 2 (своб 0 / заперт 2), px_svob=0.0, кегль ср 1.63% худш 26.32%
+=== кандидат pad_top=10 zag_mb=14 (tag=e1-pt10-mb14) ===
+=== прогон 'e1-pt10-mb14': 21 слайдов измерено, 3 переполнено (своб. 0 / заперт. 3), суммарно 42.0 px ===
+  ❌ funktor                      +2.5     px  (verstka_reshena: da)
+  ❌ kategoriya                   +20.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +19.1    px  (verstka_reshena: da)
+цена кегля: средняя 2.26%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 3 (своб 0 / заперт 3), px_svob=0.0, кегль ср 2.26% худш 26.32%
+=== кандидат pad_top=16 zag_mb=8 (tag=e1-pt16-mb8) ===
+=== прогон 'e1-pt16-mb8': 21 слайдов измерено, 3 переполнено (своб. 0 / заперт. 3), суммарно 48.0 px ===
+  ❌ funktor                      +2.5     px  (verstka_reshena: da)
+  ❌ kategoriya                   +26.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +19.1    px  (verstka_reshena: da)
+цена кегля: средняя 2.26%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 3 (своб 0 / заперт 3), px_svob=0.0, кегль ср 2.26% худш 26.32%
+=== кандидат pad_top=16 zag_mb=14 (tag=e1-pt16-mb14) ===
+=== прогон 'e1-pt16-mb14': 21 слайдов измерено, 3 переполнено (своб. 0 / заперт. 3), суммарно 60.0 px ===
+  ❌ funktor                      +8.5     px  (verstka_reshena: da)
+  ❌ kategoriya                   +26.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +25.1    px  (verstka_reshena: da)
+цена кегля: средняя 2.26%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 3 (своб 0 / заперт 3), px_svob=0.0, кегль ср 2.26% худш 26.32%
+=== кандидат pad_top=20 zag_mb=8 (tag=e1-pt20-mb8) ===
+=== прогон 'e1-pt20-mb8': 21 слайдов измерено, 3 переполнено (своб. 0 / заперт. 3), суммарно 60.0 px ===
+  ❌ funktor                      +6.5     px  (verstka_reshena: da)
+  ❌ kategoriya                   +30.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +23.1    px  (verstka_reshena: da)
+цена кегля: средняя 2.26%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 3 (своб 0 / заперт 3), px_svob=0.0, кегль ср 2.26% худш 26.32%
+=== кандидат pad_top=20 zag_mb=14 (tag=e1-pt20-mb14) ===
+=== прогон 'e1-pt20-mb14': 21 слайдов измерено, 3 переполнено (своб. 0 / заперт. 3), суммарно 72.0 px ===
+  ❌ funktor                      +12.5    px  (verstka_reshena: da)
+  ❌ kategoriya                   +30.4    px  (verstka_reshena: da)
+  ❌ kategoriya-vect-iso          +29.1    px  (verstka_reshena: da)
+цена кегля: средняя 2.13%, худшая 26.32% (kategoriya)
+лог дописан → /Users/ivanyakovlev/Documents/GitHub/materials-wt/polya-i-uzor/_studio/zhurnal/2026-08-10_dizajn-i-metriki/polya-i-uzor/progon.log
+
+  -> переполнено 3 (своб 0 / заперт 3), px_svob=0.0, кегль ср 2.13% худш 26.32%
+=== кандидат pad_top=46 zag_mb=28 (tag=e1-pt46-mb28) ===
+
+подбор: anons-dvojstvennogo — переподбор по --zanovo
+подбор: anons-dvojstvennogo — kegl=41.0 liniya=None
+  ⚠ поверх прежних значений: kegl 41 → 41.0 · liniya 100 → не трогалась
+подбор: anons-retraktov — переподбор по --zanovo
+подбор: anons-retraktov — kegl=41.0 liniya=None
+  ⚠ поверх прежних значений: kegl 41 → 41.0 · liniya 100 → не трогалась
+подбор: bazis-i-matricy — переподбор по --zanovo
+подбор: bazis-i-matricy — kegl=38.0 liniya=None
+  ⚠ поверх прежних значений: kegl 36 → 38.0 · liniya 100 → не трогалась
+подбор: centr-gruppy — переподбор по --zanovo
+подбор: centr-gruppy — kegl=39.0 liniya=66.15
+  ⚠ поверх прежних значений: kegl 38 → 39.0 · liniya 63.31 → 66.15
+подбор: dvazhdy-dvojstvennoe — переподбор по --zanovo
+подбор: dvazhdy-dvojstvennoe — kegl=39.0 liniya=None
+  ⚠ поверх прежних значений: kegl 38 → 39.0 · liniya 100 → не трогалась
+подбор: dvojstvennoe-prostranstvo — переподбор по --zanovo
+подбор: dvojstvennoe-prostranstvo — kegl=36.0 liniya=None
+  ⚠ поверх прежних значений: kegl 37 → 36.0 · liniya 100 → не трогалась
+подбор: dvojstvennyj-bazis — переподбор по --zanovo
+подбор: dvojstvennyj-bazis — kegl=35.0 liniya=None
+  ⚠ поверх прежних значений: kegl 36 → 35.0 · liniya 100 → не трогалась
+подбор: fundamentalnaya-gruppa — переподбор по --zanovo
+подбор: fundamentalnaya-gruppa — kegl=36.0 liniya=68.99
+  ⚠ поверх прежних значений: kegl 37 → 36.0 · liniya 68.99 → 68.99
+подбор: funktor — пропущен, намерение автора: verstka_reshena: da
+подбор: inyekcii — переподбор по --zanovo
+подбор: inyekcii — kegl=38.0 liniya=75.4
+  ⚠ поверх прежних значений: kegl 38 → 38.0 · liniya 72.88 → 75.4
+подбор: itogi — переподбор по --zanovo
+подбор: itogi — kegl=41.0 liniya=None
+  ⚠ поверх прежних значений: kegl 41 → 41.0 · liniya 100 → не трогалась
+подбор: izomorfizm — пропущен, намерение автора: verstka_reshena: da
+подбор: kategoriya — пропущен, намерение автора: verstka_reshena: da
+подбор: kategoriya-vect-iso — пропущен, намерение автора: verstka_reshena: da
+подбор: moral-estestvennosti — переподбор по --zanovo
+подбор: moral-estestvennosti — kegl=38.0 liniya=77.52
+  ⚠ поверх прежних значений: kegl 37 → 38.0 · liniya 66.15 → 77.52
+подбор: napominanie — переподбор по --zanovo
+подбор: napominanie — kegl=40.0 liniya=None
+  ⚠ поверх прежних значений: kegl 40 → 40.0 · liniya 100 → не трогалась
+подбор: nekanonicheskij-izomorfizm — переподбор по --zanovo
+подбор: nekanonicheskij-izomorfizm — kegl=38.0 liniya=67.85
+  ⚠ поверх прежних значений: kegl 38 → 38.0 · liniya 62.82 → 67.85
+подбор: razdelitel-estestvennost — переподбор по --zanovo
+подбор: razdelitel-estestvennost — пропущен, текстовой зоны на слайде нет (tip_verstki=razdelitel без текста)
+подбор: razdelitel-retrakty — переподбор по --zanovo
+подбор: razdelitel-retrakty — пропущен, текстовой зоны на слайде нет (tip_verstki=razdelitel без текста)
+подбор: retrakt — переподбор по --zanovo
+подбор: retrakt — ни одна проба не влезла внутри жёстких зон (см. `vmeshchenie.py --demo-zony`)
+
+команда упала rc=1: /Library/Developer/CommandLineTools/usr/bin/python3 _generator/sborka/deck.py teorkat-vvedenie/L2 -o teorkat-vvedenie/L2/dist/index.html --zanovo

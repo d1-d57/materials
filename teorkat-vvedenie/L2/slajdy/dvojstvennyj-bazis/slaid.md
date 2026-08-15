@@ -37,9 +37,9 @@ opiraetsya_na:
 bez_opredeleniya_namerenno: []
 status: v_deke
 kegl_px: 38
-mezhstrochye: 1.2
-otstup_bloka: 8.7
-podbor_avto: 026426aa3267|kegl_px=38|mezhstrochye=1.2|otstup_bloka=8.7
+mezhstrochye: 1.348
+otstup_bloka: 16.5
+podbor_avto: 026426aa3267|kegl_px=38|mezhstrochye=1.348|otstup_bloka=16.5
 ---
 ## Математика — развёрнуто
 ### [opredelenie] двойственный базис — координаты как функционалы
