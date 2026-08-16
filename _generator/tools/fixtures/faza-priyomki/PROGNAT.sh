@@ -1,5 +1,5 @@
 #!/bin/sh
-# TOOL-CONTRACT-COVERS: priyomka.py git_zona.py dolg_repozitoriev.py
+# TOOL-CONTRACT-COVERS: priyomka.py git_zona.py dolg_repozitoriev.py check_faza_priyomki.py
 # ↑ ОХВАТ: ФАЗА ПРИЁМКИ как механизм — гейты Г13 (раздел заполнен, заявки
 # сверены с очередью), Г14 (ветка названа и её влитие проверено фактом),
 # Г15 (отказ git-операции разобран), плюс две двери, без которых эти гейты
@@ -355,6 +355,97 @@ OUT=$(gejt g14 "$T/z20.md")
 case "$OUT" in OK*) echo "  ✅ ловушка 20: $OUT" ;;
   *) echo "❌ ЛОВУШКА 20: гейт сравнил имя с ПЛЕЙСХОЛДЕРОМ и покраснел на здоровом"
      echo "   заполнении — ложная тревога на каждом свежем заходе. $OUT"; exit 1 ;; esac
+
+echo "── ловушка 21: 🔴 Ч2 — недоступная папка-сосед не роняет счётчик, а пропускается с печатью"
+# 🔴 `dolg_repozitoriev.py` не поддерживает GIT_ZONA_REPO-подобной подмены — его
+# REPO_ROOT снят от РАСПОЛОЖЕНИЯ САМОГО ФАЙЛА (`parents[2]`), поэтому SOSEDI_HOME
+# в этой ловушке — РЕАЛЬНАЯ `~/Documents/GitHub`, не синтетический `$R`. Папка
+# создаётся и чистится тем же блоком, чужой диск не остаётся тронутым.
+SOSEDI=$(python3 -c "import sys; sys.path.insert(0,'$TOOLS'); import dolg_repozitoriev as d; print(d.SOSEDI_HOME)")
+PROBA="$SOSEDI/proba-dolg-nedostupnaya-fixture"
+mkdir -p "$PROBA"
+chmod 000 "$PROBA"
+
+# КРАСНОЕ — голый `.exists()` (старый код ДО починки) падает на этой же папке.
+if python3 -c "
+from pathlib import Path
+p = Path('$PROBA')
+(p / '.git').exists()
+" > /dev/null 2>&1; then
+  chmod 755 "$PROBA"; rmdir "$PROBA"
+  echo "❌ ЛОВУШКА 21: голый (p / '.git').exists() НЕ упал на папке без доступа —"
+  echo "   ловушка не воспроизводит поломку, которую якобы чинит"; exit 1
+fi
+echo "  (красное подтверждено: голый .exists() падает PermissionError на недоступной папке)"
+
+# ЗЕЛЁНОЕ — новый код инструмента переживает ту же папку и называет её вслух.
+OUT21=$(python3 "$TOOLS/dolg_repozitoriev.py" 2>&1); RC21=$?
+chmod 755 "$PROBA"
+rmdir "$PROBA"
+case "$OUT21" in
+  *"пропущено: $PROBA"*) : ;;
+  *) echo "❌ ЛОВУШКА 21: недоступная папка не названа строкой «пропущено: <путь>» —"
+     echo "   молчание неотличимо от того, что её не заметили."; echo "$OUT21"; exit 1 ;;
+esac
+if [ "$RC21" -eq 2 ]; then
+  echo "❌ ЛОВУШКА 21: инструмент упал неверным вызовом вместо пропуска. rc=$RC21"
+  echo "$OUT21"; exit 1
+fi
+echo "  ✅ ловушка 21: недоступная папка пропущена с печатью, счётчик не упал (rc=$RC21)"
+
+echo "── ловушка 22: 🔴 Ч3 — check_faza_priyomki.py КРАСНЕЕТ на staged kod_*.md с пустой ФАЗОЙ ПРИЁМКИ"
+( cd "$R"
+  G checkout -q main
+  zahod_s_razdelom kod_proba22.md '<принято|доработка|отклонено — коротко чем проверено>' zahod/vlitaya ''
+  G add kod_proba22.md )
+# 🔴 `if VAR=$(cmd); then` — ОБЯЗАТЕЛЬНО под `set -e` (шапка файла): голое
+# `VAR=$(cmd); RC=$?` для команды, которая ДОЛЖНА вернуть rc≠0, само становится
+# «упавшей простой командой» и обрывает ВЕСЬ прогон фикстуры молча (проверено
+# живым прогоном при первой версии этой ловушки — скрипт падал ровно тут).
+if OUT22=$( cd "$R" && GIT_ZONA_REPO="$R" PRIYOMKA_REPO="$R" python3 "$TOOLS/check_faza_priyomki.py" --staged 2>&1 ); then
+  ( cd "$R" && G reset -q HEAD -- kod_proba22.md ); rm -f "$R/kod_proba22.md"
+  echo "❌ ЛОВУШКА 22: пустая фаза приёмки НЕ остановила коммит (rc=0, ожидался 1)"
+  echo "$OUT22"; exit 1
+fi
+( cd "$R" && G reset -q HEAD -- kod_proba22.md ); rm -f "$R/kod_proba22.md"
+echo "  ✅ ловушка 22: rc=1 на пустой фазе приёмки"
+
+echo "── ловушка 23: Ч3 — check_faza_priyomki.py ЗЕЛЕНЕЕТ на staged kod_*.md с заполненной ФАЗОЙ ПРИЁМКИ"
+( cd "$R"
+  G checkout -q main
+  # 🔴 БЕЗ ведущего «- »: gate_g13 читает «заявок нет: …» как ПЛЕЙСХОЛДЕР-ОТКАЗ,
+  # ТОЛЬКО когда список маркированных строк ("- …") пуст. Со строкой-буллетом
+  # это попало бы в `zhivye` наравне с живой заявкой и требовало backtick-id —
+  # поймано живым прогоном (первая версия ловушки 23 падала ровно на этом).
+  zahod_s_razdelom kod_proba23.md 'принято — проверено прогоном фикстуры' zahod/vlitaya \
+    'заявок нет: эта проба фикстуры их не ставит'
+  G add kod_proba23.md )
+if ! OUT23=$( cd "$R" && GIT_ZONA_REPO="$R" PRIYOMKA_REPO="$R" python3 "$TOOLS/check_faza_priyomki.py" --staged 2>&1 ); then
+  ( cd "$R" && G reset -q HEAD -- kod_proba23.md ); rm -f "$R/kod_proba23.md"
+  echo "❌ ЛОВУШКА 23: заполненная фаза приёмки ОСТАНОВИЛА коммит (rc≠0, ожидался 0) —"
+  echo "   гейт краснеет на здоровом входе, его отключат первым же вечером"
+  echo "$OUT23"; exit 1
+fi
+( cd "$R" && G reset -q HEAD -- kod_proba23.md ); rm -f "$R/kod_proba23.md"
+echo "  ✅ ловушка 23: rc=0 на заполненной фазе приёмки, коммит не остановлен"
+
+echo "── ловушка 24: 🔴 ГРАНИЦА Ч3 — коммит файла БЕЗ kod_*.md хук вообще не трогает"
+( cd "$R"
+  G checkout -q main
+  echo "проба" > proba24.txt
+  G add proba24.txt )
+if ! OUT24=$( cd "$R" && GIT_ZONA_REPO="$R" PRIYOMKA_REPO="$R" python3 "$TOOLS/check_faza_priyomki.py" --staged 2>&1 ); then
+  ( cd "$R" && G reset -q HEAD -- proba24.txt ); rm -f "$R/proba24.txt"
+  echo "❌ ЛОВУШКА 24: коммит БЕЗ kod_*.md потревожил гейт (rc≠0, вывод: «$OUT24»)"
+  exit 1
+fi
+( cd "$R" && G reset -q HEAD -- proba24.txt ); rm -f "$R/proba24.txt"
+if [ -n "$OUT24" ]; then
+  echo "❌ ЛОВУШКА 24: коммит БЕЗ kod_*.md дал вывод («$OUT24») — молчание на чужом"
+  echo "   единственное, что не даёт хук обходить --no-verify навсегда"
+  exit 1
+fi
+echo "  ✅ ловушка 24: коммит без kod_*.md — тишина, rc=0"
 
 echo
 echo "✅ ВСЕ ЛОВУШКИ ЗЕЛЁНЫЕ ($LOVUSHEK шт.)"

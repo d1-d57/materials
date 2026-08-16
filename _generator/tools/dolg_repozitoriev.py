@@ -122,7 +122,19 @@ def repozitorii():
     for p in sorted(SOSEDI_HOME.iterdir()):
         if not p.is_dir() or p.name.endswith("-wt") or p.name.startswith("."):
             continue
-        if (p / ".git").exists():
+        # 🔴 ПАПКА РЯДОМ МОЖЕТ БЫТЬ ЧУЖОЙ (права 700 другого владельца) — стат
+        # `p / ".git"` требует execute-права НА `p`, а их у нас нет. Раньше
+        # `.exists()` ронял PermissionError не поймано, и счётчик не досчитывал
+        # НИ ОДНОГО репозитория (валился на первой же недоступной папке) —
+        # упавший счётчик неотличим от чистого репозитория для того, кто
+        # смотрит мельком. Пропускаем эту ОДНУ папку и печатаем, что пропущена
+        # — молчать нельзя, иначе дыра в охвате не видна вовсе.
+        try:
+            est_git = (p / ".git").exists()
+        except (PermissionError, OSError) as e:
+            print(f"⚠ пропущено: {p}, нет доступа ({e.__class__.__name__})")
+            continue
+        if est_git:
             najdeno.append(p)
     return najdeno
 
