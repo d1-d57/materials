@@ -126,9 +126,14 @@ def proverit_otsechku(arka: Path) -> None:
         sys.exit(f"❌ нет файла {dnevnik} — дневник арки отсутствует, хэндофф не собираю.\n"
                   "Порядок закрытия сессии:\n" + PORYADOK_ZAKRYTIYA)
     text = dnevnik.read_text(encoding="utf-8", errors="ignore")
-    m = OTSECHKA_RE.search(text)
-    if not m or m.group(1) < segodnya:
-        najdeno = m.group(1) if m else "нет вовсе"
+    # 🔴 БЕРЁМ ПОСЛЕДНЮЮ отсечку, а не первую (найдено приёмкой 2026-08-15).
+    # `search` возвращал ПЕРВОЕ совпадение — историческую отсечку прошлых сессий,
+    # и хэндофф отказывался собираться при полностью разнесённом дневнике: в файле
+    # их накапливается по одной за сессию, свежая всегда последняя.
+    vse = OTSECHKA_RE.findall(text)
+    m = max(vse) if vse else None
+    if not m or m < segodnya:
+        najdeno = m if m else "нет вовсе"
         sys.exit(f"❌ {dnevnik} не несёт отсечку «РАЗНЕСЕНО ДО СЮДА» на сегодня "
                   f"({segodnya}) — найдено: {najdeno}. Хэндофф не собираю.\n"
                   "Порядок закрытия сессии:\n" + PORYADOK_ZAKRYTIYA)
