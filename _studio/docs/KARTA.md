@@ -848,6 +848,8 @@
 
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/RAZBOR-kontura-git-gigieny.md`** (разбор контура git-гигиены: где живёт очередь заявок, кто решает про влитие, что мешало заполнить приёмку, полный охват мест с разбором вывода git)
 
+**`_studio/zhurnal/2026-08-16_git-gigiena/kod_vlit-i-uspokoitsya.md`** (финальная добивка: влить последнюю ветку с работой, погасить пустую, закоммитить остатки в materials и matemdigest-map, вывезти)
+
 
 
 
