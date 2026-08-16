@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Новые задачи</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 90px;}
+  header.mast{padding:58px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;
+       font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
+  .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);
+     display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
+  li:last-child{border-bottom:none;}
+  li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;
+     font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
+  li.zvezda::before{content:"\2605";font-style:normal;font-size:22px;padding-top:6px;color:var(--accent);}
+  li.rubrika{counter-increment:none;display:block;border-bottom:none;padding:34px 0 0;
+     font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;
+     text-transform:uppercase;color:var(--rubric);}
+  li.rubrika::before{content:none;}
+  li.rubrika+li{padding-top:14px;}
+  .tag,.cond,.hint,details,.spoiler{grid-column:2;}
+  .tag{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--ink-faint);margin:0 0 8px;}
+  .cond p+p{margin-top:10px;}
+  .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
+  details{margin:10px 0 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-faint);cursor:pointer;list-style:none;display:inline-block;
+     border:1px solid var(--rule);border-radius:3px;padding:3px 10px;}
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details[open] summary{margin-bottom:8px;}
+  .spoiler{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     padding-left:14px;border-left:2px solid var(--rubric);}
+  .spoiler p+p{margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Занятие №6</p>
+    <h1>Новые задачи</h1>
+    <p class="date">6 августа 2026</p>
+  </header>
+
+  <ol>
+    <li class="rubrika">Процессы во времени: обратимость</li>
+
+    <li>
+      <p class="tag">processy · obratimost hoda</p>
+      <div class="cond"><p>В некоторой стране из каждого города выходит ровно одна односторонняя дорога в другой город, и в каждый город входит не более одной дороги. Докажите, что турист, выехавший из столицы, когда-то в неё вернётся.</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>Ехать турист может сколько угодно долго: из любого города есть ровно один выезд, тупиков не бывает. Городов конечное число, поэтому рано или поздно он окажется в городе, где уже был.</p><p>Возьмём <strong>первый</strong> момент, когда город повторился, и назовём этот город X. Допустим, X — не столица. Тогда турист въезжал в X дважды: первый раз по дороге из какого-то города A, второй раз по дороге из какого-то города B. Города A и B различны — будь они одним и тем же, этот город повторился бы раньше, чем X, а мы взяли самое первое повторение. Значит в X входят две разные дороги, чего быть не может.</p><p>Остаётся X = столица: в неё турист попал не по дороге, а стартовал, поэтому противоречия не возникает. Значит повторился именно старт.</p><p>Всё держится на условии «входит не более одной дороги»: оно и означает, что ход <strong>обратим</strong> — зная, где турист сейчас, можно однозначно сказать, откуда он приехал. Обратимый процесс на конечном множестве возвращается ровно в начало, а не куда-то в середину.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">processy · obratimost hoda</p>
+      <div class="cond"><p>Кубик Рубика вывели из исходного состояния некоторой последовательностью поворотов граней. Докажите, что если повторять эту последовательность поворотов достаточно долго, то кубик в конце концов вернётся в исходное состояние.</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>Обозначим через S всю последовательность поворотов. Она превращает любое состояние кубика в какое-то другое, то есть задаёт отображение множества состояний в себя. Состояний у кубика конечное число.</p><p>Главное свойство: <strong>S обратимо.</strong> Каждый поворот отменяется поворотом той же грани в другую сторону, значит вся последовательность отменяется, если проделать обратные повороты в обратном порядке. Поэтому по результату всегда однозначно восстанавливается то, что было до применения S.</p><p>Теперь пусть A₀ — исходное состояние, A₁ — после первого применения S, A₂ — после второго и так далее. Состояний конечно, поэтому найдутся номера i &lt; j, при которых A_i = A_j. Отменим S ровно i раз с обеих сторон — получим A₀ = A_{j−i}. То есть через j − i повторений кубик уже вернулся в исходное состояние.</p><p>Заметьте, что обратимость здесь и делает всю работу. Без неё повтор состояния означал бы только, что процесс когда-нибудь зациклится, — но зациклиться он мог бы и в стороне, так и не вернувшись в начало.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">processy · sostoyanie eto rebro s napravleniem</p>
+      <div class="cond"><p>В Тридевятом Царстве ни одна из дорог не заканчивается тупиком. Рыцарь, Любящий Постоянство, выезжает из своего замка и, доезжая до любого перекрёстка, едет по самой левой дороге. Докажите, что в конце концов он попадёт таким образом обратно в свой замок.</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>Первое и главное решение — правильно выбрать, что считать положением рыцаря. Перекрёстка мало: приехав на один и тот же перекрёсток с разных сторон, рыцарь поедет по разным дорогам. Поэтому <strong>положение — это дорога вместе с направлением движения по ней.</strong> Таких положений конечное число: вдвое больше, чем дорог.</p><p>Правило движения переводит одно положение в другое. Проверим, что оно <strong>обратимо</strong>. Рыцарь приехал на перекрёсток по какой-то дороге и свернул на самую левую от неё. Если смотреть на дороги перекрёстка по кругу, «самая левая» — это соседняя, скажем, против часовой стрелки. Такое соответствие — сдвиг по кругу, а сдвиг обратим: по дороге, на которую свернули, однозначно восстанавливается дорога, по которой приехали.</p><p>Значит движение — обратимое отображение конечного множества положений в себя. Рыцарь едет бесконечно, положений конечно, поэтому какое-то повторится. Возьмём первое повторившееся: если бы это было не стартовое положение, у него нашлись бы два разных предшественника, а обратимость этого не допускает. Значит первым повторяется старт — и рыцарь возвращается в свой замок, причём выезжая из него в ту же сторону.</p></div></details>
+    </li>
+
+    <li class="zvezda">
+      <p class="tag">processy · rasshirit sostoyanie</p>
+      <div class="cond"><p>В Тридесятом Королевстве у каждого замка и каждой развилки сходятся три дороги. Рыцарь, Любящий Разнообразие, выехал из своего замка и по очереди поворачивает то направо, то налево. Докажите, что рыцарь вернётся в изначальный замок.</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>Прежний приём сам по себе не проходит: одной дороги с направлением уже мало, потому что дальнейший путь зависит ещё и от того, какой поворот сейчас по очереди. Поэтому <strong>положение расширяем</strong>: это дорога с направлением <strong>и</strong> пометка, куда рыцарь свернёт на ближайшей развилке. Положений по-прежнему конечное число — вчетверо больше, чем дорог.</p><p>Обратимость сохраняется. На развилке из трёх дорог поворот направо переводит въездную дорогу в одну определённую, поворот налево — в другую, и оба соответствия обратимы: по дороге, на которую свернули, и по тому, каким был поворот, однозначно восстанавливается въездная дорога. Пометка «что дальше» тоже восстанавливается — она просто меняется на противоположную.</p><p>Дальше как раньше: обратимое отображение конечного множества, движение бесконечно, значит какое-то положение повторится, а первым повторяется стартовое. Рыцарь возвращается в замок.</p><p>Условие «три дороги» нужно затем, чтобы слова «направо» и «налево» вообще имели смысл на каждой развилке.</p></div></details>
+    </li>
+
+    <li class="rubrika">Закрыть пробел</li>
+
+    <li>
+      <p class="tag">algebra · gruppirovka i vynesenie</p>
+      <div class="cond"><p>Разложите на множители: xy + x + y + 1; a³ − b³; x³ − 1; n³ − n.</p><p>А теперь вернитесь к трём местам, где это уже понадобилось: (1) в задаче про a + b + ab получилось (x + y + 1)⁄xy — что будет, если прибавить единицу? (2) 2p + 1 = k³, где p простое; (3) верно ли, что n⁴ + 4 составное при n &gt; 1?</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>xy + x + y + 1 = x(y + 1) + (y + 1) = (x + 1)(y + 1). Группировка: вынести из первой пары, из второй, увидеть общую скобку.</p><p>a³ − b³ = (a − b)(a² + ab + b²); отсюда x³ − 1 = (x − 1)(x² + x + 1).</p><p>n³ − n = n(n² − 1) = (n − 1)n(n + 1) — произведение трёх подряд идущих, поэтому делится на 6.</p><p>(1) 1 + (x + y + 1)⁄xy = (xy + x + y + 1)⁄xy = (x + 1)(y + 1)⁄xy. Вот почему величина «произведение всех (1 + a)» и не меняется.</p><p>(2) 2p + 1 = k³ ⇒ 2p = k³ − 1 = (k − 1)(k² + k + 1). Второй множитель больше первого и больше 2, поэтому k − 1 = 2, k = 3, p = 13.</p><p>(3) n⁴ + 4 = n⁴ + 4n² + 4 − 4n² = (n² + 2)² − (2n)² = (n² − 2n + 2)(n² + 2n + 2). При n &gt; 1 первый множитель больше единицы — число составное. Здесь та же разность квадратов, которую вы знаете, просто её пришлось создать.</p></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>

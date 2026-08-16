@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание — разбор</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 90px;}
+  header.mast{padding:58px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;
+       font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
+  .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);
+     display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
+  li:last-child{border-bottom:none;}
+  li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;
+     font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
+  li.zvezda::before{content:"\2605";font-style:normal;font-size:22px;padding-top:6px;color:var(--accent);}
+  li.rubrika{counter-increment:none;display:block;border-bottom:none;padding:34px 0 0;
+     font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;
+     text-transform:uppercase;color:var(--rubric);}
+  li.rubrika::before{content:none;}
+  li.rubrika+li{padding-top:14px;}
+  .tag,.cond,.hint,details,.spoiler{grid-column:2;}
+  .tag{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--ink-faint);margin:0 0 8px;}
+  .cond p+p{margin-top:10px;}
+  .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
+  details{margin:10px 0 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-faint);cursor:pointer;list-style:none;display:inline-block;
+     border:1px solid var(--rule);border-radius:3px;padding:3px 10px;}
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details[open] summary{margin-bottom:8px;}
+  .spoiler{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     padding-left:14px;border-left:2px solid var(--rubric);}
+  .spoiler p+p{margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Математика</p>
+    <h1>Домашнее задание — разбор</h1>
+    <p class="date">6 августа 2026</p>
+  </header>
+
+  <ol>
+    <li>
+      <p class="tag">derevya · visyachaya vershina ostova</p>
+      <div class="cond"><p>Система станций метро устроена так, что из каждой станции можно проехать в каждую. Докажите, что одну из станций можно закрыть так, что это свойство сохранится (для оставшихся станций).</p></div>
+      <details><summary>решение</summary><div class="spoiler"><p>Будем выбрасывать линии по одной, пока это не нарушает связности. Когда выбрасывать больше нечего, оставшаяся сеть по-прежнему связна, но в ней нет ни одного цикла: будь цикл, любую его линию можно было бы убрать, не разорвав сеть. Связная сеть без циклов — это дерево.</p><p>В дереве с хотя бы двумя вершинами обязательно есть висячая вершина — станция, из которой выходит ровно одна линия. Возьмём её и закроем. Все остальные станции остались связаны между собой, потому что через закрытую станцию никакой маршрут между другими станциями пройти не мог: у неё была единственная линия, и по ней можно было только зайти и вернуться.</p><p>В исходной сети линий было не меньше, чем в дереве, так что связность тем более сохранится.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">processy · sostoyanie eto doroga plus gorod vyezda</p>
+      <div class="cond"><p>В Тридевятом Царстве ни одна из дорог не заканчивается тупиком. Рыцарь, Любящий Постоянство, выезжает из своего замка и, доезжая до любого перекрёстка, едет по самой левой дороге. Докажите, что в конце концов он попадёт таким образом обратно в свой замок.</p><p>Карта может быть устроена как угодно: дорога имеет право выйти из перекрёстка и вернуться в него же, между двумя перекрёстками может идти несколько разных дорог. Никаких предположений о «разумности» карты делать не нужно — доказательство от её устройства не зависит.</p></div>
+      <div class="hint"><p>Пронумеруйте все дороги. Пусть рыцарь на каждом шаге записывает две вещи: номер дороги, по которой едет сейчас, и название города, из которого он по ней выехал. Докажите, что последовательность таких записей зациклится, и что первой повторится самая первая запись.</p></div>
+    </li>
+
+    <li>
+      <p class="tag">derevya · dvojnoj schet plus n minus 1</p>
+      <div class="cond"><p>В дереве имеется 200 вершин степени 5, 100 вершин степени 3, а остальные — висячие. Сколько висячих вершин в этом дереве?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>702.</p></div></details>
+      <details><summary>решение</summary><div class="spoiler"><p>Пусть висячих вершин x. Всего вершин 200 + 100 + x, значит рёбер на одно меньше: 299 + x.</p><p>Теперь посчитаем сумму степеней всех вершин двумя способами. С одной стороны, каждое ребро даёт по единице в степень каждого из своих концов, поэтому сумма степеней равна удвоенному числу рёбер: 2(299 + x). С другой стороны, она равна 200 · 5 + 100 · 3 + x · 1 = 1300 + x.</p><p>Приравниваем: 1300 + x = 598 + 2x, откуда x = 702.</p><p>Двойной подсчёт здесь работает в паре с фактом «в дереве на n вершинах ровно n − 1 ребро». Без него уравнение было бы одно на два неизвестных, поэтому вспомнить этот факт (и понимать, почему он верен) — половина задачи.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">grafy · ocenka i primer</p>
+      <div class="cond"><p>В классе 30 учеников, и никакие трое из них не дружат попарно.</p><p>Рассмотрим ученика, у которого друзей больше всех; пусть у него d друзей. Обозначим через B множество всех учеников класса, кроме этих d друзей (сам он в B входит).</p><p>(а) Докажите, что в каждой паре друзей хотя бы один человек лежит в B.</p><p>(б) Докажите, что число пар друзей не больше (30 − d) · d.</p><p>(в) Какое наибольшее число пар друзей может быть в классе? Докажите оценку и постройте пример.</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>225.</p></div></details>
+      <details><summary>решение</summary><div class="spoiler"><p><strong>(а)</strong> Пусть выбранного ученика зовут v, а u и w — какие-то двое друзей. Если бы оба они были друзьями v, то v, u и w дружили бы попарно, чего по условию не бывает. Значит хотя бы один из них не друг v, то есть лежит в B.</p><p><strong>(б)</strong> В B ровно 30 − d человек: из тридцати выкинули d друзей, а сам v остался. У каждого из них друзей не больше d — ведь d это наибольшее число друзей в классе.</p><p>Посчитаем сумму чисел друзей по всем людям из B. С одной стороны, она не больше (30 − d) · d. С другой стороны, по пункту (а) каждая пара друзей задевает B, поэтому в этой сумме она сосчитана хотя бы один раз. Значит пар друзей не больше (30 − d) · d.</p><p><strong>(в)</strong> Разность 900 − 4d(30 − d) равна (30 − 2d)², то есть неотрицательна при любом d. Отсюда (30 − d) · d ≤ 225, и вместе с пунктом (б) — пар друзей не больше 225.</p><p>Пример на 225: разобьём класс на две группы по 15 и подружим каждого из одной группы с каждым из другой. Троих попарно дружащих нет, потому что внутри групп дружб не осталось, а пар ровно 15 · 15 = 225.</p><p>Оценка и пример сошлись, значит ответ 225. Равенство в оценке достигается при d = 15 — ровно столько друзей у каждого в этом примере.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">derevya · perevod v graf</p>
+      <div class="cond"><p>Между любыми двумя соседними клетками шахматной доски лежит спичка. Какое наименьшее число спичек можно убрать, чтобы ладья могла попасть за несколько ходов из любой клетки в любую другую, не перескакивая через спички?</p></div>
+      <div class="hint"><p>Считайте клетки вершинами, а убранные спички — рёбрами. Что означает условие задачи на языке этого графа?</p></div>
+      <details><summary>ответ</summary><div class="spoiler"><p>63.</p></div></details>
+      <details><summary>решение</summary><div class="spoiler"><p>Переведём задачу на язык графов. Вершины — 64 клетки доски, а ребро проводим там, где спичка убрана: именно через такие места ладья и проходит. Условие «из любой клетки в любую» означает, что этот граф связен.</p><p>Связный граф на 64 вершинах имеет не меньше 63 рёбер: у дерева на 64 вершинах ровно 63 ребра, а меньше рёбер связности не хватит. Значит убрать надо не меньше 63 спичек.</p><p>Шестидесяти трёх хватает: уберём все спички внутри первой строки, все спички внутри каждого столбца — получится «расчёска», по которой можно доехать из любой клетки в любую. Рёбер в ней 7 (первая строка) + 8 · 7 (столбцы) = 63, и циклов нет.</p><p>Всего спичек на доске 2 · 8 · 7 = 112, так что почти половину придётся убрать. Вся работа здесь — увидеть, что задача не про спички, а про связный граф.</p></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>
