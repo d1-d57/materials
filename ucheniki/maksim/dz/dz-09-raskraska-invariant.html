@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:30px 0 30px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .fig-wrap{margin:18px 0 6px;text-align:center;}
+  .fig{display:inline-block;height:auto;max-width:100%;}
+  .fig.pair{width:180px;margin:0 12px;vertical-align:middle;}
+  .fig.one{width:180px;}
+  .cap{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .check{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:190px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);} .res.no{color:var(--rubric);}
+  details{margin-top:14px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"\25B8 ";color:var(--accent);}
+  details[open] summary::before{content:"\25BE ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр · раскраска и инвариант</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <p class="lead">Продолжаем прошлое занятие: ищем скрытую раскраску или величину, которая не меняется.</p>
+  <ol>
+    <li>
+      <div class="cnd">На столе лежат 7 монет, все орлом вверх. За один ход разрешается перевернуть любые две монеты. Можно ли за несколько ходов добиться, чтобы все монеты лежали решкой вверх?</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="нельзя,нет,не,невозможно" placeholder="можно или нельзя"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Следите за числом орлов. Как оно меняется за один ход?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Нельзя.</b></div></details>
+      <details><summary>Решение</summary><div class="body">За один ход переворачиваются две монеты, поэтому число орлов меняется на &minus;2, 0 или +2 — то есть его <b>чётность не меняется</b>. Вначале орлов 7 (нечётно), значит их число всегда будет нечётным и нулём (все решкой) стать не может.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На доске 4&times;4 в каждой клетке сидит жук. По команде каждый жук переполз на соседнюю по стороне клетку. Обязательно ли какие-то два жука окажутся в одной клетке? (На доске 5&times;5 мы доказали, что да.)</div>
+      <div class="fig-wrap"><svg viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg" class="fig one" role="img">
+<rect x="6" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="25.0" r="3.4" fill="#2a2520"/>
+<rect x="44" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="63.0" cy="25.0" r="3.4" fill="#2a2520"/>
+<rect x="82" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="101.0" cy="25.0" r="3.4" fill="#2a2520"/>
+<rect x="120" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="139.0" cy="25.0" r="3.4" fill="#2a2520"/>
+<rect x="6" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="63.0" r="3.4" fill="#2a2520"/>
+<rect x="44" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="63.0" cy="63.0" r="3.4" fill="#2a2520"/>
+<rect x="82" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="101.0" cy="63.0" r="3.4" fill="#2a2520"/>
+<rect x="120" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="139.0" cy="63.0" r="3.4" fill="#2a2520"/>
+<rect x="6" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="101.0" r="3.4" fill="#2a2520"/>
+<rect x="44" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="63.0" cy="101.0" r="3.4" fill="#2a2520"/>
+<rect x="82" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="101.0" cy="101.0" r="3.4" fill="#2a2520"/>
+<rect x="120" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="139.0" cy="101.0" r="3.4" fill="#2a2520"/>
+<rect x="6" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="139.0" r="3.4" fill="#2a2520"/>
+<rect x="44" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="63.0" cy="139.0" r="3.4" fill="#2a2520"/>
+<rect x="82" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="101.0" cy="139.0" r="3.4" fill="#2a2520"/>
+<rect x="120" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="139.0" cy="139.0" r="3.4" fill="#2a2520"/>
+</svg><div class="cap">16 жуков на доске 4&times;4</div></div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="нет,не обязательно,необязательно,не" placeholder="обязательно или нет"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Сравните с 5&times;5. Там разбор держался на том, что клеток одного цвета на одну больше. А на 4&times;4? Попробуйте разбить доску на доминошки.</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Не обязательно</b> — можно устроить так, что все жуки переползут в разные клетки.</div></details>
+      <details><summary>Решение</summary><div class="body">На 5&times;5 клеток одного цвета 13, другого 12; жук всегда меняет цвет, и 13 жуков не помещаются на 12 клеток — потому там столкновение неизбежно. На 4&times;4 клеток каждого цвета <b>поровну, по 8</b>, и столкновения можно избежать. Разобьём доску на 8 доминошек. В каждой доминошке два жука просто <b>меняются местами</b>: каждый переползает на клетку соседа. Тогда все 16 жуков сдвинулись на соседнюю клетку, и никакие два не встретились.</div></details>
+    </li>    <li>
+      <div class="cnd">На доске стоит фишка. Двое по очереди двигают её на соседнюю по стороне клетку; на уже пройденную клетку ходить нельзя. Кто не может сделать ход, проигрывает. Кто выигрывает при правильной игре:</div>
+      <div class="sub"><b>а)</b> на доске 4&times;4, фишка в углу;</div>
+      <div class="sub"><b>б)</b> на доске 3&times;3, фишка в углу?</div>
+      <div class="fig-wrap"><svg viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg" class="fig pair" role="img">
+<rect x="6" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="120" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="6" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="120" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="6" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="120" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="6" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="120" y="120" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="25.0" r="11.4" fill="#9e2b25" stroke="#2a2520" stroke-width="2"/>
+</svg><svg viewBox="0 0 126 126" xmlns="http://www.w3.org/2000/svg" class="fig pair" role="img">
+<rect x="6" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="6" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="6" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="44" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="6" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="44" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<rect x="82" y="82" width="38" height="38" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<circle cx="25.0" cy="25.0" r="11.4" fill="#9e2b25" stroke="#2a2520" stroke-width="2"/>
+</svg><div class="cap">(а) 4&times;4 &nbsp;&nbsp; (б) 3&times;3 &nbsp;·&nbsp; фишка в углу</div></div>
+      <div class="check"><label>Ответ (а):</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <div class="check"><label>Ответ (б):</label><input type="text" data-answers="второй,второй игрок,2" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Попробуйте заранее разбить доску на доминошки 1&times;2. Что это даёт игроку, который каждый раз двигает фишку на вторую клетку той доминошки, куда её только что поставили?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) первый; (б) второй.</b></div></details>
+      <details><summary>Решение</summary><div class="body"><b>(а) 4&times;4.</b> Доска целиком бьётся на доминошки. Первый первым ходом двигает фишку на соседнюю клетку той доминошки, где она стоит. Дальше, куда бы второй ни сдвинул фишку, она попадает в новую доминошку — и первый двигает её на вторую клетку этой доминошки. Партнёр по доминошке всегда ещё не пройден, поэтому у первого всегда есть ход. Проигрывает второй.
+<br><br><b>(б) 3&times;3.</b> Целиком доска не бьётся (9 клеток), но без угловой клетки, где стоит фишка, оставшиеся 8 бьются на доминошки. Теперь по доминошкам ходит второй тем же приёмом. Ход всегда есть у второго — проигрывает первый.
+<br><br><b>Правило:</b> бьётся вся доска — выигрывает первый; бьётся всё, кроме стартовой клетки, — второй.</div></details>
+    </li>
+
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/\u0451/g,'\u0435').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check'), inp=box.querySelector('input'), res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='\u0412\u0435\u0440\u043d\u043e \u2713';res.className='res ok';}
+    else{res.textContent='\u041d\u0435 \u0441\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u2014 \u043f\u043e\u0434\u0443\u043c\u0430\u0439\u0442\u0435 \u0435\u0449\u0451';res.className='res no';}
+  }
+</script>
+</body>
+</html>
