@@ -145,16 +145,27 @@ body.blanked #stage { visibility: hidden; }
    на видео, канвас и 3D (аналитик, интервью 2026-08-16). */
 .panel > video { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-/* Э3 (dochistka-pleera-i-vitriny): замена native controls — см. engine.js,
-   блок гидратации `video[controls]`. Один кружок play/pause в палитре темы,
-   тот же визуальный язык, что у `.lab-row` чуть ниже (тихий по умолчанию,
-   ярче при наведении на панель). */
-.video-ctl { position: absolute; left: 12px; bottom: 8px; z-index: 6;
-  width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
-  background: var(--card); color: var(--ink);
-  font: 15px/1 "Noto Sans", sans-serif; display: flex; align-items: center; justify-content: center;
-  opacity: .6; transition: opacity .2s; }
-.video-ctl:hover, .panel:hover .video-ctl { opacity: 1; }
+/* Э3 (dochistka-pleera-i-vitriny) + правка 2026-08-16 (живой просмотр
+   владельцем): замена native controls — см. engine.js, блок гидратации
+   `video[controls]`. Был один кружок play/pause внизу слева — маленький,
+   вылезающий за край панели, без способа увидеть время или отмотать. Теперь
+   бар во всю ширину панели: кнопка + ползунок прогресса + таймкод, тот же
+   визуальный язык, что у `.lab-row` чуть ниже (тихий по умолчанию, ярче при
+   наведении на панель). `outline: none` на видео и элементах бара — снимает
+   нативную рамку фокуса браузера, которая иначе непоследовательно
+   подсвечивала панель чёрной линией после клика. */
+.panel > video { outline: none; }
+.video-ctl-bar { position: absolute; left: 12px; right: 12px; bottom: 10px; z-index: 6;
+  display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 20px;
+  background: var(--card); opacity: .7; transition: opacity .2s; }
+.video-ctl-bar:hover, .panel:hover .video-ctl-bar { opacity: .96; }
+.video-ctl { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: none;
+  outline: none; cursor: pointer; background: var(--board); color: var(--ink);
+  font: 14px/1 "Noto Sans", sans-serif; display: flex; align-items: center; justify-content: center; }
+.video-scrub { flex: 1 1 auto; min-width: 0; height: 4px; margin: 0; outline: none;
+  accent-color: var(--steel); cursor: pointer; }
+.video-time { flex: 0 0 auto; font: 12px/1 ui-monospace, monospace; color: var(--ink);
+  white-space: nowrap; }
 
 /* лабораторная строка экспериментов (SIM-DESIGN §2) */
 /* кнопки-иконки на док-панели (правый нижний угол канваса; в узких — по центру) */

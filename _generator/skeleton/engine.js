@@ -71,11 +71,18 @@ document.querySelectorAll('[data-ill]').forEach(box => {
      полоса на всю ширину со значком звука (звука в роликах нет вовсе),
      fullscreen и меню «три точки», чужеродная на бежево-зелёной теме и
      видная ВСЕГДА (слайд стоит на паузе по умолчанию). Убрать `controls`
-     целиком нельзя — лектору нечем будет остановить ролик (47–77 c). Меняем
-     на одну кнопку play/pause в палитре темы, тем же языком, что у
-     `.lab-row`; сама функция «поставить на паузу» у лектора остаётся. */
+     целиком нельзя — лектору нечем будет остановить ролик (47–77 c) и негде
+     увидеть, сколько ролика уже прошло. Меняем на свой бар в палитре темы:
+     кнопка play/pause + ползунок прогресса + таймкод, тем же языком, что у
+     `.lab-row`. (Правка после живого просмотра владельцем 2026-08-16: без
+     ползунка нельзя понять, где сейчас находишься и отмотать на момент;
+     кнопка была мелкой в углу; клик по видео иногда оставлял на панели
+     browser-нативную рамку фокуса — `outline: none` снимает её явно, не
+     полагаясь на то, что её никто не поставит.) */
   box.querySelectorAll('video[controls]').forEach(video => {
     video.removeAttribute('controls');
+    const bar = document.createElement('div');
+    bar.className = 'video-ctl-bar';
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'video-ctl';
@@ -86,7 +93,35 @@ document.querySelectorAll('[data-ill]').forEach(box => {
     });
     video.addEventListener('play', () => { btn.textContent = '❚❚'; });
     video.addEventListener('pause', () => { btn.textContent = '▶'; });
-    box.appendChild(btn);
+
+    const scrub = document.createElement('input');
+    scrub.type = 'range';
+    scrub.className = 'video-scrub';
+    scrub.min = '0'; scrub.max = '1000'; scrub.value = '0';
+    scrub.setAttribute('aria-label', 'перемотка');
+    let seeking = false;
+    scrub.addEventListener('pointerdown', () => { seeking = true; });
+    scrub.addEventListener('input', () => {
+      if (video.duration) video.currentTime = video.duration * (scrub.value / 1000);
+    });
+    scrub.addEventListener('pointerup', () => { seeking = false; });
+
+    const fmt = s => {
+      s = Math.max(0, Math.floor(s || 0));
+      return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    };
+    const time = document.createElement('span');
+    time.className = 'video-time';
+    time.textContent = '0:00 / 0:00';
+    const updateTime = () => {
+      time.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+      if (!seeking && video.duration) scrub.value = String(1000 * video.currentTime / video.duration);
+    };
+    video.addEventListener('timeupdate', updateTime);
+    video.addEventListener('loadedmetadata', updateTime);
+
+    bar.append(btn, scrub, time);
+    box.appendChild(bar);
   });
 });
 
