@@ -850,6 +850,8 @@
 
 **`_studio/zhurnal/2026-08-16_git-gigiena/kod_vlit-i-uspokoitsya.md`** (финальная добивка: влить последнюю ветку с работой, погасить пустую, закоммитить остатки в materials и matemdigest-map, вывезти)
 
+**`_studio/zhurnal/2026-08-16_git-gigiena/kod_chistka-hvostov.md`** (чистка хвостов: порядок влитие-до-worktree в генераторе, починка git_zona.py commit на путях в индексе, гашение застрявших веток, коммит остатков)
+
 
 
 
