@@ -12,8 +12,13 @@ god.json, ЛИБО из белого списка интерфейсных сл�
   1. текстовые узлы всех dist/*.html (кроме <script>/<style>/комментариев);
   2. видимые атрибуты title / alt / aria-label / placeholder;
   3. содержимое <title>;
-  4. отсутствие <script> вовсе — иначе текст мог бы родиться в JS уже в браузере,
-     и пункты 1-3 его не увидели бы;
+  4. <script> НА СТРАНИЦАХ РАЗРЕШЁН (доводка 2026-08-20, П11: тумблер держит
+     состояние через localStorage) — но внутри него ищутся вызовы, которые
+     пишут текст в DOM (innerHTML/innerText/textContent/document.write/
+     insertAdjacentHTML): их обязано быть 0, иначе JS мог бы родить текст,
+     которого гейт не увидит статическим разбором. Голое число тегов <script>
+     печатается СПРАВОЧНО, в провал больше не идёт — см. «чего гейт не
+     проверяет» ниже, это её честная слепая зона;
   5. отсутствие CSS `content:"…"` с буквами — там тоже прячется видимый текст;
   6. служебные поля данных (sluzhebnoe, snoska, istochniki, utok) на страницы
      не доехали: они законны как данные, но запрещены ТЗ §4.
@@ -48,12 +53,15 @@ class Sbor(HTMLParser):
         self.glushit = 0
         self.skripty = 0
         self.stili = []
+        self.skript_tekst = []
         self._v_style = False
+        self._v_script = False
 
     def handle_starttag(self, tag, attrs):
         if tag == 'script':
             self.skripty += 1
             self.glushit += 1
+            self._v_script = True
         elif tag == 'style':
             self.glushit += 1
             self._v_style = True
@@ -66,10 +74,14 @@ class Sbor(HTMLParser):
             self.glushit = max(0, self.glushit - 1)
             if tag == 'style':
                 self._v_style = False
+            if tag == 'script':
+                self._v_script = False
 
     def handle_data(self, data):
         if self._v_style:
             self.stili.append(data)
+        if self._v_script:
+            self.skript_tekst.append(data)
         if self.glushit:
             return
         if data.strip():
@@ -141,6 +153,7 @@ def main():
     vsego = 0
     siroty = []
     skripty = 0
+    skript_tekst_vyzovy = []
     css_tekst = []
     zapret_naideno = []
 
@@ -150,6 +163,11 @@ def main():
         p = Sbor()
         p.feed(soder)
         skripty += p.skripty
+        for skript in p.skript_tekst:
+            for m in re.finditer(
+                    r'\.(innerHTML|innerText|textContent)\s*=|'
+                    r'\b(document\.write|insertAdjacentHTML)\s*\(', skript):
+                skript_tekst_vyzovy.append((f, m.group(0)))
         for stil in p.stili:
             for m in re.finditer(r'content\s*:\s*(["\'])(.*?)\1', stil, re.S):
                 if re.search(r'[A-Za-zА-Яа-яЁё]', m.group(2)):
@@ -172,8 +190,12 @@ def main():
     if len(siroty) > 40:
         print('   … и ещё %d' % (len(siroty) - 40))
 
-    print('тегов <script> на страницах: %d (текста, рождённого в JS, нет только при 0)'
+    print('тегов <script> на страницах: %d (справочно — JS разрешён П11, доводка 2026-08-20)'
           % skripty)
+    print('текст-порождающих вызовов в JS (innerHTML/innerText/textContent/'
+          'document.write/insertAdjacentHTML), должно быть 0: %d' % len(skript_tekst_vyzovy))
+    for f, t in skript_tekst_vyzovy[:10]:
+        print('   JS-ТЕКСТ %s : %s' % (f, t))
     print('CSS content: с буквами: %d' % len(css_tekst))
     for f, t in css_tekst[:10]:
         print('   CSS-ТЕКСТ %s : %s' % (f, t))
@@ -196,9 +218,16 @@ def main():
     print('     шрифтом-иконкой) — таких на страницах нет, но гейт к ним слеп;')
     print('   · текст внутри SVG-графики — на страницах SVG нет, проверено тем,')
     print('     что тега <svg> в собранных файлах не встречается;')
-    print('   · внешние ресурсы — их нет, страницы самодостаточны.')
+    print('   · внешние ресурсы — их нет, страницы самодостаточны;')
+    print('   · РЕАЛЬНОЕ ИСПОЛНЕНИЕ JS В БРАУЗЕРЕ (слепая зона, П11, доводка')
+    print('     2026-08-20): гейт читает <script> статически — эвристикой по')
+    print('     именам вызовов (innerHTML/innerText/textContent/document.write/')
+    print('     insertAdjacentHTML), а не настоящим прогоном страницы. Текст,')
+    print('     построенный иначе (например через шаблонные строки, minified')
+    print('     код без этих имён, или вставленный не в DOM, а куда-то ещё),')
+    print('     эта эвристика не увидит — она приближение, не гарантия.')
 
-    plohо = len(siroty) + skripty + len(css_tekst) + len(zapret_naideno)
+    plohо = len(siroty) + len(skript_tekst_vyzovy) + len(css_tekst) + len(zapret_naideno)
     return 1 if plohо else 0
 
 

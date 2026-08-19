@@ -10,8 +10,8 @@ ZADANIE = [
     ('god-1440.png',     'index.html',                 1440, 900,  None),
     ('god-kruzhok.png',  'index.html',                 1440, 900,  'label[for=t-kruzhok]'),
     ('god-390.png',      'index.html',                  390, 844,  None),
-    ('blok-1440.png',    'blok-dvojnoj-schet.html',    1440, 1180, None),
-    ('blok-390.png',     'blok-dvojnoj-schet.html',     390, 844,  None),
+    ('blok-1440.png',    'blok-kodirovka.html',        1440, 1180, None),
+    ('blok-390.png',     'blok-kodirovka.html',         390, 844,  None),
     ('nedelya-1440.png', 'nedelya-13.html',            1440, 620,  None),
 ]
 def main():

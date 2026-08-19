@@ -19,7 +19,10 @@
 body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans);
   -webkit-font-smoothing:antialiased}
 a{color:inherit}
-.oborot{max-width:1680px;margin:0 auto;padding:0 34px 20px}
+/* Колонка — около 60% ширины экрана с полями по бокам, а не во весь экран
+   (владелец переопределил ТЗ §3 при показе 2026-08-20); ниже 1300px раскладка
+   и так становится вертикальной (медиа-запрос ниже), там ширина не сужается. */
+.oborot{max-width:60vw;margin:0 auto;padding:0 34px 20px}
 
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
@@ -32,6 +35,13 @@ a{color:inherit}
   border-bottom:1px solid var(--line);padding-bottom:2px}
 .nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
 .shapka .spacer{flex:1}
+
+/* легенда цветов — очень мелким кеглем, сверху страницы года */
+.legenda{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  padding:7px 0 0;margin:0}
+.legenda .p{display:inline-flex;align-items:center;gap:5px}
+.legenda .p i{width:7px;height:7px;border-radius:50%;background:var(--c);display:inline-block}
+.legenda .p span{font:9.5px/1 var(--sans);color:var(--faint);letter-spacing:.01em}
 
 /* ── тумблер: две радиокнопки, ни строки JS ── */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
@@ -88,32 +98,23 @@ a{color:inherit}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
 .blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.7);white-space:nowrap}
-/* клетки недель внутри блока — белые волоски по границам пар */
-.blok .setka{position:absolute;inset:0;display:grid;pointer-events:none}
-.blok .setka i{border-left:1px solid rgba(253,251,246,.34)}
-.blok .setka i:first-child{border-left:0}
-.blok .setka i.pol{border-left-style:dashed;border-left-color:rgba(253,251,246,.2)}
-/* на стыке двух разделов — нарочная двухцветная диагональ */
-/* Блок на стыке двух разделов красится нарочно двухтонно. Тона — ДВА ОТТЕНКА
-   СОБСТВЕННОГО раздела: второго раздела в god.json нет, и красить блок цветом
-   соседа значило бы утверждать факт, которого владелец не давал. */
-.blok.styk{background:
-  repeating-linear-gradient(126deg,
-    var(--c) 0 15px,
-    color-mix(in srgb, var(--c) 72%, #fdfbf6) 15px 30px)}
+/* Блок на стыке нескольких разделов красится ЗОНАМИ — фон задаётся инлайн-стилем
+   (linear-gradient под углом, по одной зоне на раздел из "domeny") — а не одним
+   цветом с диагональной штриховкой: штриховка не сообщает, из чего блок состоит. */
 .blok .styk-l{flex:none;font:600 9px/1 var(--sans);text-transform:uppercase;
   letter-spacing:.08em;color:rgba(253,251,246,.9);
   border:1px solid rgba(253,251,246,.45);border-radius:12px;padding:3px 6px}
 
-/* контрольная — узкая деликатная полоска, прижата к низу ленты */
-.ktr{align-self:end;height:24px;border-radius:5px;background:var(--ktr-bg);
+/* контрольная — полная высота строки, надпись поперёк */
+.ktr{align-self:stretch;border-radius:5px;background:var(--ktr-bg);
   border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-  padding:0 1px;overflow:hidden;text-decoration:none}
-.ktr.chetv{height:16px;background:transparent;border-style:dashed}
+  padding:6px 1px;overflow:hidden;text-decoration:none}
+.ktr.chetv{background:transparent;border-style:dashed}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
-.ktr .k{font:600 8px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
-  color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
+  font:600 9px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
+  color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
 
 /* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
 .ned{position:relative;display:block;height:24px;border-radius:4px;text-decoration:none;
@@ -129,7 +130,7 @@ a{color:inherit}
 .vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
 
 /* ── страница блока / занятия ── */
-.uzko{max-width:1180px;margin:0 auto;padding:0 34px 80px}
+.uzko{max-width:60vw;margin:0 auto;padding:0 34px 80px}
 .zag{padding:34px 0 0}
 .zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
 .zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
@@ -156,17 +157,20 @@ a.metka:hover{filter:brightness(1.12)}
 .tochki .ch span{font:14px/1.4 var(--sans);color:var(--ink2);background:var(--card);
   border:1px solid var(--line2);border-radius:5px;padding:5px 10px}
 
-.zadachi{display:flex;flex-wrap:wrap;gap:8px;margin:0}
-.zadachi span{font:15px/1.45 var(--serif);color:var(--ink2);background:var(--card);
-  border:1px solid var(--line2);border-radius:6px;padding:8px 13px}
-
-.spisok{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
-  gap:0 30px}
-.spisok a{display:flex;align-items:baseline;gap:11px;padding:12px 2px;
-  border-bottom:1px solid var(--line2);text-decoration:none}
-.spisok a:hover .n{color:var(--acc)}
-.spisok .n{font:600 17px/1.3 var(--serif);color:var(--ink)}
-.spisok .d{font:12.5px/1.3 var(--sans);color:var(--faint);margin-left:auto}
+/* строки занятий блока — во всю ширину, три раздела: неделя · что происходит
+   (тема соседнего элемента недели, если неделя расщеплена — темы отдельного
+   урока в данных нет и она не сочиняется, там пусто) · кружок четверти */
+.zanyatia{margin:0;display:flex;flex-direction:column;gap:0}
+.zanyatie{display:grid;grid-template-columns:90px 1fr 200px;align-items:center;
+  gap:14px;padding:14px 2px;border-bottom:1px solid var(--line2);text-decoration:none}
+.zanyatie:hover{background:var(--card)}
+.zanyatie .n{font:600 17px/1.3 var(--serif);color:var(--ink)}
+.zanyatie .sosed{font:13.5px/1.4 var(--sans);color:var(--ink2)}
+.zanyatie .sosed a{text-decoration:none;border-bottom:1px solid var(--line)}
+.zanyatie .sosed a:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.zanyatie .kr{justify-self:end}
+.zanyatie .kr a{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.07em;
+  color:#fdfbf6;background:var(--d-Z);border-radius:20px;padding:6px 12px;text-decoration:none}
 
 .karkas{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:30px;
   margin-top:8px}
@@ -202,19 +206,20 @@ a.metka:hover{filter:brightness(1.12)}
   .blok{min-height:96px;padding:12px 13px 0}
   .blok .pz{max-height:none;font-size:12px}
   .blok .pz{display:block}
-  .blok .setka{display:none}
   /* На узком экране плашка контрольной НЕ во всю ширину: иначе она получает ту же
      массу, что тема на шесть часов, и математика опять проигрывает контролю. */
-  .ktr{height:auto;padding:6px 11px;width:52%;justify-content:flex-start}
-  .ktr.chetv{height:auto;width:38%}
-  .ktr.chetv .c{display:block}
+  .ktr{padding:6px 11px;width:52%;justify-content:flex-start}
+  .ktr .k{writing-mode:horizontal-tb;transform:none}
+  .ktr.chetv{width:38%}
   .linejka{grid-template-columns:repeat(5,minmax(0,1fr))}
   .chetv-hd .nw{margin-left:0;width:100%}
   .tochki{grid-template-columns:1fr;gap:22px}
+  .zanyatie{grid-template-columns:1fr;gap:4px}
+  .zanyatie .kr{justify-self:start}
 }
 </style>
 </head>
 <body>
-<div class="uzko"><header class="shapka"><a class="nazad" href="index.html">к году</a><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka" style="--c:var(--d-K)">комбинаторика</span><span class="metka tih">6 часов</span></div><h1>Подсчёты 2</h1><p class="pz">правило произведения · дерево · рекуррентный счёт · соответствие</p></div><section class="sect"><p class="grp">опорные точки</p><ol class="tochki" style="--c:var(--d-K)"><li><span class="t">сумма против произведения</span><span class="ch"><span>развилки дорог: когда складываем, когда умножаем</span><span>сложение произведений на составных схемах</span></span></li><li><span class="t">дерево вариантов</span><span class="ch"><span>дерево универсальнее таблицы: больше двух множителей или сложение вместе с умножением</span><span>порядок построения дерева меняет трудоёмкость</span><span>изоморфные задачи дают одинаковые деревья</span></span></li><li><span class="t">три типа наборов</span><span class="ch"><span>слова длины k в алфавите из n букв: nᵏ</span><span>выбор без повторений: n(n−1)…(n−k+1)</span><span>перестановки и n!</span></span></li><li><span class="t">рекуррентный счёт</span><span class="ch"><span>сведение к меньшему случаю</span><span>число в вершине = сумма чисел в предшественниках</span><span>кратчайшие пути в сетке улиц, путь как слово из П и В</span></span></li><li><span class="t">соответствие</span><span class="ch"><span>есть взаимно однозначное соответствие — элементов поровну</span><span>проверка «работает ли правило в обратную сторону»</span><span>симметрия как типовой способ соответствия</span></span></li></ol></section><section class="sect"><p class="grp">опорные задачи</p><div class="zadachi"><span>перестановки букв слова КОТ</span><span>автомобильный номер из двух букв и четырёх цифр</span><span>кодовый замок из девяти кнопок</span><span>забор из шести досок в три цвета, соседние разные</span><span>полоска 2×10 доминошками (89)</span><span>пешка с a1 на d3</span><span>двоичные слова без двух нулей подряд</span><span>гирьки Пети и Васи</span><span>хромой король и симметрия относительно диагонали</span></div></section><section class="sect"><p class="grp">занятия</p><div class="spisok"><a href="nedelya-17.html"><span class="n">неделя 17</span><span class="d">контрольная</span></a><a href="nedelya-18.html"><span class="n">неделя 18</span></a><a href="nedelya-19.html"><span class="n">неделя 19</span></a><a href="nedelya-20.html"><span class="n">неделя 20</span><span class="d">контрольная</span></a></div></section><div class="podval"><a class="nazad" href="index.html">к году</a></div></div>
+<div class="uzko"><header class="shapka"><a class="nazad" href="index.html">к году</a><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka" style="--c:var(--d-K)">комбинаторика</span><span class="metka tih">6 часов</span></div><h1>Подсчёты 2</h1><p class="pz">правило произведения · дерево · рекуррентный счёт · соответствие</p></div><section class="sect"><p class="grp">опорные точки</p><ol class="tochki" style="--c:var(--d-K)"><li><span class="t">сумма против произведения</span><span class="ch"><span>развилки дорог: когда складываем, когда умножаем</span><span>сложение произведений на составных схемах</span></span></li><li><span class="t">дерево вариантов</span><span class="ch"><span>дерево универсальнее таблицы: больше двух множителей или сложение вместе с умножением</span><span>порядок построения дерева меняет трудоёмкость</span></span></li><li><span class="t">три типа наборов</span><span class="ch"><span>слова длины k в алфавите из n букв: nᵏ</span><span>выбор без повторений: n(n−1)…(n−k+1)</span><span>перестановки и n!</span></span></li><li><span class="t">рекуррентный счёт</span><span class="ch"><span>сведение к меньшему случаю</span><span>число в вершине = сумма чисел в предшественниках</span><span>кратчайшие пути в сетке улиц, путь как слово из П и В</span></span></li><li><span class="t">соответствие</span><span class="ch"><span>есть взаимно однозначное соответствие — элементов поровну</span><span>проверка «работает ли правило в обратную сторону»</span></span></li></ol></section><section class="sect"><p class="grp">занятия</p><div class="zanyatia"><div class="zanyatie"><a class="n" href="nedelya-17.html">неделя 17</a><span class="sosed"><a href="kontrolnaya-06.html">контрольная <i class="tochka">·</i> II четверть</a></span><span class="kr"><a href="blok-kruzhok-iii.html">кружок</a></span></div><div class="zanyatie"><a class="n" href="nedelya-18.html">неделя 18</a><span class="sosed"></span><span class="kr"><a href="blok-kruzhok-iii.html">кружок</a></span></div><div class="zanyatie"><a class="n" href="nedelya-19.html">неделя 19</a><span class="sosed"></span><span class="kr"><a href="blok-kruzhok-iii.html">кружок</a></span></div><div class="zanyatie"><a class="n" href="nedelya-20.html">неделя 20</a><span class="sosed"><a href="kontrolnaya-07.html">контрольная <i class="tochka">·</i> подсчёты</a></span><span class="kr"><a href="blok-kruzhok-iii.html">кружок</a></span></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a></div></div>
 </body>
 </html>
