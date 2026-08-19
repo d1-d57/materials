@@ -812,15 +812,9 @@
 
 **`_studio/zhurnal/2026-08-10_dizajn-i-metriki/kod_slajdy-media.md`** (формат слайда-контейнера под внешний медиа-кусок: узкая рамка фона, медиа в центре; видео/канвас/3D лежат отдельными файлами рядом и подтягиваются генератором по ссылке)
 
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_probaZ.md`** (⚠ описание не задано)
 
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_probaY.md`** (⚠ описание не задано)
 
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_probaX.md`** (⚠ описание не задано)
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_pr_app.md`** (⚠ описание не задано)
 
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_pr_terminal.md`** (⚠ описание не задано)
-**`_studio/zhurnal/2026-08-13_skill-mat-teksta/kod_prZ.md`** (⚠ описание не задано)
 
 **`_studio/zhurnal/2026-08-14_rychagi-zahodov/kod_skill-kachestva.md`** (заход З-Б: сборка десятого скилла disciplina-kachestvo (двусторонний — создание и оценка) и дополнение движка ocenka_skilla.py с 7 до 13 счётных осей)
 
