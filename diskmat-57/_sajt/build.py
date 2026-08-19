@@ -131,6 +131,7 @@ a{color:inherit}
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
   padding:22px 0 15px;border-bottom:1px solid var(--line)}
 .shapka h1{font:700 30px/1.15 var(--serif);margin:0;letter-spacing:-.01em}
+.shapka .razmer{font:14px/1.4 var(--serif);color:var(--ink2)}
 .demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
   color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
 .nazad{font:600 13.5px/1 var(--sans);color:var(--soft);text-decoration:none;
@@ -153,35 +154,43 @@ a{color:inherit}
 #t-kurs:checked~.kalendar .tr-kruzhok{display:none}
 
 /* ── четверть ── */
-.chetv{margin:17px 0 0}
-.chetv-hd{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;
-  margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
-.chetv-hd .rim{font:700 19px/1 var(--serif);color:var(--ink);min-width:1.4em}
-.chetv-hd .cw{font:600 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
-  color:var(--faint)}
-.chetv-hd .dts{font:15px/1 var(--serif);color:var(--ink2)}
-.chetv-hd .nw{font:13px/1 var(--sans);color:var(--faint);margin-left:auto}
+/* Четверть — две колонки: слева подпись, справа лента и линейка недель.
+   «N недель» стоит вплотную к линейке, а не в шапке: иначе связь между
+   пронумерованными клетками и словом «недели» приходится угадывать
+   (находка верификатора понятности 2026-08-20). */
+.chetv{margin:16px 0 0;display:grid;grid-template-columns:100px minmax(0,1fr);
+  column-gap:12px;align-items:start}
+.chetv-hd{grid-column:1;grid-row:1;padding-top:2px}
+.chetv-hd .rim{font:700 21px/1 var(--serif);color:var(--ink);display:inline}
+.chetv-hd .cw{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin-left:6px}
+.chetv-hd .dts{display:block;font:13px/1.35 var(--serif);color:var(--ink2);margin-top:6px}
+.chetv .lenta{grid-column:2;grid-row:1}
+.nw{grid-column:1;grid-row:2;text-align:right;font:12px/24px var(--sans);
+  color:var(--faint);padding-right:2px}
+.chetv .linejka{grid-column:2;grid-row:2}
+.chetv .vne{grid-column:2;grid-row:3;justify-self:start}
 
 /* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
    вертикали, а короткая четверть честно не достаёт до правого края */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
-  grid-auto-rows:102px;gap:5px;align-items:stretch}
+  grid-auto-rows:124px;gap:5px;align-items:stretch}
 /* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
-.tr-kruzhok .lenta{grid-auto-rows:74px}
+.tr-kruzhok .lenta{grid-auto-rows:92px}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
 .blok{position:relative;display:flex;flex-direction:column;justify-content:flex-start;
-  border-radius:7px;padding:11px 13px 0;text-decoration:none;overflow:hidden;
+  border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
   background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
 .blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
-.blok .im{font:700 18px/1.14 var(--serif);letter-spacing:-.005em;padding-right:64px}
-.blok .pz{font:12px/1.38 var(--sans);color:rgba(253,251,246,.82);margin-top:5px;
-  min-height:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
-  -webkit-box-orient:vertical}
-.blok .niz{margin-top:auto;padding-bottom:7px;min-width:0}
-.blok .dm{display:block;font:600 10px/1.15 var(--sans);text-transform:uppercase;
-  letter-spacing:.085em;color:rgba(253,251,246,.74);
+.blok .im{font:700 18px/1.14 var(--serif);letter-spacing:-.005em;padding-right:62px}
+.blok .pz{font:11.5px/1.28 var(--sans);color:rgba(253,251,246,.82);margin-top:4px;
+  flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.84em}
+.blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
+  display:flex;align-items:center;gap:8px}
+.blok .dm{font:600 9.5px/1.15 var(--sans);text-transform:uppercase;min-width:0;
+  letter-spacing:.045em;color:rgba(253,251,246,.76);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
 .blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.7);white-space:nowrap}
@@ -191,19 +200,25 @@ a{color:inherit}
 .blok .setka i:first-child{border-left:0}
 .blok .setka i.pol{border-left-style:dashed;border-left-color:rgba(253,251,246,.2)}
 /* на стыке двух разделов — нарочная двухцветная диагональ */
+/* Блок на стыке двух разделов красится нарочно двухтонно. Тона — ДВА ОТТЕНКА
+   СОБСТВЕННОГО раздела: второго раздела в god.json нет, и красить блок цветом
+   соседа значило бы утверждать факт, которого владелец не давал. */
 .blok.styk{background:
-  repeating-linear-gradient(126deg, rgba(253,251,246,.16) 0 13px, rgba(0,0,0,0) 13px 26px),
-  linear-gradient(126deg, var(--c) 0 46%, var(--c2) 54% 100%)}
-.blok .styk-l{font:600 9.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
-  color:rgba(253,251,246,.88);border:1px solid rgba(253,251,246,.42);
-  border-radius:12px;padding:4px 7px}
+  repeating-linear-gradient(126deg,
+    var(--c) 0 15px,
+    color-mix(in srgb, var(--c) 72%, #fdfbf6) 15px 30px)}
+.blok .styk-l{flex:none;font:600 9px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:.08em;color:rgba(253,251,246,.9);
+  border:1px solid rgba(253,251,246,.45);border-radius:12px;padding:3px 6px}
 
 /* контрольная — узкая деликатная полоска, прижата к низу ленты */
 .ktr{align-self:end;height:24px;border-radius:5px;background:var(--ktr-bg);
   border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-  padding:0 2px;overflow:hidden}
+  padding:0 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{height:16px;background:transparent;border-style:dashed}
-.ktr .k{font:600 8.5px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
+.ktr:hover{border-color:var(--acc)}
+.ktr:hover .k{color:var(--acc)}
+.ktr .k{font:600 8px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
   color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
 
 /* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
@@ -230,6 +245,8 @@ a{color:inherit}
   text-decoration:none;display:inline-block}
 a.metka:hover{filter:brightness(1.12)}
 .metka.tih{color:var(--soft);background:transparent;border:1px solid var(--line)}
+.metka .tochka{font-style:normal;color:var(--faint);margin:0 6px}
+.metka b{font-weight:600;color:var(--ink2);text-transform:none;letter-spacing:.02em}
 .grp{font:12.5px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.09em;
   color:var(--faint);margin:0 0 16px}
 .sect{margin:44px 0 0;padding-top:26px;border-top:1px solid var(--line)}
@@ -266,21 +283,36 @@ a.metka:hover{filter:brightness(1.12)}
 .podval{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
   display:flex;gap:16px;flex-wrap:wrap;align-items:center}
 
-@media(max-width:1100px){
-  .blok .pz{display:none}
-  .blok .im{font-size:16px}
+/* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
+   он и есть то, ради чего на календарь смотрят */
+@media(max-width:1400px){
+  .blok .im{font:700 16px/1.15 var(--serif);padding-right:56px}
+  .blok .pz{font-size:11px}
+  .blok .dm{font-size:9px;letter-spacing:.03em}
+  .ktr .k{font-size:7px;letter-spacing:-.01em}
 }
-@media(max-width:860px){
+/* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
+   становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
+   раскладка становится вертикальной, блок на всю ширину. */
+@media(max-width:1300px){
   .oborot,.uzko{padding:0 16px 50px}
+  .chetv{display:block}
+  .chetv-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+  .chetv-hd .dts{display:inline;margin-top:0}
+  .nw{text-align:left;line-height:1.4;margin:7px 0 3px}
   .shapka h1{font-size:23px}
   .zag h1{font-size:27px}
   .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
   .lenta>*{grid-column:1/-1!important}
   .blok{min-height:96px;padding:12px 13px 0}
+  .blok .pz{max-height:none;font-size:12px}
   .blok .pz{display:block}
   .blok .setka{display:none}
-  .ktr{height:auto;padding:8px 11px}
-  .ktr.chetv{height:auto}
+  /* На узком экране плашка контрольной НЕ во всю ширину: иначе она получает ту же
+     массу, что тема на шесть часов, и математика опять проигрывает контролю. */
+  .ktr{height:auto;padding:6px 11px;width:52%;justify-content:flex-start}
+  .ktr.chetv{height:auto;width:38%}
   .ktr.chetv .c{display:block}
   .linejka{grid-template-columns:repeat(5,minmax(0,1fr))}
   .chetv-hd .nw{margin-left:0;width:100%}
@@ -298,6 +330,19 @@ def stranica(titul, telo, klass=''):
 
 def cvet(el):
     return 'var(--d-%s)' % el.get('domen', 'O')
+
+
+def dm_html(el):
+    """Подпись раздела. Совпала с именем блока («Разгон» — раздел «разгон») —
+    не печатается: повтор читается как сбой генерации, а не как разметка."""
+    d = DOMENY[el['domen']]
+    if norm_imya(d) == norm_imya(el['imya']):
+        return ''
+    return '<span class="dm">%s</span>' % E(d)
+
+
+def norm_imya(s):
+    return re.sub(r'[^a-zа-яё0-9]+', '', s.lower().replace('ё', 'е'))
 
 
 def setka_nedel(el):
@@ -319,17 +364,6 @@ def chasy_slovo(n):
     return 'часов'
 
 
-def sosed_domen(ch, el):
-    """Второй цвет блока «на стыке» — раздел соседнего блока четверти.
-    Если соседа нет, берётся собственный раздел: ничего не выдумывается."""
-    bl = [x for x in ch['potok'] if x['tip'] == 'blok']
-    i = bl.index(el)
-    for j in (i + 1, i - 1):
-        if 0 <= j < len(bl) and bl[j]['domen'] != el['domen']:
-            return bl[j]['domen']
-    return el['domen']
-
-
 def lenta_kursa(ch):
     out = []
     for el in ch['potok']:
@@ -340,20 +374,20 @@ def lenta_kursa(ch):
             styk = ''
             if el.get('na-styke'):
                 kl += ' styk'
-                st += ';--c2:var(--d-%s)' % sosed_domen(ch, el)
                 styk = '<span class="styk-l">на стыке</span>'
             out.append(
                 '<a class="%s" style="%s" href="blok-%s.html">%s'
-                '<span class="ug">%s<span class="ch">%d %s</span></span>'
+                '<span class="ug"><span class="ch">%d %s</span></span>'
                 '<span class="im">%s</span><span class="pz">%s</span>'
-                '<span class="niz"><span class="dm">%s</span></span></a>'
+                '<span class="niz">%s%s</span></a>'
                 % (kl, st, el['slug'], setka_nedel(el),
-                   styk, el['chasy'], chasy_slovo(el['chasy']),
-                   E(el['imya']), E(el['podzag']), E(DOMENY[el['domen']])))
+                   el['chasy'], chasy_slovo(el['chasy']),
+                   E(el['imya']), E(el['podzag']), dm_html(el), styk))
         else:
             kl = 'ktr chetv' if el.get('chetvertnaya') else 'ktr'
-            out.append('<div class="%s" style="grid-column:span %d">'
-                       '<span class="k">контрольная</span></div>' % (kl, span))
+            nom = ch['nedeli'][el['_start'] // 2]['nomer']
+            out.append('<a class="%s" style="grid-column:span %d" href="nedelya-%02d.html">'
+                       '<span class="k">контрольная</span></a>' % (kl, span, nom))
     return ''.join(out)
 
 
@@ -361,10 +395,14 @@ def lenta_kruzhka(ch):
     k = ch['kruzhok']
     if k is None:
         return ''
+    n_ned = len(ch['nedeli'])
+    setka = ('<span class="setka" style="grid-template-columns:repeat(%d,1fr)">%s</span>'
+             % (n_ned, '<i></i>' * n_ned))
     return ('<a class="blok" style="grid-column:span %d;--c:var(--d-Z)" href="blok-%s.html">'
-            '<span class="ug"><span class="ch">%d %s</span></span>'
+            '%s<span class="ug"><span class="ch">%d %s</span></span>'
             '<span class="im">кружок</span><span class="pz">%s</span></a>'
-            % (ch['chasy'], k['slug'], k['chasy'], chasy_slovo(k['chasy']), E(k['podzag'])))
+            % (ch['chasy'], k['slug'], setka,
+               k['chasy'], chasy_slovo(k['chasy']), E(k['podzag'])))
 
 
 def linejka(ch, rezhim):
@@ -376,7 +414,7 @@ def linejka(ch, rezhim):
         else:
             cv = []
             for el, _ in ned['doli']:
-                cv.append(cvet(el) if el['tip'] == 'blok' else 'var(--ktr-bg)')
+                cv.append(cvet(el) if el['tip'] == 'blok' else 'var(--ktr)')
             if len(cv) == 1:
                 fon = 'color-mix(in srgb, %s 30%%, var(--card))' % cv[0]
                 spl = ''
@@ -397,12 +435,14 @@ def chetvert_blok(ch, rezhim):
         for v in ch['vne_setki']:
             vne += ('<div class="vne"><span class="i">%s</span><span class="c">%s</span></div>'
                     % (E(v['imya']), E(v['chto'])))
-    return ('<section class="chetv"><div class="chetv-hd">'
-            '<span class="rim">%s</span><span class="cw">четверть</span>'
-            '<span class="dts">%s</span><span class="nw">%d недель</span></div>'
-            '<div class="lenta">%s</div><div class="linejka">%s</div>%s</section>'
-            % (E(ch['nomer']), E(ch['daty']), len(ch['nedeli']), lenta,
-               linejka(ch, rezhim), vne))
+    return ('<section class="chetv">'
+            '<div class="chetv-hd"><span class="rim">%s</span>'
+            '<span class="cw">четверть</span><span class="dts">%s</span></div>'
+            '<div class="lenta">%s</div>'
+            '<div class="nw">%d недель</div>'
+            '<div class="linejka">%s</div>%s</section>'
+            % (E(ch['nomer']), E(ch['daty']), lenta,
+               len(ch['nedeli']), linejka(ch, rezhim), vne))
 
 
 def god_stranica(g, chetverti):
@@ -410,8 +450,12 @@ def god_stranica(g, chetverti):
     for rezhim in ('kurs', 'kruzhok'):
         tr.append('<div class="tr-%s">%s</div>'
                   % (rezhim, ''.join(chetvert_blok(c, rezhim) for c in chetverti)))
+    # Из kurs.podzagolovok берётся ПЕРВЫЙ сегмент: хвост «строка раскрывается по
+    # нажатию» описывал забракованную версию и на этой странице был бы ложью.
+    razmer = g['kurs']['podzagolovok'].split(RAZD)[0].strip()
     telo = ('<div class="oborot">'
-            '<header class="shapka"><h1>%s</h1><span class="spacer"></span>'
+            '<header class="shapka"><h1>%s</h1><span class="razmer">%s</span>'
+            '<span class="spacer"></span>'
             '<span class="demo">демо-версия</span></header>'
             '<div class="tumbler">'
             '<input type="radio" name="tr" id="t-kurs" checked>'
@@ -420,7 +464,7 @@ def god_stranica(g, chetverti):
             '<label for="t-kurs">основной курс</label>'
             '<label for="t-kruzhok">кружок</label></div>'
             '<div class="kalendar">%s</div></div>'
-            '</div>' % (E(g['kurs']['nazvanie']), ''.join(tr)))
+            '</div>' % (E(g['kurs']['nazvanie']), E(razmer), ''.join(tr)))
     return stranica(g['kurs']['nazvanie'], telo)
 
 
@@ -486,8 +530,8 @@ def nedelya_stranica(g, ned):
                          % (cvet(el), el['slug'], E(el['imya'])))
             ssylki.append(el)
         else:
-            metki.append('<span class="metka tih">контрольная</span>'
-                         '<span class="metka tih">%s</span>' % E(el['chto']))
+            metki.append('<span class="metka tih">контрольная'
+                         '<i class="tochka">·</i><b>%s</b></span>' % E(el['chto']))
     if ch['kruzhok'] is not None:
         metki.append('<a class="metka" style="--c:var(--d-Z)" href="blok-%s.html">кружок</a>'
                      % ch['kruzhok']['slug'])
