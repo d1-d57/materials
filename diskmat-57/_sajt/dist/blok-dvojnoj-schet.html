@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Двойной счёт</title>
+<style>
+:root{
+  --paper:#f6f1e7; --card:#fcfaf5; --ink:#2b2724; --ink2:#4f4942;
+  --soft:#6b6155; --faint:#9b9186; --line:#e3dac7; --line2:#efe8d8;
+  --acc:#b3503c; --accbg:#f7e8e0;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --d-O:#a68a4e; --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
+  --d-Z:#3f7d75;
+  --ktr:#a79d90; --ktr-bg:#eae3d5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+.oborot{max-width:1680px;margin:0 auto;padding:0 34px 20px}
+
+/* ── шапка ── */
+.shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+  padding:22px 0 15px;border-bottom:1px solid var(--line)}
+.shapka h1{font:700 30px/1.15 var(--serif);margin:0;letter-spacing:-.01em}
+.demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
+  color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
+.nazad{font:600 13.5px/1 var(--sans);color:var(--soft);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:2px}
+.nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.shapka .spacer{flex:1}
+
+/* ── тумблер: две радиокнопки, ни строки JS ── */
+.tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin:16px 0 0}
+.perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;cursor:pointer;user-select:none}
+.perekl label:hover{color:var(--ink)}
+#t-kurs:checked~.perekl label[for=t-kurs],
+#t-kruzhok:checked~.perekl label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
+#t-kurs:focus-visible~.perekl label[for=t-kurs],
+#t-kruzhok:focus-visible~.perekl label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
+#t-kruzhok:checked~.kalendar .tr-kurs{display:none}
+#t-kurs:checked~.kalendar .tr-kruzhok{display:none}
+
+/* ── четверть ── */
+.chetv{margin:17px 0 0}
+.chetv-hd{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;
+  margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+.chetv-hd .rim{font:700 19px/1 var(--serif);color:var(--ink);min-width:1.4em}
+.chetv-hd .cw{font:600 13px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint)}
+.chetv-hd .dts{font:15px/1 var(--serif);color:var(--ink2)}
+.chetv-hd .nw{font:13px/1 var(--sans);color:var(--faint);margin-left:auto}
+
+/* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
+   вертикали, а короткая четверть честно не достаёт до правого края */
+.lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
+  grid-auto-rows:102px;gap:5px;align-items:stretch}
+/* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
+.tr-kruzhok .lenta{grid-auto-rows:74px}
+.linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
+
+/* блок — большой прямоугольник, главная масса страницы */
+.blok{position:relative;display:flex;flex-direction:column;justify-content:flex-start;
+  border-radius:7px;padding:11px 13px 0;text-decoration:none;overflow:hidden;
+  background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
+.blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
+.blok .im{font:700 18px/1.14 var(--serif);letter-spacing:-.005em;padding-right:64px}
+.blok .pz{font:12px/1.38 var(--sans);color:rgba(253,251,246,.82);margin-top:5px;
+  min-height:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;
+  -webkit-box-orient:vertical}
+.blok .niz{margin-top:auto;padding-bottom:7px;min-width:0}
+.blok .dm{display:block;font:600 10px/1.15 var(--sans);text-transform:uppercase;
+  letter-spacing:.085em;color:rgba(253,251,246,.74);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
+.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.7);white-space:nowrap}
+/* клетки недель внутри блока — белые волоски по границам пар */
+.blok .setka{position:absolute;inset:0;display:grid;pointer-events:none}
+.blok .setka i{border-left:1px solid rgba(253,251,246,.34)}
+.blok .setka i:first-child{border-left:0}
+.blok .setka i.pol{border-left-style:dashed;border-left-color:rgba(253,251,246,.2)}
+/* на стыке двух разделов — нарочная двухцветная диагональ */
+.blok.styk{background:
+  repeating-linear-gradient(126deg, rgba(253,251,246,.16) 0 13px, rgba(0,0,0,0) 13px 26px),
+  linear-gradient(126deg, var(--c) 0 46%, var(--c2) 54% 100%)}
+.blok .styk-l{font:600 9.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:rgba(253,251,246,.88);border:1px solid rgba(253,251,246,.42);
+  border-radius:12px;padding:4px 7px}
+
+/* контрольная — узкая деликатная полоска, прижата к низу ленты */
+.ktr{align-self:end;height:24px;border-radius:5px;background:var(--ktr-bg);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  padding:0 2px;overflow:hidden}
+.ktr.chetv{height:16px;background:transparent;border-style:dashed}
+.ktr .k{font:600 8.5px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
+  color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+
+/* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
+.ned{position:relative;display:block;height:24px;border-radius:4px;text-decoration:none;
+  font:600 11px/24px var(--sans);color:var(--ink2);text-align:center;
+  background:var(--nb);border:1px solid var(--line2)}
+.ned:hover{color:var(--acc);border-color:var(--acc)}
+.ned.split{box-shadow:inset 0 0 0 1px var(--card)}
+
+/* вне сетки */
+.vne{display:inline-flex;align-items:baseline;gap:9px;margin-top:7px;padding:5px 11px;
+  border:1px dashed var(--line);border-radius:5px;background:var(--card)}
+.vne .i{font:600 13px/1 var(--serif);color:var(--ink2)}
+.vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
+
+/* ── страница блока / занятия ── */
+.uzko{max-width:1180px;margin:0 auto;padding:0 34px 80px}
+.zag{padding:34px 0 0}
+.zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
+.zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
+.metki{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.metka{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:#fdfbf6;background:var(--c);border-radius:20px;padding:7px 13px;
+  text-decoration:none;display:inline-block}
+a.metka:hover{filter:brightness(1.12)}
+.metka.tih{color:var(--soft);background:transparent;border:1px solid var(--line)}
+.grp{font:12.5px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin:0 0 16px}
+.sect{margin:44px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+
+.tochki{counter-reset:t;margin:0;padding:0;list-style:none;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:26px 40px}
+.tochki li{counter-increment:t;position:relative;padding-left:38px}
+.tochki li::before{content:counter(t);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border-radius:50%;background:var(--c);color:#fdfbf6;
+  font:700 12.5px/26px var(--sans);text-align:center}
+.tochki .t{font:700 20px/1.28 var(--serif);margin:0 0 9px}
+.tochki .ch{display:flex;flex-wrap:wrap;gap:6px}
+.tochki .ch span{font:14px/1.4 var(--sans);color:var(--ink2);background:var(--card);
+  border:1px solid var(--line2);border-radius:5px;padding:5px 10px}
+
+.zadachi{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.zadachi span{font:15px/1.45 var(--serif);color:var(--ink2);background:var(--card);
+  border:1px solid var(--line2);border-radius:6px;padding:8px 13px}
+
+.spisok{margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:0 30px}
+.spisok a{display:flex;align-items:baseline;gap:11px;padding:12px 2px;
+  border-bottom:1px solid var(--line2);text-decoration:none}
+.spisok a:hover .n{color:var(--acc)}
+.spisok .n{font:600 17px/1.3 var(--serif);color:var(--ink)}
+.spisok .d{font:12.5px/1.3 var(--sans);color:var(--faint);margin-left:auto}
+
+.karkas{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:30px;
+  margin-top:8px}
+.karkas .box{background:var(--card);border:1px solid var(--line2);border-radius:8px;
+  padding:20px 22px;min-height:190px}
+.karkas .box .grp{margin-bottom:0}
+
+.podval{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+
+@media(max-width:1100px){
+  .blok .pz{display:none}
+  .blok .im{font-size:16px}
+}
+@media(max-width:860px){
+  .oborot,.uzko{padding:0 16px 50px}
+  .shapka h1{font-size:23px}
+  .zag h1{font-size:27px}
+  .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
+  .lenta>*{grid-column:1/-1!important}
+  .blok{min-height:96px;padding:12px 13px 0}
+  .blok .pz{display:block}
+  .blok .setka{display:none}
+  .ktr{height:auto;padding:8px 11px}
+  .ktr.chetv{height:auto}
+  .ktr.chetv .c{display:block}
+  .linejka{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .chetv-hd .nw{margin-left:0;width:100%}
+  .tochki{grid-template-columns:1fr;gap:22px}
+}
+</style>
+</head>
+<body>
+<div class="uzko"><header class="shapka"><a class="nazad" href="index.html">к году</a><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka" style="--c:var(--d-D)">дискретная математика</span><span class="metka tih">6 часов</span><span class="metka tih">на стыке</span></div><h1>Двойной счёт</h1><p class="pz">одно и то же двумя способами · задачи-близнецы · рукопожатия и подсчёт рёбер</p></div><section class="sect"><p class="grp">опорные точки</p><ol class="tochki" style="--c:var(--d-D)"><li><span class="t">два способа счёта</span><span class="ch"><span>посчитать одно и то же дважды и приравнять</span><span>счёт как доказательство, а не как способ получить ответ</span></span></li><li><span class="t">задачи-близнецы</span><span class="ch"><span>литературно разные задачи с одной математической сутью</span><span>наклеивание ярлыков поверх слов условия</span><span>разыгрывание сценки</span><span>семьи близнецов</span></span></li><li><span class="t">соответствие «k к одному»</span><span class="ch"><span>каждому объекту отвечает ровно k других</span><span>отсюда деление</span><span>письма и рукопожатия: n(n−1) и n(n−1)/2</span><span>диагонали n-угольника n(n−3)/2</span></span></li><li><span class="t">подсчёт рёбер</span><span class="ch"><span>соответствие «m к n»</span><span>сумма степеней вершин считается с двух сторон</span><span>число людей с нечётным числом рукопожатий чётно</span></span></li></ol></section><section class="sect"><p class="grp">опорные задачи</p><div class="zadachi"><span>30 школьников, каждый решил 2 задачи, каждую решили 3 — сколько задач</span><span>рукопожатия на кружке</span><span>диагонали выпуклого многоугольника</span><span>четыре семьи задач-близнецов с ответами 8!, 8·7, 8·7/2, 2⁸</span><span>таблица 2×4 и число 12 345 678 как две записи одной задачи</span></div></section><section class="sect"><p class="grp">занятия</p><div class="spisok"><a href="nedelya-13.html"><span class="n">неделя 13</span></a><a href="nedelya-14.html"><span class="n">неделя 14</span></a><a href="nedelya-15.html"><span class="n">неделя 15</span></a></div></section><div class="podval"><a class="nazad" href="index.html">к году</a></div></div>
+</body>
+</html>
