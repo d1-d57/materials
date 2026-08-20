@@ -693,6 +693,21 @@ cp "$TOOLS/check_tool_contract.py" "$R7/_generator/tools/check_tool_contract.py"
 cp "$TOOLS/check_uroki.py" "$R7/_generator/tools/check_uroki.py"
 cp "$TOOLS/check_ves.py" "$R7/_generator/tools/check_ves.py"
 cp "$TOOLS/check_marker.py" "$R7/_generator/tools/check_marker.py"
+# 🔴 Д5 (заход `pochinka-instrumentov`, 20.08): хук зовёт ЕЩЁ и
+# `check_faza_priyomki.py` (`.githooks/pre-commit`, строка с `--staged || exit
+# 1`) — этот стенд её не копировал, и КАЖДЫЙ коммит внутри R7 падал на
+# `ModuleNotFoundError`/«No such file or directory», независимо от того,
+# зелёная подсадная фикстура или красная. Стенд был красным у ВСЕХ, кто трогал
+# любой из пяти файлов её охвата — обходили `--no-verify`.
+# Транзитивные зависимости `check_faza_priyomki.py` (`import priyomka`, а та —
+# `dnevnik`/`dostavit_urok`/`git_zona`, `dnevnik` — `zakryt_sessiyu`,
+# `git_zona` — `korni`) — тот же класс дефекта, что уже оплачен для
+# `modeli.py`/`check_tool_contract.py` выше по этому файлу: список копирования
+# ручной, импорт нет. `check_uroki.py` (нужен `dostavit_urok`) уже в списке.
+cp "$TOOLS/check_faza_priyomki.py" "$TOOLS/priyomka.py" "$TOOLS/dnevnik.py" \
+   "$TOOLS/dostavit_urok.py" "$TOOLS/git_zona.py" "$TOOLS/korni.py" \
+   "$TOOLS/zakryt_sessiyu.py" \
+   "$R7/_generator/tools/"
 chmod +x "$R7/.githooks/pre-commit"
 
 # Флаг красный/зелёный — файл на диске, не переменная окружения: хук зовёт

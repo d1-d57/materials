@@ -506,6 +506,62 @@ PY
     esac
 done
 
+# ── ЛОВУШКА 10: РАБОЧАЯ ПАПКА ЗАХОДА (worktree) — имя папки ≠ имя репозитория ──
+# 🔴 РОВНО ДЕФЕКТ Д1 (заход `pochinka-instrumentov`, замер 2026-08-20). До
+# правки `КОРНИ = КОРНИ_ПО_РЕПО.get(REPO.name, КОРНИ_MATERIALS)` — а `REPO.name`
+# это имя ПАПКИ НА ДИСКЕ. Рабочая папка захода называется именем ЗАХОДА
+# (`disciplina-wt/<тема>`), а не именем репозитория; словарь его не знает и
+# молча отдаёт таблицу `materials`. Следствие — живое и опасное: документ,
+# который лежит под `_studio/…` (а рабочие заходы фабрики лежат именно там),
+# уезжает в `_studio/docs/KARTA.md` вместо `README.md §6` — С rc=0 И ЗЕЛЁНОЙ
+# ГАЛОЧКОЙ. Сработало дважды за двое суток; владелец ведёт ВСЕ заходы через
+# рабочие папки — воспроизводилось бы в каждом следующем.
+# Здесь строится НАСТОЯЩАЯ git-worktree связка (не имитация именем): корень,
+# буквально названный `disciplina`, и линкованная рабочая папка с ДРУГИМ
+# именем — ровно те отношения, что даёт `git worktree add`, и ровно то, чем
+# опознаёт репозиторий живая починка (`git rev-parse --git-common-dir`).
+DISC="$T/disciplina"
+WT="$T/inache-nazvannaya-rabochaya-papka"
+mkdir -p "$DISC/_generator/tools" "$DISC/_studio/docs" "$DISC/_studio/zhurnal"
+cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
+   "$DISC/_generator/tools/"
+karta_zavesti "$DISC/_studio/docs/KARTA.md"   # индекс МАТЕРИАЛС-стиля — приманка, обязан остаться нетронутым
+printf '%s\n' '# disciplina (фикстурная проба Д1)' '' \
+    '## §6. Карта документов (все `.md`)' \
+    '**`docs/`:** этот README.' \
+    > "$DISC/README.md"
+(
+    cd "$DISC" && git init -q . && git config user.email fixture@test \
+    && git config user.name fixture && git add -A && git commit -qm baseline \
+    && git worktree add -q -b zahod/proba-d1 "$WT"
+) > "$T/d1-worktree.log" 2>&1
+
+if [ -d "$WT/_generator/tools" ]
+then
+    mkdir -p "$WT/_studio/zhurnal"
+    echo "проба Д1: рабочий документ" > "$WT/_studio/zhurnal/PROBA-D1.md"
+    ( cd "$WT" && python3 _generator/tools/register_doc.py \
+        _studio/zhurnal/PROBA-D1.md "проба Д1: рабочая папка захода" ) \
+        > "$T/d1-register.log" 2>&1 || true
+    # 🔴 ПИШЕТ ТО ДЕРЕВО, ГДЕ ПОЗВАНА (`$WT`, НЕ `$DISC`) — worktree несёт
+    # СВОЮ рабочую копию файлов, отдельную от главной папки, хоть история и
+    # общая. Ровно так живёт настоящий заход: он пишет README.md/KARTA.md в
+    # СВОЕЙ рабочей папке, а не в главной.
+    if grep -q "PROBA-D1.md" "$WT/README.md" 2>/dev/null
+    then echo "  ✅ регистрация ИЗ РАБОЧЕЙ ПАПКИ (worktree) ушла в README.md §6 — свой корень disciplina опознан НЕВЗИРАЯ на имя папки"
+    else
+        echo "  ❌ РЕГИСТРАЦИЯ ИЗ РАБОЧЕЙ ПАПКИ НЕ УШЛА В README.md — Д1 не починен"; FAIL=1
+        cat "$T/d1-register.log"
+    fi
+    if grep -q "PROBA-D1.md" "$WT/_studio/docs/KARTA.md" 2>/dev/null
+    then echo "  ❌ РЕГИСТРАЦИЯ УЕХАЛА В ЧУЖОЙ ИНДЕКС (_studio/docs/KARTA.md, таблица materials) — Д1 воспроизведён"; FAIL=1
+    else echo "  ✅ чужой индекс (_studio/docs/KARTA.md, приманка) не тронут — имя рабочей папки не подменило корень"
+    fi
+else
+    echo "  ❌ WORKTREE НЕ ЗАВЁЛСЯ — ловушка 10 не смогла проверить сценарий Д1"; FAIL=1
+    cat "$T/d1-worktree.log"
+fi
+
 if [ "$FAIL" = 0 ]
 then echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0
 else echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1
