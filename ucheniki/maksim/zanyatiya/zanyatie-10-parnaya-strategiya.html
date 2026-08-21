@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие — парная стратегия</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:30px 0 30px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .fig-wrap{margin:18px 0 6px;text-align:center;}
+  .fig{display:inline-block;height:auto;max-width:100%;}
+  .fig.rook{width:250px;} .fig.tbl{width:220px;}
+  .cap{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  details{margin-top:14px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"\25B8 ";color:var(--accent);}
+  details[open] summary::before{content:"\25BE ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр · парная стратегия</p>
+    <h1>Задачи</h1>
+  </header>
+  <p class="lead">Во всех задачах двое ходят по очереди; кто не может сделать ход — проигрывает. Общая нить — отвечать на ход соперника парным ходом.</p>
+  <ol>
+    <li>
+      <div class="cnd">Ладья стоит в правом верхнем углу доски 8&times;8. За ход её двигают влево или вниз на любое число клеток. Проигрывает тот, кто не может сделать ход. Кто выигрывает при правильной игре?</div>
+      <div class="fig-wrap"><svg viewBox="0 0 252 252" xmlns="http://www.w3.org/2000/svg" class="fig rook" role="img">
+<rect x="6" y="6" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="6" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="6" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="6" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="6" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="6" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="6" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="6" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="36" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="36" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="36" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="36" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="36" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="36" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="36" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="36" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="66" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="66" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="66" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="66" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="66" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="66" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="66" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="66" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="96" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="96" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="96" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="96" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="96" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="96" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="96" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="96" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="126" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="126" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="126" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="126" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="126" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="126" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="126" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="126" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="156" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="156" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="156" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="156" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="156" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="156" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="156" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="156" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="186" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="186" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="186" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="186" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="186" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="186" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="186" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="186" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="6" y="216" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="36" y="216" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="66" y="216" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="96" y="216" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="126" y="216" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="156" y="216" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="186" y="216" width="30" height="30" fill="#efe7d2" stroke="#2a2520" stroke-width="1.1"/>
+<rect x="216" y="216" width="30" height="30" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.1"/>
+<circle cx="231.0" cy="21.0" r="9.6" fill="#9e2b25" stroke="#2a2520" stroke-width="2"/>
+<text x="231.0" y="24.9" text-anchor="middle" font-family="PT Sans,sans-serif" font-size="10" font-weight="700" fill="#fff">Л</text>
+</svg><div class="cap">Ладья двигается только влево или вниз</div></div>
+      <details><summary>Указание</summary><div class="body">Отметьте на доске клетки, из которых проигрывает тот, чей ход. Начните с левого нижнего угла. На какой линии они лежат?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Второй.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Разметим клетки на выигрышные и проигрышные, как обычно, начиная с левого нижнего угла (из него ходить нельзя — он проигрышный). Проигрышные клетки лягут <b>на диагональ</b>: те, где до левого края столько же клеток, сколько до нижнего. Из такой клетки любой ход уводит с диагонали, а с любой клетки вне диагонали можно вернуться на неё одним ходом. Стратегия: возвращай ладью на диагональ. Правый верхний угол доски 8&times;8 — сам на диагонали, поэтому проигрывает тот, кто ходит первым: выигрывает второй.
+<br><br><b>Спрятанная суть:</b> это те же «две кучки». Расстояния до левого и до нижнего края — две кучки камней, ход уменьшает одну из них, а «держи ладью на диагонали» — это «держи кучки равными». На <b>прямоугольной</b> (не квадратной) доске старт вне диагонали — тогда выигрывает первый, первым ходом встав на диагональ.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На столе несколько кучек камней. За ход берут любое число камней (хотя бы один) из одной кучки. Кто не может сделать ход, проигрывает.</div>
+      <div class="sub"><b>а)</b> Кучки 4, 4, 7, 7. Кто выигрывает?</div>
+      <div class="sub"><b>б)</b> Кучки 4, 4, 7. Кто выигрывает?</div>
+      <details><summary>Указание</summary><div class="body">Можно ли разбить кучки на пары одинаковых? Что делать, если соперник взял из одной кучки пары?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) второй; (б) первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body"><b>(а)</b> Кучки бьются на пары равных: (4, 4) и (7, 7). Второй играет зеркально: сколько соперник взял из одной кучки пары, столько же он берёт из её напарницы — пары снова равны. Первый всегда получает позицию из равных пар и в конце не может ходить. Выигрывает второй.
+<br><br><b>(б)</b> Теперь первый первым ходом убирает всю кучку 7 и оставляет 4, 4 — пару равных. Дальше он сам играет зеркально и выигрывает.
+<br><br>Это шаг вперёд от ладьи: там пара была одна (две кучки), здесь пар несколько.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Двое по очереди кладут на прямоугольный стол одинаковые круглые монеты — так, чтобы они не накладывались друг на друга (свешиваться за край нельзя). Кто не может положить монету, проигрывает. Кто выигрывает при правильной игре?</div>
+      <div class="fig-wrap"><svg viewBox="0 0 230 150" xmlns="http://www.w3.org/2000/svg" class="fig tbl" role="img">
+<rect x="8" y="8" width="214" height="134" rx="14" fill="#fbf7ec" stroke="#2a2520" stroke-width="2"/>
+<circle cx="70" cy="58" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="150" cy="50" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="105" cy="100" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="178" cy="104" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+</svg><div class="cap">Монеты не должны накладываться</div></div>
+      <details><summary>Указание</summary><div class="body">У прямоугольного стола есть центр. Что если первый походит в него, а дальше будет отвечать симметрично?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Первый кладёт первую монету точно в <b>центр</b> стола. Дальше на каждую монету соперника он кладёт свою в точке, симметричной относительно центра (поворот на 180&deg;). Если сопернику нашлось свободное место, то и симметричное ему место свободно — по симметрии, — значит, у первого всегда есть ход. Проигрывает второй.
+<br><br>Первый ход именно в центр не случаен: центр — единственная точка, симметричная самой себе, поэтому её надо занять сразу, иначе симметричное место совпало бы с уже занятым. Здесь позиции не переберёшь — симметрию приходится придумать.</div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>

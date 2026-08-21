@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Домашнее задание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--ink:#2a2520;--ink-soft:#5d5446;--rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:18px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 30px 90px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:20px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.34em;text-transform:uppercase;font-size:12px;color:var(--rubric);font-weight:700;margin-bottom:12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:40px;line-height:1;}
+  .lead{font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:8px;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;position:relative;padding:30px 0 30px 64px;border-bottom:1px solid var(--rule);}
+  li:last-child{border-bottom:none;}
+  .cnd{position:relative;}
+  li .cnd::before{content:counter(p);position:absolute;left:-64px;top:-2px;font-family:"Old Standard TT",serif;font-style:italic;font-weight:700;font-size:42px;line-height:1;color:var(--rubric);}
+  .sub{margin-top:8px;}
+  .fig-wrap{margin:18px 0 6px;text-align:center;}
+  .fig{display:inline-block;height:auto;max-width:100%;}
+  .fig.tbl{width:220px;} .fig.mg{width:160px;}
+  .cap{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);margin-top:4px;}
+  .check{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .check label{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.04em;color:var(--ink-soft);}
+  .check input{font-family:"PT Serif",serif;font-size:16px;padding:6px 11px;border:1px solid var(--rule);border-radius:3px;background:#fbf7ec;color:var(--ink);width:190px;}
+  .check input:focus{outline:none;border-color:var(--accent);}
+  .check button{font-family:"PT Sans",sans-serif;font-size:13px;font-weight:700;letter-spacing:.04em;padding:7px 15px;border:none;border-radius:3px;background:var(--accent);color:#f4eede;cursor:pointer;}
+  .check button:hover{background:#2f594f;}
+  .res{font-family:"PT Sans",sans-serif;font-size:14px;font-weight:700;}
+  .res.ok{color:var(--accent);} .res.no{color:var(--rubric);}
+  details{margin-top:14px;border-left:2px solid var(--rule);padding-left:16px;}
+  summary{font-family:"PT Sans",sans-serif;font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent);cursor:pointer;list-style:none;padding:3px 0;}
+  summary::-webkit-details-marker{display:none;}
+  summary::before{content:"\25B8 ";color:var(--accent);}
+  details[open] summary::before{content:"\25BE ";}
+  .body{font-size:16.5px;line-height:1.55;color:var(--ink-soft);padding:6px 0 8px;}
+  .body b{color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">Теория игр</p>
+    <h1>Домашнее задание</h1>
+  </header>
+  <p class="lead">Во всех задачах двое ходят по очереди. Нужно понять, кто выигрывает при правильной игре, и объяснить почему.</p>
+  <ol>
+    <li>
+      <div class="cnd">На столе несколько кучек камней. За ход берут любое число камней (хотя бы один) из одной кучки. Кто не может сделать ход, проигрывает.</div>
+      <div class="sub"><b>а)</b> Кучки 4, 4, 7, 7. Кто выигрывает?</div>
+      <div class="sub"><b>б)</b> Кучки 4, 4, 7. Кто выигрывает?</div>
+      <div class="check"><label>Ответ (а):</label><input type="text" data-answers="второй,второй игрок,2" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <div class="check"><label>Ответ (б):</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Можно ли разбить кучки на пары одинаковых? Что делать, если соперник взял из одной кучки такой пары?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>(а) второй; (б) первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body"><b>(а)</b> Кучки разбиваются на пары равных: (4,&nbsp;4) и (7,&nbsp;7). Второй играет зеркально: сколько соперник взял из одной кучки пары, столько же он берёт из её напарницы. После каждого его хода кучки снова разбиты на равные пары, поэтому у него всегда есть ответ, и в конце ходить не может первый.
+<br><br><b>(б)</b> Первый убирает всю кучку 7 и оставляет 4,&nbsp;4 — пару равных. Дальше он сам играет зеркально и выигрывает.</div></details>
+    </li>
+    <li>
+      <div class="cnd">Двое по очереди кладут на прямоугольный стол одинаковые круглые монеты — так, чтобы они не накладывались друг на друга и не свешивались за край. Кто не может положить монету, проигрывает.</div>
+      <div class="fig-wrap"><svg viewBox="0 0 230 150" xmlns="http://www.w3.org/2000/svg" class="fig tbl" role="img">
+<rect x="8" y="8" width="214" height="134" rx="14" fill="#fbf7ec" stroke="#2a2520" stroke-width="2"/>
+<circle cx="70" cy="58" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="150" cy="50" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="105" cy="100" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+<circle cx="178" cy="104" r="15" fill="#c9a24b" stroke="#2a2520" stroke-width="1.6"/>
+</svg><div class="cap">Монеты не должны накладываться</div></div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="первый,первый игрок,1" placeholder="первый или второй"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Здесь позиции не переберёшь — их бесконечно много. Зато у прямоугольного стола есть центр. Что если первый займёт его сразу, а дальше будет отвечать на каждый ход соперника?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Первый.</b></div></details>
+      <details><summary>Решение</summary><div class="body">Первый кладёт монету точно в <b>центр</b> стола. Дальше на каждую монету соперника он кладёт свою в точке, симметричной относительно центра (поворот на 180&deg;). Если сопернику нашлось свободное место, то и симметричное ему место свободно — картина монет всё время остаётся симметричной. Значит, у первого всегда есть ход, и проигрывает второй.
+<br><br>Первый ход именно в центр не случаен: центр — единственная точка, которая переходит сама в себя. Заняв её сразу, первый исключает случай, когда симметричное место совпало бы с уже занятым.</div></details>
+    </li>
+    <li>
+      <div class="cnd">На столе лежат девять фишек с числами 1, 2, 3, 4, 5, 6, 7, 8, 9. Двое по очереди берут себе по одной фишке. Выигрывает тот, кто первым соберёт у себя <b>три фишки с суммой 15</b> (три любые из взятых им). Может ли кто-нибудь из игроков обеспечить себе победу?</div>
+      <div class="check"><label>Ответ:</label><input type="text" data-answers="нет,никто,ничья,не может" placeholder="кто или «никто»"><button onclick="chk(this)">Проверить</button><span class="res"></span></div>
+      <details><summary>Указание</summary><div class="body">Выпишите все тройки чисел от 1 до 9 с суммой 15. Сколько их получилось? В скольких тройках участвует число 5, а в скольких — число 1? Не напоминает ли этот набор что-то хорошо знакомое?</div></details>
+      <details><summary>Ответ</summary><div class="body"><b>Никто.</b> Оба игрока могут обеспечить себе ничью, но не победу.</div></details>
+      <details><summary>Решение</summary><div class="body">Выпишем все тройки с суммой 15 — их ровно <b>восемь</b>:
+<br>159, 168, 249, 258, 267, 348, 357, 456.
+<br><br>Теперь запишем числа в квадрат 3&times;3 так, чтобы каждая строка, каждый столбец и каждая диагональ давали в сумме 15 (это <b>магический квадрат</b>):
+<div class="fig-wrap"><svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" class="fig mg" role="img">
+<rect x="6" y="6" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="29.0" y="36.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">2</text>
+<rect x="52" y="6" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="75.0" y="36.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">7</text>
+<rect x="98" y="6" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="121.0" y="36.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">6</text>
+<rect x="6" y="52" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="29.0" y="82.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">9</text>
+<rect x="52" y="52" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="75.0" y="82.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">5</text>
+<rect x="98" y="52" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="121.0" y="82.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">1</text>
+<rect x="6" y="98" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="29.0" y="128.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">4</text>
+<rect x="52" y="98" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="75.0" y="128.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">3</text>
+<rect x="98" y="98" width="46" height="46" fill="#fbf7ec" stroke="#2a2520" stroke-width="1.4"/>
+<text x="121.0" y="128.0" text-anchor="middle" font-family="Old Standard TT,serif" font-size="23" fill="#2a2520">8</text>
+</svg></div>
+У квадрата ровно восемь таких линий: три строки, три столбца и две диагонали — и это в точности наши восемь троек. Значит, взять фишку — то же самое, что занять клетку квадрата, а собрать тройку с суммой 15 — то же самое, что занять целую линию.
+<br><br>Но это и есть <b>крестики-нолики</b>! А в них при правильной игре никто не выигрывает: оба могут добиться ничьей. Значит, и здесь ни один игрок не может обеспечить себе победу.
+<br><br>Заметьте, как это подтверждает счёт: число 5 входит в четыре тройки — и в квадрате оно стоит в центре, через который проходят четыре линии; числа 2, 4, 6, 8 входят в три тройки и стоят по углам; остальные — в две и стоят на серединах сторон.</div></details>
+    </li>
+  </ol>
+</div>
+<script>
+  function norm(s){return s.trim().toLowerCase().replace(/\u0451/g,'\u0435').replace(/\s+/g,' ').replace(/[.!]+$/,'');}
+  function chk(btn){
+    var box=btn.closest('.check'), inp=box.querySelector('input'), res=box.querySelector('.res');
+    var val=norm(inp.value);
+    if(!val){res.textContent='';res.className='res';return;}
+    var ans=inp.dataset.answers.split(',').map(norm);
+    if(ans.indexOf(val)>=0){res.textContent='\u0412\u0435\u0440\u043d\u043e \u2713';res.className='res ok';}
+    else{res.textContent='\u041d\u0435 \u0441\u0445\u043e\u0434\u0438\u0442\u0441\u044f \u2014 \u043f\u043e\u0434\u0443\u043c\u0430\u0439\u0442\u0435 \u0435\u0449\u0451';res.className='res no';}
+  }
+</script>
+</body>
+</html>
