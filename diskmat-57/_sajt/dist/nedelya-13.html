@@ -22,7 +22,15 @@ a{color:inherit}
 /* Колонка — около 60% ширины экрана с полями по бокам, а не во весь экран
    (владелец переопределил ТЗ §3 при показе 2026-08-20); ниже 1300px раскладка
    и так становится вертикальной (медиа-запрос ниже), там ширина не сужается. */
-.oborot{max-width:60vw;margin:0 auto;padding:0 34px 20px}
+.oborot{max-width:min(1860px,96vw);margin:0 auto;padding:0 30px 20px}
+.oborot.uzko{padding-bottom:70px}
+.shapka .tit{font:700 25px/1.1 var(--serif);color:var(--ink);text-decoration:none;flex:none}
+.perekl-nav{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin-left:20px;align-self:center}
+.perekl-nav a{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none}
+.perekl-nav a:hover{color:var(--ink)}
+.perekl-nav a.tek{background:var(--ink);color:var(--paper)}
 
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
@@ -36,6 +44,22 @@ a{color:inherit}
 .nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
 .shapka .spacer{flex:1}
 
+/* источники: карточки книг на странице блока и сама страница источников */
+.knigi{display:flex;flex-wrap:wrap;gap:9px}
+.kniga{display:block;text-decoration:none;border:1px solid var(--line);border-radius:7px;
+  padding:10px 13px;background:var(--card);min-width:220px}
+.kniga:hover{border-color:var(--acc)}
+.kn-a{display:block;font:11px/1.2 var(--sans);color:var(--faint);margin-bottom:3px}
+.kn-n{display:block;font:600 14px/1.3 var(--serif);color:var(--ink)}
+.isty{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ist{border:1px solid var(--line);border-radius:8px;padding:15px 17px;background:var(--card)}
+.ist h2{font:700 17px/1.25 var(--serif);color:var(--ink);margin:0 0 5px}
+.ist .kn-g{font:12px/1.4 var(--sans);color:var(--faint);margin:6px 0 0}
+.ist .kn-c{font:13.5px/1.45 var(--sans);color:var(--ink2);margin:8px 0 0}
+.ist .kn-s{margin:10px 0 0}
+.ist .kn-s a{font:600 13px/1 var(--sans);color:var(--acc);text-decoration:none;
+  border-bottom:1px solid var(--acc);padding-bottom:2px}
+
 /* легенда цветов — очень мелким кеглем, сверху страницы года */
 .legenda{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
   padding:7px 0 0;margin:0}
@@ -46,7 +70,12 @@ a{color:inherit}
 /* ── тумблер: две радиокнопки, ни строки JS ── */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
-  border-radius:24px;padding:3px;margin:16px 0 0}
+  border-radius:24px;padding:3px;margin:0 0 0 20px;align-self:center}
+.perekl-ss{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none}
+.perekl-ss:hover{color:var(--ink)}
+.kr-chast .im{font:700 16px/1.16 var(--serif)}
+.kr-chast .pz{margin-top:5px}
 .perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
   border-radius:22px;cursor:pointer;user-select:none}
 .perekl label:hover{color:var(--ink)}
@@ -78,9 +107,9 @@ a{color:inherit}
 /* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
    вертикали, а короткая четверть честно не достаёт до правого края */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
-  grid-auto-rows:124px;gap:5px;align-items:stretch}
+  grid-auto-rows:172px;gap:6px;align-items:stretch}
 /* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
-.tr-kruzhok .lenta{grid-auto-rows:92px}
+.tr-kruzhok .lenta{grid-auto-rows:126px}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
@@ -88,7 +117,7 @@ a{color:inherit}
   border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
   background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
 .blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
-.blok .im{font:700 18px/1.14 var(--serif);letter-spacing:-.005em;padding-right:62px}
+.blok .im{font:700 20px/1.14 var(--serif);letter-spacing:-.005em}
 .blok .pz{font:11.5px/1.28 var(--sans);color:rgba(253,251,246,.82);margin-top:4px;
   flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.84em}
 .blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
@@ -97,7 +126,8 @@ a{color:inherit}
   letter-spacing:.045em;color:rgba(253,251,246,.76);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
-.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.7);white-space:nowrap}
+.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.62);white-space:nowrap;
+  margin-left:auto;flex:none;padding-left:8px}
 /* Блок на стыке нескольких разделов красится ЗОНАМИ — фон задаётся инлайн-стилем
    (linear-gradient под углом, по одной зоне на раздел из "domeny") — а не одним
    цветом с диагональной штриховкой: штриховка не сообщает, из чего блок состоит. */
@@ -110,9 +140,10 @@ a{color:inherit}
   border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
   padding:6px 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{background:transparent;border-style:dashed}
+.ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
-.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12.5px;
   font:600 9px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
   color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
 
@@ -130,7 +161,7 @@ a{color:inherit}
 .vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
 
 /* ── страница блока / занятия ── */
-.uzko{max-width:60vw;margin:0 auto;padding:0 34px 80px}
+.uzko{max-width:min(1320px,92vw);margin:0 auto;padding:0 30px 70px}
 .zag{padding:34px 0 0}
 .zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
 .zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
@@ -184,10 +215,10 @@ a.metka:hover{filter:brightness(1.12)}
 /* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
    он и есть то, ради чего на календарь смотрят */
 @media(max-width:1400px){
-  .blok .im{font:700 16px/1.15 var(--serif);padding-right:56px}
+  .blok .im{font:700 17px/1.15 var(--serif)}
   .blok .pz{font-size:11px}
   .blok .dm{font-size:9px;letter-spacing:.03em}
-  .ktr .k{font-size:7px;letter-spacing:-.01em}
+  .ktr .k{font-size:11px;letter-spacing:-.01em}
 }
 /* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
    становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
@@ -220,6 +251,6 @@ a.metka:hover{filter:brightness(1.12)}
 </style>
 </head>
 <body>
-<div class="uzko"><header class="shapka"><a class="nazad" href="index.html">к году</a><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka tih">II четверть</span><a class="metka" style="--c:var(--d-K)" href="blok-dvojnoj-schet.html">Двойной счёт</a><a class="metka" style="--c:var(--d-Z)" href="blok-kruzhok-ii.html">кружок</a></div><h1>неделя 13</h1></div><section class="sect"><div class="karkas"><div class="box"><p class="grp">что было на уроке</p></div><div class="box"><p class="grp">домашнее задание</p></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a><a class="nazad" href="blok-dvojnoj-schet.html">к блоку</a></div></div>
+<div class="oborot uzko"><header class="shapka"><a class="tit" href="index.html">Спецмат, 7 класс</a><nav class="perekl-nav"><a href="index.html">основной курс</a><a href="index.html">кружок</a><a href="istochniki.html">источники</a></nav><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka tih">II четверть</span><a class="metka" style="--c:var(--d-K)" href="blok-dvojnoj-schet.html">Двойной счёт</a><a class="metka" style="--c:var(--d-Z)" href="blok-kruzhok-ii.html">кружок</a></div><h1>неделя 13</h1></div><section class="sect"><div class="karkas"><div class="box"><p class="grp">что было на уроке</p></div><div class="box"><p class="grp">домашнее задание</p></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a><a class="nazad" href="blok-dvojnoj-schet.html">к блоку</a></div></div>
 </body>
 </html>

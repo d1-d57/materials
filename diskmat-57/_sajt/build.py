@@ -99,6 +99,7 @@ def razobrat(g):
                 ch['kruzhok'] = k
             elif e['tip'] == 'vne-setki':
                 ch['vne_setki'].append(dict(e))
+                ch['potok'].append(dict(e))   # рисуется в ленте, но в счёт недель НЕ идёт
         for k in range(0, len(uroki), 2):
             n += 1
             a, b = uroki[k], uroki[k + 1]
@@ -138,7 +139,15 @@ a{color:inherit}
 /* Колонка — около 60% ширины экрана с полями по бокам, а не во весь экран
    (владелец переопределил ТЗ §3 при показе 2026-08-20); ниже 1300px раскладка
    и так становится вертикальной (медиа-запрос ниже), там ширина не сужается. */
-.oborot{max-width:60vw;margin:0 auto;padding:0 34px 20px}
+.oborot{max-width:min(1860px,96vw);margin:0 auto;padding:0 30px 20px}
+.oborot.uzko{padding-bottom:70px}
+.shapka .tit{font:700 25px/1.1 var(--serif);color:var(--ink);text-decoration:none;flex:none}
+.perekl-nav{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin-left:20px;align-self:center}
+.perekl-nav a{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none}
+.perekl-nav a:hover{color:var(--ink)}
+.perekl-nav a.tek{background:var(--ink);color:var(--paper)}
 
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
@@ -152,6 +161,22 @@ a{color:inherit}
 .nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
 .shapka .spacer{flex:1}
 
+/* источники: карточки книг на странице блока и сама страница источников */
+.knigi{display:flex;flex-wrap:wrap;gap:9px}
+.kniga{display:block;text-decoration:none;border:1px solid var(--line);border-radius:7px;
+  padding:10px 13px;background:var(--card);min-width:220px}
+.kniga:hover{border-color:var(--acc)}
+.kn-a{display:block;font:11px/1.2 var(--sans);color:var(--faint);margin-bottom:3px}
+.kn-n{display:block;font:600 14px/1.3 var(--serif);color:var(--ink)}
+.isty{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ist{border:1px solid var(--line);border-radius:8px;padding:15px 17px;background:var(--card)}
+.ist h2{font:700 17px/1.25 var(--serif);color:var(--ink);margin:0 0 5px}
+.ist .kn-g{font:12px/1.4 var(--sans);color:var(--faint);margin:6px 0 0}
+.ist .kn-c{font:13.5px/1.45 var(--sans);color:var(--ink2);margin:8px 0 0}
+.ist .kn-s{margin:10px 0 0}
+.ist .kn-s a{font:600 13px/1 var(--sans);color:var(--acc);text-decoration:none;
+  border-bottom:1px solid var(--acc);padding-bottom:2px}
+
 /* легенда цветов — очень мелким кеглем, сверху страницы года */
 .legenda{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
   padding:7px 0 0;margin:0}
@@ -162,7 +187,12 @@ a{color:inherit}
 /* ── тумблер: две радиокнопки, ни строки JS ── */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
-  border-radius:24px;padding:3px;margin:16px 0 0}
+  border-radius:24px;padding:3px;margin:0 0 0 20px;align-self:center}
+.perekl-ss{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none}
+.perekl-ss:hover{color:var(--ink)}
+.kr-chast .im{font:700 16px/1.16 var(--serif)}
+.kr-chast .pz{margin-top:5px}
 .perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
   border-radius:22px;cursor:pointer;user-select:none}
 .perekl label:hover{color:var(--ink)}
@@ -194,9 +224,9 @@ a{color:inherit}
 /* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
    вертикали, а короткая четверть честно не достаёт до правого края */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
-  grid-auto-rows:124px;gap:5px;align-items:stretch}
+  grid-auto-rows:172px;gap:6px;align-items:stretch}
 /* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
-.tr-kruzhok .lenta{grid-auto-rows:92px}
+.tr-kruzhok .lenta{grid-auto-rows:126px}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
@@ -204,7 +234,7 @@ a{color:inherit}
   border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
   background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
 .blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
-.blok .im{font:700 18px/1.14 var(--serif);letter-spacing:-.005em;padding-right:62px}
+.blok .im{font:700 20px/1.14 var(--serif);letter-spacing:-.005em}
 .blok .pz{font:11.5px/1.28 var(--sans);color:rgba(253,251,246,.82);margin-top:4px;
   flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.84em}
 .blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
@@ -213,7 +243,8 @@ a{color:inherit}
   letter-spacing:.045em;color:rgba(253,251,246,.76);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
-.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.7);white-space:nowrap}
+.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.62);white-space:nowrap;
+  margin-left:auto;flex:none;padding-left:8px}
 /* Блок на стыке нескольких разделов красится ЗОНАМИ — фон задаётся инлайн-стилем
    (linear-gradient под углом, по одной зоне на раздел из "domeny") — а не одним
    цветом с диагональной штриховкой: штриховка не сообщает, из чего блок состоит. */
@@ -226,9 +257,10 @@ a{color:inherit}
   border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
   padding:6px 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{background:transparent;border-style:dashed}
+.ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
-.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12.5px;
   font:600 9px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
   color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
 
@@ -246,7 +278,7 @@ a{color:inherit}
 .vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
 
 /* ── страница блока / занятия ── */
-.uzko{max-width:60vw;margin:0 auto;padding:0 34px 80px}
+.uzko{max-width:min(1320px,92vw);margin:0 auto;padding:0 30px 70px}
 .zag{padding:34px 0 0}
 .zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
 .zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
@@ -300,10 +332,10 @@ a.metka:hover{filter:brightness(1.12)}
 /* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
    он и есть то, ради чего на календарь смотрят */
 @media(max-width:1400px){
-  .blok .im{font:700 16px/1.15 var(--serif);padding-right:56px}
+  .blok .im{font:700 17px/1.15 var(--serif)}
   .blok .pz{font-size:11px}
   .blok .dm{font-size:9px;letter-spacing:.03em}
-  .ktr .k{font-size:7px;letter-spacing:-.01em}
+  .ktr .k{font-size:11px;letter-spacing:-.01em}
 }
 /* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
    становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
@@ -334,6 +366,25 @@ a.metka:hover{filter:brightness(1.12)}
   .zanyatie .kr{justify-self:start}
 }
 """
+
+
+def shapka(g, tek=''):
+    """Одна шапка на все страницы: имя курса и три кнопки.
+
+    Разъезжающиеся шапки заставляют читателя заново искать навигацию на каждом
+    экране; кнопка «к году» вместо общей панели — тот же дефект.
+    """
+    knopki = [('index.html', 'основной курс', 'kurs'),
+              ('index.html', 'кружок', 'kruzhok'),
+              ('istochniki.html', 'источники', 'ist')]
+    out = []
+    for adres, imya, kod in knopki:
+        out.append('<a href="%s"%s>%s</a>'
+                   % (adres, ' class="tek"' if kod == tek else '', E(imya)))
+    return ('<header class="shapka"><a class="tit" href="index.html">%s</a>'
+            '<nav class="perekl-nav">%s</nav><span class="spacer"></span>'
+            '<span class="demo">демо-версия</span></header>'
+            % (E(g['kurs']['nazvanie']), ''.join(out)))
 
 
 def stranica(titul, telo, klass=''):
@@ -398,28 +449,48 @@ def lenta_kursa(ch):
                 styk = '<span class="styk-l">на стыке</span>'
             out.append(
                 '<a class="%s" style="%s" href="blok-%s.html">'
-                '<span class="ug"><span class="ch">%d %s</span></span>'
                 '<span class="im">%s</span><span class="pz">%s</span>'
-                '<span class="niz">%s%s</span></a>'
+                '<span class="niz">%s%s<span class="ch">%d %s</span></span></a>'
                 % (kl, st, el['slug'],
-                   el['chasy'], chasy_slovo(el['chasy']),
-                   E(el['imya']), E(el['podzag']), dm_html(el), styk))
-        else:
+                   E(el['imya']), E(el['podzag']), dm_html(el), styk,
+                   el['chasy'], chasy_slovo(el['chasy'])))
+        elif el['tip'] == 'kontrolnaya':
             kl = 'ktr chetv' if el.get('chetvertnaya') else 'ktr'
             out.append('<a class="%s" style="grid-column:span %d" href="%s.html">'
                        '<span class="k">контрольная</span></a>' % (kl, span, el['slug']))
+        else:
+            # вне сетки: та же узкая плашка, что у контрольной, и в той же ленте —
+            # отдельной строкой под календарём она читалась как чужеродный довесок
+            out.append('<div class="ktr vne-l" style="grid-column:span %d">'
+                       '<span class="k">игра</span></div>' % span)
     return ''.join(out)
 
 
 def lenta_kruzhka(ch):
+    """Дорожка кружка режется на его СОБСТВЕННЫЕ части — пункты karta.
+
+    Темы кружка идут ПАРАЛЛЕЛЬНО основному курсу и названы по-настоящему
+    («принцип Дирихле», «ним и двоичная запись»), а не «методы» и «задачи»:
+    деление по жанру занятия ничего не сообщает о содержании года.
+    Раскладка лежит в god.json, поле temy у элемента kruzhok.
+    """
     k = ch['kruzhok']
     if k is None:
         return ''
-    return ('<a class="blok" style="grid-column:span %d;--c:var(--d-Z)" href="blok-%s.html">'
-            '<span class="ug"><span class="ch">%d %s</span></span>'
-            '<span class="im">кружок</span><span class="pz">%s</span></a>'
-            % (ch['chasy'], k['slug'],
-               k['chasy'], chasy_slovo(k['chasy']), E(k['podzag'])))
+    out = []
+    for tema in k.get('temy') or []:
+        span = tema['nedel'] * 2          # лента размечена в УРОКАХ, неделя = два урока
+        out.append(
+            '<a class="blok kr-chast" style="grid-column:span %d;--c:var(--d-%s)" '
+            'href="blok-%s.html">'
+            '<span class="im">%s</span><span class="pz">%s</span>'
+            '<span class="niz"><span class="dm">%s</span>'
+            '<span class="ch">%d %s</span></span></a>'
+            % (span, tema['domen'], k['slug'], E(tema['imya']),
+               '' if tema['nedel'] < 2 else E(RAZD.join(upakovat_chto(tema['chto']))),
+               E(DOMENY[tema['domen']]),
+               tema['nedel'], 'недели' if 2 <= tema['nedel'] <= 4 else 'неделя'))
+    return ''.join(out)
 
 
 def linejka(ch, rezhim):
@@ -447,11 +518,7 @@ def linejka(ch, rezhim):
 
 def chetvert_blok(ch, rezhim):
     lenta = lenta_kruzhka(ch) if rezhim == 'kruzhok' else lenta_kursa(ch)
-    vne = ''
-    if rezhim == 'kurs':
-        for v in ch['vne_setki']:
-            vne += ('<div class="vne"><span class="i">%s</span><span class="c">%s</span></div>'
-                    % (E(v['imya']), E(v['chto'])))
+    vne = ''   # вне-сеточные слоты рисуются внутри ленты, см. lenta_kursa
     return ('<section class="chetv">'
             '<div class="chetv-hd"><span class="rim">%s</span>'
             '<span class="cw">четверть</span><span class="dts">%s</span></div>'
@@ -495,21 +562,21 @@ def god_stranica(g, chetverti):
                   % (rezhim, ''.join(chetvert_blok(c, rezhim) for c in chetverti)))
     # Из kurs.podzagolovok берётся ПЕРВЫЙ сегмент: хвост «строка раскрывается по
     # нажатию» описывал забракованную версию и на этой странице был бы ложью.
-    razmer = g['kurs']['podzagolovok'].split(RAZD)[0].strip()
     telo = ('<div class="oborot">'
-            '<header class="shapka"><h1>%s</h1><span class="razmer">%s</span>'
-            '<span class="spacer"></span>'
-            '<span class="demo">демо-версия</span></header>'
-            '%s'
             '<div class="tumbler">'
             '<input type="radio" name="tr" id="t-kurs" checked>'
             '<input type="radio" name="tr" id="t-kruzhok">'
+            '<header class="shapka"><h1>%s</h1>'
             '<div class="perekl">'
             '<label for="t-kurs">основной курс</label>'
-            '<label for="t-kruzhok">кружок</label></div>'
+            '<label for="t-kruzhok">кружок</label>'
+            '<a class="perekl-ss" href="istochniki.html">источники</a></div>'
+            '<span class="spacer"></span>'
+            '<span class="demo">демо-версия</span></header>'
+            '%s'
             '<div class="kalendar">%s</div></div>'
             '<script>%s</script>'
-            '</div>' % (E(g['kurs']['nazvanie']), E(razmer), legenda_html(g),
+            '</div>' % (E(g['kurs']['nazvanie']), legenda_html(g),
                         ''.join(tr), TUMBLER_JS))
     return stranica(g['kurs']['nazvanie'], telo)
 
@@ -562,27 +629,73 @@ def zanyatia_html(nedeli, svoj, kruzhok_ob):
     return '<div class="zanyatia">%s</div>' % ''.join(row)
 
 
+def knigi_bloka(g, el):
+    """Книги блока: id из данных, карточки — оттуда же. Своих слов нет."""
+    ids = el.get('knigi') or []
+    if not ids:
+        return ''
+    po_id = {k['id']: k for k in g.get('literatura', [])}
+    p = []
+    for i in ids:
+        k = po_id.get(i)
+        if not k:
+            continue
+        p.append('<a class="kniga" href="istochniki.html#%s">'
+                 '<span class="kn-a">%s</span><span class="kn-n">%s</span></a>'
+                 % (k['id'], E(k['avtor']), E(k['nazvanie'])))
+    if not p:
+        return ''
+    return ('<section class="sect"><p class="grp">источники</p>'
+            '<div class="knigi">%s</div></section>' % ''.join(p))
+
+
+def istochniki_stranica(g):
+    p = []
+    for k in g.get('literatura', []):
+        p.append('<article class="ist" id="%s">'
+                 '<h2>%s</h2><p class="kn-a">%s</p>'
+                 '<p class="kn-g">%s</p><p class="kn-c">%s</p>'
+                 '<p class="kn-s"><a href="%s" target="_blank" rel="noopener">открыть</a></p>'
+                 '</article>'
+                 % (k['id'], E(k['nazvanie']), E(k['avtor']), E(k['gde']),
+                    E(k['chto']), E(k['ssylka'])))
+    telo = ('<div class="oborot uzko">'
+            '%s'
+            '<div class="zag"><h1>источники</h1></div>'
+            '<div class="isty">%s</div>'
+            '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
+            '</div>' % (shapka(g, 'ist'), ''.join(p)))
+    return stranica('источники', telo)
+
+
 def blok_stranica(g, el, kruzhok=False):
     cv = 'var(--d-Z)' if kruzhok else cvet(el)
     imya = 'кружок' if kruzhok else el['imya']
-    metki = ['<span class="metka" style="--c:%s">%s</span>'
-             % (cv, E('кружок' if kruzhok else DOMENY[el['domen']]))]
+    if kruzhok:
+        imena_d = ['кружок']
+    else:
+        imena_d = [DOMENY[d] for d in (el.get('domeny') or [el['domen']])]
+    metki = ['<span class="metka" style="--c:%s">%s</span>' % (cv, E(d))
+             for d in imena_d]
     metki.append('<span class="metka tih">%s четверть</span>' % E(el['_ch']['nomer'])
                  if kruzhok else
                  '<span class="metka tih">%d %s</span>' % (el['chasy'], chasy_slovo(el['chasy'])))
     if not kruzhok and el.get('na-styke'):
         metki.append('<span class="metka tih">на стыке</span>')
     kruzhok_ob = None if kruzhok else el['_ch']['kruzhok']
-    telo = ('<div class="uzko">'
-            '<header class="shapka"><a class="nazad" href="index.html">к году</a>'
-            '<span class="spacer"></span><span class="demo">демо-версия</span></header>'
+    telo = ('<div class="oborot uzko">'
+            '%s'
             '<div class="zag"><div class="metki">%s</div><h1>%s</h1><p class="pz">%s</p></div>'
             '<section class="sect"><p class="grp">опорные точки</p>%s</section>'
             '<section class="sect"><p class="grp">занятия</p>%s</section>'
-            '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
+            '%s'
+            '<div class="podval"><a class="nazad" href="index.html">к году</a>'
+            '<span class="spacer"></span>'
+            '<a class="nazad" href="istochniki.html">источники</a></div>'
             '</div>'
-            % (''.join(metki), E(imya), E(el['podzag']),
-               tochki_html(el['karta'], cv), zanyatia_html(el['nedeli'], el, kruzhok_ob)))
+            % (shapka(g), ''.join(metki), E(imya), E(el['podzag']),
+               tochki_html(el['karta'], cv), zanyatia_html(el['nedeli'], el, kruzhok_ob),
+               knigi_bloka(g, el)))
     return stranica(imya, telo)
 
 
@@ -604,29 +717,27 @@ def nedelya_stranica(g, ned):
     niz = ['<a class="nazad" href="index.html">к году</a>']
     for el in ssylki:
         niz.append('<a class="nazad" href="blok-%s.html">к блоку</a>' % el['slug'])
-    telo = ('<div class="uzko">'
-            '<header class="shapka"><a class="nazad" href="index.html">к году</a>'
-            '<span class="spacer"></span><span class="demo">демо-версия</span></header>'
+    telo = ('<div class="oborot uzko">'
+            '%s'
             '<div class="zag"><div class="metki">%s</div><h1>неделя %d</h1></div>'
             '<section class="sect"><div class="karkas">'
             '<div class="box"><p class="grp">что было на уроке</p></div>'
             '<div class="box"><p class="grp">домашнее задание</p></div>'
             '</div></section>'
             '<div class="podval">%s</div>'
-            '</div>' % (''.join(metki), ned['nomer'], ''.join(niz)))
+            '</div>' % (shapka(g), ''.join(metki), ned['nomer'], ''.join(niz)))
     return stranica('неделя %d' % ned['nomer'], telo)
 
 
 def kontrolnaya_stranica(g, ktr):
     ch = ktr['_ch']
     metki = ['<span class="metka tih">%s четверть</span>' % E(ch['nomer'])]
-    telo = ('<div class="uzko">'
-            '<header class="shapka"><a class="nazad" href="index.html">к году</a>'
-            '<span class="spacer"></span><span class="demo">демо-версия</span></header>'
+    telo = ('<div class="oborot uzko">'
+            '%s'
             '<div class="zag"><div class="metki">%s</div><h1>контрольная</h1>'
             '<p class="pz">%s</p></div>'
             '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
-            '</div>' % (''.join(metki), E(ktr['chto'])))
+            '</div>' % (shapka(g), ''.join(metki), E(ktr['chto'])))
     return stranica(ktr['chto'], telo)
 
 
@@ -672,6 +783,7 @@ def main():
         pisali.append(imya)
 
     polozhit('index.html', god_stranica(g, chetverti))
+    polozhit('istochniki.html', istochniki_stranica(g))
     for el in bloki:
         polozhit('blok-%s.html' % el['slug'], blok_stranica(g, el))
     for k in kruzhki:
