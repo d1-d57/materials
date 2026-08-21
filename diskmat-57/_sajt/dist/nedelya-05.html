@@ -35,7 +35,6 @@ a{color:inherit}
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
   padding:22px 0 15px;border-bottom:1px solid var(--line)}
-.shapka h1{font:700 30px/1.15 var(--serif);margin:0;letter-spacing:-.01em}
 .shapka .razmer{font:14px/1.4 var(--serif);color:var(--ink2)}
 .demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
   color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
@@ -70,10 +69,7 @@ a{color:inherit}
 /* ── тумблер: две радиокнопки, ни строки JS ── */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
-  border-radius:24px;padding:3px;margin:0 0 0 20px;align-self:center}
-.perekl-ss{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
-  border-radius:22px;text-decoration:none}
-.perekl-ss:hover{color:var(--ink)}
+  border-radius:24px;padding:3px;margin:16px 0 0}
 .kr-chast .im{font:700 16px/1.16 var(--serif)}
 .kr-chast .pz{margin-top:5px}
 .perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
@@ -105,11 +101,11 @@ a{color:inherit}
 .chetv .vne{grid-column:2;grid-row:3;justify-self:start}
 
 /* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
-   вертикали, а короткая четверть честно не достаёт до правого края */
+   вертикали, а короткая четверть честно не достаёт до правого края.
+   Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
+   тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
   grid-auto-rows:172px;gap:6px;align-items:stretch}
-/* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
-.tr-kruzhok .lenta{grid-auto-rows:126px}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
@@ -160,8 +156,10 @@ a{color:inherit}
 .vne .i{font:600 13px/1 var(--serif);color:var(--ink2)}
 .vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
 
-/* ── страница блока / занятия ── */
-.uzko{max-width:min(1320px,92vw);margin:0 auto;padding:0 30px 70px}
+/* ── страница блока / занятия ──
+   Ширина текстовой области ОДНА на всех страницах — задаётся `.oborot`
+   (см. выше); `.uzko` здесь больше не переопределяет max-width, только
+   добавочный нижний отступ через `.oborot.uzko` (владелец 2026-08-20). */
 .zag{padding:34px 0 0}
 .zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
 .zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
@@ -230,7 +228,6 @@ a.metka:hover{filter:brightness(1.12)}
     margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
   .chetv-hd .dts{display:inline;margin-top:0}
   .nw{text-align:left;line-height:1.4;margin:7px 0 3px}
-  .shapka h1{font-size:23px}
   .zag h1{font-size:27px}
   .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
   .lenta>*{grid-column:1/-1!important}
@@ -251,6 +248,6 @@ a.metka:hover{filter:brightness(1.12)}
 </style>
 </head>
 <body>
-<div class="oborot uzko"><header class="shapka"><a class="tit" href="index.html">Спецмат, 7 класс</a><nav class="perekl-nav"><a href="index.html">основной курс</a><a href="index.html">кружок</a><a href="istochniki.html">источники</a></nav><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka tih">I четверть</span><span class="metka tih">контрольная<i class="tochka">·</i><b>разгон и подсчёты</b></span><a class="metka" style="--c:var(--d-D)" href="blok-chetnost.html">Чётность</a><a class="metka" style="--c:var(--d-Z)" href="blok-kruzhok-i.html">кружок</a></div><h1>неделя 5</h1></div><section class="sect"><div class="karkas"><div class="box"><p class="grp">что было на уроке</p></div><div class="box"><p class="grp">домашнее задание</p></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a><a class="nazad" href="blok-chetnost.html">к блоку</a></div></div>
+<div class="oborot uzko"><header class="shapka"><a class="tit" href="index.html">Спецмат, 7 класс</a><nav class="perekl-nav"><a href="index.html" class="tek">основной курс</a><a href="index.html">кружок</a><a href="istochniki.html">источники</a></nav><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka tih">I четверть</span><span class="metka tih">контрольная<i class="tochka">·</i><b>разгон и подсчёты</b></span><a class="metka" style="--c:var(--d-D)" href="blok-chetnost.html">Чётность</a><a class="metka" style="--c:var(--d-Z)" href="blok-kruzhok-i.html">кружок</a></div><h1>неделя 5</h1></div><section class="sect"><div class="karkas"><div class="box"><p class="grp">что было на уроке</p></div><div class="box"><p class="grp">домашнее задание</p></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a><a class="nazad" href="blok-chetnost.html">к блоку</a></div></div>
 </body>
 </html>

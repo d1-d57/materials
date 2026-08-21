@@ -152,7 +152,6 @@ a{color:inherit}
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
   padding:22px 0 15px;border-bottom:1px solid var(--line)}
-.shapka h1{font:700 30px/1.15 var(--serif);margin:0;letter-spacing:-.01em}
 .shapka .razmer{font:14px/1.4 var(--serif);color:var(--ink2)}
 .demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
   color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
@@ -187,10 +186,7 @@ a{color:inherit}
 /* ── тумблер: две радиокнопки, ни строки JS ── */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
-  border-radius:24px;padding:3px;margin:0 0 0 20px;align-self:center}
-.perekl-ss{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
-  border-radius:22px;text-decoration:none}
-.perekl-ss:hover{color:var(--ink)}
+  border-radius:24px;padding:3px;margin:16px 0 0}
 .kr-chast .im{font:700 16px/1.16 var(--serif)}
 .kr-chast .pz{margin-top:5px}
 .perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
@@ -222,11 +218,11 @@ a{color:inherit}
 .chetv .vne{grid-column:2;grid-row:3;justify-self:start}
 
 /* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
-   вертикали, а короткая четверть честно не достаёт до правого края */
+   вертикали, а короткая четверть честно не достаёт до правого края.
+   Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
+   тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
   grid-auto-rows:172px;gap:6px;align-items:stretch}
-/* у кружка одна дорожка на четверть — низкая лента, чтобы не зияла пустотой */
-.tr-kruzhok .lenta{grid-auto-rows:126px}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
@@ -277,8 +273,10 @@ a{color:inherit}
 .vne .i{font:600 13px/1 var(--serif);color:var(--ink2)}
 .vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
 
-/* ── страница блока / занятия ── */
-.uzko{max-width:min(1320px,92vw);margin:0 auto;padding:0 30px 70px}
+/* ── страница блока / занятия ──
+   Ширина текстовой области ОДНА на всех страницах — задаётся `.oborot`
+   (см. выше); `.uzko` здесь больше не переопределяет max-width, только
+   добавочный нижний отступ через `.oborot.uzko` (владелец 2026-08-20). */
 .zag{padding:34px 0 0}
 .zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
 .zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
@@ -347,7 +345,6 @@ a.metka:hover{filter:brightness(1.12)}
     margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
   .chetv-hd .dts{display:inline;margin-top:0}
   .nw{text-align:left;line-height:1.4;margin:7px 0 3px}
-  .shapka h1{font-size:23px}
   .zag h1{font-size:27px}
   .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
   .lenta>*{grid-column:1/-1!important}
@@ -560,23 +557,23 @@ def god_stranica(g, chetverti):
     for rezhim in ('kurs', 'kruzhok'):
         tr.append('<div class="tr-%s">%s</div>'
                   % (rezhim, ''.join(chetvert_blok(c, rezhim) for c in chetverti)))
-    # Из kurs.podzagolovok берётся ПЕРВЫЙ сегмент: хвост «строка раскрывается по
-    # нажатию» описывал забракованную версию и на этой странице был бы ложью.
+    # Шапка — та же shapka(), что на остальных страницах (А3): свой <h1> и
+    # свой набор кнопок здесь были ровно тем разъездом, который замечал
+    # владелец. Тумблер курс/кружок — отдельная строка ПОД общей шапкой,
+    # это внутристраничный переключатель данных, а не навигация по сайту.
     telo = ('<div class="oborot">'
             '<div class="tumbler">'
             '<input type="radio" name="tr" id="t-kurs" checked>'
             '<input type="radio" name="tr" id="t-kruzhok">'
-            '<header class="shapka"><h1>%s</h1>'
+            '%s'
             '<div class="perekl">'
             '<label for="t-kurs">основной курс</label>'
             '<label for="t-kruzhok">кружок</label>'
-            '<a class="perekl-ss" href="istochniki.html">источники</a></div>'
-            '<span class="spacer"></span>'
-            '<span class="demo">демо-версия</span></header>'
+            '</div>'
             '%s'
             '<div class="kalendar">%s</div></div>'
             '<script>%s</script>'
-            '</div>' % (E(g['kurs']['nazvanie']), legenda_html(g),
+            '</div>' % (shapka(g, 'kurs'), legenda_html(g),
                         ''.join(tr), TUMBLER_JS))
     return stranica(g['kurs']['nazvanie'], telo)
 
@@ -693,7 +690,7 @@ def blok_stranica(g, el, kruzhok=False):
             '<span class="spacer"></span>'
             '<a class="nazad" href="istochniki.html">источники</a></div>'
             '</div>'
-            % (shapka(g), ''.join(metki), E(imya), E(el['podzag']),
+            % (shapka(g, 'kruzhok' if kruzhok else 'kurs'), ''.join(metki), E(imya), E(el['podzag']),
                tochki_html(el['karta'], cv), zanyatia_html(el['nedeli'], el, kruzhok_ob),
                knigi_bloka(g, el)))
     return stranica(imya, telo)
@@ -725,7 +722,7 @@ def nedelya_stranica(g, ned):
             '<div class="box"><p class="grp">домашнее задание</p></div>'
             '</div></section>'
             '<div class="podval">%s</div>'
-            '</div>' % (shapka(g), ''.join(metki), ned['nomer'], ''.join(niz)))
+            '</div>' % (shapka(g, 'kurs'), ''.join(metki), ned['nomer'], ''.join(niz)))
     return stranica('неделя %d' % ned['nomer'], telo)
 
 
@@ -737,7 +734,7 @@ def kontrolnaya_stranica(g, ktr):
             '<div class="zag"><div class="metki">%s</div><h1>контрольная</h1>'
             '<p class="pz">%s</p></div>'
             '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
-            '</div>' % (shapka(g), ''.join(metki), E(ktr['chto'])))
+            '</div>' % (shapka(g, 'kurs'), ''.join(metki), E(ktr['chto'])))
     return stranica(ktr['chto'], telo)
 
 
