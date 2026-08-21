@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спецмат, 7 класс</title>
+<style>
+:root{
+  --paper:#f6f1e7; --card:#fcfaf5; --ink:#2b2724; --ink2:#4f4942;
+  --soft:#6b6155; --faint:#9b9186; --line:#e3dac7; --line2:#efe8d8;
+  --acc:#b3503c; --accbg:#f7e8e0;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --d-O:#a68a4e; --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
+  --d-Z:#3f7d75;
+  --ktr:#a79d90; --ktr-bg:#eae3d5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+/* Колонка — около 60% ширины экрана с полями по бокам, а не во весь экран
+   (владелец переопределил ТЗ §3 при показе 2026-08-20); ниже 1300px раскладка
+   и так становится вертикальной (медиа-запрос ниже), там ширина не сужается. */
+.oborot{max-width:min(1860px,96vw);margin:0 auto;padding:0 30px 20px}
+.oborot.uzko{padding-bottom:70px}
+.shapka .tit{font:700 25px/1.1 var(--serif);color:var(--ink);text-decoration:none;flex:none}
+.perekl-nav{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin-left:20px;align-self:center}
+.perekl-nav a{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none}
+.perekl-nav a:hover{color:var(--ink)}
+.perekl-nav a.tek{background:var(--ink);color:var(--paper)}
+
+/* ── шапка ── */
+.shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+  padding:22px 0 15px;border-bottom:1px solid var(--line)}
+.shapka .razmer{font:14px/1.4 var(--serif);color:var(--ink2)}
+.demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
+  color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
+.nazad{font:600 13.5px/1 var(--sans);color:var(--soft);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:2px}
+.nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.shapka .spacer{flex:1}
+
+/* источники: карточки книг на странице блока и сама страница источников */
+.knigi{display:flex;flex-wrap:wrap;gap:9px}
+.kniga{display:block;text-decoration:none;border:1px solid var(--line);border-radius:7px;
+  padding:10px 13px;background:var(--card);min-width:220px}
+.kniga:hover{border-color:var(--acc)}
+.kn-a{display:block;font:11px/1.2 var(--sans);color:var(--faint);margin-bottom:3px}
+.kn-n{display:block;font:600 14px/1.3 var(--serif);color:var(--ink)}
+.isty{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ist{border:1px solid var(--line);border-radius:8px;padding:15px 17px;background:var(--card)}
+.ist h2{font:700 17px/1.25 var(--serif);color:var(--ink);margin:0 0 5px}
+.ist .kn-g{font:12px/1.4 var(--sans);color:var(--faint);margin:6px 0 0}
+.ist .kn-c{font:13.5px/1.45 var(--sans);color:var(--ink2);margin:8px 0 0}
+.ist .kn-s{margin:10px 0 0}
+.ist .kn-s a{font:600 13px/1 var(--sans);color:var(--acc);text-decoration:none;
+  border-bottom:1px solid var(--acc);padding-bottom:2px}
+
+/* легенда цветов — очень мелким кеглем, сверху страницы года */
+.legenda{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  padding:7px 0 0;margin:0}
+.legenda .p{display:inline-flex;align-items:center;gap:5px}
+.legenda .p i{width:7px;height:7px;border-radius:50%;background:var(--c);display:inline-block}
+.legenda .p span{font:9.5px/1 var(--sans);color:var(--faint);letter-spacing:.01em}
+
+/* ── тумблер: две радиокнопки, ни строки JS ── */
+.tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin:16px 0 0}
+.kr-chast .im{font:700 16px/1.16 var(--serif)}
+.kr-chast .pz{margin-top:5px}
+.perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;cursor:pointer;user-select:none}
+.perekl label:hover{color:var(--ink)}
+#t-kurs:checked~.perekl label[for=t-kurs],
+#t-kruzhok:checked~.perekl label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
+#t-kurs:focus-visible~.perekl label[for=t-kurs],
+#t-kruzhok:focus-visible~.perekl label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
+#t-kruzhok:checked~.kalendar .tr-kurs{display:none}
+#t-kurs:checked~.kalendar .tr-kruzhok{display:none}
+
+/* ── четверть ── */
+/* Четверть — две колонки: слева подпись, справа лента и линейка недель.
+   «N недель» стоит вплотную к линейке, а не в шапке: иначе связь между
+   пронумерованными клетками и словом «недели» приходится угадывать
+   (находка верификатора понятности 2026-08-20). */
+.chetv{margin:16px 0 0;display:grid;grid-template-columns:100px minmax(0,1fr);
+  column-gap:12px;align-items:start}
+.chetv-hd{grid-column:1;grid-row:1;padding-top:2px}
+.chetv-hd .rim{font:700 21px/1 var(--serif);color:var(--ink);display:inline}
+.chetv-hd .cw{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin-left:6px}
+.chetv-hd .dts{display:block;font:13px/1.35 var(--serif);color:var(--ink2);margin-top:6px}
+.chetv .lenta{grid-column:2;grid-row:1}
+.nw{grid-column:1;grid-row:2;text-align:right;font:12px/24px var(--sans);
+  color:var(--faint);padding-right:2px}
+.chetv .linejka{grid-column:2;grid-row:2}
+.chetv .vne{grid-column:2;grid-row:3;justify-self:start}
+
+/* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
+   вертикали, а короткая четверть честно не достаёт до правого края.
+   Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
+   тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
+.lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
+  grid-auto-rows:172px;gap:6px;align-items:stretch}
+.linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
+
+/* блок — большой прямоугольник, главная масса страницы */
+.blok{position:relative;display:flex;flex-direction:column;justify-content:flex-start;
+  border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
+  background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
+.blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
+.blok .im{font:700 20px/1.14 var(--serif);letter-spacing:-.005em}
+.blok .pz{font:11.5px/1.28 var(--sans);color:rgba(253,251,246,.82);margin-top:4px;
+  flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.84em}
+.blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
+  display:flex;align-items:center;gap:8px}
+.blok .dm{font:600 9.5px/1.15 var(--sans);text-transform:uppercase;min-width:0;
+  letter-spacing:.045em;color:rgba(253,251,246,.76);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
+.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.62);white-space:nowrap;
+  margin-left:auto;flex:none;padding-left:8px}
+/* Блок на стыке нескольких разделов красится ЗОНАМИ — фон задаётся инлайн-стилем
+   (linear-gradient под углом, по одной зоне на раздел из "domeny") — а не одним
+   цветом с диагональной штриховкой: штриховка не сообщает, из чего блок состоит. */
+.blok .styk-l{flex:none;font:600 9px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:.08em;color:rgba(253,251,246,.9);
+  border:1px solid rgba(253,251,246,.45);border-radius:12px;padding:3px 6px}
+
+/* контрольная — полная высота строки, надпись поперёк */
+.ktr{align-self:stretch;border-radius:5px;background:var(--ktr-bg);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  padding:6px 1px;overflow:hidden;text-decoration:none}
+.ktr.chetv{background:transparent;border-style:dashed}
+.ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
+.ktr:hover{border-color:var(--acc)}
+.ktr:hover .k{color:var(--acc)}
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12.5px;
+  font:600 9px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
+  color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
+
+/* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
+.ned{position:relative;display:block;height:24px;border-radius:4px;text-decoration:none;
+  font:600 11px/24px var(--sans);color:var(--ink2);text-align:center;
+  background:var(--nb);border:1px solid var(--line2)}
+.ned:hover{color:var(--acc);border-color:var(--acc)}
+.ned.split{box-shadow:inset 0 0 0 1px var(--card)}
+
+/* вне сетки */
+.vne{display:inline-flex;align-items:baseline;gap:9px;margin-top:7px;padding:5px 11px;
+  border:1px dashed var(--line);border-radius:5px;background:var(--card)}
+.vne .i{font:600 13px/1 var(--serif);color:var(--ink2)}
+.vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
+
+/* ── страница блока / занятия ──
+   Ширина текстовой области ОДНА на всех страницах — задаётся `.oborot`
+   (см. выше); `.uzko` здесь больше не переопределяет max-width, только
+   добавочный нижний отступ через `.oborot.uzko` (владелец 2026-08-20). */
+.zag{padding:34px 0 0}
+.zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
+.zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
+.metki{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.metka{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:#fdfbf6;background:var(--c);border-radius:20px;padding:7px 13px;
+  text-decoration:none;display:inline-block}
+a.metka:hover{filter:brightness(1.12)}
+.metka.tih{color:var(--soft);background:transparent;border:1px solid var(--line)}
+.metka .tochka{font-style:normal;color:var(--faint);margin:0 6px}
+.metka b{font-weight:600;color:var(--ink2);text-transform:none;letter-spacing:.02em}
+.grp{font:12.5px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin:0 0 16px}
+.sect{margin:44px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+
+.tochki{counter-reset:t;margin:0;padding:0;list-style:none;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:26px 40px}
+.tochki li{counter-increment:t;position:relative;padding-left:38px}
+.tochki li::before{content:counter(t);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border-radius:50%;background:var(--c);color:#fdfbf6;
+  font:700 12.5px/26px var(--sans);text-align:center}
+.tochki .t{font:700 20px/1.28 var(--serif);margin:0 0 9px}
+.tochki .ch{display:flex;flex-wrap:wrap;gap:6px}
+.tochki .ch span{font:14px/1.4 var(--sans);color:var(--ink2);background:var(--card);
+  border:1px solid var(--line2);border-radius:5px;padding:5px 10px}
+
+/* строки занятий блока — во всю ширину, три раздела: неделя · что происходит
+   (тема соседнего элемента недели, если неделя расщеплена — темы отдельного
+   урока в данных нет и она не сочиняется, там пусто) · кружок четверти */
+.zanyatia{margin:0;display:flex;flex-direction:column;gap:0}
+.zanyatie{display:grid;grid-template-columns:90px 1fr 200px;align-items:center;
+  gap:14px;padding:14px 2px;border-bottom:1px solid var(--line2);text-decoration:none}
+.zanyatie:hover{background:var(--card)}
+.zanyatie .n{font:600 17px/1.3 var(--serif);color:var(--ink)}
+.zanyatie .sosed{font:13.5px/1.4 var(--sans);color:var(--ink2)}
+.zanyatie .sosed a{text-decoration:none;border-bottom:1px solid var(--line)}
+.zanyatie .sosed a:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.zanyatie .kr{justify-self:end}
+.zanyatie .kr a{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.07em;
+  color:#fdfbf6;background:var(--d-Z);border-radius:20px;padding:6px 12px;text-decoration:none}
+
+.karkas{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:30px;
+  margin-top:8px}
+.karkas .box{background:var(--card);border:1px solid var(--line2);border-radius:8px;
+  padding:20px 22px;min-height:190px}
+.karkas .box .grp{margin-bottom:0}
+
+.podval{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+
+/* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
+   он и есть то, ради чего на календарь смотрят */
+@media(max-width:1400px){
+  .blok .im{font:700 17px/1.15 var(--serif)}
+  .blok .pz{font-size:11px}
+  .blok .dm{font-size:9px;letter-spacing:.03em}
+  .ktr .k{font-size:11px;letter-spacing:-.01em}
+}
+/* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
+   становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
+   раскладка становится вертикальной, блок на всю ширину. */
+@media(max-width:1300px){
+  .oborot,.uzko{padding:0 16px 50px}
+  .chetv{display:block}
+  .chetv-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+    margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+  .chetv-hd .dts{display:inline;margin-top:0}
+  .nw{text-align:left;line-height:1.4;margin:7px 0 3px}
+  .zag h1{font-size:27px}
+  .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
+  .lenta>*{grid-column:1/-1!important}
+  .blok{min-height:96px;padding:12px 13px 0}
+  .blok .pz{max-height:none;font-size:12px}
+  .blok .pz{display:block}
+  /* На узком экране плашка контрольной НЕ во всю ширину: иначе она получает ту же
+     массу, что тема на шесть часов, и математика опять проигрывает контролю. */
+  .ktr{padding:6px 11px;width:52%;justify-content:flex-start}
+  .ktr .k{writing-mode:horizontal-tb;transform:none}
+  .ktr.chetv{width:38%}
+  .linejka{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .chetv-hd .nw{margin-left:0;width:100%}
+  .tochki{grid-template-columns:1fr;gap:22px}
+  .zanyatie{grid-template-columns:1fr;gap:4px}
+  .zanyatie .kr{justify-self:start}
+}
+</style>
+</head>
+<body>
+<div class="oborot"><div class="tumbler"><input type="radio" name="tr" id="t-kurs" checked><input type="radio" name="tr" id="t-kruzhok"><header class="shapka"><a class="tit" href="index.html">Спецмат, 7 класс</a><nav class="perekl-nav"><a href="index.html" class="tek">основной курс</a><a href="index.html">кружок</a><a href="istochniki.html">источники</a></nav><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="perekl"><label for="t-kurs">основной курс</label><label for="t-kruzhok">кружок</label></div><div class="legenda"><span class="p"><i style="--c:var(--d-A)"></i><span>арифметика</span></span><span class="p"><i style="--c:var(--d-K)"></i><span>комбинаторика</span></span><span class="p"><i style="--c:var(--d-V)"></i><span>вероятность</span></span><span class="p"><i style="--c:var(--d-D)"></i><span>дискретная математика</span></span><span class="p"><i style="--c:var(--d-O)"></i><span>разгон</span></span></div><div class="kalendar"><div class="tr-kurs"><section class="chetv"><div class="chetv-hd"><span class="rim">I</span><span class="cw">четверть</span><span class="dts">1 сентября — 25 октября</span></div><div class="lenta"><a class="blok" style="grid-column:span 3;--c:var(--d-O)" href="blok-razgon.html"><span class="im">Разгон</span><span class="pz">проценты и доли · обратный ход · рыцари, лжецы и отрицание</span><span class="niz"><span class="ch">3 часа</span></span></a><a class="blok" style="grid-column:span 5;--c:var(--d-K)" href="blok-podschety-1.html"><span class="im">Подсчёты 1</span><span class="pz">счёт перечислением · таблица и группы · сумма и разность</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">5 часов</span></span></a><a class="ktr" style="grid-column:span 1" href="kontrolnaya-01.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 5;--c:var(--d-D)" href="blok-chetnost.html"><span class="im">Чётность</span><span class="pz">определение и формулы · таблицы чётности · чётность как инвариант</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">5 часов</span></span></a><a class="ktr chetv" style="grid-column:span 2" href="kontrolnaya-02.html"><span class="k">контрольная</span></a></div><div class="nw">8 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-O) 30%, var(--card))" href="nedelya-01.html">1</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--d-O) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-K) 34%, var(--card)) 50% 100%)" href="nedelya-02.html">2</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-03.html">3</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-04.html">4</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--ktr) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-D) 34%, var(--card)) 50% 100%)" href="nedelya-05.html">5</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-D) 30%, var(--card))" href="nedelya-06.html">6</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-D) 30%, var(--card))" href="nedelya-07.html">7</a><a class="ned" style="--nb:color-mix(in srgb, var(--ktr) 30%, var(--card))" href="nedelya-08.html">8</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">II</span><span class="cw">четверть</span><span class="dts">4 ноября — 30 декабря</span></div><div class="lenta"><a class="ktr" style="grid-column:span 1" href="kontrolnaya-03.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 6;--c:var(--d-A)" href="blok-arifmetika-1.html"><span class="im">Арифметика 1</span><span class="pz">делимость и её свойства · признаки · деление с остатком</span><span class="niz"><span class="dm">арифметика</span><span class="ch">6 часов</span></span></a><a class="ktr" style="grid-column:span 1" href="kontrolnaya-04.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 6;--c:var(--d-K)" href="blok-dvojnoj-schet.html"><span class="im">Двойной счёт</span><span class="pz">одно и то же двумя способами · задачи-близнецы · рукопожатия и подсчёт рёбер</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">6 часов</span></span></a><a class="ktr chetv" style="grid-column:span 2" href="kontrolnaya-05.html"><span class="k">контрольная</span></a><div class="ktr vne-l" style="grid-column:span 2"><span class="k">игра</span></div></div><div class="nw">8 недель</div><div class="linejka"><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--ktr) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-A) 34%, var(--card)) 50% 100%)" href="nedelya-09.html">9</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-A) 30%, var(--card))" href="nedelya-10.html">10</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-A) 30%, var(--card))" href="nedelya-11.html">11</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--d-A) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--ktr) 34%, var(--card)) 50% 100%)" href="nedelya-12.html">12</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-13.html">13</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-14.html">14</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-15.html">15</a><a class="ned" style="--nb:color-mix(in srgb, var(--ktr) 30%, var(--card))" href="nedelya-16.html">16</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">III</span><span class="cw">четверть</span><span class="dts">11 января — 26 марта</span></div><div class="lenta"><a class="ktr" style="grid-column:span 1" href="kontrolnaya-06.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 6;--c:var(--d-K)" href="blok-podschety-2.html"><span class="im">Подсчёты 2</span><span class="pz">правило произведения · дерево · рекуррентный счёт · соответствие</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">6 часов</span></span></a><a class="ktr" style="grid-column:span 1" href="kontrolnaya-07.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 4;--c:var(--d-V)" href="blok-veroyatnost-1.html"><span class="im">Вероятность 1</span><span class="pz">частота в длинной серии · определение через исходы · подсчёт исходов · сумма вероятностей</span><span class="niz"><span class="dm">вероятность</span><span class="ch">4 часа</span></span></a><a class="ktr" style="grid-column:span 1" href="kontrolnaya-08.html"><span class="k">контрольная</span></a><a class="blok styk" style="grid-column:span 5;--c:var(--d-K);background:linear-gradient(115deg, var(--d-K) 0.00% 33.33%, var(--d-D) 33.33% 66.67%, var(--d-A) 66.67% 100.00%)" href="blok-kodirovka.html"><span class="im">Кодировка</span><span class="pz">объект как строка · число подмножеств · двоичная запись · организация выбора</span><span class="niz"><span class="dm">комбинаторика</span><span class="styk-l">на стыке</span><span class="ch">5 часов</span></span></a><a class="ktr chetv" style="grid-column:span 2" href="kontrolnaya-09.html"><span class="k">контрольная</span></a></div><div class="nw">10 недель</div><div class="linejka"><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--ktr) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-K) 34%, var(--card)) 50% 100%)" href="nedelya-17.html">17</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-18.html">18</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-19.html">19</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--d-K) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--ktr) 34%, var(--card)) 50% 100%)" href="nedelya-20.html">20</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-V) 30%, var(--card))" href="nedelya-21.html">21</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-V) 30%, var(--card))" href="nedelya-22.html">22</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--ktr) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-K) 34%, var(--card)) 50% 100%)" href="nedelya-23.html">23</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-24.html">24</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-K) 30%, var(--card))" href="nedelya-25.html">25</a><a class="ned" style="--nb:color-mix(in srgb, var(--ktr) 30%, var(--card))" href="nedelya-26.html">26</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">IV</span><span class="cw">четверть</span><span class="dts">6 апреля — 26 мая</span></div><div class="lenta"><a class="blok" style="grid-column:span 4;--c:var(--d-A)" href="blok-arifmetika-2.html"><span class="im">Арифметика 2</span><span class="pz">сравнение по модулю · действия с остатками · циклы и периодичность</span><span class="niz"><span class="dm">арифметика</span><span class="ch">4 часа</span></span></a><a class="ktr" style="grid-column:span 1" href="kontrolnaya-10.html"><span class="k">контрольная</span></a><a class="blok" style="grid-column:span 3;--c:var(--d-D)" href="blok-igry.html"><span class="im">Игры</span><span class="pz">стратегии на симметрии счёта · граф позиций · выигрышные и проигрышные</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">3 часа</span></span></a><a class="blok" style="grid-column:span 4;--c:var(--d-V)" href="blok-veroyatnost-2.html"><span class="im">Вероятность 2</span><span class="pz">дерево опыта · условная вероятность · независимость</span><span class="niz"><span class="dm">вероятность</span><span class="ch">4 часа</span></span></a><a class="ktr chetv" style="grid-column:span 2" href="kontrolnaya-11.html"><span class="k">контрольная</span></a><div class="ktr vne-l" style="grid-column:span 2"><span class="k">игра</span></div></div><div class="nw">7 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-A) 30%, var(--card))" href="nedelya-27.html">27</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-A) 30%, var(--card))" href="nedelya-28.html">28</a><a class="ned split" style="--nb:linear-gradient(90deg,color-mix(in srgb, var(--ktr) 34%, var(--card)) 0 50%,color-mix(in srgb, var(--d-D) 34%, var(--card)) 50% 100%)" href="nedelya-29.html">29</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-D) 30%, var(--card))" href="nedelya-30.html">30</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-V) 30%, var(--card))" href="nedelya-31.html">31</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-V) 30%, var(--card))" href="nedelya-32.html">32</a><a class="ned" style="--nb:color-mix(in srgb, var(--ktr) 30%, var(--card))" href="nedelya-33.html">33</a></div></section></div><div class="tr-kruzhok"><section class="chetv"><div class="chetv-hd"><span class="rim">I</span><span class="cw">четверть</span><span class="dts">1 сентября — 25 октября</span></div><div class="lenta"><a class="blok kr-chast" style="grid-column:span 4;--c:var(--d-D)" href="blok-kruzhok-i.html"><span class="im">рыцари и лжецы</span><span class="pz">отрицание высказывания · разбор случаев · сквозной сюжет вместо разрозненных задач</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">2 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-D)" href="blok-kruzhok-i.html"><span class="im">раскраски</span><span class="pz">ход меняет цвет · чётность числа ходов · доска без двух углов</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">3 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-D)" href="blok-kruzhok-i.html"><span class="im">замощения</span><span class="pz">узкие места · с чего начинать конструкцию · когда замостить нельзя</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">3 недели</span></span></a></div><div class="nw">8 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-01.html">1</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-02.html">2</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-03.html">3</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-04.html">4</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-05.html">5</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-06.html">6</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-07.html">7</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-08.html">8</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">II</span><span class="cw">четверть</span><span class="dts">4 ноября — 30 декабря</span></div><div class="lenta"><a class="blok kr-chast" style="grid-column:span 4;--c:var(--d-A)" href="blok-kruzhok-ii.html"><span class="im">размен монет</span><span class="pz">делимость со звёздочкой · подсчёт двумя способами со звёздочкой</span><span class="niz"><span class="dm">арифметика</span><span class="ch">2 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-A)" href="blok-kruzhok-ii.html"><span class="im">принцип Дирихле</span><span class="pz">ящики и предметы · Дирихле в задачах на остатки · как выбрать ящик</span><span class="niz"><span class="dm">арифметика</span><span class="ch">3 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-D)" href="blok-kruzhok-ii.html"><span class="im">инвариант</span><span class="pz">величина, которая не меняется при ходе · семь роботов с разными операциями · инвариант как препятствие</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">3 недели</span></span></a></div><div class="nw">8 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-09.html">9</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-10.html">10</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-11.html">11</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-12.html">12</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-13.html">13</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-14.html">14</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-15.html">15</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-16.html">16</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">III</span><span class="cw">четверть</span><span class="dts">11 января — 26 марта</span></div><div class="lenta"><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-K)" href="blok-kruzhok-iii.html"><span class="im">оценка и пример</span><span class="pz">как строить пример, а не только запрет · разбиение на блоки · оценка внутри блока</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">3 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-K)" href="blok-kruzhok-iii.html"><span class="im">изоморфизм задач</span><span class="pz">постройте соответствие между двумя задачами · организованный перебор со звёздочкой</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">3 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 8;--c:var(--d-K)" href="blok-kruzhok-iii.html"><span class="im">информация</span><span class="pz">отгадывание чисел карточками · код с исправлением ошибки · гири 1, 2, 4, 8 · код Грея</span><span class="niz"><span class="dm">комбинаторика</span><span class="ch">4 недели</span></span></a></div><div class="nw">10 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-17.html">17</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-18.html">18</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-19.html">19</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-20.html">20</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-21.html">21</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-22.html">22</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-23.html">23</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-24.html">24</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-25.html">25</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-26.html">26</a></div></section><section class="chetv"><div class="chetv-hd"><span class="rim">IV</span><span class="cw">четверть</span><span class="dts">6 апреля — 26 мая</span></div><div class="lenta"><a class="blok kr-chast" style="grid-column:span 4;--c:var(--d-A)" href="blok-kruzhok-iv.html"><span class="im">арифметика</span><span class="pz">циклы степеней по модулю · разнобой</span><span class="niz"><span class="dm">арифметика</span><span class="ch">2 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 6;--c:var(--d-D)" href="blok-kruzhok-iv.html"><span class="im">игры</span><span class="pz">разметка позиций с конца · симметрия как стратегия · ним и двоичная запись</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">3 недели</span></span></a><a class="blok kr-chast" style="grid-column:span 4;--c:var(--d-D)" href="blok-kruzhok-iv.html"><span class="im">процессы</span><span class="pz">полуинвариант · почему процесс обязан кончиться</span><span class="niz"><span class="dm">дискретная математика</span><span class="ch">2 недели</span></span></a></div><div class="nw">7 недель</div><div class="linejka"><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-27.html">27</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-28.html">28</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-29.html">29</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-30.html">30</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-31.html">31</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-32.html">32</a><a class="ned" style="--nb:color-mix(in srgb, var(--d-Z) 30%, var(--card))" href="nedelya-33.html">33</a></div></section></div></div></div><script>
+(function(){
+  var K='sajt-kursa-tumbler';
+  var v=localStorage.getItem(K);
+  var el=document.getElementById(v==='kruzhok'?'t-kruzhok':'t-kurs');
+  if(el)el.checked=true;
+  document.getElementById('t-kurs').addEventListener('change',function(){localStorage.setItem(K,'kurs')});
+  document.getElementById('t-kruzhok').addEventListener('change',function(){localStorage.setItem(K,'kruzhok')});
+})();
+</script></div>
+</body>
+</html>
