@@ -11,7 +11,7 @@
   --acc:#b3503c; --accbg:#f7e8e0;
   --serif:Georgia,'Times New Roman',serif;
   --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  --d-O:#a68a4e; --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
+  --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
   --d-Z:#3f7d75;
   --ktr:#a79d90; --ktr-bg:#eae3d5;
 }
@@ -148,6 +148,15 @@ a{color:inherit}
   justify-content:center;padding:6px 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{background:transparent;border-style:dashed}
 .ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
+/* незаполненный слот (8И класс, владелец 2026-08-22) — обычно ШИРОКИЙ (может
+   занимать всю четверть, --sp большой), поэтому не узкая полоска с текстом
+   поперёк, как контрольная/игра, а штриховка "место зарезервировано" и
+   горизонтальная подпись — вертикальный текст в широком коробе выглядел бы
+   потерянным. Не ссылка — курсор обычный, а не pointer. */
+.ktr.pusto{background:repeating-linear-gradient(135deg,var(--card),var(--card) 10px,
+  var(--line2) 10px,var(--line2) 11px);border-style:dashed;cursor:default}
+.ktr.pusto .k{writing-mode:horizontal-tb;transform:none;font:600 14px/1.1 var(--sans);
+  letter-spacing:.02em}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
 .ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
