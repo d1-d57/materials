@@ -422,7 +422,7 @@ podgotovit "$R1"
 GIT_ZONA_REPO="$R1" python3 "$T/zvat.py" "$GEN" "$R1" \
     _studio/zhurnal/arka bez-wt --branch osnova --zone "_generator/" \
     --finalizirovano "ф1" --finalizirovano "ф2" \
-    --kanal terminal --opisanie "проба обычного режима" > "$T/plain.txt" 2>&1 || true
+    --kanal terminal --dvizhok claude --opisanie "проба обычного режима" > "$T/plain.txt" 2>&1 || true
 
 [ -f "$R1/_studio/zhurnal/arka/kod_bez-wt.md" ] \
     && echo "  ✅ БЕЗ --worktree заход лёг в основное дерево (режим не сломан)" \
@@ -591,7 +591,7 @@ for TEMA in "fixt-a&b" "fixt-a;b" "fixt-a*b" "fixt-a\$b" "fixt-a|b" "fixt-it's" 
     GIT_ZONA_REPO="$R4" python3 "$T/zvat.py" "$GEN" "$R4" \
         _studio/zhurnal/arka "$TEMA" --branch osnova --zone "_generator/" \
         --finalizirovano "ф1" --finalizirovano "ф2" \
-        --kanal terminal --opisanie "проба метасимволов" > "$T/meta.txt" 2>&1 || true
+        --kanal terminal --dvizhok claude --opisanie "проба метасимволов" > "$T/meta.txt" 2>&1 || true
     S=$(sed -n '/^cd .*claude -p/,/^```$/p' "$T/meta.txt" | sed '$d')
     if [ -z "$S" ]; then
         # Генератор ОТКАЗАЛ на кривом имени — законный и даже лучший исход
