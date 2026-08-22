@@ -280,6 +280,13 @@ a.metka:hover{filter:brightness(1.12)}
   .ktr .k{writing-mode:horizontal-tb;transform:none;font-size:13px;
     white-space:normal;overflow:visible;text-overflow:clip;text-align:left}
   .ktr.chetv{width:44%}
+  /* Контрольная/игра на ЦЕЛУЮ неделю (chasy>=2) — узкая тонкая плашка той же
+     высоты, что и получасовая, читалась как "непонятно, чему отдана целая
+     неделя" (владелец 2026-08-22): на десктопе разницу в часах показывает
+     ширина колонки, а на мобильном все плашки и так во всю ширину, ширина
+     ничего не сообщает. Даём такой плашке высоту и вес блочной карточки. */
+  .ktr.polnaya{width:100%;justify-content:center;min-height:64px;padding:14px 16px}
+  .ktr.polnaya .k{font-size:17px;text-align:center}
   .tochki{grid-template-columns:1fr;gap:22px}
   .zanyatie{grid-template-columns:1fr;gap:4px}
   .zanyatie .kr{justify-self:start}
