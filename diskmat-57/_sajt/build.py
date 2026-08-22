@@ -148,6 +148,7 @@ a{color:inherit}
   border-radius:22px;text-decoration:none;cursor:pointer;user-select:none}
 .perekl-nav a:hover,.perekl-nav label:hover{color:var(--ink)}
 .perekl-nav a.tek{background:var(--ink);color:var(--paper)}
+.perekl-nav .dk{display:none}
 /* На странице года кнопки "основной курс"/"кружок" в общей шапке — это те же
    label этого же тумблера (переключают вид на месте), а не ссылки на index.html:
    раньше они дублировались отдельным рядом ниже, и работала только НИЖНЯЯ пара
@@ -271,7 +272,8 @@ a{color:inherit}
   font:600 11px/24px var(--sans);color:var(--ink2);text-align:center;
   background:var(--nb);border:1px solid var(--line2)}
 .ned:hover{color:var(--acc);border-color:var(--acc)}
-.ned.split{box-shadow:inset 0 0 0 1px var(--card)}
+.ned.split{box-shadow:inset 0 0 0 1px var(--card);
+  background:linear-gradient(90deg,var(--c1) 0 50%,var(--c2) 50% 100%)}
 
 /* вне сетки */
 .vne{display:inline-flex;align-items:baseline;gap:9px;margin-top:7px;padding:5px 11px;
@@ -346,11 +348,37 @@ a.metka:hover{filter:brightness(1.12)}
    раскладка становится вертикальной, блок на всю ширину. */
 @media(max-width:1300px){
   .oborot,.uzko{padding:0 16px 50px}
-  .chetv{display:block}
-  .chetv-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-    margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+  /* Шапка: имя курса и «демо-версия» — на одной строке (spacer раздвигает их),
+     три кнопки навигации — отдельной строкой ПОД ними, во всю ширину:
+     сначала обе кнопки лезли в одну строку с именем и разъезжались
+     (владелец 2026-08-22). Слово "курс" вместо "основной курс" — короче,
+     влезает в узкую кнопку (см. shapka(), .dl/.dk). */
+  .shapka .spacer{order:2}
+  .demo{order:3}
+  .perekl-nav{order:4;flex-basis:100%;margin-left:0;margin-top:10px;
+    justify-content:space-between}
+  .perekl-nav a,.perekl-nav label{flex:1;text-align:center;padding:9px 6px}
+  .perekl-nav .dl{display:none}
+  .perekl-nav .dk{display:inline}
+
+  /* Четверть: заголовок — во всю ширину сверху; ниже — карточки занятий
+     слева и УЗКАЯ СПЛОШНАЯ вертикальная лента недель справа, а не строка
+     мелких клеток ПОСЛЕ всех карточек (владелец 2026-08-22: "лента недель
+     не должна идти отдельным блоком в конце — пусть идёт сбоку, одной
+     длинной вертикальной полосой"). */
+  .chetv{display:grid;grid-template-columns:minmax(0,1fr) 34px;
+    grid-template-rows:auto auto 1fr;column-gap:8px;row-gap:6px;margin:16px 0 0}
+  .chetv-hd{grid-column:1/-1;grid-row:1;display:flex;align-items:baseline;gap:10px;
+    flex-wrap:wrap;margin-bottom:0;padding-bottom:5px;border-bottom:1px solid var(--line2)}
   .chetv-hd .dts{display:inline;margin-top:0}
-  .nw{text-align:left;line-height:1.4;margin:7px 0 3px}
+  .chetv .lenta{grid-column:1;grid-row:2/4}
+  .nw{grid-column:2;grid-row:2;text-align:center;line-height:1.15;
+    font-size:10px;padding:0}
+  .chetv .linejka{grid-column:2;grid-row:3;grid-template-columns:none;
+    display:flex;flex-direction:column;height:100%}
+  .linejka .ned{flex:1 1 0;height:auto;min-height:22px;font-size:10px;line-height:1;
+    display:flex;align-items:center;justify-content:center}
+  .ned.split{background:linear-gradient(180deg,var(--c1) 0 50%,var(--c2) 50% 100%)}
   .zag h1{font-size:27px}
   .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
   .lenta>*{grid-column:1/-1!important}
@@ -360,10 +388,15 @@ a.metka:hover{filter:brightness(1.12)}
   /* На узком экране плашка контрольной НЕ во всю ширину: иначе она получает ту же
      массу, что тема на шесть часов, и математика опять проигрывает контролю. */
   .ktr{padding:6px 11px;width:52%;justify-content:flex-start}
-  .ktr .k{writing-mode:horizontal-tb;transform:none}
-  .ktr.chetv{width:38%}
-  .linejka{grid-template-columns:repeat(5,minmax(0,1fr))}
-  .chetv-hd .nw{margin-left:0;width:100%}
+  /* .ktr .k укрупнён (см. базовое правило, П. владельца 2026-08-22) для
+     ВЕРТИКАЛЬНОЙ узкой полосы на десктопе — горизонтальному тексту в плашке
+     52% ширины столько не нужно, иначе "контрольная" обрезается ("кон…").
+     white-space:normal — доп. страховка: у .ktr.chetv (38→44%, четвертная
+     контрольная) слово всё ещё может не влезть в одну строку, пусть тогда
+     перенесётся на вторую, а не срежется многоточием. */
+  .ktr .k{writing-mode:horizontal-tb;transform:none;font-size:13px;
+    white-space:normal;overflow:visible;text-overflow:clip;text-align:left}
+  .ktr.chetv{width:44%}
   .tochki{grid-template-columns:1fr;gap:22px}
   .zanyatie{grid-template-columns:1fr;gap:4px}
   .zanyatie .kr{justify-self:start}
@@ -381,18 +414,23 @@ def shapka(g, tek='', tumbler=False):
     ссылки на index.html, а label ТЕХ ЖЕ радиокнопок тумблера, что переключают
     вид на месте (владелец 2026-08-22: кнопка должна работать там, где она
     нарисована, а не только в продублированном ряду ниже — тот ряд снят).
+
+    "основной курс" на узком экране не помещается в кнопку — оба слова лежат
+    в двух span, CSS на мобильном показывает только короткое "курс"
+    (владелец 2026-08-22).
     """
+    kurs_metka = '<span class="dl">основной курс</span><span class="dk">курс</span>'
     if tumbler:
-        out = ['<label for="t-kurs">основной курс</label>',
+        out = ['<label for="t-kurs">%s</label>' % kurs_metka,
                '<label for="t-kruzhok">кружок</label>',
                '<a href="istochniki.html">источники</a>']
     else:
-        knopki = [('index.html', 'основной курс', 'kurs'),
-                  ('index.html', 'кружок', 'kruzhok'),
-                  ('istochniki.html', 'источники', 'ist')]
+        knopki = [('index.html', kurs_metka, 'kurs', True),
+                  ('index.html', 'кружок', 'kruzhok', False),
+                  ('istochniki.html', 'источники', 'ist', False)]
         out = ['<a href="%s"%s>%s</a>'
-               % (adres, ' class="tek"' if kod == tek else '', E(imya))
-               for adres, imya, kod in knopki]
+               % (adres, ' class="tek"' if kod == tek else '', imya if syroj else E(imya))
+               for adres, imya, kod, syroj in knopki]
     return ('<header class="shapka"><a class="tit" href="index.html">%s</a>'
             '<nav class="perekl-nav">%s</nav><span class="spacer"></span>'
             '<span class="demo">демо-версия</span></header>'
@@ -506,6 +544,11 @@ def lenta_kruzhka(ch):
 
 
 def linejka(ch, rezhim):
+    """Расщеплённая неделя красится ДВУМЯ цветами через --c1/--c2, а не готовым
+    градиентом: направление разреза разное на десктопе (лента горизонтальна —
+    полоски слева/справа, 90deg) и на мобильном (лента становится вертикальной
+    колонкой сбоку от карточек — полоски сверху/снизу, 180deg, владелец
+    2026-08-22); одни и те же цвета, направление задаёт CSS по ширине экрана."""
     out = []
     for ned in ch['nedeli']:
         if rezhim == 'kruzhok':
@@ -519,12 +562,12 @@ def linejka(ch, rezhim):
                 fon = 'color-mix(in srgb, %s 30%%, var(--card))' % cv[0]
                 spl = ''
             else:
-                fon = ('linear-gradient(90deg,'
-                       'color-mix(in srgb, %s 34%%, var(--card)) 0 50%%,'
-                       'color-mix(in srgb, %s 34%%, var(--card)) 50%% 100%%)' % (cv[0], cv[1]))
+                fon = ('--c1:color-mix(in srgb, %s 34%%, var(--card));'
+                       '--c2:color-mix(in srgb, %s 34%%, var(--card))' % (cv[0], cv[1]))
                 spl = ' split'
-        out.append('<a class="ned%s" style="--nb:%s" href="nedelya-%02d.html">%d</a>'
-                   % (spl, fon, ned['nomer'], ned['nomer']))
+        st = fon if spl else ('--nb:%s' % fon)
+        out.append('<a class="ned%s" style="%s" href="nedelya-%02d.html">%d</a>'
+                   % (spl, st, ned['nomer'], ned['nomer']))
     return ''.join(out)
 
 
