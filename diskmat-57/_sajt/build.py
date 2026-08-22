@@ -1,24 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Сборщик сайта курса. Один источник — god.json, одна команда — этот файл.
+"""Сборщик сайта курса. Один источник на класс, одна команда — этот файл.
 
-    python3 build.py            # собрать в dist/
+    python3 build.py            # собрать ВСЕ классы (см. KLASSY) в dist/
     python3 build.py --proverit # только счёт, ничего не писать
 
-Три экрана (ТЗ-sajt.md §3) плюс страница контрольной (П8, доводка 2026-08-20):
-  dist/index.html            — год целиком, календарь по неделям, тумблер курс/кружок
-  dist/blok-<slug>.html      — блок: опорные точки из karta, строки занятий
-  dist/nedelya-NN.html       — занятие: пустой каркас под будущее наполнение
-  dist/kontrolnaya-NN.html   — контрольная: её тема (chto), а не неделя
+Классы (владелец 2026-08-22): семиклассники — god.json, файлы без префикса
+(историческая ссылка уже разошлась); восьмой — god-8.json, префикс "8-",
+пока пустой каркас (материал пришлют позже). Переключатель — в shapka().
 
-Весь видимый текст берётся из god.json либо из белого списка god.json["interfejs"].
-Ничего не сочиняется — проверяется gejt_teksta.py.
+Три экрана (ТЗ-sajt.md §3) плюс страница контрольной (П8, доводка 2026-08-20),
+на класс с префиксом <p> (пусто у седьмого, "8-" у восьмого):
+  dist/<p>index.html            — год целиком, календарь по неделям, тумблер курс/кружок
+  dist/<p>blok-<slug>.html      — блок: опорные точки из karta, строки занятий
+  dist/<p>nedelya-NN.html       — занятие: пустой каркас под будущее наполнение
+  dist/<p>kontrolnaya-NN.html   — контрольная: её тема (chto), а не неделя
+
+Весь видимый текст берётся из god-файла либо из белого списка interfejs.
+Ничего не сочиняется — проверяется gejt_teksta.py (объединяет все god-файлы).
 """
 import json, os, re, sys, html
 
 TUT = os.path.dirname(os.path.abspath(__file__))
-IST = os.path.join(TUT, 'god.json')
 DIST = os.path.join(TUT, 'dist')
+
+# Классы школы 57, буква И — сайт года 2026/27 у семиклассников, восьмой пока
+# пуст (учительница пришлёт материал позже, владелец 2026-08-22). Каждый
+# класс — свой god-файл и свой набор страниц с префиксом файла (второй
+# элемент кортежа); префикс '' у седьмого — исторически первый, без него
+# ссылки, уже отправленные коллеге, не должны сдвинуться.
+KLASSY = [('7', 'god.json', ''), ('8', 'god-8.json', '8-')]
+PREFIKS = ''   # текущий префикс файлов — выставляет sobrat() на каждый класс
 
 # ── нарезка года на недели ─────────────────────────────────────────────────
 # Неделя = пара = два подряд идущих урока потока четверти. В поток входят
@@ -419,7 +431,8 @@ a.metka:hover{filter:brightness(1.12)}
 
 
 def shapka(g, tek='', tumbler=False):
-    """Одна шапка на все страницы: имя курса и три кнопки.
+    """Одна шапка на все страницы: имя курса, переключатель класса и три
+    кнопки курс/кружок/источники.
 
     Разъезжающиеся шапки заставляют читателя заново искать навигацию на каждом
     экране; кнопка «к году» вместо общей панели — тот же дефект.
@@ -432,23 +445,35 @@ def shapka(g, tek='', tumbler=False):
     "основной курс" на узком экране не помещается в кнопку — оба слова лежат
     в двух span, CSS на мобильном показывает только короткое "курс"
     (владелец 2026-08-22).
+
+    Переключатель класса (7/8) — НАСТОЯЩАЯ навигация на index.html другого
+    класса (не тумблер: у каждого класса свой god-файл, свои данные, сшивать
+    их в одну страницу незачем и рискованно для будущего наполнения восьмого
+    владелец 2026-08-22). Использует ту же вёрстку .perekl-nav, что и
+    курс/кружок/источники — не новый визуальный язык, тот же самый.
     """
+    klass_nav = ''.join(
+        '<a href="%sindex.html"%s>%s класс</a>'
+        % (pfx, ' class="tek"' if kl == g['_klass'] else '', E(kl))
+        for kl, _, pfx in KLASSY)
     kurs_metka = '<span class="dl">основной курс</span><span class="dk">курс</span>'
     if tumbler:
         out = ['<label for="t-kurs">%s</label>' % kurs_metka,
                '<label for="t-kruzhok">кружок</label>',
-               '<a href="istochniki.html">источники</a>']
+               '<a href="%sistochniki.html">источники</a>' % PREFIKS]
     else:
-        knopki = [('index.html', kurs_metka, 'kurs', True),
-                  ('index.html', 'кружок', 'kruzhok', False),
-                  ('istochniki.html', 'источники', 'ist', False)]
+        knopki = [('%sindex.html' % PREFIKS, kurs_metka, 'kurs', True),
+                  ('%sindex.html' % PREFIKS, 'кружок', 'kruzhok', False),
+                  ('%sistochniki.html' % PREFIKS, 'источники', 'ist', False)]
         out = ['<a href="%s"%s>%s</a>'
                % (adres, ' class="tek"' if kod == tek else '', imya if syroj else E(imya))
                for adres, imya, kod, syroj in knopki]
-    return ('<header class="shapka"><a class="tit" href="index.html">%s</a>'
+    return ('<header class="shapka"><a class="tit" href="%sindex.html">Спецмат</a>'
+            '<span class="razmer">57 школа · И классы</span>'
+            '<nav class="perekl-nav">%s</nav>'
             '<nav class="perekl-nav">%s</nav><span class="spacer"></span>'
             '<span class="demo">демо-версия</span></header>'
-            % (E(g['kurs']['nazvanie']), ''.join(out)))
+            % (PREFIKS, klass_nav, ''.join(out)))
 
 
 def stranica(titul, telo, klass=''):
@@ -520,16 +545,16 @@ def lenta_kursa(ch):
                 kl += ' styk'
                 styk = '<span class="styk-l">на стыке</span>'
             out.append(
-                '<a class="%s" style="%s" href="blok-%s.html">'
+                '<a class="%s" style="%s" href="%sblok-%s.html">'
                 '<span class="im">%s</span><span class="pz">%s</span>'
                 '<span class="niz">%s%s<span class="ch">%d %s</span></span></a>'
-                % (kl, st, el['slug'],
+                % (kl, st, PREFIKS, el['slug'],
                    E(el['imya']), E(el['podzag']), dm_html(el), styk,
                    el['chasy'], chasy_slovo(el['chasy'])))
         elif el['tip'] == 'kontrolnaya':
             kl = 'ktr chetv' if el.get('chetvertnaya') else 'ktr'
-            out.append('<a class="%s" style="--sp:%d" href="%s.html">'
-                       '<span class="k">контрольная</span></a>' % (kl, span, el['slug']))
+            out.append('<a class="%s" style="--sp:%d" href="%s%s.html">'
+                       '<span class="k">контрольная</span></a>' % (kl, span, PREFIKS, el['slug']))
         else:
             # вне сетки: та же узкая плашка, что у контрольной, и в той же ленте —
             # отдельной строкой под календарём она читалась как чужеродный довесок.
@@ -556,11 +581,11 @@ def lenta_kruzhka(ch):
         span = tema['nedel'] * 2          # лента размечена в УРОКАХ, неделя = два урока
         out.append(
             '<a class="blok kr-chast" style="--sp:%d;--c:var(--d-%s)" '
-            'href="blok-%s.html">'
+            'href="%sblok-%s.html">'
             '<span class="im">%s</span><span class="pz">%s</span>'
             '<span class="niz"><span class="dm">%s</span>'
             '<span class="ch">%d %s</span></span></a>'
-            % (span, tema['domen'], k['slug'], E(tema['imya']),
+            % (span, tema['domen'], PREFIKS, k['slug'], E(tema['imya']),
                '' if tema['nedel'] < 2 else E(RAZD.join(upakovat_chto(tema['chto']))),
                E(DOMENY[tema['domen']]),
                tema['nedel'], 'недели' if 2 <= tema['nedel'] <= 4 else 'неделя'))
@@ -590,21 +615,26 @@ def linejka(ch, rezhim):
                        '--c2:color-mix(in srgb, %s 34%%, var(--card))' % (cv[0], cv[1]))
                 spl = ' split'
         st = fon if spl else ('--nb:%s' % fon)
-        out.append('<a class="ned%s" style="%s" href="nedelya-%02d.html">%d</a>'
-                   % (spl, st, ned['nomer'], ned['nomer']))
+        out.append('<a class="ned%s" style="%s" href="%snedelya-%02d.html">%d</a>'
+                   % (spl, st, PREFIKS, ned['nomer'], ned['nomer']))
     return ''.join(out)
 
 
 def chetvert_blok(ch, rezhim):
     lenta = lenta_kruzhka(ch) if rezhim == 'kruzhok' else lenta_kursa(ch)
     vne = ''   # вне-сеточные слоты рисуются внутри ленты, см. lenta_kursa
+    # Даты четверти — начало и конец на РАЗНЫХ строках (владелец 2026-08-22:
+    # обе даты помещались на одну строку, а хотелось "1 сентября" отдельно,
+    # затем "— 25 октября" ниже). Разрыв ставится на уже существующем " — "
+    # из данных — не сочиняется новый текст, только перенос строки в разметке.
+    daty = E(ch['daty']).replace(' — ', '<br>— ')
     return ('<section class="chetv">'
             '<div class="chetv-hd"><span class="rim">%s</span>'
             '<span class="cw">четверть</span><span class="dts">%s</span></div>'
             '<div class="lenta">%s</div>'
             '<div class="nw">%d недель</div>'
             '<div class="linejka">%s</div>%s</section>'
-            % (E(ch['nomer']), E(ch['daty']), lenta,
+            % (E(ch['nomer']), daty, lenta,
                len(ch['nedeli']), linejka(ch, rezhim), vne))
 
 
@@ -693,15 +723,15 @@ def zanyatia_html(nedeli, svoj, kruzhok_ob):
             if el is svoj:
                 continue
             if el['tip'] == 'blok':
-                sosed.append('<a href="blok-%s.html">%s</a>' % (el['slug'], E(el['imya'])))
+                sosed.append('<a href="%sblok-%s.html">%s</a>' % (PREFIKS, el['slug'], E(el['imya'])))
             else:
-                sosed.append('<a href="%s.html">контрольная <i class="tochka">·</i> %s</a>'
-                             % (el['slug'], E(el['chto'])))
-        kr = ('<span class="kr"><a href="blok-%s.html">кружок</a></span>' % kruzhok_ob['slug']
+                sosed.append('<a href="%s%s.html">контрольная <i class="tochka">·</i> %s</a>'
+                             % (PREFIKS, el['slug'], E(el['chto'])))
+        kr = ('<span class="kr"><a href="%sblok-%s.html">кружок</a></span>' % (PREFIKS, kruzhok_ob['slug'])
               if kruzhok_ob is not None else '')
-        row.append('<div class="zanyatie"><a class="n" href="nedelya-%02d.html">неделя %d</a>'
+        row.append('<div class="zanyatie"><a class="n" href="%snedelya-%02d.html">неделя %d</a>'
                    '<span class="sosed">%s</span>%s</div>'
-                   % (ned['nomer'], ned['nomer'], ' · '.join(sosed), kr))
+                   % (PREFIKS, ned['nomer'], ned['nomer'], ' · '.join(sosed), kr))
     return '<div class="zanyatia">%s</div>' % ''.join(row)
 
 
@@ -716,9 +746,9 @@ def knigi_bloka(g, el):
         k = po_id.get(i)
         if not k:
             continue
-        p.append('<a class="kniga" href="istochniki.html#%s">'
+        p.append('<a class="kniga" href="%sistochniki.html#%s">'
                  '<span class="kn-a">%s</span><span class="kn-n">%s</span></a>'
-                 % (k['id'], E(k['avtor']), E(k['nazvanie'])))
+                 % (PREFIKS, k['id'], E(k['avtor']), E(k['nazvanie'])))
     if not p:
         return ''
     return ('<section class="sect"><p class="grp">источники</p>'
@@ -739,8 +769,8 @@ def istochniki_stranica(g):
             '%s'
             '<div class="zag"><h1>источники</h1></div>'
             '<div class="isty">%s</div>'
-            '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
-            '</div>' % (shapka(g, 'ist'), ''.join(p)))
+            '<div class="podval"><a class="nazad" href="%sindex.html">к году</a></div>'
+            '</div>' % (shapka(g, 'ist'), ''.join(p), PREFIKS))
     return stranica('источники', telo)
 
 
@@ -765,13 +795,13 @@ def blok_stranica(g, el, kruzhok=False):
             '<section class="sect"><p class="grp">опорные точки</p>%s</section>'
             '<section class="sect"><p class="grp">занятия</p>%s</section>'
             '%s'
-            '<div class="podval"><a class="nazad" href="index.html">к году</a>'
+            '<div class="podval"><a class="nazad" href="%sindex.html">к году</a>'
             '<span class="spacer"></span>'
-            '<a class="nazad" href="istochniki.html">источники</a></div>'
+            '<a class="nazad" href="%sistochniki.html">источники</a></div>'
             '</div>'
             % (shapka(g, 'kruzhok' if kruzhok else 'kurs'), ''.join(metki), E(imya), E(el['podzag']),
                tochki_html(el['karta'], cv), zanyatia_html(el['nedeli'], el, kruzhok_ob),
-               knigi_bloka(g, el)))
+               knigi_bloka(g, el), PREFIKS, PREFIKS))
     return stranica(imya, telo)
 
 
@@ -781,18 +811,18 @@ def nedelya_stranica(g, ned):
     ssylki = []
     for el, chas in ned['doli']:
         if el['tip'] == 'blok':
-            metki.append('<a class="metka" style="--c:%s" href="blok-%s.html">%s</a>'
-                         % (cvet(el), el['slug'], E(el['imya'])))
+            metki.append('<a class="metka" style="--c:%s" href="%sblok-%s.html">%s</a>'
+                         % (cvet(el), PREFIKS, el['slug'], E(el['imya'])))
             ssylki.append(el)
         else:
             metki.append('<span class="metka tih">контрольная'
                          '<i class="tochka">·</i><b>%s</b></span>' % E(el['chto']))
     if ch['kruzhok'] is not None:
-        metki.append('<a class="metka" style="--c:var(--d-Z)" href="blok-%s.html">кружок</a>'
-                     % ch['kruzhok']['slug'])
-    niz = ['<a class="nazad" href="index.html">к году</a>']
+        metki.append('<a class="metka" style="--c:var(--d-Z)" href="%sblok-%s.html">кружок</a>'
+                     % (PREFIKS, ch['kruzhok']['slug']))
+    niz = ['<a class="nazad" href="%sindex.html">к году</a>' % PREFIKS]
     for el in ssylki:
-        niz.append('<a class="nazad" href="blok-%s.html">к блоку</a>' % el['slug'])
+        niz.append('<a class="nazad" href="%sblok-%s.html">к блоку</a>' % (PREFIKS, el['slug']))
     telo = ('<div class="oborot uzko">'
             '%s'
             '<div class="zag"><div class="metki">%s</div><h1>неделя %d</h1></div>'
@@ -812,17 +842,24 @@ def kontrolnaya_stranica(g, ktr):
             '%s'
             '<div class="zag"><div class="metki">%s</div><h1>контрольная</h1>'
             '<p class="pz">%s</p></div>'
-            '<div class="podval"><a class="nazad" href="index.html">к году</a></div>'
-            '</div>' % (shapka(g, 'kurs'), ''.join(metki), E(ktr['chto'])))
+            '<div class="podval"><a class="nazad" href="%sindex.html">к году</a></div>'
+            '</div>' % (shapka(g, 'kurs'), ''.join(metki), E(ktr['chto']), PREFIKS))
     return stranica(ktr['chto'], telo)
 
 
 # ── прогон ─────────────────────────────────────────────────────────────────
-def main():
-    tolko_schet = '--proverit' in sys.argv
-    g = json.load(open(IST, encoding='utf-8'))
-    global DOMENY
+def sobrat_klass(klass, god_fajl, prefiks, tolko_schet):
+    """Собирает ОДИН класс (свой god-файл, свой набор файлов с префиксом) —
+    KLASSY гоняет эту функцию по разу на класс, вызов независим для каждого:
+    пустой восьмой класс (владелец 2026-08-22 — материал пришлют позже, пока
+    нужен только каркас с теми же четвертями) не должен уронить сборку
+    семиклассников, и наоборот."""
+    global DOMENY, PREFIKS
+    ist = os.path.join(TUT, god_fajl)
+    g = json.load(open(ist, encoding='utf-8'))
+    g['_klass'] = klass
     DOMENY = g['kurs']['domeny']
+    PREFIKS = prefiks
 
     chetverti, bloki, nedeli, kontrolnye = razobrat(g)
 
@@ -837,7 +874,8 @@ def main():
     kruzhki = [c['kruzhok'] for c in chetverti if c['kruzhok'] is not None]
 
     if tolko_schet:
-        print('источник        : %s' % IST)
+        print('--- класс %s (%s) ---' % (klass, god_fajl))
+        print('источник        : %s' % ist)
         print('четвертей       : %d' % len(chetverti))
         print('уроков          : %d' % sum(c['chasy'] for c in g['chetverti']))
         print('недель          : %d' % y_ned)
@@ -858,16 +896,16 @@ def main():
             f.write(soder)
         pisali.append(imya)
 
-    polozhit('index.html', god_stranica(g, chetverti))
-    polozhit('istochniki.html', istochniki_stranica(g))
+    polozhit('%sindex.html' % prefiks, god_stranica(g, chetverti))
+    polozhit('%sistochniki.html' % prefiks, istochniki_stranica(g))
     for el in bloki:
-        polozhit('blok-%s.html' % el['slug'], blok_stranica(g, el))
+        polozhit('%sblok-%s.html' % (prefiks, el['slug']), blok_stranica(g, el))
     for k in kruzhki:
-        polozhit('blok-%s.html' % k['slug'], blok_stranica(g, k, kruzhok=True))
+        polozhit('%sblok-%s.html' % (prefiks, k['slug']), blok_stranica(g, k, kruzhok=True))
     for n in nedeli:
-        polozhit('nedelya-%02d.html' % n['nomer'], nedelya_stranica(g, n))
+        polozhit('%snedelya-%02d.html' % (prefiks, n['nomer']), nedelya_stranica(g, n))
     for ktr in kontrolnye:
-        polozhit('%s.html' % ktr['slug'], kontrolnaya_stranica(g, ktr))
+        polozhit('%s%s.html' % (prefiks, ktr['slug']), kontrolnaya_stranica(g, ktr))
 
     x_blok = len(bloki)
     x_kruzhok = len(kruzhki)
@@ -876,7 +914,8 @@ def main():
     x_ktr = len(kontrolnye)
     rasshep = sum(1 for n in nedeli if len(n['doli']) > 1)
 
-    print('источник         : %s' % IST)
+    print('--- класс %s (%s) ---' % (klass, god_fajl))
+    print('источник         : %s' % ist)
     print('собрано в        : %s' % DIST)
     print('страница года    : 1 из 1')
     print('страниц блоков   : %d из %d' % (x_blok, y_blok))
@@ -899,13 +938,24 @@ def main():
         bed.append('karta: %d из %d' % (x_karta, y_karta))
     if x_ktr != y_ktr:
         bed.append('контрольные: %d из %d' % (x_ktr, y_ktr))
-    if not (x_blok and x_ned and x_karta and x_ktr):
+    # "Охват 0" подозрителен ТОЛЬКО когда источник обещал контент, а вышло 0 —
+    # у восьмого класса источник САМ по себе пуст (y_* тоже 0), это законно
+    # (владелец 2026-08-22: пустой каркас, материал пришлют позже), не брак.
+    if not (x_blok and x_ned and x_karta and x_ktr) and (y_blok or y_kruzhok or y_ktr):
         bed.append('охват 0 при непустом источнике')
     if bed:
         print('ОХВАТ НЕ ПОЛОН: ' + ' · '.join(bed))
         return 1
-    print('охват полон')
+    print('охват полон' if x_blok else 'пустой каркас (класс ещё без материала)')
     return 0
+
+
+def main():
+    tolko_schet = '--proverit' in sys.argv
+    rc = 0
+    for klass, god_fajl, prefiks in KLASSY:
+        rc = sobrat_klass(klass, god_fajl, prefiks, tolko_schet) or rc
+    return rc
 
 
 if __name__ == '__main__':

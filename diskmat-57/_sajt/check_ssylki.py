@@ -18,7 +18,10 @@ import json, os, re, sys, collections
 
 TUT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(TUT, 'dist')
-IST = os.path.join(TUT, 'god.json')
+# Несколько классов (7 и 8, владелец 2026-08-22) — несколько source-файлов,
+# охват считается суммой по всем.
+IST_FAJLY = [f for f in ('god.json', 'god-8.json')
+             if os.path.exists(os.path.join(TUT, f))]
 
 SSYLKA = re.compile(r'<a\b[^>]*\bhref\s*=\s*"([^"]+)"', re.I)
 # П8: клик по плашке контрольной обязан вести на её тему (kontrolnaya-NN.html),
@@ -26,7 +29,14 @@ SSYLKA = re.compile(r'<a\b[^>]*\bhref\s*=\s*"([^"]+)"', re.I)
 KTR_SSYLKA = re.compile(r'<a\s+class="ktr[^"]*"[^>]*\bhref\s*=\s*"([^"]+)"', re.I)
 
 
+def bez_prefiksa(imya):
+    """Снимает префикс класса ("8-index.html" → "index.html") — у второго и
+    далее класса (владелец 2026-08-22) имя файла не с чистого корня."""
+    return re.sub(r'^\d+-', '', imya)
+
+
 def rod(imya):
+    imya = bez_prefiksa(imya)
     if imya == 'index.html':
         return 'god'
     if imya.startswith('blok-'):
@@ -68,17 +78,21 @@ def main():
             dostignuty[cel] += 1
         for h in KTR_SSYLKA.findall(soder):
             cel = h.split('#')[0].split('?')[0]
-            if cel.startswith('nedelya-'):
+            if bez_prefiksa(cel).startswith('nedelya-'):
                 ktr_na_nedelyu.append((f, h))
 
-    # охват: до каждой ли страницы вообще можно дойти
-    sirotstvo = [f for f in fajly if f != 'index.html' and not dostignuty.get(f)]
+    # охват: до каждой ли страницы вообще можно дойти — index.html ЛЮБОГО
+    # класса (в т.ч. "8-index.html") законно недостижим ИЗНУТРИ: это вход
+    # с витрины, на него ссылается шапка другого класса, а не сама страница.
+    sirotstvo = [f for f in fajly if not bez_prefiksa(f) == 'index.html' and not dostignuty.get(f)]
 
-    g = json.load(open(IST, encoding='utf-8'))
-    y_blok = sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'blok')
-    y_kruzhok = sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'kruzhok')
-    y_ned = sum(c['chasy'] for c in g['chetverti']) // 2
-    y_ktr = sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'kontrolnaya')
+    y_blok = y_kruzhok = y_ned = y_ktr = 0
+    for ist_fajl in IST_FAJLY:
+        g = json.load(open(os.path.join(TUT, ist_fajl), encoding='utf-8'))
+        y_blok += sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'blok')
+        y_kruzhok += sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'kruzhok')
+        y_ned += sum(c['chasy'] for c in g['chetverti']) // 2
+        y_ktr += sum(1 for c in g['chetverti'] for e in c['elementy'] if e['tip'] == 'kontrolnaya')
 
     print('страниц в dist   : %d (блоков %d из %d, кружка %d из %d, занятий %d из %d, контрольных %d из %d)'
           % (len(fajly),

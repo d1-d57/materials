@@ -30,8 +30,12 @@ import json, os, re, sys, html
 from html.parser import HTMLParser
 
 TUT = os.path.dirname(os.path.abspath(__file__))
-IST = os.path.join(TUT, 'god.json')
 DIST = os.path.join(TUT, 'dist')
+# Несколько классов (7 и 8, владелец 2026-08-22) — несколько source-файлов;
+# страница любого класса может использовать слово из ЛЮБОГО god-файла (общая
+# шапка одна на все классы), поэтому корпус и белый список — объединение.
+IST_FAJLY = [f for f in ('god.json', 'god-8.json')
+             if os.path.exists(os.path.join(TUT, f))]
 
 VIDIMYE_ATR = ('title', 'alt', 'aria-label', 'placeholder')
 ZAPRET_POLYA = ('sluzhebnoe', 'snoska', 'istochniki', 'utok')
@@ -123,26 +127,33 @@ def chisto(frag, korpus_slit, belyj):
 
 
 def main():
-    g = json.load(open(IST, encoding='utf-8'))
-    belyj = set(norm(x) for x in g['interfejs'])
-    korpus_slit = ' ¦ '.join(norm(x) for x in korpus_iz(g, []))
-
-    # запрещённые ТЗ §4 поля — отдельным списком, чтобы ловить их адресно
+    # Несколько классов — несколько g; корпус/белый список/запрет объединяются
+    # по ВСЕМ (общая шапка одного класса легально цитирует "7 класс"/"8 класс"
+    # из ЛЮБОГО god-файла — см. IST_FAJLY).
+    gg = [json.load(open(os.path.join(TUT, f), encoding='utf-8')) for f in IST_FAJLY]
+    belyj = set()
+    korpus_kuski = []
     zapret = []
-    for pole in ZAPRET_POLYA:
-        korpus_iz(g.get(pole), zapret)
-    for c in g['chetverti']:
-        for e in c['elementy']:
-            if 'istochniki' in e:
-                zapret.append(e['istochniki'])
+    razresh_kuski = []
+    for g in gg:
+        belyj |= set(norm(x) for x in g['interfejs'])
+        korpus_kuski += korpus_iz(g, [])
+        for pole in ZAPRET_POLYA:
+            korpus_iz(g.get(pole), zapret)
+        for c in g['chetverti']:
+            for e in c['elementy']:
+                if 'istochniki' in e:
+                    zapret.append(e['istochniki'])
+        razresh = dict(g)
+        for pole in ZAPRET_POLYA:
+            razresh.pop(pole, None)
+        razresh_kuski += korpus_iz(razresh, [])
+    korpus_slit = ' ¦ '.join(norm(x) for x in korpus_kuski)
     zapret = [norm(x) for x in zapret if norm(x)]
     # Разрешённый корпус — данные БЕЗ служебных полей. Фраза, которая есть и там
     # и там (например «правило произведения» — и метод в utok, и тема в karta),
     # служебной не считается: иначе гейт краснеет на законном материале.
-    razresh = dict(g)
-    for pole in ZAPRET_POLYA:
-        razresh.pop(pole, None)
-    razresh_slit = ' ¦ '.join(norm(x) for x in korpus_iz(razresh, []))
+    razresh_slit = ' ¦ '.join(norm(x) for x in razresh_kuski)
     zapret = [z for z in zapret if z not in razresh_slit]
 
     fajly = sorted(f for f in os.listdir(DIST) if f.endswith('.html'))
@@ -182,7 +193,7 @@ def main():
             if not ok:
                 siroty.append((f, rod, ' '.join(t.split())[:110]))
 
-    print('источник данных  : %s' % IST)
+    print('источники данных : %s' % ', '.join(IST_FAJLY))
     print('страниц проверено: %d' % len(fajly))
     print('строк проверено %d, сирот %d' % (vsego, len(siroty)))
     for f, rod, t in siroty[:40]:
@@ -204,10 +215,11 @@ def main():
     for f, t in zapret_naideno[:10]:
         print('   ЗАПРЕЩЁННОЕ ПОЛЕ %s : %s…' % (f, t))
 
+    vse_slova = sorted({w for g in gg for w in g['interfejs']})
     print()
-    print('БЕЛЫЙ СПИСОК (god.json["interfejs"], %d слов, слово в слово):'
-          % len(g['interfejs']))
-    for w in g['interfejs']:
+    print('БЕЛЫЙ СПИСОК (interfejs всех источников, %d слов, слово в слово):'
+          % len(vse_slova))
+    for w in vse_slova:
         print('   · %s' % w)
 
     print()
