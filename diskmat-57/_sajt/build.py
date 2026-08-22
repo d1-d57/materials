@@ -80,6 +80,15 @@ def razobrat(g):
     n_ktr = 0
     for c in g['chetverti']:
         potok = [e for e in c['elementy'] if e['tip'] in POTOK]
+        # Пустая четверть (elementy=[], например у ещё не наполненного класса,
+        # владелец 2026-08-22 — "прибить гвоздями", а не разово подгонять под
+        # 8И) сама по себе получает ОДИН pusto на весь chasy: раскладка на
+        # недели и ширина ленты собираются АРИФМЕТИКОЙ той же дорогой, что и
+        # для настоящего курса, без ручной заглушки в god-файле — это
+        # единственное место, где такая заглушка нужна, и оно универсально
+        # для любого будущего курса/предмета с тем же учебным годом.
+        if not potok and c['chasy']:
+            potok = [{'tip': 'pusto', 'chasy': c['chasy']}]
         summa = sum(e['chasy'] for e in potok)
         if summa != c['chasy']:
             sys.exit('ЧЕТВЕРТЬ %s: поток даёт %d уроков, в chasy стоит %d — данные не подгоняю'
@@ -233,7 +242,9 @@ a{color:inherit}
 .chetv-hd .rim{font:700 21px/1 var(--serif);color:var(--ink);display:inline}
 .chetv-hd .cw{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
   color:var(--faint);margin-left:6px}
-.chetv-hd .dts{display:block;font:13px/1.35 var(--serif);color:var(--ink2);margin-top:6px}
+.chetv-hd .dts{display:block;font:13px/1.35 var(--serif);color:var(--ink2);margin-top:6px;
+  text-align:center}
+.chetv-hd .dts .tire{display:block}
 .chetv .lenta{grid-column:2;grid-row:1}
 .nw{grid-column:1;grid-row:2;text-align:right;font:12px/24px var(--sans);
   color:var(--faint);padding-right:2px}
@@ -411,6 +422,7 @@ a.metka:hover{filter:brightness(1.12)}
   .chetv-hd{grid-column:1/-1;grid-row:1;display:flex;align-items:baseline;gap:10px;
     flex-wrap:wrap;margin-bottom:0;padding-bottom:5px;border-bottom:1px solid var(--line2)}
   .chetv-hd .dts{display:inline;margin-top:0}
+  .chetv-hd .dts .tire{display:inline}
   .chetv .lenta{grid-column:1;grid-row:2}
   /* "N недель" убрана с мобильного: число и так видно по надписям в линейке
      справа, а лишняя строка над ней сдвинула бы её старт относительно ленты. */
@@ -593,6 +605,14 @@ def lenta_kruzhka(ch):
     """
     k = ch['kruzhok']
     if k is None:
+        # Нет данных кружка (например у ещё не наполненного класса) — та же
+        # незаполненная плашка на всю четверть, что и в основном потоке
+        # (lenta_kursa), той же ширины: высота/ширина ленты ОДНА у курса и
+        # кружка (владелец 2026-08-20/2026-08-22) — заглушки в data для
+        # этого заводить не нужно, ширина всегда следует из chasy четверти.
+        if ch['chasy']:
+            return ('<div class="ktr pusto" style="--sp:%d">'
+                    '<span class="k">не заполнено</span></div>' % ch['chasy'])
         return ''
     out = []
     for tema in k.get('temy') or []:
@@ -646,11 +666,16 @@ def linejka(ch, rezhim):
 def chetvert_blok(ch, rezhim):
     lenta = lenta_kruzhka(ch) if rezhim == 'kruzhok' else lenta_kursa(ch)
     vne = ''   # вне-сеточные слоты рисуются внутри ленты, см. lenta_kursa
-    # Даты четверти — начало и конец на РАЗНЫХ строках (владелец 2026-08-22:
-    # обе даты помещались на одну строку, а хотелось "1 сентября" отдельно,
-    # затем "— 25 октября" ниже). Разрыв ставится на уже существующем " — "
-    # из данных — не сочиняется новый текст, только перенос строки в разметке.
-    daty = E(ch['daty']).replace(' — ', '<br>— ')
+    # Даты четверти — начало, тире, конец на ТРЁХ строках, тире по центру, но
+    # ТОЛЬКО на широком экране: на мобильном шапка четверти и так узкая
+    # строка рядом с "I ЧЕТВЕРТЬ" (владелец 2026-08-20), три строки её
+    # раздули бы. Разрыв — через <span class="tire">, а не <br> (владелец
+    # 2026-08-22, вторая правка после первой попытки на <br>: слева "— 25
+    # октября" читалось как обрубленное начало строки) — CSS решает per-
+    # breakpoint, block на десктопе даёт свою строку, inline на мобильном
+    # возвращает прежний однострочный вид. Разделитель — тот же " — " из
+    # данных, текст не сочиняется, только разметка.
+    daty = E(ch['daty']).replace(' — ', '<span class="tire"> — </span>')
     return ('<section class="chetv">'
             '<div class="chetv-hd"><span class="rim">%s</span>'
             '<span class="cw">четверть</span><span class="dts">%s</span></div>'
