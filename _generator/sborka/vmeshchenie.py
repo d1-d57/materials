@@ -29,7 +29,14 @@ import korpus  # noqa: E402 — Э2: диапазоны корпуса, вызы
 
 GENERATOR = SBORKA.parent
 
-KEGL_FLOOR = 35            # canon — podgonka.kegl_dlya_znakov / sverstat.py:FLOOR_PX. Пол обязателен ВСЕГДА (Э1).
+KEGL_FLOOR = 28            # canon-пол СДВИНУТ 35→28 заходом solver-kalibrovka 23.08: старая рельса 35
+                            # объявляла «переполнением» слайды Л2, которые владелец верстал руками и
+                            # показывал студентам (funktor kegl=32, kategoriya kegl=28 — промером
+                            # подтверждено: content_fill 85–98 %, обреза нет). Что защищала: читаемость
+                            # канона sverstat.FLOOR_PX. Что проходит теперь: плотные математические
+                            # слайды, где человек САМ уходит ниже 35; штраф похожести по-прежнему тянет
+                            # к корпусной медиане 38, пол стал последним прибежищем, а не ложным
+                            # обвинителем.
 KEGL_DEFAULT = 38
 BLOK_FLOOR_PX = 4          # px — абсолютная страховка снизу для отступа (Э1 захода solver-v3-dyhanie):
                             # отступ теперь ДОЛЯ кегля (blok_koef), но на самом тугом ряду это не даёт
@@ -58,6 +65,15 @@ LINE_LEN_HARD_MAX = 80
 # разумного, — заведомо плохой корпусный выброс не должен расширить жёсткую
 # зону солвера.
 _MARGIN = 0.15
+
+# Низ ЛЕСТНИЦЫ рангов по интерлиньяжу (solver-kalibrovka 23.08): канон-оценка
+# владельца «ожидаемо 1.2–1.5», она же была полом зоны до расширения. Лестница
+# калибрована на этом диапазоне; когда пол ЗОНЫ опустили до 1.12 (аварийный
+# запас для плотных слайдов Л2), якорить лестницу на зону значило бы съехать
+# всем слайдам (проверено прогоном `progon_baza --baza 16`: |Δblok| против
+# человеческих значений 3.545→5.695). Зона даёт СТРАХОВКУ снизу, лестница
+# живёт в каноне.
+LADEN_LH_LO = 1.20
 
 
 def _bounds_from_corpus(stat, abs_floor, abs_ceil, min_owner=None, max_owner=None, margin=None):
@@ -140,9 +156,17 @@ def build_zones(corpus=None):
     # (там и так доминирует abs_floor=KEGL_FLOOR). Контрпримеры sl-circle/
     # sl-plan (человек взял 41 — потолок корпуса) обязаны остаться внутри
     # зоны: p95=41 <= hi, проверено фактом (см. `## ОТЧЁТ`).
-    kegl = _bounds_from_corpus(c["кегль_px"], abs_floor=KEGL_FLOOR, abs_ceil=44, margin=0.0)
+    # min_owner=KEGL_FLOOR (solver-kalibrovka 23.08): без него пол зоны держит
+    # корпусный p5=35 трёх СТАРЫХ деков — L2 в корпус не входит, и его живая
+    # практика (kegl 28–32 на плотных слайдах, промером подтверждена) была вне
+    # закона. Гарантия владельца «ниже 28 не надо» пробивает корпусную статистику.
+    kegl = _bounds_from_corpus(c["кегль_px"], abs_floor=KEGL_FLOOR, abs_ceil=44, margin=0.0,
+                               min_owner=KEGL_FLOOR)
     lh = _bounds_from_corpus(c["lh_отношение_к_кеглю"], abs_floor=1.05, abs_ceil=1.8,
-                              min_owner=1.20, max_owner=1.50)  # Э1: «ожидаемо 1.2–1.5»
+                              min_owner=1.12, max_owner=1.50)  # Э1: «ожидаемо 1.2–1.5»;
+    # пол 1.20→1.12 (solver-kalibrovka 23.08): владелец на Л2 верстал с lh=1.15
+    # (funktor, kategoriya-vect-iso — промером подтверждено, что влезает), старый
+    # пол объявлял это пространство запрещённым.
     # Э1 захода solver-v3-dyhanie: отступ — ДОЛЯ кегля (`blok_koef`), не
     # независимая px-ручка (тот же приём, что уже даёт `lh`). Потолок ratio —
     # канон-грань 26px (canon-дефолт --blok) / KEGL_FLOOR (пол кегля): при
@@ -215,15 +239,26 @@ def check_liniya_zone(zones, axis, value):
 
 
 # ─────────────────────────── Э4: РЕШЁТКА (rungi) ───────────────────────────
-def build_rungi(zones, steps=6):
+def build_rungi(zones, steps=6, laden=None):
     """(lh, blok_koef, потолок_кегля) от роскошного к тугому — Э4: небольшая
     фиксированная решётка вместо континуума (визуальная стабильность между
     похожими слайдами), построена ИЗ zones (Э1), не захардкожена отдельно.
     `blok_koef` вместо `blok` (Э1 захода solver-v3-dyhanie) — отступ едет
-    вместе с кеглем, отдельной px-оси для перебора больше нет."""
-    lh_lo, lh_hi = zones["lh"]
+    вместе с кеглем, отдельной px-оси для перебора больше нет.
+    `laden` (solver-kalibrovka 23.08) — (lh_lo, lh_hi, kegl_lo, kegl_hi) для
+    ЛЕСТНИЦЫ рангов; по умолчанию сами зоны. Причина: лестница калибровалась
+    под типографски здоровый корпусный диапазон; когда полы зон расширили в
+    аварийный запас для плотных слайдов Л2 (kegl 28, lh 1.12), якорить на
+    аварийные полы стало нельзя — потолок тугих рядов упал бы 38.6→35.8 и ряды
+    lh съехали бы на ВСЕХ слайдах, включая старые деки (проверено прогоном
+    `progon_baza --baza 16`: |Δblok| 3.545→5.695 против человеческих значений).
+    Звенит из `podobrat_slide` корпусными p5..p95 — на старых деках лестница
+    побитово та же, что до расширения зон."""
+    if laden is None:
+        laden = (zones["lh"][0], zones["lh"][1],
+                 zones["kegl"][0], zones["kegl"][1])
+    lh_lo, lh_hi, laden_kegl_lo, laden_kegl_hi = laden
     koef_lo, koef_hi = zones["blok_koef"]
-    kegl_lo, kegl_hi = zones["kegl"]
     rungi = []
     for i in range(steps):
         t = i / (steps - 1)  # 0 — роскошный (max lh/koef), 1 — тугой (min)
@@ -231,8 +266,8 @@ def build_rungi(zones, steps=6):
         koef = round(koef_hi - t * (koef_hi - koef_lo), 4)
         # потолок кегля сужается вместе с рангом — тот же принцип, что в
         # sverstat.STUPENI (чем туже ритм, тем ниже разумный потолок шрифта).
-        ceil = round(kegl_hi - t * (kegl_hi - kegl_lo) * 0.4, 1)
-        rungi.append((lh, koef, max(ceil, kegl_lo)))
+        ceil = round(laden_kegl_hi - t * (laden_kegl_hi - laden_kegl_lo) * 0.4, 1)
+        rungi.append((lh, koef, max(ceil, zones["kegl"][0])))
     return rungi
 
 
@@ -240,8 +275,14 @@ def build_kegl_grid(zones, steps=7):
     """Фиксированная решётка кегля (Э4, «как `fontScale` PowerPoint») —
     визуальная стабильность: два похожих слайда снапятся на ОДНУ и ТУ ЖЕ
     точку, а не разъедутся на 22 против 21 по капризу бинарного поиска
-    (критерий готовности 5)."""
+    (критерий готовности 5).
+    solver-kalibrovka 23.08: шаг держится ≈1px — при зоне [35,41] это те же
+    7 точек, что были всегда; после расширения зоны до [28,41] прежние 7 точек
+    дали бы шаг 2.17px и огрубили снап всем слайдам (человек брал 32 — между
+    новыми точками 30.17 и 32.33 он бы не встал)."""
     lo, hi = zones["kegl"]
+    if hi > lo:
+        steps = max(steps, min(int(round(hi - lo)) + 1, 21))
     return [round(lo + (hi - lo) * k / (steps - 1), 2) for k in range(steps)]
 
 
@@ -446,6 +487,12 @@ _JS_SOLVE = r"""
   // Бинарный поиск максимального влезающего кегля при (lh, blokKoef, liniya) —
   // вмещение монотонно (Э5 захода solver-vmeshcheniya): меньше кегль
   // помещается не хуже. `iters` проб на решётку.
+  // solver-kalibrovka 23.08: вариант «искать сразу по решётке kegl_grid»
+  // проверен живым прогоном и ОТКАТЕН — на реальном рендере предикат не строго
+  // монотонен (субпиксель KaTeX: проба 36.67 может переполнять при влезающей
+  // 38.6), дискретный поиск менял выбранные параметры (retrakt liniya 65→75),
+  // а времени не экономил: 19.6с против 20.9с на лекцию L2, узкое место не в
+  // числе проб. Оставлен непрерывный поиск как проверенный.
   function maxKegl(floor, ceil, lh, blokKoef, liniya, iters) {
     const top = measure(ceil, lh, blokKoef, liniya);
     if (top.fits) return top;
@@ -654,7 +701,12 @@ def podobrat_slide(page, html_path, axis, iters=8, steps=6, text_len_chars=None,
 
     corpus = corpus if corpus is not None else korpus.corpus_stats()
     zones = build_zones(corpus)
-    rungi = build_rungi(zones, steps=steps)
+    # Лестницы рангов — по корпусной норме p5..p95 (не по аварийным полам зон;
+    # см. докстринг build_rungi, solver-kalibrovka 23.08). Нет корпуса — зоны.
+    stat_kegl = corpus.get("кегль_px") or {}
+    laden = (LADEN_LH_LO, zones["lh"][1],
+             stat_kegl.get("p5", zones["kegl"][0]), zones["kegl"][1])
+    rungi = build_rungi(zones, steps=steps, laden=laden)
 
     cfg = {"kegl_floor": zones["kegl"][0], "iters": iters, "rungi": rungi, "liniya_steps": [None],
            "kegl_grid": build_kegl_grid(zones), "blok_floor_px": BLOK_FLOOR_PX,
