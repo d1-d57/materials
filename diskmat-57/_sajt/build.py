@@ -34,10 +34,14 @@ PREFIKS = ''   # текущий префикс файлов — выставля
 
 # ── нарезка года на недели ─────────────────────────────────────────────────
 # Неделя = пара = два подряд идущих урока потока четверти. В поток входят
-# только blok и kontrolnaya: kruzhok — параллельная дорожка (третий урок),
+# blok, kontrolnaya и pusto: kruzhok — параллельная дорожка (третий урок),
 # vne-setki по определению вне сетки. Неделя может делиться между двумя
 # элементами — это законно и должно быть видно.
-POTOK = ('blok', 'kontrolnaya')
+# "pusto" — незаполненный слот (владелец 2026-08-22: у 8И класса те же
+# недели учебного года, что у 7И, просто содержание ещё не прислали) —
+# держит арифметику недель наравне с blok/kontrolnaya, но не рисует ни
+# цвета, ни темы и не заводит своей страницы (см. lenta_kursa/linejka).
+POTOK = ('blok', 'kontrolnaya', 'pusto')
 
 # Разделитель перечислений в данных — ТОЧКА С ПРОБЕЛАМИ. Голая «·» встречается
 # внутри формул («8·7», «8·7/2») и резать по ней нельзя: так формула рвётся надвое.
@@ -140,7 +144,7 @@ CSS = """
   --acc:#b3503c; --accbg:#f7e8e0;
   --serif:Georgia,'Times New Roman',serif;
   --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  --d-O:#a68a4e; --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
+  --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
   --d-Z:#3f7d75;
   --ktr:#a79d90; --ktr-bg:#eae3d5;
 }
@@ -277,6 +281,15 @@ a{color:inherit}
   justify-content:center;padding:6px 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{background:transparent;border-style:dashed}
 .ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
+/* незаполненный слот (8И класс, владелец 2026-08-22) — обычно ШИРОКИЙ (может
+   занимать всю четверть, --sp большой), поэтому не узкая полоска с текстом
+   поперёк, как контрольная/игра, а штриховка "место зарезервировано" и
+   горизонтальная подпись — вертикальный текст в широком коробе выглядел бы
+   потерянным. Не ссылка — курсор обычный, а не pointer. */
+.ktr.pusto{background:repeating-linear-gradient(135deg,var(--card),var(--card) 10px,
+  var(--line2) 10px,var(--line2) 11px);border-style:dashed;cursor:default}
+.ktr.pusto .k{writing-mode:horizontal-tb;transform:none;font:600 14px/1.1 var(--sans);
+  letter-spacing:.02em}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
 .ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
@@ -555,6 +568,11 @@ def lenta_kursa(ch):
             kl = 'ktr chetv' if el.get('chetvertnaya') else 'ktr'
             out.append('<a class="%s" style="--sp:%d" href="%s%s.html">'
                        '<span class="k">контрольная</span></a>' % (kl, span, PREFIKS, el['slug']))
+        elif el['tip'] == 'pusto':
+            # незаполненный слот (владелец 2026-08-22, 8И класс): держит место
+            # недели, но не рисует ни цвета, ни темы — не ссылка, некуда вести.
+            out.append('<div class="ktr pusto" style="--sp:%d">'
+                       '<span class="k">не заполнено</span></div>' % span)
         else:
             # вне сетки: та же узкая плашка, что у контрольной, и в той же ленте —
             # отдельной строкой под календарём она читалась как чужеродный довесок.
@@ -606,7 +624,12 @@ def linejka(ch, rezhim):
         else:
             cv = []
             for el, _ in ned['doli']:
-                cv.append(cvet(el) if el['tip'] == 'blok' else 'var(--ktr)')
+                if el['tip'] == 'blok':
+                    cv.append(cvet(el))
+                elif el['tip'] == 'pusto':
+                    cv.append('var(--faint)')
+                else:
+                    cv.append('var(--ktr)')
             if len(cv) == 1:
                 fon = 'color-mix(in srgb, %s 30%%, var(--card))' % cv[0]
                 spl = ''
@@ -814,9 +837,11 @@ def nedelya_stranica(g, ned):
             metki.append('<a class="metka" style="--c:%s" href="%sblok-%s.html">%s</a>'
                          % (cvet(el), PREFIKS, el['slug'], E(el['imya'])))
             ssylki.append(el)
-        else:
+        elif el['tip'] == 'kontrolnaya':
             metki.append('<span class="metka tih">контрольная'
                          '<i class="tochka">·</i><b>%s</b></span>' % E(el['chto']))
+        elif el['tip'] == 'pusto':
+            metki.append('<span class="metka tih">не заполнено</span>')
     if ch['kruzhok'] is not None:
         metki.append('<a class="metka" style="--c:var(--d-Z)" href="%sblok-%s.html">кружок</a>'
                      % (PREFIKS, ch['kruzhok']['slug']))

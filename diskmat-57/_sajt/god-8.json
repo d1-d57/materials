@@ -5,34 +5,41 @@
       "A": "арифметика",
       "K": "комбинаторика",
       "V": "вероятность",
-      "D": "дискретная математика",
-      "O": "разгон"
+      "D": "дискретная математика"
     }
   },
   "chetverti": [
     {
       "nomer": "I",
       "daty": "1 сентября — 25 октября",
-      "chasy": 0,
-      "elementy": []
+      "chasy": 16,
+      "elementy": [
+        {"tip": "pusto", "chasy": 16}
+      ]
     },
     {
       "nomer": "II",
       "daty": "4 ноября — 30 декабря",
-      "chasy": 0,
-      "elementy": []
+      "chasy": 16,
+      "elementy": [
+        {"tip": "pusto", "chasy": 16}
+      ]
     },
     {
       "nomer": "III",
       "daty": "11 января — 26 марта",
-      "chasy": 0,
-      "elementy": []
+      "chasy": 20,
+      "elementy": [
+        {"tip": "pusto", "chasy": 20}
+      ]
     },
     {
       "nomer": "IV",
       "daty": "6 апреля — 26 мая",
-      "chasy": 0,
-      "elementy": []
+      "chasy": 14,
+      "elementy": [
+        {"tip": "pusto", "chasy": 14}
+      ]
     }
   ],
   "interfejs": [
@@ -62,7 +69,8 @@
     "открыть",
     "7 класс",
     "8 класс",
-    "57 школа · И классы"
+    "57 школа · И классы",
+    "не заполнено"
   ],
   "literatura": []
 }
