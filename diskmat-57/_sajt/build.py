@@ -152,10 +152,15 @@ a{color:inherit}
    label этого же тумблера (переключают вид на месте), а не ссылки на index.html:
    раньше они дублировались отдельным рядом ниже, и работала только НИЖНЯЯ пара
    (владелец 2026-08-22). Подсветка активной — через :checked, не статичный "tek". */
-#t-kurs:checked~.perekl-nav label[for=t-kurs],
-#t-kruzhok:checked~.perekl-nav label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
-#t-kurs:focus-visible~.perekl-nav label[for=t-kurs],
-#t-kruzhok:focus-visible~.perekl-nav label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
+/* `.perekl-nav` — не прямой сосед радиокнопок, а внук (лежит внутри
+   <header class="shapka">) — общий комбинатор `~` берёт только ПРЯМЫХ
+   соседей, поэтому селектор идёт через `header.shapka`, а не напрямую в
+   `.perekl-nav` (баг найден владельцем 2026-08-22: «источники» подсвечивался
+   через статичный класс .tek, а курс/кружок — нет, ровно из-за вложенности). */
+#t-kurs:checked~header.shapka .perekl-nav label[for=t-kurs],
+#t-kruzhok:checked~header.shapka .perekl-nav label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
+#t-kurs:focus-visible~header.shapka .perekl-nav label[for=t-kurs],
+#t-kruzhok:focus-visible~header.shapka .perekl-nav label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
 
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
@@ -223,7 +228,7 @@ a{color:inherit}
    Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
    тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
 .lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
-  grid-auto-rows:172px;gap:6px;align-items:stretch}
+  grid-auto-rows:190px;gap:6px;align-items:stretch}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы */
@@ -231,9 +236,9 @@ a{color:inherit}
   border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
   background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
 .blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
-.blok .im{font:700 20px/1.14 var(--serif);letter-spacing:-.005em}
-.blok .pz{font:11.5px/1.28 var(--sans);color:rgba(253,251,246,.82);margin-top:4px;
-  flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.84em}
+.blok .im{font:700 26px/1.15 var(--serif);letter-spacing:-.005em}
+.blok .pz{font:15px/1.32 var(--sans);color:rgba(253,251,246,.86);margin-top:6px;
+  flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.96em}
 .blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
   display:flex;align-items:center;gap:8px}
 .blok .dm{font:600 9.5px/1.15 var(--sans);text-transform:uppercase;min-width:0;
@@ -257,8 +262,8 @@ a{color:inherit}
 .ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
 .ktr:hover{border-color:var(--acc)}
 .ktr:hover .k{color:var(--acc)}
-.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);font-size:12.5px;
-  font:600 9px/1.1 var(--sans);text-transform:lowercase;letter-spacing:0;
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
+  font:600 18px/1.1 var(--sans);text-transform:lowercase;letter-spacing:-.01em;
   color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
 
 /* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
@@ -331,10 +336,10 @@ a.metka:hover{filter:brightness(1.12)}
 /* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
    он и есть то, ради чего на календарь смотрят */
 @media(max-width:1400px){
-  .blok .im{font:700 17px/1.15 var(--serif)}
-  .blok .pz{font-size:11px}
+  .blok .im{font:700 22px/1.15 var(--serif)}
+  .blok .pz{font-size:14px}
   .blok .dm{font-size:9px;letter-spacing:.03em}
-  .ktr .k{font-size:11px;letter-spacing:-.01em}
+  .ktr .k{font-size:15px;letter-spacing:-.01em}
 }
 /* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
    становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
