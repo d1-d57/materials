@@ -232,8 +232,12 @@ a{color:inherit}
   grid-auto-rows:190px;gap:6px;align-items:stretch}
 .linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
 
-/* блок — большой прямоугольник, главная масса страницы */
+/* блок — большой прямоугольник, главная масса страницы.
+   grid-column идёт через --sp (часы элемента), а не литералом в инлайн-стиле:
+   на десктопе это ширина колонки, на мобильном та же переменная станет
+   высотой строки (grid-row) — одно число, два разных смысла раскладки. */
 .blok{position:relative;display:flex;flex-direction:column;justify-content:flex-start;
+  grid-column:span var(--sp,1);
   border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
   background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
 .blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
@@ -256,9 +260,9 @@ a{color:inherit}
   border:1px solid rgba(253,251,246,.45);border-radius:12px;padding:3px 6px}
 
 /* контрольная — полная высота строки, надпись поперёк */
-.ktr{align-self:stretch;border-radius:5px;background:var(--ktr-bg);
-  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-  padding:6px 1px;overflow:hidden;text-decoration:none}
+.ktr{align-self:stretch;height:100%;grid-column:span var(--sp,1);border-radius:5px;
+  background:var(--ktr-bg);border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;padding:6px 1px;overflow:hidden;text-decoration:none}
 .ktr.chetv{background:transparent;border-style:dashed}
 .ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
 .ktr:hover{border-color:var(--acc)}
@@ -362,41 +366,51 @@ a.metka:hover{filter:brightness(1.12)}
   .perekl-nav .dk{display:inline}
 
   /* Четверть: заголовок — во всю ширину сверху; ниже — карточки занятий
-     слева и УЗКАЯ СПЛОШНАЯ вертикальная лента недель справа, а не строка
-     мелких клеток ПОСЛЕ всех карточек (владелец 2026-08-22: "лента недель
-     не должна идти отдельным блоком в конце — пусть идёт сбоку, одной
-     длинной вертикальной полосой"). */
+     слева и УЗКАЯ вертикальная лента недель справа, В ОДНОЙ координатной
+     сетке с лентой занятий (владелец 2026-08-22, вторая правка после
+     первой мобильной раскладки: блоки съезжали относительно своих
+     недель, потому что высота карточки не зависела от часов, а клетки
+     линейки распределялись поровну flex:1 — два независимых механизма,
+     которые не могли совпасть).
+     Шаг сетки — 1 час = HOUR_PXpx, ОДИНАКОВЫЙ у .lenta и у .linejka:
+     каждый элемент ленты растёт на --sp (часы, та же переменная, что на
+     десктопе даёт ширину колонки — см. .blok/.ktr), каждая неделя в
+     линейке — всегда 2 часа. Оба грида стартуют от ОДНОЙ и той же строки
+     (никакой "N недель" или другой подписи над линейкой, которая сдвинула
+     бы её старт относительно ленты), поэтому выравнивание — арифметика
+     общих координат, а не подгонка на глаз. "Игра" не входит в linejka()
+     вообще (см. razobrat() — она не считается в uroki/nedeli), поэтому
+     напротив нее в линейке закономерно пусто: у неё и вправду нет недели. */
   .chetv{display:grid;grid-template-columns:minmax(0,1fr) 34px;
-    grid-template-rows:auto auto 1fr;column-gap:8px;row-gap:6px;margin:16px 0 0}
+    grid-template-rows:auto 1fr;column-gap:8px;margin:16px 0 0}
   .chetv-hd{grid-column:1/-1;grid-row:1;display:flex;align-items:baseline;gap:10px;
     flex-wrap:wrap;margin-bottom:0;padding-bottom:5px;border-bottom:1px solid var(--line2)}
   .chetv-hd .dts{display:inline;margin-top:0}
-  .chetv .lenta{grid-column:1;grid-row:2/4}
-  .nw{grid-column:2;grid-row:2;text-align:center;line-height:1.15;
-    font-size:10px;padding:0}
-  .chetv .linejka{grid-column:2;grid-row:3;grid-template-columns:none;
-    display:flex;flex-direction:column;height:100%}
-  .linejka .ned{flex:1 1 0;height:auto;min-height:22px;font-size:10px;line-height:1;
+  .chetv .lenta{grid-column:1;grid-row:2}
+  /* "N недель" убрана с мобильного: число и так видно по надписям в линейке
+     справа, а лишняя строка над ней сдвинула бы её старт относительно ленты. */
+  .nw{display:none}
+  .chetv .linejka{grid-column:2;grid-row:2}
+  .zag h1{font-size:27px}
+  .lenta,.linejka{grid-template-columns:1fr;grid-auto-rows:46px;gap:4px;margin-top:0}
+  .lenta>*{grid-column:1;grid-row:span var(--sp,1)}
+  .linejka .ned{grid-row:span 2;height:auto;min-height:0;font-size:10px;line-height:1;
     display:flex;align-items:center;justify-content:center}
   .ned.split{background:linear-gradient(180deg,var(--c1) 0 50%,var(--c2) 50% 100%)}
-  .zag h1{font-size:27px}
-  .lenta{grid-template-columns:1fr;grid-auto-rows:auto;gap:7px}
-  .lenta>*{grid-column:1/-1!important}
-  .blok{min-height:96px;padding:12px 13px 0}
-  .blok .pz{max-height:none;font-size:12px}
-  .blok .pz{display:block}
-  /* На узком экране плашка контрольной НЕ во всю ширину: иначе она получает ту же
-     массу, что тема на шесть часов, и математика опять проигрывает контролю. */
-  .ktr{padding:6px 11px;width:52%;justify-content:flex-start}
-  /* .ktr .k укрупнён (см. базовое правило, П. владельца 2026-08-22) для
-     ВЕРТИКАЛЬНОЙ узкой полосы на десктопе — горизонтальному тексту в плашке
-     52% ширины столько не нужно, иначе "контрольная" обрезается ("кон…").
-     white-space:normal — доп. страховка: у .ktr.chetv (38→44%, четвертная
-     контрольная) слово всё ещё может не влезть в одну строку, пусть тогда
-     перенесётся на вторую, а не срежется многоточием. */
+  .blok{min-height:0;padding:12px 13px 0}
+  .blok .pz{max-height:none;font-size:12px;display:block}
+  /* Контрольная и игра — ОДИНАКОВЫЙ вид независимо от того, четвертная она
+     (chetv) или нет: разницу "получасовая / на всю неделю" теперь честно
+     показывает ВЫСОТА (1 или 2 часа, та же --sp), а не разный стиль рамки —
+     раньше получасовая была серой заливкой, четвертная — на белом
+     пунктиром, и это читалось как два разных сорта контрольной, а не как
+     один и тот же элемент разной длительности (владелец 2026-08-22).
+     Ширина — ВСЕГДА 100%, как у блока: разную массу должна показывать
+     высота, а не то, что контрольная уже блока. */
+  .ktr{padding:6px 11px;width:100%;justify-content:center}
+  .ktr.chetv,.ktr.vne-l{background:var(--ktr-bg);border-style:solid}
   .ktr .k{writing-mode:horizontal-tb;transform:none;font-size:13px;
-    white-space:normal;overflow:visible;text-overflow:clip;text-align:left}
-  .ktr.chetv{width:44%}
+    white-space:normal;overflow:visible;text-overflow:clip;text-align:center}
   .tochki{grid-template-columns:1fr;gap:22px}
   .zanyatie{grid-template-columns:1fr;gap:4px}
   .zanyatie .kr{justify-self:start}
@@ -484,11 +498,19 @@ def chasy_slovo(n):
 
 
 def lenta_kursa(ch):
+    """--sp (часы элемента) — ОДНА переменная на десктопе и на мобильном:
+    десктоп читает её как grid-column (ширина колонки, см. .blok/.ktr),
+    мобильный медиа-запрос переопределяет её же как grid-row (высоту
+    строки). Порядок элементов и их часы — те же, что использовал
+    razobrat() при нарезке недель, поэтому линейка недель (linejka(),
+    тот же шаг сетки) совпадает с лентой АРИФМЕТИКОЙ координат, не
+    подгонкой на глаз (владелец 2026-08-22: раньше высота карточки не
+    зависела от часов, и блок «съезжал» относительно своей недели)."""
     out = []
     for el in ch['potok']:
         span = el['chasy']
         if el['tip'] == 'blok':
-            st = 'grid-column:span %d;--c:%s' % (span, cvet(el))
+            st = '--sp:%d;--c:%s' % (span, cvet(el))
             fon = zony_fon(el)
             if fon:
                 st += ';background:%s' % fon
@@ -506,12 +528,14 @@ def lenta_kursa(ch):
                    el['chasy'], chasy_slovo(el['chasy'])))
         elif el['tip'] == 'kontrolnaya':
             kl = 'ktr chetv' if el.get('chetvertnaya') else 'ktr'
-            out.append('<a class="%s" style="grid-column:span %d" href="%s.html">'
+            out.append('<a class="%s" style="--sp:%d" href="%s.html">'
                        '<span class="k">контрольная</span></a>' % (kl, span, el['slug']))
         else:
             # вне сетки: та же узкая плашка, что у контрольной, и в той же ленте —
-            # отдельной строкой под календарём она читалась как чужеродный довесок
-            out.append('<div class="ktr vne-l" style="grid-column:span %d">'
+            # отдельной строкой под календарём она читалась как чужеродный довесок.
+            # У игры нет своей недели (razobrat() не считает её в uroki/nedeli) —
+            # на мобильном линейка недель для неё закономерно пуста, это не баг.
+            out.append('<div class="ktr vne-l" style="--sp:%d">'
                        '<span class="k">игра</span></div>' % span)
     return ''.join(out)
 
@@ -531,7 +555,7 @@ def lenta_kruzhka(ch):
     for tema in k.get('temy') or []:
         span = tema['nedel'] * 2          # лента размечена в УРОКАХ, неделя = два урока
         out.append(
-            '<a class="blok kr-chast" style="grid-column:span %d;--c:var(--d-%s)" '
+            '<a class="blok kr-chast" style="--sp:%d;--c:var(--d-%s)" '
             'href="blok-%s.html">'
             '<span class="im">%s</span><span class="pz">%s</span>'
             '<span class="niz"><span class="dm">%s</span>'
