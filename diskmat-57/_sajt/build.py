@@ -144,10 +144,18 @@ a{color:inherit}
 .shapka .tit{font:700 25px/1.1 var(--serif);color:var(--ink);text-decoration:none;flex:none}
 .perekl-nav{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
   border-radius:24px;padding:3px;margin-left:20px;align-self:center}
-.perekl-nav a{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
-  border-radius:22px;text-decoration:none}
-.perekl-nav a:hover{color:var(--ink)}
+.perekl-nav a,.perekl-nav label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none;cursor:pointer;user-select:none}
+.perekl-nav a:hover,.perekl-nav label:hover{color:var(--ink)}
 .perekl-nav a.tek{background:var(--ink);color:var(--paper)}
+/* На странице года кнопки "основной курс"/"кружок" в общей шапке — это те же
+   label этого же тумблера (переключают вид на месте), а не ссылки на index.html:
+   раньше они дублировались отдельным рядом ниже, и работала только НИЖНЯЯ пара
+   (владелец 2026-08-22). Подсветка активной — через :checked, не статичный "tek". */
+#t-kurs:checked~.perekl-nav label[for=t-kurs],
+#t-kruzhok:checked~.perekl-nav label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
+#t-kurs:focus-visible~.perekl-nav label[for=t-kurs],
+#t-kruzhok:focus-visible~.perekl-nav label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
 
 /* ── шапка ── */
 .shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
@@ -183,19 +191,12 @@ a{color:inherit}
 .legenda .p i{width:7px;height:7px;border-radius:50%;background:var(--c);display:inline-block}
 .legenda .p span{font:9.5px/1 var(--sans);color:var(--faint);letter-spacing:.01em}
 
-/* ── тумблер: две радиокнопки, ни строки JS ── */
+/* ── тумблер: две радиокнопки, ни строки JS ──
+   Кнопки-label живут в общей шапке (.perekl-nav, см. выше) — здесь только
+   сами радиокнопки и то, что они переключают в календаре. */
 .tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
-.perekl{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
-  border-radius:24px;padding:3px;margin:16px 0 0}
 .kr-chast .im{font:700 16px/1.16 var(--serif)}
 .kr-chast .pz{margin-top:5px}
-.perekl label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
-  border-radius:22px;cursor:pointer;user-select:none}
-.perekl label:hover{color:var(--ink)}
-#t-kurs:checked~.perekl label[for=t-kurs],
-#t-kruzhok:checked~.perekl label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
-#t-kurs:focus-visible~.perekl label[for=t-kurs],
-#t-kruzhok:focus-visible~.perekl label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
 #t-kruzhok:checked~.kalendar .tr-kurs{display:none}
 #t-kurs:checked~.kalendar .tr-kruzhok{display:none}
 
@@ -365,19 +366,28 @@ a.metka:hover{filter:brightness(1.12)}
 """
 
 
-def shapka(g, tek=''):
+def shapka(g, tek='', tumbler=False):
     """Одна шапка на все страницы: имя курса и три кнопки.
 
     Разъезжающиеся шапки заставляют читателя заново искать навигацию на каждом
     экране; кнопка «к году» вместо общей панели — тот же дефект.
+
+    "tumbler" — только на странице года: там "основной курс"/"кружок" не
+    ссылки на index.html, а label ТЕХ ЖЕ радиокнопок тумблера, что переключают
+    вид на месте (владелец 2026-08-22: кнопка должна работать там, где она
+    нарисована, а не только в продублированном ряду ниже — тот ряд снят).
     """
-    knopki = [('index.html', 'основной курс', 'kurs'),
-              ('index.html', 'кружок', 'kruzhok'),
-              ('istochniki.html', 'источники', 'ist')]
-    out = []
-    for adres, imya, kod in knopki:
-        out.append('<a href="%s"%s>%s</a>'
-                   % (adres, ' class="tek"' if kod == tek else '', E(imya)))
+    if tumbler:
+        out = ['<label for="t-kurs">основной курс</label>',
+               '<label for="t-kruzhok">кружок</label>',
+               '<a href="istochniki.html">источники</a>']
+    else:
+        knopki = [('index.html', 'основной курс', 'kurs'),
+                  ('index.html', 'кружок', 'kruzhok'),
+                  ('istochniki.html', 'источники', 'ist')]
+        out = ['<a href="%s"%s>%s</a>'
+               % (adres, ' class="tek"' if kod == tek else '', E(imya))
+               for adres, imya, kod in knopki]
     return ('<header class="shapka"><a class="tit" href="index.html">%s</a>'
             '<nav class="perekl-nav">%s</nav><span class="spacer"></span>'
             '<span class="demo">демо-версия</span></header>'
@@ -557,23 +567,20 @@ def god_stranica(g, chetverti):
     for rezhim in ('kurs', 'kruzhok'):
         tr.append('<div class="tr-%s">%s</div>'
                   % (rezhim, ''.join(chetvert_blok(c, rezhim) for c in chetverti)))
-    # Шапка — та же shapka(), что на остальных страницах (А3): свой <h1> и
-    # свой набор кнопок здесь были ровно тем разъездом, который замечал
-    # владелец. Тумблер курс/кружок — отдельная строка ПОД общей шапкой,
-    # это внутристраничный переключатель данных, а не навигация по сайту.
+    # Шапка — та же shapka(), что на остальных страницах (А3), а кнопки
+    # "основной курс"/"кружок" в ней — сами label тумблера (tumbler=True):
+    # переключают вид НА МЕСТЕ, без отдельного продублированного ряда ниже
+    # (владелец 2026-08-22 — ряд дублировал кнопки шапки, и работал только
+    # он, а не верхняя шапка; теперь ряд снят, работает верхняя).
     telo = ('<div class="oborot">'
             '<div class="tumbler">'
             '<input type="radio" name="tr" id="t-kurs" checked>'
             '<input type="radio" name="tr" id="t-kruzhok">'
             '%s'
-            '<div class="perekl">'
-            '<label for="t-kurs">основной курс</label>'
-            '<label for="t-kruzhok">кружок</label>'
-            '</div>'
             '%s'
             '<div class="kalendar">%s</div></div>'
             '<script>%s</script>'
-            '</div>' % (shapka(g, 'kurs'), legenda_html(g),
+            '</div>' % (shapka(g, tumbler=True), legenda_html(g),
                         ''.join(tr), TUMBLER_JS))
     return stranica(g['kurs']['nazvanie'], telo)
 
