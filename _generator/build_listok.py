@@ -113,6 +113,11 @@ STIL = """
        font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
   h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
   .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  .preambula{margin:26px 0 4px;padding:20px 22px;background:var(--panel);border:1px solid var(--rule);
+     border-left:3px solid var(--accent);border-radius:2px;font-size:15.5px;}
+  .preambula h2{font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;
+     text-transform:uppercase;color:var(--accent);margin:0 0 10px;}
+  .preambula p+p{margin-top:9px;}
   ol{list-style:none;counter-reset:p;margin-top:8px;}
   li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);
      display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
@@ -161,7 +166,7 @@ STRANICA = """<!DOCTYPE html>
     <h1>{zagolovok}</h1>
     {data}
   </header>
-
+{preambula}
   <ol>
 {zadachi}
   </ol>
@@ -227,11 +232,14 @@ def sobrat(manifest: Path, out: Path | None, tolko_lint: bool,
         return 0
 
     data = f'<p class="date">{html.escape(meta["data"])}</p>' if meta.get("data") else ""
+    pre = sekcii.get("Преамбула", "").strip()
+    preambula = (f'\n  <div class="preambula"><h2>{html.escape(meta.get("preambula_zagolovok", "Определения"))}</h2>'
+                 f'{v_html(pre)}</div>\n') if pre else ""
     stranica = STRANICA.format(
         title=html.escape(meta.get("zagolovok", "Листок")),
         stil=STIL, kicker=html.escape(meta.get("kicker", "Математика")),
         zagolovok=html.escape(meta.get("zagolovok", "Листок")),
-        data=data, zadachi="\n\n".join(bloki))
+        data=data, preambula=preambula, zadachi="\n\n".join(bloki))
     out = out or manifest.with_suffix(".html")
     out.write_text(stranica, encoding="utf-8")
     print(f"→ {out.relative_to(REPO) if out.is_relative_to(REPO) else out}")

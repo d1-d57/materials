@@ -788,7 +788,14 @@ def check_s3_puti(z, pr, zahod_path):
     # требует вердикт урока 30. Краснеть на этом значит наказывать за исполнение
     # канона.
     roditel = glavnyj_repo().parent
-    soseda = {d.name for d in roditel.iterdir() if (d / ".git").exists()} \
+
+    def est_git(d):
+        try:
+            return (d / ".git").exists()
+        except OSError:
+            return False
+
+    soseda = {d.name for d in roditel.iterdir() if est_git(d)} \
         if roditel.is_dir() else set()
 
     def sushchestvuet(tok):
@@ -1089,7 +1096,8 @@ def _usage_forma(usage: str, sub: str):
     return obyaz, pozic
 
 
-FLAG_SO_ZNACHENIEM_RE = re.compile(r'(--?[\w-]+)\s+(?:\[)?([A-ZА-ЯЁ][A-ZА-ЯЁ_0-9]*|<[^>]+>)')
+FLAG_SO_ZNACHENIEM_RE = re.compile(
+    r'(--?[\w-]+)\s+(?:\[)?([A-ZА-ЯЁ][A-ZА-ЯЁ_0-9]*|<[^>]+>|\{[^}]+\})')
 
 
 def _flagi_so_znacheniem(usage: str):

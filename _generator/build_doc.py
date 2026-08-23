@@ -27,6 +27,8 @@ argparse, pathlib, html); линтер-гейт до сборки (структ�
 (harvest_katex.py), не рантайм. Офлайн вид деградирует в сырой `$…$`, не падая.
 """
 import re, sys, argparse
+import importlib.util
+import os
 from pathlib import Path
 from html import escape as esc
 
@@ -37,6 +39,47 @@ from html import escape as esc
 # только ВИД: CSS-классы, якоря, печать номера, HTML ката.
 sys.path.insert(0, str(Path(__file__).resolve().parent / "sborka"))
 import bloki  # noqa: E402
+
+# ───────────────────────── ЦВЕТА — ИЗ ДОМА ТОКЕНОВ ПО НАЗНАЧЕНИЮ ─────────────────────────
+# Дом значений — `_generator/tokeny/tokeny.py` плагина disciplina: значение
+# привязано к НАЗНАЧЕНИЮ (что цвет служит), а не к имени переменной носителя.
+# Носитель «doc» снят с этого файла, поэтому значения ниже совпадают с прежними
+# литералами посимвольно — меняется ИСТОЧНИК, не вид: перекраска = правка дома.
+# Литералы, которых в доме нет (тёмная тема и прочие), остаются здесь и ждут
+# расширения дома отдельным решением владельца — не выдумывать по ходу.
+def _token_cvet(naznachenie):
+    """Значение цвета назначения `naznachenie` для носителя «doc» из дома токенов."""
+    koren = os.environ.get("DISCIPLINA_KOREN")
+    if not koren:
+        # _generator/build_doc.py → корень materials → соседняя папка плагина
+        koren = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "..", "..", "disciplina")
+    pyt = os.path.join(os.path.abspath(koren), "_generator", "tokeny", "tokeny.py")
+    if not os.path.exists(pyt):
+        raise ImportError(
+            "дом дизайн-токенов не найден: %s — значения по назначению исполняет "
+            "_generator/tokeny/tokeny.py плагина disciplina; корень плагина можно "
+            "задать через env DISCIPLINA_KOREN" % pyt)
+    spec = importlib.util.spec_from_file_location("_dom_tokenov", pyt)
+    dom = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(dom)
+    znachenie = dom.GRUPPY["cvet"]["naznacheniya"].get(naznachenie)
+    if znachenie is None:
+        raise KeyError("назначения «%s» в доме токенов нет" % naznachenie)
+    privyazka = znachenie["znacheniya"].get("doc")
+    if privyazka is None:
+        raise KeyError("назначение «%s» есть, но для носителя doc привязки нет "
+                       "(дом токенов расширяется решением владельца)" % naznachenie)
+    return privyazka["znachenie"]
+
+
+CVET_FON_BUMAGA = _token_cvet("fon-bumaga")            # --bg
+CVET_ZALIVKA_UZLA = _token_cvet("zalivka-uzla")        # --panel
+CVET_OSNOWNOJ = _token_cvet("osnovnoj")                # --text
+CVET_DOPOLNYAYUSHCHIJ = _token_cvet("dopolnyayushchij")  # --muted
+# (--muted обслуживает и назначение metka-priglushennaya — тот же var, та же
+#  привязка в доме; определение var одно, обращение выше.)
+CVET_KONTRASTNYJ = _token_cvet("kontrastnyj")          # --accent
 
 GEN_BANNER = ("<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — "
              "РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->\n")
@@ -1182,8 +1225,8 @@ PAGE = r"""<!DOCTYPE html>
 <style>
 :root{
   /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
-  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
-  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --bg:""" + CVET_FON_BUMAGA + r"""; --panel:""" + CVET_ZALIVKA_UZLA + r"""; --text:""" + CVET_OSNOWNOJ + r"""; --muted:""" + CVET_DOPOLNYAYUSHCHIJ + r""";
+  --rule:#e7e2d6; --accent:""" + CVET_KONTRASTNYJ + r"""; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
   --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
   --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
   --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
