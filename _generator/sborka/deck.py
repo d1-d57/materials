@@ -206,6 +206,7 @@ def _podobrat_tipografiku(to_compile, zanovo=False):
     from slaid import compile_slide_html
 
     podobrano, propushcheno, legasi = 0, 0, []
+    nepobezhdenye = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(channel="chrome", headless=True)
         page = browser.new_page(viewport={"width": 1440, "height": 810}, device_scale_factor=1)
@@ -249,9 +250,17 @@ def _podobrat_tipografiku(to_compile, zanovo=False):
                     html_path.write_text(html, encoding="utf-8")
                     res = vmeshchenie.podobrat_slide(page, html_path, axis=axis)
                 if res["chosen"] is None:
-                    raise SystemExit(
-                        "подбор: %s — ни одна проба не влезла внутри жёстких зон "
-                        "(см. `vmeshchenie.py --demo-zony`)" % sid)
+                    # Д-В9: отказ солвера на ОДНОМ слайде больше не роняет сборку
+                    # ВСЕЙ колоды (прежде здесь был `raise SystemExit`, и цена —
+                    # цикл «упало → правлю карточку руками → пересобираю всё»).
+                    # Слайд помечается НЕПОБЕЖДЁННЫМ, список уходит наверх, прогон
+                    # в конце печатает его и завершается с rc=1: дек собирается
+                    # целиком, но молча зеленеть при непобеждённых нельзя.
+                    nepobezhdenye.append(sid)
+                    print("подбор: %s — ОТКАЗ: ни одна проба не влезла внутри жёстких зон "
+                          "(см. `vmeshchenie.py --demo-zony`); слайд НЕПОБЕЖДЁН, "
+                          "сборка продолжается" % sid, file=sys.stderr)
+                    continue
                 vmeshchenie.apply_to_card(slide_path, res["chosen"])
                 podobrano += 1
                 print("подбор: %s — kegl=%.1f liniya=%s" % (
@@ -272,7 +281,7 @@ def _podobrat_tipografiku(to_compile, zanovo=False):
               "     Разморозить лекцию целиком: `deck.py <лекция> -o <выход> --zanovo`;\n"
               "     закрепить решение автора навсегда: `%s: da` в шапке карточки."
               % (POLE_METKI, len(legasi), ", ".join(legasi), POLE_NAMERENIYA))
-    return podobrano, propushcheno
+    return podobrano, propushcheno, nepobezhdenye
 
 
 def _wrap_vizitka_html(sid, css, slide_html):
@@ -555,8 +564,9 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     # намеренно недописаны и не обязаны собираться (Я1 §4-бис: «в дек не входит»).
     to_compile = [p for p in slide_paths if p.parent.name in slide_order]
 
+    nepobezhdenye = []
     if podbor:
-        _podobrat_tipografiku(to_compile, zanovo=zanovo)
+        _, _, nepobezhdenye = _podobrat_tipografiku(to_compile, zanovo=zanovo)
 
     # Э1 захода sloi-i-obrez: номер раздела — СКВОЗНОЙ по разделителям в порядке их
     # следования в деке. Считается здесь, потому что карточка своего места в деке не
@@ -675,7 +685,7 @@ def build(src, out, jobs=None, podbor=True, zanovo=False):
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8")
     n_rezerv = sum(1 for s in status_by_sid.values() if s == "rezerv")
-    return len(order), n_rezerv, out
+    return len(order), n_rezerv, out, nepobezhdenye
 
 
 def main():
@@ -693,8 +703,9 @@ def main():
     args = ap.parse_args()
     from formaty import FormatSlaida  # noqa: E402  (тот же приём, что slaid.py main())
     try:
-        n, n_rezerv, out = build(args.src, args.out, jobs=args.jobs,
-                                 podbor=not args.bez_podbora, zanovo=args.zanovo)
+        n, n_rezerv, out, nepobezhdenye = build(args.src, args.out, jobs=args.jobs,
+                                                podbor=not args.bez_podbora,
+                                                zanovo=args.zanovo)
     except FormatSlaida as e:
         print("ОШИБКА: %s" % e, file=sys.stderr)
         return 1
@@ -720,6 +731,15 @@ def main():
         # rc=0, иначе отсутствие браузера выглядело бы как брак вёрстки.
         print("⚠ гейт вмещения не отработал: %s: %s" % (type(e).__name__, e),
               file=sys.stderr)
+    # Д-В9: СПИСОК непобеждённых — в самом конце прогона, и rc=1 при непустом
+    # списке. Печать без ненулевого кода возврата критерий не закрывает: сборка,
+    # которая молча зеленеет, хуже падения — ей верят.
+    if nepobezhdenye:
+        print("\nНЕПОБЕЖДЁННЫЕ СЛАЙДЫ (%d) — солвер не подобрал типографику, карточки "
+              "не тронуты, слайды собраны «как есть»:" % len(nepobezhdenye))
+        for sid in nepobezhdenye:
+            print("  - %s" % sid)
+        return 1
     return 0
 
 
