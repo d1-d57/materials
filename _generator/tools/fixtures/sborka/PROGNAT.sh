@@ -109,7 +109,14 @@ molchit() {  # <описание> <код, который НЕ должен пр
 
 # ── ЗАМЕРЫ ЖИВОГО МИРА: ни одно число и ни одно имя не вписано в фикстуру рукой ─
 VETKA=$(cd "$REPO_ROOT" && git --no-optional-locks rev-parse --abbrev-ref HEAD)
-DEFOV=$(cd "$REPO_ROOT" && grep -c "def " _generator/tools/check_zahod.py)
+# 🔴 Мерой был `grep -c "def "` — но 21.08 заход otkljuchit-dubli превратил
+# check_zahod.py в диспетчер без единого def: греп стал отвечать «0» с кодом 1,
+# и под `set -e` это роняло прогон МОЛЧА, блокируя pre-commit любого пути из
+# TOOL-CONTRACT-COVERS (заявка 2026-08-23T1949; тот же класс, что у LOVUSHEK
+# выше, отсюда `|| true`). Ловушкам 8/9/21 нужно ЖИВОЕ число, а не вырожденный
+# ноль (замена «→ 0.» на «→ 0.» пуста), — мерой стало число строк файла:
+# непустой файл ⇒ совпадения есть ⇒ код 0.
+DEFOV=$(cd "$REPO_ROOT" && grep -c "^" _generator/tools/check_zahod.py || true)
 # Ветка, на которой заведомо НЕТ этого самого гейта, — для ловушки 7 (С3b).
 VETKA_BEZ=""
 for B in $(cd "$REPO_ROOT" && git --no-optional-locks branch --format='%(refname:short)'); do
@@ -123,7 +130,7 @@ done
 # имя коммита («fatal: malformed object name»). Поймано первым прогоном фикстуры:
 # ловушка 15 молча пропускалась при семи невлитых ветках в репозитории.
 VETKA_VLIT=$(cd "$REPO_ROOT" && git --no-optional-locks branch --format='%(refname:short)' --no-merged | head -1)
-echo "── замеры живого мира: ветка=$VETKA · def-ов в check_zahod.py=$DEFOV · без гейта=${VETKA_BEZ:-нет} · к влитию=${VETKA_VLIT:-нет}"
+echo "── замеры живого мира: ветка=$VETKA · строк в check_zahod.py=$DEFOV · без гейта=${VETKA_BEZ:-нет} · к влитию=${VETKA_VLIT:-нет}"
 
 # ── эталон здорового захода: КАЖДОЕ утверждение истинно про живой репозиторий ──
 # 🔴 Раздел «## 4.1 ГИГИЕНА» добавлен в эталон 2026-08-09 вместе с гейтом С8, и это
@@ -151,7 +158,7 @@ sobrat_zdorovyj() {  # <путь>
 Сделать X, ровно по шагам. Файла \`_generator/tools/net-takogo-fajla.py\` не существует, проверено: \`test -e _generator/tools/net-takogo-fajla.py\`.
 
 **КРИТЕРИЙ ГОТОВНОСТИ (может ПРОВАЛИТЬСЯ):**
-1. Живой прогон на реальном файле: \`grep -c "def " _generator/tools/check_zahod.py\` → $DEFOV.
+1. Живой прогон на реальном файле: \`grep -c "^" _generator/tools/check_zahod.py\` → $DEFOV.
 2. \`python3 _generator/tools/git_zona.py check --zone _generator/\` → ✅.
 
 ## 3. ВЕРИФИКАТОР
