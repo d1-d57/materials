@@ -93,6 +93,22 @@ def Am(k):
     return G
 
 
+def obmotki_formula(M, N, x):
+    """W_M(N,x) = сумма C(N,(N+x+jM)/2) по целым j с целым нижним индексом."""
+    tot = 0
+    for j in range(-(N // M + 3), N // M + 4):
+        idx = (N + x + j * M)
+        if idx % 2 == 0:
+            tot += C(N, idx // 2)
+    return tot
+
+
+def obmotki_spektr(M, N, x):
+    """Независимая проверка: (1/M) * сумма собственных чисел цикла в степени N."""
+    return sum((2 * cos(2 * pi * k / M)) ** N * cos(2 * pi * k * x / M)
+               for k in range(M)) / M
+
+
 def izobrazheniya(m, n):
     """Знакопеременная сумма изображений со сдвигом m+2."""
     M = m + 2
@@ -123,6 +139,15 @@ if __name__ == "__main__":
             want = brute_area(m, n)
             assert got == want, (m, n, got, want)
     print("совпадает всюду при m<=4, n<=5")
+
+    print("== обмотки: формула против спектра цикла ==")
+    for M in range(2, 9):
+        for N in range(0, 13):
+            for x in range(M):
+                f_ = obmotki_formula(M, N, x)
+                s_ = round(obmotki_spektr(M, N, x))
+                assert f_ == s_, (M, N, x, f_, s_)
+    print("совпадает всюду при M<=8, N<=12")
 
     print("== изображения против перебора и динамики ==")
     for m in range(1, 7):
