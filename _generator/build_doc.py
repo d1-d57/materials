@@ -321,15 +321,23 @@ def md_table(lines):
     return "<table><thead><tr>%s</tr></thead><tbody>%s</tbody></table>" % (head, rows)
 
 
+# Хвост зачина вида «утверждения 7» — обратная ссылка на адресат (Р-9 арки блоков, Д10),
+# а не подпись: присоединяется к кнопке без тире, ровно как написал автор.
+_OTSYLKA_TAIL_RE = re.compile(r"^(утверждения|теоремы|леммы|предложения|следствия)\s+\S")
+
+
 def proof_details(joined):
     """`*Доказательство — подпись.* тело` → свёрнутый кат. СВЁРНУТ ПО УМОЛЧАНИЮ (Р-владелец
     2026-07-24: «сворачивать — на уровне генератора, раз и навсегда»). Хвост зачина после
-    тире идёт в подпись кнопки: «доказательство — счёт двумя способами»."""
+    тире идёт в подпись кнопки: «доказательство — счёт двумя способами». Отвязанный кат с
+    обратной ссылкой («*Доказательство утверждения 7.*») — вторая форма Р-9:
+    подпись «доказательство утверждения 7», тоже свёрнут."""
     v = bloki.razobrat_zachin_vyvoda(joined)
     if v is None:
         return ""
     kw, tail, body = v.zachin, v.hvost, v.telo
-    cap = kw.lower() + (" — " + tail if tail else "")
+    sep = " " if _OTSYLKA_TAIL_RE.match(tail) else " — "
+    cap = kw.lower() + (sep + tail if tail else "")
     return ('<details class="d-proof"><summary>%s</summary><div class="proof">%s</div></details>'
             % (esc(cap), _body_html(body)))
 
@@ -642,7 +650,9 @@ def render_stream(body, sid="s0"):
 
 _DRILL_AXES = ("род", "вердикт", "уровень", "вход")            # голые значения → строка осей
 _DRILL_LINES = ("узел", "следует-из", "источник", "решение")   # тела с готовыми лейблами → своя строка
-_DRILL_PROOF_RE = re.compile(r"^\*(Доказательство|Логика|Идея)")
+# ЧЕТЫРЕ имени зачина вывода — тот же состав, что bloki.ZACHINY_VYVODA (Д9, закрыто
+# 2026-08-23: без «Решение» блок *Решение.* в drill-потоке молча не давал ката)
+_DRILL_PROOF_RE = re.compile(r"^\*(Доказательство|Логика|Идея|Решение)")
 
 # стиль тихого слоя: тонкие метки, не пилюли; цвета приглушены, замечаются только при поиске глазом
 DRILL_CSS = """<style>
@@ -912,11 +922,11 @@ def _drill_stmt(head_text, blocks, sid):
         if k in fields:
             quiet_ps.append("<p>%s</p>" % render_inline(fields[k]))
     quiet = '<div class="d-quiet">%s</div>' % "".join(quiet_ps) if quiet_ps else ""
-    # кат доказательства: у упражнения (зачин *Идея…*) — «Идея»
+    # кат доказательства: имя кнопки — зачин (Идея/Решение) либо «Доказательство»
     cut = ""
     if proof_blocks:
         pm = _DRILL_PROOF_RE.match(proof_blocks[0].lstrip())
-        cut_label = "Идея" if pm.group(1) == "Идея" else "Доказательство"
+        cut_label = pm.group(1) if pm.group(1) in ("Идея", "Решение") else "Доказательство"
         cut = ('<details class="d-proof"><summary>%s</summary>%s</details>'
                % (cut_label, render_stream("\n\n".join(proof_blocks), sid)[0]))
     return ('<details class="d-st"%s><summary>%s%s</summary>'
