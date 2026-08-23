@@ -79,7 +79,10 @@ CVET_OSNOWNOJ = _token_cvet("osnovnoj")                # --text
 CVET_DOPOLNYAYUSHCHIJ = _token_cvet("dopolnyayushchij")  # --muted
 # (--muted обслуживает и назначение metka-priglushennaya — тот же var, та же
 #  привязка в доме; определение var одно, обращение выше.)
-CVET_KONTRASTNYJ = _token_cvet("kontrastnyj")          # --accent
+CVET_KONTRASTNYJ = _token_cvet("kontrastnyj")          # --accent и --link
+# (--link светлой темы всегда нёс ТО ЖЕ значение, что --accent, — одним литералом
+#  на две переменные. Оставить --link литералом значило бы РАЗОРВАТЬ эту связку
+#  правкой дома: акцент поехал бы, ссылка нет. Найдено верификатором захода.)
 
 GEN_BANNER = ("<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — "
              "РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->\n")
@@ -1229,7 +1232,7 @@ PAGE = r"""<!DOCTYPE html>
   --rule:#e7e2d6; --accent:""" + CVET_KONTRASTNYJ + r"""; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
   --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
   --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
-  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --flag-closed-bg:#e9f5e9; --link:""" + CVET_KONTRASTNYJ + r"""; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
   --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
   /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
      DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
