@@ -36,6 +36,10 @@
 
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+# Живой дом тел (заход odin-istochnik-kopij): инструменты здесь — тонкие
+# диспетчеры на тело в соседнем `disciplina`; ловушки копируют инструмент в
+# одноразовое дерево, где диспетчер соседа не найдёт. Копировать надо ТЕЛО.
+ZHIVOJ_DOM="$(cd "$TOOLS/../.." && cd .. && pwd)/disciplina/_generator/tools"
 
 # 🔴 ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить окружение git — та же строка и та же
 # причина, что в fixtures/git_zona/PROGNAT.sh. Внутри хука git экспортирует
@@ -51,11 +55,11 @@ trap 'rm -rf "$T"' EXIT
 ARKA=_studio/zhurnal/2026-07-30_proba
 mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
          "$T/$ARKA" "$T/teoriya-kategoriy/kartoteka" "$T/proekt"
-cp "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" "$TOOLS/check_zahod.py" \
-   "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$TOOLS/korni.py" \
-   "$TOOLS/check_sborki.py" "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" \
-   "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
-   "$TOOLS/check_tool_contract.py" \
+cp "$TOOLS/check_kartoteka.py" "$ZHIVOJ_DOM/register_doc.py" "$TOOLS/check_zahod.py" \
+   "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" "$ZHIVOJ_DOM/korni.py" \
+   "$ZHIVOJ_DOM/check_sborki.py" "$ZHIVOJ_DOM/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" \
+   "$ZHIVOJ_DOM/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
+   "$ZHIVOJ_DOM/check_tool_contract.py" \
    "$T/_generator/tools/"
 # `modeli.py` — импорт верхнего уровня в `bootstrap_zahod.py`; без него временная
 # копия падает `ModuleNotFoundError`, и красной оказывается фикстура, а не проверка

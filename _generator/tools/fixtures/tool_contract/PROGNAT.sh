@@ -21,6 +21,10 @@
 
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+# Живой дом тел (заход odin-istochnik-kopij): инструменты здесь — тонкие
+# диспетчеры на тело в соседнем `disciplina`; ловушки копируют инструмент в
+# одноразовое дерево, где диспетчер соседа не найдёт. Копировать надо ТЕЛО.
+ZHIVOJ_DOM="$(cd "$TOOLS/../.." && cd .. && pwd)/disciplina/_generator/tools"
 
 # Та же каноническая вычистка, что в фикстуре git_zona: внутри хука git отдаёт
 # дочерним процессам GIT_DIR/GIT_INDEX_FILE АБСОЛЮТНЫМИ путями на боевой репо.
@@ -428,7 +432,8 @@ cd "$R"
 git init -q .
 git config user.email fixture@test
 git config user.name fixture
-cp "$TOOLS/check_tool_contract.py" _generator/tools/
+cp "$ZHIVOJ_DOM/check_tool_contract.py" _generator/tools/
+cp "$ZHIVOJ_DOM/korni.py" _generator/tools/
 mkdir -p _generator/tools/fixtures/tool_contract
 cp "$TOOLS/fixtures/tool_contract/BASELINE" _generator/tools/fixtures/tool_contract/
 printf '# TOOL-CONTRACT: no-input\n# TOOL-CONTRACT: called-by-hand\nimport subprocess\ndef a():\n    subprocess.run(["git", "diff"])\n' \

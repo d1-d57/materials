@@ -1,435 +1,47 @@
 #!/usr/bin/env python3
-"""Гейт уроков фабрике: у каждого урока обязана быть ЦЕНА.
+"""check_uroki.py — тонкий диспетчер: ОДНА дверь, а не вторая копия.
 
-ЗАЧЕМ ЭТОТ ФАЙЛ СУЩЕСТВУЕТ (не удалять причину — она дороже кода).
+ОТКЛЮЧЕНО 2026-08-24, заход `odin-istochnik-kopij`: копия разошлась с живым
+экземпляром МОЛЧА (сторож `sverka_kopij.py` в `disciplina`, девять пар).
+Проверено перед отключением диффом по существу: уникальной работы в редакции
+`materials` не было — вся она уже лежит в живом экземпляре. Ведущая сторона —
+`disciplina`. Живой экземпляр — `disciplina/_generator/tools/check_uroki.py`.
+Путь остаётся рабочим: вызывающие документы не меняются.
 
-За трое суток (16–17.07.2026) написано 17 секций «→ фабрика». До канона дошла ОДНА.
-Проверено: `git log _studio/docs/` — канон правился один раз, и не про уроки. У фабрики
-было ТРИ хука «→ фабрика» (после отчёта · хэндофф · закрытие арки), и втроём они
-доставили ~1 урок из ~12.
+Форма — образцы `priyomka.py` и `dolg_repozitoriev.py` (заходы
+`otkljuchit-dubli`, `vynos-instrumentov`): файл остаётся и CLI, и библиотекой —
+`runpy.run_path(ДВЕРЬ, run_name=__name__)` без `__main__`-гварда. При запуске
+дверь получает `__name__ == "__main__"` и её `sys.exit(main())` срабатывает
+как обычно, с тем же кодом возврата; при импорте все имена двери переезжают
+в этот модуль (`import check_uroki`; `check_uroki.<имя>` продолжает работать). Дверь не
+найдена — внятный отказ, а не голый ModuleNotFoundError.
 
-Разбор (RESHENIYA Р31): хуки были ПРОЗОЙ в .md — правилом, которое можно нарушить
-молча. А по закону KONSTITUCIYA §11 такое правило будет нарушено, включая автором.
-Ещё одно «теперь точно заносим» стало бы тем же пожеланием в четвёртый раз, поэтому
-вместо уговоров — этот скрипт в pre-commit.
-
-ЧТО ОН ЛОВИТ. Ровно одно: урок без строки `ЦЕНА:`. Порог канона дословно — «урок без
-цены это наблюдение, ему в канон нельзя» — потому что цена задним числом НЕ
-восстанавливается: через день помнишь мораль, но не помнишь, что сломалось.
-
-Урок с `ВЕРДИКТ:` НЕ проверяется: его уже отсудила закрывающая сессия, и она же решала,
-настоящая ли цена. Гейт защищает ВХОД в эту сессию, а не её выход. (Оно же лечит и
-исторические файлы, где цена написана прозой до появления формата.)
-
-⚠️ ЧЕКЕР СОВРАЛ НА ПЕРВОМ ЗАПУСКЕ — как и `check_kartoteka.py`, трижды. Он объявил браком
-все 11 уроков арки teorkat: цена у них есть, но прозой («**Цена — четыре рецидива:**»),
-а не строкой `ЦЕНА:`. Соблазн был ослабить регексп до «есть слово цена» — это убило бы
-гейт (он перестал бы уметь краснеть). Вместо этого — правило про вердикт выше.
-
-ЧЕГО ОН НЕ ЛОВИТ (сказано честно — клауза 3 гейта, RUKOVODSTVO §Заход):
-  * что цена НАСТОЯЩАЯ, а не приписана для галочки;
-  * что урок вообще записан — молчание не отличить от «уроков не было»;
-  * что урок доехал до канона (это закрытие арки, ARKA §7 п.3).
-Скрипт считает строки, а не правду. Правду ловит владелец и свежая сессия.
-
-Проверяет ТОЛЬКО арки, файлы которых есть в этом коммите: чинить старые арки он не
-требует и потому не шумит. Молчит, когда всё чисто, — иначе его отключат, и это будет
-конец затеи.
-
-Запуск (обычно через pre-commit, но можно руками):
-    python3 _generator/tools/check_uroki.py                 # staged-файлы коммита
-    python3 _generator/tools/check_uroki.py <путь.md> ...   # явные файлы
-Код возврата: 0 — чисто, 1 — есть уроки без цены (годится в ворота).
-Обойти можно: `git commit --no-verify`. Это НЕ дыра — закон говорит «нельзя нарушить
-МОЛЧА», а не «нельзя нарушить». Обошёл — значит напечатал это руками и знаешь, что делаешь.
+🔴 Перед exec двери ставится умолчание `GIT_ZONA_REPO` = корень ЭТОГО дерева:
+тело судит дерево вызова, а не свой дом. `setdefault`, а не присвоение —
+явный env зовущего (например, фикстурный одноразовый репозиторий) сильнее
+умолчания диспетчера.
 """
+
+# TOOL-CONTRACT: called-by-hand — живая точка вызова названа: хук `.githooks/pre-commit` этого репозитория зовёт `check_uroki.py` на каждом коммите;
+# плюс руки владельца и вызовы из соседних инструментов.
+
 import os
-import re
-import subprocess
+import runpy
 import sys
-import datetime
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[2]  # .../materials
-UROKI_NAME = "UROKI-FABRIKE.md"
-ZAHOD_SECTION = "## УРОКИ ФАБРИКЕ"
+КОРЕНЬ_MATERIALS = Path(__file__).resolve().parents[2]
+ДВЕРЬ = КОРЕНЬ_MATERIALS.parent / "disciplina" / "_generator" / "tools" / "check_uroki.py"
 
-# 🔴 ЗНАЧЕНИЕ ПРОДУБЛИРОВАНО, А НЕ ИМПОРТИРОВАНО ИЗ korni.py — НАРОЧНО.
-# `import korni` роняет фикстуру `fixtures/dvizhok`: она копирует check_uroki.py
-# в изолированную песочницу БЕЗ соседних инструментов (проверяет только логику
-# самого хука), и импорт падал там `ModuleNotFoundError` на каждом здоровом
-# пути — нашёл регрессией живой прогон `fixtures/dvizhok/PROGNAT.sh` при первой
-# же правке. check_uroki.py и раньше был листовым модулем без кросс-тул
-# импортов (его саму импортирует dostavit_urok.py, а не наоборот) — эта строка
-# обязана совпадать с `korni.ВЕРДИКТЫ_REL`, но копия дешевле хрупкой связи.
-VERDIKTY_REL = "_studio/zhurnal/_INFRA-git/VERDIKTY.md"
+os.environ.setdefault("GIT_ZONA_REPO", str(КОРЕНЬ_MATERIALS))
 
-HEADING = re.compile(r"^### (.+)$")
-# Цена засчитывается и с жирным выделением: `**ЦЕНА: …**` — это то же самое,
-# что `ЦЕНА: …`, автор просто подчеркнул её. Гейт судит СУТЬ, а не оформление.
-# Цена ошибки прежней строгой формы (21.07): в закрытой арке лежали 7 полноценных
-# уроков с настоящей ценой, написанной жирным, — гейт объявил их «уроками без цены»
-# и блокировал коммиты ЧУЖИХ заходов. Из-за этого один заход ушёл через --no-verify,
-# а аналитик записал в канон ложный урок «гейт штрафует за чужой долг».
-# Разделитель после токена — ЛЮБОЙ, не только «: »: гейт судил пунктуацию, а не
-# наличие цены, и урок «ЦЕНА обратная, и она названа конкретно: …» был объявлен
-# уроком без цены (нашла верификация 30.07). `(?!\w)` — токен «ЦЕНА» ЦЕЛЫМ словом:
-# без него «ЦЕНАЛОГ: 5» проходил бы как цена, хотя слово другое.
-#
-# 🔴 Индент — НЕ добавлен нарочно (заход `kod_gejty-kotorye-vrut.md`, 06.08).
-# `^` тут якорит начало строки без отступа, и это совпадает с якорем HEADING
-# ниже — заголовок с отступом гейт тоже не видит. Оба живых случая индента в
-# корпусе (`lekcia-1:13`, `konspekt-l1:13`) — это плейсхолдер шаблона `### N.
-# <...>`, НАРОЧНО сдвинутый на 2 пробела, чтобы строгий греп-гейт шапки (см.
-# `_TEMPLATE-arka/UROKI-FABRIKE.md`) не считал сам образец уроком. Дать PRICE
-# индент-толерантность здесь безопасно (HEADING всё равно не найдёт заголовок),
-# но толерантность в ГРЕП-гейте той же арки — нет: это бы расстроило именно
-# этот приём. Оставляю оба гейта раздельно консервативными, без спекулятивной
-# толерантности к форме, для которой в корпусе нет ни одной настоящей записи.
-PRICE = re.compile(r"^\*{0,2}ЦЕНА(?!\w)[^\w]*(.*?)\*{0,2}$")
-VERDICT = re.compile(r"^\*{0,2}ВЕРДИКТ: *(.*?)\*{0,2}$")
-# Заголовок-плейсхолдер из шаблона (`### <что произошло>`) — не урок, а рыба.
-PLACEHOLDER = re.compile(r"^<.*>$")
+if not ДВЕРЬ.is_file():
+    print(f"⛔ Полная дверь не найдена по вычисленному пути: {ДВЕРЬ}", file=sys.stderr)
+    print("   Ожидается репозиторий `disciplina` рядом с `materials` "
+          f"(сосед {КОРЕНЬ_MATERIALS.parent}). Если разложено иначе — "
+          "поправь вычисление ДВЕРЬ в этом файле.", file=sys.stderr)
+    if __name__ == "__main__":
+        sys.exit(1)
+    raise ModuleNotFoundError(f"дверь диспетчера check_uroki.py не найдена: {ДВЕРЬ}")
 
-
-def staged_files():
-    """Файлы в индексе коммита. Пусто — не в git-контексте, это не ошибка.
-
-    🔴 Фикстуры самого гейта (`_generator/tools/fixtures/`) отсюда ИСКЛЮЧЕНЫ.
-    Они по своему назначению содержат уроки без цены — иначе не на чем проверить,
-    что гейт умеет падать, — и лежат в структуре `zhurnal/<арка>/kod_*.md`, потому
-    что скрипт выбирает цели по ней. Для хука это неотличимо от настоящей арки.
-    Цена (21.07): в первый же коммит после их появления хук завалил ВСЕ ДЕСЯТЬ
-    коммитов плана — репозиторий не мог принять ничего, включая сами фикстуры.
-    Явно переданный аргументом путь проверяется по-прежнему: так `PROGNAT.sh`
-    гоняет фикстуры и видит их падение. Фильтр только для автоподбора из индекса.
-    """
-    try:
-        out = subprocess.run(
-            ["git", "--no-optional-locks", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
-            cwd=REPO_ROOT, capture_output=True, text=True, check=True,
-        ).stdout
-    except (subprocess.CalledProcessError, FileNotFoundError):
-        return []
-    return [REPO_ROOT / line for line in out.splitlines()
-            if line and "/fixtures/" not in "/" + line]
-
-
-def targets_from(paths):
-    """Какие файлы уроков проверять: UROKI-FABRIKE.md тронутых АРОК + тронутые kod_*.md.
-
-    Арка тронута = в коммите есть ЛЮБОЙ её файл. Тогда её уроки обязаны быть в форме,
-    даже если сам файл уроков в этот коммит не попал: иначе гейт молчит ровно тогда,
-    когда урок забыли записать.
-    """
-    found = set()
-    for p in paths:
-        if p.name.startswith("kod_") and p.suffix == ".md" and p.is_file():
-            found.add(p)
-        for parent in p.parents:
-            if parent.parent.name == "zhurnal" and parent.name != "_TEMPLATE-arka":
-                uroki = parent / UROKI_NAME
-                if uroki.is_file():
-                    found.add(uroki)
-                break
-    return sorted(found)
-
-
-# ── ГЕЙТ 2: адрес артефакта в отчёте ────────────────────────────────────────
-# Заход, который что-то СОБРАЛ, обязан назвать абсолютный путь к собранному —
-# иначе владелец физически не может это открыть. Проверяется ТОЛЬКО у заходов с
-# заполненным отчётом: признак — строка «КОММИТ:» с настоящим хэшем (7+ hex).
-# Плейсхолдер `<хэш>` из шаблона под это не подпадает, значит незаконченный заход
-# гейт не трогает и старые файлы не краснеют — они попадают под проверку лишь
-# когда их СНОВА кладут в коммит, то есть когда их и так правят.
-#
-# ЦЕНА (31.07.2026): за одну сессию собраны колода слайдов, вид ленты и три
-# документа. Ни один путь не был назван в отчёте; владелец: «я всё время не могу
-# найти твои новые файлы». Дороже: сборка колоды молча не запустилась (цепочка
-# через `&&` оборвалась на штатном ненулевом коде `sverstat.py`), владелец открыл
-# ВЧЕРАШНЮЮ колоду и заключил, что правка не сработала, — круг ушёл на поиск
-# поломки, которой не было. Оба случая лечит одна строка адреса.
-#
-# 🔴 ЧЕСТНАЯ ГРАНИЦА ГЕЙТА — он говорит про себя, чего НЕ проверяет.
-# Область — только заходы, РОЖДЁННЫЕ НОВЫМ ШАБЛОНОМ, то есть несущие строку
-# «АРТЕФАКТ». Строки нет вовсе → файл старше правила, гейт молчит. Иначе он
-# покраснел бы на 48 заходах из 122 (замерено 31.07 перед включением), их стали
-# бы обходить `--no-verify`, и защита пропала бы целиком — ровно тот сценарий,
-# от которого предостерегает `konvejer/GEJTY.md`.
-# Отсюда дыра, и я её называю: исполнитель, УДАЛИВШИЙ строку, гейт обойдёт.
-# Заткнуть её можно только сверкой с шаблоном по хэшу, а это дороже пользы:
-# на приёмке аналитик всё равно обязан открыть артефакт сам (RUKOVODSTVO §Приёмка 1½).
-DONE = re.compile(r"^\*{0,2}КОММИТ:?\*{0,2}\s*`?[0-9a-f]{7,40}`?")
-ARTEFAKT = re.compile(r"^\*{0,2}АРТЕФАКТ(?!\w)\*{0,2}:?\*{0,2}\s*(.*)$")
-# `<...>` — незаполненная рыба из шаблона; она и есть то, что ловится.
-RYBA = re.compile(r"^`?<.*>`?$")
-
-
-def artefakt_missing(path):
-    """True — отчёт заполнен (хэш коммита настоящий), а адрес артефакта — рыба.
-
-    Файл без строки «АРТЕФАКТ» вообще — вне области гейта (см. границу выше).
-    """
-    done = in_scope = filled = False
-    for line in path.read_text(encoding="utf-8").splitlines():
-        s = line.strip()
-        if DONE.match(s):
-            done = True
-            continue
-        m = ARTEFAKT.match(s)
-        if m:
-            in_scope = True
-            val = m.group(1).strip()
-            if val and not RYBA.match(val):
-                filled = True
-    return done and in_scope and not filled
-
-
-# ── ГЕЙТ 3: закрытие реестра — тем же ходом, что и починка ──────────────────
-# ЗАЧЕМ. Владелец дословно: «мы запускаем заход, который закрывает долги А,Б,С,
-# отрабатывает, всё хорошо. Потом спрашиваю — А,Б,С не закрыты… состояние
-# ускользает». Между «починил» и «отмечено» стоят три хода (исполнитель чинит →
-# приёмка верит отчёту → метку переставляет кто-то потом), и на любом из них
-# теряются — за одну ночь потерялись дважды. Лечится тем же приёмом, что уже
-# стоит выше для АРТЕФАКТА: заявление о закрытии в `## ОТЧЁТ` без переставленной
-# метки в реестре красит коммит.
-#
-# 🔴 ТРИ РЕЕСТРА — ТРИ РАЗНЫХ СПОСОБА СВЕРКИ, назвал в `## ПЛАН` этого захода:
-#  * ДОЛГИ (`DOLG.md`) живут в ДРУГОМ git-репозитории (`~/Documents/GitHub/
-#    disciplina`, не `materials`) — коммит `materials` физически не может внести
-#    его правку в свой `git diff --cached`. Сверяем ЖИВОЙ файл с диска: строка
-#    `СТАТУС:` найденного долга обязана нести СЕГОДНЯШНЮЮ дату данных (тот же
-#    канон, что корневой `CLAUDE.md` правило 6 / Р34 уже требует от любой
-#    отметки «закрыто» — не 1:1 «тот же коммит», а ближайшее исполнимое
-#    приближение к цели владельца).
-#  * ИНЦИДЕНТЫ закрываются в `VERDIKTY.md` (НЕ в `INCIDENTY.md` — та входящая
-#    сырая корзина, «руками строки не заводятся», см. её собственную шапку) —
-#    этот файл ВНУТРИ `materials`, сверяем ДОБАВЛЕННУЮ строку `git diff --cached`
-#    этого же коммита.
-#  * УРОКИ закрываются строкой `ВЕРДИКТ:` в `UROKI-FABRIKE.md` арки ТОГО ЖЕ
-#    захода — тоже внутри `materials`, тот же приём git-diff.
-#
-# Заявление ловится СО-ВХОЖДЕНИЕМ по строке (глагол «закры*» + токен рядом),
-# не разбором смысла — терпимая сторона ошибки, тот же принцип, что у Г6
-# `priyomka.py`: «ложное срабатывание стоит взгляда, пропуск стоит потерянного
-# долга». Отчёт без заявлений о закрытии гейт не трогает — обратная
-# совместимость обеспечена ПУСТЫМ множеством заявлений, а не отдельной веткой.
-DOLG_PATH = Path(os.environ.get("CHECK_UROKI_DOLG")
-                  or "~/Documents/GitHub/disciplina/skills/slajdy/DOLG.md").expanduser()
-
-CLOSURE_VERB = re.compile(r"закры\w*", re.I)
-DOLG_TOKEN = re.compile(r"\b((?:Д|Б)\d+)\b")
-INCIDENT_MARK_RE = re.compile(r"вердикт:\s*закрыт\s+гейтом", re.I)
-
-
-def otchet_sekciya(text):
-    """Текст `## ОТЧЁТ` (до следующего `## ` или конца файла); "" — секции нет."""
-    m = re.search(r'^##\s+ОТЧЁТ[^\n]*\n(.*?)(?=^##\s|\Z)', text, re.M | re.S)
-    return m.group(1) if m else ""
-
-
-def zayavlennye_zakrytiya(otchet):
-    """(долги: {метки}, инцидент: bool, урок: bool) — заявления о закрытии в ОТЧЁТЕ."""
-    dolgi, incident, urok = set(), False, False
-    for line in otchet.splitlines():
-        if CLOSURE_VERB.search(line):
-            for m in DOLG_TOKEN.finditer(line):
-                dolgi.add(m.group(1))
-            if re.search(r"инцидент", line, re.I):
-                incident = True
-        if re.search(r"урок", line, re.I) and re.search(r"реализован|закры\w*", line, re.I):
-            urok = True
-    return dolgi, incident, urok
-
-
-def otnositelno(put, baza):
-    try:
-        return put.resolve().relative_to(baza.resolve()).as_posix()
-    except (ValueError, OSError):
-        return None
-
-
-def staged_added_lines(rel_path, repo_root):
-    """Строки, ДОБАВЛЕННЫЕ этим же staged-коммитом (без ведущего `+`)."""
-    if rel_path is None:
-        return []
-    r = subprocess.run(
-        ["git", "--no-optional-locks", "diff", "--cached", "-U0", "--", rel_path],
-        cwd=repo_root, capture_output=True, text=True,
-    )
-    if r.returncode != 0:
-        return []
-    return [ln[1:] for ln in r.stdout.splitlines() if ln.startswith("+") and not ln.startswith("+++")]
-
-
-def dolg_metka_svezha(label, dolg_path=None, segodnya=None):
-    """True/False — метка тронута/не тронута сегодня. None — файл вне доступа
-    (честная граница гейта: он не может проверить репозиторий, которого нет на
-    этой машине, и молчит про этот долг вместо ложного красного)."""
-    dolg_path = dolg_path or DOLG_PATH
-    if not dolg_path.is_file():
-        return None
-    segodnya = segodnya or datetime.date.today().isoformat()
-    for line in dolg_path.read_text(encoding="utf-8", errors="ignore").splitlines():
-        if re.search(r"\b" + re.escape(label) + r"\b", line) and "СТАТУС:" in line:
-            return segodnya in line
-    return False
-
-
-def incident_metka_dobavlena(repo_root):
-    rel = otnositelno(repo_root / VERDIKTY_REL, repo_root)
-    return any(INCIDENT_MARK_RE.search(ln) for ln in staged_added_lines(rel, repo_root))
-
-
-def urok_metka_dobavlena(uroki_path, repo_root):
-    rel = otnositelno(uroki_path, repo_root)
-    for ln in staged_added_lines(rel, repo_root):
-        m = VERDICT.match(ln.strip())
-        if m and m.group(1).strip():
-            return True
-    return False
-
-
-def zakrytiya_bez_metki(path, text, repo_root=None, dolg_path=None, segodnya=None):
-    """[(вид, метка, почему), ...] — заявленные закрытия без переставленной метки."""
-    repo_root = repo_root or REPO_ROOT
-    otchet = otchet_sekciya(text)
-    dolgi, incident, urok = zayavlennye_zakrytiya(otchet)
-    problemy = []
-    for label in sorted(dolgi):
-        svezha = dolg_metka_svezha(label, dolg_path, segodnya)
-        if svezha is False:
-            problemy.append(("долг", label,
-                              f"в {dolg_path or DOLG_PATH} нет строки СТАТУС: "
-                              f"с сегодняшней датой для {label}"))
-    if incident and not incident_metka_dobavlena(repo_root):
-        problemy.append(("инцидент", "—",
-                          f"этот коммит не добавляет строку «вердикт: закрыт гейтом "
-                          f"...» в {VERDIKTY_REL}"))
-    if urok and not urok_metka_dobavlena(path.parent / UROKI_NAME, repo_root):
-        problemy.append(("урок", "—",
-                          f"этот коммит не добавляет непустую строку ВЕРДИКТ: в "
-                          f"{path.parent.name}/{UROKI_NAME}"))
-    return problemy
-
-
-def lessons_in(path):
-    """[(строка, заголовок)] — уроки БЕЗ цены и БЕЗ вердикта; плюс сколько всего проверено.
-
-    В UROKI-FABRIKE.md уроки лежат в корне файла; в kod_<тема>.md — только внутри
-    секции `## УРОКИ ФАБРИКЕ` (иначе `### ` из ПЛАНА/ОТЧЁТА посчитались бы уроками).
-    """
-    text = path.read_text(encoding="utf-8").splitlines()
-    scoped = path.name != UROKI_NAME
-    inside = not scoped
-    lessons = []
-    cur = None
-
-    def flush():
-        if cur:
-            lessons.append(cur)
-
-    for n, line in enumerate(text, 1):
-        if scoped and line.startswith("## "):
-            flush()
-            cur = None
-            inside = line.strip().startswith(ZAHOD_SECTION)
-            continue
-        if not inside:
-            continue
-        m = HEADING.match(line)
-        if m:
-            flush()
-            title = m.group(1).strip()
-            cur = None if PLACEHOLDER.match(title) else {"line": n, "title": title,
-                                                         "price": False, "verdict": False}
-            continue
-        if not cur:
-            continue
-        if (mp := PRICE.match(line)) and mp.group(1).strip():
-            cur["price"] = True
-        elif (mv := VERDICT.match(line)) and mv.group(1).strip():
-            cur["verdict"] = True
-    flush()
-    return lessons
-
-
-def main(argv):
-    # `--help`/`-h` — раньше argv молча трактовался как путь и main() тихо
-    # возвращал rc=0 без единой строки: контракту инструмента (`--help` даёт
-    # rc=0 И непустой вывод) это не соответствовало (найдено заходом
-    # `kod_gejty-kotorye-vrut.md`, 06.08 — прогон по всей `_generator/tools/`).
-    if argv and argv[0] in ("-h", "--help"):
-        print(__doc__)
-        return 0
-    paths = [Path(a).resolve() for a in argv] if argv else staged_files()
-    broken = []
-    checked = 0
-    bezadresa = []
-    nezakrytye = []
-
-    def rel(p):
-        try:
-            return p.relative_to(REPO_ROOT)
-        except ValueError:
-            return p  # файл вне репо (ручной прогон) — печатаем как есть
-
-    for f in targets_from(paths):
-        if f.name.startswith("kod_"):
-            if artefakt_missing(f):
-                bezadresa.append(f)
-            text = f.read_text(encoding="utf-8", errors="ignore")
-            for vid, metka, pochemu in zakrytiya_bez_metki(f, text):
-                nezakrytye.append((f, vid, metka, pochemu))
-        for les in lessons_in(f):
-            if les["verdict"]:
-                continue  # уже отсуждён закрывающей сессией — не пересматриваем
-            checked += 1
-            if not les["price"]:
-                broken.append((f, les["line"], les["title"]))
-
-    if bezadresa:
-        print("❌ ОТЧЁТ БЕЗ АДРЕСА АРТЕФАКТА — владельцу нечего открыть:\n", file=sys.stderr)
-        for f in bezadresa:
-            print(f"  {rel(f)}\n      ↳ отчёт заполнен (хэш коммита есть), "
-                  f"а строки «**АРТЕФАКТ:** <абсолютный путь>» нет", file=sys.stderr)
-        print("\nЧини одним из двух — оба законных:", file=sys.stderr)
-        print("  • дописать «**АРТЕФАКТ:** /абсолютный/путь» в ## ОТЧЁТ;", file=sys.stderr)
-        print("  • написать «**АРТЕФАКТ:** артефакта нет: <почему>» — "
-              "заход, который ничего не собрал, это законный исход.", file=sys.stderr)
-        print("\nПроскочить: git commit --no-verify (можно; но уже не молча).\n", file=sys.stderr)
-
-    if nezakrytye:
-        print("❌ ЗАКРЫТИЕ БЕЗ МЕТКИ — заявлено в ## ОТЧЁТ, реестр не тронут этим же ходом:\n",
-              file=sys.stderr)
-        for f, vid, metka, pochemu in nezakrytye:
-            hvost = f" {metka}" if metka != "—" else ""
-            print(f"  {rel(f)}\n      ↳ {vid}{hvost}: {pochemu}", file=sys.stderr)
-        print("\nЧини одним из двух — оба законных:", file=sys.stderr)
-        print("  • переставь метку тем же коммитом (форма — `reviziya_dolgov.py`: "
-              "СТАТУС/ВЕРДИКТ · дата · команда → вывод);", file=sys.stderr)
-        print("  • убери заявление о закрытии из ## ОТЧЁТ, если оно ещё рано.", file=sys.stderr)
-        print("\nПроскочить: git commit --no-verify (можно; но уже не молча).\n", file=sys.stderr)
-
-    if not broken:
-        return 1 if (bezadresa or nezakrytye) else 0
-
-    print("❌ УРОК БЕЗ ЦЕНЫ — в канон он не пойдёт (RESHENIYA Р31, KONSTITUCIYA §11):\n",
-          file=sys.stderr)
-    for f, line_no, title in broken:
-        print(f"  {rel(f)}:{line_no}\n      ### {title}\n      ↳ нет строки «ЦЕНА: ...»",
-              file=sys.stderr)
-    print(f"\nПроверено уроков: {checked}, без цены: {len(broken)}.", file=sys.stderr)
-    print("Цена = что сломалось и сколько стоило (ходов/заходов/лекций, кто поймал).",
-          file=sys.stderr)
-    print("Задним числом она не восстанавливается — через день помнишь мораль, а не поломку.",
-          file=sys.stderr)
-    print("\nЧини одним из двух — оба законных:", file=sys.stderr)
-    print("  • дописать «ЦЕНА: ...» под заголовком;", file=sys.stderr)
-    print("  • удалить урок — цены нет, значит это наблюдение, а не закон.", file=sys.stderr)
-    print("\nПроскочить: git commit --no-verify (можно; но уже не молча).", file=sys.stderr)
-    return 1
-
-
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+globals().update(runpy.run_path(str(ДВЕРЬ), run_name=__name__))

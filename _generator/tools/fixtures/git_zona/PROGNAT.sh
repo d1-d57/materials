@@ -35,6 +35,10 @@
 
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+# Живой дом тел (заход odin-istochnik-kopij): инструменты здесь — тонкие
+# диспетчеры на тело в соседнем `disciplina`; ловушки копируют инструмент в
+# одноразовое дерево, где диспетчер соседа не найдёт. Копировать надо ТЕЛО.
+ZHIVOJ_DOM="$(cd "$TOOLS/../.." && cd .. && pwd)/disciplina/_generator/tools"
 
 # 🔴 ОБЯЗАТЕЛЬНО ПЕРВЫМ ХОДОМ: вычистить окружение git.
 # Внутри хука git экспортирует GIT_DIR, GIT_INDEX_FILE и другие GIT_* —
@@ -511,9 +515,9 @@ PY
 T17=$(mktemp -d)
 trap 'rm -rf "$T" "$T17"' EXIT
 mkdir -p "$T17/_generator/tools" "$T17/_studio/zhurnal" "$T17/arka"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
-   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
-   "$TOOLS/check_tool_contract.py" "$T17/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$ZHIVOJ_DOM/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$ZHIVOJ_DOM/korni.py" "$ZHIVOJ_DOM/check_sborki.py" \
+   "$ZHIVOJ_DOM/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$ZHIVOJ_DOM/check_uroki.py" "$TOOLS/dostavit_urok.py" "$TOOLS/modeli.py" \
+   "$ZHIVOJ_DOM/check_tool_contract.py" "$T17/_generator/tools/"
 # 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ (заход `kanon-put`, 14.08): без неё
 # `bootstrap_zahod.py` ОТКАЗЫВАЕТСЯ собирать заход — путь в секции-носителе
 # больше не берётся от места запуска. Поддельный репозиторий объявляет
@@ -778,9 +782,9 @@ git -C "$T5" worktree remove --force "$WT5" >/dev/null 2>&1 || true
 T22=$(mktemp -d)
 trap 'rm -rf "$T" "$T3" "$O3" "$T4" "$O4" "$T5" "$O5" "$T22"' EXIT
 mkdir -p "$T22/_generator/tools" "$T22/_studio/zhurnal/proba22"
-cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$TOOLS/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$TOOLS/korni.py" "$TOOLS/check_sborki.py" \
-   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
-   "$TOOLS/modeli.py" "$TOOLS/check_tool_contract.py" "$T22/_generator/tools/"
+cp "$TOOLS/bootstrap_zahod.py" "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/register_doc.py" "$TOOLS/check_kartoteka.py" "$TOOLS/check_zahod.py" "$ZHIVOJ_DOM/korni.py" "$ZHIVOJ_DOM/check_sborki.py" \
+   "$ZHIVOJ_DOM/schet_nezakrytogo.py" "$TOOLS/check_incidenty.py" "$ZHIVOJ_DOM/check_uroki.py" "$TOOLS/dostavit_urok.py" \
+   "$TOOLS/modeli.py" "$ZHIVOJ_DOM/check_tool_contract.py" "$T22/_generator/tools/"
 printf '# синтетика фикстуры (см. пояснение у ловушки 17)\n%s\n' "$T22" > "$T22/_generator/tools/KANON-KOREN"
 # 🔴 `modeli.py` в списке — не украшение: `bootstrap_zahod.py` импортирует его
 # верхним уровнем, и без файла падает на ИМПОРТЕ. Тогда ловушка печатает
@@ -1065,7 +1069,7 @@ mkdir -p "$T32/_generator/tools" "$T32/arka" "$T32/zona"
 # были красны НЕЗАВИСИМО от кода приёмки: они грепают вывод краша, а не
 # вердикт. Без починки — трейсбек до `check_uroki`, с ней — осмысленный вывод.
 cp "$TOOLS/priyomka.py" "$TOOLS/git_zona.py" "$TOOLS/dnevnik.py" "$TOOLS/dostavit_urok.py" \
-   "$TOOLS/check_uroki.py" "$TOOLS/zakryt_sessiyu.py" "$TOOLS/korni.py" "$T32/_generator/tools/"
+   "$ZHIVOJ_DOM/check_uroki.py" "$TOOLS/zakryt_sessiyu.py" "$ZHIVOJ_DOM/korni.py" "$T32/_generator/tools/"
 cd "$T32"
 git init -q .
 git config user.email fixture@test
@@ -1577,7 +1581,7 @@ T42=$(mktemp -d)
 git init -q -b osnova "$T42"
 git -C "$T42" config user.email fixture@test; git -C "$T42" config user.name fixture
 mkdir -p "$T42/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T42/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T42/_generator/tools/"
 echo "baza" > "$T42/f.txt"
 git -C "$T42" add -A; git -C "$T42" commit -qm baza
 git -C "$T42" worktree add -q "$T42-wt" -b rabota >/dev/null 2>&1
@@ -1601,7 +1605,7 @@ T43=$(mktemp -d)
 git init -q -b osnova "$T43"
 git -C "$T43" config user.email fixture@test; git -C "$T43" config user.name fixture
 mkdir -p "$T43/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T43/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T43/_generator/tools/"
 echo "baza" > "$T43/f.txt"
 git -C "$T43" add -A; git -C "$T43" commit -qm baza
 echo "tolko-t43" > "$T43/t43-only.txt"
@@ -1623,7 +1627,7 @@ T44=$(mktemp -d)
 git init -q -b main "$T44"
 git -C "$T44" config user.email fixture@test; git -C "$T44" config user.name fixture
 mkdir -p "$T44/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T44/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T44/_generator/tools/"
 echo baza > "$T44/f.txt"; git -C "$T44" add -A; git -C "$T44" commit -qm baza
 OUT44=$(GIT_ZONA_REPO="$T44" python3 "$T44/_generator/tools/git_zona.py" zayavka "текст дословно, две строки над ним" 2>&1)
 ID44=$(echo "$OUT44" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
@@ -1671,7 +1675,7 @@ T48=$(mktemp -d)
 git init -q -b main "$T48"
 git -C "$T48" config user.email fixture@test; git -C "$T48" config user.name fixture
 mkdir -p "$T48/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T48/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T48/_generator/tools/"
 echo baza > "$T48/f.txt"; git -C "$T48" add -A; git -C "$T48" commit -qm baza
 OUT48_EMPTY=$(GIT_ZONA_REPO="$T48" python3 "$T48/_generator/tools/git_zona.py" zayavki 2>&1); RC48_EMPTY=$?
 GIT_ZONA_REPO="$T48" python3 "$T48/_generator/tools/git_zona.py" zayavka "заявка для ловушки сорок восемь" >/dev/null 2>&1
@@ -1699,7 +1703,7 @@ T50=$(mktemp -d)
 git init -q -b main "$T50"
 git -C "$T50" config user.email fixture@test; git -C "$T50" config user.name fixture
 mkdir -p "$T50/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T50/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T50/_generator/tools/"
 echo baza > "$T50/f.txt"; git -C "$T50" add -A; git -C "$T50" commit -qm baza
 OUT50=$(GIT_ZONA_REPO="$T50" python3 "$T50/_generator/tools/git_zona.py" zayavka "заявка ловушки пятьдесят" 2>&1)
 ID50=$(echo "$OUT50" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{4}-[a-z0-9-]+' | head -1)
@@ -1745,7 +1749,7 @@ T53=$(mktemp -d)
 git init -q -b main "$T53"
 git -C "$T53" config user.email fixture@test; git -C "$T53" config user.name fixture
 mkdir -p "$T53/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$TOOLS/check_incidenty.py" "$T53/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$TOOLS/check_incidenty.py" "$T53/_generator/tools/"
 echo baza > "$T53/f.txt"; git -C "$T53" add -A; git -C "$T53" commit -qm baza
 GIT_ZONA_REPO="$T53" python3 "$T53/_generator/tools/git_zona.py" zayavka "заявка для доктора" >/dev/null 2>&1
 OUT53=$(GIT_ZONA_REPO="$T53" python3 "$T53/_generator/tools/git_zona.py" doctor 2>&1)
@@ -1760,7 +1764,7 @@ T54=$(mktemp -d)
 git init -q -b main "$T54"
 git -C "$T54" config user.email fixture@test; git -C "$T54" config user.name fixture
 mkdir -p "$T54/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T54/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T54/_generator/tools/"
 echo baza > "$T54/f.txt"; git -C "$T54" add -A; git -C "$T54" commit -qm baza
 git -C "$T54" branch feature54
 git -C "$T54" worktree add -q "$T54-wt" feature54 >/dev/null 2>&1
@@ -1784,7 +1788,7 @@ T55=$(mktemp -d)
 git init -q -b main "$T55"
 git -C "$T55" config user.email fixture@test; git -C "$T55" config user.name fixture
 mkdir -p "$T55/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T55/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T55/_generator/tools/"
 echo baza > "$T55/f.txt"; git -C "$T55" add -A; git -C "$T55" commit -qm baza
 git -C "$T55" checkout -q -b feature55
 echo feat > "$T55/g.txt"; git -C "$T55" add g.txt; git -C "$T55" commit -qm feat
@@ -1825,7 +1829,7 @@ T56=$(mktemp -d)
 git init -q -b main "$T56"
 git -C "$T56" config user.email fixture@test; git -C "$T56" config user.name fixture
 mkdir -p "$T56/_generator/tools"
-cp "$TOOLS/git_zona.py" "$TOOLS/korni.py" "$T56/_generator/tools/"
+cp "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" "$T56/_generator/tools/"
 echo baza > "$T56/f.txt"; git -C "$T56" add -A; git -C "$T56" commit -qm baza
 git -C "$T56" branch feat56a
 git -C "$T56" branch feat56b

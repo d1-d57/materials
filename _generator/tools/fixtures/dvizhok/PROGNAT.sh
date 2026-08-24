@@ -56,6 +56,10 @@
 
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+# Живой дом тел (заход odin-istochnik-kopij): инструменты здесь — тонкие
+# диспетчеры на тело в соседнем `disciplina`; ловушки копируют инструмент в
+# одноразовое дерево, где диспетчер соседа не найдёт. Копировать надо ТЕЛО.
+ZHIVOJ_DOM="$(cd "$TOOLS/../.." && cd .. && pwd)/disciplina/_generator/tools"
 GEN=$(cd "$TOOLS/.." && pwd)
 REPO=$(cd "$GEN/.." && pwd)
 
@@ -367,7 +371,7 @@ podgotovit() {
     # корни только из него и без него не импортируются вовсе. Забыть его здесь —
     # значит получить не «фикстура покраснела», а «фикстура упала на импорте»,
     # то есть шум вместо сигнала.
-    cp "$TOOLS/korni.py" "$R/_generator/tools/korni.py"
+    cp "$ZHIVOJ_DOM/korni.py" "$R/_generator/tools/korni.py"
     # 🔴 ДЕКЛАРАЦИЯ КАНОНИЧЕСКОГО КОРНЯ (заход `kanon-put`, 14.08): без неё
     # `bootstrap_zahod.py` ОТКАЗЫВАЕТСЯ собирать заход — путь в секции-носителе
     # больше не берётся от места запуска. Поддельный репозиторий объявляет
@@ -689,10 +693,10 @@ fi
 R7="$T/repo-ohvat"
 mkdir -p "$R7/.githooks" "$R7/_generator/tools/fixtures/mnimaya" "$R7/mnimyj-modul"
 cp "$REPO/.githooks/pre-commit" "$R7/.githooks/pre-commit"
-cp "$TOOLS/check_tool_contract.py" "$R7/_generator/tools/check_tool_contract.py"
-cp "$TOOLS/check_uroki.py" "$R7/_generator/tools/check_uroki.py"
-cp "$TOOLS/check_ves.py" "$R7/_generator/tools/check_ves.py"
-cp "$TOOLS/check_marker.py" "$R7/_generator/tools/check_marker.py"
+cp "$ZHIVOJ_DOM/check_tool_contract.py" "$R7/_generator/tools/check_tool_contract.py"
+cp "$ZHIVOJ_DOM/check_uroki.py" "$R7/_generator/tools/check_uroki.py"
+cp "$ZHIVOJ_DOM/check_ves.py" "$R7/_generator/tools/check_ves.py"
+cp "$ZHIVOJ_DOM/check_marker.py" "$R7/_generator/tools/check_marker.py"
 # 🔴 Д5 (заход `pochinka-instrumentov`, 20.08): хук зовёт ЕЩЁ и
 # `check_faza_priyomki.py` (`.githooks/pre-commit`, строка с `--staged || exit
 # 1`) — этот стенд её не копировал, и КАЖДЫЙ коммит внутри R7 падал на
@@ -705,7 +709,7 @@ cp "$TOOLS/check_marker.py" "$R7/_generator/tools/check_marker.py"
 # `modeli.py`/`check_tool_contract.py` выше по этому файлу: список копирования
 # ручной, импорт нет. `check_uroki.py` (нужен `dostavit_urok`) уже в списке.
 cp "$TOOLS/check_faza_priyomki.py" "$TOOLS/priyomka.py" "$TOOLS/dnevnik.py" \
-   "$TOOLS/dostavit_urok.py" "$TOOLS/git_zona.py" "$TOOLS/korni.py" \
+   "$TOOLS/dostavit_urok.py" "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/korni.py" \
    "$TOOLS/zakryt_sessiyu.py" \
    "$R7/_generator/tools/"
 chmod +x "$R7/.githooks/pre-commit"

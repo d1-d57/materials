@@ -57,6 +57,10 @@
 
 set -e
 TOOLS=$(cd "$(dirname "$0")/../.." && pwd)
+# Живой дом тел (заход odin-istochnik-kopij): инструменты здесь — тонкие
+# диспетчеры на тело в соседнем `disciplina`; ловушки копируют инструмент в
+# одноразовое дерево, где диспетчер соседа не найдёт. Копировать надо ТЕЛО.
+ZHIVOJ_DOM="$(cd "$TOOLS/../.." && cd .. && pwd)/disciplina/_generator/tools"
 # Абсолютный путь к САМОМУ СЕБЕ — снимается ЗДЕСЬ, до первого `cd` во временный
 # каталог. Относительный `$0` ниже уже не находится: фикстура к тому моменту
 # сидит в /tmp, и `grep` по нему падает rc=2, унося весь прогон.
@@ -78,11 +82,11 @@ mkdir -p "$T/_generator/tools" "$T/_studio/docs" "$T/_studio/zhurnal" \
          "$T/$VTOROY/docs" "$T/$VTOROY/zhurnal" \
          "$T/$TRETIY/docs" "$T/$TRETIY/zhurnal" \
          "$T/teoriya-kategoriy/kartoteka"
-cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
+cp "$ZHIVOJ_DOM/korni.py" "$TOOLS/check_kartoteka.py" "$ZHIVOJ_DOM/register_doc.py" \
    "$TOOLS/check_zahod.py" "$TOOLS/bootstrap_zahod.py" "$TOOLS/bootstrap_arka.py" \
-   "$TOOLS/check_incidenty.py" "$TOOLS/git_zona.py" "$TOOLS/check_sborki.py" \
-   "$TOOLS/schet_nezakrytogo.py" "$TOOLS/check_uroki.py" "$TOOLS/dostavit_urok.py" \
-   "$TOOLS/modeli.py" "$TOOLS/check_tool_contract.py" \
+   "$TOOLS/check_incidenty.py" "$TOOLS/git_zona.py" "$ZHIVOJ_DOM/check_sborki.py" \
+   "$ZHIVOJ_DOM/schet_nezakrytogo.py" "$ZHIVOJ_DOM/check_uroki.py" "$TOOLS/dostavit_urok.py" \
+   "$TOOLS/modeli.py" "$ZHIVOJ_DOM/check_tool_contract.py" \
    "$T/_generator/tools/"
 # 🔴 `check_tool_contract.py` в списке — ТОТ ЖЕ КЛАСС, что `modeli.py` строкой
 # ниже, и пойман он на baseline этого захода, ДО единой правки шва: `check_zahod.py`
@@ -523,7 +527,7 @@ done
 DISC="$T/disciplina"
 WT="$T/inache-nazvannaya-rabochaya-papka"
 mkdir -p "$DISC/_generator/tools" "$DISC/_studio/docs" "$DISC/_studio/zhurnal"
-cp "$TOOLS/korni.py" "$TOOLS/check_kartoteka.py" "$TOOLS/register_doc.py" \
+cp "$ZHIVOJ_DOM/korni.py" "$TOOLS/check_kartoteka.py" "$ZHIVOJ_DOM/register_doc.py" \
    "$DISC/_generator/tools/"
 karta_zavesti "$DISC/_studio/docs/KARTA.md"   # индекс МАТЕРИАЛС-стиля — приманка, обязан остаться нетронутым
 printf '%s\n' '# disciplina (фикстурная проба Д1)' '' \
