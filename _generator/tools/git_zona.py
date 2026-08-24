@@ -2618,12 +2618,28 @@ def execute_commits(commits, push=False, delete_plan=False, no_verify=False):
         # ОБЕ половины держит фикстура (мутационно проверена, не на слово):
         #   sh _generator/tools/fixtures/git_zona/PROGNAT.sh
         # В pre-commit она поднимается при любой правке этого файла.
-        r = git("add", "--", *c["paths"], check=False)
-        if r.returncode != 0:
-            print(f"❌ add упал (rc={r.returncode}): {c['msg']}\n   "
-                  + (r.stderr.strip().splitlines() or ["(stderr пуст)"])[0])
-            failed.append(c["msg"])
-            continue
+        #
+        # 🔴 Ч2 chistka-hvostov: путь, УЖЕ стейдженный относительно HEAD
+        # (`git diff --cached --name-only`), повторный `add` не берёт молча —
+        # он ПАДАЕТ. Застейдженное удаление ушедшего с диска файла отсутствует
+        # и в рабочем дереве, и (полноценной записью) в индексе разом, а именно
+        # по этому пересечению pathspec matching у git отказывает: `fatal: ...
+        # did not match any files`, rc=128. На игнорируемых путях (`.DS_Store`,
+        # `.fuse_hidden*`), уже удалённых с диска и застейдженных КЕМ-ТО раньше
+        # (или предыдущим циклом этой же функции), `add` по ним и раньше не
+        # смог бы взять их ЗАНОВО — а `git status --porcelain` на них выше уже
+        # непуст, значит до этой строки ход обязательно доходил и падал.
+        # Добавляем ТОЛЬКО то, чего в индексе ещё нет: путь уже там — вводить
+        # заново нечего, а не повод ронять коммит.
+        uzhe_v_indekse = set(git("diff", "--cached", "--name-only").stdout.splitlines())
+        k_dobavleniyu = [p for p in c["paths"] if p not in uzhe_v_indekse]
+        if k_dobavleniyu:
+            r = git("add", "--", *k_dobavleniyu, check=False)
+            if r.returncode != 0:
+                print(f"❌ add упал (rc={r.returncode}): {c['msg']}\n   "
+                      + (r.stderr.strip().splitlines() or ["(stderr пуст)"])[0])
+                failed.append(c["msg"])
+                continue
         # Флаг встраивается ЗДЕСЬ, в общем ядре, а не в обёртках: тропы `commit`
         # и `commit --zone -m` обязаны вести себя одинаково (см. докстроку).
         nv = ["--no-verify"] if no_verify else []

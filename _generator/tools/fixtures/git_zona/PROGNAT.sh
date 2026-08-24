@@ -1867,4 +1867,39 @@ git -C "$T56" worktree remove --force "$T56-wtB" >/dev/null 2>&1 || true
 git -C "$T56" worktree remove --force "$T56/../$(basename "$T56")-wt/posle56" >/dev/null 2>&1 || true
 rm -rf "$T56" "$T56-wtA" "$T56-wtB" "$T56-wt"
 
+# ── ЛОВУШКА 57: 🔴 Ч2 chistka-hvostov — путь, УЖЕ стейдженный (git diff
+# --cached ДО вызова commit), повторный `add` НЕ роняет ход ──
+# Живой сценарий (matemdigest-map, 16.08): игнорируемый путь (`.DS_Store` /
+# `.fuse_hidden*`) удалён с диска и застейджен как `D` РАНЬШЕ, чем до него
+# добрался `execute_commits()` — второй `git add` того же пути падает
+# `fatal: ... did not match any files` (pathspec отсутствует и в рабочем
+# дереве, и — как отдельная запись — в индексе одновременно), rc=128, и
+# коммит зоны срывался целиком. Починка: `add` пропускает то, что уже видно
+# в `git diff --cached --name-only`.
+T57=$(mktemp -d)
+git -C "$T57" init -q .
+git -C "$T57" config user.email fixture@test
+git -C "$T57" config user.name fixture
+mkdir -p "$T57/zona57"
+echo "мусор" > "$T57/zona57/.DS_Store"
+git -C "$T57" add zona57/.DS_Store
+git -C "$T57" commit -qm "baseline: трекнутый .DS_Store (было до .gitignore)"
+echo "zona57/.DS_Store" > "$T57/.gitignore"
+git -C "$T57" add .gitignore
+git -C "$T57" commit -qm "gitignore заводится позже"
+rm "$T57/zona57/.DS_Store"
+# УЖЕ стейджено ДО вызова commit — состояние, которое ловит починка Ч2
+git -C "$T57" add -- zona57/.DS_Store
+RC57=0
+GIT_ZONA_REPO="$T57" python3 "$TOOLS/git_zona.py" commit --zone 'zona57/' \
+    -m "уборка мусора" >"$T57/vyvod.txt" 2>&1 || RC57=$?
+if [ "$RC57" = "0" ] \
+   && ! git -C "$T57" diff --cached --name-only | grep -q '\.DS_Store' \
+   && git -C "$T57" show --stat --format= HEAD | grep -q '\.DS_Store'
+then echo "  ✅ ловушка 57: путь, уже застейдженный до commit, доехал без повторного add"
+else echo "  ❌ ЛОВУШКА 57: коммит уже застейдженного пути сорвался (rc=$RC57) — регрессия Ч2. Вывод:"
+     cat "$T57/vyvod.txt"; FAIL=1
+fi
+rm -rf "$T57"
+
 [ "$FAIL" = "0" ] && { echo "ФИКСТУРЫ ЗЕЛЁНЫЕ"; exit 0; } || { echo "ФИКСТУРЫ КРАСНЫЕ"; exit 1; }
