@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Спецмат 7 класс — карта года</title>
+<style>
+:root{
+  --bg:#F7F5F1; --ink:#1D1B19; --mute:#8B877F; --rule:#E4E0D9;
+  --A:#C0873A; --K:#3D6CA0; --V:#4B8B6B; --D:#7A5B90; --O:#A29E97;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:14.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1140px;margin:0 auto;padding:38px 34px 26px}
+.wrap+.wrap{border-top:1px solid var(--rule);padding-top:36px;padding-bottom:56px}
+h1{font-size:20px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+.sub{font-size:13px;color:var(--mute);margin:0 0 18px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 20px;font-size:12.5px;color:var(--mute);align-items:center}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:2px;display:inline-block}
+.sw.tri{background:linear-gradient(105deg,var(--K) 0 34%,var(--A) 34% 67%,var(--D) 67% 100%)}
+
+.qt{display:flex;align-items:baseline;gap:10px;margin:18px 0 6px;font-size:11.5px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.qt b{color:var(--ink);font-weight:600;letter-spacing:.08em}
+.qt .h{margin-left:auto;font-variant-numeric:tabular-nums;letter-spacing:0;text-transform:none}
+.qt:first-of-type{margin-top:0}
+
+.row{border-radius:3px;margin-bottom:2px;color:#fff}
+.row[data-d=A]{background:var(--A)} .row[data-d=K]{background:var(--K)}
+.row[data-d=V]{background:var(--V)} .row[data-d=D]{background:var(--D)}
+.row[data-d=O]{background:var(--O)}
+.row.tri2{background:linear-gradient(90deg,var(--K) 0 50%,var(--D) 50% 100%)}
+.row.tri3{background:linear-gradient(90deg,var(--K) 0 33.34%,var(--A) 33.34% 66.67%,var(--D) 66.67% 100%)}
+summary{list-style:none;cursor:pointer;padding:6px 12px;display:grid;
+  grid-template-columns:148px 26px 1fr 12px;gap:9px;align-items:baseline}
+summary::-webkit-details-marker{display:none}
+.nm{font-weight:600;font-size:13px}
+.hr{font-size:11.5px;font-variant-numeric:tabular-nums;opacity:.7;text-align:right}
+.tt{font-size:12px;opacity:.95}
+.ar{font-size:9px;transition:transform .15s;justify-self:end;opacity:.7}
+details[open] .ar{transform:rotate(90deg)}
+.map{padding:2px 12px 12px;border-top:1px solid rgba(255,255,255,.28);margin:0 12px 8px;font-size:12px}
+.map dl{margin:8px 0 0;display:grid;grid-template-columns:128px 1fr;gap:4px 12px}
+.map dt{font-size:11px;padding-top:1px;opacity:.72}
+.map dd{margin:0}
+.map .ex{margin-top:9px;padding-top:8px;border-top:1px dotted rgba(255,255,255,.35);font-size:11.5px;opacity:.82}
+.map .sr{margin-top:7px;font-size:11px;opacity:.7}
+
+.kr{display:grid;grid-template-columns:148px 26px 1fr;gap:9px;padding:3px 12px;margin-bottom:2px;
+  border-radius:3px;font-size:11.5px;align-items:baseline;background:#57524B;color:rgba(255,255,255,.72)}
+.kr .nm{font-weight:400;font-size:11.5px;color:#fff}
+.kr .hr{opacity:.7}
+.kr.big{background:#332F2A}
+.kr.out{background:transparent;border:1px dashed var(--mute);color:var(--mute);padding:3px 11px}
+.kr.out .nm{color:var(--mute)}
+
+.row.club{background:#8A8378;margin-bottom:4px}
+.club summary{grid-template-columns:148px 26px 1fr 12px;padding:5px 12px}
+.club .nm{font-weight:600;font-size:12.5px}
+
+table{border-collapse:collapse;width:100%;font-size:12.5px;margin-top:4px}
+th{font-weight:400;color:var(--mute);font-size:10.5px;padding:0 0 8px;text-align:center;
+  vertical-align:bottom;font-variant-numeric:tabular-nums;line-height:1.25}
+th.lead{text-align:left;width:196px}
+th b{display:block;color:var(--ink);font-weight:400;font-size:10px}
+td{padding:0;height:27px;text-align:center;border-top:1px solid var(--rule)}
+td.lead{text-align:left;padding-right:12px;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;background:#B3ADA3;display:inline-block;vertical-align:middle}
+.home{width:19px;height:19px;border-radius:50%;display:inline-block;vertical-align:middle}
+.hA{background:var(--A)}.hK{background:var(--K)}.hV{background:var(--V)}.hD{background:var(--D)}.hO{background:var(--O)}
+.divcol{border-left:1px solid var(--rule)}
+.foot{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;
+  color:var(--mute);line-height:1.55;max-width:96ch}
+</style>
+</head>
+<body>
+
+<div style="max-width:900px;margin:0 auto;padding:14px 18px;background:#fff3d6;
+  border:1px solid #d8b96a;border-radius:5px;font:15px/1.5 -apple-system,sans-serif">
+  🗄 <b>Архивная версия карты, 19 августа 2026.</b> Живая карта года собирается из
+  <code>../_sajt/god.json</code> и лежит в <code>../_sajt/index.html</code>.
+  Этот файл оставлен как след предыдущего оформления; правки сюда не вносятся.
+</div>
+
+<div class="wrap">
+<h1>Спецмат, 7 класс — карта года</h1>
+<p class="sub">66 уроков основного курса, 33 часа кружка · строка раскрывается по нажатию</p>
+
+<div class="legend">
+  <span><i class="sw A"></i>арифметика</span>
+  <span><i class="sw K"></i>комбинаторика</span>
+  <span><i class="sw V"></i>вероятность</span>
+  <span><i class="sw D"></i>дискретная математика</span>
+  <span><i class="sw O"></i>разгон</span>
+  <span><i class="sw tri"></i>на стыке доменов</span>
+</div>
+
+<!-- ================= I ================= -->
+<div class="qt"><b>I четверть</b><span>1 сентября — 25 октября</span><span class="h">16 ч</span></div>
+<details class="row club">
+  <summary><span class="nm">Кружок</span><span class="hr">8</span>
+    <span class="tt">как построить пример · инерция мышления · крайнее · от противного · раскраски · замощения</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>методы</dt><dd>как построить пример (Шаповалов 1) · преодолеть инерцию мышления (Шаповалов 3) · принцип крайнего (Корсаков 3.2) · доказательство от противного (Корсаков 2.2)</dd>
+      <dt>раскраски</dt><dd>раскраска доски в два цвета · замощения и разрезания, узкие места (Шаповалов 5)</dd>
+      <dt>задачи</dt><dd>логика со звёздочкой · задачи матпраздника прошлых лет</dd>
+    </dl>
+  </div>
+</details>
+
+<details class="row" data-d="O">
+  <summary><span class="nm">Разгон</span><span class="hr">3</span>
+    <span class="tt">проценты и доли · обратный ход · рыцари, лжецы и отрицание</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>доли и части</dt><dd>процент как доля · задачи на смеси и разбавление · «каждый седьмой шахматист»</dd>
+      <dt>обратный ход</dt><dd>задача решается с конца · восстановление начального состояния по конечному</dd>
+      <dt>логика</dt><dd>рыцари и лжецы · разбор случаев · отрицание высказывания, «неверно, что»</dd>
+    </dl>
+    <div class="ex">Опорные: уксусная эссенция 70% и разбавление · смешать 10% и 15% растворы до 12% · блондины и голубоглазые · рыцари и лжецы на острове.</div>
+    <div class="sr">Корсаков 1.1, 2.1 · NLOGN</div>
+  </div>
+</details>
+
+<details class="row" data-d="K">
+  <summary><span class="nm">Подсчёты 1</span><span class="hr">5</span>
+    <span class="tt">счёт перечислением · таблица и группы · сумма и разность</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>счёт перечислением</dt><dd>сколько чисел от m до n: n−m+1 · ошибка на единицу · пролёты, а не этажи</dd>
+      <dt>имена вместо объектов</dt><dd>считать удобнее коды, а не сами объекты · таблица как разбиение на группы · равные группы — умножение · одинаковые таблицы дают одинаковые ответы</dd>
+      <dt>правило суммы</dt><dd>непересекающиеся случаи складываются · объединение и пересечение, круги Эйлера</dd>
+      <dt>отбрось лишнее</dt><dd>переход к дополнению: посчитать всё остальное и вычесть · пересечение вычитается один раз · проверка на малых числах</dd>
+      <dt>треугольная таблица</dt><dd>1+2+…+n · объединение слагаемых в пары от краёв</dd>
+    </dl>
+    <div class="ex">Опорные: числа от 17 до 123 · термометр от −50 до +50 · подъём с первого этажа на пятый · пять точек на прямой — сколько отрезков · рассказ со страницы 34 по 69 · колода 36 карт: пики и картинки · пиццерия с семью начинками · сколько семёрок при выписывании чисел от 1 до 100.</div>
+    <div class="sr">Шень К21 · РШ1 1, 4</div>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">разгон и подсчёты</span></div>
+
+<details class="row" data-d="D">
+  <summary><span class="nm">Чётность</span><span class="hr">5</span>
+    <span class="tt">определение и формулы · таблицы чётности · чётность как инвариант</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>определение</dt><dd>n чётно, если n = 2m · чётность нуля · формулы 2n и 2n+1 · чередование на числовой оси · признак по последней цифре</dd>
+      <dt>арифметика чётности</dt><dd>таблица сложения Ч+Ч=Ч, Ч+Н=Н, Н+Н=Ч · таблица умножения · сумма чётна ⟺ нечётных слагаемых чётное число · произведение соседних чисел чётно</dd>
+      <dt>чётность как инвариант</dt><dd>что не меняется при ходе · разбиение на пары · разложить поровну · форма занятия у Манжиной: семь «роботов» с разными операциями и один вопрос на всех — найдите то, что никогда не меняется; слово «инвариант» не произносится</dd>
+      <dt>чередование</dt><dd>клетки доски, соседи по кругу, цепочки пометок</dd>
+    </dl>
+    <div class="ex">Опорные: шахматная доска, клетка (i,j) белая ⟺ i+j нечётно · 25 учеников по кругу, мальчики и девочки не рядом с одноимёнными · 20 плюсов и 20 минусов по кругу · таблица 7×11 с чётными суммами по строкам и нечётными по столбцам · игра «называем числа, выигрыш по чётности суммы» · точный квадрат, чётный, но не делящийся на 4.</div>
+    <div class="sr">Шень А01 · Манжина «Чередование» и «Планета Л20М25Ш» · Маслякова 04–06</div>
+  </div>
+</details>
+
+
+<div class="kr big"><span class="nm">Контрольная</span><span class="hr">2</span><span class="tt">I четверть</span></div>
+
+<!-- ================= II ================= -->
+<div class="qt"><b>II четверть</b><span>4 ноября — 30 декабря</span><span class="h">16 ч</span></div>
+<details class="row club">
+  <summary><span class="nm">Кружок</span><span class="hr">8</span>
+    <span class="tt">Дирихле · конструкции и узкие места · инвариант · хитрые раскраски · размен монет</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>методы</dt><dd>принцип Дирихле (Корсаков 3.1) · Дирихле в задачах на остатки · конструкции, узкие места, ослабление условий (Шаповалов 4–6) · инвариант в олимпиадных задачах</dd>
+      <dt>раскраски</dt><dd>хитрые разбиения, раскраска в несколько цветов</dd>
+      <dt>задачи</dt><dd>размен монет (семинар Корсакова) · делимость со звёздочкой · подсчёт двумя способами со звёздочкой</dd>
+    </dl>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">I четверть</span></div>
+
+<details class="row" data-d="A">
+  <summary><span class="nm">Арифметика 1</span><span class="hr">6</span>
+    <span class="tt">делимость и её свойства · признаки · деление с остатком</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>делимость</dt><dd>a = kb · кратное, делитель, запись b∣a · крайние случаи: 0 делится на всё, на 0 не делят и почему это соглашение</dd>
+      <dt>свойства</dt><dd>сумма и разность кратных кратны · если одно делится, другое нет — сумма не делится · транзитивность · делимость произведения по одному множителю и почему обратное неверно</dd>
+      <dt>признаки</dt><dd>на 2, 5, 10 по последней цифре · на 3 и 9 по сумме цифр · на 4 и 8 · на 11</dd>
+      <dt>деление с остатком</dt><dd>делимое, делитель, неполное частное, остаток · a = qb + r, 0 ≤ r &lt; b · единственность и что ломается при других границах для r · числа с данным остатком идут с шагом b</dd>
+      <dt>число делителей</dt><dd>делители разбиваются на пары с произведением n · нечётное число делителей ⟺ точный квадрат</dd>
+    </dl>
+    <div class="ex">Опорные: круговое шоссе длиной b км · григорианский календарь, правило 4/100/400 · 365 = 52·7 + 1, день недели 1 января · «сейчас два часа дня, что будет через 100 часов» · 111, 222, …, 999 делятся на 37 · 173173 = 1001·173 · квадрат 8×8 на прямоугольники 1×3 · книги, дающие остаток 1 при делении на 3, 4, 5, 6.</div>
+    <div class="sr">Шень А02–А03 · Маслякова 08–11</div>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">арифметика</span></div>
+
+<details class="row tri2" data-d="D">
+  <summary><span class="nm">Двойной счёт</span><span class="hr">6</span>
+    <span class="tt">одно и то же двумя способами · задачи-близнецы · рукопожатия и подсчёт рёбер</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>два способа счёта</dt><dd>посчитать одно и то же дважды и приравнять · счёт как доказательство, а не как способ получить ответ</dd>
+      <dt>задачи-близнецы</dt><dd>литературно разные задачи с одной математической сутью · наклеивание ярлыков поверх слов условия · разыгрывание сценки · семьи близнецов</dd>
+      <dt>соответствие «k к одному»</dt><dd>каждому объекту отвечает ровно k других · отсюда деление · письма и рукопожатия: n(n−1) и n(n−1)/2 · диагонали n-угольника n(n−3)/2</dd>
+      <dt>подсчёт рёбер</dt><dd>соответствие «m к n» · сумма степеней вершин считается с двух сторон · число людей с нечётным числом рукопожатий чётно</dd>
+    </dl>
+    <div class="ex">Опорные: 30 школьников, каждый решил 2 задачи, каждую решили 3 — сколько задач · рукопожатия на кружке · диагонали выпуклого многоугольника · четыре семьи задач-близнецов с ответами 8!, 8·7, 8·7/2, 2⁸ · таблица 2×4 и число 12 345 678 как две записи одной задачи.</div>
+    <div class="sr">Корсаков 1.2, 7 · РШ1 6 · Шень К24 · Манжина «Графы-1», «Турниры»</div>
+  </div>
+</details>
+
+
+<div class="kr big"><span class="nm">Контрольная</span><span class="hr">2</span><span class="tt">первое полугодие</span></div>
+
+<!-- ================= III ================= -->
+<div class="qt"><b>III четверть</b><span>11 января — 26 марта</span><span class="h">20 ч</span></div>
+<details class="row club">
+  <summary><span class="nm">Кружок</span><span class="hr">10</span>
+    <span class="tt">ним · волшебные карточки · коды Хэмминга · взвешивания · соответствие между задачами</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>методы</dt><dd>оценка и пример: как строить пример · постройте соответствие между двумя задачами · организованный перебор со звёздочкой</dd>
+      <dt>отступления</dt><dd>ним и двоичная запись (Шень, «Игры» 4) · отгадывание чисел волшебными карточками · коды Хэмминга · взвешивания и гири</dd>
+      <dt>задачи</dt><dd>комбинаторика со звёздочкой · вероятность со звёздочкой · задачи матпраздника</dd>
+    </dl>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">II четверть</span></div>
+
+<details class="row" data-d="K">
+  <summary><span class="nm">Подсчёты 2</span><span class="hr">6</span>
+    <span class="tt">правило произведения · дерево · рекуррентный счёт · соответствие</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>сумма против произведения</dt><dd>развилки дорог: когда складываем, когда умножаем · сложение произведений на составных схемах</dd>
+      <dt>дерево вариантов</dt><dd>дерево универсальнее таблицы: больше двух множителей или сложение вместе с умножением · порядок построения дерева меняет трудоёмкость · изоморфные задачи дают одинаковые деревья</dd>
+      <dt>три типа наборов</dt><dd>слова длины k в алфавите из n букв: nᵏ · выбор без повторений: n(n−1)…(n−k+1) · перестановки и n!</dd>
+      <dt>рекуррентный счёт</dt><dd>сведение к меньшему случаю · число в вершине = сумма чисел в предшественниках · кратчайшие пути в сетке улиц, путь как слово из П и В</dd>
+      <dt>соответствие</dt><dd>есть взаимно однозначное соответствие — элементов поровну · проверка «работает ли правило в обратную сторону» · симметрия как типовой способ соответствия</dd>
+    </dl>
+    <div class="ex">Опорные: перестановки букв слова КОТ · автомобильный номер из двух букв и четырёх цифр · кодовый замок из девяти кнопок · забор из шести досок в три цвета, соседние разные · полоска 2×10 доминошками (89) · пешка с a1 на d3 · двоичные слова без двух нулей подряд · гирьки Пети и Васи · хромой король и симметрия относительно диагонали.</div>
+    <div class="sr">Шень К22–К23 · РШ1 5 · РШ2 2</div>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">подсчёты</span></div>
+
+<details class="row" data-d="V">
+  <summary><span class="nm">Вероятность 1</span><span class="hr">4</span>
+    <span class="tt">частота в длинной серии · определение через исходы · подсчёт исходов · сумма вероятностей</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>длинная серия</dt><dd>частота события и её стабилизация · колебания затухают с ростом числа опытов · закон больших чисел на словах, без формул · «практически наверняка» против «наверняка»</dd>
+      <dt>определение</dt><dd>опыт, исход, благоприятные исходы, равновозможность · вероятность = отношение благоприятных к равновозможным · невозможное и достоверное событие</dd>
+      <dt>подсчёт исходов</dt><dd>таблица 6×6 на двух костях · сумма очков по диагоналям таблицы · правило произведения: 6⁴ на четырёх костях · переход к противоположному: «хотя бы одна шестёрка» = 6⁴ − 5⁴</dd>
+      <dt>сумма вероятностей</dt><dd>несовместные события · вероятность «хотя бы одного» = сумма · противоположные события, сумма вероятностей равна единице · несовместные не значит противоположные</dd>
+    </dl>
+    <div class="ex">Опорные: орлянка и график частоты орла при 200 бросках · мешок с бумажками 0–9 · две кости, красная и синяя · очередь из четырёх человек · автомобильный номер от 000 до 999 · мешок с белыми 10%, жёлтыми 15% и чёрными кубиками · перчатки в ящике: 101 наверняка и 6 практически наверняка.</div>
+    <div class="sr">Шень В1–4, 6 · Высоцкий 1–2</div>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">вероятность</span></div>
+
+<details class="row tri3" data-d="K">
+  <summary><span class="nm">Кодировка</span><span class="hr">5</span>
+    <span class="tt">объект как строка · число подмножеств · двоичная запись · организация выбора</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>кодировка</dt><dd>заменить объект именем: слово — строкой букв, число — строкой цифр, набор — строкой символов · считаем коды вместо объектов</dd>
+      <dt>число подмножеств</dt><dd>набор кодируется строкой из плюсов и минусов · 2ⁿ подмножеств · двоичные слова длины n</dd>
+      <dt>двоичная запись</dt><dd>запись числа в основании 2 как самый бедный алфавит · взвешивание гирями 1, 2, 4, 8</dd>
+      <dt>организация выбора</dt><dd>что достаточно указать, чтобы всё остальное определилось · скелет и достройка · принцип равноправия скелетов, регулярность дерева</dd>
+    </dl>
+    <div class="ex">Опорные: пиццерия с семью начинками, 2⁷ наборов · фокус «НАУКА УМЕЕТ МНОГО ГИТИК» · восемь ладей, не бьющих друг друга (8!) · прямоугольник 3×4, в каждой полоске нечётное число синих (2⁹) · пароль из восьми нулей и единиц · два разбойника делят восемь различных монет.</div>
+    <div class="sr">РШ2 6 · Шень К24</div>
+  </div>
+</details>
+
+
+<div class="kr big"><span class="nm">Контрольная</span><span class="hr">2</span><span class="tt">III четверть</span></div>
+
+<!-- ================= IV ================= -->
+<div class="qt"><b>IV четверть</b><span>6 апреля — 26 мая</span><span class="h">14 ч</span></div>
+<details class="row club">
+  <summary><span class="nm">Кружок</span><span class="hr">7</span>
+    <span class="tt">симметрия как стратегия · игры с числами · процессы · арифметика и вероятность со звёздочкой</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>игры</dt><dd>симметрия как стратегия: монеты на столе, кони на доске, строчка минусов (Шень, «Игры» 5) · игры с числами и кучками · процессы: что не меняется</dd>
+      <dt>задачи</dt><dd>арифметика со звёздочкой: периодичность, последние цифры · вероятность со звёздочкой · разнобой (Корсаков 9.2)</dd>
+    </dl>
+  </div>
+</details>
+
+<details class="row" data-d="A">
+  <summary><span class="nm">Арифметика 2</span><span class="hr">4</span>
+    <span class="tt">сравнение по модулю · действия с остатками · циклы и периодичность</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>сравнимость</dt><dd>x ≡ y (mod n), если x − y делится на n · равносильно равенству остатков · классы остатков, их ровно n</dd>
+      <dt>действия</dt><dd>сравнения можно складывать, вычитать и умножать · делить и сокращать нельзя, контрпример 2·3 ≡ 2·8 (mod 10) · таблицы сложения и умножения остатков</dd>
+      <dt>циклы</dt><dd>степени по модулю с какого-то момента идут по кругу · степени двойки по модулю 10: 2, 4, 8, 6 · периодичность процессов</dd>
+      <dt>приложения</dt><dd>признаки делимости через сумму цифр · доказательства невозможности взглядом по модулю</dd>
+    </dl>
+    <div class="ex">Опорные: остаток 8¹⁰⁰ при делении на 7 · последние цифры степеней · 2¹⁰⁰¹ + 3¹⁰⁰¹ делится на 5 · числа, у которых n² кончается на ту же цифру (0, 1, 5, 6) · x² + y² = 1003 неразрешимо, взгляд по модулю 4 · дни недели через 100 часов.</div>
+    <div class="sr">Шень А04 · Маслякова 12</div>
+  </div>
+</details>
+
+<div class="kr"><span class="nm">Контрольная</span><span class="hr">1</span><span class="tt">кодировка и арифметика</span></div>
+
+<details class="row" data-d="D">
+  <summary><span class="nm">Игры</span><span class="hr">3</span>
+    <span class="tt">стратегии на симметрии счёта · граф позиций · выигрышные и проигрышные</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>первые стратегии</dt><dd>дополнять ход противника до пяти · уравнять кучки и поддерживать равенство · инвариант-счёт: число ходов не зависит от игры</dd>
+      <dt>анализ с конца</dt><dd>граф позиций: вершины — позиции, стрелки — ходы · выигрышная и проигрышная позиция для того, чей ход</dd>
+      <dt>три правила разметки</dt><dd>позиция, из которой нельзя сделать ход, — проигрышная · есть ход в проигрышную — позиция выигрышная · все ходы ведут в выигрышные — позиция проигрышная · стратегия: ставить противника в проигрышную</dd>
+      <dt>изоморфизм игр</dt><dd>две кучки спичек и односторонняя ладья на доске — одна и та же игра · периодичность выигрышных позиций</dd>
+    </dl>
+    <div class="ex">Опорные: 25 спичек, брать от одной до четырёх · две кучки 10 и 7 · шоколадка 5×8 ломается ровно 39 раз при любой игре · односторонняя ладья, проигрышные позиции на диагонали · число 60, вычитать любой делитель · часы, перевод стрелки на 2 или 3 часа.</div>
+    <div class="sr">Шень «Игры» 2–3 · Манжина «Анализ позиций» · Корсаков 9.1</div>
+  </div>
+</details>
+
+<details class="row" data-d="V">
+  <summary><span class="nm">Вероятность 2</span><span class="hr">4</span>
+    <span class="tt">дерево опыта · условная вероятность · независимость</span><span class="ar">▸</span></summary>
+  <div class="map">
+    <dl>
+      <dt>дерево опыта</dt><dd>цепочка в дереве и вероятность вдоль цепочки · правило умножения Pr[AB] = Pr[B]·Pr[A|B]</dd>
+      <dt>условная вероятность</dt><dd>доля одной группы внутри другой, сначала на процентах · Pr[A|B] = Pr[AB]/Pr[B] · «забываем исходы, неблагоприятные для B, и среди оставшихся считаем долю»</dd>
+      <dt>независимость</dt><dd>A не зависит от B, если Pr[A|B] = Pr[A] · равносильно Pr[AB] = Pr[A]·Pr[B] · независимость симметрична · схемы с возвращением и без</dd>
+    </dl>
+    <div class="ex">Опорные: тропинки в парке и болото · фонари с двух заводов, обратная задача о браке · французский 15%, немецкий 20%, оба 5% · два тормозных контура · мешок с 6 белыми и 4 чёрными шарами, два чёрных подряд с возвращением и без · «бой яиц» из воспоминаний Сахарова.</div>
+    <div class="sr">Шень В9–10 · Высоцкий 5, 7</div>
+  </div>
+</details>
+
+
+<div class="kr big"><span class="nm">Контрольная</span><span class="hr">2</span><span class="tt">материал года</span></div>
+<div class="kr out"><span class="nm">Математическая игра</span><span class="hr">2</span><span class="tt">вне сетки</span></div>
+
+<div class="foot">
+  33 пары, 66 уроков: 16 · 16 · 20 · 14 по четвертям. Содержательных 51, обычных контрольных 7 по уроку, четвертных 4 по два. Контрольная на урок стоит первым уроком пары; в такой день десятиминутки по домашке нет. Кружок — третий урок сразу после пары, для тех, кто остался: методы, задачи со звёздочкой и отступления, теории и контрольных там нет. Даты по календарю Минпросвещения на 2026/2027, сверить с графиком 57-й.
+</div>
+</div>
+
+<!--
+  СЛУЖЕБНОЕ, НЕ ОТОБРАЖАЕТСЯ — обоснования решений, для памяти автора карты.
+
+  Чётность стоит рано: от неё зависят инвариант, процессы и половина дискретных сюжетов.
+  У Шеня чётность открывает курс арифметики, а не дискретки.
+
+  Двойной счёт после чётности: рукопожатия без чётности не доказываются;
+  у Корсакова двойной счёт стоял рано и провалился именно поэтому.
+
+  Кодировка после Подсчётов 2: опирается на «Соответствия» Шеня (лист 24),
+  а тот идёт после «Рекуррентных формул» (лист 23). В первой редакции здесь была инверсия.
+
+  Вероятность после Подсчётов 2: таблица 6×6 на двух костях — это правило произведения.
+  Каркас взят у Шеня (вероятность через равновозможные исходы), а не у Высоцкого
+  (через деревья, комбинаторика только с 10-го занятия). Высоцкий — источник задач.
+
+  Соответствие подаётся молча, через задачи-близнецы: в 8 классе биекция вводится
+  формально, и нужно, чтобы с идеей уже поработали.
+
+  Игры: тема алгоритмизуема — раскрасил граф состояний от конца к началу, получил ответ.
+  Третья за год встреча с графом после рукопожатий и дерева путей. Своей контрольной
+  не получают, материал входит куском в годовую.
+
+  Арифметика: всего 10 часов за год, и расти ей некуда. Из курса Шеня доступны только
+  листки 01–04; дальше простые числа, Евклид, ОТА, Ферма — всё отдано 8 классу.
+  Проверить при отборе задач, хватает ли материала.
+
+  Что ушло на кружок: ним (ни на что не опирается), раскраски (нет домашки-инструкции),
+  Дирихле (мало простых задач, решится при отборе), симметрия в играх (трюк).
+
+  Чего на кружке быть не может: простые числа, разложение на простые, ОТА, алгоритм
+  Евклида, малая теорема Ферма, сочетания и Паскаль, формула полной вероятности, Байес,
+  парадоксы, биекция как объект. Всё это обязательная программа или материал 8 класса.
+  Правило: если тему кто-то потом будет проходить систематически, кружку её отдавать нельзя.
+
+  Дыры без источника: инвариант, рукопожатия, подсчёт рёбер — проверить Шень-2000 л. 27,
+  Канель-Белова, «Ленинградские математические кружки».
+  Листки Ольги Манжены (летняя школа 57-й, 6 класс) утеряны, запросить заново.
+-->
+
+<div class="wrap">
+<h1>Методы сквозь год</h1>
+<p class="sub">крупный круг — блок, где метод в центре · серая точка — возврат на чужом материале</p>
+
+<table>
+  <tr>
+    <th class="lead"></th>
+    <th>1<b>разгон</b></th><th>2<b>подсч.1</b></th><th>3<b>чётн.</b></th>
+    <th class="divcol">4<b>арифм.1</b></th><th>5<b>дв.счёт</b></th>
+    <th class="divcol">6<b>подсч.2</b></th><th>7<b>вер.1</b></th><th>8<b>кодир.</b></th>
+    <th class="divcol">9<b>арифм.2</b></th><th>10<b>игры</b></th><th>11<b>вер.2</b></th>
+  </tr>
+
+  <tr><td class="lead">Обратный ход</td>
+    <td><i class="home hO"></i></td><td></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td>
+    <td class="divcol"></td><td></td><td></td>
+    <td class="divcol"></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Отрицание и дополнение</td>
+    <td><i class="home hO"></i></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"></td><td></td><td><i class="dot"></i></td></tr>
+
+  <tr><td class="lead">Организованный перебор</td>
+    <td></td><td><i class="home hK"></i></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Правило суммы и разности</td>
+    <td></td><td><i class="home hK"></i></td><td></td>
+    <td class="divcol"></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td><td><i class="dot"></i></td></tr>
+
+  <tr><td class="lead">Правило произведения</td>
+    <td></td><td></td><td></td>
+    <td class="divcol"></td><td></td>
+    <td class="divcol"><i class="home hK"></i></td><td><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td><td><i class="dot"></i></td></tr>
+
+  <tr><td class="lead">Чётность</td>
+    <td></td><td></td><td><i class="home hD"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Инвариант</td>
+    <td></td><td></td><td><i class="home hD"></i></td>
+    <td class="divcol"></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Двойной счёт</td>
+    <td></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="home hD"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"></td><td></td><td><i class="dot"></i></td></tr>
+
+  <tr><td class="lead">Граф — молча</td>
+    <td></td><td></td><td></td>
+    <td class="divcol"></td><td><i class="home hD"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td></td><td></td>
+    <td class="divcol"></td><td><i class="dot"></i></td><td><i class="dot"></i></td></tr>
+
+  <tr><td class="lead">Соответствие — молча</td>
+    <td></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="home hK"></i></td><td><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"></td><td></td><td></td></tr>
+
+  <tr><td class="lead">Кодировка</td>
+    <td></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td></td><td><i class="home hK"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td></td><td></td></tr>
+
+  <tr><td class="lead">Оценка и пример</td>
+    <td><i class="dot"></i></td><td></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="home hK"></i></td><td></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Конструкция, узкое место</td>
+    <td></td><td><i class="dot"></i></td><td></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td></td><td><i class="home hK"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+
+  <tr><td class="lead">Пошаговое построение</td>
+    <td></td><td></td><td></td>
+    <td class="divcol"></td><td><i class="dot"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td></td><td><i class="home hK"></i></td>
+    <td class="divcol"><i class="dot"></i></td><td><i class="dot"></i></td><td></td></tr>
+</table>
+
+<div class="foot">
+  Пустых строк и столбцов нет: у каждого метода есть блок-дом и не меньше двух возвратов, в каждом блоке работает не меньше четырёх методов. Граф, соответствие и пошаговое построение вслух не называются. Вертикальные линии — границы четвертей.
+</div>
+</div>
+
+</body>
+</html>
