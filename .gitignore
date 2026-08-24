@@ -130,3 +130,15 @@ buffon/_render-zahod04/
 # исключения — другое время жизни, их дом отдельный файл под git:
 # `_studio/zhurnal/_INFRA-git/POSTOYANNYE.md`.
 _studio/zhurnal/_INFRA-git/zayavki/
+
+# Чужие материалы, полученные от коллег (листки, подборки, черновики).
+# Вне git СОЗНАТЕЛЬНО: авторство не наше, публикации не предполагается,
+# в `sayt/` эти файлы попасть не должны. Опись — `_fond/chuzhoe/README.md`,
+# она в git и отвечает на вопрос «что там лежит», когда файлов уже нет.
+_fond/chuzhoe/*
+!_fond/chuzhoe/README.md
+_fond/biblioteka/*
+!_fond/biblioteka/README.md
+
+# Porozhdaemyj zond zapisi (pustoj fajl) ot instrumentov - v kommity ne hodit.
+.probe_write
