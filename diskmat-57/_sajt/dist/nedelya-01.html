@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>неделя 1</title>
+<style>
+:root{
+  --paper:#f6f1e7; --card:#fcfaf5; --ink:#2b2724; --ink2:#4f4942;
+  --soft:#6b6155; --faint:#9b9186; --line:#e3dac7; --line2:#efe8d8;
+  --acc:#b3503c; --accbg:#f7e8e0;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
+  --d-Z:#3f7d75;
+  --ktr:#a79d90; --ktr-bg:#eae3d5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 var(--sans);
+  -webkit-font-smoothing:antialiased}
+a{color:inherit}
+/* Колонка — около 60% ширины экрана с полями по бокам, а не во весь экран
+   (владелец переопределил ТЗ §3 при показе 2026-08-20); ниже 1300px раскладка
+   и так становится вертикальной (медиа-запрос ниже), там ширина не сужается. */
+.oborot{max-width:min(1860px,96vw);margin:0 auto;padding:0 30px 20px}
+.oborot.uzko{padding-bottom:70px}
+.shapka .tit{font:700 25px/1.1 var(--serif);color:var(--ink);text-decoration:none;flex:none}
+.perekl-nav{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:3px;margin-left:20px;align-self:center}
+.perekl-nav a,.perekl-nav label{font:600 13px/1 var(--sans);color:var(--soft);padding:8px 17px;
+  border-radius:22px;text-decoration:none;cursor:pointer;user-select:none}
+.perekl-nav a:hover,.perekl-nav label:hover{color:var(--ink)}
+.perekl-nav a.tek{background:var(--ink);color:var(--paper)}
+.perekl-nav .dk{display:none}
+/* На странице года кнопки "основной курс"/"кружок" в общей шапке — это те же
+   label этого же тумблера (переключают вид на месте), а не ссылки на index.html:
+   раньше они дублировались отдельным рядом ниже, и работала только НИЖНЯЯ пара
+   (владелец 2026-08-22). Подсветка активной — через :checked, не статичный "tek". */
+/* `.perekl-nav` — не прямой сосед радиокнопок, а внук (лежит внутри
+   <header class="shapka">) — общий комбинатор `~` берёт только ПРЯМЫХ
+   соседей, поэтому селектор идёт через `header.shapka`, а не напрямую в
+   `.perekl-nav` (баг найден владельцем 2026-08-22: «источники» подсвечивался
+   через статичный класс .tek, а курс/кружок — нет, ровно из-за вложенности). */
+#t-kurs:checked~header.shapka .perekl-nav label[for=t-kurs],
+#t-kruzhok:checked~header.shapka .perekl-nav label[for=t-kruzhok]{background:var(--ink);color:var(--paper)}
+#t-kurs:focus-visible~header.shapka .perekl-nav label[for=t-kurs],
+#t-kruzhok:focus-visible~header.shapka .perekl-nav label[for=t-kruzhok]{outline:2px solid var(--acc);outline-offset:2px}
+
+/* ── шапка ── */
+.shapka{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;
+  padding:22px 0 15px;border-bottom:1px solid var(--line)}
+.shapka .razmer{font:14px/1.4 var(--serif);color:var(--ink2)}
+.demo{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.12em;
+  color:var(--acc);background:var(--accbg);border-radius:20px;padding:7px 14px}
+.nazad{font:600 13.5px/1 var(--sans);color:var(--soft);text-decoration:none;
+  border-bottom:1px solid var(--line);padding-bottom:2px}
+.nazad:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.shapka .spacer{flex:1}
+
+/* источники: карточки книг на странице блока и сама страница источников */
+.knigi{display:flex;flex-wrap:wrap;gap:9px}
+.kniga{display:block;text-decoration:none;border:1px solid var(--line);border-radius:7px;
+  padding:10px 13px;background:var(--card);min-width:220px}
+.kniga:hover{border-color:var(--acc)}
+.kn-a{display:block;font:11px/1.2 var(--sans);color:var(--faint);margin-bottom:3px}
+.kn-n{display:block;font:600 14px/1.3 var(--serif);color:var(--ink)}
+.isty{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.ist{border:1px solid var(--line);border-radius:8px;padding:15px 17px;background:var(--card)}
+.ist h2{font:700 17px/1.25 var(--serif);color:var(--ink);margin:0 0 5px}
+.ist .kn-g{font:12px/1.4 var(--sans);color:var(--faint);margin:6px 0 0}
+.ist .kn-c{font:13.5px/1.45 var(--sans);color:var(--ink2);margin:8px 0 0}
+.ist .kn-s{margin:10px 0 0}
+.ist .kn-s a{font:600 13px/1 var(--sans);color:var(--acc);text-decoration:none;
+  border-bottom:1px solid var(--acc);padding-bottom:2px}
+
+/* легенда цветов — очень мелким кеглем, сверху страницы года */
+.legenda{display:flex;gap:12px;flex-wrap:wrap;align-items:center;
+  padding:7px 0 0;margin:0}
+.legenda .p{display:inline-flex;align-items:center;gap:5px}
+.legenda .p i{width:7px;height:7px;border-radius:50%;background:var(--c);display:inline-block}
+.legenda .p span{font:9.5px/1 var(--sans);color:var(--faint);letter-spacing:.01em}
+
+/* ── тумблер: две радиокнопки, ни строки JS ──
+   Кнопки-label живут в общей шапке (.perekl-nav, см. выше) — здесь только
+   сами радиокнопки и то, что они переключают в календаре. */
+.tumbler>input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.kr-chast .im{font:700 16px/1.16 var(--serif)}
+.kr-chast .pz{margin-top:5px}
+#t-kruzhok:checked~.kalendar .tr-kurs{display:none}
+#t-kurs:checked~.kalendar .tr-kruzhok{display:none}
+
+/* ── четверть ── */
+/* Четверть — две колонки: слева подпись, справа лента и линейка недель.
+   «N недель» стоит вплотную к линейке, а не в шапке: иначе связь между
+   пронумерованными клетками и словом «недели» приходится угадывать
+   (находка верификатора понятности 2026-08-20). */
+.chetv{margin:16px 0 0;display:grid;grid-template-columns:100px minmax(0,1fr);
+  column-gap:12px;align-items:start}
+.chetv-hd{grid-column:1;grid-row:1;padding-top:2px}
+.chetv-hd .rim{font:700 21px/1 var(--serif);color:var(--ink);display:inline}
+.chetv-hd .cw{font:600 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin-left:6px}
+.chetv-hd .dts{display:block;font:13px/1.35 var(--serif);color:var(--ink2);margin-top:6px;
+  text-align:center}
+.chetv-hd .dts .tire{display:block}
+.chetv .lenta{grid-column:2;grid-row:1}
+.nw{grid-column:1;grid-row:2;text-align:right;font:12px/24px var(--sans);
+  color:var(--faint);padding-right:2px}
+.chetv .linejka{grid-column:2;grid-row:2}
+.chetv .vne{grid-column:2;grid-row:3;justify-self:start}
+
+/* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
+   вертикали, а короткая четверть честно не достаёт до правого края.
+   Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
+   тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
+.lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
+  grid-auto-rows:190px;gap:6px;align-items:stretch}
+.linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
+
+/* блок — большой прямоугольник, главная масса страницы.
+   grid-column идёт через --sp (часы элемента), а не литералом в инлайн-стиле:
+   на десктопе это ширина колонки, на мобильном та же переменная станет
+   высотой строки (grid-row) — одно число, два разных смысла раскладки. */
+.blok{position:relative;display:flex;flex-direction:column;justify-content:flex-start;
+  grid-column:span var(--sp,1);
+  border-radius:7px;padding:11px 11px 0;text-decoration:none;overflow:hidden;
+  background:var(--c);color:#fdfbf6;transition:transform .12s ease, box-shadow .12s ease}
+.blok:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(43,39,36,.22)}
+.blok .im{font:700 26px/1.15 var(--serif);letter-spacing:-.005em}
+.blok .pz{font:15px/1.32 var(--sans);color:rgba(253,251,246,.86);margin-top:6px;
+  flex:0 1 auto;min-height:0;overflow:hidden;max-height:3.96em}
+.blok .niz{margin-top:auto;padding-bottom:7px;min-width:0;flex:none;position:relative;
+  display:flex;align-items:center;gap:8px}
+.blok .dm{font:600 9.5px/1.15 var(--sans);text-transform:uppercase;min-width:0;
+  letter-spacing:.045em;color:rgba(253,251,246,.76);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blok .ug{position:absolute;top:10px;right:11px;display:flex;align-items:center;gap:7px}
+.blok .ch{font:600 10.5px/1 var(--sans);color:rgba(253,251,246,.62);white-space:nowrap;
+  margin-left:auto;flex:none;padding-left:8px}
+/* Блок на стыке нескольких разделов красится ЗОНАМИ — фон задаётся инлайн-стилем
+   (linear-gradient под углом, по одной зоне на раздел из "domeny") — а не одним
+   цветом с диагональной штриховкой: штриховка не сообщает, из чего блок состоит. */
+.blok .styk-l{flex:none;font:600 9px/1 var(--sans);text-transform:uppercase;
+  letter-spacing:.08em;color:rgba(253,251,246,.9);
+  border:1px solid rgba(253,251,246,.45);border-radius:12px;padding:3px 6px}
+
+/* контрольная — полная высота строки, надпись поперёк */
+.ktr{align-self:stretch;height:100%;grid-column:span var(--sp,1);border-radius:5px;
+  background:var(--ktr-bg);border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;padding:6px 1px;overflow:hidden;text-decoration:none}
+.ktr.chetv{background:transparent;border-style:dashed}
+.ktr.vne-l{background:transparent;border-style:dotted;cursor:default}
+/* незаполненный слот (8И класс, владелец 2026-08-22) — обычно ШИРОКИЙ (может
+   занимать всю четверть, --sp большой), поэтому не узкая полоска с текстом
+   поперёк, как контрольная/игра, а штриховка "место зарезервировано" и
+   горизонтальная подпись — вертикальный текст в широком коробе выглядел бы
+   потерянным. Не ссылка — курсор обычный, а не pointer. */
+.ktr.pusto{background:repeating-linear-gradient(135deg,var(--card),var(--card) 10px,
+  var(--line2) 10px,var(--line2) 11px);border-style:dashed;cursor:default}
+.ktr.pusto .k{writing-mode:horizontal-tb;transform:none;font:600 14px/1.1 var(--sans);
+  letter-spacing:.02em}
+.ktr:hover{border-color:var(--acc)}
+.ktr:hover .k{color:var(--acc)}
+.ktr .k{writing-mode:vertical-rl;transform:rotate(180deg);
+  font:600 18px/1.1 var(--sans);text-transform:lowercase;letter-spacing:-.01em;
+  color:var(--ktr);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;max-height:100%}
+
+/* линейка недель — сплошной хребет 1..33, расщеплённая неделя двухцветна */
+.ned{position:relative;display:block;height:24px;border-radius:4px;text-decoration:none;
+  font:600 11px/24px var(--sans);color:var(--ink2);text-align:center;
+  background:var(--nb);border:1px solid var(--line2)}
+.ned:hover{color:var(--acc);border-color:var(--acc)}
+.ned.split{box-shadow:inset 0 0 0 1px var(--card);
+  background:linear-gradient(90deg,var(--c1) 0 50%,var(--c2) 50% 100%)}
+
+/* вне сетки */
+.vne{display:inline-flex;align-items:baseline;gap:9px;margin-top:7px;padding:5px 11px;
+  border:1px dashed var(--line);border-radius:5px;background:var(--card)}
+.vne .i{font:600 13px/1 var(--serif);color:var(--ink2)}
+.vne .c{font:11.5px/1 var(--sans);color:var(--faint)}
+
+/* ── страница блока / занятия ──
+   Ширина текстовой области ОДНА на всех страницах — задаётся `.oborot`
+   (см. выше); `.uzko` здесь больше не переопределяет max-width, только
+   добавочный нижний отступ через `.oborot.uzko` (владелец 2026-08-20). */
+.zag{padding:34px 0 0}
+.zag h1{font:700 38px/1.1 var(--serif);margin:0 0 12px;letter-spacing:-.015em}
+.zag .pz{font:19px/1.5 var(--serif);color:var(--ink2);margin:0 0 16px;max-width:44em}
+.metki{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.metka{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:#fdfbf6;background:var(--c);border-radius:20px;padding:7px 13px;
+  text-decoration:none;display:inline-block}
+a.metka:hover{filter:brightness(1.12)}
+.metka.tih{color:var(--soft);background:transparent;border:1px solid var(--line)}
+.metka .tochka{font-style:normal;color:var(--faint);margin:0 6px}
+.metka b{font-weight:600;color:var(--ink2);text-transform:none;letter-spacing:.02em}
+.grp{font:12.5px/1.4 var(--sans);text-transform:uppercase;letter-spacing:.09em;
+  color:var(--faint);margin:0 0 16px}
+.sect{margin:44px 0 0;padding-top:26px;border-top:1px solid var(--line)}
+
+.tochki{counter-reset:t;margin:0;padding:0;list-style:none;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:26px 40px}
+.tochki li{counter-increment:t;position:relative;padding-left:38px}
+.tochki li::before{content:counter(t);position:absolute;left:0;top:1px;
+  width:26px;height:26px;border-radius:50%;background:var(--c);color:#fdfbf6;
+  font:700 12.5px/26px var(--sans);text-align:center}
+.tochki .t{font:700 20px/1.28 var(--serif);margin:0 0 9px}
+.tochki .ch{display:flex;flex-wrap:wrap;gap:6px}
+.tochki .ch span{font:14px/1.4 var(--sans);color:var(--ink2);background:var(--card);
+  border:1px solid var(--line2);border-radius:5px;padding:5px 10px}
+
+/* строки занятий блока — во всю ширину, три раздела: неделя · что происходит
+   (тема соседнего элемента недели, если неделя расщеплена — темы отдельного
+   урока в данных нет и она не сочиняется, там пусто) · кружок четверти */
+.zanyatia{margin:0;display:flex;flex-direction:column;gap:0}
+.zanyatie{display:grid;grid-template-columns:90px 1fr 200px;align-items:center;
+  gap:14px;padding:14px 2px;border-bottom:1px solid var(--line2);text-decoration:none}
+.zanyatie:hover{background:var(--card)}
+.zanyatie .n{font:600 17px/1.3 var(--serif);color:var(--ink)}
+.zanyatie .sosed{font:13.5px/1.4 var(--sans);color:var(--ink2)}
+.zanyatie .sosed a{text-decoration:none;border-bottom:1px solid var(--line)}
+.zanyatie .sosed a:hover{color:var(--acc);border-bottom-color:var(--acc)}
+.zanyatie .kr{justify-self:end}
+.zanyatie .kr a{font:600 11px/1 var(--sans);text-transform:uppercase;letter-spacing:.07em;
+  color:#fdfbf6;background:var(--d-Z);border-radius:20px;padding:6px 12px;text-decoration:none}
+
+.karkas{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:30px;
+  margin-top:8px}
+.karkas .box{background:var(--card);border:1px solid var(--line2);border-radius:8px;
+  padding:20px 22px;min-height:190px}
+.karkas .box .grp{margin-bottom:0}
+
+.podval{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+  display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+
+/* узкое окно: имя мельче, чтобы не лезло под угол — но подзаголовок ОСТАЁТСЯ:
+   он и есть то, ради чего на календарь смотрят */
+@media(max-width:1400px){
+  .blok .im{font:700 22px/1.15 var(--serif)}
+  .blok .pz{font-size:14px}
+  .blok .dm{font-size:9px;letter-spacing:.03em}
+  .ktr .k{font-size:15px;letter-spacing:-.01em}
+}
+/* Ниже этого порога сетка-календарь перестаёт быть читаемой: клетка урока
+   становится уже слова «контрольная». Порог измерен, а не выбран на глаз —
+   раскладка становится вертикальной, блок на всю ширину. */
+@media(max-width:1300px){
+  .oborot,.uzko{padding:0 16px 50px}
+  /* Шапка: имя курса и «демо-версия» — на одной строке (spacer раздвигает их),
+     три кнопки навигации — отдельной строкой ПОД ними, во всю ширину:
+     сначала обе кнопки лезли в одну строку с именем и разъезжались
+     (владелец 2026-08-22). Слово "курс" вместо "основной курс" — короче,
+     влезает в узкую кнопку (см. shapka(), .dl/.dk). */
+  .shapka .spacer{order:2}
+  .demo{order:3}
+  .perekl-nav{order:4;flex-basis:100%;margin-left:0;margin-top:10px;
+    justify-content:space-between}
+  .perekl-nav a,.perekl-nav label{flex:1;text-align:center;padding:9px 6px}
+  .perekl-nav .dl{display:none}
+  .perekl-nav .dk{display:inline}
+
+  /* Четверть: заголовок — во всю ширину сверху; ниже — карточки занятий
+     слева и УЗКАЯ вертикальная лента недель справа, В ОДНОЙ координатной
+     сетке с лентой занятий (владелец 2026-08-22, вторая правка после
+     первой мобильной раскладки: блоки съезжали относительно своих
+     недель, потому что высота карточки не зависела от часов, а клетки
+     линейки распределялись поровну flex:1 — два независимых механизма,
+     которые не могли совпасть).
+     Шаг сетки — 1 час = HOUR_PXpx, ОДИНАКОВЫЙ у .lenta и у .linejka:
+     каждый элемент ленты растёт на --sp (часы, та же переменная, что на
+     десктопе даёт ширину колонки — см. .blok/.ktr), каждая неделя в
+     линейке — всегда 2 часа. Оба грида стартуют от ОДНОЙ и той же строки
+     (никакой "N недель" или другой подписи над линейкой, которая сдвинула
+     бы её старт относительно ленты), поэтому выравнивание — арифметика
+     общих координат, а не подгонка на глаз. "Игра" не входит в linejka()
+     вообще (см. razobrat() — она не считается в uroki/nedeli), поэтому
+     напротив нее в линейке закономерно пусто: у неё и вправду нет недели. */
+  .chetv{display:grid;grid-template-columns:minmax(0,1fr) 34px;
+    grid-template-rows:auto 1fr;column-gap:8px;margin:16px 0 0}
+  .chetv-hd{grid-column:1/-1;grid-row:1;display:flex;align-items:baseline;gap:10px;
+    flex-wrap:wrap;margin-bottom:0;padding-bottom:5px;border-bottom:1px solid var(--line2)}
+  .chetv-hd .dts{display:inline;margin-top:0}
+  .chetv-hd .dts .tire{display:inline}
+  .chetv .lenta{grid-column:1;grid-row:2}
+  /* "N недель" убрана с мобильного: число и так видно по надписям в линейке
+     справа, а лишняя строка над ней сдвинула бы её старт относительно ленты. */
+  .nw{display:none}
+  .chetv .linejka{grid-column:2;grid-row:2}
+  .zag h1{font-size:27px}
+  .lenta,.linejka{grid-template-columns:1fr;grid-auto-rows:46px;gap:4px;margin-top:0}
+  .lenta>*{grid-column:1;grid-row:span var(--sp,1)}
+  .linejka .ned{grid-row:span 2;height:auto;min-height:0;font-size:10px;line-height:1;
+    display:flex;align-items:center;justify-content:center}
+  .ned.split{background:linear-gradient(180deg,var(--c1) 0 50%,var(--c2) 50% 100%)}
+  .blok{min-height:0;padding:12px 13px 0}
+  .blok .pz{max-height:none;font-size:12px;display:block}
+  /* Контрольная и игра — ОДИНАКОВЫЙ вид независимо от того, четвертная она
+     (chetv) или нет: разницу "получасовая / на всю неделю" теперь честно
+     показывает ВЫСОТА (1 или 2 часа, та же --sp), а не разный стиль рамки —
+     раньше получасовая была серой заливкой, четвертная — на белом
+     пунктиром, и это читалось как два разных сорта контрольной, а не как
+     один и тот же элемент разной длительности (владелец 2026-08-22).
+     Ширина — ВСЕГДА 100%, как у блока: разную массу должна показывать
+     высота, а не то, что контрольная уже блока. */
+  .ktr{padding:6px 11px;width:100%;justify-content:center}
+  .ktr.chetv,.ktr.vne-l{background:var(--ktr-bg);border-style:solid}
+  .ktr .k{writing-mode:horizontal-tb;transform:none;font-size:13px;
+    white-space:normal;overflow:visible;text-overflow:clip;text-align:center}
+  .tochki{grid-template-columns:1fr;gap:22px}
+  .zanyatie{grid-template-columns:1fr;gap:4px}
+  .zanyatie .kr{justify-self:start}
+}
+</style>
+</head>
+<body>
+<div class="oborot uzko"><header class="shapka"><a class="tit" href="index.html">Спецмат</a><span class="razmer">57 школа · И классы</span><nav class="perekl-nav"><a href="index.html" class="tek">7 класс</a><a href="8-index.html">8 класс</a></nav><nav class="perekl-nav"><a href="index.html" class="tek"><span class="dl">основной курс</span><span class="dk">курс</span></a><a href="index.html">кружок</a><a href="istochniki.html">источники</a></nav><span class="spacer"></span><span class="demo">демо-версия</span></header><div class="zag"><div class="metki"><span class="metka tih">I четверть</span><a class="metka" style="--c:var(--d-D)" href="blok-razgon.html">Разгон</a><a class="metka" style="--c:var(--d-Z)" href="blok-kruzhok-i.html">кружок</a></div><h1>неделя 1</h1></div><section class="sect"><div class="karkas"><div class="box"><p class="grp">что было на уроке</p></div><div class="box"><p class="grp">домашнее задание</p></div></div></section><div class="podval"><a class="nazad" href="index.html">к году</a><a class="nazad" href="blok-razgon.html">к блоку</a></div></div>
+</body>
+</html>
