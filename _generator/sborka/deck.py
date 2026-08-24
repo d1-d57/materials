@@ -357,8 +357,13 @@ def _podobrat_vizitku(zanovo=False):
     try:
         from playwright.sync_api import sync_playwright
     except ImportError as e:
-        raise SystemExit(
-            "playwright не установлен — подбор визитки недоступен (%s)" % e)
+        # Д-В9, вторая половина: вызов безусловный, поэтому отсутствие playwright
+        # здесь убивало ЛЮБУЮ сборку — а визитка СЛУЖЕБНАЯ, её подбор обязан
+        # деградировать именованной строкой, как у обычных слайдов выше.
+        print("подбор визитки — ПРОПУСК: playwright не установлен (%s); дек "
+              "собирается дальше, визитка — с прежними значениями карточки" % e,
+              file=sys.stderr)
+        return
     from formaty import render_body
     from tipy import compile_tip
     body_html = render_body(telo, acc_tag="span")
@@ -376,7 +381,13 @@ def _podobrat_vizitku(zanovo=False):
         finally:
             browser.close()
     if res["chosen"] is None:
-        raise SystemExit("подбор визитки: ни одна проба не влезла внутри жёстких зон")
+        # Д-В9, вторая половина: тот же класс, что у обычных слайдов выше —
+        # неразрешимость СЛУЖЕБНОЙ визитки стоит пропуска её подбора, не всей деки;
+        # молчаливый пропуск запрещён, поэтому строка названа поимённо.
+        print("подбор визитки — ОТКАЗ: ни одна проба не влезла внутри жёстких зон "
+              "(см. `vmeshchenie.py --demo-zony`); дек собирается дальше, визитка — "
+              "с прежними значениями карточки, подбор не применён", file=sys.stderr)
+        return
     vmeshchenie.apply_to_card(vizitka_path, res["chosen"])
     print("подбор визитки: kegl=%.1f" % res["chosen"]["kegl"], file=sys.stderr)
 
