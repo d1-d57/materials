@@ -850,6 +850,16 @@
 
 **`_studio/zhurnal/2026-08-24_razvedka-metodov/kod_razvedka-metodov.md`** (разведка: где производящую функцию из комбинаторики изучают средствами анализа и алгебры через уравнения, которым она удовлетворяет — источники и образцы жанра)
 
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-08-24.md`** (Выгрузка сессии 2026-08-24 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-08-24-2.md`** (Выгрузка сессии 2026-08-24 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/HANDOFF-2026-08-25.md`** (Хэндофф в сессию 2026-08-25)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_skelet-izlozheniya.md`** (Найти центральный объект и список теорем курса; сдать СКЕЛЕТ ИЗЛОЖЕНИЯ на 2-3 страницы)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_svod-i-skelet.md`** (Влить всё невлитое, свести ресёрчи курса в пронумерованный реестр, написать скелет изложения)
+
 
 
 
