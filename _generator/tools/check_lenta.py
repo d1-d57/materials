@@ -9,6 +9,12 @@
 
 Код возврата: 0 — чисто, 1 — есть нарушения. Годится в ворота.
 
+ЖАНР (FORMA §3.1/§7): признак жанра — `zhanr:` во фронтматтере; отсутствие = `lenta`.
+При `zhanr:` ≠ `lenta` форма снята целиком: гейт печатает «это не лента» и гонит только
+жанрово-нейтральный L9 (`check_termin`); красным остаётся вердикт только документов с
+`zhanr: lenta` либо без поля. Словарь полей закрыт (FORMA §3.8–3.9): `> поле:X` с X вне
+{mn, insight} краснеет пунктом L14 — но только у ленты; в чужом жанре чужое поле живо.
+
 ЗАЧЕМ. Гейт `G7` проверяет ФАЙЛ: есть ли лента, свежий ли `view.html`, покрыт ли `slide_order`,
 стоит ли строка раскладки. Ни один его пункт не смотрит на СОДЕРЖИМОЕ. Цена этого зазора снята
 командой по картотеке фабрики (`_studio/zhurnal/2026-08-05_faza-lenty/klassy_otkazov.py`):
@@ -49,6 +55,7 @@ PUNKTY = {
     "L11": ("у каждой `<figure>` есть `<svg>` и `<figcaption>`; классы `s-*` движку известны", "G · иллюстрации"),
     "L12": ("ПОСТРОЧНАЯ сверка источник ↔ вид, не только хвост блока",         "J · носителя нет"),
     "L13": ("у каждого `<svg>` есть PNG-рендер не старше источника",           "G · иллюстрации"),
+    "L14": ("словарь полей закрыт: только `mn` и `insight`, чужое поле краснеет", "F · два адресата"),
 }
 
 # 🔴 СЛЕПАЯ ЗОНА ПЕЧАТАЕТСЯ ВСЕГДА, а не только когда красно: зелёный чекер с необъявленной
@@ -152,11 +159,50 @@ def bloki(text):
     return [b.strip() for b in re.split(r"\n\s*\n", text) if b.strip()]
 
 
+ZHanr_RE = re.compile(r"^zhanr\s*:\s*(\S+)\s*$", re.M)
+
+
+def zhanr_dokumenta(text):
+    """Признак жанра (FORMA §3.1): `zhanr:` во фронтматтере; отсутствие = `lenta`."""
+    fm = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+    if not fm:
+        return "lenta"
+    mz = ZHanr_RE.search(fm.group(1))
+    return mz.group(1) if mz else "lenta"
+
+
+def proverit_chuzhoj(put, zhanr):
+    """Чужой жанр (FORMA §7): форма ленты снята целиком, остался жанрово-нейтральный L9.
+
+    «Это не лента» и «это плохая лента» — разные вердикты с разными действиями; краснить
+    здоровый текст чужого жанра — ложный гейт. Красный здесь даёт только L9.
+    """
+    src = Path(put)
+    if not src.is_file():
+        return None, [("ВХОД", "нет файла: %s" % put)], {"chuzhoj": True}, []
+    bedy, sdelano = [], set()
+    sdelano.add("L9")
+    bad_t, err_t = termin_gejt(put)
+    if err_t:
+        bedy.append(("L9", err_t))
+    else:
+        for imya, stroka, num, termin, gde in bad_t:
+            bedy.append(("L9", "%s:%d — «%s» (определение %d) работает раньше, во врезке %d"
+                               % (imya, stroka, termin, num, gde)))
+    svodka = {"chuzhoj": True, "zhanr": zhanr, "punktov": len(sdelano)}
+    return svodka, bedy, {"snyato": []}, sorted(sdelano)
+
+
 def proverit(put, vid_put=None, edinic=None):
     src = Path(put)
     if not src.is_file():
         return None, [("ВХОД", "нет файла: %s" % put)], {}, []
     text = src.read_text(encoding="utf-8")
+
+    # ── признак жанра (FORMA §3.1/§7): чужой жанр снимает форму ДО всякой проверки ──
+    zhanr = zhanr_dokumenta(text)
+    if zhanr != "lenta":
+        return proverit_chuzhoj(put, zhanr)
 
     # ── Y считается ДО работы и ПО ИСТОЧНИКУ ──
     # Объект = то, что гейт способен просудить поштучно: единица выхода, врезка, иллюстрация.
@@ -195,6 +241,19 @@ def proverit(put, vid_put=None, edinic=None):
     if not re.search(r"словар", do_edinicy, re.I) or not re.search(r"^\|[ :|-]+\|$", do_edinicy, re.M):
         krasnyj("L2", "до первой единицы нет словаря обозначений таблицей "
                       "(«одно понятие — одно обозначение», FORMA §3.2)")
+
+    # ── L14 · словарь полей ЗАКРЫТ (FORMA §3.8–3.9): mn и insight, других нет ──
+    # Молчаливый пропуск чужого поля — брак ГЕЙТА, а не разрешение; замечание называет поле.
+    # Только у ленты: в чужом жанре чужая пометка жива (§7).
+    sdelano.add("L14")
+    POLE_SLOVAR = ("mn", "insight")
+    polya = {}
+    for mp in re.finditer(r"^>\s*поле\s*:\s*([A-Za-zА-Яа-яЁё0-9_-]+)", text, re.M):
+        polya[mp.group(1)] = polya.get(mp.group(1), 0) + 1
+    for imya in sorted(polya):
+        if imya not in POLE_SLOVAR:
+            krasnyj("L14", "поле «%s» вне закрытого словаря полей (разрешены mn, insight), "
+                           "употреблений: %d — FORMA §3.8–3.9" % (imya, polya[imya]))
 
     # ── L3 · Статус в метке · L4 · кат или «объявляем» · L6 · нумерация ──
     sdelano.update(("L3", "L4", "L6"))
@@ -391,6 +450,26 @@ def main():
             for k, v in bedy:
                 print("  ✗ %s: %s" % (k, v))
         sys.exit(1)
+
+    # ── чужой жанр: «это не лента» машинно отличено от «это плохая лента» (FORMA §7) ──
+    if svodka.get("chuzhoj"):
+        if not tiho:
+            print("── ГЕЙТ ФОРМЫ ЛЕНТЫ (check_lenta) ──")
+            print("  %s" % args[0])
+            print("  ЭТО НЕ ЛЕНТА — форма снята (остался L9): во фронтматтере `zhanr: %s`"
+                  % svodka["zhanr"])
+            print("  пунктов гейта отработало: %d из %d — %s"
+                  % (svodka["punktov"], len(PUNKTY), ", ".join(sdelano)))
+            print("\n  ЧЕГО ЭТОТ ГЕЙТ НЕ ПРОВЕРЯЕТ — список закрытый:")
+            for klass, chto in NE_PROVERYAEM:
+                print("     · [%s] %s" % (klass, chto))
+            if bedy:
+                print("\n  ✗ КРАСНЫЙ — замечаний %d:" % len(bedy))
+                for k, v in bedy:
+                    print("     %-4s %s" % (k, v))
+            else:
+                print("\n  ✓ ЗЕЛЁНЫЙ: это не лента; жанрово-нейтральная часть (L9) чиста")
+        sys.exit(1 if bedy else 0)
 
     if not tiho:
         print("── ГЕЙТ ФОРМЫ ЛЕНТЫ (check_lenta) ──")
