@@ -60,7 +60,7 @@ adresat: владелец
 
 ```bash
 cd /Users/ivanyakovlev/Documents/GitHub/materials
-python3 _generator/build_doc.py obzory/<slug>/src
+python3 ../disciplina/_generator/build_doc.py obzory/<slug>/src
 python3 _generator/tools/check_view.py obzory/<slug>/src
 ```
 

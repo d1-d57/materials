@@ -47,8 +47,8 @@
 Полный диалект автора — `README.md §Диалект документ-вида`; визуальный контракт — `../_studio/docs/kak-delat/STANDART-oformlenia.md §3–4`.
 
 ```bash
-python3 _generator/build_doc.py <src-dir>             # линтер + сборка → <src>/view.html
-python3 _generator/build_doc.py <src-dir> --lint      # только линтер, без записи
+python3 ../disciplina/_generator/build_doc.py <src-dir>             # линтер + сборка → <src>/view.html
+python3 ../disciplina/_generator/build_doc.py <src-dir> --lint      # только линтер, без записи
 python3 _generator/tools/check_view.py <src-dir>      # ГЕЙТ ВЫХОДА, обязателен после КАЖДОЙ сборки
 ```
 

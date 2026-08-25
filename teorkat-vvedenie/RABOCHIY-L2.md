@@ -96,7 +96,7 @@ registr: служебный
 ## Сборка и сверка — числа считаются командами
 
 ```bash
-python3 _generator/build_doc.py teorkat-vvedenie/LENTA-L2
+python3 ../disciplina/_generator/build_doc.py teorkat-vvedenie/LENTA-L2
 python3 _generator/tools/check_view.py teorkat-vvedenie/LENTA-L2
 
 # разделов ленты == карточек контракта

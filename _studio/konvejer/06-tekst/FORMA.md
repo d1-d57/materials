@@ -227,7 +227,7 @@ nomera: da
 
 ⚠ Движок markdown-таблицы **умеет** с 2026-08-04 (`md_table`, ветка 6a в `render_stream`).
 `_generator/README.md:58` до сих пор утверждает обратное — это долг README, не движка; проверяется
-одной командой: `python3 _generator/build_doc.py teorkat-vvedenie/DOKAZATELSTVA-L1` даёт 4 `<table>`
+одной командой: `python3 ../disciplina/_generator/build_doc.py teorkat-vvedenie/DOKAZATELSTVA-L1` даёт 4 `<table>`
 при 4 строках-разделителях `|---|` в источнике.
 
 ### 3.6 «Что берём как известное»
@@ -322,7 +322,7 @@ nomera: da
 **После каждой сборки — два гейта, оба обязательны:**
 
 ```
-python3 _generator/build_doc.py <папка-ленты>
+python3 ../disciplina/_generator/build_doc.py <папка-ленты>
 python3 _generator/tools/check_view.py <папка-ленты>
 python3 _generator/tools/check_lenta.py <лента.md>
 ```

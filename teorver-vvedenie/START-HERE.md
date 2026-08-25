@@ -14,7 +14,7 @@
 2. **`istochniki/`** — реестр зоны. `MANIFEST.md` (что где лежит, полнота, оффсеты страниц, что НЕ взято и почему) · `VYCHITANO.md` (дайджест на каждый источник — **чтобы книги не перечитывать**) · `pdf/` — 5 полных копий рабочих книг · `narezki/` — школьные куски из взрослых.
 3. **`DAJDZHEST-istochnikov.md`** — ~40 отобранных задач с дословными формулировками и адресами, разложены по пяти темам; три варианта доказательства Маркова и Чебышёва.
 4. **`MATERIAL-l1.md`, `MATERIAL-l345.md`** — сырьё под лекции: ~270 тыс. знаков дословных цитат и условий с адресами. Отсюда берут, когда лекцию надо наполнить.
-5. **`plan/src/l1…l5.md` → `view.html`** — сам драфт. Сборка: `python3 ../_generator/build_doc.py teorver-vvedenie/plan/src` → `view.html`; обязательные гейты после сборки — `check_view.py` и `check_termin.py`.
+5. **`plan/src/l1…l5.md` → `view.html`** — сам драфт. Сборка: `python3 ../../disciplina/../disciplina/_generator/build_doc.py teorver-vvedenie/plan/src` → `view.html`; обязательные гейты после сборки — `check_view.py` и `check_termin.py`.
 
 ## Три вещи, которые тут легко нарушить
 

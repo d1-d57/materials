@@ -35,7 +35,7 @@
 
 ## Полный текст-образец
 
-`catalan/zhurnal/2026-07-13_dika-v-vysshey-matematike/obyasnenie-tl/src/lekciya-tl-puti-dika.md` — ~8 стр., собирается `_generator/build_doc.py` в `view.html`. Все фрагменты этой папки — оттуда.
+`catalan/zhurnal/2026-07-13_dika-v-vysshey-matematike/obyasnenie-tl/src/lekciya-tl-puti-dika.md` — ~8 стр., собирается `../disciplina/_generator/build_doc.py` в `view.html`. Все фрагменты этой папки — оттуда.
 
 ## Как дополнять
 

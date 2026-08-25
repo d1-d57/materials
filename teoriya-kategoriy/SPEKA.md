@@ -425,7 +425,7 @@
 
 ### Наследование фабрики — «дефолт, кроме…»
 
-Дефолт берём как есть: арки (`../_studio/docs/kak-delat/ARKA.md`) · картотека (`kartoteka/STANDART-uzla.md`) · контракт текста (`../_studio/docs/kak-delat/STANDART-teksta.md`) + оформления (`STANDART-oformlenia.md`) · движки `../_generator/build_doc.py` (документ) и `build_deck.py` (слайды) · гейт `check_view.py` после КАЖДОЙ сборки документа · словарь примитивов `../_illustracii/DISCIPLINA.md`.
+Дефолт берём как есть: арки (`../_studio/docs/kak-delat/ARKA.md`) · картотека (`kartoteka/STANDART-uzla.md`) · контракт текста (`../_studio/docs/kak-delat/STANDART-teksta.md`) + оформления (`STANDART-oformlenia.md`) · движки `../../disciplina/../disciplina/_generator/build_doc.py` (документ) и `build_deck.py` (слайды) · гейт `check_view.py` после КАЖДОЙ сборки документа · словарь примитивов `../_illustracii/DISCIPLINA.md`.
 
 **Отклонения проекта:**
 1. **Терминология — свой глоссарий** `spravochnik/TERMINY-russkie.md`, засеян выверенными терминами ТЗ. По Р17 гейт внутренний: глоссарий проекта ВЫШЕ веба. Русская практика, а не калька.

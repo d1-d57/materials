@@ -114,7 +114,7 @@
 
 ### Наследование фабрики — «дефолт, кроме…»
 
-Берём как есть: движок `_generator/build_doc.py` и `build_deck.py`, гейт `check_view.py` после каждой сборки, словарь примитивов иллюстраций, стандарт текста и оформления, арк-ритуал `_studio/docs/kak-delat/ARKA.md`, заходы по `RUKOVODSTVO-zahodami.md`.
+Берём как есть: движок `../disciplina/_generator/build_doc.py` и `build_deck.py`, гейт `check_view.py` после каждой сборки, словарь примитивов иллюстраций, стандарт текста и оформления, арк-ритуал `_studio/docs/kak-delat/ARKA.md`, заходы по `RUKOVODSTVO-zahodami.md`.
 
 **Отклонения:** пока нет. Появится — строкой сюда.
 

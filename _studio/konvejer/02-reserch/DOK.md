@@ -66,7 +66,7 @@ throughline брифа — КАНДИДАТ. Если фактура его не
 
 ## Якоря
 - Модель: `../../docs/spravka/FAZA-1-REDESIGN.md` (стадия 2). Грунтовка карточек: `../../zhurnal/2026-07-10_sborka-konvejera/distillat-catalan-kartochki.md`; образцы — `../../../catalan/spravochnik/{STANDART-uzla,KARTA-OBLASTI}.md`, `TERMINY-russkie.md`.
-- Doc-движок (вид котлов): `../../../_generator/build_doc.py`, `../../../_generator/doc-demo/`, `../../../_generator/DVIZHKI.md` (Р15).
+- Doc-движок (вид котлов): `../../../../disciplina/../disciplina/_generator/build_doc.py`, `../../../_generator/doc-demo/`, `../../../_generator/DVIZHKI.md` (Р15).
 - Соседи по сессии: `../03-matbaza/DOK.md` (математика-котёл = skelet, та же сессия) · `../04-gibrid-istochnik/DOK.md` (нарратив тянет нить + сборка).
 - Решения: `../../docs/pochemu-i-videnie/RESHENIYA.md` (Р3, Р15, Р17, Р18); откуда бриф — `../01-brief/DOK.md`.
 - УСТАРЕВШЕЕ (не сид): `../../zhurnal/2026-07-10_sborka-konvejera/distillat-reserch-matbaza.md` — one-stream/ранний-нарратив отменён редизайном.

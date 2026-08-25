@@ -40,7 +40,7 @@
      дисциплина, biblioteka→дайджест, термины (Р17), гейт. Читаешь, не редактируешь.
   2. `_studio/zhurnal/2026-07-10_sborka-konvejera/distillat-catalan-kartochki.md` — грунтовка графа.
   3. `_studio/docs/spravka/FAZA-1-REDESIGN.md` — стадия 2 (ресёрч без сюжета, два котла, критерии).
-  4. `_generator/doc-demo/{matematika,naupop}.md` + `_generator/build_doc.py` (шапка) — как выглядит
+  4. `_generator/doc-demo/{matematika,naupop}.md` + `../disciplina/_generator/build_doc.py` (шапка) — как выглядит
      двухвкладочный вид котлов (фронтматтер `tab/status/registr`, `> поле:`, `⚑ Флаг`, `🖼 …{N}`).
   5. Образцы карточек: `catalan/spravochnik/{STANDART-uzla,KARTA-OBLASTI,TERMINY-russkie}.md`.
   6. Бриф лекции `<LECTURE>` (арка 1) — путь подставит Cowork: 8 полей.
