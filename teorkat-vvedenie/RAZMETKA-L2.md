@@ -8,7 +8,7 @@ poryadok: 3
 
 > 🔴 **ИСТОЧНИК ПРАВДЫ — КАРТОЧКИ `teorkat-vvedenie/L2/`, а не этот файл.** Здесь читаемая сводка на
 > одной странице: «почему», цитаты владельца и сверка переезда, которым в карточке места нет.
-> Разошлись — правы карточки. Гейт: `python3 _generator/sborka/gejt_kartochki.py --faza 1 teorkat-vvedenie/L2`.
+> Разошлись — правы карточки. Гейт: `python3 ../disciplina/_generator/sborka/gejt_kartochki.py --faza 1 teorkat-vvedenie/L2`.
 >
 > **Редакция 2 (2026-08-09)** — пересборка блоков после разбора первого собранного слайда
 > (`_studio/zhurnal/2026-08-07_arhitektura-slajdov/POMARKI-2026-08-09.md`). Содержание не менялось:

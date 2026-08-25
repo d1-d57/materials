@@ -35,7 +35,7 @@ registr: читаемый
 - **фаза 2** — состав и число блоков, деление на слайды, порядок; сюда попадает большинство;
 - **фаза 3** — текст слайдов, объём, формулировки.
 
-Правки вносятся в карточки `L2/slajdy/<имя>/slaid.md` (разделы «Математика — развёрнуто» и «Текст слайда — сжато») и в `L2/brief.md` (`slide_order`). Гейт — `python3 _generator/sborka/gejt_kartochki.py teorkat-vvedenie/L2`.
+Правки вносятся в карточки `L2/slajdy/<имя>/slaid.md` (разделы «Математика — развёрнуто» и «Текст слайда — сжато») и в `L2/brief.md` (`slide_order`). Гейт — `python3 ../disciplina/_generator/sborka/gejt_kartochki.py teorkat-vvedenie/L2`.
 
 **3. Вести дневник правил — параллельно, не потом.**
 
