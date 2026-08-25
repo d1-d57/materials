@@ -55,6 +55,7 @@ import os
 import re
 import shlex
 import shutil
+import stat
 import subprocess
 import sys
 import time
@@ -91,7 +92,7 @@ def _resolve_repo():
     if override:
         return Path(override)
     r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--show-toplevel"],
-                       capture_output=True, text=True)
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode == 0 and r.stdout.strip():
         return Path(r.stdout.strip())
     return korni.REPO  # не git-дерево или git не ответил — прежнее поведение
@@ -126,6 +127,14 @@ RODY = ("git-operaciya", "pravka-koda")
 # Сторож повтора: сколько `ЗАСТРЯЛА:` подряд означают неверный АДРЕС, а не
 # занятость исполнителя. Три — порог из §11; он же назван в критерии захода.
 STOROZH_POROG = 3
+
+# СЛЕД «ВЗЯТО В РАБОТУ» у заявки (В16, цена оплачена 25.08: два захода волны 3A
+# взяли одни и те же четыре заявки на влитие, один отступил, увидев конфликт
+# смещающимся у себя на глазах). След ставит `zayavka-vzyat`, читают `zayavki`
+# и повторные попытки взять. Часов до протухания по умолчанию: взявший мог
+# умереть вместе со своей сессией — вечная блокировка хуже гонки, поэтому след
+# тухнет, и заявка снова свободна.
+VZJATO_TUH_CH_PO_UMOLCHANIJU = 24
 
 
 def in_sandbox():
@@ -214,7 +223,7 @@ def _git_env():
     global _LOCAL_ENV_VARS
     if _LOCAL_ENV_VARS is None:
         r = subprocess.run(["git", "--no-optional-locks", "rev-parse", "--local-env-vars"],
-                           capture_output=True, text=True)
+                           capture_output=True, text=True, encoding="utf-8", errors="replace")
         _LOCAL_ENV_VARS = [v for v in r.stdout.split() if v]
     env = os.environ.copy()
     for v in _LOCAL_ENV_VARS:
@@ -240,7 +249,7 @@ def git(*args, check=True):
     """
     r = subprocess.run(
         ["git", "--no-optional-locks", *args],
-        cwd=REPO, capture_output=True, text=True, errors="replace", env=_git_env(),
+        cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace", env=_git_env(),
     )
     if check and r.returncode != 0:
         sys.exit(f"❌ git {' '.join(args)} упал:\n{r.stderr.strip()}")
@@ -554,7 +563,7 @@ def batch_oids(queries):
     r = subprocess.run(
         ["git", "--no-optional-locks", "cat-file", "--batch-check"],
         cwd=REPO, input="".join(q + "\n" for q in queries),
-        capture_output=True, text=True)
+        capture_output=True, text=True, encoding="utf-8", errors="replace")
     out = r.stdout.splitlines() if r.returncode == 0 else []
     res = []
     for i in range(len(queries)):
@@ -1095,7 +1104,7 @@ def worktree_gryaz(path):
         return [], []
     r = subprocess.run(["git", "--no-optional-locks", "-C", str(p), "status",
                         "--porcelain", "--untracked-files=all", "--ignored"],
-                       capture_output=True, text=True, env=_git_env())
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", env=_git_env())
     if r.returncode != 0:
         return [], []
     rabota, ignor = [], []
@@ -1192,12 +1201,20 @@ def stroka_voskresheniya(name):
     return f"python3 _generator/tools/git_zona.py voskresit --branch {name}"
 
 
-def zakryt_odnu(name, head, wt, vsyo_ravno=None):
-    """Закрыть ОДНУ ветку: метрика → надгробие → снос папки → снос ветки.
+def zakryt_odnu(name, head, wt, vsyo_ravno=None, snyt_papku=False):
+    """Закрыть ОДНУ ветку: метрика → надгробие → папка (оставить/снести) → ветка.
 
     Возвращает 0 при успехе, 1 при отказе. Печатает всё сама — вызывающему
     остаётся считать. Порядок шагов НЕ переставлять: каждый закрывает свой
     случай из шапки раздела.
+
+    🔴 РАЗВИЛКА ПАПКИ (заход ochered-zayavok, решение 24.08). Прежде дверь ВСЕГДА
+    снимала рабочую папку заодно с веткой — вопреки контракту зоны «рабочую папку
+    гасит приёмка» (случилось у ЧЕТЫРЁХ заходов волны стадии 2 подряд); цена по
+    `dolg-mat-bloka`: приёмке нужна живая рабочая папка — С-проверки, точка
+    отката, — а её уже нет. Теперь по умолчанию папка ОСТАЁТСЯ: HEAD отсоединяется
+    (файлы нетронуты), и только поэтому `branch -D` вообще возможен — занятую
+    ветку git удалить не даст. Прежнее поведение целиком — флагом `--snyt-papku`.
     """
     full = "refs/heads/" + name
     otkaz = zapret_zakrytiya(name)
@@ -1236,6 +1253,44 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
         log_incident(f"zakryt-vetku --vsyo-ravno: {name} — {vsyo_ravno}",
                      "работа ветки не перенесена; вернуть — voskresit --branch " + name)
 
+    # ── 1-бис. ВЕРДИКТ НЕ УСТОЯЛСЯ — НЕ ЗАКРЫВАЮ (К-4, решение владельца 24.08) ──
+    # 🔴 ПОЧЕМУ ОТКАЗ, А НЕ ПРЕДУПРЕЖДЕНИЕ. `branch_loss` ставит `nestabilno`,
+    # когда состояние ссылок-кандидатов уехало ДВАЖДЫ подряд прямо во время
+    # чтения, и рядом с флагом написано прямым текстом: «доверять ему как
+    # окончательному нельзя». До 24.08 этот признак читала РОВНО ОДНА функция —
+    # `print_loss_watch()`, то есть печать `doctor`/`poteri`. Оба места, которые
+    # ветку УДАЛЯЮТ (эта функция и отбор `--vse-zelenye`), его не смотрели вовсе:
+    # «safe», про которое метрика сама сказала «могло не устояться», удаляло
+    # ветку молча — и именно в том режиме, где человек вывода не читает.
+    #
+    # Гонка здесь не экзотика, а норма: подметание зовут, когда веток накопилось
+    # много, то есть когда рядом кто-то пишет (в этом репозитории параллельно
+    # живут до 8 рабочих папок).
+    #
+    # Отказ ПЕРЕБИВАЕМЫЙ — в отличие от грязной рабочей папки ниже: там потеря
+    # необратима, а здесь вердикт всего лишь не проверен, и осознанное решение
+    # владельца законно. Обход — тот же `--vsyo-ravno "<причина>"`, и причина
+    # уезжает в автолог, а не теряется.
+    if res.get("nestabilno"):
+        if not vsyo_ravno:
+            print(f"🔴 `{name}` — НЕ закрываю: вердикт не устоялся.\n"
+                  "   Состояние ссылок-кандидатов уехало во время чтения дважды подряд —\n"
+                  "   рядом пишет кто-то ещё, и «безопасно» получено по наполовину\n"
+                  "   уехавшему снимку.\n"
+                  "   → перечитать, когда писатель уймётся:\n"
+                  f"     python3 _generator/tools/git_zona.py poteri --branch {name}\n"
+                  "   → либо, если решение осознанное, повтори с"
+                  f'     `--vsyo-ravno "<причина>"` — надгробие всё равно ставится.')
+            log_incident(f"zakryt-vetku: {name} — вердикт не устоялся "
+                         "(гонка с другим writer'ом)",
+                         f"перечитать `poteri --branch {name}` и повторить")
+            return 1
+        print(f"   ⚠ --vsyo-ravno: закрываю, хотя вердикт не устоялся. "
+              f"Причина: {vsyo_ravno}")
+        log_incident(f"zakryt-vetku --vsyo-ravno: {name} — вердикт не устоялся, "
+                     f"закрыто всё равно: {vsyo_ravno}",
+                     "вернуть — voskresit --branch " + name)
+
     # ── 2. РАБОЧАЯ ПАПКА: незакоммиченное надгробие НЕ держит (случай 1) ──
     # Отказ неперебиваемый: это единственная реально необратимая потеря.
     put_wt = wt.get(name)
@@ -1258,35 +1313,47 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
         return 1
     if put_wt:
         gryazno, ignoriruemoe = worktree_gryaz(put_wt)
-        if gryazno:
-            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(gryazno)} "
-                  f"путей вне git.\n   {put_wt}\n"
-                  "   Надгробие держит КОММИТЫ; файл, который никогда не коммитили,\n"
-                  "   не держит ничто — это единственная необратимая потеря здесь,\n"
-                  "   и `--vsyo-ravno` её НЕ перебивает.\n"
-                  "   Посмотреть:  python3 _generator/tools/git_zona.py check   "
-                  f"(запусти из {put_wt})")
-            print_paths(gryazno, "??", limit=8)
-            return 1
-        # 🔴 ИГНОРИРУЕМОЕ (найдено верификатором): `worktree remove` сносит его
-        # молча, а `status` без `--ignored` о нём не говорит. В этом репозитории
-        # под `.gitignore` намеренно лежат снапшоты и pdf-источники, поэтому
-        # молчать нельзя. Но и запрещать намертво нельзя: тот же шаблон ловит
-        # `__pycache__` и `.DS_Store`, а уборка, встающая на каждом `.DS_Store`,
-        # не состоится вовсе. ⇒ отказ, перебиваемый названной причиной.
-        if ignoriruemoe and not vsyo_ravno:
-            print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(ignoriruemoe)} "
-                  f"ИГНОРИРУЕМЫХ путей.\n   {put_wt}\n"
-                  "   Они вне git по `.gitignore` — значит надгробие их не держит,\n"
-                  "   а снос рабочей папки унесёт их молча. В этом репозитории так\n"
-                  "   лежат снапшоты и pdf-источники, а не только кэш:")
-            print_paths(ignoriruemoe, "!!", limit=8)
-            print("   Мусор (`__pycache__`, `.DS_Store`) — повтори с "
-                  "`--vsyo-ravno \"<причина>\"`.")
-            return 1
-        if ignoriruemoe:
-            print(f"   ⚠ Игнорируемых путей в папке: {len(ignoriruemoe)} — "
-                  "уйдут вместе с ней, надгробие их не держит.")
+        # 🔴 ОТКАЗЫ ЭТОГО БЛОКА — ТОЛЬКО ДЛЯ РЕЖИМА СНОСА: их причина «снос
+        # унесёт молча». Папка, которая остаётся на месте, ничего не теряет —
+        # и незакоммиченное, и игнорируемое переживают закрытие ветки.
+        if snyt_papku:
+            if gryazno:
+                print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(gryazno)} "
+                      f"путей вне git.\n   {put_wt}\n"
+                      "   Надгробие держит КОММИТЫ; файл, который никогда не коммитили,\n"
+                      "   не держит ничто — это единственная необратимая потеря здесь,\n"
+                      "   и `--vsyo-ravno` её НЕ перебивает.\n"
+                      "   Посмотреть:  python3 _generator/tools/git_zona.py check   "
+                      f"(запусти из {put_wt})")
+                print_paths(gryazno, "??", limit=8)
+                return 1
+            # 🔴 ИГНОРИРУЕМОЕ (найдено верификатором): `worktree remove` сносит его
+            # молча, а `status` без `--ignored` о нём не говорит. В этом репозитории
+            # под `.gitignore` намеренно лежат снапшоты и pdf-источники, поэтому
+            # молчать нельзя. Но и запрещать намертво нельзя: тот же шаблон ловит
+            # `__pycache__` и `.DS_Store`, а уборка, встающая на каждом `.DS_Store`,
+            # не состоится вовсе. ⇒ отказ, перебиваемый названной причиной.
+            if ignoriruemoe and not vsyo_ravno:
+                print(f"⛔ `{name}` — НЕ закрываю: в рабочей папке {len(ignoriruemoe)} "
+                      f"ИГНОРИРУЕМЫХ путей.\n   {put_wt}\n"
+                      "   Они вне git по `.gitignore` — значит надгробие их не держит,\n"
+                      "   а снос рабочей папки унесёт их молча. В этом репозитории так\n"
+                      "   лежат снапшоты и pdf-источники, а не только кэш:")
+                print_paths(ignoriruemoe, "!!", limit=8)
+                print("   Мусор (`__pycache__`, `.DS_Store`) — повтори с "
+                      "`--vsyo-ravno \"<причина>\"`.")
+                return 1
+            if ignoriruemoe:
+                print(f"   ⚠ Игнорируемых путей в папке: {len(ignoriruemoe)} — "
+                      "уйдут вместе с ней, надгробие их не держит.")
+        else:
+            if gryazno:
+                print(f"   ⚠ В рабочей папке {len(gryazno)} путей вне git — папка "
+                      "остаётся НА МЕСТЕ, ничего не теряется;\n"
+                      f"   гася папку позже (`worktree drop`), git спросит подтверждение.")
+            if ignoriruemoe:
+                print(f"   ⚠ Игнорируемых путей в папке: {len(ignoriruemoe)} — "
+                      "остаются на диске вместе с папкой.")
 
     # ── 3. НАДГРОБИЕ: имя занято ⇒ отказ, `-f` не используем НИКОГДА (случай 3) ──
     # 🔴 СРАВНЕНИЕ БЕЗ УЧЁТА РЕГИСТРА — НАЙДЕНО ВЕРИФИКАТОРОМ. Диск владельца
@@ -1347,17 +1414,32 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
         print(f"❌ `{name}` — {pochemu}. Надгробие СНЯТО обратно: ветка жива, и\n"
               "   оставленный тег объявил бы её вечно-безопасной для сторожа.")
 
-    # ── 4. РАБОЧАЯ ПАПКА СНОСИТСЯ ДО ВЕТКИ: занятую ветку git удалить не даст ──
+    # ── 4. ПАПКА: оставить (умолчание, контракт «гасит приёмка») или снести ──
+    # В обоих режимах ветка к шагу 5 должна быть СВОБОДНА от рабочей папки:
+    # занятую ветку git удалить не даст. Умолчание отсоединяет HEAD (`checkout
+    # --detach` не переписывает ни одного файла — папка остаётся ровно той же),
+    # прежний режим снимает папку целиком.
     if put_wt:
-        if Path(put_wt).is_dir():
-            r = git("worktree", "remove", put_wt, check=False)
-            if r.returncode != 0:
-                snyat_nadgrobie(f"рабочая папка не снялась: "
-                                f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}")
-                return 1
+        if snyt_papku:
+            if Path(put_wt).is_dir():
+                r = git("worktree", "remove", put_wt, check=False)
+                if r.returncode != 0:
+                    snyat_nadgrobie(f"рабочая папка не снялась: "
+                                    f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}")
+                    return 1
+            else:
+                # Папки нет, а запись есть — та самая осиротевшая служебная запись.
+                git("worktree", "prune", check=False)
         else:
-            # Папки нет, а запись есть — та самая осиротевшая служебная запись.
-            git("worktree", "prune", check=False)
+            if Path(put_wt).is_dir():
+                r = git("-C", str(put_wt), "checkout", "--detach",
+                        "--quiet", check=False)
+                if r.returncode != 0:
+                    snyat_nadgrobie(f"HEAD в рабочей папке не отсоединился: "
+                                    f"{r.stderr.strip().splitlines()[0] if r.stderr.strip() else ''}")
+                    return 1
+            else:
+                git("worktree", "prune", check=False)
 
     # 🔴 СВЕРКА ВЕРШИНЫ ПЕРЕД УДАЛЕНИЕМ — НАЙДЕНО ВЕРИФИКАТОРОМ (гонка).
     # Между `git tag` и `git branch -D` лежит целый `worktree remove`, а до них —
@@ -1389,7 +1471,13 @@ def zakryt_odnu(name, head, wt, vsyo_ravno=None):
 
     print(f"✅ `{name}` закрыта. Надгробие: {MOGILA}{name} → {vershina[:8]}")
     if put_wt:
-        print(f"   Рабочая папка снята: {put_wt}")
+        if snyt_papku:
+            print(f"   Рабочая папка снята: {put_wt}")
+        else:
+            imya = Path(put_wt).name
+            print(f"   Рабочая папка ОСТАВЛЕНА (HEAD отсоединён, файлы целы): {put_wt}\n"
+                  f"   Гасит приёмка:  python3 _generator/tools/git_zona.py worktree drop {imya}\n"
+                  f"   (ветки у папки больше нет; незакоммиченное `drop` не пустит без --force)")
     if oskolki:
         print(f"   Осколков вне всех ссылок было {len(oskolki)} (reset/amend) — "
               f"их держал reflog ветки,\n   и он удалён вместе с ней; "
@@ -1445,7 +1533,8 @@ def cmd_zakryt_vetku(args):
 
     zakryto, otkazano = [], []
     for n in celi:
-        rc = zakryt_odnu(n, head, wt, vsyo_ravno=args.vsyo_ravno)
+        rc = zakryt_odnu(n, head, wt, vsyo_ravno=args.vsyo_ravno,
+                         snyt_papku=args.snyt_papku)
         (zakryto if rc == 0 else otkazano).append(n)
         print()
 
@@ -1654,16 +1743,24 @@ def cmd_zayavka(args):
     arka = args.arka or "не названа"
     srochnost = args.srochnost or "obychnaya"
     rod = getattr(args, "rod", None) or "?"
+    # Адресат (заход git-odna-dver 25.08): у заявки должен быть хозяин.
+    # Умолчание `kontur` — git-операции и так исполняет гит-контур; содержательная
+    # правка кода без адресата висит, потому что её никто не считал своей.
+    komu = (getattr(args, "komu", None) or "").strip()
+    if _est_plejsholder(komu):
+        komu = ""
+    komu = komu or "kontur"
     blok_vlitiya = f"\nКАК ВЛИВАТЬ: {kak_vlit}\n" if kak_vlit else ""
     (d / name).write_text(
         f"ЗАЯВКА: {time.strftime('%Y-%m-%dT%H:%M')} · автор: {avtor} · арка: {arka}\n"
         f"СРОЧНОСТЬ: {srochnost}\n"
-        f"РОД: {rod}\n\n"
+        f"РОД: {rod}\n"
+        f"КОМУ: {komu}\n\n"
         f"{text}\n"
         f"{blok_vlitiya}",
         encoding="utf-8")
     zid = name[:-3]
-    print(f"✅ Заявка создана: {zid}\n   {d / name}")
+    print(f"✅ Заявка создана: {zid} (адресат: {komu})\n   {d / name}")
     return 0
 
 
@@ -1748,7 +1845,7 @@ def otkaz_stop(operaciya, komanda, rc, podrobnosti, chto_delat):
     return rc
 
 
-_SHAPKA_KLYUCHI = ("ЗАЯВКА:", "СРОЧНОСТЬ:", "РОД:", "ЗАСТРЯЛА:", "ЗАКРЫТО:",
+_SHAPKA_KLYUCHI = ("ЗАЯВКА:", "СРОЧНОСТЬ:", "РОД:", "КОМУ:", "ЗАСТРЯЛА:", "ЗАКРЫТО:",
                    "ПЕРЕАДРЕСОВАНА:")
 
 
@@ -1908,7 +2005,28 @@ def cmd_zayavki(args):
     else:
         print(f"Открытых заявок: {len(otkrytyye)}\n")
         for zid, _p, vozrast_ch, srochnost, rod, pervaya in otkrytyye:
-            print(f"   · {zid}  ({vozrast_ch} ч, {srochnost}, род: {rod})\n     {pervaya}")
+            try:
+                tekst = _p.read_text(encoding="utf-8")
+            except OSError:
+                tekst = ""
+            # АДРЕСАТ В САМОЙ ОЧЕРЕДИ (заход git-odna-dver 25.08): читающий
+            # очередь сразу видит, чья это работа; у старых заявок поля нет —
+            # печатаем умолчание контура.
+            komu = _pole_shapki(tekst.splitlines(), "КОМУ:", po_umolchaniyu="kontur")
+            print(f"   · {zid}  ({vozrast_ch} ч, {srochnost}, род: {rod}, "
+                  f"кому: {komu})\n     {pervaya}")
+            # 🔴 СЛЕД «ВЗЯТО» ВИДЕН В САМОЙ ОЧЕРЕДИ (В16): исполнитель читает
+            # `zayavki` ПЕРВЫМ ходом — именно там он обязан увидеть, что заявка
+            # уже у кого-то, а не узнавать об этом отказом на взятии.
+            sled = _poslednee_vzyato(tekst)
+            if sled:
+                zhiv, ostalos = _vzyato_status(sled)
+                if zhiv:
+                    print(f"     ⚠ ВЗЯТО В РАБОТУ: {sled[1]} · {sled[0]} "
+                          f"(осталось {ostalos:.1f} ч из {sled[2]})")
+                else:
+                    print(f"     след взятия ПРОТУХ ({sled[1]} · {sled[0]}) — "
+                          "можно брать заново")
 
     peradres = _peradresovannyye()
     if peradres:
@@ -2096,6 +2214,114 @@ def cmd_zayavka_zakryt(args):
         print(f"✅ Заявка закрыта и перенесена: {sdelano / p.name}")
     else:
         print(f"⚠ Заявка помечена ЗАСТРЯЛА, остаётся открытой: {p}")
+    return 0
+
+
+# ───────────────────── след «ВЗЯТО В РАБОТУ» у заявки (В16) ───────────────────
+#
+# 🔴 ЦЕНА, КОТОРОЙ ЗАВЕДЁН СЛЕД. 25.08 два захода параллельно взяли одни и те же
+# четыре заявки на влитие, и один отступил, увидев, как конфликт смещается у него
+# на глазах. Очередь не отличала «лежит свободно» от «кто-то уже взял»: следа не
+# было вовсе (перегнано грепом 25.08 — слов «взято»/«в работе» здесь не было).
+#
+# 🔴 ПОЧЕМУ СЛЕД ПРОТУХАЕТ, А НЕ ВЕЧЕН. Взявший мог умереть вместе со своей
+# сессией; вечная блокировка хуже гонки. Поэтому след несёт срок: по истечении
+# заявка снова свободна, а прошлый след остаётся в файле строкой ниже — история
+# взятий не стирается.
+#
+# Формат строки в файле заявки (последняя `ВЗЯТО:` — действующая):
+#   ВЗЯТО: 2026-08-24T14:33 · кто · протухает через N ч
+# опциональный хвост при перехвате протухшего/чужого следа:
+#   … · ПОВЕРХ (<старый след>): почему
+
+_VZJATO_RE = re.compile(
+    r"^ВЗЯТО:\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})\s+·\s+(.+?)\s+·\s+протухает через (\d+) ч")
+
+
+def _poslednee_vzyato(text):
+    """Действующий след взятия или None → (штамп, кто, часов_до_протухания, epoch)."""
+    sled = None
+    for l in text.splitlines():
+        m = _VZJATO_RE.match(l)
+        if not m:
+            continue
+        try:
+            ts = time.mktime(time.strptime(m.group(1), "%Y-%m-%dT%H:%M"))
+        except ValueError:
+            continue
+        sled = (m.group(1), m.group(2), int(m.group(3)), ts)
+    return sled
+
+
+def _vzyato_status(sled):
+    """(жив_ли_след, осталось_часов) для следа из `_poslednee_vzyato`."""
+    if not sled:
+        return False, 0.0
+    ostalos = sled[3] + sled[2] * 3600 - time.time()
+    return ostalos > 0, ostalos / 3600
+
+
+def cmd_zayavka_vzyat(args):
+    """Взять заявку в работу — оставить след «кто · когда · протухает».
+
+    Пишет в рабочее дерево (дописывает строку в файл заявки) — как `zayavka`,
+    из песочницы разрешено. Вторая попытка взять ЖИВЫЙ след отказывается:
+    отказ ДОЛЖЕН быть отличим от первого взятия, в этом смысл критерия В16.
+    """
+    kem = (args.kem or "").strip()
+    if _est_plejsholder(kem):
+        print("⛔ Назвись: `zayavka-vzyat <id> --kem \"<кто взял>\"` — "
+              "след без имени не след.")
+        return 1
+    poverh = (args.poverh or "").strip()
+    if _est_plejsholder(poverh):
+        poverh = ""
+
+    d = zayavki_dir()
+    p = d / f"{args.id}.md"
+    if not p.is_file():
+        vtoroy = zayavki_na_zahod_dir() / f"{args.id}.md"
+        if vtoroy.is_file():
+            p = vtoroy
+        else:
+            print(f"⛔ Нет такой заявки: {args.id}")
+            suschie = sorted(q.stem for q in d.glob("*.md")) if d.is_dir() else []
+            for s in suschie:
+                print(f"   {s}")
+            return 1
+
+    sled = _poslednee_vzyato(p.read_text(encoding="utf-8"))
+    zhiv, ostalos = _vzyato_status(sled)
+    dop = ""
+    if zhiv and not poverh:
+        stamp, kem_staryj, tuh_staryj, _ts = sled
+        print(f"⛔ Заявка УЖЕ ВЗЯТА: {kem_staryj} · {stamp} "
+              f"(осталось {ostalos:.1f} ч из {tuh_staryj}).")
+        print("   Второй заход за той же заявкой — та самая гонка В16: два")
+        print("   исполнителя делают одну работу и сталкиваются на влитии.")
+        print("   Это не твоя заявка — возьми другую.")
+        print("   След протухнет сам; если прошлый взявший умер вместе с сессией,")
+        print("   перехвати с причиной: zayavka-vzyat <id> --kem \"<кто>\" "
+              "--poverh \"<почему>\"")
+        return 1
+    if zhiv and poverh:
+        stamp, kem_staryj, _tuh_staryj, _ts = sled
+        dop = f" · ПОВЕРХ ({kem_staryj} · {stamp}): {poverh}"
+        print(f"   ⚠ Перехват живого следа ({kem_staryj} · {stamp}); причина записана.")
+    elif sled and not zhiv:
+        _stamp, kem_staryj, tuh_staryj, _ts = sled
+        dop = f" · ПОВЕРХ ({kem_staryj} · {_stamp}): след протух ({tuh_staryj} ч)"
+        print(f"   ⚠ Прошлый след ПРОТУХ ({kem_staryj}, {tuh_staryj} ч назад истёк) — "
+              "взявший считан умершим, заявка снова свободна.")
+
+    tuh = args.tuh_chasov
+    with open(p, "a", encoding="utf-8") as f:
+        f.write(f"ВЗЯТО: {time.strftime('%Y-%m-%dT%H:%M')} · {kem} · "
+                f"протухает через {tuh} ч{dop}\n")
+    do_tuha = time.strftime("%Y-%m-%dT%H:%M", time.localtime(time.time() + tuh * 3600))
+    print(f"✅ Заявка взята в работу: {args.id}\n"
+          f"   Взял: {kem}\n"
+          f"   След протухнет: {do_tuha} (через {tuh} ч) — до этого второе взятие отклоняется.")
     return 0
 
 
@@ -2311,14 +2537,20 @@ def cmd_clean(args):
             print(f"   {p}")
 
     removed = 0
+    failed = []
     for p in junk:
         try:
+            os.chmod(p, stat.S_IWUSR)
             p.unlink()
             removed += 1
-        except OSError:
-            pass
+        except OSError as e:
+            failed.append((p.name, str(e)))
     if removed:
         print(f"🧹 Убрано мусорных объектов (`tmp_obj_*`): {removed}.")
+    if failed:
+        print(f"❌ Не удалось убрать мусорных объектов: {len(failed)}.")
+        for name, err in failed:
+            print(f"   {name}: {err}")
 
     locks2, junk2 = find_locks()
     if not locks2 and not junk2:
@@ -2369,7 +2601,25 @@ def zona_sushchestvuet(zone):
                              f"   репозиторий: {koren}\n"
                              f"   → там свой git: `cd {p}` и `git status --porcelain`, "
                              f"этот инструмент судит только своё дерево.")
-    rel_str = str(rel)
+    # 🔴 `as_posix()`, А НЕ `str()` — ИНАЧЕ ГЕЙТ 0 ПРИЁМКИ ЗЕЛЕНЕЕТ НА НЕСОХРАНЁННОЙ
+    # РАБОТЕ. `relative_to` отдаёт путь СВОЕЙ платформы: на Windows `str(rel)` даёт
+    # `ot-maksa\predlozheniya`, а `git status --porcelain` всегда печатает пути через
+    # `/`. Префиксное сравнение в `in_zone()` не совпадает НИ С ОДНОЙ строкой —
+    # строк ноль — и `check --zone` печатает «✅ работа доехала в git» с `rc=0`.
+    # То есть ровно тот отказ, ради которого эта функция и написана (см. шапку),
+    # возвращался здесь же, внутри неё, на второй платформе.
+    #
+    # Ломались ТОЛЬКО вложенные зоны (`ot-maksa/predlozheniya`, `_studio/zhurnal/<арка>`),
+    # то есть обычный случай; односоставная зона (`ot-maksa`) разделителя не содержит
+    # и потому работала — поэтому дефект и не бросался в глаза.
+    # Замер 23.08: файл вне git внутри зоны → `check` без зоны красный, `--zone ot-maksa`
+    # красный, `--zone ot-maksa/predlozheniya` ЗЕЛЁНЫЙ на том же файле.
+    #
+    # ⚠ `rel_str` уходит ещё и в `git ls-files -- <rel_str>`. ПРОВЕРЕНО ПРОГОНОМ
+    # 23.08: git для Windows обратные слэши в pathspec понимает сам, так что ЭТА
+    # половина не ломалась. Правка нужна ровно ради `in_zone()` — сравнения строк
+    # на стороне Python, где никто ничего не нормализует.
+    rel_str = rel.as_posix()
     if rel_str == ".":
         return True, None, None          # зона = корень репозитория ⇒ всё дерево
     if not p.exists():
@@ -2631,6 +2881,10 @@ def execute_commits(commits, push=False, delete_plan=False, no_verify=False):
         # непуст, значит до этой строки ход обязательно доходил и падал.
         # Добавляем ТОЛЬКО то, чего в индексе ещё нет: путь уже там — вводить
         # заново нечего, а не повод ронять коммит.
+        # ⚠ Блок перенесён из редакции materials заходом git-odna-dver 25.08
+        # (единственное уникальное знание той половины, см.
+        # _studio/zhurnal/2026-08-20_poryadok-v-metaskillah/SRAVNENIE-git-zona.md);
+        # держит его ловушка 57 полной фикстуры materials и местная копия ниже.
         uzhe_v_indekse = set(git("diff", "--cached", "--name-only").stdout.splitlines())
         k_dobavleniyu = [p for p in c["paths"] if p not in uzhe_v_indekse]
         if k_dobavleniyu:
@@ -2958,8 +3212,27 @@ def cmd_worktree(args):
             sys.exit("❌ Нужно имя: `git_zona.py worktree add <имя> [--branch <ветка>]`")
         path = WT_HOME / args.name
         if path.exists():
-            print(f"⚠ Уже есть: {path}\n   Работай в ней или сними: "
-                  f"`git_zona.py worktree drop {args.name}`")
+            # 🔴 ИДЕМПОТЕНТНОСТЬ ПОВТОРА (заход git-odna-dver, цена снята вживую
+            # 25.08: все десять окон волны умерли на первой строке). Канон
+            # (`disciplina-zahod`, два канала запуска) прямо говорит: «папка уже
+            # есть — просто перейти, это НЕ ошибка». А дверь возвращала rc=1 —
+            # то есть говорила «всё хорошо, работай» и одновременно сигналит
+            # об ошибке: стартовая строка захода с `&&` обрывалась.
+            # Повтор ТОЙ ЖЕ команды (та же ветка в папке) → rc=0; расхождение
+            # (просили другую ветку) — настоящий отказ с именами обеих.
+            branch_est = args.branch or f"zahod/{args.name}"
+            tam = git_tam(path, "rev-parse", "--abbrev-ref", "HEAD", check=False)
+            sushchaya = tam.stdout.strip() if tam.returncode == 0 else ""
+            if sushchaya == branch_est:
+                print(f"⚠ Уже есть и стоит на той же ветке `{branch_est}` — "
+                      f"это не ошибка, работай в ней: {path}\n"
+                      f"   Снять, если нужна заново: "
+                      f"`git_zona.py worktree drop {args.name}`")
+                return 0
+            print(f"⚠ Уже есть: {path}\n"
+                  f"   В ней стоит `{sushchaya or '?'}`, а команда просила "
+                  f"`{branch_est}`.\n   Работай в существующей либо сними её и "
+                  f"заведи нужную: `git_zona.py worktree drop {args.name}`")
             return 1
         branch = args.branch or f"zahod/{args.name}"
         exists = git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}",
@@ -2993,7 +3266,7 @@ def cmd_worktree(args):
         # заведён у claude-code как issue #55724). Лучше оставить папку висеть.
         st = subprocess.run(["git", "--no-optional-locks", "-C", str(path),
                              "status", "--porcelain", "--untracked-files=all"],
-                            capture_output=True, text=True).stdout.strip()
+                            capture_output=True, text=True, encoding="utf-8", errors="replace").stdout.strip()
         if st and not args.force:
             n = len(st.splitlines())
             print(f"⛔ В папке {n} путей вне git — НЕ удаляю, работа дороже порядка.\n"
@@ -3019,8 +3292,9 @@ def cmd_adopt(args):
     (worktree-заход оставил двойную копию зоны — `RUKOVODSTVO §Заход`).
     """
     branch, zone = args.branch, args.zone
-    if git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}", check=False).returncode != 0:
-        sys.exit(f"❌ Ветки нет: {branch}")
+    if not ssylka_est(branch):
+        sys.exit(f"❌ Ссылки нет: {branch} — ни ветки, ни `origin/*`, ни тега "
+                 f"с таким именем.")
     diff = git("diff", "--stat", f"HEAD..{branch}", "--", zone, check=False)
     print(f"═══ adopt: зону `{zone}` берём с ветки `{branch}` на текущую ═══\n")
     print(diff.stdout.rstrip() or "(различий по зоне между ветками нет — брать нечего)")
@@ -3140,6 +3414,32 @@ def flagi_obhoda_sliyaniya(no_verify, obraz):
     return [], None
 
 
+def ssylka_est(imya):
+    """Ссылка разрешается в коммит? Локальная ветка, `origin/*`, тег — всё равно.
+
+    🔴 ЗАЧЕМ ОТДЕЛЬНЫМ ПРЕДИКАТОМ, А НЕ ЛИТЕРАЛОМ `refs/heads/` (D-06 §1).
+    `merge` и `adopt` проверяли существование ссылки как
+    `rev-parse --verify refs/heads/<имя>` — то есть `origin/main` не находился
+    НИКОГДА, и самый частый случай («синхронизироваться с origin») дверью был
+    невыполним по построению. ЦЕНА, замер 24.08: `PLAN.md` арки предписывал
+    буквально `git_zona.py merge origin/main`, дверь ответила «Ветки нет», и
+    работа пошла в обход — голым `git branch`, то есть мимо двери, от чего
+    `GIT-disciplina §0` и защищает. Обход был не первым: в истории лежит
+    `383dd84 Merge branch 'sync-origin-main-20260823'` — соавтор решал то же
+    самое тем же способом раньше, и класс просто не был назван.
+
+    ⚠ ЗДЕСЬ — ДА, У `zakryt-vetku` — НЕТ, и это не недоделка. Там литерал
+    `refs/heads/` СМЫСЛОВОЙ: закрыть можно только локальную ветку, `origin/*`
+    и теги закрывать нечем. Ослабить проверку там значило бы разрешить команде
+    целиться в то, чего она не умеет.
+
+    `^{commit}` в конце обязателен: без него аннотированный тег разрешится
+    в объект тега, а нам нужен коммит, к которому он ведёт.
+    """
+    return git("rev-parse", "--verify", "--quiet", imya + "^{commit}",
+               check=False).returncode == 0
+
+
 def cmd_merge(args):
     """Влить ветку в ТЕКУЩУЮ — единственная законная дверь к слиянию.
 
@@ -3217,9 +3517,11 @@ def cmd_merge(args):
     if not args.branch:
         sys.exit("❌ Нужна ветка: `git_zona.py merge <ветка> [--zone <путь>]`")
     branch = args.branch
-    if git("rev-parse", "--verify", "--quiet", f"refs/heads/{branch}",
-           check=False).returncode != 0:
-        sys.exit(f"❌ Ветки нет: {branch}")
+    if not ssylka_est(branch):
+        sys.exit(f"❌ Ссылки нет: {branch} — ни ветки, ни `origin/*`, ни тега "
+                 f"с таким именем.\n"
+                 f"   Свежая ли `origin/*`, показывает `doctor`; удалённые "
+                 f"ссылки обновляет `git fetch`.")
 
     head = git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
     if head == branch:
@@ -3413,7 +3715,7 @@ def git_tam(cwd, *args, **kw):
     """
     check = kw.pop("check", True)
     r = subprocess.run(["git", "--no-optional-locks", "-C", str(cwd), *args],
-                       capture_output=True, text=True, env=_git_env())
+                       capture_output=True, text=True, encoding="utf-8", errors="replace", env=_git_env())
     if check and r.returncode != 0:
         sys.exit(f"❌ git {' '.join(args)} в {cwd} упал:\n{r.stderr.strip()}")
     return r
@@ -3609,7 +3911,7 @@ def _dolozhit_progon(vitrina, sha):
     while True:
         r = subprocess.run(["gh", "run", "list", "--branch", vitrina, "--limit", "10",
                             "--json", "status,conclusion,url,headSha"],
-                           cwd=REPO, capture_output=True, text=True)
+                           cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace")
         if r.returncode != 0:
             print("   ⚠ `gh` не отвечает — исход прогона проверить нечем.\n"
                   "     Посмотри страницу Actions репозитория сам.")
@@ -3909,23 +4211,103 @@ def cmd_vyvezti(args):
 # (у неё свой), и чужая/отцепленная ветка в ней (отказ, а не влитие куда попало).
 
 
-def osnovnaya_vetka():
+def osnovnaya_vetka(koren=None):
     """(имя основной ветки, None) либо (None, причина) — СНЯТО КОМАНДОЙ.
+
+    `koren` — судить ДРУГОЙ репозиторий (соседний, не свой). По умолчанию свой:
+    источники 1–2 спрашиваются у `REPO`, источник 3 — у главной рабочей копии.
+    Параметр заведён ради `dolg_repozitoriev.py`, который считает долг по
+    СОСЕДНИМ репозиториям и держал ЧЕТВЁРТУЮ копию этого определения — ту же
+    HEAD-овую и с тем же дефектом. Копию убрали, дом остался один.
+
+    🔴 ЭТО ДОМ ОТВЕТА, И ОН ОДИН. Тот же вопрос задают `priyomka.py` (Г12, Г14) и
+    `bootstrap_zahod.py` (сторож невлитых веток) — оба зовут ЭТУ функцию, своей
+    копии определения не заводят. Три копии и были дефектом: один и тот же
+    неверный ответ приезжал в трёх местах, и чинить его пришлось бы трижды.
+    Фикстура держит это машинно (`fixtures/topologiya/PROGNAT.sh`, ловушка
+    `M-07-pod-mutaciej-storozh-vrjot-i-dom-otveta-odin`): подменяется ДОМ, и
+    если вызывающий перестанет спрашивать дом, подмена его не достанет и
+    ловушка покраснеет.
 
     🔴 ИМЯ НЕ ВПИСЫВАЕТСЯ В КОД. `arka/mat-kostyak` в `materials` и `main` в
     `disciplina` — разные, и захардкоженное имя сделало бы подкоманду
     однорепозиторной ровно в тот момент, когда её зовут во втором репозитории.
-    Определение, работающее в обоих: основная ветка — та, что стоит в ГЛАВНОЙ
-    рабочей копии (`glavnaya_rabochaya()`), а не в worktree-ответвлении.
-    Отцепленный HEAD там — это НЕ имя ветки, и вливать в него нельзя: отказ.
+
+    🔴 ОТ РЕПОЗИТОРИЯ, А НЕ ОТ `HEAD` — И ВОТ ПОЧЕМУ ЭТО ПЕРЕПИСАНО. Прежнее
+    определение («основная ветка — та, что стоит в ГЛАВНОЙ рабочей копии»)
+    верно РОВНО в многопапочной топологии: там заходы живут в worktree, а
+    главная папка стоит на основной ветке. В ОДНОПАПОЧНОМ репозитории (Матлас, и
+    вообще любой обычный проект) главная папка — единственная, и в ней стоит
+    ветка захода. Функция отвечала «основная ветка = ветка захода», после чего:
+      · `vlit-v-osnovnuyu` отказывался вливать «саму в себя» — и с `rc=0`;
+      · Г14 приёмки печатал ✅ «ВЛИТА», сравнив ветку С СОБОЙ. Это единственный
+        гейт, стерегущий «отчёт приехал без кода», и в той топологии он не мог
+        покраснеть НИКОГДА — зелёный гейт, который ничего не проверяет, хуже
+        отсутствующего: рецензент перестаёт смотреть;
+      · сторож невлитых веток не давал собрать заход, считая невлитым влитое.
+    Замер — `ot-maksa/BACKLOG_MATLAS.md`, M-01/M-02/M-07, живой прогон 23.08.
+
+    ПОРЯДОК ИСТОЧНИКОВ — СВЕРХУ ВНИЗ, ПЕРВЫЙ ОТВЕТИВШИЙ ВЫИГРЫВАЕТ:
+      1. `git symbolic-ref refs/remotes/origin/HEAD` — что удалённый репозиторий
+         САМ считает своей веткой по умолчанию. Самый сильный источник: это факт
+         о репозитории, а не о том, где кто стоит.
+      2. настроенный дефолт `init.defaultBranch` — **только `--local`**, то есть
+         настройка ЭТОГО репозитория. Глобальную намеренно не читаем: она
+         описывает МАШИНУ, а не репозиторий, и на машине владельца ответила бы
+         `main` для `materials`, чья основная ветка — `arka/mat-kostyak`. Взять
+         её значило бы сломать ровно ту топологию, ради которой написано (3).
+      3. ветка ГЛАВНОЙ рабочей копии — прежнее поведение, последним запасом.
+         В многопапочной топологии оно верно и остаётся ответом по умолчанию,
+         когда репозиторий о себе ничего не сообщил.
+
+    🔴 ИСТОЧНИК ПРИНИМАЕТСЯ, ТОЛЬКО ЕСЛИ НАЗВАННАЯ ИМ ВЕТКА СУЩЕСТВУЕТ ЛОКАЛЬНО.
+    Без этой проверки порядок источников сделал бы ХУЖЕ, чем было: влить,
+    сравнить `--merged`, посчитать `--no-merged` можно лишь по существующей
+    ветке, и ответ-призрак означал бы отказ на ровном месте там, где сегодня
+    работает. Не существует — падаем к следующему источнику, а не отказываем.
+
+    Отцепленный HEAD в главной папке — это НЕ имя ветки, и вливать в него
+    нельзя: отказ (и только если до (3) вообще дошло).
     """
-    glav = glavnaya_rabochaya()
+    # Одна дверь к git на всю функцию: свой репозиторий или названный чужой.
+    def _g(*a):
+        return (git(*a, check=False) if koren is None
+                else git_tam(koren, *a, check=False))
+
+    def _est(name):
+        return bool(name) and _g("rev-parse", "--verify", "--quiet",
+                                 f"refs/heads/{name}").returncode == 0
+
+    # 1. Что репозиторий сам объявил своей веткой по умолчанию.
+    # 🔴 ХВОСТ БЕРЁТСЯ ПО ПРЕФИКСУ, А НЕ ПО ПОСЛЕДНЕМУ СЛЭШУ. Имя основной ветки
+    # в этой фабрике содержит слэш (`arka/mat-kostyak`), и `rsplit("/", 1)[-1]`
+    # отдал бы `mat-kostyak` — ветку, которой нет. Проверка существования это
+    # поймала бы и увела к следующему источнику, но ответ был бы верным
+    # СЛУЧАЙНО, а не по построению.
+    PREFIKS_ORIGIN = "refs/remotes/origin/"
+    r = _g("symbolic-ref", "--quiet", PREFIKS_ORIGIN + "HEAD")
+    polnoe = r.stdout.strip() if r.returncode == 0 else ""
+    if polnoe.startswith(PREFIKS_ORIGIN):
+        imya = polnoe[len(PREFIKS_ORIGIN):]
+        if _est(imya):
+            return imya, None
+
+    # 2. Настроенный дефолт ЭТОГО репозитория (не машины — см. докстринг).
+    r = _g("config", "--local", "--get", "init.defaultBranch")
+    if r.returncode == 0 and _est(r.stdout.strip()):
+        return r.stdout.strip(), None
+
+    # 3. Прежнее поведение: ветка главной рабочей копии (у чужого репозитория —
+    #    его собственный HEAD: понятия «главная копия» снаружи у нас нет).
+    glav = Path(koren) if koren is not None else glavnaya_rabochaya()
     r = git_tam(glav, "rev-parse", "--abbrev-ref", "HEAD", check=False)
     if r.returncode != 0:
         return None, f"главная рабочая копия {glav} не отвечает на rev-parse"
     name = r.stdout.strip()
     if not name or name == "HEAD":
-        return None, (f"в главной рабочей копии {glav} ОТЦЕПЛЕННЫЙ HEAD — "
+        return None, (f"в главной рабочей копии {glav} ОТЦЕПЛЕННЫЙ HEAD, а "
+                      f"репозиторий не объявил ветку по умолчанию ни через "
+                      f"`origin/HEAD`, ни через `init.defaultBranch` — "
                       f"имени основной ветки нет, вливать не во что")
     return name, None
 
@@ -4179,7 +4561,78 @@ def cmd_vlit_v_osnovnuyu(args):
                      "подождать и повторить ту же команду")
         return 2
 
-    r = git_tam(glav, "merge", "--no-edit", branch, check=False)
+    # 🔴 ГЛАВНАЯ ПАПКА МОЖЕТ СТОЯТЬ НЕ НА ОСНОВНОЙ ВЕТКЕ — И ТОГДА `merge` ВЛИВАЕТ
+    # НЕ ТУДА, МОЛЧА. `git merge` вливает в то, что ВЫЧЕКАУЧЕНО, а не в то, что
+    # названо: в однопапочном репозитории (Матлас) главная папка стоит на ветке
+    # захода, и `merge zahod/proba` из неё даёт «Already up to date», rc=0 — а
+    # печаталось при этом «✅ Влито в `main`». Вершина `main` не двигалась.
+    # Вторая половина M-01, найденная фикстурой `fixtures/topologiya/PROGNAT.sh`
+    # уже ПОСЛЕ починки определения основной ветки: verное имя цели ничего не
+    # стоит, если запись идёт в другое место.
+    # 🔴 ПОЧЕМУ НЕ `checkout` ОСНОВНОЙ И ОБРАТНО. В общей рабочей папке checkout
+    # МОЛЧА откатывает дерево к состоянию ветки, и следа в git не остаётся —
+    # оплаченная цена 27→28.07 (файл откатился ночью, поймал владелец вручную).
+    # Инструмент, чинящий потерю работы, не имеет права её устраивать.
+    # `git fetch . <ветка>:<основная>` двигает ССЫЛКУ, не трогая ни дерево, ни
+    # индекс, и по построению отказывается от всего, что не fast-forward, — то
+    # есть переписать историю им нельзя. Он же отказывается писать в ветку,
+    # вычекаученную в ЛЮБОЙ рабочей папке, так что чужой заход в безопасности.
+    # Не fast-forward — честный отказ: настоящее слияние требует дерева, а
+    # дерева основной ветки здесь нет ни у кого.
+    tekushchaya = git_tam(glav, "rev-parse", "--abbrev-ref", "HEAD",
+                          check=False).stdout.strip()
+    if tekushchaya != osn:
+        print(f"\n⚠ Главная папка стоит на `{tekushchaya}`, а не на `{osn}` — "
+              f"дерева основной ветки нет ни в одной рабочей папке.\n"
+              f"   Двигаю ССЫЛКУ `{osn}` (`git fetch . {branch}:{osn}`): дерево и "
+              f"индекс не трогаются, не-fast-forward отвергается.")
+        r = git_tam(glav, "fetch", ".", f"{branch}:{osn}", check=False)
+        if r.returncode == 0:
+            novaya = git_tam(glav, "rev-parse", osn, check=False).stdout.strip()
+            print(f"\n✅ Влито в `{osn}` перемоткой: {novaya[:7]} "
+                  f"({git_tam(glav, 'log', '-1', '--format=%s', osn).stdout.strip()})")
+            _obyavit_ne_vstroennoe(novye_instrumenty, koren=glav)
+            return 0
+        print(f"\n❌ Перемотка `{osn}` не прошла (rc={r.returncode}):")
+        for l in ((r.stderr.strip() + "\n" + r.stdout.strip()).strip().splitlines()[:5]
+                  or ["(вывод пуст)"]):
+            print(f"   {l}")
+        print(f"\n   Скорее всего `{osn}` ушла вперёд и перемоткой не берётся — "
+              f"нужно НАСТОЯЩЕЕ слияние,\n   а для него нужна рабочая папка, стоящая "
+              f"на `{osn}`. Завести её: `git_zona.py worktree add …`,\n   слить там и "
+              f"повторить. Ветка `{branch}` остаётся невлитой — это честный отказ.")
+        log_incident(f"vlit-v-osnovnuyu {branch}: перемотка {osn} отвергнута",
+                     f"основная ветка {osn} не вычекаучена нигде, а fast-forward "
+                     f"невозможен — нужна рабочая папка на {osn} и настоящее слияние")
+        return otkaz_stop(
+            f"влитие ветки {branch} в основную {osn} перемоткой",
+            f"git_zona.py vlit-v-osnovnuyu {branch}", r.returncode,
+            (r.stderr.strip() + " " + r.stdout.strip()).strip(),
+            f"завести рабочую папку на {osn}, слить там по существу; "
+            f"до этого ветка {branch} остаётся невлитой")
+
+    # 🔴 ФАНТОМНЫЙ DIRECTORY-RENAME НА ПУТЯХ ОЧЕРЕДИ — ОТКЛЮЧАЕМ RENAME-DETECTION.
+    # Случай `dolg-git` 23.08 (заявка 2230): ветка переносила каталог очереди
+    # `na-zahod/* → sdelano/*`, а main только что ДОБАВИЛ новый файл в
+    # `na-zahod/`; rename-detection git решил, что этот файл «переехал» вместе с
+    # каталогом, и перенаправил его в `sdelano/` — влитие встало на конфликт,
+    # которого не существует (блоб стадии 2 совпадал байт-в-байт с
+    # `main:na-zahod/…`). Стоило остановленного влития и ручного разбора стадий.
+    # Лечение: когда слияние затрагивает пути очереди, переезды там честно
+    # выглядят удалением+добавлением (`-X no-renames`) — фантом не возникает.
+    # Цена осознана и принята: настоящий переезд файла внутри очереди встанет
+    # как delete/add-конфликт вместо тихого автослияния — редкий случай, и он
+    # ДОСТОВЕРНЕЙ фантома.
+    strategiya = ["--no-edit"]
+    if any(p == ZAYAVKI_DIR or p.startswith(ZAYAVKI_DIR + "/") for p in touched):
+        strategiya += ["-X", "no-renames"]
+        print("\n⚠ В слиянии пути очереди заявок (" + ZAYAVKI_DIR + ") — "
+              "rename-detection ОТКЛЮЧЁН (-X no-renames):\n"
+              "   иначе добавленный в старый каталог файл git «переименует» следом "
+              "за переносом каталога\n"
+              "   и влитие встанет на фантомный конфликт (случай dolg-git 23.08, "
+              "заявка 2230).\n")
+    r = git_tam(glav, "merge", *strategiya, branch, check=False)
     if r.returncode == 0:
         print(f"\n✅ Влито в `{osn}` без конфликтов: "
               f"{git_tam(glav, 'log', '-1', '--oneline').stdout.strip()}")
@@ -4223,6 +4676,9 @@ def cmd_vlit_v_osnovnuyu(args):
 
 
 def main():
+    # Первым ходом, до любой печати: иначе рамка `═══` уронит инструмент
+    # на консоли cp1251 раньше, чем он успеет что-нибудь сказать (В-05).
+    korni.nastroit_vyvod()
     ap = argparse.ArgumentParser(description="Вся работа с git в materials/ — через этот файл.")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
@@ -4235,10 +4691,15 @@ def main():
 
     zv = sub.add_parser("zakryt-vetku",
                         help="закрыть ветку безопасно: надгробие `mogila/<имя>`, "
-                             "снос рабочей папки и ветки, строка воскрешения")
+                             "ветка; рабочая папка по умолчанию ОСТАЁТСЯ (гасит "
+                             "приёмка), снести — `--snyt-papku`")
     zv.add_argument("--branch", help="имя ветки")
     zv.add_argument("--vse-zelenye", dest="vse_zelenye", action="store_true",
                     help="подмести ВСЕ ветки с зелёной метрикой одной командой")
+    zv.add_argument("--snyt-papku", dest="snyt_papku", action="store_true",
+                    help="ПРЕЖНЕЕ поведение: снять рабочую папку заодно с веткой. "
+                         "По умолчанию папка остаётся на месте (HEAD отсоединяется, "
+                         "файлы целы) — её гасит приёмка через `worktree drop`")
     zv.add_argument("--vsyo-ravno", dest="vsyo_ravno", metavar="ПРИЧИНА",
                     help="закрыть, даже если метрика нашла потерю; ПРИЧИНА "
                          "обязательна и пишется в INCIDENTY. Грязную рабочую "
@@ -4267,6 +4728,11 @@ def main():
     za.add_argument("--rod", choices=list(RODY),
                     help="род работы: git-operaciya | pravka-koda. Не назван — "
                          "пишется `?`, и сортировать очередь на входе нечем")
+    za.add_argument("--komu", dest="komu", metavar="АДРЕСАТ",
+                    help="кому исполнять: `kontur` (гит-контур, умолчание) | "
+                         "`zahod <имя>` | `vladelec`. Заявка без адресата — "
+                         "зона без хозяина: два исполнителя делают одну работу "
+                         "или никто не делает (волна 3A, цена 25.08)")
     za.add_argument("--kak-vlit", dest="kak_vlit", metavar="ИНСТРУКЦИЯ",
                     help="мини-промпт «как вливать»: что и в каком порядке, где "
                          "ждать конфликта, чьей стороной разрешать, что пересобрать "
@@ -4300,6 +4766,23 @@ def main():
     zz.add_argument("--rezultat", help="что вышло — обязателен, если не --zastryala")
     zz.add_argument("--zastryala", help="что помешало — заявка остаётся открытой")
     zz.set_defaults(func=cmd_zayavka_zakryt)
+
+    zvy = sub.add_parser("zayavka-vzyat",
+                         help="взять заявку в работу: след «кто · когда · протухает» "
+                              "в файле заявки; живой след отклоняет второе взятие "
+                              "(В16); разрешено из песочницы")
+    zvy.add_argument("id", help="id заявки (имя файла без .md)")
+    zvy.add_argument("--kem", required=True,
+                     help="кто взял (заход/исполнитель) — след без имени не след")
+    zvy.add_argument("--tuh-chasov", dest="tuh_chasov", type=int,
+                     default=VZJATO_TUH_CH_PO_UMOLCHANIJU,
+                     help=f"через сколько часов след протухает "
+                          f"(по умолчанию {VZJATO_TUH_CH_PO_UMOLCHANIJU}); "
+                          "взявший мог умереть вместе с сессией")
+    zvy.add_argument("--poverh", metavar="ПРИЧИНА",
+                     help="перехватить ЧУЖОЙ или протухший след; причина пишется "
+                          "в файл, старый след остаётся строкой истории")
+    zvy.set_defaults(func=cmd_zayavka_vzyat)
 
     c = sub.add_parser("check", help="что вне git (read-only, краснеет)")
     c.add_argument("--zone", help="проверять только этот префикс пути")
@@ -4419,10 +4902,23 @@ def main():
         print(f"⛔ Не понял часть команды: {got}\n"
               "   Частая причина — хвост-«комментарий» в строке: zsh владельца передаёт\n"
               "   `# …` программе как аргументы. Убери из команды всё после последней\n"
-              "   кавычки (или закавычь сообщение целиком) и повтори.\n"
-              "   Ничего не сделано.")
+              "   кавычки (или закавычь сообщение целиком) и повтори.")
+        # Класс K VERDIKTY (2026-08-20, дефект → этот заход): если хвост —
+        # продолжение СПИСКА путей после `--zone`, совет «убери хвост» ведёт к
+        # более УЗКОЙ зоне, чем хотел писавший. Верная форма другая — флаг
+        # ПОВТОРЯЕТСЯ; называем её, а не только причину.
+        # Живой случай 20.08: `--zone skills/ doma/ _generator/ …` — всё после
+        # первого пути стало позиционным мусором.
+        klass_k = bool(getattr(args, "zone", None)) and not got.startswith("-")
+        if klass_k:
+            print("   Если хвост — ЕЩЁ ОДИН путь зоны, верная форма — ПОВТОРИТЬ флаг:\n"
+                  f"     … --zone {(args.zone or '').strip()} --zone <второй путь>\n"
+                  "   (`--zone` принимает один путь и повторяется; списком — нет).")
+        print("   Ничего не сделано.")
         log_incident("запуск с мусорными аргументами",
-                     f"лишнее в команде: {got[:60]} — убрать хвост и повторить")
+                     ("хвост похож на второй путь зоны — верная форма "
+                      "`--zone один --zone два`: "
+                      if klass_k else f"лишнее в команде: {got[:60]} — убрать хвост и повторить"))
         sys.exit(2)
     sys.exit(args.func(args))
 
