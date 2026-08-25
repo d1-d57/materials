@@ -331,7 +331,7 @@ python3 _illustracii/proverka_pomarok.py <файл.svg> [ещё файлы…]
   `k = Math.min(r.width/vb.width, r.height/vb.height)`, затем `parseFloat(getComputedStyle(e).fontSize) * k`
   по каждому `<text>`/`<tspan>` в собранном слайде.
   🔴 **`k` — НЕ константа рисунка: полоса ходит под солвером, целиться надо с запасом, а не в пол.**
-  Ширину полосы выбирает солвер вмещения (`_generator/sborka/vmeshchenie.py`, ручка `liniya`), и он
+  Ширину полосы выбирает солвер вмещения (`../disciplina/_generator/sborka/vmeshchenie.py`, ручка `liniya`), и он
   вправе её сузить, когда текста стало больше. Зона вертикальной полосы — `liniya` до 83,2%
   (печатается: `python3 -c "import sys;sys.path.insert(0,'_generator/sborka');import korpus,vmeshchenie
   as v;print(v.build_zones(korpus.corpus_stats())['liniya_vertical'])"`), то есть панель законно
