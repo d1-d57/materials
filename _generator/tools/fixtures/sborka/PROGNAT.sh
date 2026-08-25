@@ -624,7 +624,15 @@ echo "$OUT27C" | grep -qi "токен состава не распознан\|tr
 echo "  ✅ ловушка 27в: koridor_obyoma.py — мусор в --sostav падает громко (rc≠0, сообщение по делу)"
 
 echo "── ловушка 28: 🔴 Р1 (заход porcia-1-zamknut-konvejer) — своя карточка зелёная для своего гейта"
-SBORKA="$REPO_ROOT/_generator/sborka"
+# 🔴 Конвейер вынесен 25.08 в соседний плагин (`../disciplina/_generator/sborka`,
+# решение владельца); сторона materials снесена насовсем. Фикстура осталась тут и
+# зовёт конвейер ПО СОСЕДСТВУ — данные ($REPO_ROOT/teorkat-vvedenie) и фикстуры
+# живут здесь же.
+SBORKA="$REPO_ROOT/../disciplina/_generator/sborka"
+DISC_GEN=$(cd "$(dirname "$SBORKA")" && pwd)
+# корень плагина — для прогонов ВРЕМЕННОЙ КОПИИ конвейера (ловушка 44-бис):
+# копия в tmp сама себя не наводит на дом родов, env для того и заведён
+DISC_ROOT=$(cd "$DISC_GEN/.." && pwd)
 ZAP_VALS_PY='
 import sys
 from pathlib import Path
@@ -927,9 +935,9 @@ OUT32F2=$(python3 "$SBORKA/gejt_kartochki.py" --faza 1 "$L32" 2>&1) || {
 echo "  ✅ ловушка 32: заглушка — оба красные на МЫСЛИ; размечено без тел — faza1 зелёный, полный красный на ТЕЛЕ; написано — оба зелёные"
 
 echo "── ловушка 33: 🔴 Д17 (заход tihie-polomki, П1) — тег сцены над списком не рушит его в абзац"
-OUT33=$(python3 - <<'PY'
-import sys
-sys.path.insert(0, "_generator")
+OUT33=$(DISC_GEN="$DISC_GEN" python3 - <<'PY'
+import os, sys
+sys.path.insert(0, os.environ["DISC_GEN"])
 from build_deck import render_md
 html = render_md('{@3}\n- раз\n- два', {}, None)
 print(html)
@@ -1082,9 +1090,9 @@ echo "── ловушка 39: 🔴 ПУСТОЙ ТЕГ не съедает б�
 # НАВСЕГДА — и все следующие абзацы верхнего уровня переставали опознаваться.
 # Молча: ни ошибки, ни предупреждения, просто смета занижала на 6.9 строки
 # (`buffon/sl-grid` — один блок вместо трёх). На L2 `<br>` не встречается ни разу.
-OUT39=$(python3 - <<'PYEOF' 2>&1
-import sys
-sys.path.insert(0, "_generator/sborka")
+OUT39=$(SBORKA="$SBORKA" python3 - <<'PYEOF' 2>&1
+import os, sys
+sys.path.insert(0, os.environ["SBORKA"])
 from smeta import _ZonaParser
 Z = '<div class="zone copy t-body">%s<p>BBBB</p><p>CCCC</p></div>'
 for imya, pervyj, segm in (("без пустых", "<p>AAAA</p>", 1),
@@ -1123,7 +1131,7 @@ echo "── ловушка 41: 🔴 заход zakony-v-gejt — двенадц
 # не красное (заход дословно: «закон, у которого появился нарушитель, выдаёт
 # жёлтое»), поэтому здесь сторожим НАЗВАННОСТЬ закона поимённо в выводе, а не rc:
 # `rc=0` на этой фикстуре — ожидаемый и правильный исход, не провал ловушки.
-L41="$SBORKA/../tools/fixtures/sborka/zakony-l2"
+L41="$TOOLS/fixtures/sborka/zakony-l2"
 OUT41=$(python3 "$SBORKA/gejt_kartochki.py" "$L41" 2>&1) || {
   echo "❌ ЛОВУШКА 41: фикстура законов дала rc≠0 — жёлтое покрасило гейт, порог включения нарушен:"
   echo "$OUT41"; exit 1; }
@@ -1150,7 +1158,7 @@ echo "── ловушка 42: 🔴 заход tipologia-odna-os, Э3 — жё�
 # карточки, КАЖДАЯ нарушает РОВНО одну из трёх красных клауз Э3 (недостающий
 # обязательный блок / лишний блок вне раскладки / нарушенный порядок) и
 # ничего больше — изоляция та же, что у ловушки 41 для законов фазы 2.
-L42="$SBORKA/../tools/fixtures/sborka/tipologia-e3-negativ"
+L42="$TOOLS/fixtures/sborka/tipologia-e3-negativ"
 OUT42=$(python3 "$SBORKA/gejt_kartochki.py" "$L42" 2>&1) && {
   echo "❌ ЛОВУШКА 42: фикстура Э3 (три заведомо неправильные карточки) дала rc=0 — гейт состава не краснеет вовсе:"
   echo "$OUT42"; exit 1; }
@@ -1232,7 +1240,7 @@ echo "── ловушка 43: 🔴 заход sceny-iz-blokov — гейты �
 # заполненным sceny_vruchnuyu, чтобы не задеть Э2; Э2: ручной тег без поля —
 # без единого блока [dokazatelstvo], чтобы не задеть Э3) — та же изоляция, что
 # у ловушки 42 для клауз Э3 захода tipologia-odna-os.
-L43="$SBORKA/../tools/fixtures/sborka/sceny-negativ"
+L43="$TOOLS/fixtures/sborka/sceny-negativ"
 OUT43=$(python3 "$SBORKA/gejt_kartochki.py" "$L43" 2>&1) && {
   echo "❌ ЛОВУШКА 43: фикстура Э2/Э3 (две заведомо неправильные карточки) дала rc=0 — гейты не краснеют вовсе:"
   echo "$OUT43"; exit 1; }
@@ -1255,7 +1263,7 @@ echo "── ловушка 44: 🔴 заход kod_rebra-blokov.md, Э2 — а�
 # несёт две карточки: [dokazatelstvo] без dokazatelstvo_opiraetsya_na (красная клауза,
 # владелец назвал жёсткость здесь обязательной) и [primer] без primer_dlya (жёлтая —
 # пример иногда самостоятелен). Та же изоляция, что у ловушек 42/43.
-L44="$SBORKA/../tools/fixtures/sborka/rebra-negativ"
+L44="$TOOLS/fixtures/sborka/rebra-negativ"
 OUT44=$(python3 "$SBORKA/gejt_kartochki.py" "$L44" 2>&1) && {
   echo "❌ ЛОВУШКА 44: фикстура Э2 (доказательство без адресата) дала rc=0 — гейт не краснеет вовсе:"
   echo "$OUT44"; exit 1; }
@@ -1304,8 +1312,10 @@ assert s.count(marker) == 1, "якорь поломки не единствен�
 s = s.replace(marker, "    return [b for b in blocks if b.telo.strip()]\n" + marker)
 open(p, "w", encoding="utf-8").write(s)
 PY44B
-OUT44B=$(python3 "$L44B_TMP/gejt_kartochki.py" "$REPO_ROOT/teorkat-vvedenie/L2" 2>&1)
-RC44B=$?
+# 🔴 ожидаемый КРАСНЫЙ ловится идиомой `&& RC=0 || RC=$?`: под `set -e` голое
+# `OUT=$(...)` с заведомо падающим движком умирал молча ДО своей же проверки
+# (врождённый дефект ловушки, пойман первым живым прогоном до неё — 25.08).
+OUT44B=$(DISCIPLINA_KOREN="$DISC_ROOT" python3 "$L44B_TMP/gejt_kartochki.py" "$REPO_ROOT/teorkat-vvedenie/L2" 2>&1) && RC44B=0 || RC44B=$?
 rm -rf "$L44B_TMP"
 [ "$RC44B" -ne 0 ] || {
   echo "❌ ЛОВУШКА 44-бис: сцены сломаны нарочно, а гейт дал rc=0 — инвариант «сцена = блок» не краснеет:"
