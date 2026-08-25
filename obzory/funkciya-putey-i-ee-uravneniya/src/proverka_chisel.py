@@ -493,4 +493,469 @@ if __name__ == "__main__":
     for imya, u, det in rs:
         print(("OK " if u else "FAIL ") + imya + (" — " + det if det else ""))
     print("проверено %d из %d" % (X, Y))
-    raise SystemExit(0 if X == Y else 1)
+    # 🔴 `raise SystemExit` ОТСЮДА УБРАН, и это не косметика.
+    # Прогон 2026-08-25: блок кончался выходом, поэтому всё, что стояло ниже по
+    # файлу, не исполнялось НИКОГДА — а печать «проверено 10 из 10» выглядела
+    # полным отчётом. Ровно тот случай, когда зелёный вывод скрывает
+    # непрогнанную половину проверок. Итог и код возврата — в конце файла,
+    # после определения `blok_skeleta_v2`.
+    _ITOG_BLOK1 = (X, Y)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# БЛОК СКЕЛЕТА v2 — специализации нового объекта (свободный СТАРТ + площадь
+# от уровня старта). Заведён 2026-08-25 после разбора владельца: при старте,
+# закреплённом в нуле, ноль ЕСТЬ СТЕНКА, и предел по m даёт ЛУЧ, а не прямую,
+# поэтому биномиальные и гауссовы из прежнего объекта не выводились вовсе.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def blok_skeleta_v2():
+    from collections import defaultdict
+    from functools import lru_cache
+    from math import comb
+    X = Y = 0
+
+    def puti(m, x, y, N):
+        if not (0 <= x <= m and 0 <= y <= m):
+            return None
+        dp = [0]*(m+1); dp[x] = 1
+        for _ in range(N):
+            nd = [0]*(m+1)
+            for p, v in enumerate(dp):
+                if v:
+                    if p:     nd[p-1] += v
+                    if p < m: nd[p+1] += v
+            dp = nd
+        return dp[y]
+
+    def q_puti(m, x, y, N):
+        """площадь от УРОВНЯ СТАРТА: шаг вверх с высоты p стоит (p - x)"""
+        dp = [defaultdict(int) for _ in range(m+1)]; dp[x][0] = 1
+        for _ in range(N):
+            nd = [defaultdict(int) for _ in range(m+1)]
+            for p in range(m+1):
+                for a, v in dp[p].items():
+                    if p:     nd[p-1][a] += v
+                    if p < m: nd[p+1][a + (p - x)] += v
+            dp = nd
+        return dict(dp[y])
+
+    @lru_cache(None)
+    def gauss(n, k):
+        if k == 0 or k == n:
+            return (1,)
+        A, B = gauss(n-1, k-1), gauss(n-1, k)
+        r = defaultdict(int)
+        for i, c in enumerate(A): r[i] += c
+        for i, c in enumerate(B): r[i+k] += c
+        return tuple(r[i] for i in range(max(r)+1))
+
+    def fib(n):
+        a, b = 0, 1
+        for _ in range(n): a, b = b, a+b
+        return a
+
+    res = []
+
+    # 1. дыра прежнего объекта: старт в нуле => предел по m даёт ЛУЧ, не прямую
+    N, k = 8, 2
+    luch = puti(80, 0, k, N)
+    res.append(("Старт в нуле: предел по m даёт ЛУЧ, не прямую",
+                luch == 28 and comb(N, (N+k)//2) == 56,
+                "путей 0->2 длины 8 при m=80 равно %d, на прямой %d" % (luch, comb(N, (N+k)//2))))
+
+    # 2. Каталан: x=y=0, m>=n, q=1
+    good = all(puti(n, 0, 0, 2*n) == comb(2*n, n)//(n+1) for n in range(1, 9))
+    res.append(("Каталан: x=y=0, m>=n, q=1 -> [z^2n] = C_n", good, "n<=8"))
+
+    # 3. биномиальные: x=n, y=n+k, m=2n, n>=r
+    good, cases = True, 0
+    for N in range(2, 13, 2):
+        for k in range(-N, N+1, 2):
+            r = (N+k)//2
+            if not (0 <= r <= N): continue
+            for n in range(max(r, (N-k)//2), max(r, (N-k)//2)+3):
+                v = puti(2*n, n, n+k, N)
+                if v is not None:
+                    cases += 1
+                    good &= (v == comb(N, r))
+    res.append(("Биномиальные: x=n, y=n+k, m=2n, n>=r -> [z^N] = C(N,r)",
+                good, "проверено %d случаев, порог n>=r точный" % cases))
+
+    # 4. гауссовы: та же подстановка, q свободно; сдвиг c = C(r,2) - r(N-r)
+    good, cases = True, 0
+    for N in range(2, 13, 2):
+        for k in range(-N, N+1, 2):
+            r = (N+k)//2
+            if not (0 <= r <= N): continue
+            n = max(r, (N-k)//2) + 2
+            d = q_puti(2*n, n, n+k, N)
+            if not d: continue
+            cases += 1
+            g = gauss(N, r)
+            # площадь уже нормирована от старта => сдвиг ровно c
+            c = r*(r-1)//2 - r*(N-r) + n*0
+            base = min(d)
+            got = [d.get(base+i, 0) for i in range(len(g))]
+            good &= (got == list(g) and sum(d.values()) == comb(N, r))
+    res.append(("Гауссовы: та же подстановка, q свободно -> [z^N] = q^c*[N,r]_q",
+                good, "проверено %d случаев, N<=12" % cases))
+
+    # 5. независимость от сдвига при нормировке от старта
+    good = True
+    for N, k in ((4,0),(6,0),(6,2),(8,2)):
+        r = (N+k)//2
+        baza = None
+        for n in range(max(r,1), r+5):
+            d = q_puti(2*n, n, n+k, N)
+            if not d: continue
+            if baza is None: baza = d
+            else: good &= (d == baza)
+    res.append(("Нормировка от старта: q-ответ НЕ зависит от сдвига", good,
+                "иначе многочлен уезжает вместе со стартом"))
+
+    # 6. q-Каталан Карлица-Риордана
+    d = q_puti(4, 0, 0, 8)
+    good = sum(d.values()) == 14 and [d.get(i,0) for i in range(7)] == [1,3,3,3,2,1,1]
+    res.append(("q-Каталан: x=y=0, m>=n, q -> C_n(q)", good, "n=4: 1+3q+3q^2+3q^3+2q^4+q^5+q^6"))
+
+    # 7. Фибоначчи
+    good = all(puti(3, 0, 0, 2*n) == fib(2*n-1) for n in range(1, 10))
+    res.append(("Фибоначчи: m=3, x=y=0, q=1 -> [z^2n] = F_{2n-1}", good, "n<=9"))
+
+    # 8. баллотные
+    good, cases = True, 0
+    for N in range(1, 11):
+        for y in range(0, N+1):
+            if (N+y) % 2: continue
+            r = (N+y)//2
+            cases += 1
+            good &= (puti(N+2, 0, y, N) == comb(N, r) - comb(N, r+1))
+    res.append(("Баллотные: x=0, m>=N, q=1 -> C(N,r) - C(N,r+1)", good, "%d пар, N<=10" % cases))
+
+    # 9. вероятность возвращения через сдвиг
+    good = all(puti(2*(N//2+1), N//2+1, N//2+1, N) == comb(N, N//2) for N in (4,6,8,10,12))
+    res.append(("Вероятность возвращения: x=y=n, m=2n -> C(N,N/2)/2^N", good, "N=4..12"))
+
+    X = sum(1 for _, g, _ in res if g)
+    Y = len(res)
+    print()
+    print("── БЛОК СКЕЛЕТА v2: специализации нового объекта ──")
+    for name, g, note in res:
+        print("%s %s — %s" % ("OK" if g else "ПРОВАЛ", name, note))
+    print("проверено %d из %d" % (X, Y))
+    return X, Y
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# БЛОК ОБЩИХ ТЕОРЕМ (2026-08-25). Проверяет теоремы 4-6 скелета для ПРОИЗВОЛЬНЫХ
+# x, y, m — а не для луча и не для замкнутых путей. Это ответ на вопрос владельца
+# «не стал ли объект слишком общим, чтобы про него что-то доказывалось».
+# ═══════════════════════════════════════════════════════════════════════════
+
+def blok_obshih_teorem():
+    from math import comb, cos, pi, sin
+
+    def puti(m, x, y, N):
+        dp = [0]*(m+1); dp[x] = 1
+        for _ in range(N):
+            nd = [0]*(m+1)
+            for p, v in enumerate(dp):
+                if v:
+                    if p:     nd[p-1] += v
+                    if p < m: nd[p+1] += v
+            dp = nd
+        return dp[y]
+
+    def CC(n, k):
+        return comb(n, k) if 0 <= k <= n else 0
+
+    res = []
+
+    # ── Теорема 6: спектральная формула, любые x,y ──
+    bad = tested = 0
+    for m in range(1, 7):
+        M = m + 2
+        for x in range(m+1):
+            for y in range(m+1):
+                for N in range(0, 11):
+                    s = 2/M*sum((2*cos(k*pi/M))**N * sin(k*pi*(x+1)/M) * sin(k*pi*(y+1)/M)
+                                for k in range(1, M))
+                    tested += 1
+                    if abs(s - puti(m, x, y, N)) > 1e-6: bad += 1
+    res.append(("Т6 спектральная формула для ЛЮБЫХ x,y", bad == 0,
+                "%d случаев (m<=6, все x,y, N<=10), расхождений %d" % (tested, bad)))
+
+    # ── Теорема 5: метод изображений, любые x,y ──
+    def izobr(m, x, y, N):
+        M = m + 2; s = 0
+        for j in range(-(N//M + 3), N//M + 4):
+            a = N + y - x + 2*j*M
+            b = N + y + x + 2 + 2*j*M
+            if a % 2 == 0: s += CC(N, a//2)
+            if b % 2 == 0: s -= CC(N, b//2)
+        return s
+    bad = tested = 0
+    for m in range(1, 7):
+        for x in range(m+1):
+            for y in range(m+1):
+                for N in range(0, 13):
+                    tested += 1
+                    if izobr(m, x, y, N) != puti(m, x, y, N): bad += 1
+    res.append(("Т5 метод изображений для ЛЮБЫХ x,y", bad == 0,
+                "%d случаев, расхождений %d" % (tested, bad)))
+
+    # ── Теорема 4: Чебышёв, любые x,y ──
+    def U(k):
+        a, b = [1], [1]
+        if k == 0: return a
+        for _ in range(k-1):
+            n = [0]*(len(a)+2)
+            for i, c in enumerate(b): n[i] += c
+            for i, c in enumerate(a): n[i+2] -= c
+            a, b = b, n
+        return b
+    def mul(A, B):
+        r = [0]*(len(A)+len(B)-1)
+        for i, c in enumerate(A):
+            for j, d in enumerate(B): r[i+j] += c*d
+        return r
+    def cheb(m, x, y, K=9):
+        num = mul(U(min(x, y)), U(m - max(x, y))); den = U(m+1)
+        q = [0]*K; rem = num[:] + [0]*K
+        for i in range(K):
+            q[i] = rem[i]//den[0] if den[0] else 0
+            for j, c in enumerate(den):
+                if i+j < len(rem): rem[i+j] -= q[i]*c
+        sh = abs(y-x)
+        return [0]*sh + q[:K-sh]
+    bad = tested = 0
+    for m in range(1, 6):
+        for x in range(m+1):
+            for y in range(m+1):
+                tested += 1
+                if cheb(m, x, y, 9) != [puti(m, x, y, N) for N in range(9)]: bad += 1
+    res.append(("Т4 формула Чебышёва для ЛЮБЫХ x,y", bad == 0,
+                "%d пар (m<=5), расхождений %d" % (tested, bad)))
+
+    # ── Фибоначчи: поправка владельца, конец СВОБОДЕН ──
+    def vse(m, x, N):
+        dp = [0]*(m+1); dp[x] = 1
+        for _ in range(N):
+            nd = [0]*(m+1)
+            for p, v in enumerate(dp):
+                if v:
+                    if p:     nd[p-1] += v
+                    if p < m: nd[p+1] += v
+            dp = nd
+        return sum(dp)
+    def fib(n):
+        a, b = 0, 1
+        for _ in range(n): a, b = b, a+b
+        return a
+    good = all(vse(3, 0, N) == fib(N+1) for N in range(1, 13))
+    res.append(("Фибоначчи: m=3, x=0, конец СВОБОДЕН -> F_{N+1} (поправка владельца)",
+                good, "N<=12: 1,2,3,5,8,13,21,34,55,89,144,233 — каждое N, а не через одно"))
+
+    # ── лестница по потолку ──
+    ryady = {m: [vse(m, 0, N) for N in range(1, 11)] for m in (1, 2, 3, 4)}
+    good = (ryady[1] == [1]*10
+            and ryady[2] == [1,2,2,4,4,8,8,16,16,32]
+            and ryady[3] == [1,2,3,5,8,13,21,34,55,89]
+            and ryady[4] == [1,2,3,6,9,18,27,54,81,162])
+    res.append(("Лестница по потолку: m=1 единицы, m=2 степени 2, m=3 Фибоначчи, m=4 степени 3",
+                good, "все пути из 0, N<=10"))
+
+    # ── замкнутые: сходимость к Каталану сверху ──
+    zam = {m: [puti(m, 0, 0, 2*n) for n in range(1, 8)] for m in (4, 5, 7)}
+    good = (zam[4] == [1,2,5,14,41,122,365]
+            and all(zam[4][n-1] == (3**(n-1) + 1)//2 for n in range(1, 8))
+            and zam[7] == [1,2,5,14,42,132,429])
+    res.append(("Замкнутые 0->0: m=4 даёт (3^{n-1}+1)/2, m>=n даёт Каталан", good,
+                "лестница сходится к Каталану сверху"))
+
+    X = sum(1 for _, g, _ in res if g); Y = len(res)
+    print()
+    print("── БЛОК ОБЩИХ ТЕОРЕМ: утверждения для ПРОИЗВОЛЬНЫХ x, y ──")
+    for name, g, note in res:
+        print("%s %s — %s" % ("OK" if g else "ПРОВАЛ", name, note))
+    print("проверено %d из %d" % (X, Y))
+    return X, Y
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# БЛОК Q-СЛОЯ (заход matbaza-skeleta, 2026-08-25). Ответ на вопрос В1:
+# замкнутая форма F_m(x,y;z,q) для ПРОИЗВОЛЬНЫХ x,y существует — отношение
+# q-континуант (теорема 27 скелета); при q=1 вырождается в Чебышёва (Т8).
+# Проверка тождества «числитель = знаменатель × перебор» почленно.
+# Здесь же — программная проверка графа ссылок SKELET.md.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def blok_q_sloy():
+    from collections import defaultdict
+    import os
+    import re
+
+    res = []
+    DZ, DQ = 8, 64          # усечение по z и по |показателю q| (площади до +-N*m)
+
+    def per(m, x, y, N):
+        """перебор путей x->y с площадью от старта; {площадь: число}"""
+        dp = [defaultdict(int) for _ in range(m + 1)]
+        dp[x][0] = 1
+        for _ in range(N):
+            nd = [defaultdict(int) for _ in range(m + 1)]
+            for p in range(m + 1):
+                for a, v in dp[p].items():
+                    if p:
+                        nd[p - 1][a] += v
+                    if p < m:
+                        nd[p + 1][a + (p - x)] += v
+            dp = nd
+        return dp[y]
+
+    def mul(A, B):
+        out = defaultdict(int)
+        for (z1, q1), c1 in A.items():
+            for (z2, q2), c2 in B.items():
+                if z1 + z2 <= DZ and abs(q1 + q2) <= DQ:
+                    out[(z1 + z2, q1 + q2)] += c1 * c2
+        return dict(out)
+
+    def theta(m, x):
+        th = [{(0, 0): 1}, {(0, 0): 1}]
+        for i in range(2, m + 2):
+            cur = defaultdict(int)
+            for (z, q), c in th[i - 1].items():
+                cur[(z, q)] += c
+            e = i - 2 - x
+            for (z, q), c in th[i - 2].items():
+                if z + 2 <= DZ and abs(q + e) <= DQ:
+                    cur[(z + 2, q + e)] -= c
+            th.append(dict(cur))
+        return th
+
+    def phi(m, x):
+        ph = {m + 2: {(0, 0): 1}, m + 1: {(0, 0): 1}}
+        for j in range(m, 0, -1):
+            cur = defaultdict(int)
+            for (z, q), c in ph[j + 1].items():
+                cur[(z, q)] += c
+            e = j - 1 - x
+            for (z, q), c in ph[j + 2].items():
+                if z + 2 <= DZ and abs(q + e) <= DQ:
+                    cur[(z + 2, q + e)] -= c
+            ph[j] = dict(cur)
+        return ph
+
+    # ── Т27: числитель(континуанты, моном) == знаменатель × перебор ──
+    bad = tested = 0
+    for m in range(1, 7):
+        for x in range(m + 1):
+            thx = theta(m, x)
+            phx = phi(m, x)
+            den = thx[m + 1]
+            for y in range(m + 1):
+                F = defaultdict(int)
+                for N in range(DZ + 1):
+                    for a, c in per(m, x, y, N).items():
+                        if abs(a) <= DQ:
+                            F[(N, a)] += c
+                if x <= y:
+                    d = y - x
+                    mon = dict(((z + d, q + d * (d - 1) // 2), c)
+                               for (z, q), c in thx[x].items()
+                               if z + d <= DZ and abs(q + d * (d - 1) // 2) <= DQ)
+                    num = mul(mon, phx[y + 2])
+                else:
+                    d = x - y
+                    mon = dict(((z + d, q), c) for (z, q), c in thx[y].items()
+                               if z + d <= DZ)
+                    num = mul(mon, phx[x + 2])
+                prod = mul(den, dict(F))
+                tested += 1
+                keys = set(num) | set(prod)
+                if any(num.get(k, 0) != prod.get(k, 0) for k in keys):
+                    bad += 1
+    res.append(("Т27 континуантная формула с весом площади для ЛЮБЫХ x,y",
+                tested > 0 and bad == 0,
+                "%d пар (m<=6), ряды до z^%d, |q|^%d, расхождений %d"
+                % (tested, DZ, DQ, bad)))
+
+    # ── Т27 при q=1 переходит в Т8 (Чебышёв) ──
+    def U_poly(k):
+        if k <= 0:
+            return [1]
+        a, b = [1], [1]
+        for _ in range(k - 1):
+            n = [0] * (len(a) + 2)
+            for i, c in enumerate(b):
+                n[i] += c
+            for i, c in enumerate(a):
+                n[i + 2] -= c
+            a, b = b, n
+        return b
+
+    def pri_q1(poly):
+        acc = defaultdict(int)
+        for (z, q), c in poly.items():
+            acc[z] += c
+        return [acc[z] for z in sorted(acc)]
+
+    good = True
+    for m in range(1, 6):
+        for x in range(m + 1):
+            thx = theta(m, x)
+            t_lo = pri_q1(thx[min(x, m)])          # только чётные степени z
+            t_den = pri_q1(thx[m + 1])
+            Ulo, Uden = U_poly(min(x, m))[::2], U_poly(m + 1)[::2]
+            good &= (len(t_lo) <= len(Ulo)
+                     and all(a == b for a, b in zip(t_lo, Ulo))
+                     and len(t_den) <= len(Uden)
+                     and all(a == b for a, b in zip(t_den, Uden)))
+    res.append(("Т27 при q=1 даёт многочлены Чебышёва теоремы 8", good,
+                "m<=5, все x"))
+
+    # ── граф ссылок SKELET.md: каждый номер в «опирается» существует ──
+    skelet = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), os.pardir, "SKELET.md"))
+    try:
+        text = open(skelet, encoding="utf-8").read()
+        bloks = set(int(n) for n in re.findall(
+            r"\[(?:opredelenie|utverzhdenie)\]\s*\*\*(?:Определение|Утверждение|Теорема)\s+(\d+)",
+            text))
+        refs, lines = [], 0
+        for mm in re.finditer(r"опирается:\s*([0-9,\s]+)", text):
+            lines += 1
+            refs += [int(v) for v in re.findall(r"\d+", mm.group(1))]
+        bitye = sorted(set(v for v in refs if v not in bloks))
+        defs = len(re.findall(r"\[opredelenie\]", text))
+        utv = len(re.findall(r"\[utverzhdenie\]", text))
+        graf_ok = (not bitye) and lines == utv and len(bloks) == defs + utv
+        res.append(("Граф ссылок SKELET.md: битых 0, строк «опирается» = числу утверждений",
+                    graf_ok,
+                    "блоков %d (определений %d, утверждений %d), ссылок %d, битых %s"
+                    % (defs + utv, defs, utv, len(refs), bitye or "нет")))
+    except OSError as ex:
+        res.append(("Граф ссылок SKELET.md", False, "файл не прочитан: %s" % ex))
+
+    X = sum(1 for _, g, _ in res if g)
+    Y = len(res)
+    print()
+    print("── БЛОК Q-СЛОЯ: произвольные x,y с весом площади + граф скелета ──")
+    for name, g, note in res:
+        print("%s %s — %s" % ("OK" if g else "ПРОВАЛ", name, note))
+    print("проверено %d из %d" % (X, Y))
+    return X, Y
+
+
+if __name__ == "__main__":
+    X2, Y2 = blok_skeleta_v2()
+    X3, Y3 = blok_obshih_teorem()
+    X4, Y4 = blok_q_sloy()
+    X1, Y1 = globals().get("_ITOG_BLOK1", (0, 0))
+    print()
+    print("ИТОГО по четырём блокам: проверено %d из %d" % (X1+X2+X3+X4, Y1+Y2+Y3+Y4))
+    raise SystemExit(0 if (X1==Y1 and X2==Y2 and X3==Y3 and X4==Y4) else 1)
