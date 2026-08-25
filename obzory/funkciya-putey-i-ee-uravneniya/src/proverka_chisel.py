@@ -785,10 +785,177 @@ def blok_obshih_teorem():
     return X, Y
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# БЛОК Q-СЛОЯ (заход matbaza-skeleta, 2026-08-25). Ответ на вопрос В1:
+# замкнутая форма F_m(x,y;z,q) для ПРОИЗВОЛЬНЫХ x,y существует — отношение
+# q-континуант (теорема 27 скелета); при q=1 вырождается в Чебышёва (Т8).
+# Проверка тождества «числитель = знаменатель × перебор» почленно.
+# Здесь же — программная проверка графа ссылок SKELET.md.
+# ═══════════════════════════════════════════════════════════════════════════
+
+def blok_q_sloy():
+    from collections import defaultdict
+    import os
+    import re
+
+    res = []
+    DZ, DQ = 8, 64          # усечение по z и по |показателю q| (площади до +-N*m)
+
+    def per(m, x, y, N):
+        """перебор путей x->y с площадью от старта; {площадь: число}"""
+        dp = [defaultdict(int) for _ in range(m + 1)]
+        dp[x][0] = 1
+        for _ in range(N):
+            nd = [defaultdict(int) for _ in range(m + 1)]
+            for p in range(m + 1):
+                for a, v in dp[p].items():
+                    if p:
+                        nd[p - 1][a] += v
+                    if p < m:
+                        nd[p + 1][a + (p - x)] += v
+            dp = nd
+        return dp[y]
+
+    def mul(A, B):
+        out = defaultdict(int)
+        for (z1, q1), c1 in A.items():
+            for (z2, q2), c2 in B.items():
+                if z1 + z2 <= DZ and abs(q1 + q2) <= DQ:
+                    out[(z1 + z2, q1 + q2)] += c1 * c2
+        return dict(out)
+
+    def theta(m, x):
+        th = [{(0, 0): 1}, {(0, 0): 1}]
+        for i in range(2, m + 2):
+            cur = defaultdict(int)
+            for (z, q), c in th[i - 1].items():
+                cur[(z, q)] += c
+            e = i - 2 - x
+            for (z, q), c in th[i - 2].items():
+                if z + 2 <= DZ and abs(q + e) <= DQ:
+                    cur[(z + 2, q + e)] -= c
+            th.append(dict(cur))
+        return th
+
+    def phi(m, x):
+        ph = {m + 2: {(0, 0): 1}, m + 1: {(0, 0): 1}}
+        for j in range(m, 0, -1):
+            cur = defaultdict(int)
+            for (z, q), c in ph[j + 1].items():
+                cur[(z, q)] += c
+            e = j - 1 - x
+            for (z, q), c in ph[j + 2].items():
+                if z + 2 <= DZ and abs(q + e) <= DQ:
+                    cur[(z + 2, q + e)] -= c
+            ph[j] = dict(cur)
+        return ph
+
+    # ── Т27: числитель(континуанты, моном) == знаменатель × перебор ──
+    bad = tested = 0
+    for m in range(1, 7):
+        for x in range(m + 1):
+            thx = theta(m, x)
+            phx = phi(m, x)
+            den = thx[m + 1]
+            for y in range(m + 1):
+                F = defaultdict(int)
+                for N in range(DZ + 1):
+                    for a, c in per(m, x, y, N).items():
+                        if abs(a) <= DQ:
+                            F[(N, a)] += c
+                if x <= y:
+                    d = y - x
+                    mon = dict(((z + d, q + d * (d - 1) // 2), c)
+                               for (z, q), c in thx[x].items()
+                               if z + d <= DZ and abs(q + d * (d - 1) // 2) <= DQ)
+                    num = mul(mon, phx[y + 2])
+                else:
+                    d = x - y
+                    mon = dict(((z + d, q), c) for (z, q), c in thx[y].items()
+                               if z + d <= DZ)
+                    num = mul(mon, phx[x + 2])
+                prod = mul(den, dict(F))
+                tested += 1
+                keys = set(num) | set(prod)
+                if any(num.get(k, 0) != prod.get(k, 0) for k in keys):
+                    bad += 1
+    res.append(("Т27 континуантная формула с весом площади для ЛЮБЫХ x,y",
+                tested > 0 and bad == 0,
+                "%d пар (m<=6), ряды до z^%d, |q|^%d, расхождений %d"
+                % (tested, DZ, DQ, bad)))
+
+    # ── Т27 при q=1 переходит в Т8 (Чебышёв) ──
+    def U_poly(k):
+        if k <= 0:
+            return [1]
+        a, b = [1], [1]
+        for _ in range(k - 1):
+            n = [0] * (len(a) + 2)
+            for i, c in enumerate(b):
+                n[i] += c
+            for i, c in enumerate(a):
+                n[i + 2] -= c
+            a, b = b, n
+        return b
+
+    def pri_q1(poly):
+        acc = defaultdict(int)
+        for (z, q), c in poly.items():
+            acc[z] += c
+        return [acc[z] for z in sorted(acc)]
+
+    good = True
+    for m in range(1, 6):
+        for x in range(m + 1):
+            thx = theta(m, x)
+            t_lo = pri_q1(thx[min(x, m)])          # только чётные степени z
+            t_den = pri_q1(thx[m + 1])
+            Ulo, Uden = U_poly(min(x, m))[::2], U_poly(m + 1)[::2]
+            good &= (len(t_lo) <= len(Ulo)
+                     and all(a == b for a, b in zip(t_lo, Ulo))
+                     and len(t_den) <= len(Uden)
+                     and all(a == b for a, b in zip(t_den, Uden)))
+    res.append(("Т27 при q=1 даёт многочлены Чебышёва теоремы 8", good,
+                "m<=5, все x"))
+
+    # ── граф ссылок SKELET.md: каждый номер в «опирается» существует ──
+    skelet = os.path.normpath(os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), os.pardir, "SKELET.md"))
+    try:
+        text = open(skelet, encoding="utf-8").read()
+        bloks = set(int(n) for n in re.findall(
+            r"\[(?:opredelenie|utverzhdenie)\]\s*\*\*(?:Определение|Утверждение|Теорема)\s+(\d+)",
+            text))
+        refs, lines = [], 0
+        for mm in re.finditer(r"опирается:\s*([0-9,\s]+)", text):
+            lines += 1
+            refs += [int(v) for v in re.findall(r"\d+", mm.group(1))]
+        bitye = sorted(set(v for v in refs if v not in bloks))
+        defs = len(re.findall(r"\[opredelenie\]", text))
+        utv = len(re.findall(r"\[utverzhdenie\]", text))
+        graf_ok = (not bitye) and lines == utv and len(bloks) == defs + utv
+        res.append(("Граф ссылок SKELET.md: битых 0, строк «опирается» = числу утверждений",
+                    graf_ok,
+                    "блоков %d (определений %d, утверждений %d), ссылок %d, битых %s"
+                    % (defs + utv, defs, utv, len(refs), bitye or "нет")))
+    except OSError as ex:
+        res.append(("Граф ссылок SKELET.md", False, "файл не прочитан: %s" % ex))
+
+    X = sum(1 for _, g, _ in res if g)
+    Y = len(res)
+    print()
+    print("── БЛОК Q-СЛОЯ: произвольные x,y с весом площади + граф скелета ──")
+    for name, g, note in res:
+        print("%s %s — %s" % ("OK" if g else "ПРОВАЛ", name, note))
+    print("проверено %d из %d" % (X, Y))
+    return X, Y
+
+
 if __name__ == "__main__":
     X2, Y2 = blok_skeleta_v2()
     X3, Y3 = blok_obshih_teorem()
+    X4, Y4 = blok_q_sloy()
     X1, Y1 = globals().get("_ITOG_BLOK1", (0, 0))
     print()
-    print("ИТОГО по трём блокам: проверено %d из %d" % (X1+X2+X3, Y1+Y2+Y3))
-    raise SystemExit(0 if (X1==Y1 and X2==Y2 and X3==Y3) else 1)
+    print("ИТОГО по четырём блокам: проверено %d из %d" % (X1+X2+X3+X4, Y1+Y2+Y3+Y4))
+    raise SystemExit(0 if (X1==Y1 and X2==Y2 and X3==Y3 and X4==Y4) else 1)
