@@ -1,8 +1,8 @@
 # RUKOVODSTVO-zahodami.md → ПЕРЕЕХАЛ
 
-> 🔴 **Дом методологии захода и приёмки теперь `_meta/disciplina/RUKOVODSTVO-zahodami.md`** (от корня репозитория). Здесь остался только указатель.
+> 🔴 **Дом методологии захода и приёмки теперь в репозитории `disciplina`: `disciplina/skills/disciplina-zahod/RUKOVODSTVO-zahodami.md`.** Копия в `materials/_meta/disciplina/RUKOVODSTVO-zahodami.md` снесена 2026-08-25 (заход vynos-kanona). Здесь остался только указатель.
 
-🔴 **Ссылка вида `RUKOVODSTVO-zahodami.md §<раздел>` теперь ведёт СЮДА, а раздела здесь нет.** Разделы этого документа названы словами, а не номерами, и переехали целиком под теми же именами в `../../../_meta/disciplina/RUKOVODSTVO-zahodami.md`:
+🔴 **Ссылка вида `RUKOVODSTVO-zahodami.md §<раздел>` теперь ведёт СЮДА, а раздела здесь нет.** Разделы этого документа названы словами, а не номерами, и переехали целиком под теми же именами в `disciplina/skills/disciplina-zahod/RUKOVODSTVO-zahodami.md`:
 
 | раздел | о чём |
 |---|---|
@@ -24,10 +24,10 @@
 
 | Что нужно | Куда |
 |---|---|
-| как писать заход исполнителю и как принимать отчёт | `../../../_meta/disciplina/RUKOVODSTVO-zahodami.md` |
-| канон арок: Ф0, память, хэндофф, размер, закрытие | `../../../_meta/disciplina/ARKA.md` |
-| любая работа с git | `../../../_meta/disciplina/GIT-disciplina.md` |
-| где что живёт и что краснеет, если разъехалось | `../../../_meta/disciplina/ISTOCHNIK-PRAVDY.md` |
+| как писать заход исполнителю и как принимать отчёт | `disciplina/skills/disciplina-zahod/RUKOVODSTVO-zahodami.md` |
+| канон арок: Ф0, память, хэндофф, размер, закрытие | `disciplina/skills/disciplina-arka/ARKA.md` |
+| любая работа с git | `disciplina/skills/disciplina-git/GIT-disciplina.md` |
+| где что живёт и что краснеет, если разъехалось | `disciplina/skills/disciplina-istochnik-pravdy/ISTOCHNIK-PRAVDY.md` |
 | что этот дом вообще есть и чего он НЕ делает | `../../../_meta/README.md` |
 
 ⚠ **Не путать с однофамильцами.** В `kurs leto 2026/` и `catalan/` лежат СВОИ `RUKOVODSTVO-zahodami.md` — это отдельные форки, разошедшиеся с каноном (101 и 120 строк против 349; замер 2026-08-06, `../../../_meta/UROKI.md §2`). Канон — только тот, что назван выше.
@@ -40,8 +40,9 @@
 
 ## §Класс «НЕМЕДЛЕННОЕ» — фильтр повторяемости вместо спора о приоритетах
 
-> 🔴 **Написано СЮДА, а не в `_meta/disciplina/RUKOVODSTVO-zahodami.md`, где
-> живёт остальной канон**, потому что зона захода `kod_zamykanie-reestrov.md`
+> 🔴 **Написано СЮДА, а не в `disciplina/skills/disciplina-zahod/RUKOVODSTVO-zahodami.md`, где
+> живёт остальной канон** (прежний адрес внутри materials — `_meta/disciplina/RUKOVODSTVO-zahodami.md`,
+> снесён 2026-08-25), потому что зона захода `kod_zamykanie-reestrov.md`
 > (`_studio/zhurnal/2026-08-07_arhitektura-slajdov/`) даёт править ИМЕННО этот
 > файл-указатель, а не `_meta/` (READ-ONLY по контракту зоны). Перенос текста
 > в настоящий дом канона — не мой ход; пункт очереди с `ДОМ: владелец` в

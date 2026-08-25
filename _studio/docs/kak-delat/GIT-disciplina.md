@@ -1,8 +1,8 @@
 # GIT-disciplina.md → ПЕРЕЕХАЛ
 
-> 🔴 **Единственный дом git теперь `_meta/disciplina/GIT-disciplina.md`** (от корня репозитория). Здесь остался только указатель.
+> 🔴 **Единственный дом git теперь в репозитории `disciplina`: `disciplina/skills/disciplina-git/GIT-disciplina.md`.** Копия в `materials/_meta/disciplina/GIT-disciplina.md` снесена 2026-08-25 (заход vynos-kanona). Здесь остался только указатель.
 
-🔴 **Ссылка вида `GIT-disciplina.md §<раздел>` теперь ведёт СЮДА, а раздела здесь нет.** Все разделы переехали целиком и под теми же номерами в `../../../_meta/disciplina/GIT-disciplina.md`:
+🔴 **Ссылка вида `GIT-disciplina.md §<раздел>` теперь ведёт СЮДА, а раздела здесь нет.** Все разделы переехали целиком и под теми же номерами в `disciplina/skills/disciplina-git/GIT-disciplina.md`:
 
 | раздел | о чём |
 |---|---|
@@ -20,10 +20,10 @@
 
 | Что нужно | Куда |
 |---|---|
-| любая работа с git: коммит · «не коммитится» · worktree · слияние · публикация | `../../../_meta/disciplina/GIT-disciplina.md` |
-| как писать заход исполнителю и как принимать отчёт | `../../../_meta/disciplina/RUKOVODSTVO-zahodami.md` |
-| канон арок | `../../../_meta/disciplina/ARKA.md` |
-| где что живёт и что краснеет, если разъехалось | `../../../_meta/disciplina/ISTOCHNIK-PRAVDY.md` |
+| любая работа с git: коммит · «не коммитится» · worktree · слияние · публикация | `disciplina/skills/disciplina-git/GIT-disciplina.md` |
+| как писать заход исполнителю и как принимать отчёт | `disciplina/skills/disciplina-zahod/RUKOVODSTVO-zahodami.md` |
+| канон арок | `disciplina/skills/disciplina-arka/ARKA.md` |
+| где что живёт и что краснеет, если разъехалось | `disciplina/skills/disciplina-istochnik-pravdy/ISTOCHNIK-PRAVDY.md` |
 | что этот дом вообще есть и чего он НЕ делает | `../../../_meta/README.md` |
 
 ⚠ **Сам инструмент никуда не ехал.** `git_zona.py` как лежал, так и лежит в `../../../_generator/tools/git_zona.py`; переехали ПРАВИЛА, а не код. Автолог срывов коммита (`../../zhurnal/_INFRA-git/INCIDENTY.md`) тоже остался при `_studio/` — индекс git у репозитория один, и лог у него один (`_generator/tools/korni.py`, константа `ИНФРА`).

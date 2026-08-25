@@ -3,7 +3,7 @@
 > **КОГДА читать:** когда `dolg_repozitoriev.py` печатает «вынесено» и хочется понять,
 > почему чужой долг не краснеет. · **ЧТО дописывать сюда:** ТОЛЬКО строку выноса по
 > формату ниже. · **КУДА дальше:** сам счётчик — `_generator/tools/dolg_repozitoriev.py`,
-> канон git — `_meta/disciplina/GIT-disciplina.md`.
+> канон git — `disciplina/skills/disciplina-git/GIT-disciplina.md` (репозиторий `disciplina`; копия в `materials/_meta/disciplina/` снесена 2026-08-25).
 
 ## Зачем этот файл
 
