@@ -1,6 +1,6 @@
 # Банк задач — формат
 
-> Одна задача = один файл. HTML — **артефакт**: правится банк или манифест, не выход. Движок — `../../../_generator/build_listok.py`.
+> Одна задача = один файл. HTML — **артефакт**: правится банк или манифест, не выход. Движок — `../../../../disciplina/_generator/build_listok.py`.
 >
 > ⚠ Статус: **прототип на согласовании** (30.07.2026). Заведён вместе с первым живым листком `ucheniki/danya/dz/dz-posle-04`. Если формат утверждается — переезжает в `_studio/docs/spravka/` и получает гейт; если нет — сносится вместе с движком, потерь на два файла.
 
@@ -75,14 +75,14 @@ pokazyvat: usloviya          # usloviya | podskazki | polnyj
 ## Сборка
 
 ```
-python3 _generator/build_listok.py <манифест.md> [-o out.html] [--lint]
+python3 ../disciplina/_generator/build_listok.py <манифест.md> [-o out.html] [--lint]
                                    [--pokazyvat РЕЖИМ] [--zagolovok ТЕКСТ]
 ```
 
 `--pokazyvat` и `--zagolovok` перебивают манифест. **Второй вид того же листка делается флагом, а не копией манифеста** — дублировать список задач нельзя, иначе источников снова два. Живой пример: ДЗ после №4 существует в трёх видах из одного `dz-posle-04.md`.
 
 ```
-python3 _generator/build_listok.py ucheniki/danya/dz/dz-posle-04.md \
+python3 ../disciplina/_generator/build_listok.py ucheniki/danya/dz/dz-posle-04.md \
     --pokazyvat polnyj --zagolovok "Домашнее задание — разбор" \
     -o ucheniki/danya/dz/dz-posle-04-razbor.html
 ```
