@@ -35,7 +35,7 @@ python3 _generator/tools/check_termin.py <src>   # термин не работ�
 python3 _generator/tools/check_view.py   <src>   # текст не съеден при отрисовке — по СОБРАННОМУ выходу
 ```
 
-`check_view` до сборки честно краснеет с подсказкой «сначала собери» — это вердикт, а не поломка. Собирают разными движками: текст для чтения — `_generator/build_doc.py`, слайды — `_generator/build_deck.py` (`README.md` §2).
+`check_view` до сборки честно краснеет с подсказкой «сначала собери» — это вердикт, а не поломка. Собирают разными движками: текст для чтения — `_generator/build_doc.py`, слайды — `../disciplina/_generator/build_deck.py` (`README.md` §2).
 
 ## ⚠ Дыры — знать до начала, а не наткнуться
 

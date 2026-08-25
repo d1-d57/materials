@@ -38,4 +38,4 @@ slide_order:
 
 ⚑ **`cover_place` не заполнено** — название зала аналитику не известно. По правилу «нет поля — нет элемента» строки на обложке не будет; вписывает владелец.
 
-Сборка: `python3 _generator/build_deck.py teorkat-vvedenie/src` → `dist/index.html`.
+Сборка: `python3 ../disciplina/_generator/build_deck.py teorkat-vvedenie/src` → `dist/index.html`.

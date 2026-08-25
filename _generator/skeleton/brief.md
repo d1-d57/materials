@@ -34,5 +34,5 @@ slide_order:
 - `base.css` — общий канон-CSS (структура `#stage/.slide/.zone/.fit`, сцены, `#hint`, роли текста `t-body/t-display/t-math`, `.panel/.lab-row/.sim-controls`).
 - `engine.js` — движок дословно. `tokens.css` — канон-палитра. `fonts/faces.css` — 5 @font-face.
 
-Сборка: `python3 _generator/build_deck.py <дек>/src` → `dist/index.html`.
+Сборка: `python3 ../disciplina/_generator/build_deck.py <дек>/src` → `dist/index.html`.
 Гейт greenfield (1-я сборка): линтер + `audit.py` (браузер) + глаз (render.py). render-identity — со 2-й сборки.

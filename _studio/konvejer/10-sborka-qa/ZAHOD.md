@@ -48,7 +48,7 @@ RUKOVODSTVO §4) избыточен: сам 5-слойный гейт — и е�
 - Прочитать ТОЛЬКО:
   - весь `<LECTURE>/src/` по дереву контракта, перечисленному в §3 «Вход» (это и есть предмет
     работы — не «остальной проект»);
-  - `materials/_generator/build_deck.py`, `materials/_generator/render.py`,
+  - `disciplina/../disciplina/_generator/build_deck.py`, `materials/_generator/render.py`,
     `materials/_generator/DESIGN.md`, `materials/_generator/README.md` — сам инструмент, уже
     готов, не переписывается (§2);
   - `materials/_generator/audit.py` — ТОЛЬКО ЕСЛИ он физически существует на диске; если нет —
@@ -115,7 +115,7 @@ RUKOVODSTVO §4) избыточен: сам 5-слойный гейт — и е�
 
 ### Слой 1 — линтер `build_deck.py` (дешёвый: stdlib, без браузера)
 ```
-python3 _generator/build_deck.py <LECTURE>/src
+python3 ../disciplina/_generator/build_deck.py <LECTURE>/src
 ```
 Это ОДНО действие: гейт + сборка (пишет `<LECTURE>/src/dist/index.html`, только если гейт
 зелёный). Если нужен ТОЛЬКО гейт без записи файла — `--lint`.

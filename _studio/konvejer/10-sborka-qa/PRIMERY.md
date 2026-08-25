@@ -69,7 +69,7 @@ slide_order:
   его в `render_inline_md(..., acc_tag)`, по умолчанию `"b"`). **Живой нюанс**: buffon объявляет
   `accent_tag: span` явно; `dandelin/src/brief.md` (строки 1–28) вообще НЕ несёт поле
   `accent_tag` в фронтматтере — используется дефолт `"b"` функции `render_md`/`render_inline_md`
-  в `_generator/build_deck.py` без явного объявления в манифесте. Т.е. схема FORMAT-ISTOCHNIKA
+  в `../disciplina/_generator/build_deck.py` без явного объявления в манифесте. Т.е. схема FORMAT-ISTOCHNIKA
   документирует поле как «core», но на практике оно опционально там, где дефолт устраивает —
   писать в `brief.md` новой лекции ЯВНО, только если тег не `b`.
 - `slide_order` — единственный источник истины порядка показа; должен ТОЧНО покрывать
@@ -80,9 +80,9 @@ slide_order:
 
 Команды дословно из `_generator/README.md` (строки 12–14):
 ```bash
-python3 _generator/build_deck.py dandelin/src            # линтер-гейт + сборка → dandelin/src/dist/index.html
-python3 _generator/build_deck.py dandelin/src --lint     # только линтер
-python3 _generator/build_deck.py dandelin/src --no-banner # без баннера (для byte-exact сверки с оригиналом)
+python3 ../disciplina/_generator/build_deck.py dandelin/src            # линтер-гейт + сборка → dandelin/src/dist/index.html
+python3 ../disciplina/_generator/build_deck.py dandelin/src --lint     # только линтер
+python3 ../disciplina/_generator/build_deck.py dandelin/src --no-banner # без баннера (для byte-exact сверки с оригиналом)
 ```
 и сверка глазами (README.md строка 52):
 ```bash
@@ -93,7 +93,7 @@ python3 _generator/render.py --compare dandelin/index.html dandelin/src/dist/ind
 install playwright && playwright install chrome»).
 
 **Формат ожидаемого PASS-вывода** — дословные форматные строки из живого кода (`main()` в
-`_generator/build_deck.py`, строки 333–357), с РЕАЛЬНЫМИ числами для dandelin — посчитанными по
+`../disciplina/_generator/build_deck.py`, строки 333–357), с РЕАЛЬНЫМИ числами для dandelin — посчитанными по
 прозе его же `brief.md` (это НЕ захваченный лог фактического прогона: сам `build_deck.py`
 playwright не требует и мог бы быть прогнан здесь, но проверка велась чтением, не исполнением):
 ```
@@ -184,7 +184,7 @@ $%s$ не в math/katex.json (пересобери harvest_katex.py)»). Плю�
 - «убери слово X на слайде N» → правишь content/<id>.md, пересборка меняет одну строку.
 - «абзац появляется на 3-й сцене» → {@3} перед абзацем в content/<id>.md.
 - «подпись лишняя на рисунке» → правишь illustrations/<NAME>.svg, текст слайда не трогается.
-- Пересборка: python3 _generator/build_deck.py <лекция>/src — секунды, копейки токенов.
+- Пересборка: python3 ../disciplina/_generator/build_deck.py <лекция>/src — секунды, копейки токенов.
 ```
 Это и есть операционный смысл всего гейта шага 10: правка — одна строка в одном файле слоя, гейт
 (слои 1–5 из `ZAHOD.md` этого шага) — дешёвая машинная проверка, что эта одна строка не сломала

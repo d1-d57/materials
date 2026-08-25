@@ -164,10 +164,10 @@ Bespoke-грид — уже РЕШЕНО в `DOK.md` (раздел «Решен�
    только если во входе явно 3D-глава / `<canvas data-sim="<KIND>">` только если во входе
    явно симуляция; имя `<NAME>`/`<KIND>` — из таблицы `## ВХОД`, содержимое НЕ создавать (это
    арка 9) — бокс остаётся пустым.
-4. Линтер (дёшево, без браузера): `python3 _generator/build_deck.py <src-путь> --lint` → 0
+4. Линтер (дёшево, без браузера): `python3 ../disciplina/_generator/build_deck.py <src-путь> --lint` → 0
    нерезолвленных `{{...}}`; каждый `data-ill`/`data-iframe` резолвится в существующий файл
    ИЛИ явно варнинг «ждёт арку 9» (не фейл на этой стадии); `slide_order` без сирот/дублей.
-5. Полная сборка: `python3 _generator/build_deck.py <src-путь>` → пишет
+5. Полная сборка: `python3 ../disciplina/_generator/build_deck.py <src-путь>` → пишет
    `<src-путь>/dist/index.html`.
 6. Глаз: `python3 _generator/render.py <src-путь>/dist/index.html _render/<лекция>` — снимает
    ВСЕ слайды PNG (`_render/<лекция>/NN.png`, `NN` — позиция id в `slide_order`, счёт с нуля);
@@ -225,7 +225,7 @@ _render/<лекция>-diff` (попиксельный дифф, если ест
   — это ожидаемо, содержимое даёт арка 9);
 - на каждый такой id есть свой блок `#<id> .grid{...}` (+ сопутствующие `#<id> .<zone>{...}`)
   в `<src-путь>/shablon.html`, bespoke, без переиспользования общих архетип-классов;
-- `python3 _generator/build_deck.py <src-путь> --lint` — 0 фейлов: нерезолвленных `{{...}}` =
+- `python3 ../disciplina/_generator/build_deck.py <src-путь> --lint` — 0 фейлов: нерезолвленных `{{...}}` =
   0, `slide_order` точно покрывает `slides/`+`content/` без сирот/дублей;
 - 0 overflow `.zone` — проверено глазом на PNG/скриншоте (`render.py`), для КАЖДОГО
   затронутого id, не «на вид похоже без проверки»;

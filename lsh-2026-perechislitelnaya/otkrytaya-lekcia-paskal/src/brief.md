@@ -47,7 +47,7 @@ slide_order:
 считают инструменты:
 
 ```
-python3 _generator/build_deck.py <…>/src --lint     # слайды, иллюстрации, sims, вес
+python3 ../disciplina/_generator/build_deck.py <…>/src --lint     # слайды, иллюстрации, sims, вес
 python3 src/tools/gates.py --table                  # сцены и все 12 вопросов бота
 python3 src/tools/check_numbers.py                  # каждое число — перебором
 python3 src/tools/render_all.py                     # все слайды в PNG + контактный лист
@@ -97,4 +97,4 @@ python3 src/tools/render_all.py --fit               # сколько текст�
 `base.css`, `engine.js`, `tokens.css`, `fonts/faces.css`. Потолок движка — **9 сцен**
 на слайд (`applyScene` снимает классы циклом 1…9); гейт 2 краснеет при выходе за него.
 
-Сборка: `python3 _generator/build_deck.py <…>/otkrytaya-lekcia-paskal/src` → `dist/index.html`.
+Сборка: `python3 ../disciplina/_generator/build_deck.py <…>/otkrytaya-lekcia-paskal/src` → `dist/index.html`.

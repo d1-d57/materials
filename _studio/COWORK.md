@@ -21,7 +21,7 @@ Cowork работает в песочнице; проект — в `materials/` 
 
 **⚙️ Генератор — брать готовый, НЕ писать заново (жёсткий триггер).** Любой HTML-артефакт (документ-вид, слайды, лекция, лонгрид, лендинг) собирается ТОЛЬКО существующим генератором `_generator/`; писать свой парсер `md→HTML` запрещено (дорого и уже было — переделка `catalan/…/obyasnenie-html/`).
 - Документ-вид (поток текста для вычитки, формулы KaTeX) → `python3 _generator/build_doc.py <src>` → `<src>/view.html`. Демо — `_generator/doc-demo/`.
-- Слайд-колода (канон html-slides-studio) → `python3 _generator/build_deck.py <lecture>/src` → `src/dist/index.html`.
+- Слайд-колода (канон html-slides-studio) → `python3 ../disciplina/_generator/build_deck.py <lecture>/src` → `src/dist/index.html`.
 - Правишь только источник (`content/*.md`, `illustrations/*.svg`, `tokens.css`); HTML — выход генератора, руками не трогаешь. Только stdlib, без pip/сети.
 - Триггер-слова «сделай html / собери / сверстай / презентация / слайды / лонгрид / документ» → первый шаг = `_generator/README.md`, а не код.
 

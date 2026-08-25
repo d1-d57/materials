@@ -2,7 +2,7 @@
 
 > ⚙️ **БРАТЬ ЭТОТ ГЕНЕРАТОР, НЕ ПИСАТЬ СВОЙ.** Любой HTML-артефакт (документ-вид, слайды, лекция, лонгрид) собирается только отсюда; писать новый парсер `md→HTML` запрещено (дорого и уже было — переделка `catalan/…/obyasnenie-html/`).
 > - **Документ-вид** (поток текста для авторской вычитки, формулы KaTeX) → `python3 _generator/build_doc.py <src>` → `<src>/view.html`. Демо — `_generator/doc-demo/` (`matematika.md` ‖ `naupop.md`).
-> - **Слайд-колода** (канон html-slides-studio) → `python3 _generator/build_deck.py <lecture>/src` → `src/dist/index.html`.
+> - **Слайд-колода** (канон html-slides-studio) → `python3 ../disciplina/_generator/build_deck.py <lecture>/src` → `src/dist/index.html`.
 > - Правишь только источник (`content/*.md`, `illustrations/*.svg`, `tokens.css`); HTML — выход, руками не трогаешь. Только stdlib, без pip/сети.
 
 Собирает **папку-источник** (`<lecture>/src/`) в один самодостаточный `index.html`
@@ -33,7 +33,7 @@ python3 -m dvizhki --spisok          # какие движки есть
 
 Аргументы, поведение и коды возврата у движков ТЕ ЖЕ, что при запуске путём: диспетчер
 исполняет тот же файл через `runpy`, не подменяя ни `__file__`, ни `sys.argv[0]`. Запуск
-путём (`python3 _generator/build_deck.py …`) продолжает работать — он никуда не делся.
+путём (`python3 ../disciplina/_generator/build_deck.py …`) продолжает работать — он никуда не делся.
 
 **Зачем это вообще.** Движок адресовался МЕСТОМ: скрипты курсов вычисляли путь к нему,
 поднимаясь вверх от себя (`ROOT = Path(__file__).parents[N]`). Пока так, `_generator` нельзя
@@ -58,9 +58,9 @@ python3 -m dvizhki --spisok          # какие движки есть
 
 ## Команды
 ```bash
-python3 _generator/build_deck.py dandelin/src            # линтер-гейт + сборка → dandelin/src/dist/index.html
-python3 _generator/build_deck.py dandelin/src --lint     # только линтер
-python3 _generator/build_deck.py dandelin/src --no-banner # без баннера (для byte-exact сверки с оригиналом)
+python3 ../disciplina/_generator/build_deck.py dandelin/src            # линтер-гейт + сборка → dandelin/src/dist/index.html
+python3 ../disciplina/_generator/build_deck.py dandelin/src --lint     # только линтер
+python3 ../disciplina/_generator/build_deck.py dandelin/src --no-banner # без баннера (для byte-exact сверки с оригиналом)
 ```
 Только stdlib — ни pip, ни сети. Выход несёт HTML-коммент-баннер «СГЕНЕРИРОВАНО …
 РУКАМИ НЕ ПРАВИТЬ» (не влияет на рендер).

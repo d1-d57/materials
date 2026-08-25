@@ -71,7 +71,7 @@
 - **3D в деке напрямую** — самый дорогой антипаттерн (каждая правка = пересборка колоды, canvas 0×0 пока слайд скрыт). Всегда standalone за harness сначала.
 
 ## Якоря (по требованию)
-- Живой код: `../../dandelin/src/{brief.md,tokens.css,illustrations/*,chapters/spheres.html,drivers/10.js}`, `../../buffon/ANIM-01-cos-area-spec.md`, `../../_generator/build_deck.py`.
+- Живой код: `../../dandelin/src/{brief.md,tokens.css,illustrations/*,chapters/spheres.html,drivers/10.js}`, `../../buffon/ANIM-01-cos-area-spec.md`, `../../../disciplina/../disciplina/_generator/build_deck.py`.
 - Скилл: `html-slides-studio/references/{images,simulations,slide-engine}.md`, `threejs/SKILL.md` + `references/{embedded-scene-in-slides,translucent-depth}.md`.
 
 ## Открытые вопросы
