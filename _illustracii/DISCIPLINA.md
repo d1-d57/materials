@@ -333,7 +333,7 @@ python3 _illustracii/proverka_pomarok.py <файл.svg> [ещё файлы…]
   🔴 **`k` — НЕ константа рисунка: полоса ходит под солвером, целиться надо с запасом, а не в пол.**
   Ширину полосы выбирает солвер вмещения (`../disciplina/_generator/sborka/vmeshchenie.py`, ручка `liniya`), и он
   вправе её сузить, когда текста стало больше. Зона вертикальной полосы — `liniya` до 83,2%
-  (печатается: `python3 -c "import sys;sys.path.insert(0,'_generator/sborka');import korpus,vmeshchenie
+  (печатается: `python3 -c "import sys;sys.path.insert(0,'../disciplina/_generator/sborka');import korpus,vmeshchenie
   as v;print(v.build_zones(korpus.corpus_stats())['liniya_vertical'])"`), то есть панель законно
   усыхает почти вдвое, и `k` вместе с ней. *Живой случай (2026-08-12, `disk-i-okruzhnost`): подпись
   замерили 10,9px при `liniya=70` и панели 375×364; пока правка шла, солвер соседнего захода поднял

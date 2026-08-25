@@ -32,9 +32,9 @@ FAZA-1-REDESIGN}.md`, `docs/kak-delat/STANDART-oformlenia.md` — ни один 
 ## 1. Состав папки — числом, не на глаз
 
 ```
-find _generator/sborka -maxdepth 1 -type f | grep -v __pycache__ | wc -l
+find ../disciplina/_generator/sborka -maxdepth 1 -type f | grep -v __pycache__ | wc -l
 # → 15
-find _generator/sborka -maxdepth 1 -type f \( -name '*.py' -o -name '*.js' \) -exec wc -l {} + | tail -1
+find ../disciplina/_generator/sborka -maxdepth 1 -type f \( -name '*.py' -o -name '*.js' \) -exec wc -l {} + | tail -1
 # → 5043 total (14 .py + 1 .js: kesh_formul.js)
 ```
 
