@@ -1,0 +1,44 @@
+ОПИСЬ ВЫНОСА ЖИВЫХ ИНСТРУМЕНТОВ materials/_generator/tools → disciplina
+Заход zahod/vynos-tools, волна 5, 2026-08-26. Замер: 36 .py, 16 диспетчеров
+(<60 строк + ссылка на disciplina), 20 живых; под git 343 файла.
+Вердикт каждой строкой (критерий готовности п.1). Детали доказательств —
+в файле-заходе _studio/zhurnal/2026-08-20_poryadok-v-metaskillah/kod_vynos-tools.md.
+
+1.  bootstrap_arka.py        — дубль, снесён. Множество def/class ⊆ disciplina
+                              (452 строки против 174; дифф множеств пуст в сторону materials).
+2.  bootstrap_lekcia.py      — перенесён. Соимённого в disciplina нет; зовущие:
+                              doma/*/POKRYTIE.md, skills/slajdy/DOLG.md, README materials.
+3.  bootstrap_zahod.py       — ЗАПРЕЩЁН СОСЕДОМ (karkas-subagent-uslovnyj →
+                              karkas-vlitie-i-sborka). Не выношен, не тронут ни на одной стороне.
+4.  check_incidenty.py       — дубль, снесён. Disciplina 347 строк — редизайн волны-4
+                              klassy-incidentov-2 (SVEZHEST сохранён), materials 305 — прежняя редакция.
+5.  check_kartoteka.py       — дубль, снесён. diff -q: IDENTICAL.
+6.  check_karty.py           — перенесён вместе с fixtures/karty/. Соимённого нет.
+7.  check_kurs.py            — перенесён. Зовущие: POKRYTIE ×3, ot-maksa/backlog/B-21.md.
+8.  check_lenta.py           — перенесён вместе с fixtures/lenta/.
+9.  check_view.py            — перенесён. Зовущий код: _generator/sborka/bloki.py,
+                              build_deck.py, build_doc.py; POKRYTIE ×4.
+10. check_zahod.py           — дубль, снесён. Отключённый диспетчер двери disciplina
+                              (заход otkljuchit-dubli 21.08, «уникальных строк — 0»).
+11. dnevnik.py               — дубль, снесён. Тот же отключённый диспетчер (64 строки,
+                              порог «<60» счёл его живым ошибочно).
+12. git_zona.py              — дубль, снесён. Редакция materials БАЙТ-РАВНА коммиту
+                              250803f на origin/zahod/git-odna-dver (тег mogila/…):
+                              знание уже в репозитории disciplina; в main НЕ влито —
+                              заявка на влитие ставится в отчёте, чужую ветку не вливаю.
+13. graf_zavisimostej.py     — перенесён вместе с fixtures/graf/.
+14. kadry.py                 — перенесён вместе с fixtures/kadry/.
+15. priyomka.py              — ЗАПРЕЩЁН СОСЕДОМ (priyomka-dvurepozitornaya). Не выношен.
+16. reviziya_dolgov.py       — перенесён вместе с fixtures/reviziya_dolgov/.
+17. schet_blokov.py          — перенесён вместе с fixtures/schet_blokov/.
+18. sdelat_handoff.py        — дубль, снесён. Отключённый диспетчер (70 строк).
+19. sostoyanie.py            — дубль, снесён (IDENTICAL); фикстуры materials богаче
+                              на 18 папок (g7-*, g12-*, g13-scena, g14-*, g15-kaskad,
+                              zdorovyj*) — переносятся в fixtures/sostoyanie/;
+                              PROGNAT.sh disciplina новее (23.08 против 28.07) — остаётся главный.
+20. sostoyanie_lekcii.py     — перенесён. Зовущие: POKRYTIE ×3, KARTA-LEKCIY.md и др.
+
+Прочее: KANON-KOREN — disciplina новее (16.08 > 14.08), материаловская копия
+сносится; ves_izvestnoe.txt — IDENTICAL, сносится. Мёртвых среди живых: 0.
+Фикстурные папки без хозяина среди этих 20 (диспетчеры/запрещённые/чужие
+движки) не тронуты — отдельная строка разбора в отчёте.
