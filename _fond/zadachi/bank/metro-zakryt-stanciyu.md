@@ -7,6 +7,7 @@ bez_otveta: da
 proverka: ostovnoe derevo suschestvuet, u nego est visyachaya vershina; ee udalenie sohranyaet svyaznost ostatka. Provereno vruchnuyu 2026-08-06
 status: gotova
 istochnik: kruzhok CPM Hamovniki 7 klass, listok "Derevya" 02.12.2025, zadacha 3
+itog: ✗ ДЗ после №6: рецепт «станция наименьшей степени» ложен, контрпример есть в разборе. Правильный ход — висячая вершина ОСТОВНОГО дерева, до него на №7 не дошли
 ---
 
 ## Условие

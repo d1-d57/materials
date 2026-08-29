@@ -7,6 +7,7 @@ otvet: 63
 proverka: 64 kletki-vershiny, nuzhen svyaznyj ostovnyj podgraf ⇒ ne menshe 63 ryober; ostovnoe derevo daet rovno 63. Vsego spichek 2*8*7=112. Provereno 2026-08-06
 status: gotova
 istochnik: kruzhok CPM Hamovniki 7 klass, listok "Derevya" 02.12.2025, zadacha 2
+itog: ~ ДЗ после №6: пример 7+56=63 верный и оптимальный, оценки нет («надо двигаться по столбцам» — не доказательство). Зеркальная половина
 ---
 
 ## Условие

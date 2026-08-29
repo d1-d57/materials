@@ -7,6 +7,7 @@ bez_otveta: da
 proverka: (a) dlinnejshij put; (b) vybrasyvanie ryober; (v) schyotchik komponent, ravenstvo iz zapreta na cikly. Punkty nezavisimy ot posleduyushchih — cepochka proshla 2026-08-06
 status: gotova
 istochnik: kruzhok CPM Hamovniki 7 klass, listok "Derevya" 02.12.2025, Svojstva 1-3
+itog: ~ ДЗ после №7: (а) взял через сумму степеней (2n−2 против 2n), аккуратнее моего пути, но перепутал «максимум» и «минимум»; (б) остовное дерево — не сдано
 ---
 
 ## Условие

@@ -7,6 +7,7 @@ otvet: n − 3 diagonali, n − 2 treugolnika
 proverka: perebor vseh triangulyacij vypuklyh n-ugolnikov pri n=4..7 (2, 5, 14, 42 shtuki): vsegda n-2 treugolnika, n-3 diagonali i ne menshe dvuh "ushej". Schitano 2026-08-06
 status: gotova
 istochnik: Shen "Matematicheskaya indukciya" zadacha 8; baza spetsmata listok id 132 №16 i listok id 329 №18. Punkt (b) — analog utverzhdeniya o visyachej vershine, po ukazaniyu vladelca analogiya v uslovii NE nazyvaetsya
+itog: ✗ ДЗ после №7: пункт (а) не сделан вовсе; в (б) вместо доказательства неопределённое слово «центр» и две картинки. Диагональ не режет — шага индукции нет. Аналогию с деревом не увидел
 ---
 
 ## Условие
