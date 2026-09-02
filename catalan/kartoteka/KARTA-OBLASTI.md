@@ -12,9 +12,9 @@ registr: рабочий
 ## Индекс по роду
 
 - **затравка:** `kart-starter-parametr`
-- **мостик:** `kart-normirovka-starta` `kart-polyusa-spektr` `kart-jtp-mesto` `kart-okruzhnost-kanal`
-- **утверждение:** `kart-porog-ngr` `kart-izobrazheniya-otrazhenie` `kart-q-kontinuanty`
-- **находка:** `kart-obshchee-prostee` `kart-chebyshev-smysl`
+- **мостик:** `kart-normirovka-starta` `kart-polyusa-spektr` `kart-jtp-mesto` `kart-okruzhnost-kanal` `kart-q-spektr-granica` `kart-polosa-ili-okruzhnost`
+- **утверждение:** `kart-porog-ngr` `kart-izobrazheniya-otrazhenie` `kart-q-kontinuanty` `kart-q-otrazheniya-maj-ne-ploshchad` `kart-rr-dve-storony` `kart-dva-q-katalana` `kart-predel-q-zamknuto`
+- **находка:** `kart-obshchee-prostee` `kart-chebyshev-smysl` `kart-centralnaya-para` `kart-dom-teorem-vienno` `kart-tri-normirovki-ploshchadi`
 
 ---
 
@@ -32,9 +32,20 @@ registr: рабочий
 | `kart-obshchee-prostee` | В3: общее доказывается не дороже частного (изображения/спектр/континуанты), частное требует разборов выживания | [карточка](kart-obshchee-prostee.md) |
 | `kart-chebyshev-smysl` | В4: Чебышёв = правило Якоби для обратной матрицы шага — два минора-хвоста на полный определитель-спектр | [карточка](kart-chebyshev-smysl.md) |
 | `kart-okruzhnost-kanal` | окружность — второй канал оператора шага; площади без края нет, переход отрезок↔окружность нечестен | [карточка](kart-okruzhnost-kanal.md) |
+| `kart-q-otrazheniya-maj-ne-ploshchad` | 🔴 изображения с гауссовыми биномами — про major index, не про площадь; для площади ломаются при одной стенке | [карточка](kart-q-otrazheniya-maj-ne-ploshchad.md) |
+| `kart-rr-dve-storony` | конечные Роджерс — Рамануджан суть финитизация пары «сумма = произведение»; $d_m$ — континуант, не площадной счёт | [карточка](kart-rr-dve-storony.md) |
+| `kart-q-spektr-granica` | при $q\ne1$ исчезает не спектр, а замкнутая форма собственных чисел | [карточка](kart-q-spektr-granica.md) |
+| `kart-centralnaya-para` | центральна пара «определение объекта + связка изображения↔спектр»; каскад 21 из 26 | [карточка](kart-centralnaya-para.md) |
+| `kart-polosa-ili-okruzhnost` | 🔴 у KOSTYAK и SKELET разные центральные объекты — окружность против полосы; развилка курса | [карточка](kart-polosa-ili-okruzhnost.md) |
+| `kart-dom-teorem-vienno` | Чебышёв и континуанты — переоткрытие каркаса Флажоле — Вьенно; прообразы опубликованы | [карточка](kart-dom-teorem-vienno.md) |
+| `kart-dva-q-katalana` | площадной $q$-Каталан и major-index $q$-Каталан — разные; замкнутая форма только у второго | [карточка](kart-dva-q-katalana.md) |
+| `kart-tri-normirovki-ploshchadi` | площадь считается тремя несовместимыми способами в наших же файлах; гейты этого не ловят | [карточка](kart-tri-normirovki-ploshchadi.md) |
+| `kart-predel-q-zamknuto` | при $m\to\infty$, $q\ne1$ замкнутый ответ есть: $G=H(qt)/H(t)$ (Haug — Prellberg) | [карточка](kart-predel-q-zamknuto.md) |
 
 ## Нити (маршруты)
 
-- **«почему объект устроен так»:** `kart-starter-parametr` → `kart-porog-ngr` → `kart-normirovka-starta` → `kart-okruzhnost-kanal`
-- **«четыре взгляда на одну формулу»:** `kart-chebyshev-smysl` → `kart-polyusa-spektr` → `kart-izobrazheniya-otrazhenie` → `kart-q-kontinuanty`
-- **«место классики»:** `kart-jtp-mesto` → `kart-izobrazheniya-otrazhenie`
+- **«почему объект устроен так»:** `kart-starter-parametr` → `kart-porog-ngr` → `kart-normirovka-starta` → `kart-okruzhnost-kanal` → `kart-polosa-ili-okruzhnost`
+- **«четыре взгляда на одну формулу»:** `kart-chebyshev-smysl` → `kart-polyusa-spektr` → `kart-izobrazheniya-otrazhenie` → `kart-q-kontinuanty` → `kart-centralnaya-para`
+- **«место классики»:** `kart-jtp-mesto` → `kart-izobrazheniya-otrazhenie` → `kart-rr-dve-storony`
+- **🔴 «где мы ошибались» (нить разведки 03.09):** `kart-q-otrazheniya-maj-ne-ploshchad` → `kart-dva-q-katalana` → `kart-rr-dve-storony` → `kart-q-spektr-granica` → `kart-tri-normirovki-ploshchadi`. Общий сюжет нити: **везде, где ответ красиво замыкался, мы подставляли $\operatorname{maj}$ вместо площади либо путали нормировку.** Читать перед любой работой с $q$-слоем.
+- **«откуда это у людей»:** `kart-dom-teorem-vienno` → `kart-predel-q-zamknuto` → `kart-rr-dve-storony`

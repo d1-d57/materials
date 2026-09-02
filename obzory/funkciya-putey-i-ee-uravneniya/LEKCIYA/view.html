@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Функция путей: мишень лекции</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
+
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-1:checked ~ #panel-1{display:block}
+#tab-1:checked ~ .tabbar label[for="tab-1"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-2:checked ~ #panel-2{display:block}
+#tab-2:checked ~ .tabbar label[for="tab-2"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-3:checked ~ #panel-3{display:block}
+#tab-3:checked ~ .tabbar label[for="tab-3"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+#tab-4:checked ~ #panel-4{display:block}
+#tab-4:checked ~ .tabbar label[for="tab-4"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:1090px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
+
+/* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
+table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
+table th,table td{border:1px solid var(--rule);padding:.45em .8em;text-align:left;vertical-align:top}
+table thead th{font-family:var(--sans);background:var(--shade);font-weight:600;color:var(--text)}
+table tbody tr:nth-child(even){background:var(--panel)}
+table tbody td:first-child{color:var(--muted)}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:var(--chip);color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (_illustracii/DISCIPLINA.md, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-thin-a{fill:none;stroke:var(--accent);stroke-width:1.4}
+/* .s-thin-a / .s-txt-a — тонкая акцентная линия и акцентная метка. Заведены 2026-07-31 (записки Л1):
+   цветовое кодирование роли стрелки (акцент = переименование/перестановка, нейтральный = сама
+   конструкция) требовало ТОНКОЙ акцентной линии, а .s-accent 2.4px для 9 стрелок в ряд слишком
+   жирна. ЦЕНА пропуска: аналитик выдумал классы на месте, в движке их не было, и в разделе
+   «Почему это красиво» не нарисовалась НИ ОДНА из 9 стрелок σ и обе горизонтали квадрата —
+   `<line>` без своего stroke по SVG не рисуется вовсе. Все три гейта остались зелёными. */
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-txt-a{font-family:var(--sans);font-size:12px;fill:var(--accent)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:var(--faint);font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
+</style>
+</head>
+<body>
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
+<div class="wrap">
+<div class="doc-head">
+  <h1>Функция путей: мишень лекции</h1>
+</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-1">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-2">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-3">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-4">
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Общая часть</label>
+<label class="tab-label" for="tab-1">1. Комбинаторный</label>
+<label class="tab-label" for="tab-2">2. Алгебраический</label>
+<label class="tab-label" for="tab-3">3. Разностные уравнения</label>
+<label class="tab-label" for="tab-4">4. Функциональное уравнение</label>
+</nav>
+<section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">Один объект вместо четырёх</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">Почему старт обязан быть параметром</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">Что объект считает: разбор частных случаев</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">То же самое со счётом площади</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">Четыре взгляда</a></summary></details></li></ol></details><main><article class="stream"><h1>Функция путей: один объект и четыре взгляда на него</h1>
+<blockquote>🔴🔴 <strong>ЭТО МИШЕНЬ, А НЕ ТЕКСТ. ЧИТАТЬ КАК ГОТОВОЕ НЕЛЬЗЯ.</strong>  Черновик собран 03.09 за один ход, глядя ТОЛЬКО в <code>../SKELET.md</code>. Ни один из накопленных ресёрчей (<code>../reserch/R1–R4</code>, <code>../src/obzor.md</code>, <code>HREBET-kursa.md</code>, <code>RAZVEDKA-metody-i-obrazcy.md</code>, картотека) при письме не открывался, внешней литературы не было вовсе. Разведка того же дня показала, что именно из этого сломалось:  <em> <strong>вкладка 4 держится на опровергнутом.</strong> Утверждение «вес площади даёт знакопеременную сумму гауссовых биномов с квадратичными показателями» верно для $\operatorname{maj}$, а не для площади; для площади метод изображений ломается уже при одной стенке. Значит маршрут «объект → квадратичные показатели → пятиугольная теорема → Якоби» в лекции не обоснован; </em> <strong>утверждение про Роджерса — Рамануджана неверно</strong> в той части, где сказано «обе стороны — левые части тождеств»: стороны разные, это финитизация пары «сумма = произведение»; <em> <strong>отрицательный результат про $q$-спектр во вкладке 3 слишком силён:</strong> структура сохраняется, исчезает только замкнутая форма собственных чисел; </em> <strong>центральная теорема не назначена</strong> — задача из <code>NAVIGATOR</code> при письме даже не ставилась; счётный ответ разведки — пара «определение объекта + связка изображения↔спектр», каскад 21 из 26; * <strong>развилка «полоса или окружность» не разрешена:</strong> <code>KOSTYAK.md</code> строит курс вокруг окружности, скелет — вокруг полосы, и они несовместимы.  Полный список — <code>../RAZVEDKA-2026-09-03.md</code>. Мишень оставлена намеренно: по ней видно, какая композиция получается без материала, и правки против неё показывают, что именно материал меняет.</blockquote>
+<blockquote>Это текст лекции, а не конспект курса. Он отвечает на один вопрос: <strong>что за предмет мы изучаем весь год и почему одно тянет за собой другое.</strong> Строгий каркас утверждений с графом ссылок живёт отдельно — <code>../SKELET.md</code>; здесь на него ссылаются именами вида <code>chebyshev (20)</code>.  Устройство лекции: сначала общая часть — объект и то, что он считает. Потом четыре вкладки, по одной на взгляд. <strong>Взгляд — это не глава, а способ задавать вопрос.</strong> У каждого свой вопрос, свой аппарат и своя граница; в конце каждой вкладки прямо сказано, работает он в общем случае или нет.</blockquote>
+<details class="sec sec2" open><summary><h2 id="s0-h-1">Один объект вместо четырёх</h2></summary><div class="sec-body">
+<p>Курс обычно рассказывают как четыре сюжета: пути на прямой и биномиальные коэффициенты; пути с одной стенкой и числа Каталана; пути в коридоре и Фибоначчи; блуждание, спектр и асимптотика. Четыре сюжета — четыре набора приёмов, и связь между ними выглядит как совпадение.</p>
+<p>Здесь предмет один. Есть <strong>одна</strong> функция от пяти параметров; прямая, луч и отрезок — не разные объекты, а значения этих параметров. Всё, что кажется отдельными сюжетами, получается из неё подстановкой.</p>
+<div class="stmt defn" id="s0-d-1"><span class="lbl">Определение 1 (полоса и путь).</span><p><!--id: lek-put--> Пусть $m\ge0$ — целое. <strong>Полоса</strong> — клетки $\{0,1,\dots,m\}$ целой прямой. <strong>Путь</strong> $\gamma$ длины $N$ из клетки $x$ в клетку $y$ — последовательность</p><p class="eq">$$\gamma=(x_0,x_1,\dots,x_N),\qquad x_0=x,\quad x_N=y,\quad|x_{i+1}-x_i|=1,\quad 0\le x_i\le m.$$</p><p>Шаг вверх называем подъёмом, вниз — спуском; число подъёмов обозначаем $r$. При закреплённых концах число подъёмов от пути не зависит: $r=\frac{N+y-x}2$. опирается: polosa-put (1)</p></div>
+<div class="stmt defn" id="s0-d-2"><span class="lbl">Определение 2 (вес площади).</span><p><!--id: lek-ves--> Пусть $h_1,\dots,h_r$ — высоты клеток, из которых путь делает подъёмы. Тогда</p><p class="eq">$$\tilde a(\gamma)=\sum_{i=1}^{r}(h_i-x)$$</p><p>— площадь между траекторией и горизонталью через старт. Иначе: подъём из клетки $p$ несёт вес $q^{\,p-x}$, спуск — вес $1$. Нормировка «от старта», а не «от нуля», выбрана не из вкуса: без неё показатели уезжают вместе со стартом, и сравнить две доски становится нельзя. опирается: ploshchad (2)</p></div>
+<div class="stmt defn" id="s0-d-3"><span class="lbl">Определение 3 (функция путей).</span><p><!--id: lek-funkciya--> Для целых $m\ge0$ и $0\le x,y\le m$ положим</p><p class="eq">$$F_m(x,y;\,z,q)\;=\;\sum_{\gamma:\,x\to y}z^{|\gamma|}\,q^{\tilde a(\gamma)}.$$</p><p>Пять параметров: потолок $m$, старт $x$, финиш $y$, переменная длины $z$, переменная площади $q$. Коэффициент при $z^N$ — многочлен по $q$, считающий пути длины $N$ по площади; при $q=1$ он просто считает пути. опирается: obekt (3)</p></div>
+<p>Дальше всюду $M=m+2$ — это число клеток плюс две стенки, и оно окажется главным числом всей истории.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-2">Почему старт обязан быть параметром</h2></summary><div class="sec-body">
+<p>Соблазн: закрепить $x=0$ и оставить один параметр $m$. Тогда рост потолка должен был бы давать сначала луч, потом прямую. Он этого не даёт.</p>
+<div class="stmt thm" id="s0-t-4"><span class="lbl">Утверждение 4 (три области — это подстановки, а не разные предметы).</span><p><!--id: lek-oblasti--> Пусть путь имеет длину $N$ и $r$ подъёмов. Тогда</p><p class="eq">$$\text{отрезок}:\ \text{любые }m,x,y;\qquad\text{луч}:\ x=0,\ m\ge N;\qquad\text{прямая}:\ x=n,\ m=2n,\ n\ge r.$$</p><p>На луче путь физически не достаёт до потолка. На прямой старт отодвинут от обеих стенок дальше, чем путь способен уйти, — и стенок для него не существует.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>На луче путь длины $N$ из клетки $0$ не поднимается выше $N$, поэтому потолок $m\ge N$ ни одного пути не запрещает. На прямой путь длины $N$ с $r$ подъёмами отклоняется от старта вверх не более чем на $r$ клеток, вниз — не более чем на $N-r$; при $x=n$, $m=2n$ и $n\ge r$ обе стенки недостижимы. Обратно, при $x=0$ нижняя стенка не уходит ни при каком потолке: путей $0\to2$ длины $8$ ровно</p><p class="eq">$$21,\;27,\;28,\;28,\;28,\dots\qquad(m=3,4,5,6,7,\dots),$$</p><p>последовательность застывает на $28$, тогда как на прямой таких путей $\binom85=56$. Значит, ростом одного $m$ прямая не достигается, и $x$ обязан остаться параметром. $\square$ опирается: tri-oblasti (5), start-parametr (4)</p></div></details></div>
+<p>Отсюда рабочее правило чтения всего дальнейшего: <strong>подставить параметры → взять коэффициент при $z^N$ → узнать знакомое.</strong></p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-3">Что объект считает: разбор частных случаев</h2></summary><div class="sec-body">
+<p>Здесь мы не доказываем формул — только опознаём последовательности. Чему они равны, разбирается в четырёх вкладках.</p>
+<div class="stmt thm" id="s0-t-5"><span class="lbl">Утверждение 5 (числа Каталана).</span><p><!--id: lek-katalan--> Пусть $x=y=0$ и $m\ge n$. Тогда</p><p class="eq">$$[z^{2n}]\,F_m(0,0;z,1)\;=\;C_n\;:\qquad 1,\,2,\,5,\,14,\,42,\,132,\,429,\,1430.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Путь $0\to0$ длины $2n$, не выходящий вниз, — это в точности путь Дика длины $2n$; потолок $m\ge n$ не мешает, поскольку такой путь поднимается не выше $n$. Число путей Дика длины $2n$ и есть $C_n$ по определению. $\square$ опирается: katalan-schet (6)</p></div></details></div>
+<div class="stmt thm" id="s0-t-6"><span class="lbl">Утверждение 6 (биномиальные коэффициенты и точный порог).</span><p><!--id: lek-binom--> Пусть $x=n$, $y=n+k$, $m=2n$ и $n\ge r$, где $r=\frac{N+k}2$. Тогда</p><p class="eq">$$[z^N]\,F_{2n}(n,n+k;z,1)\;=\;\binom Nr.$$</p><p>Порог здесь не предельный переход, а точное условие: совпадение наступает при конечном $n$ и дальше не меняется.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>По <a class="xref" href="#s0-t-4">утверждению 4</a> при $n\ge r$ стенки недостижимы, поэтому путей ровно столько, сколько свободных путей на прямой: выбрать, какие $r$ из $N$ шагов будут подъёмами. $\square$ опирается: binom-porog (8)</p></div></details></div>
+<div class="stmt thm" id="s0-t-7"><span class="lbl">Утверждение 7 (баллотные числа).</span><p><!--id: lek-ballot--> Пусть $x=0$, $m\ge N$, а финиш $y$ свободен. Тогда</p><p class="eq">$$[z^N]\,F_m(0,y;z,1)\;=\;\#\{\text{путей }0\to y\text{ на луче}\}$$</p><p>— баллотное число. Один параметр $y$, пробегая свои значения, выдаёт сразу весь баллотный треугольник, а не одну его строку. опирается: ballotnye (7)</p></div>
+<div class="stmt thm" id="s0-t-8"><span class="lbl">Утверждение 8 (числа Фибоначчи).</span><p><!--id: lek-fib--> Пусть $m=3$, $x=0$, а финиш свободен, и пусть $a_N=\sum_{y=0}^{3}[z^N]F_3(0,y;z,1)$. Тогда</p><p class="eq">$$a_N=F_{N+1}\;:\qquad 1,\,1,\,2,\,3,\,5,\,8,\,13,\,21,\,34,\,55,\,89,\,144,\,233\qquad(N=0,\dots,12).$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $A$ — матрица смежности пути из четырёх клеток. Её собственные числа $2\cos\frac{k\pi}5$, $k=1,\dots,4$, поэтому характеристический многочлен есть $\lambda^4-3\lambda^2+1$, и всякая последовательность вида $\mathbf1^{\mathsf T}A^N e_0$ подчиняется рекурренте $a_{N+4}=3a_{N+2}-a_N$. Числа Фибоначчи ей подчиняются тоже: $F_{n+4}=3F_{n+2}-F_n$. Начальные четыре члена совпадают: $a_0,a_1,a_2,a_3=1,1,2,3=F_1,F_2,F_3,F_4$. Значит, совпадают все. $\square$</p></div></details></div>
+<p>Замечание о закреплённом финише: при $0\to0$ вышла бы подпоследовательность через одну, $F_{2n-1}$, — при нечётном $N$ вернуться в ноль просто нельзя. Свободный финиш даёт <strong>каждое</strong> число Фибоначчи, и это довод в пользу того, чтобы держать финиш свободным параметром. опирается: fibonachchi (9)</p>
+<div class="stmt thm" id="s0-t-9"><span class="lbl">Утверждение 9 (лестница по потолку).</span><p><!--id: lek-lestnica--> Пусть $x=0$, финиш свободен, $a_N^{(m)}$ — полное число путей длины $N$. Тогда</p><p class="eq">$$a^{(1)}_N=1;\qquad a^{(2)}_N=2^{\lfloor N/2\rfloor};\qquad a^{(3)}_N=F_{N+1};\qquad a^{(4)}_N=3^{\lfloor(N-1)/2\rfloor}2^{\,(N-1)\bmod2}\ \ (N\ge1).$$</p><p>Меняем ОДИН параметр — и проходим весь список знакомых последовательностей; дальше, при $m\ge5$, начинаются последовательности без имени.</p></div>
+<p>🔴 Обратите внимание на несимметричность: у $m=2$ и $m=3$ формула работает с $N=0$, у $m=4$ приходится сдвигать индекс на единицу. Это не описка и не вкус записи — у сдвига есть причина, и она спектральная; разбирается во вкладке 3. опирается: lestnica-potolka (14), edinicy-m1 (11), dvoyki-m2 (12), troyki-m4 (13)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-4">То же самое со счётом площади</h2></summary><div class="sec-body">
+<p>Пока $q=1$, объект считает пути. При свободном $q$ он считает их <strong>по площади</strong> — и знакомые последовательности превращаются в знакомые многочлены.</p>
+<div class="stmt thm" id="s0-t-10"><span class="lbl">Утверждение 10 (гауссов бином).</span><p><!--id: lek-gauss--> Пусть выполнены условия <a class="xref" href="#s0-t-6">утверждения 6</a>, а $q$ свободно. Тогда с точностью до общего монома $q^{\,c}$, одного для всех путей,</p><p class="eq">$$q^{-c}\,[z^N]\,F_{2n}(n,n+k;z,q)\;=\;\begin{bmatrix}N\\r\end{bmatrix}_q,$$</p><p>то есть распределение свободных путей по площади есть гауссов бином — он же счётчик разбиений, помещающихся в коробку $r\times(N-r)$. опирается: gaussov-binom (18), sdvig-gaussova (32)</p></div>
+<div class="stmt thm" id="s0-t-11"><span class="lbl">Утверждение 11 ($q$-числа Каталана).</span><p><!--id: lek-qkatalan--> Пусть $x=y=0$, $m\ge n$, а $q$ свободно. Тогда</p><p class="eq">$$[z^{2n}]\,F_m(0,0;z,q)\;=\;C_n(q),\qquad C_4(q)=1+3q+3q^2+3q^3+2q^4+q^5+q^6,$$</p><p>и $C_n(1)=C_n$. Это $q$-числа Каталана Карлица — Риордана: они считают пути Дика по площади под ними. опирается: q-katalan (19)</p></div>
+<p>Так устроен весь предмет: <strong>$q=1$ даёт числа, свободное $q$ — многочлены, и вторая история богаче ровно настолько, насколько площадь богаче длины.</strong></p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-5">Четыре взгляда</h2></summary><div class="sec-body">
+<p>Дальше объект перестаёт быть списком специализаций и становится предметом теорем. Взглядов четыре, и различаются они не темой, а вопросом.</p>
+<table><thead><tr><th>вкладка</th><th>взгляд</th><th>вопрос</th><th>аппарат</th><th>общий случай</th></tr></thead><tbody><tr><td>1</td><td>комбинаторный</td><td>чему равен ОТДЕЛЬНЫЙ коэффициент</td><td>отражения, включение-исключение</td><td>работает при любых $m,x,y$; при $q\ne1$ — работает</td></tr><tr><td>2</td><td>алгебраический</td><td>как устроена ФУНКЦИЯ целиком</td><td>уравнение на функцию, цепная дробь, континуанты</td><td>работает полностью, включая $q\ne1$</td></tr><tr><td>3</td><td>разностные уравнения</td><td>как коэффициент РАСТЁТ</td><td>оператор шага, спектр, синусы</td><td>работает при $q=1$; при $q\ne1$ — НЕ работает</td></tr><tr><td>4</td><td>функциональное уравнение</td><td>что происходит в ПРЕДЕЛЕ</td><td>двойственность, суммирование Пуассона, тэта</td><td>работает как предельная техника; тождества добываются, но не все</td></tr></tbody></table>
+<p>Порядок вкладок — по возрастанию того, насколько далеко приходится отойти от самих путей.</p>
+<p>🔴 <strong>Пятый взгляд существует, и объект его не улавливает.</strong> Это взгляд биекционный: циклическая лемма Дворецкого — Моцкина, шесть классических биекций Каталана, статистики вроде числа пиков (числа Нараяны) и major index. Он даёт те же формулы третьим способом, но проходит мимо нашей функции: объект параметризован длиной и площадью, а не этими статистиками. Это записано как отрицательный результат, а не как пробел изложения — в <code>../SVEDENIE-kursa.md</code> соответствующие пункты стоят в разделе «не сводится».</p>
+</div></details></article></main></div></section>
+<section class="panel" id="panel-1"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-1">Одна стенка: принцип отражения</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-2">Две стенки: метод изображений</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-3">Что делает вес площади</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s1-h-4">Граница взгляда</a></summary></details></li></ol></details><main><article class="stream"><h1>Взгляд 1. Комбинаторный: каждый коэффициент отдельно</h1>
+<blockquote><strong>Вопрос взгляда:</strong> чему равно ОДНО число — коэффициент при $z^N$ при заданных $m,x,y$?  Приём один на весь взгляд, и он геометрический: запрет «не заходить за стенку» снимается <strong>отражением</strong>. Стенка перестаёт быть запретом и становится симметрией; запрещённые пути не вычёркиваются по одному, а сопоставляются с разрешёнными на другой доске.</blockquote>
+<details class="sec sec2" open><summary><h2 id="s1-h-1">Одна стенка: принцип отражения</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s1-t-12"><span class="lbl">Теорема 12 (принцип отражения, Андре).</span><p><!--id: lek-otrazhenie--> Пусть путь идёт из $x\ge0$ в $y\ge0$ за $N$ шагов и не спускается ниже нуля (потолка нет), и пусть $r=\frac{N+y-x}2$. Тогда</p><p class="eq">$$\#\{\gamma:x\to y,\ \gamma\ge0\}\;=\;\binom Nr-\binom N{r+x+1}.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Свободных путей из $a$ в $b$ за $N$ шагов ровно $\binom N{(N+b-a)/2}$: путь задаётся выбором подъёмов. Свободных путей из $x$ в $y$ — $\binom Nr$; вычесть надо те, что хоть раз побывали на уровне $-1$.</p></div></details></div>
+<p>Возьмём такой путь и <strong>отразим относительно уровня $-1$ его начальный кусок</strong> — от старта до момента первого попадания в $-1$. Отражение переводит шаг вверх в шаг вниз и обратно, поэтому получается снова путь; его старт из $x$ переходит в $-2-x$, а финиш не тронут. Отображение обратимо: у любого пути из $-2-x$ в $y$ есть первое попадание в $-1$ (старт лежит ниже $-1$, финиш выше, значит уровень $-1$ пересекается), и отражение начального куска возвращает исходный путь. Значит, плохих путей ровно столько, сколько всех путей из $-2-x$ в $y$: $$\binom N{\frac{N+y+2+x}2}=\binom N{r+x+1}.\qquad\square$$ опирается: izobrazheniya (21), otrazhenie (31)</p>
+<p>Первое, что отсюда падает, — весь баллотный треугольник.</p>
+<div class="stmt thm" id="s1-t-13"><span class="lbl">Утверждение 13 (баллотные числа замкнутой формулой).</span><p><!--id: lek-ballot-formula--> Пусть $x=0$ и $m\ge N$. Тогда</p><p class="eq">$$[z^N]\,F_m(0,y;z,1)\;=\;\binom Nr-\binom N{r+1},\qquad r=\frac{N+y}2.$$</p><p>Это утверждение 7 общей части, доведённое до формулы: там мы узнали баллотные числа, здесь сказали, чему они равны. опирается: ballotnye (7), otrazhenie (31)</p></div>
+<div class="stmt thm" id="s1-t-14"><span class="lbl">Утверждение 14 (формула чисел Каталана — первый вывод).</span><p><!--id: lek-katalan-otrazhenie--> Пусть $x=y=0$, $N=2n$, $m\ge n$. Тогда</p><p class="eq">$$C_n=\binom{2n}n-\binom{2n}{n+1}=\frac1{n+1}\binom{2n}n.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Первое равенство — <a class="xref" href="#s1-t-13">утверждение 13</a> при $y=0$, $r=n$. Второе — прямой счёт:</p><p class="eq">$$\binom{2n}{n+1}=\binom{2n}n\cdot\frac{n}{n+1},\qquad\text{откуда}\qquad \binom{2n}n-\binom{2n}{n+1}=\binom{2n}n\Bigl(1-\frac n{n+1}\Bigr)=\frac1{n+1}\binom{2n}n.\qquad\square$$</p></div></details></div>
+<p>Это первый из стандартных выводов формулы Каталана. Второй — через уравнение на функцию — во вкладке 2; третий, через циклическую лемму, объект не видит вовсе, и почему — сказано в общей части. опирается: formula-katalana (29), otrazhenie (31)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s1-h-2">Две стенки: метод изображений</h2></summary><div class="sec-body">
+<p>Одна стенка — одно отражение. Две стенки порождают уже <strong>группу</strong>: композиции двух отражений дают сдвиги, и группа оказывается бесконечной диэдральной.</p>
+<div class="stmt thm" id="s1-t-15"><span class="lbl">Теорема 15 (метод изображений в полосе).</span><p><!--id: lek-izobrazheniya--> Пусть $M=m+2$. Тогда</p><p class="eq">$$[z^N]\,F_m(x,y;z,1)\;=\;\sum_{j\in\mathbb Z}\Bigl[\binom{N}{\frac{N+y-x+2jM}2}-\binom{N}{\frac{N+y+x+2+2jM}2}\Bigr].$$</p><p>Сумма конечна: слагаемое ненулевое лишь пока индекс лежит между $0$ и $N$, то есть при $|j|\lesssim N/2M$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Добавим к полосе две запрещённые линии: пол на уровне $-1$ и потолок на уровне $m+1$. Пусть $G$ — группа движений прямой, порождённая отражениями $\sigma_{-1}$ и $\sigma_{m+1}$ относительно этих линий. Композиция двух отражений — сдвиг на $2M$, поэтому $G$ состоит из сдвигов $p\mapsto p+2jM$ (чётные элементы, знак $+1$) и отражений $p\mapsto -2-p+2jM$ (нечётные, знак $-1$).</p></div></details></div>
+<p>Включение-исключение по $G$: число путей из $x$ в $y$, не задевающих ни одной запрещённой линии, равно знакопеременной сумме числа СВОБОДНЫХ путей из образов $g(x)$ в $y$ со знаком $\det g$. Обоснование то же, что в <a class="xref" href="#s1-t-12">теореме 12</a>, применённое по очереди: путь, задевший линию, отражается относительно первой задетой линии и сокращается ровно с одним слагаемым противоположного знака; остаются только пути, не задевшие ничего. Подставляя $g(x)=x+2jM$ и $g(x)=-2-x+2jM$ и считая свободные пути биномами, получаем формулу. $\square$ опирается: izobrazheniya (21)</p>
+<div class="stmt thm" id="s1-t-16"><span class="lbl">Утверждение 16 (обе прежние формулы — это гашение слагаемых).</span><p><!--id: lek-gashenie--> Пусть в <a class="xref" href="#s1-t-15">теореме 15</a> сначала $m\ge N$ и $x=0$, а затем $x=n$, $y=n+k$, $m=2n$, $n\ge r$. Тогда в первом случае выживают ровно два слагаемых, во втором — одно:</p><p class="eq">$$\binom Nr-\binom N{r+1}\qquad\text{и}\qquad\binom Nr.$$</p><p>То есть биномиальные коэффициенты, баллотные числа и Каталан — не три формулы, а одна, у которой при разных подстановках гаснет разное число членов. опирается: otrazhenie (31), binom-porog (8)</p></div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s1-h-3">Что делает вес площади</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s1-t-17"><span class="lbl">Утверждение 17 ($q$-изображения: показатели квадратичны).</span><p><!--id: lek-q-izobrazheniya--> Пусть $q$ свободно. Тогда отражения не гасятся весом площади, а градуируются им: формула <a class="xref" href="#s1-t-15">теоремы 15</a> превращается в знакопеременную сумму гауссовых биномов</p><p class="eq">$$[z^N]\,F_m(x,y;z,q)\;=\;\sum_{j\in\mathbb Z}\Bigl(q^{\alpha_j}\begin{bmatrix}N\\ \beta_j\end{bmatrix}_q-q^{\alpha'_j}\begin{bmatrix}N\\ \beta'_j\end{bmatrix}_q\Bigr),$$</p><p>где показатели $\alpha_j,\alpha'_j$ квадратичны по номеру отражения $j$, а индексы $\beta_j,\beta'_j$ линейны.</p></div>
+<p>Квадратичность не случайна и не техническая: $j$-е отражение сдвигает путь на величину, линейную по $j$, а площадь под сдвинутым путём меняется на величину, линейную по сдвигу, — итого квадрат. Именно эта квадратичность через две вкладки превратится в пятиугольные и треугольные показатели классических тождеств.</p>
+<p>🔴 <strong>ОПРОВЕРГНУТО РАЗВЕДКОЙ 03.09. Весь этот блок и всё, что на нём стоит, читать нельзя.</strong> Формула такого вида существует у Краттенталера — Моханти (следствие 3), но для статистики $\operatorname{maj}$, а не для площади. Для площади метод изображений ломается уже при ОДНОЙ стенке: $C_3(q)=1+2q+q^2+q^3$ не представляется разностью гауссовых биномов; на свободных путях $\operatorname{maj}$ и площадь равнораспределены (Мак-Магон), на путях со стенкой — нет. У Owczarek — Prellberg формулы изображений нет вовсе: их теорема 1 даёт отношение континуант, и индекс суммирования там степень, а не номер отражения. Подробности — <code>../RAZVEDKA-2026-09-03.md</code> §1 У1. опирается: q-izobrazheniya (27)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s1-h-4">Граница взгляда</h2></summary><div class="sec-body">
+<p><strong>Работает ли в общем случае — да.</strong> Теорема 15 выписана для произвольных $m,x,y$, а <a class="xref" href="#s1-t-17">утверждение 17</a> переносит её и на свободное $q$. В этом смысле комбинаторный взгляд полон: любой отдельный коэффициент он даёт точно.</p>
+<p><strong>Чего он не даёт — роста.</strong> Формула точна, но не обозрима. При $m=3$, $N=120$, $x=y=0$ ответ равен $3{,}3\cdot10^{24}$, а наибольшее слагаемое суммы — $9{,}7\cdot10^{34}$: слагаемые превосходят ответ в $2{,}9\cdot10^{10}$ раз и гасят друг друга почти полностью. Из такой записи нельзя увидеть ни скорости роста, ни асимптотики — арифметически она безупречна и информационно бесполезна.</p>
+<p>Это и есть повод для следующих взглядов. Сумма отражений отвечает на вопрос «сколько ровно», и отвечать на вопрос «как быстро растёт» она не обязана — на него отвечает вкладка 3, и отвечает одним слагаемым там, где здесь их десятки, гасящих друг друга.</p>
+</div></details></article></main></div></section>
+<section class="panel" id="panel-2"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s2-h-1">Уравнение по первому возвращению</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s2-h-2">Замкнутая формула для произвольных концов</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s2-h-3">Вес площади: то же рассуждение выживает</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s2-h-4">Граница взгляда</a></summary></details></li></ol></details><main><article class="stream"><h1>Взгляд 2. Алгебраический: уравнение вместо перебора</h1>
+<blockquote><strong>Вопрос взгляда:</strong> как устроена ФУНКЦИЯ целиком — не отдельный её коэффициент?  Смена привычки: свойство пути перестаёт быть свойством пути и становится <strong>действием на функцию</strong>. «Разрезать путь по первому возвращению» — это не приём подсчёта, а способ выразить функцию через саму себя. Дальше остаётся решить уравнение и разложить решение в ряд; перебора не будет вовсе.</blockquote>
+<details class="sec sec2" open><summary><h2 id="s2-h-1">Уравнение по первому возвращению</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s2-t-18"><span class="lbl">Теорема 18 (уравнение первого возвращения).</span><p><!--id: lek-pervyy-vozvrat--> Пусть $t=z^2$, пусть $f_m(t,q)=F_m(0,0;z,q)$ и $f_0=1$. Тогда при всех $m\ge1$</p><p class="eq">$$f_m(t,q)\;=\;\frac1{1-t\,f_{m-1}(qt,\,q)},\qquad\text{а при }q=1\quad f_m=\frac1{1-t\,f_{m-1}}.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Непустой путь $0\to0$ разрезается по моменту первого возвращения в клетку $0$. Первый кусок устроен так: подъём $0\to1$, затем путь $1\to1$, ни разу не спускающийся в $0$, затем спуск $1\to0$. Оставшийся хвост — снова произвольный путь $0\to0$. Отсюда $f_m=1+(\text{вес первого куска})\cdot f_m$, и всё сводится к весу первого куска.</p></div></details></div>
+<p>Длина: два крайних шага дают $z^2=t$. Площадь: подъём из клетки $0$ по определению 2 стоит $q^{0}=1$, спуск бесплатен всегда, — значит, крайние шаги веса не несут. Середина живёт в клетках $1..m$ и, сдвинутая вниз на одну клетку, есть в точности путь $0\to0$ в полосе высоты $m-1$; но каждый её подъём делается из клетки на единицу выше, чем в сдвинутой копии, то есть стоит ровно в $q$ раз дороже. Подъёмов у пути длины $2k$ ровно $k$, поэтому вес середины получается из $f_{m-1}$ подстановкой $t\mapsto qt$. Итого $f_m=1+t\,f_{m-1}(qt,q)\,f_m$, что и требовалось. $\square$</p>
+<p>🔴 В прежней редакции скелета это уравнение стояло с первой степенью $z$ и с лишним множителем $q$. Обе ошибки разведены символьным счётом; запись — в журнале <code>../SKELET.md</code>. Урок общего вида: в уравнении на функцию цена ошибки в показателе не видна глазами — ряд сходится, коэффициенты выглядят правдоподобно, и ловится это только счётом. опирается: pervyy-vozvrat (24)</p>
+<div class="stmt thm" id="s2-t-19"><span class="lbl">Утверждение 19 (конечная цепная дробь).</span><p><!--id: lek-drob--> Пусть $q=1$. Тогда развёртывание <a class="xref" href="#s2-t-18">теоремы 18</a> даёт цепную дробь ровно из $m$ ярусов:</p><p class="eq">$$f_m(t)=\cfrac1{1-\cfrac{t}{1-\cfrac{t}{\ddots\,-\cfrac t1}}}$$</p><p>Потолок здесь виден напрямую: <strong>высота полосы — это глубина дроби.</strong> Снять потолок значит устремить $m\to\infty$ и получить бесконечную дробь; в этом взгляде «убрать стенку» — не предельный переход в геометрии, а предельный переход в алгебраическом выражении. опирается: pervyy-vozvrat (24)</p></div>
+<div class="stmt thm" id="s2-t-20"><span class="lbl">Утверждение 20 (формула Каталана — второй вывод).</span><p><!--id: lek-katalan-uravnenie--> Пусть $m\to\infty$, $q=1$ и $G(t)=\lim_m f_m(t)$. Тогда $G=1+tG^2$, откуда</p><p class="eq">$$G(t)=\frac{1-\sqrt{1-4t}}{2t}=\sum_{n\ge0}\frac1{n+1}\binom{2n}n t^n.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Уравнение получается из <a class="xref" href="#s2-t-18">теоремы 18</a> при $m\to\infty$: $G=1/(1-tG)$. Квадратное уравнение $tG^2-G+1=0$ имеет два корня; при $t\to0$ функция обязана стремиться к $1$, что отбирает корень со знаком минус перед радикалом.</p></div></details></div>
+<p>Осталось разложить радикал. Биномиальный коэффициент с полуцелым верхом считается прямо: $$\binom{1/2}k=\frac{\frac12\bigl(\frac12-1\bigr)\cdots\bigl(\frac12-k+1\bigr)}{k!}=(-1)^{k-1}\frac{(2k-2)!}{2^{2k-1}\,k!\,(k-1)!},$$ откуда при $k\ge1$ $$\binom{1/2}k(-4)^k=-\,\frac{2\,(2k-2)!}{k!\,(k-1)!}=-\frac2k\binom{2k-2}{k-1}.$$ Значит $\sqrt{1-4t}=1-2\sum_{k\ge1}\frac1k\binom{2k-2}{k-1}t^k$, и после деления на $2t$ $$G(t)=\sum_{k\ge1}\frac1k\binom{2k-2}{k-1}t^{k-1}=\sum_{n\ge0}\frac1{n+1}\binom{2n}n t^n.\qquad\square$$</p>
+<p>Это второй стандартный вывод формулы Каталана. Сравните с первым (вкладка 1): там она получилась вычитанием двух биномов, здесь — решением уравнения. Одно и то же число, два разных механизма — и это не совпадение, а первое проявление сюжета, который во вкладке 4 станет главным. опирается: formula-katalana (29), pervyy-vozvrat (24)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s2-h-2">Замкнутая формула для произвольных концов</h2></summary><div class="sec-body">
+<p>Уравнение первого возвращения хорошо описывает замкнутые пути. Для произвольных $x,y$ работает другой алгебраический приём — тот, который видит полосу как матрицу.</p>
+<div class="stmt thm" id="s2-t-21"><span class="lbl">Теорема 21 (замкнутая формула через многочлены Чебышёва).</span><p><!--id: lek-chebyshev--> Пусть $U_0=U_1=1$ и $U_k=U_{k-1}-z^2U_{k-2}$. Тогда</p><p class="eq">$$F_m(x,y;\,z,1)\;=\;z^{|y-x|}\,\frac{U_{\min(x,y)}(z)\;U_{m-\max(x,y)}(z)}{U_{m+1}(z)}.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Пусть $A$ — матрица смежности полосы: $(m+1)\times(m+1)$, единицы на двух побочных диагоналях. Тогда $(A^N)_{xy}$ — число путей длины $N$ из $x$ в $y$, и потому</p><p class="eq">$$F_m(x,y;z,1)=\sum_{N\ge0}z^N(A^N)_{xy}=\bigl[(I-zA)^{-1}\bigr]_{xy}.$$</p><p>Матрица $T=I-zA$ трёхдиагональна: единицы на диагонали, $-z$ рядом. Для трёхдиагональной матрицы правило Якоби даёт элементы обратной через миноры: минор, дополнительный к позиции $(x,y)$, распадается на верхний левый угловой минор порядка $\min(x,y)$ и нижний правый порядка $m-\max(x,y)$, а между ними стоит треугольный блок с $-z$ на диагонали, дающий множитель $z^{|y-x|}$ (знак съедается множителем $(-1)^{x+y}$).</p></div></details></div>
+<p>Остаётся опознать миноры. Пусть $D_k$ — угловой минор порядка $k$ матрицы $T$. Разложение по последней строке даёт $D_k=D_{k-1}-z^2D_{k-2}$ при $D_0=D_1=1$, то есть $D_k=U_k$. Полный определитель — это $D_{m+1}$. $\square$</p>
+<p>Знаменатель — определитель всей полосы; числитель — определители двух хвостов, от нижней стенки до ближнего конца пути и от дальнего конца до потолка. Стенки входят в формулу не как запрет, а как границы двух миноров. опирается: chebyshev (20)</p>
+<div class="stmt thm" id="s2-t-22"><span class="lbl">Утверждение 22 (рациональность и полюса).</span><p><!--id: lek-polyusa--> Пусть $M=m+2$. Тогда $F_m(x,y;z,1)$ — рациональная функция при любом потолке, её полюса суть</p><p class="eq">$$z=\frac1{2\cos\frac{k\pi}M},\qquad k=1,\dots,m+1,$$</p><p>и ближайший к нулю полюс отвечает $k=1$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Рациональность видна из <a class="xref" href="#s2-t-21">теоремы 21</a>. Полюса — корни $U_{m+1}(z)=\det(I-zA)$, то есть числа $z=1/\lambda$ по собственным числам $\lambda$ матрицы смежности пути из $m+1$ клеток; эти собственные числа равны $2\cos\frac{k\pi}M$. Наибольшее из них отвечает $k=1$, значит наименьший по модулю полюс — тоже. $\square$</p></div></details></div>
+<p>Именно здесь алгебра передаёт эстафету: полюс ближайший к нулю управляет ростом коэффициентов, но чтобы это увидеть, нужен уже другой язык — вкладка 3. опирается: polyusa-rost (26), chebyshev (20)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s2-h-3">Вес площади: то же рассуждение выживает</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s2-t-23"><span class="lbl">Теорема 23 ($q$-континуанты).</span><p><!--id: lek-q-kontinuanty--> Пусть $\theta_0=\theta_1=1$ и $\theta_i=\theta_{i-1}-z^2q^{\,i-2-x}\theta_{i-2}$, а $\varphi_{m+2}=\varphi_{m+1}=1$ и $\varphi_j=\varphi_{j+1}-z^2q^{\,j-1-x}\varphi_{j+2}$. Тогда</p><p class="eq">$$F_m(x,y;\,z,q)=\begin{cases}z^{\,y-x}\,q^{\binom{y-x}2}\dfrac{\theta_x\,\varphi_{y+2}}{\theta_{m+1}},&x\le y,\\[3mm] z^{\,x-y}\,\dfrac{\theta_y\,\varphi_{x+2}}{\theta_{m+1}},&x>y.\end{cases}$$</p><p>При $q=1$ оба семейства совпадают с $U_k$, и формула становится <a class="xref" href="#s2-t-21">теоремой 21</a>.</p></div>
+<p><em>Схема доказательства.</em> Вес площади не разрушает матричной картины, а деформирует её: подъём из клетки $p$ несёт $zq^{\,p-x}$ вместо $z$, спуск — по-прежнему $z$. Матрица $T_q$ остаётся трёхдиагональной, но перестаёт быть симметричной; правило Якоби к трёхдиагональной матрице применимо независимо от симметрии, а угловые миноры удовлетворяют тем же трёхчленным рекуррентам, только с $q$-градуированными коэффициентами — это и есть $\theta$ и $\varphi$. $\square$ опирается: q-kontinuanty (25)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s2-h-4">Граница взгляда</h2></summary><div class="sec-body">
+<p><strong>Работает ли в общем случае — да, и это единственный из четырёх взглядов, который переживает вес площади целиком.</strong> Теорема 23 выписана для произвольных $m,x,y$ и произвольного $q$; ни одного условия вида «при достаточно большом $m$» или «при $q=1$» в ней нет.</p>
+<p><strong>Чего он не даёт — асимптотики.</strong> Замкнутая формула отвечает на вопрос «как устроена функция», но извлечение асимптотики коэффициентов из отношения континуант — уже отдельная работа с особенностями. Алгебра доводит до полюсов (<a class="xref" href="#s2-t-22">утверждение 22</a>) и останавливается: чтобы полюс превратился в скорость роста, нужен третий взгляд.</p>
+</div></details></article></main></div></section>
+<section class="panel" id="panel-3"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s3-h-1">Один шаг как оператор</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s3-h-2">Диагонализация: синусы</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s3-h-3">Скорость роста и почему она почти никогда не целая</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s3-h-4">Лестница по потолку — это спектр</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s3-h-5">Граница взгляда</a></summary></details></li></ol></details><main><article class="stream"><h1>Взгляд 3. Разностные уравнения: откуда в комбинаторной задаче косинусы</h1>
+<blockquote><strong>Вопрос взгляда:</strong> как коэффициент РАСТЁТ с длиной?  Здесь мы перестаём смотреть на путь целиком и смотрим на то, как число путей обновляется за один шаг. Обновление — линейный оператор; оператор диагонализуется; собственные векторы оказываются синусами, а собственные числа — косинусами. Косинусы в задаче о путях появляются не по аналогии с волной: полоса <strong>и есть</strong> струна с закреплёнными концами, а один шаг блуждания — её разностное уравнение.</blockquote>
+<details class="sec sec2" open><summary><h2 id="s3-h-1">Один шаг как оператор</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s3-t-24"><span class="lbl">Утверждение 24 (разностное уравнение с нулевым краем).</span><p><!--id: lek-uravnenie-shaga--> Пусть $u_N(p)=[z^N]F_m(x,p;z,1)$ — число путей длины $N$ из $x$ в клетку $p$. Тогда</p><p class="eq">$$u_{N+1}(p)=u_N(p-1)+u_N(p+1),\qquad u_N(-1)=u_N(m+1)=0,\qquad u_0=\delta_x.$$</p><p>Записав $A$ — матрицу этого обновления, получаем $u_N=A^Nu_0$; а через дискретный лапласиан $(\Delta u)(p)=u(p+1)-2u(p)+u(p-1)$ то же самое читается как</p><p class="eq">$$A=\Delta+2I.$$</p><p>Стенки вошли сюда не запретом, а <strong>краевым условием Дирихле</strong>: вне полосы функция равна нулю. Это и есть перевод задачи на язык, где живут синусы. опирается: obekt (3)</p></div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s3-h-2">Диагонализация: синусы</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s3-t-25"><span class="lbl">Теорема 25 (спектральная формула).</span><p><!--id: lek-spektr--> Пусть $M=m+2$. Тогда</p><p class="eq">$$[z^N]\,F_m(x,y;z,1)\;=\;\frac2M\sum_{k=1}^{m+1}\Bigl(2\cos\frac{k\pi}M\Bigr)^{\!N}\sin\frac{k\pi(x+1)}M\,\sin\frac{k\pi(y+1)}M.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Положим $v_k(p)=\sin\frac{k\pi(p+1)}M$ при $p=0,\dots,m$ и $k=1,\dots,m+1$. Продолжение $v_k$ на $p=-1$ и $p=m+1$ даёт ноль — краевое условие выполнено автоматически. Проверим, что это собственный вектор:</p><p class="eq">$$v_k(p-1)+v_k(p+1)=\sin\frac{k\pi p}M+\sin\frac{k\pi(p+2)}M=2\cos\frac{k\pi}M\,\sin\frac{k\pi(p+1)}M,$$</p><p>по формуле суммы синусов. Значит $Av_k=2\cos\frac{k\pi}M\,v_k$.</p></div></details></div>
+<p>Векторов $m+1$, и они ортогональны: при $1\le k,l\le M-1$ $$\sum_{s=1}^{M-1}\sin\frac{k\pi s}M\sin\frac{l\pi s}M=\frac M2\,\delta_{kl},$$ что даёт разложение единичного вектора $e_x=\frac2M\sum_k v_k(x)\,v_k$. Применяя $A^N$ и беря компоненту $y$, получаем требуемое. $\square$</p>
+<p>Обратите внимание, чего здесь НЕ было: ни одного пути мы не перебрали. Ответ получен из того, как устроено обновление, а не из того, как устроены отдельные траектории. опирается: spektr (22)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s3-h-3">Скорость роста и почему она почти никогда не целая</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s3-t-26"><span class="lbl">Утверждение 26 (рост, теорема Нивена и три исключения).</span><p><!--id: lek-rost--> Пусть $M=m+2$. Тогда при больших $N$ в <a class="xref" href="#s3-t-25">теореме 25</a> выживает слагаемое $k=1$, и число путей растёт как</p><p class="eq">$$\Bigl(2\cos\frac\pi M\Bigr)^{\!N}.$$</p><p>Само основание рационально только при $m=1$, где оно равно $1$. Целым бывает не основание, а его КВАДРАТ — ровно при $m=1,2,4$, где он равен $1,2,3$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Первое утверждение: $2\cos\frac{k\pi}M$ строго убывает по $k$, поэтому $k=1$ даёт наибольшее по модулю собственное число. Второе: по теореме Нивена $2\cos\pi t$ при рациональном $t$ принимает рациональные значения лишь $0,\pm1,\pm2$; при $M\ge3$ величина $2\cos\frac\pi M$ лежит строго между $0$ и $2$, значит она рациональна только когда равна $1$, то есть $M=3$. Третье: $\bigl(2\cos\frac\pi M\bigr)^2=2+2\cos\frac{2\pi}M$, и это целое ровно тогда, когда $2\cos\frac{2\pi}M$ целое, — снова по Нивену при $M=3,4,6$, что отвечает $m=1,2,4$ и даёт квадраты $1,2,3$. $\square$</p></div></details></div>
+<p>Отсюда видно, почему знакомые последовательности кончаются так быстро: степенями числа растут только там, где квадрат роста целый, а таких потолков ровно три.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s3-h-4">Лестница по потолку — это спектр</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s3-t-27"><span class="lbl">Утверждение 27 (лестница объяснена спектром, включая сдвиг при $m=4$).</span><p><!--id: lek-lestnica-spektr--> Пусть $x=0$, финиш свободен и $a_N=\sum_y u_N(y)$. Тогда собственное число $\lambda_k$ входит в $a_N$ с весом, пропорциональным $\sum_{y}v_k(y)$, и потому</p><p class="eq">$$m=1:\ a_N=1;\qquad m=2:\ a_{N+2}=2a_N\ (N\ge0);\qquad m=4:\ a_{N+2}=3a_N\ \text{только при }N\ge1.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Из <a class="xref" href="#s3-t-25">теоремы 25</a> суммированием по $y$: $a_N=\frac2M\sum_k\lambda_k^N\,v_k(0)\sum_{y=0}^{m}v_k(y)$. Считаем суммы $\sum_y v_k(y)=\sum_{s=1}^{M-1}\sin\frac{k\pi s}M$.</p></div></details></div>
+<p>При $m=1$ ($M=3$) собственные числа $1$ и $-1$; для $k=2$ сумма равна $\sin\frac{2\pi}3+\sin\frac{4\pi}3=0$. Остаётся одно слагаемое с $\lambda=1$, значит $a_N\equiv1$.</p>
+<p>При $m=2$ ($M=4$) собственные числа $\sqrt2,\,0,\,-\sqrt2$; для $k=2$ значения синуса по $s=1,2,3$ равны $1,0,-1$, сумма нулевая — нулевое собственное число выпадает. Остаются $\pm\sqrt2$, их квадрат равен $2$, отсюда $a_{N+2}=2a_N$ при всех $N\ge0$.</p>
+<p>При $m=4$ ($M=6$) собственные числа $\sqrt3,\,1,\,0,\,-1,\,-\sqrt3$. Для $k=2$ и $k=4$ суммы синусов нулевые, и эти слагаемые выпадают. Но для $k=3$ значения синуса по $s=1,\dots,5$ равны $1,0,-1,0,1$, и сумма равна $1$ — <strong>нулевое собственное число НЕ выпадает.</strong> Оно даёт вклад $0^N$: единицу при $N=0$ и ноль при $N\ge1$. Поэтому чистое утроение через шаг начинается только с $N=1$. $\square$</p>
+<p>🔴 Вот и объяснение сдвига, который в общей части был отмечен как странность. Это не описка в формуле и не особенность малых чисел: при $m=4$ у оператора шага есть <strong>нулевое собственное число с ненулевым весом</strong>, и оно портит ровно один член ряда — нулевой. При $m=2$ нулевое собственное число тоже есть, но его вес равен нулю, и сдвига не возникает. Прежняя редакция скелета выписывала обе формулы одинаково и на $m=4$ ошибалась; исправлено, запись в журнале <code>../SKELET.md</code>. опирается: lestnica-potolka (14), troyki-m4 (13), spektr (22)</p>
+<div class="stmt thm" id="s3-t-28"><span class="lbl">Утверждение 28 (формула Бине как главный член спектральной суммы).</span><p><!--id: lek-bine--> Пусть $m=3$, $x=0$, финиш свободен. Тогда в спектральной сумме выживают ровно два слагаемых, отвечающие $\lambda=\varphi$ и $\lambda=-\varphi^{-1}$, где $\varphi=\frac{1+\sqrt5}2$, и она в точности есть формула Бине:</p><p class="eq">$$a_N=F_{N+1}=\frac{\varphi^{\,N+1}-(-\varphi)^{-(N+1)}}{\sqrt5}.$$</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>Здесь $M=5$, собственные числа $2\cos\frac{k\pi}5$ при $k=1,\dots,4$, то есть $\varphi,\ \varphi^{-1},\ -\varphi^{-1},\ -\varphi$. Суммы $\sum_yv_k(y)$ обращаются в ноль при $k=2$ и $k=4$ и отличны от нуля при $k=1,3$. Остаются два слагаемых с основаниями $\varphi$ и $-\varphi^{-1}$; их коэффициенты равны $\varphi/\sqrt5$ и $1/(\varphi\sqrt5)$, что и есть запись Бине. $\square$</p></div></details></div>
+<p>Так асимптотика Фибоначчи перестаёт быть отдельным фактом: <strong>$\varphi^N$ — это просто главное собственное число полосы высоты 3.</strong> А золотое сечение появляется потому, что $2\cos36^\circ=\varphi$; ничего специфически «фибоначчиева» в нём нет, есть пятиугольная симметрия числа $M=5$. опирается: bine (30), fibonachchi (9)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s3-h-5">Граница взгляда</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s3-t-29"><span class="lbl">Утверждение 29 (при $q\ne1$ спектра нет — честная граница).</span><p><!--id: lek-net-q-spektra--> Пусть $q\ne1$. Тогда представления вида <a class="xref" href="#s3-t-25">теоремы 25</a> у объекта нет. Причина видна прямо из вывода: вес площади делает коэффициенты оператора шага зависящими от клетки, синусы перестают быть собственными векторами, а ортогональность, на которой держалось разложение, ломается. Ни здесь, ни в литературе аналога не найдено — $q$-слой решают дробями и континуантами вкладки 2. Поиск вёлся по Краттенталеру (гл. 10), Owczarek — Prellberg, Ouvry — Polychronakos; отрицательный вывод ограничен этими домами и заявлен как отрицательный, а не как пробел изложения. опирается: net-q-spektra (28)</p></div>
+<p><strong>Работает ли в общем случае — при $q=1$ да, при $q\ne1$ нет.</strong> Это единственный из четырёх взглядов, у которого граница проходит по $q$, а не по геометрии: любые $m,x,y$ он берёт, а вес площади не берёт вовсе.</p>
+<p><strong>Что он даёт взамен</strong> — то, чего нет у первых двух: <strong>скорость</strong>. Там, где вкладка 1 выписывает десятки почти сокращающихся биномов, здесь работает одно слагаемое, и из него сразу видно и рост $\bigl(2\cos\frac\pi M\bigr)^N$, и время перемешивания порядка $M^2$ (спектральная щель $\lambda_1-\lambda_2$ ведёт себя как $\frac{3\pi^2}{2M^2}$).</p>
+<p>И теперь у нас есть <strong>две точные формулы для одного и того же числа</strong> — сумма отражений и сумма синусов. То, что они равны, — не техническая проверка, а содержательное утверждение. Оно и есть предмет четвёртой вкладки.</p>
+</div></details></article></main></div></section>
+<section class="panel" id="panel-4"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-1">Две формулы одного числа</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-2">Что делает с этим вес площади</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-3">Пятиугольная теорема Эйлера</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-4">Тройное тождество Якоби: инструмент, а не следствие</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-5">Ещё одно равенство двух счётов</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-6">Куда это приходит: тэта и модулярность</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s4-h-7">Граница взгляда</a></summary></details></li></ol></details><main><article class="stream"><h1>Взгляд 4. Функциональное уравнение посложнее: модулярность и асимптотика</h1>
+<blockquote>🔴🔴 <strong>ВКЛАДКА ПРОБИТА В ОСНОВАНИИ.</strong> Она держится на утверждении 17 вкладки 1 («вес площади даёт квадратичные показатели»), которое разведка 03.09 опровергла: такая формула — про $\operatorname{maj}$, не про площадь. Значит недоказанными оказываются переходы «объект → пятиугольная теорема» и «объект → знакопеременная сумма, которую сворачивает Якоби». Уцелело: <a class="xref" href="#s4-t-30">теорема 30</a> (равенство двух формул доказано дважды независимо), инволюция Франклина (доказана здесь и от объекта не зависит), <a class="xref" href="#s4-t-35">утверждение 35</a> про тэту.  Отдельно неверно <a class="xref" href="#s4-t-34">утверждение 34</a>: «при $m\to\infty$ обе стороны — левые части тождеств Роджерса — Рамануджана». Стороны РАЗНЫЕ — сумма и произведение, — и в этом смысл финитизации.  Сверх того <code>KOSTYAK.md</code> пишет прямо: «наша $F_n(z,q)$ при произвольных $z,q$ модулярной формой не является», а непрерывный предел из курса исключён. То есть взгляд 4 в заявленной форме материалом не обеспечен — это развилка, а не пробел изложения. См. <code>../RAZVEDKA-2026-09-03.md</code> §§1, 4, 5.</blockquote>
+<blockquote><strong>Вопрос взгляда:</strong> что происходит в ПРЕДЕЛЕ и почему две точные формулы для одного числа — содержательный факт, а не совпадение?  Три предыдущих взгляда дали три ответа на один вопрос. Здесь предметом становится само их равенство. Оказывается, это частный случай механизма, который в анализе называется суммированием Пуассона, а на его дальнем конце стоит модулярность.</blockquote>
+<details class="sec sec2" open><summary><h2 id="s4-h-1">Две формулы одного числа</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-30"><span class="lbl">Теорема 30 (двойственность как суммирование Пуассона).</span><p><!--id: lek-dvoystvennost--> Пусть $M=m+2$. Тогда для всех $N$ и всех $x,y$</p><p class="eq">$$\sum_{j\in\mathbb Z}\Bigl[\binom{N}{\tfrac{N+y-x+2jM}2}-\binom{N}{\tfrac{N+y+x+2+2jM}2}\Bigr]\;=\;\frac2M\sum_{k=1}^{m+1}\Bigl(2\cos\tfrac{k\pi}M\Bigr)^{\!N}\sin\tfrac{k\pi(x+1)}M\,\sin\tfrac{k\pi(y+1)}M.$$</p><p>Слева — сумма по группе отражений, справа — сумма по её характерам. Это и есть суммирование Пуассона в его конечной, циклической форме: обе стороны считают одно число, но одна проходит по элементам группы, а другая — по её двойственной.</p></div>
+<p><em>Замечание о том, что здесь доказано.</em> Само равенство доказано дважды и независимо: левая часть — теорема 15 вкладки 1, правая — теорема 25 вкладки 3, каждая выведена из определения объекта. Содержательное утверждение этой теоремы не в равенстве, а в <strong>прочтении</strong> равенства: пара «группа ↔ характеры» объясняет, почему у задачи ровно две естественные точные формулы и почему они дополнительны по сложности. опирается: dvoystvennost (23), izobrazheniya (21), spektr (22)</p>
+<p>Дополнительность стоит увидеть в числах. При $m=3$, $N=120$, $x=y=0$ ответ равен $3{,}3\cdot10^{24}$, наибольшее слагаемое слева — $9{,}7\cdot10^{34}$: левая часть считает точно и гасит почти всё, что насчитала. Справа при тех же данных выживает практически один член. Ровно наоборот при большом $M$ и малом $N$: там слева одно-два слагаемых, а справа сумма из $m+1$ членов, ни один из которых не главный. <strong>Каждая формула проста в точности там, где вторая безнадёжна.</strong></p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-2">Что делает с этим вес площади</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-31"><span class="lbl">Утверждение 31 (квадратичные показатели).</span><p><!--id: lek-kvadratichnye--> Пусть $q$ свободно и $m\to\infty$. Тогда отражения градуируются весом площади: $j$-е отражение сдвигает путь на величину, линейную по $j$, площадь меняется на величину, линейную по сдвигу, — и в сумме появляется</p><p class="eq">$$\sum_{j\in\mathbb Z}(-1)^{j}\,q^{\,\text{квадратичное по }j}\cdot(\dots),$$</p><p>то есть знакопеременный ряд с квадратичным показателем. Ряды такого вида — ровно те, что стоят в левых частях классических тождеств «сумма ↔ произведение».</p></div>
+<p>Это стык двух миров, и стоит назвать его прямо: <strong>квадратичность показателя — не свойство теории чисел, а след того, что стенок две.</strong> Одна стенка дала бы линейный показатель и никаких тождеств. опирается: q-izobrazheniya (27)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-3">Пятиугольная теорема Эйлера</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-32"><span class="lbl">Теорема 32 (пятиугольная теорема Эйлера).</span><p><!--id: lek-pyatiugolnaya--> Пусть $|q|<1$. Тогда</p><p class="eq">$$\sum_{j\in\mathbb Z}(-1)^jq^{\,j(3j-1)/2}\;=\;\prod_{k\ge1}(1-q^k).$$</p><p>Из объекта получается ЛЕВАЯ часть — знакопеременная сумма с квадратичным показателем по <a class="xref" href="#s4-t-31">утверждению 31</a>. Равенство её произведению — отдельный факт, и доказывается он биекцией.</p><details class="d-proof"><summary>доказательство — правой части (инволюция Франклина)</summary><div class="proof"><p>Раскроем произведение: коэффициент при $q^n$ равен $\sum_\lambda(-1)^{\ell(\lambda)}$, где $\lambda$ пробегает разбиения числа $n$ на РАЗЛИЧНЫЕ части, а $\ell$ — число частей. Построим инволюцию, меняющую чётность $\ell$.</p></div></details></div>
+<p>Для разбиения $\lambda_1>\lambda_2>\dots>\lambda_\ell$ обозначим $s=\lambda_\ell$ — наименьшую часть, и $\sigma$ — длину верхней «лестницы», то есть наибольшее $i$ с $\lambda_1-\lambda_2=\dots=\lambda_{i-1}-\lambda_i=1$.</p>
+<p><em> если $\sigma<s$: снимем по единице с верхних $\sigma$ частей и допишем новую часть $\sigma$ — частей стало на одну больше; </em> если $\sigma\ge s$: уберём наименьшую часть $s$ и добавим по единице к верхним $s$ частям — частей стало на одну меньше.</p>
+<p>Обе операции сохраняют различность частей и взаимно обратны, значит слагаемые с противоположными знаками сокращаются попарно. Исключений ровно два семейства — те, где лестница ДОХОДИТ до наименьшей части и операции сталкиваются: $$\lambda=(2j-1,2j-2,\dots,j),\quad n=\frac{j(3j-1)}2,\qquad\text{и}\qquad\lambda=(2j,2j-1,\dots,j+1),\quad n=\frac{j(3j+1)}2.$$ У обоих ровно $j$ частей, то есть знак $(-1)^j$; вместе они дают показатели $j(3j-1)/2$ при $j\in\mathbb Z$. $\square$<a class="mn-ref" id="s4-mnr-1" href="#s4-mn-1">✳</a></p>
+<p id="s4-mn-1" class="mn"><a class="mn-back" href="#s4-mnr-1">✳</a> <b>Статус вывода из объекта.</b> Путь «объект → левая часть» опирается на явный вид показателей утверждения 17 вкладки 1, а он в этой редакции с источником не сличался. Доказана здесь правая половина — та, что связывает сумму с произведением; левая половина заявлена и помечена как открытое место в <code>../SKELET.md</code>.
+опирается: pyatiugolnaya (33), q-izobrazheniya (27)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-4">Тройное тождество Якоби: инструмент, а не следствие</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-33"><span class="lbl">Утверждение 33 (JTP входит инструментом).</span><p><!--id: lek-yakobi--> Пусть тождество читается в направлении «из объекта». Тогда объект даёт знакопеременную сумму, а свернуть её в произведение позволяет тройное тождество Якоби</p><p class="eq">$$\prod_{n\ge1}(1-q^{n})(1+q^{\,n-\frac12}w)(1+q^{\,n-\frac12}w^{-1})\;=\;\sum_{j\in\mathbb Z}q^{\,j^2/2}w^{\,j},$$</p><p>которое специализацией нашего объекта НЕ получается.</p></div>
+<p>Это отрицательный результат, и он был предметом отдельной проверки: гипотеза состояла в том, что тройное тождество Якоби и формула Каталана окажутся связаны как две специализации одной функции. Связи не нашлось. Обобщение, содержащее JTP, существует — формулы Вейля — Каца для аффинной алгебры $A_1^{(1)}$, — но это уже не путевой объект, и включать его в курс значило бы менять предмет. Из объекта прямо получается только специализация JTP — пятиугольная <a class="xref" href="#s4-t-32">теорема 32</a>.</p>
+<p><strong>Отрицательный ответ здесь такой же результат, как положительный.</strong> Он говорит, где именно проходит граница объекта, и избавляет курс от обещания, которого тот не может сдержать. опирается: yakobi (35)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-5">Ещё одно равенство двух счётов</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-34"><span class="lbl">Утверждение 34 (Роджерс — Рамануджан как равенство двух счётов).</span><p><!--id: lek-rodzhers--> Пусть $d_m$ — многочлен замкнутых путей с весом площади под потолком $m$. Тогда он одновременно равен прямому счёту и счёту через отражения:</p><p class="eq">$$d_m=\sum_{j\ge0}q^{j^2}\begin{bmatrix}m-j\\ j\end{bmatrix}_q=\sum_{j\in\mathbb Z}(-1)^jq^{\frac{j(5j+1)}2}\begin{bmatrix}m\\\big\lfloor\frac{m-5j}2\big\rfloor\end{bmatrix}_q,$$</p><p>а при $m\to\infty$ обе стороны становятся левыми частями тождеств Роджерса — Рамануджана.</p></div>
+<p>Механизм тот же, что в <a class="xref" href="#s4-t-30">теореме 30</a>: одно число посчитано двумя способами, и равенство двух способов и есть тождество. Разница только в том, что теперь считается многочлен, а не число, и вместо биномов стоят гауссовы биномы. опирается: rodzhers-ramanudzhan (34)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-6">Куда это приходит: тэта и модулярность</h2></summary><div class="sec-body">
+<div class="stmt thm" id="s4-t-35"><span class="lbl">Утверждение 35 (модулярность как имя места).</span><p><!--id: lek-modulyarnost--> Пусть в <a class="xref" href="#s4-t-30">теореме 30</a> сделан непрерывный предел: полоса растёт, шаг уменьшается, суммы превращаются в ряды по решётке. Тогда обе стороны становятся тэта-рядом $\theta(s)=\sum_{n\in\mathbb Z}e^{-\pi n^2 s}$, а само равенство превращается в</p><p class="eq">$$\theta(1/s)=\sqrt s\;\theta(s).$$</p><p>Это то же суммирование Пуассона, но уже не для конечной группы отражений, а для решётки $\mathbb Z$; гауссиана переходит в гауссиану, отсюда корень.</p></div>
+<p><strong>Модулярность входит сюда именем места, а не предметом изучения.</strong> Курс не занимается модулярными формами и не должен: он доходит до точки, где становится видно, что двойственность отражений и характеров — конечная тень преобразования $s\mapsto1/s$. Дальше начинается другая теория, и правильное действие курса — назвать её и остановиться. опирается: modulyarnost (36), dvoystvennost (23)</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s4-h-7">Граница взгляда</h2></summary><div class="sec-body">
+<p><strong>Работает ли в общем случае — частично, и граница здесь не по параметрам, а по жанру.</strong> Первые три взгляда дают формулы при заданных $m,x,y$; этот работает только в пределе $m\to\infty$ и производит не формулы для коэффициентов, а <strong>тождества</strong>. При конечном $m$ он не говорит ничего нового: <a class="xref" href="#s4-t-30">теорема 30</a> при конечном $M$ — это просто равенство двух уже доказанных формул.</p>
+<p><strong>Чего он не даёт.</strong> Тройное тождество Якоби из объекта не выводится (<a class="xref" href="#s4-t-33">утверждение 33</a>); предельные переходы — от точной формулы к асимптотике, от дискретного лапласиана к непрерывному — требуют аппарата, которого у объекта нет и который курс подключает извне.</p>
+<p><strong>Что остаётся на руках после четырёх взглядов.</strong> Один объект, пять параметров. Комбинаторный взгляд даёт любой отдельный коэффициент, включая $q\ne1$. Алгебраический — функцию целиком, тоже включая $q\ne1$. Разностный — скорость роста, но только при $q=1$. Функциональный — тождества, но только в пределе. Ни один из четырёх не покрывает остальных; каждый закрывает то, на чём остальные останавливаются. Это и есть содержание курса: <strong>не четыре темы, а четыре вопроса к одной функции.</strong></p>
+</div></details></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
+});
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>

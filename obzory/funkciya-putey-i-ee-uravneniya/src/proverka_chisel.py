@@ -558,11 +558,15 @@ def blok_skeleta_v2():
     res = []
 
     # 1. дыра прежнего объекта: старт в нуле => предел по m даёт ЛУЧ, не прямую
+    # 🔴 РЯД ЦЕЛИКОМ, А НЕ ОДНА ТОЧКА. Прежняя проверка брала только m=80 —
+    # ровно те m, где утверждение верно, — и потому пропустила ложное «28 при
+    # всех m>=3», уехавшее в SKELET.md и в карточку. Факт: 21 (m=3), 27 (m=4),
+    # 28 (m>=5). Найдено вычиткой транскрипта субагентом 2026-09-02.
     N, k = 8, 2
-    luch = puti(80, 0, k, N)
-    res.append(("Старт в нуле: предел по m даёт ЛУЧ, не прямую",
-                luch == 28 and comb(N, (N+k)//2) == 56,
-                "путей 0->2 длины 8 при m=80 равно %d, на прямой %d" % (luch, comb(N, (N+k)//2))))
+    ryad = [puti(m, 0, k, N) for m in range(3, 10)]
+    res.append(("Старт в нуле: ряд по m застывает на 28 лишь с m>=5, не с m>=3",
+                ryad == [21, 27, 28, 28, 28, 28, 28] and comb(N, (N+k)//2) == 56,
+                "путей 0->2 длины 8 при m=3..9: %s; на прямой %d" % (ryad, comb(N, (N+k)//2))))
 
     # 2. Каталан: x=y=0, m>=n, q=1
     good = all(puti(n, 0, 0, 2*n) == comb(2*n, n)//(n+1) for n in range(1, 9))
@@ -918,26 +922,46 @@ def blok_q_sloy():
     res.append(("Т27 при q=1 даёт многочлены Чебышёва теоремы 8", good,
                 "m<=5, все x"))
 
-    # ── граф ссылок SKELET.md: каждый номер в «опирается» существует ──
+    # ── граф ссылок SKELET.md: каждое ИМЯ в «опирается» объявлено ──
+    # 🔴 2026-09-03: ссылки переведены с номеров на ИМЕНА блоков (слаг в комментарии
+    # `<!--id: chebyshev-->` за заголовком). Номер — только порядок чтения, он подвижен;
+    # имя — личность блока, оно не меняется. Прежний разбор искал `опирается:\s*([0-9,\s]+)`
+    # и на именах нашёл бы ноль ссылок при непустой строке — то есть был бы зелёным,
+    # не видя ничего, ровно как разбор, чинённый 2026-08-25. Полный гейт ссылок
+    # (дубли имён, справочный номер в скобках, межфайловые `[#имя]`) — `src/check_ssylki.py`;
+    # здесь остаётся его счётная половина, чтобы прогон чисел не зависел от второго скрипта.
     skelet = os.path.normpath(os.path.join(
         os.path.dirname(os.path.abspath(__file__)), os.pardir, "SKELET.md"))
     try:
         text = open(skelet, encoding="utf-8").read()
-        bloks = set(int(n) for n in re.findall(
-            r"\[(?:opredelenie|utverzhdenie)\]\s*\*\*(?:Определение|Утверждение|Теорема)\s+(\d+)",
-            text))
+        # 🔴 re.M ОБЯЗАТЕЛЕН: без него `^` значит «начало ТЕКСТА», а не строки.
+        zag = re.findall(
+            r"^\*\*(Определение|Утверждение|Теорема)\s+(\d+)\s*\([^)]*\)\.\*\*"
+            r"\s*<!--\s*id:\s*([a-z0-9-]+)\s*-->", text, re.M)
+        imena = set(t[2] for t in zag)
+        bez_imeni = len(re.findall(
+            r"^\*\*(?:Определение|Утверждение|Теорема)\s+\d+\s*\([^)]*\)\.\*\*(?!\s*<!--\s*id:)",
+            text, re.M))
         refs, lines = [], 0
-        for mm in re.finditer(r"опирается:\s*([0-9,\s]+)", text):
+        for mm in re.finditer(r"^опирается:\s*(.+)$", text, re.M):
             lines += 1
-            refs += [int(v) for v in re.findall(r"\d+", mm.group(1))]
-        bitye = sorted(set(v for v in refs if v not in bloks))
-        defs = len(re.findall(r"\[opredelenie\]", text))
-        utv = len(re.findall(r"\[utverzhdenie\]", text))
-        graf_ok = (not bitye) and lines == utv and len(bloks) == defs + utv
-        res.append(("Граф ссылок SKELET.md: битых 0, строк «опирается» = числу утверждений",
+            for elem in mm.group(1).split(","):
+                nm = re.match(r"^\s*([a-z][a-z0-9-]*)\s*(?:\(\d+\))?\s*$", elem)
+                # неразобранный элемент попадает в битые под своим сырым видом,
+                # чтобы порча формы не выглядела как отсутствие ссылок
+                refs.append(nm.group(1) if nm else elem.strip())
+        bitye = sorted(set(v for v in refs if v not in imena))
+        defs = len(re.findall(r"^\*\*Определение\s+\d+", text, re.M))
+        utv = len(re.findall(r"^\*\*(?:Утверждение|Теорема)\s+\d+", text, re.M))
+        graf_ok = (not bitye) and lines == utv and len(imena) == defs + utv \
+            and bez_imeni == 0 and len(refs) > 0
+        res.append(("Граф ссылок SKELET.md: битых 0, имя у каждого блока, "
+                    "строк «опирается» = числу утверждений",
                     graf_ok,
-                    "блоков %d (определений %d, утверждений %d), ссылок %d, битых %s"
-                    % (defs + utv, defs, utv, len(refs), bitye or "нет")))
+                    "блоков %d (определений %d, утверждений %d), имён %d, без имени %d, "
+                    "ссылок %d, битых %s"
+                    % (defs + utv, defs, utv, len(imena), bez_imeni, len(refs),
+                       bitye or "нет")))
     except OSError as ex:
         res.append(("Граф ссылок SKELET.md", False, "файл не прочитан: %s" % ex))
 
