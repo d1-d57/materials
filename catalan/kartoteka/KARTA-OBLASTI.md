@@ -41,6 +41,11 @@ registr: рабочий
 | `kart-dva-q-katalana` | площадной $q$-Каталан и major-index $q$-Каталан — разные; замкнутая форма только у второго | [карточка](kart-dva-q-katalana.md) |
 | `kart-tri-normirovki-ploshchadi` | площадь считается тремя несовместимыми способами в наших же файлах; гейты этого не ловят | [карточка](kart-tri-normirovki-ploshchadi.md) |
 | `kart-predel-q-zamknuto` | при $m\to\infty$, $q\ne1$ замкнутый ответ есть: $G=H(qt)/H(t)$ (Haug — Prellberg) | [карточка](kart-predel-q-zamknuto.md) |
+| `kart-potolok-est-finitizaciya` | 🔴 высота полосы = параметр финитизации Роджерса — Рамануджана; при $t=-q$ наша дробь есть дробь Рамануджана | [карточка](kart-potolok-est-finitizaciya.md) |
+| `kart-eyler-vypadaet` | пятиугольная теорема из объекта НЕ выводится (два довода); её место занимает тождество модуля 5 | [карточка](kart-eyler-vypadaet.md) |
+| `kart-al-salam-ismail-dom` | наш $q$-объект — многочлены Аль-Салама — Исмаила 1983; мера известна явно, название статьи есть наш сюжет | [карточка](kart-al-salam-ismail-dom.md) |
+| `kart-q-menyaet-tip-spektra` | $q$ меняет ТИП предельного спектра: разрез $[-2,2]$ против компактного с накоплением в нуле | [карточка](kart-q-menyaet-tip-spektra.md) |
+| `kart-tri-prochteniya-plus-predel` | прочтений резольвенты три, предел — не четвёртое; четвёртое есть преобразование Коши меры | [карточка](kart-tri-prochteniya-plus-predel.md) |
 
 ## Нити (маршруты)
 
@@ -48,4 +53,5 @@ registr: рабочий
 - **«четыре взгляда на одну формулу»:** `kart-chebyshev-smysl` → `kart-polyusa-spektr` → `kart-izobrazheniya-otrazhenie` → `kart-q-kontinuanty` → `kart-centralnaya-para`
 - **«место классики»:** `kart-jtp-mesto` → `kart-izobrazheniya-otrazhenie` → `kart-rr-dve-storony`
 - **🔴 «где мы ошибались» (нить разведки 03.09):** `kart-q-otrazheniya-maj-ne-ploshchad` → `kart-dva-q-katalana` → `kart-rr-dve-storony` → `kart-q-spektr-granica` → `kart-tri-normirovki-ploshchadi`. Общий сюжет нити: **везде, где ответ красиво замыкался, мы подставляли $\operatorname{maj}$ вместо площади либо путали нормировку.** Читать перед любой работой с $q$-слоем.
-- **«откуда это у людей»:** `kart-dom-teorem-vienno` → `kart-predel-q-zamknuto` → `kart-rr-dve-storony`
+- **«откуда это у людей»:** `kart-dom-teorem-vienno` → `kart-al-salam-ismail-dom` → `kart-predel-q-zamknuto` → `kart-rr-dve-storony`
+- **⭐ «потолок как ручка» (несущая нить курса, 03.09):** `kart-centralnaya-para` → `kart-tri-prochteniya-plus-predel` → `kart-q-menyaet-tip-spektra` → `kart-potolok-est-finitizaciya` → `kart-eyler-vypadaet`. Сюжет нити: **высота полосы выглядит ограничением задачи, а оказывается параметром финитизации — опусти потолок, получишь многочлен; подними, получишь тождество Роджерса — Рамануджана.**
