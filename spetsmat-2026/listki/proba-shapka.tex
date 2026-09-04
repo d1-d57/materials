@@ -1,0 +1,16 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{fontspec}\usepackage{polyglossia}\setmainlanguage{russian}
+\setmainfont{SourceSerifPro}[Path=shrifty/,Extension=.ttf,
+  UprightFont=*_400Regular,ItalicFont=*_400Regular_Italic,
+  BoldFont=*_700Bold,BoldItalicFont=*_700Bold_Italic]
+\usepackage[left=11mm,right=13mm,top=18mm,bottom=14mm]{geometry}
+\pagestyle{empty}\setlength{\parindent}{0pt}
+\newcommand{\proba}[2]{\centerline{\textit{Школа № 179. КЛ. 2026/2027 уч.год}}
+  \par\medskip\centerline{\rule{0.62\linewidth}{0.4pt}}\par\smallskip
+  \centerline{#1}\par\smallskip\centerline{\footnotesize\textsf{[#2]}}\par\bigskip\bigskip}
+\begin{document}
+\proba{\textbf{1$a$. \MakeUppercase{Деревья}}}{сейчас: все прописные}
+\proba{\textbf{1$a$. \textsc{Деревья}}}{textsc — как в прошлом году, если шрифт умеет капитель}
+\proba{\textbf{1$a$. Д\lower0.08ex\hbox{\fontsize{8.4}{10}\selectfont ЕРЕВЬЯ}}}{эмуляция капители: первая буква полная, остальные уменьшенные прописные}
+\proba{\textbf{1$a$. Деревья}}{без всего: как в txt-версии прошлогоднего листка}
+\end{document}
