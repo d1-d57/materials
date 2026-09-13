@@ -7,6 +7,7 @@ otvet: net
 proverka: polnyj perebor vseh 1024 grafov na 5 vershinah — takoj nabor stepenej ne vstrechaetsya, 2026-08-06
 status: gotova
 istochnik: bank pod budushchie zanyatiya
+itog: снята владельцем 29.08 не глядя в решение: «очевидно — рисуешь двух с четырьмя знакомыми и сразу видишь, что человека с одним знакомым нет». Для этого ученика слишком прямая
 ---
 
 ## Условие

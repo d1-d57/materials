@@ -7,6 +7,7 @@ bez_otveta: da
 proverka: perehod (a,b,c,d)->(b,c,d,a+b+c+d mod 10) obratim: a=(e-b-c-d) mod 10 — provereno perebor; period 2,0,2,5 raven 1560; 4,8,9,1 stoit rovno za 4 shaga DO starta, 2026-08-06
 status: gotova
 istochnik: kruzhok CPM Hamovniki 7 klass, listok "Zaciklivanie" 13.12.2025, zadacha 4(a,b)
+itog: ~ ДЗ после №7: (а) конечность и «первым повторяется старт» — каркас верный, но обратимость объявлена, а не доказана; (б) 4,8,9,1 верно, обоснования однозначности шага назад нет
 ---
 
 ## Условие

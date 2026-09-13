@@ -7,6 +7,7 @@ bez_otveta: da
 proverka: sostoyanie = para (polozhenie 1, polozhenie 2); hod obratim, tak kak po polozheniyu 1 DO hoda vosstanavlivaetsya primenyonnaya ko 2 kombinaciya. Provereno vruchnuyu 2026-08-06
 status: gotova
 istochnik: kruzhok CPM Hamovniki 7 klass, listok "Zaciklivanie" 13.12.2025, zadacha 8
+itog: ~ ДЗ после №7 (дослана перед занятием №8): пошёл НЕ через пару-состояние, а своим путём — через периоды и произведение n·y, и путь рабочий. Но оба ключевых шага объявлены: почему цикл первого содержит СТАРТ и почему второй вообще возвращается (нужно: за период первого ко второму применяется одна и та же суммарная комбинация S, а повторение S конечное число раз даёт исходное положение)
 ---
 
 ## Условие

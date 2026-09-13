@@ -7,6 +7,7 @@ otvet: 4
 proverka: polnyj perebor maksimalnogo nezavisimogo mnozhestva na 28 kletkah ramki, 2026-08-06
 status: gotova
 istochnik: sobrana pod DZ posle №5
+itog: снята владельцем 29.08: «очевидно, ответ четыре, что тут обсуждать». Обе половины видны сразу — для этого ученика не задача
 ---
 
 ## Условие

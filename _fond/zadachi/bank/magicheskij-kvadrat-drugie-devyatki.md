@@ -1,7 +1,7 @@
 ---
 id: magicheskij-kvadrat-drugie-devyatki
-tema: konstruktiv
-priyom: reshyotka-iz-dvuh-shagov
+tema: конструктив
+priyom: решётка из двух шагов
 uroven: 7-8
 otvet: (a) nelzya; (b) mozhno, summa linii 36; (v) v centre stoit srednee arifmeticheskoe vseh devyati chisel
 proverka: perebor vseh 9! rasstanovok, 2026-08-23. Dlya 1,2,3,4,5,6,7,8,10 magicheskogo kvadrata net. Dlya 2,5,8,9,12,15,16,19,22 est, summa linii 36. Provereno takzhe na 5,7,9,16,18,20,27,29,31 (summa 54) — devyatki vida a + i*d + j*e pri i,j = 0,1,2 dayut kvadrat vsegda

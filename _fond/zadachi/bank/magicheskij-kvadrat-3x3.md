@@ -1,7 +1,7 @@
 ---
 id: magicheskij-kvadrat-3x3
-tema: dvojnoj-schet
-priyom: schyot-kratnostej-vynuzhdaet-rasstanovku
+tema: двойной счёт
+priyom: счёт кратностей вынуждает расстановку
 uroven: 7-8
 otvet: (a) vosem troek; (b) 15; (v) 5 v centre, 1-3-7-9 po seredinam storon, 2-4-6-8 po uglam; (g) 4*15 = 45 + 3*centr, otkuda centr = 5; (d) vosem kvadratov, vse — odin s tochnostyu do povorotov i otrazhenij
 proverka: perebor vseh 9! rasstanovok, 2026-08-23. Magicheskih kvadratov rovno 8; summa linii vsegda 15; v centre vsegda 5; v uglah tolko 2,4,6,8, po seredinam storon tolko 1,3,7,9. Troek s summoj 15 rovno 8, i mnozhestvo troek sovpadaet s mnozhestvom linij. Orbita odnogo kvadrata pod 4 povorotami i otrazheniyami dayot vse 8. V levom verhnem uglu kazhdoe iz 2,4,6,8 vstrechaetsya rovno dvazhdy

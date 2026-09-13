@@ -7,6 +7,7 @@ otvet: vse summy krome 1, 2, 4, 7
 proverka: perebor summ do 60 — nepredstavimy rovno 1, 2, 4, 7; vse s >= 8 predstavimy. Schitano 2026-08-06
 status: gotova
 istochnik: baza spetsmata, listok "Indukciya" (id 329) №10; on zhe v listkah id 2 №7 i id 59
+itog: ✗ ДЗ после №7: шаг «10, 11, 12 и дальше +3» нашёл сам (это и есть полная индукция), но ответа не дал — сказал «все больше 10», потерял 3, 5, 6, 8, 9 и не доказал непредставимость 1, 2, 4, 7
 ---
 
 ## Условие

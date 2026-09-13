@@ -7,6 +7,7 @@ bez_otveta: da
 proverka: zhadnyj algoritm dayot razlozhenie dlya vseh n=1..4999, stepeni ne povtoryayutsya — perebor 2026-08-06
 status: gotova
 istochnik: baza spetsmata, listok "Indukciya" (id 329) №9; on zhe v listkah id 59 №13 i id 201 №10
+itog: ~ ДЗ после №7: доказал по-своему (блоками: до 2ⁿ, само 2ⁿ, и 2ⁿ плюс всё до 2ⁿ) — верно, но это ОБЫЧНАЯ индукция, а он подписал «это полная». Ярлык есть, различения нет
 ---
 
 ## Условие
