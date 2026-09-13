@@ -1,0 +1,5 @@
+D1|lineika-chisla|openrouter/anthropic/claude-sonnet-5|diskmat-57/docs/LINEJKA-chisla.md|razvedka
+D2|lineika-grafy|openrouter/anthropic/claude-sonnet-5|diskmat-57/docs/LINEJKA-grafy-metody.md|razvedka
+D3|lineika-podschety|openrouter/anthropic/claude-sonnet-5|diskmat-57/docs/LINEJKA-podschety-kruzhok.md|razvedka
+D4|karta-dokumentov|openrouter/anthropic/claude-sonnet-5|diskmat-57/docs/KARTA-DOKUMENTOV.md|pryamoj
+D5|koncepcia-goda|openrouter/anthropic/claude-sonnet-5|diskmat-57/docs/KONCEPCIA-goda.md|pryamoj
