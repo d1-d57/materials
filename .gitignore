@@ -142,3 +142,11 @@ _fond/biblioteka/*
 
 # Porozhdaemyj zond zapisi (pustoj fajl) ot instrumentov - v kommity ne hodit.
 .probe_write
+
+# ── Фотографии тетрадей учеников — НЕ в git. Заведено 13.09.2026.
+# Репозиторий публичный (проверено: github.com/d1-d57/materials, repository_public: true),
+# а `ученики/PROBNOE.md` прямо запрещает класть в него персональные данные
+# несовершеннолетних. Почерк, черновики и школьные тетради ребёнка — ровно это.
+# В git идёт ДИСТИЛЛЯТ в ZHURNAL.md (что решил, как записал), сами снимки — нет.
+# Правило шире одного ученика: ловит любую папку foto/ у любого ученика.
+ucheniki/*/foto/
