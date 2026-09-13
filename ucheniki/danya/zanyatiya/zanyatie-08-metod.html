@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие №8 — план разбора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.6;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+
+  header.mast{padding:52px 0 14px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+          color:var(--rubric);margin-bottom:10px;}
+  h1{font-family:"Old Standard TT",Georgia,serif;font-size:33px;font-weight:400;line-height:1.15;}
+  .data{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin-top:8px;}
+  .cel{margin:18px 0 0;padding:14px 16px;background:var(--panel);border-left:3px solid var(--accent);
+       font-size:16px;color:var(--ink-soft);}
+  .cel b{color:var(--ink);}
+
+  .plan{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 8px;font-family:"PT Sans",sans-serif;font-size:12px;}
+  .plan span{padding:3px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft);white-space:nowrap;}
+  .plan span b{color:var(--ink);font-weight:700;}
+
+  section.z{padding:30px 0 6px;border-top:1px solid var(--rule);margin-top:26px;}
+  .hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .num{font-family:"Old Standard TT",serif;font-size:26px;color:var(--rubric);line-height:1;}
+  h2{font-family:"Old Standard TT",Georgia,serif;font-size:23px;font-weight:400;flex:1;min-width:200px;}
+  .meta{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--ink-faint);white-space:nowrap;}
+  .meta i{font-style:normal;color:var(--accent);}
+  .meta.new i{color:var(--rubric);}
+
+  details.cond{margin:10px 0 16px;}
+  details.cond summary{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;
+       display:inline-block;border-bottom:1px dotted var(--rule);padding-bottom:2px;}
+  details.cond summary::-webkit-details-marker{display:none;}
+  details.cond summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details.cond[open] summary{margin-bottom:9px;}
+  .usl{background:var(--panel);border:1px solid var(--rule);padding:13px 16px;font-size:15.5px;color:var(--ink-soft);}
+  .usl p+p{margin-top:7px;}
+
+  .pole{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:7px 0;align-items:start;}
+  .pole+.pole{border-top:1px dotted var(--rule);}
+  .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+       color:var(--ink-faint);padding-top:5px;}
+  .lab.ok{color:var(--accent);}
+  .lab.hole{color:var(--rubric);}
+  .pole p+p{margin-top:6px;}
+  ul.q{list-style:none;}
+  ul.q li{position:relative;padding-left:20px;margin-bottom:6px;}
+  ul.q li::before{content:"—";position:absolute;left:0;color:var(--accent);}
+  ul.q li em{font-style:italic;}
+  .tih{color:var(--ink-soft);font-size:15.5px;}
+
+  footer{margin-top:36px;padding-top:16px;border-top:2px solid var(--ink);
+         font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);}
+  footer b{font-family:"PT Serif",serif;color:var(--ink);}
+  @media (max-width:560px){
+    .pole{grid-template-columns:1fr;gap:2px;}
+    .lab{padding-top:0;}
+    h1{font-size:27px;} h2{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Занятие №8 · план разбора</div>
+  <h1>Доказательства и остовное дерево</h1>
+  <div class="data">27 августа 2026 · полтора часа</div>
+</header>
+
+<div class="cel">
+  <b>Одна мысль на всё занятие:</b> каркас у него верный почти везде, а ключевой шаг раз за разом
+  объявляется вместо того, чтобы доказываться. Занятие про то, чтобы он сам увидел это место в трёх
+  своих решениях подряд — и получил инструмент, который закрывает две старые задачи.
+</div>
+
+<div class="plan">
+  <span><b>1.</b> Многоугольник · 25</span>
+  <span><b>2.</b> Степени двойки + монеты · 15</span>
+  <span><b>3.</b> Последовательность + кубики · 10</span>
+  <span><b>4.</b> Спички · 10</span>
+  <span><b>5.</b> Остовное дерево · 20</span>
+  <span><b>6.</b> Два остова · 10</span>
+</div>
+
+<!-- 1 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">1</span>
+    <h2>Многоугольник и диагонали</h2>
+    <span class="meta">разбор · <i>25 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Выпуклый n-угольник разрезали на треугольники непересекающимися диагоналями.</p>
+      <p>(а) Сколько получилось треугольников и сколько провели диагоналей? Докажите, что иначе быть не может.</p>
+      <p>(б) Назовём треугольник разрезания <i>угловым</i>, если две его стороны — стороны исходного
+         многоугольника. Докажите, что угловой треугольник обязательно найдётся и что их не меньше двух.</p>
+      <p class="tih">Ответ: треугольников n − 2, диагоналей n − 3.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Сдал</div><div>
+    Под литерой (а) написал не про счёт, а про угловые: многоугольник — это «центр» плюс отрезанные
+    от него угловые треугольники, и центр нельзя разрезать больше чем на две части. Две картинки
+    шестиугольника. Пункт (б) оборван на первой фразе.
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Засчитано</div><div>
+    Ничего — и сказать это прямо, но не как «неверно», а как «здесь нет доказательства»: слово «центр»
+    ничем не определено, а два примера не доказывают «по-другому быть не может».
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    Ни разу не взял диагональ и не разрезал по ней. Шага индукции нет вообще: вместо него попытка
+    охватить общую картину целиком — ровно как было с рыцарем и «неразумными картами».
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Возьми любую диагональ разрезания. На что распался многоугольник?</li>
+      <li>Сколько вершин у каждого куска? <em>(ждём k + m = n + 2 и вопрос «почему +2»: концы посчитаны дважды)</em></li>
+      <li>Ты знаешь ответ для кусков. Как из них собрать ответ для целого?</li>
+      <li>В пункте (б): почему одного углового мало? <em>(нашу диагональ может иметь стороной только один)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если встанет</div><div>
+    Толчок не «разбери случаи», а в его рабочей форме: <b>что здесь можно разрезать, чтобы получились
+    такие же задачи поменьше?</b>
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Ради этого всё. Положить рядом его же сданный №1 про висячие вершины: <b>сколько треугольников,
+    сколько общих сторон?</b> n − 2 и n − 3. Ничего не напоминает? Разрезание многоугольника — дерево,
+    нарисованное иначе, угловой треугольник — висячая вершина. <b>Аналогию не называть</b> — только эти два числа.
+  </div></div>
+</section>
+
+<!-- 2 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">2</span>
+    <h2>Степени двойки и монеты — вместе</h2>
+    <span class="meta">разбор · <i>15 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условия</summary>
+    <div class="usl">
+      <p><b>Степени двойки.</b> Докажите, что любое натуральное число можно представить как сумму
+         нескольких различных степеней двойки.</p>
+      <p><b>Монеты.</b> Какие суммы можно заплатить монетами по 3 и 5 рублей без сдачи? Найдите все
+         и докажите, что других нет.</p>
+      <p class="tih">Ответ: все, кроме 1, 2, 4 и 7.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Сдал</div><div>
+    <p>Степени двойки — доказал блоками: всё до 2ⁿ, само 2ⁿ, и 2ⁿ плюс всё до 2ⁿ. Приписал:
+       «это полная индукция».</p>
+    <p>Монеты — нашёл «умею 10, 11, 12, дальше прибавляю тройки», а ответом назвал «все больше 10».</p>
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Засчитано</div><div>
+    Оба хода верные, и это надо сказать: в степенях двойки рассуждение полное, в монетах найден
+    именно тот шаг, который нужен.
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    <p>Ярлыки перепутаны местами. В степенях двойки шаг опирается на соседнее утверждение — это
+       обычная индукция, а названа полной. В монетах шаг опирается на то, что тремя номерами
+       раньше, — это полная, и он её не заметил.</p>
+    <p>Плюс в монетах ответ не сверен с вопросом: 3, 5, 6, 8, 9 потеряны, непредставимость 1, 2, 4, 7
+       не доказана.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Не «какая это индукция», а: <b>на что ссылается твой шаг — на соседнее утверждение
+          или на любое из меньших?</b> Задать про оба решения подряд, ответы получатся разные.</li>
+      <li>Почему в монетах базы понадобилось три, а не одна? Что сломается, если взять базой только восьмёрку?</li>
+      <li>Перечитай условие монет вслух. Ты ответил на этот вопрос?</li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">3</span>
+    <h2>Последовательность и кубики — вместе</h2>
+    <span class="meta">разбор · <i>10 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условия</summary>
+    <div class="usl">
+      <p><b>Последовательность.</b> 2, 0, 2, 5, 9, 6, 2, 2, … — каждый новый член равен последней цифре
+         суммы четырёх предыдущих. (а) Докажите, что кусок 2, 0, 2, 5 встретится снова.
+         (б) Докажите, что встретится кусок 4, 8, 9, 1.</p>
+      <p><b>★ Кубики.</b> Робот подходит то к одному кубику Рубика, то ко второму. К первому всё время
+         применяет одну и ту же комбинацию; комбинация для второго зависит от текущего положения первого.
+         Докажите, что когда-нибудь оба кубика одновременно окажутся в исходном положении.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Сдал</div><div>
+    <p>Последовательность: состояний конечно, значит зациклится; первым повторяется старт,
+       «ведь к каждой четвёрке ведёт одна стрелка». В (б) назвал 4, 8, 9, 1 — верно.</p>
+    <p>Кубики: свой путь, через периоды. Первый циклится через n, второй через y, значит через n·y оба.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Засчитано</div><div>
+    Оба каркаса верные. В кубиках путь вообще не тот, что в моём решении (там пара-состояние),
+    и он рабочий — это стоит отметить вслух.
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    Одна и та же в обоих, и та же, что в задаче 1: ключевой шаг объявлен. «К каждой четвёрке ведёт
+    одна стрелка» — утверждение, а не наблюдение. В кубиках «второй циклится через y ходов» — потеряна
+    единица измерения: y считает не ходы, а обороты первого.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Дана четвёрка. Как найти ту, что стояла перед ней? Напиши формулу.
+          <em>(первое число — последняя цифра разности)</em></li>
+      <li>Что именно применяется ко второму кубику за один полный оборот первого — одно и то же
+          или каждый раз разное? Почему? <em>(здесь вся задача: одна и та же комбинация, а её повторение
+          конечное число раз возвращает кубик на место)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Свести три разбора в один диагноз: во всех трёх задачах каркас был твой и верный, а падало
+    одно и то же место. Назвать это место словами — его же словами, если получится.
+  </div></div>
+</section>
+
+<!-- 4 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">4</span>
+    <h2>Спички и ладья</h2>
+    <span class="meta">возврат к старой · <i>10 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Между любыми двумя соседними клетками шахматной доски лежит спичка. Какое наименьшее число
+         спичек можно убрать, чтобы ладья могла попасть за несколько ходов из любой клетки в любую
+         другую, не перескакивая через спички?</p>
+      <p class="tih">Ответ: 63.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Было</div><div>
+    ДЗ после №6. Подать именно как возврат и назвать старой: <b>«твой пример был верный и оптимальный,
+    недостаёт второй половины»</b>.
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    Пример 7 + 56 = 63 построен и оптимален. Оценки нет: «надо двигаться либо по всем столбцам,
+    либо по всем строкам» — это описание его же примера, а не доказательство.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Переведи на язык графов: что вершины, что рёбра? Что означает «ладья доедет куда угодно»?</li>
+      <li><b>Сколько рёбер минимум нужно связному графу на 64 вершинах?</b></li>
+    </ul>
+    <p class="tih">Скорее всего сошлётся на «в дереве n − 1» как на известное. Вот и повод спросить,
+       а почему это верно, — и перейти в блок 5 бесплатно.</p>
+  </div></div>
+</section>
+
+<!-- 5 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">5</span>
+    <h2>Остовное дерево</h2>
+    <span class="meta new">новое · <i>20 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>цепочка пунктов</summary>
+    <div class="usl">
+      <p>(4) Докажите, что в любом связном графе можно выбросить часть рёбер так, чтобы он остался
+         связным и стал деревом.</p>
+      <p>(5) Докажите, что в дереве, где вершин хотя бы две, есть висячая вершина.</p>
+      <p>(6) Выведите: в связном графе найдётся вершина, при удалении которой граф останется связным.</p>
+      <p class="tih">Пункты (1)–(3) — контрпример к «наименьшей степени» и счётчик компонент — он уже прошёл на №7.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    На №7 до этого не доехали, а без остовного дерева не закрываются ни спички, ни метро.
+    Это и есть новый материал занятия.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Выбрасываем рёбра, пока можно. Почему в конце не осталось циклов?</li>
+      <li>Почему один и тот же счётчик компонент даёт неравенство в произвольном связном графе
+          и равенство в дереве? Что именно меняется?</li>
+      <li>Где здесь понадобилась висячая вершина? <em>(для формулы n − 1 не нужна вовсе — только ради следствия)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Метро</div><div>
+    Внутрь этого блока, пунктом (6). Тоже старая задача и тоже назвать старой. Его тогдашний рецепт —
+    «закрыть станцию с наименьшим числом линий» — ложный, и ломать его должен он сам:
+    <b>построй сеть, где такая станция ровно одна и закрыть её нельзя.</b> Дальше правильный ответ
+    выпадает даром: нужна не малая степень в графе, а висячая вершина в остовном дереве.
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Равносильные определения: три определения дерева стояли в преамбуле его домашки, и он ими
+    пользовался. Спросить, почему из «рёбер ровно n − 1» следует «циклов нет».
+  </div></div>
+</section>
+
+<!-- 6 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">6</span>
+    <h2>Ровно два остовных дерева</h2>
+    <span class="meta new">новое · <i>10 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Может ли в каком-то связном графе быть в точности два различных остовных дерева?</p>
+      <p class="tih">Ответ: не может — либо одно, либо не меньше трёх. Проверено перебором всех связных
+         графов до шести вершин: двойка не встречается ни разу.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Короткая, целиком доказательная, и бьёт в его «нашёл — значит всё»: два остова найти легко,
+    вопрос в том, может ли их быть ровно два.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Нарисуй граф с двумя остовными деревьями. Точно только два?</li>
+      <li>Возьми ребро, не вошедшее в дерево, и верни его. Что появилось?</li>
+      <li>А если теперь выкинуть другое ребро этого цикла?</li>
+    </ul>
+  </div></div>
+</section>
+
+<footer>
+  <b>На дом отсюда:</b> сто городов и 199 авиалиний. Если задача уйдёт быстро — довесок:
+  а 199 здесь обязательно?
+</footer>
+
+</div>
+</body>
+</html>

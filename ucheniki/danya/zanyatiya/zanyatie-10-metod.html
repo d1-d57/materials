@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие №10 — план</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.6;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+
+  header.mast{padding:52px 0 14px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+          color:var(--rubric);margin-bottom:10px;}
+  h1{font-family:"Old Standard TT",Georgia,serif;font-size:33px;font-weight:400;line-height:1.15;}
+  .data{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin-top:8px;}
+  .cel{margin:18px 0 0;padding:14px 16px;background:var(--panel);border-left:3px solid var(--accent);
+       font-size:16px;color:var(--ink-soft);}
+  .cel b{color:var(--ink);}
+  .cel p+p{margin-top:8px;}
+
+  .plan{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 8px;font-family:"PT Sans",sans-serif;font-size:12px;}
+  .plan span{padding:3px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft);white-space:nowrap;}
+  .plan span b{color:var(--ink);font-weight:700;}
+
+  section.z{padding:30px 0 6px;border-top:1px solid var(--rule);margin-top:26px;}
+  .hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .num{font-family:"Old Standard TT",serif;font-size:26px;color:var(--rubric);line-height:1;}
+  h2{font-family:"Old Standard TT",Georgia,serif;font-size:23px;font-weight:400;flex:1;min-width:200px;}
+  .meta{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--ink-faint);white-space:nowrap;}
+  .meta i{font-style:normal;color:var(--accent);}
+  .meta.new i{color:var(--rubric);}
+
+  details.cond{margin:10px 0 16px;}
+  details.cond summary{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;
+       display:inline-block;border-bottom:1px dotted var(--rule);padding-bottom:2px;}
+  details.cond summary::-webkit-details-marker{display:none;}
+  details.cond summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details.cond[open] summary{margin-bottom:9px;}
+  .usl{background:var(--panel);border:1px solid var(--rule);padding:13px 16px;font-size:15.5px;color:var(--ink-soft);}
+  .usl p+p{margin-top:7px;}
+
+  .pole{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:7px 0;align-items:start;}
+  .pole+.pole{border-top:1px dotted var(--rule);}
+  .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+       color:var(--ink-faint);padding-top:5px;}
+  .lab.ok{color:var(--accent);}
+  .lab.hole{color:var(--rubric);}
+  .pole p+p{margin-top:6px;}
+  ul.q{list-style:none;}
+  ul.q li{position:relative;padding-left:20px;margin-bottom:6px;}
+  ul.q li::before{content:"—";position:absolute;left:0;color:var(--accent);}
+  ul.q li em{font-style:italic;}
+  .tih{color:var(--ink-soft);font-size:15.5px;}
+  table.ch{border-collapse:collapse;font-family:"PT Sans",sans-serif;font-size:14px;margin-top:6px;}
+  table.ch td,table.ch th{border:1px solid var(--rule);padding:4px 11px;text-align:center;}
+  table.ch th{color:var(--ink-faint);font-weight:400;font-size:12px;}
+
+  footer{margin-top:36px;padding-top:16px;border-top:2px solid var(--ink);
+         font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);}
+  footer b{font-family:"PT Serif",serif;color:var(--ink);}
+  footer p+p{margin-top:7px;}
+  @media (max-width:560px){
+    .pole{grid-template-columns:1fr;gap:2px;}
+    .lab{padding-top:0;}
+    h1{font-size:27px;} h2{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Занятие №10 · план</div>
+  <h1>Дерево как строка: код Прюфера и формула Кэли</h1>
+  <div class="data">после занятия №9 · полтора часа</div>
+</header>
+
+<div class="cel">
+  <p><b>Почему это.</b> На №9 сработало не объяснение, а находка: неожиданное соответствие между
+  геометрической картинкой и графом, маленькие случаи, нарисованные руками, и обобщение, которого
+  он попросил сам. Здесь та же машина в чистом виде — дерево оказывается строкой чисел, и из этого
+  соответствия падает готовая формула.</p>
+  <p><b>Как вести.</b> Не останавливать и не давать указаний: на №9 это его злило. Где он не видит
+  шага, подсовывать не подсказку, а <b>неверное рассуждение</b> — как с коровами.</p>
+</div>
+
+<div class="plan">
+  <span><b>1.</b> Сколько деревьев · 15</span>
+  <span><b>2.</b> Дерево → строка · 20</span>
+  <span><b>3.</b> Строка → дерево · 25</span>
+  <span><b>4.</b> Кэли · 10</span>
+  <span><b>5.</b> Веер · 20</span>
+</div>
+
+<!-- 1 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">1</span>
+    <h2>Сколько всего деревьев</h2>
+    <span class="meta new">разминка руками · <i>15 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Вершины дерева пронумерованы числами от 1 до n; деревья с разной нумерацией считаются
+         разными. Выпишите все деревья на трёх пронумерованных вершинах, потом на четырёх.
+         Сколько их?</p>
+      <p class="tih">Ответ: 3 и 16. Проверено перебором: 3, 16, 125, 1296 при n = 3, 4, 5, 6.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Без своих нарисованных 3 и 16 формула в конце ничего не будет значить. И это ровно тот жанр,
+    который ему зашёл: рисовать маленькие случаи и смотреть, что получается.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Три вершины — сколько деревьев? <em>(три: какая вершина в середине)</em></li>
+      <li>Четыре — сколько? <em>(16: четыре цепочки по порядку… пусть считает сам, тут легко сбиться)</em></li>
+      <li>Числа 1, 3, 16 — угадывается что-нибудь? <em>(гипотезу не подтверждать и не опровергать;
+          пусть висит до конца занятия)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если встанет</div><div>
+    На четырёх вершинах он почти наверняка сначала посчитает неправильно. Не поправлять сразу —
+    спросить, по какому признаку он раскладывал деревья на группы. <em>(звёзды и цепочки: 4 + 12)</em>
+  </div></div>
+</section>
+
+<!-- 2 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">2</span>
+    <h2>Дерево → строка</h2>
+    <span class="meta new">новое · <i>20 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>правило</summary>
+    <div class="usl">
+      <p>Пока вершин больше двух: находим висячую вершину с наименьшим номером, вычёркиваем её
+         и записываем номер её соседа. Получается строка из n − 2 чисел.</p>
+      <p>Постройте строку для нескольких деревьев на пяти вершинах.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Само правило не доказывается, а показывается на примере — пусть прогонит два-три дерева
+    руками. Содержание начинается со следующего вопроса.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Почему в строке ровно n − 2 числа?</li>
+      <li>Возьми звезду на пяти вершинах. Какая у неё строка? А у цепочки?</li>
+      <li>Какие вершины в строку <b>не попадают никогда</b>? <em>(висячие — и это надо доказать
+          в обе стороны, а не заметить на примерах)</em></li>
+      <li>Сколько раз попадает вершина степени d? <em>(d − 1 — это его любимый двойной подсчёт;
+          сумма по всем вершинам даёт 2(n − 1) − n = n − 2, то есть в точности длину строки)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Ловушка</div><div>
+    Он, скорее всего, скажет «висячие не попадают» после двух примеров и пойдёт дальше. Тут и
+    поймать: <b>это утверждение, а не наблюдение</b> — ровно то место, на котором он падал три
+    домашки подряд. Просить доказать в обе стороны.
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">3</span>
+    <h2>Строка → дерево</h2>
+    <span class="meta new">главное · <i>25 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Докажите, что по строке дерево восстанавливается однозначно.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Здесь соответствие становится биекцией — то самое, что ему нравится. И это единственный
+    по-настоящему трудный пункт занятия.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Дана строка. Какую вершину вычеркнули первой? <em>(наименьшую из тех, что в строке
+          не встречаются — по предыдущему пункту)</em></li>
+      <li>С кем она была соединена?</li>
+      <li>Что делать дальше? <em>(вычеркнуть её и первое число строки, повторить; в конце соединить
+          две оставшиеся вершины)</em></li>
+      <li>Почему на каждом шаге выбора нет?</li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если встанет</div><div>
+    Не объяснять алгоритм — дать строку и попросить восстановить дерево. Например 1, 1, 3 на пяти
+    вершинах. Он восстановит руками, а потом уже поймёт, что делал.
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Ложное рассуждение, если понадобится встряска, — по образцу коров: «строка всегда начинается
+    с соседа вершины 1, ведь единица — наименьший номер». Пусть ищет, где это ломается.
+  </div></div>
+</section>
+
+<!-- 4 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">4</span>
+    <h2>Формула Кэли</h2>
+    <span class="meta new">следствие · <i>10 мин</i></span>
+  </div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Строк длины n − 2 из чисел от 1 до n — сколько? Значит деревьев сколько?</li>
+      <li>Сверь с тем, что насчитал в начале.</li>
+      <li>А сколько деревьев, где вершина 1 висячая? <em>(единица не встречается в строке:
+          (n − 1) в степени n − 2. При n = 4, 5, 6 это 9, 64, 625 — проверено перебором)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Что должно остаться</div><div>
+    <table class="ch">
+      <tr><th>n</th><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+      <tr><th>деревьев</th><td>3</td><td>16</td><td>125</td><td>1296</td></tr>
+      <tr><th>вершина 1 — лист</th><td>1</td><td>9</td><td>64</td><td>625</td></tr>
+    </table>
+  </div></div>
+</section>
+
+<!-- 5 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">5</span>
+    <h2>Веер</h2>
+    <span class="meta">если останется время · <i>20 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Вершина V₀ соединена рёбрами со всеми вершинами V₁, …, V<sub>n</sub>, и, кроме того,
+         соседние по номеру вершины V<sub>i</sub> и V<sub>i+1</sub> тоже соединены. Сколько у этого
+         графа остовов?</p>
+      <p class="tih">Ответ: числа Фибоначчи с чётными номерами — 1, 3, 8, 21, 55, 144.
+         Проверено перебором до n = 6.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    <p>Второй сюжет того же дня, но про другое: здесь считаются не все деревья, а остовы одного
+       графа, и ответ узнаётся руками — 1, 3, 8, 21, 55, а дальше он сам скажет «Фибоначчи».</p>
+    <p><b>Заодно закрывает долг:</b> понятие остовного дерева до сих пор не введено, и здесь оно
+       нужно по делу, а не в порядке теории.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>n = 1, 2, 3 — посчитай остовы руками.</li>
+      <li>Какие рёбра обода взяты — что они делают с номерами 1…n? <em>(разбивают на куски подряд
+          идущих)</em></li>
+      <li>Сколько спиц нужно, если кусков k? <em>(ровно k, по одной в каждый кусок)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Если дойдёт до рекурренты: a<sub>n</sub> = 3a<sub>n−1</sub> − a<sub>n−2</sub>. Почему из неё
+    получаются именно чётные Фибоначчи — отдельный сюжет, можно оставить на потом.
+  </div></div>
+</section>
+
+<footer>
+  <p><b>На дом:</b> сколько циклов может быть в графе с n вершинами и n + 1 ребром (ответ 2 или 3,
+  оба случая рисуются) · сто городов и 199 авиалиний · веер, если не успели на занятии.</p>
+  <p><b>Долг прошлых занятий:</b> спички (он решил половину — пример есть, оценки нет), метро
+  и цепочка про остовное дерево пунктами (4)–(6). Лежит готовым в
+  <span style="font-family:'PT Sans',sans-serif">zanyatie-08-metod.html</span>, блоки 4–6.
+  Часть про остов частично закрывается веером.</p>
+</footer>
+
+</div>
+</body>
+</html>
