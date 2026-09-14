@@ -1,0 +1,32 @@
+<svg viewBox="0 0 640 256" width="880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Две панели одного масштаба, в каждой маршрут длины шесть из нуля в ноль, не опускающийся ниже нуля, и залитая область между маршрутом и уровнем нуль; слева маршрут поднимается до уровня три и возвращается, залитая область большая; справа маршрут трижды поднимается на уровень один и трижды опускается, залитая область втрое меньше">
+  <polygon class="s-fillsh" points="54,200 94,150 134,100 174,50 214,100 254,150 294,200"/>
+  <polygon class="s-fillsh" points="366,200 406,150 446,200 486,150 526,200 566,150 606,200"/>
+  <line class="s-thin" x1="40" y1="50" x2="308" y2="50" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="40" y1="100" x2="308" y2="100" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="40" y1="150" x2="308" y2="150" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="352" y1="50" x2="620" y2="50" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="352" y1="100" x2="620" y2="100" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="352" y1="150" x2="620" y2="150" stroke-dasharray="5 4"/>
+  <line class="s-line" x1="40" y1="200" x2="308" y2="200"/>
+  <line class="s-line" x1="352" y1="200" x2="620" y2="200"/>
+  <polyline class="s-accent" points="54,200 94,150 134,100 174,50 214,100 254,150 294,200"/>
+  <polyline class="s-accent" points="366,200 406,150 446,200 486,150 526,200 566,150 606,200"/>
+  <circle class="s-node" cx="94" cy="150" r="3.6"/>
+  <circle class="s-node" cx="134" cy="100" r="3.6"/>
+  <circle class="s-node" cx="174" cy="50" r="3.6"/>
+  <circle class="s-node" cx="214" cy="100" r="3.6"/>
+  <circle class="s-node" cx="254" cy="150" r="3.6"/>
+  <circle class="s-node" cx="406" cy="150" r="3.6"/>
+  <circle class="s-node" cx="446" cy="200" r="3.6"/>
+  <circle class="s-node" cx="486" cy="150" r="3.6"/>
+  <circle class="s-node" cx="526" cy="200" r="3.6"/>
+  <circle class="s-node" cx="566" cy="150" r="3.6"/>
+  <circle class="s-node s-node-r" cx="54" cy="200" r="4.2"/>
+  <circle class="s-node s-node-r" cx="294" cy="200" r="4.2"/>
+  <circle class="s-node s-node-r" cx="366" cy="200" r="4.2"/>
+  <circle class="s-node s-node-r" cx="606" cy="200" r="4.2"/>
+  <text class="s-txt-m" style="font-size:14px" x="32" y="205" text-anchor="end">0</text>
+  <text class="s-txt-m" style="font-size:14px" x="32" y="155" text-anchor="end">1</text>
+  <text class="s-txt-m" style="font-size:14px" x="32" y="105" text-anchor="end">2</text>
+  <text class="s-txt-m" style="font-size:14px" x="32" y="55" text-anchor="end">3</text>
+</svg>

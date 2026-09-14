@@ -1,0 +1,26 @@
+<svg viewBox="0 0 638 204" width="880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Коридор высоты 4: маршрут длины 12 стартует у нижней стенки, дважды отражается от верхней и возвращается к нижней">
+  <line class="s-thin" x1="38" y1="140" x2="618" y2="140" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="38" y1="102" x2="618" y2="102" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="38" y1="64" x2="618" y2="64" stroke-dasharray="5 4"/>
+  <line class="s-line" x1="38" y1="178" x2="618" y2="178"/>
+  <line class="s-line" x1="38" y1="26" x2="618" y2="26"/>
+  <polyline class="s-accent" points="52,178 98,140 144,102 190,64 236,26 282,64 328,26 374,64 420,102 466,140 512,102 558,140 604,178"/>
+  <circle class="s-node" cx="98" cy="140" r="3.6"/>
+  <circle class="s-node" cx="144" cy="102" r="3.6"/>
+  <circle class="s-node" cx="190" cy="64" r="3.6"/>
+  <circle class="s-node" cx="236" cy="26" r="3.6"/>
+  <circle class="s-node" cx="282" cy="64" r="3.6"/>
+  <circle class="s-node" cx="328" cy="26" r="3.6"/>
+  <circle class="s-node" cx="374" cy="64" r="3.6"/>
+  <circle class="s-node" cx="420" cy="102" r="3.6"/>
+  <circle class="s-node" cx="466" cy="140" r="3.6"/>
+  <circle class="s-node" cx="512" cy="102" r="3.6"/>
+  <circle class="s-node" cx="558" cy="140" r="3.6"/>
+  <circle class="s-node s-node-r" cx="52" cy="178" r="4.2"/>
+  <circle class="s-node s-node-r" cx="604" cy="178" r="4.2"/>
+  <text class="s-txt-m" style="font-size:14px" x="30" y="183" text-anchor="end">0</text>
+  <text class="s-txt-m" style="font-size:14px" x="30" y="145" text-anchor="end">1</text>
+  <text class="s-txt-m" style="font-size:14px" x="30" y="107" text-anchor="end">2</text>
+  <text class="s-txt-m" style="font-size:14px" x="30" y="69" text-anchor="end">3</text>
+  <text class="s-txt-m" style="font-size:14px" x="30" y="31" text-anchor="end">4</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg viewBox="0 0 620 152" width="880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ряд правильных многоугольников с общим радиусом описанной окружности: треугольник, квадрат, пятиугольник и шестиугольник; пятиугольник выделен пунктирным контуром, остальные три нарисованы сплошным">
+  <polygon class="s-line" points="82,22 121.84,91 42.16,91"/>
+  <polygon class="s-line" points="266.53,35.47 266.53,100.53 201.47,100.53 201.47,35.47"/>
+  <polygon class="s-line" points="386,22 429.75,53.79 413.04,105.21 358.96,105.21 342.25,53.79" stroke-dasharray="7 5"/>
+  <polygon class="s-line" points="584,68 561,107.84 515,107.84 492,68 515,28.16 561,28.16"/>
+  <text class="s-txt-m" style="font-size:14px" x="82" y="130" text-anchor="middle">M=3</text>
+  <text class="s-txt-m" style="font-size:14px" x="234" y="130" text-anchor="middle">M=4</text>
+  <text class="s-txt-m" style="font-size:14px" x="386" y="130" text-anchor="middle">M=5</text>
+  <text class="s-txt-m" style="font-size:14px" x="538" y="130" text-anchor="middle">M=6</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg viewBox="0 0 570 196" width="880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Слева плоское корневое дерево с тремя рёбрами: из корня выходят два ребра, у левого потомка ещё одно; справа отвечающий ему маршрут длины шесть с высотами 0, 1, 2, 1, 0, 1, 0, между панелями двусторонняя стрелка соответствия">
+  <line class="s-line" x1="100" y1="46" x2="48" y2="96"/>
+  <line class="s-line" x1="100" y1="46" x2="152" y2="96"/>
+  <line class="s-line" x1="48" y1="96" x2="48" y2="146"/>
+  <circle class="s-node" cx="48" cy="96" r="3.6"/>
+  <circle class="s-node" cx="152" cy="96" r="3.6"/>
+  <circle class="s-node" cx="48" cy="146" r="3.6"/>
+  <circle class="s-node s-node-r" cx="100" cy="46" r="4.2"/>
+  <line class="s-thin" x1="196" y1="96" x2="246" y2="96"/>
+  <path class="s-ar-m" d="M237,92 l9,4 -9,4 z"/>
+  <path class="s-ar-m" d="M205,92 l-9,4 9,4 z"/>
+  <line class="s-thin" x1="274" y1="46" x2="554" y2="46" stroke-dasharray="5 4"/>
+  <line class="s-thin" x1="274" y1="96" x2="554" y2="96" stroke-dasharray="5 4"/>
+  <line class="s-line" x1="274" y1="146" x2="554" y2="146"/>
+  <polyline class="s-accent" points="288,146 330,96 372,46 414,96 456,146 498,96 540,146"/>
+  <circle class="s-node" cx="330" cy="96" r="3.6"/>
+  <circle class="s-node" cx="372" cy="46" r="3.6"/>
+  <circle class="s-node" cx="414" cy="96" r="3.6"/>
+  <circle class="s-node" cx="456" cy="146" r="3.6"/>
+  <circle class="s-node" cx="498" cy="96" r="3.6"/>
+  <circle class="s-node s-node-r" cx="288" cy="146" r="4.2"/>
+  <circle class="s-node s-node-r" cx="540" cy="146" r="4.2"/>
+  <text class="s-txt-m" style="font-size:14px" x="266" y="151" text-anchor="end">0</text>
+  <text class="s-txt-m" style="font-size:14px" x="266" y="101" text-anchor="end">1</text>
+  <text class="s-txt-m" style="font-size:14px" x="266" y="51" text-anchor="end">2</text>
+</svg>
