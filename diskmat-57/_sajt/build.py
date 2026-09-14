@@ -155,6 +155,7 @@ CSS = """
   --sans:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   --d-A:#b25f3c; --d-K:#5f7f4a; --d-V:#4a7292; --d-D:#7d4f78;
   --d-Z:#3f7d75;
+  --d-G:#4a7292; --d-M:#7d4f78;
   --ktr:#a79d90; --ktr-bg:#eae3d5;
 }
 *{box-sizing:border-box}
@@ -251,13 +252,16 @@ a{color:inherit}
 .chetv .linejka{grid-column:2;grid-row:2}
 .chetv .vne{grid-column:2;grid-row:3;justify-self:start}
 
-/* лента: сетка в УРОКАХ, 20 колонок на все четверти — уроки выровнены по
-   вертикали, а короткая четверть честно не достаёт до правого края.
-   Высота ленты ОДНА для обеих вкладок (курс/кружок) — иначе переключение
-   тумблера меняет высоту календаря и страница «прыгает» (владелец 2026-08-20). */
-.lenta{display:grid;grid-template-columns:repeat(20,minmax(0,1fr));
+/* лента: сетка в УРОКАХ, столько колонок на все четверти, сколько часов у
+   самой длинной четверти года (посчитано в sobrat_klass(), не литерал) —
+   уроки выровнены по вертикали, а короткая четверть честно не достаёт до
+   правого края. Шкала ОДНА на все четверти — иначе теряется сравнимость
+   длины четвертей на глаз. Высота ленты ОДНА для обеих вкладок (курс/кружок)
+   — иначе переключение тумблера меняет высоту календаря и страница «прыгает»
+   (владелец 2026-08-20). */
+.lenta{display:grid;grid-template-columns:repeat(__LENTA_COLS__,minmax(0,1fr));
   grid-auto-rows:190px;gap:6px;align-items:stretch}
-.linejka{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:4px}
+.linejka{display:grid;grid-template-columns:repeat(__LINEJKA_COLS__,minmax(0,1fr));gap:5px;margin-top:4px}
 
 /* блок — большой прямоугольник, главная масса страницы.
    grid-column идёт через --sp (часы элемента), а не литералом в инлайн-стиле:
@@ -454,6 +458,13 @@ a.metka:hover{filter:brightness(1.12)}
 }
 """
 
+# CSS отдаваемая текущей странице — CSS с __LENTA_COLS__/__LINEJKA_COLS__
+# подставленными под класс, который сейчас собирает sobrat_klass() (тот же
+# приём, что и у PREFIKS/DOMENY выше: глобальная «текущая» переменная,
+# выставляемая по разу на класс). До первого sobrat_klass() равна CSS с
+# литералами прежнего максимума — на случай прямого вызова stranica().
+CSS_TEKUSHAYA = CSS.replace('__LENTA_COLS__', '20').replace('__LINEJKA_COLS__', '10')
+
 
 def shapka(g, tek='', tumbler=False):
     """Одна шапка на все страницы: имя курса, переключатель класса и три
@@ -505,7 +516,7 @@ def stranica(titul, telo, klass=''):
     return ('<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
             '<title>%s</title>\n<style>%s</style>\n</head>\n<body%s>\n%s\n</body>\n</html>\n'
-            % (E(titul), CSS, (' class="%s"' % klass) if klass else '', telo))
+            % (E(titul), CSS_TEKUSHAYA, (' class="%s"' % klass) if klass else '', telo))
 
 
 def cvet(el):
@@ -904,12 +915,21 @@ def sobrat_klass(klass, god_fajl, prefiks, tolko_schet):
     пустой восьмой класс (владелец 2026-08-22 — материал пришлют позже, пока
     нужен только каркас с теми же четвертями) не должен уронить сборку
     семиклассников, и наоборот."""
-    global DOMENY, PREFIKS
+    global DOMENY, PREFIKS, CSS_TEKUSHAYA
     ist = os.path.join(TUT, god_fajl)
     g = json.load(open(ist, encoding='utf-8'))
     g['_klass'] = klass
     DOMENY = g['kurs']['domeny']
     PREFIKS = prefiks
+
+    # Ширина ленты/линейки — по самой длинной четверти ЭТОГО класса, не
+    # литерал: c['chasy'] уже суммирует только то, что стоит в сетке (blok +
+    # kontrolnaya), kruzhok и vne-setki в него не входят. Неделя = пара
+    # уроков (см. нарезку в razobrat()), отсюда //2.
+    max_chasy = max(c['chasy'] for c in g['chetverti'])
+    max_ned = max_chasy // 2
+    CSS_TEKUSHAYA = (CSS.replace('__LENTA_COLS__', str(max_chasy))
+                         .replace('__LINEJKA_COLS__', str(max_ned)))
 
     chetverti, bloki, nedeli, kontrolnye = razobrat(g)
 
