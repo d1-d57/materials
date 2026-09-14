@@ -908,6 +908,66 @@ def kontrolnaya_stranica(g, ktr):
     return stranica(ktr['chto'], telo)
 
 
+# ── сторож отменённого (Р110) ───────────────────────────────────────────────
+# Список запретов лежит здесь, одним местом, и читается глазами: каждая
+# строка — (шаблон, номер решения RESHENIYA.md), которое что-то убрало из
+# основной программы. Область — ТОЛЬКО tip=='blok': imya, podzag, karta
+# (tema+chto). Кружок (Р108), literatura (Р109), sluzhebnoe и utok сюда не
+# попадают — не по недосмотру, а по решению: кружок и книжный список законно
+# несут отменённое из основной программы (кружок — своим именем, книги —
+# про запас), sluzhebnoe и utok — служебная проза и метки, не текст для
+# читателя сайта.
+#
+# \b вокруг коротких токенов (граф, бином) — иначе «граф» ловит «график»,
+# «биография» как подстроку.
+ZAPRET_OTMENENNOGO = [
+    (r'процент',               'Р50'),
+    (r'дроб',                  'Р50'),
+    (r'доли и части',          'Р50'),
+    (r'Евклид',                'Р25'),
+    (r'разложение на прост',   'Р25'),
+    (r'взаимно прост',         'Р95'),
+    (r'текстов(ая|ые) задач',  'Р103'),
+    (r'сочетани',              'Р15'),
+    (r'\bбином',               'Р15'),
+    (r'Паскал',                'Р15'),
+    (r'\bграф\b',              'Р64'),
+    (r'индукци',               'Р70'),
+    (r'квантор',               'Р71'),
+    (r'оценк\w* (и|с) пример', 'Р87'),
+    (r'узк(ое|ие) мест',       'Р89'),
+    (r'конструкци',            'Р89'),
+]
+
+
+def tekst_bloka(e):
+    chasti = [e.get('imya', ''), e.get('podzag', '')]
+    for k in e.get('karta', []):
+        chasti.append(k.get('tema', ''))
+        chasti.append(k.get('chto', ''))
+    return ' '.join(chasti)
+
+
+def storozh_otmenennogo(g):
+    """Р110: краснеет, если в блоках основной программы (tip=='blok', поля
+    imya/podzag/karta) нашлось то, что решение отменило. Возвращает
+    (наход[], блоков_проверено, блоков_всего) — наход пуст ⟹ зелёный.
+
+    НЕ проверяет: смысл, только подстроки — не увидит отменённое, названное
+    другими словами; кружок/literatura/sluzhebnoe/utok вне области — решение
+    (Р108, Р109), а не недосмотр.
+    """
+    bloki = [e for c in g['chetverti'] for e in c['elementy'] if e.get('tip') == 'blok']
+    nahod = []
+    for e in bloki:
+        t = tekst_bloka(e)
+        for rx, reshenie in ZAPRET_OTMENENNOGO:
+            m = re.search(rx, t, re.I)
+            if m:
+                nahod.append('«%s» в блоке %s — отменено %s' % (m.group(0), e.get('imya'), reshenie))
+    return nahod, len(bloki), len(bloki)
+
+
 # ── прогон ─────────────────────────────────────────────────────────────────
 def sobrat_klass(klass, god_fajl, prefiks, tolko_schet):
     """Собирает ОДИН класс (свой god-файл, свой набор файлов с префиксом) —
@@ -953,6 +1013,17 @@ def sobrat_klass(klass, god_fajl, prefiks, tolko_schet):
         print('дорожек кружка  : %d' % y_kruzhok)
         print('пунктов karta   : %d' % y_karta)
         print('контрольных     : %d' % y_ktr)
+        nahod, provereno, vsego = storozh_otmenennogo(g)
+        print('сторож отменённого (Р110): блоков проверено %d из %d · запретов в списке %d'
+              % (provereno, vsego, len(ZAPRET_OTMENENNOGO)))
+        print('  НЕ проверяет: подстроки, не смысл · отменённое другими словами не увидит ·'
+              ' кружок/literatura/sluzhebnoe/utok вне области (Р108, Р109) — решение, не недосмотр')
+        if nahod:
+            print('  🔴 НАЙДЕНО %d:' % len(nahod))
+            for n in nahod:
+                print('    ❌ %s' % n)
+            return 1
+        print('  зелёный: отменённого не найдено')
         return 0
 
     if not os.path.isdir(DIST):
