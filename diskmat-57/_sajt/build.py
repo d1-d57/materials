@@ -629,8 +629,19 @@ def lenta_kruzhka(ch):
     for tema in k.get('temy') or []:
         span = tema['nedel'] * 2          # лента размечена в УРОКАХ, неделя = два урока
         domen = tema.get('domen')         # форма занятия (разнобой/олимпиада/...) домена не несёт
-        cv = 'var(--d-%s)' % domen if domen else 'var(--ktr)'
-        dm = '<span class="dm">%s</span>' % E(DOMENY[domen]) if domen else ''
+        if domen is None:
+            # Без домена — форма занятия, не тема: узкая полоска с именем БОКОМ,
+            # тот же приём, что у «контрольная» в основном потоке (lenta_kursa),
+            # а не цветная карточка кроя kr-chast — у формы нет цвета, который
+            # ей давал бы право на такую карточку, и полноразмерный im/pz текст
+            # в узкой колонке нечитаем (находка владельца по скриншоту).
+            out.append(
+                '<a class="ktr" style="--sp:%d" href="%sblok-%s.html">'
+                '<span class="k">%s</span></a>'
+                % (span, PREFIKS, k['slug'], E(tema['imya'])))
+            continue
+        cv = 'var(--d-%s)' % domen
+        dm = '<span class="dm">%s</span>' % E(DOMENY[domen])
         out.append(
             '<a class="blok kr-chast" style="--sp:%d;--c:%s" '
             'href="%sblok-%s.html">'
