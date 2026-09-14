@@ -282,7 +282,30 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: head of the documentation wave (Claude Code, Opus 5), by hand (dirizher launched 0 lanes).
+
+1. §0.1 git contour — done. Worktree `../materials-wt/karta-dokumentov` — created, branch verified.
+2. File list by command: in the worktree `docs/` has 12 `.md` (the snapshot said 11 — the three LINEJKA-*.md of this wave are merged since) and the arc folder 37 `.md` (snapshot 33). `ls -la` inside a fresh worktree shows checkout time for every file, so «last changed» is taken from `ls -la` of the MAIN folder and cross-checked with `git log -1 --format=%ad` — both named in the document.
+3. One phrase per file from its head (the «КОГДА читать / ЧТО» line where present), live/archive by content and date.
+4. ДУБЛИ: byte-identical files by `md5`; content duplicates only with a grep of the same line in BOTH files, command in the row.
+5. ЧЕГО НЕТ: every `*.md` name referenced inside the 49 files, resolved relative to the referring file and checked with `ls`.
+6. ПРЕДЛОЖЕНИЕ ПО СТРУКТУРЕ — marked as a proposal; nothing moved, renamed or deleted.
+7. The LINEJKA-*.md of zahody 1–3 exist and are read. Commit by path, criterion from main after merge, verifier (every named file exists, every duplicate re-grepped), final hygiene.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
+
+1. The arc's own deliverable «скелет года 7» (TZ.md, NAVIGATOR.md: «арка кончается, когда есть документ «скелет года 7»») does not exist under any name on 14.09; the arc's end condition is currently unmeetable by definition unless the owner re-states it.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. Six files of `docs/` are byte-identical copies of `_istochnik/handoff-2026-08-18/01–06` (md5 equal, both tracked) — two copies of the same text in git; see KARTA-DOKUMENTOV.md Д1–Д6 and proposal П2.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. `SESSIYA.md:522` names `ТЗ-sajt.md` with Cyrillic «ТЗ»; the file is `TZ-sajt.md`.
+   ДОМ: SESSIYA.md
+   ДОСТАВЛЕНО: karta-dokumentov#3
+4. The zahod's file-count snapshot (11 in `docs/`, 33 in the arc) did not match the disk at the start of the session (9 in `docs/`), i.e. the snapshot was wrong already at build time, not merely stale.
+   ДОМ: UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: karta-dokumentov#4
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -315,22 +338,77 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+СНИМОК ВХОДА: (subagent of the git contour, verbatim)
+```
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+(пусто — нет непровлённых веток)
+
+$ git --no-optional-locks status --porcelain | wc -l
+      93
+
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       2
+
+$ git_zona.py zayavki
+Открытых заявок: 4
+   · 2026-08-25T0042-otkaz-studio  (1 ч, blokiruet, род: git-operaciya)
+   · 2026-09-11T2101-cowork-11-09-2026-materials-disciplina  (1 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-09-14T0217-14-09-diskmat-57-2026-08  (0 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-09-14T0321-arka-mat-kostyak-zahod-lineika-podschety  (0 ч, obychnaya, род: git-operaciya, операция: vyvoz)
+── na-zahod (12 заявок, гит-контуру не по мандату) ──
+Охват: заявок открыто 4, переадресовано 12, постоянных исключений 1, сторож краснеет на 0
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+- Пункт 0: `_studio/zhurnal/_INFRA-git/INCIDENTY.md` — `e3a07c10`.
+- Пункт 1: `2026-09-14T0321-arka-mat-kostyak-zahod-lineika-podschety` — `vyvezti --yes`, push прошёл (`19415f16`, `41de9530`, `e3a07c10`), закрыта; три прочие — застряли ранее, не перепомечены.
+- Пункт 2: `--no-merged | grep -c zahod/` = 0 → вливать нечего.
+- Пункт 3: `check` — 136 путей содержательной работы, не коммитил.
+- Пункт 4: гашения нет по заданию.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — `2026-08-25T0042-otkaz-studio`, `2026-09-11T2101-cowork-11-09-2026-materials-disciplina`, `2026-09-14T0217-14-09-diskmat-57-2026-08` — коммит содержательной работы / чужих зон, вне мандата контура.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**What was done and why.** Map of all project documentation in the four required sections: `## ЧТО ГДЕ ЛЕЖИТ` (49 files: lines by `wc -l`, disk date by `stat`, commit date by `git log`, live/archive by content), `## ДУБЛИ` (13 content duplicates, each with its command, plus template overlaps named as not-duplicates), `## ЧЕГО НЕТ` (7 missing documents, each with the referring file:line and `ls`), `## ПРЕДЛОЖЕНИЕ ПО СТРУКТУРЕ` (7 proposals, marked as proposals). Nothing moved, renamed or deleted.
+
+**Verdict:** дублей найдено 13 (6 byte-identical copies of the 18.08 handoff, transcript dumps differing only in the «Охват» line, a handoff title duplicate, one source described twice and diverged, owner quotes living both in the diary and in the registers); осмотрено 49 файлов из 49.
+
+**Divergences:** the zahod snapshot said 11 + 33 `.md`; live is 12 + 37, and `docs/` had 9 at session start (ВОПРОСЫ 4). The LINEJKA files of zahody 1–3 existed and were included. `ls -la` in a fresh worktree gives checkout time, so dates are taken from the main folder and from `git log` — named in the document.
+
+**How checked:** criterion from the worktree and from the main folder after merge → `разделы [True, True, True, True] файлов docs 13 из них названо 13`, rc=0; `check_termin.py` green.
+
+**Verifier (fresh sonnet, no nested subagents, 49 of 49 files, ≈230 claims, every duplicate command re-run, quote overlaps recounted 20/5/8, missing files re-`ls`-ed):** «выдано 0 позиций из 0 найденных»; one non-defect remark (the 11 → 12 snapshot arithmetic) was made explicit in `62664e8e`.
+
+**Git contour subagent — six lines verbatim:**
+1) заявок было 4, закрыто 1, застряло 3 (2026-08-25T0042-otkaz-studio, 2026-09-11T2101-cowork-11-09-2026-materials-disciplina, 2026-09-14T0217-14-09-diskmat-57-2026-08)
+2) влито 0 из 0 названных, сборка список не заполнила и `--no-merged | grep -c zahod/` = 0 — вливать нечего; основная ветка — arka/mat-kostyak
+3) хвост Cowork: забрано 1 (INCIDENTY.md, e3a07c10) / осталось 0 в допустимой зоне
+4) погашено 0 / не погашено 0 — гашение веток вне этого захода по заданию
+5) необратимое: нет — только commit (e3a07c10) и push, оба штатно обратимы через git
+6) выдано 1 позиций из 4 найденных
+
+**Not touched:** everything outside `diskmat-57/docs/KARTA-DOKUMENTOV.md`; this zahod file not committed; registration door refuses project paths — not called.
+
+**Hygiene §4.1:** Г1 `check --zone` ✅ (worktree and main after merge). Г2 not applicable — `_istochnik/` was only read. Г3 no-merged 0 → 0. Г4 no new `.py`. Г5 not registered (door refuses project paths). Г6 commits touch only the zone path.
+
+**Final git hygiene:** вне git своей зоны 0 · merged into `arka/mat-kostyak` without conflicts, HEAD `62664e8e` · post-check from main: criterion rc=0, `check --zone` ✅ · невлитых 0 · own branch pushed, `@{u}..` = 0 · main 2 commits ahead — request `2026-09-14T0339-arka-mat-kostyak-zahod-karta-dokumentov`.
+
+**Необратимое:** необратимого нет.
+
+**Run time + tokens:** channel `app` — not applicable.
+
+**ПОВТОРЯЕМОСТЬ:** ВОПРОСЫ 4 (file-count snapshots in the zahod body are wrong at build time) repeats for any zahod whose inputs are counted at build — a factory item; ВОПРОСЫ 1–3 are owner/queue items.
+
+ПРАВКИ ПРОЧИТАНЫ: блок пуст («правок нет»).
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/docs/KARTA-DOKUMENTOV.md` — Markdown, any editor / GitHub preview
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `797ce2d0` — `karta-dokumentov: map of 49 project docs — what lies where, 13 duplicates by command, missing documents, structure proposal (proposal only)` + `62664e8e` — `karta-dokumentov: verifier note — the zahod snapshot count 11 does not match 9 + 3 on disk, said so` · `git_zona.py check --zone diskmat-57/docs/KARTA-DOKUMENTOV.md` → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
@@ -345,7 +423,9 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — критерий rc=0 из главной папки после влития (13 из 13 файлов docs названы), верификатор 49 из 49 файлов — 0 расхождений; ничего не перенесено и не удалено; ветка влита и вывезена. Принято головой волны по поручению владельца 14.09.
+
+Клапан Г17: `check_sborki.py` на этом файле красный только по С3 — путь `/sessions/pensive-fervent-gauss/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` не существует на этой машине; причина дословно: «путь вшит шаблоном bootstrap_zahod.py (история цены из песочницы Cowork) во все заходы волны, к работе захода отношения не имеет; дефект генератора, не отчёта».
 
 **ВЕТКА РАБОТЫ:** `zahod/karta-dokumentov`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -356,6 +436,6 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: влитие и вывоз ветки сделал сам заход, коммит артефакта уже в `arka/mat-kostyak`; вывоз основной ветки и гашение ветки выполнены этим же ходом приёмки напрямую через `git_zona.py`, без очереди.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*

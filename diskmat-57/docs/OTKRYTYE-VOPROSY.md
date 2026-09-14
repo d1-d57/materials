@@ -56,3 +56,40 @@
 - [ ] **В24. Как сделать разбор у доски полезным, а не пересказом решённого.** Вопрос владельца дословно: *«чтобы им было полезно, чтобы разбор тоже был полезен, а не просто разбираешь то, что уже решили. Надо придумать»*. Частичный ответ уже есть — задача со значком «разбираем у доски» не принимается ни у кого, поэтому к разбору класс приходит с попытками (Р81). Не отработано: механика ведомости, раздача разных вариантов против списывания, и что делать с теми, кто задачу всё-таки решил.
 - [ ] **В25. Какой листок про обратный ход берём на 15.09.** Владелец: *«про „Решение с конца" у меня точно есть другой листок, из NLOGN, хороший… их надо сравнить как минимум»*. В базе лежит листок матшколы Макса (`_fond/chuzhoe/matshkola-5-6-2026/1.1_reshenie-s-konca_listok.tex`, 10 задач); листок NLOGN не найден и не сравнён.
 - [ ] **В26. Своей системы «из чего состоит кружок первого года» у нас нет.** Владелец просил её отдельно: *«нужна система, из чего состоит кружок первого года. Я бы на это смотрел внимательно»*. Внешняя карта такой системы найдена (страница Мерзона, `RESERCH-russkie-kruzhki.md`), но она чужая и не переведена в наши решения. Часть ответа должна прийти из волны документации — заход `kod_koncepcia-goda.md`, раздел «КРУЖОК».
+
+---
+
+## Пункты очереди заходов, доставленные `dostavit_urok.py`
+
+> Дословные находки из секций `## ВОПРОСЫ` файлов-заходов — голос исполнителя, который об это споткнулся, не редактора. Разбирает их человек: находка описывает, что мешало, но задачей сама не становится.
+> Строка `ДОСТАВЛЕНО: <заход>#<N>` внизу каждой записи — та же метка, что стоит в источнике; по ней Г7 `priyomka.py` проверяет, что доставка не объявлена ложно.
+
+#### lineika-chisla#4
+
+4. Two live holes of the NUMBERS line (≥2 sources, no block names them, not closed by Р25): linear equations in integers (Sgibnev 6 · Kanel-Belov «Алгоритм Евклида») and coprime numbers (Sgibnev 2, 6 · Kanel-Belov example · issue 16 lesson 3). Relevant to В19 (third arithmetic block).
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+ДОСТАВЛЕНО: lineika-chisla#4 · 2026-09-14
+
+#### lineika-chisla#5
+
+5. `god.json` is behind decisions Р49/Р50/Р63: it still holds blocks «Вероятность 1», «Вероятность 2», the «доли и части / проценты» row of «Разгон», and domain `D` on «Чётность». The zahod's god.json checks therefore run against a pre-reframe programme.
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+ДОСТАВЛЕНО: lineika-chisla#5 · 2026-09-14
+
+#### lineika-grafy#3
+
+3. Decisions are ahead of `god.json`: «разумный перебор» (Р72, Р80 — introduced 15.09) and «принцип крайнего» (Р58 — method across sheets) are named by no block; the zahod's own «нет у нас» check therefore reports holes that the owner has already closed. The two live holes of GRAPHS/METHODS (proof by contradiction, extremal principle) are exactly В23.
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+ДОСТАВЛЕНО: lineika-grafy#3 · 2026-09-14
+
+#### lineika-podschety#2
+
+2. Two live holes of COUNTING/CIRCLE (≥2 sources, no block, no decision): «сколько надо взять» (Spivak, Karavaeva 6 кл. 4) — its only place in `god.json` is «Вероятность 1», which Р49 removes; and word problems on motion/age/work/equations (Spivak ×4 sheets, Burago 5–6, Karavaeva 7 кл. 7).
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+ДОСТАВЛЕНО: lineika-podschety#2 · 2026-09-14
+
+#### koncepcia-goda#2
+
+2. The 8 lessons freed from probability have a principle (Р58) but no open question of their own in the register; В21 covers only dates/volume after the 15.09 start.
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+ДОСТАВЛЕНО: koncepcia-goda#2 · 2026-09-14

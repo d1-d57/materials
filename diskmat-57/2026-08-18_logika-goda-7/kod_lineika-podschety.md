@@ -302,7 +302,28 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: head of the documentation wave (Claude Code, Opus 5), by hand — the dirizher launched 0 lanes (see ВОПРОСЫ of kod_lineika-chisla.md).
+
+1. §0.1 git contour — one subagent, done. 2. Worktree `../materials-wt/lineika-podschety`, branch verified; live lesson numbers taken by the zahod command (Подсчёты 1 differs from the snapshot: 5, not 4; kruzhok is 8+8+10+7 = 33 lessons over four `tip == "kruzhok"` elements — there is no single kruzhok block).
+3. Sources: pdftotext TOCs for RS-1, RS-2, `shapovalov-konstrukcii.pdf` (the registry already warns the file is «Как построить пример?», not «Конструкции» — check the title page and report); 05-Vzveshivaj is a scan without a text layer → TOC from the registry, marked; Spivak PDF has a broken text layer → structure from the registry and the `spivak67/` menu, marked; Burago fragment by pdftotext; Karavaeva programmes by file.
+4. Document `diskmat-57/docs/LINEJKA-podschety-kruzhok.md`: 7 × `## ИСТОЧНИК:`, `## НАЛОЖЕНИЕ` for the 4 counting blocks plus a separate part «для кружка» from sources 3–7, `## ДЫРЫ` checked by the zahod command plus a blocks-only count, homonyms named.
+5. Commit by path, criterion, verifier (100 % of sources), merge, post-check from main, push own branch, request for main.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
+
+1. Registry entry `shapovalov-konstrukcii` is wrong in the opposite direction from what it claims: it says the file's TOC is «Как построить пример?», but the title page and annotation of `_fond/biblioteka/shapovalov-konstrukcii.pdf` say «Математические конструкции: от хижин к дворцам» (issue 13, 2016); «Как построить пример?» is cited inside as the author's previous book. The zahod's name for source 3 is correct.
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+   ДОСТАВЛЕНО: lineika-podschety#1
+2. Two live holes of COUNTING/CIRCLE (≥2 sources, no block, no decision): «сколько надо взять» (Spivak, Karavaeva 6 кл. 4) — its only place in `god.json` is «Вероятность 1», which Р49 removes; and word problems on motion/age/work/equations (Spivak ×4 sheets, Burago 5–6, Karavaeva 7 кл. 7).
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+   ДОСТАВЛЕНО: lineika-podschety#2
+3. Р58 and Р67 (both 13.09) contradict on «оценка плюс пример»: Р58 takes it into the main programme as a method, Р67 leaves it on the circle. Neither cancels the other in its «Где развёрнуто» column.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+4. Factory lesson: a verifier subagent given «сплошная выборка 100 %» spawned its own sub-subagents and returned «жду субагентов» twice instead of a report; its children finished later and did find 3 real discrepancies. The verifier clause does not say «без своих субагентов».
+   ЦЕНА: one extra verifier run (≈170k tokens) and a delayed merge; without reading the late children's output the 3 fixes would have been lost.
+   ДОМ: UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: lineika-podschety#4
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -335,22 +356,61 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+СНИМОК ВХОДА: (subagent of the git contour, as returned)
+- `git --no-optional-locks branch --no-merged arka/mat-kostyak` → пусто
+- `git --no-optional-locks status --porcelain | wc -l` → 92
+- `git --no-optional-locks log --oneline @{u}.. | wc -l` → 2
+- `git_zona.py zayavki` → «Открытых заявок: 4»: 2026-08-25T0042-otkaz-studio, 2026-09-11T2101-cowork-11-09-2026-materials-disciplina, 2026-09-14T0217-14-09-diskmat-57-2026-08, 2026-09-14T0256-arka-mat-kostyak-zahod-lineika-grafy (плюс блок «na-zahod» — не мои)
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+- Пункт 0: `commit --zone _studio/zhurnal/_INFRA-git/INCIDENTY.md` → `6e7c6fe5`.
+- Пункт 1: заявка `2026-09-14T0256-arka-mat-kostyak-zahod-lineika-grafy` исполнена `vyvezti --yes` (3 коммита: `a99a1960`, `9fca423e`, `6e7c6fe5`) и закрыта.
+- Пункт 2: `--no-merged | grep -c zahod/` = 0 → вливать нечего.
+- Пункт 3: `check` — зона захода в главной папке отсутствует, не тронута.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — `2026-08-25T0042-otkaz-studio`, `2026-09-11T2101-cowork-11-09-2026-materials-disciplina`, `2026-09-14T0217-14-09-diskmat-57-2026-08` — ранее помечены ЗАСТРЯЛА, причина та же: содержательная работа / чужой репозиторий, вне мандата контура.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**What was done and why.** Survey of the COUNTING line and the circle: 7 × `## ИСТОЧНИК:`, `## НАЛОЖЕНИЕ` split into the 4 main blocks and a separate circle table for sources 3–7 (as the zahod asks), `## ДЫРЫ` with three counts (whole file / blocks / circle). No programme, no order, no anchor problems.
+
+**Verdict:** дыр найдено 9 — живых 2 («сколько надо взять», word problems), закрыты решениями 2 (combinations — Р15, 8th grade; reasoned enumeration — Р72/Р80, not in `god.json`), стоят на кружке 5 (estimation, Dirichlet, constructions, cutting, partly weighings); проверено 7 из 7.
+
+**Divergences:** live Подсчёты 1 = 5 lessons (snapshot 4); «КРУЖОК 33» is four `kruzhok` elements 8+8+10+7, not one block; Weighings PDF has no text layer (0 words) → registry TOC; Spivak PDF broken → registry menu, confirmed by 29 `s_*.htm` pages, 10 of them opened; registry mis-describes `shapovalov-konstrukcii.pdf` (ВОПРОСЫ 1).
+
+**How checked:** criterion in the worktree and from the main folder after merge → `источников 7 наложение True дыры True`, rc=0; `check_termin.py` green.
+
+**Verifier:** first sonnet verifier fanned out into its own 4 subagents and returned no report (ВОПРОСЫ 4); a second one without subagents, 7 of 7 sources, >140 claims → «выдано 0 позиций из 0 найденных». The first one's late children found 3 label-level issues (count labels «число подмножеств 3», «соответствие 6» named words other than the counted stems; «поиск монеты — только кружок III» contradicted «фальшив 0») — fixed in `41de9530`. No invented book content.
+
+**Git contour subagent — six lines verbatim:**
+1. заявок было 4, закрыто 1 (2026-09-14T0256-arka-mat-kostyak-zahod-lineika-grafy), застряло 3 (2026-08-25T0042-otkaz-studio, 2026-09-11T2101-cowork-11-09-2026-materials-disciplina, 2026-09-14T0217-14-09-diskmat-57-2026-08 — прежняя пометка, причина та же: вне мандата контура)
+2. влито в основную 0 веток из 0 названных; `--no-merged | grep zahod/` = 0 → вливать нечего; основная ветка — `arka/mat-kostyak`
+3. хвост Cowork: забрано пунктом 0 — `_studio/zhurnal/_INFRA-git/INCIDENTY.md` (коммит `6e7c6fe5`); вне git остаётся 135 путей содержательной работы (не автологи) — CLAUDE.md/README.md по репо, `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` и `.../2026-08-27_matproekty-179/` целиком, diskmat-57, spetsmat-2026, ucheniki, obzory и др. — не коммичу
+4. погашено: ничего (п.4 задания — гашение веток делает аналитик при приёмке); не погашено — ни одна ветка, `rc` не применялся
+5. необратимое: ничего не удалял; необратимо только само действие push — 3 коммита (`a99a1960`, `9fca423e`, `6e7c6fe5`) вывезены на `origin/arka/mat-kostyak`, восстановимо `revert`/force-push при нужде
+6. выдано 1 позиций из 4 найденных
+
+**Not touched:** everything outside `diskmat-57/docs/LINEJKA-podschety-kruzhok.md`; this zahod file not committed; registration door refuses project paths (see kod_lineika-chisla.md) — no hand edits.
+
+**Hygiene §4.1:** Г1 `check --zone` from the worktree (`GIT_ZONA_REPO=$PWD`) and from main after merge → ✅. Г2 not applicable. Г3 no-merged 0 → 0. Г4 no new `.py`. Г5 not registered (door refuses). Г6 commits touch only the zone path.
+
+**Final git hygiene:** вне git своей зоны 0 · merged into `arka/mat-kostyak` without conflicts, main HEAD `41de9530` · post-check from main: criterion rc=0, `check --zone` ✅ · невлитых 0 · own branch pushed, `@{u}..` = 0 · main 2 commits ahead — request `2026-09-14T0321-arka-mat-kostyak-zahod-lineika-podschety` (git-operaciya, vyvoz).
+
+**Необратимое:** необратимого нет.
+
+**Run time + tokens:** channel `app` — not applicable.
+
+**ПОВТОРЯЕМОСТЬ:** ВОПРОСЫ 4 repeats on every zahod whose verifier is a subagent with a 100 % sample — the head now forbids nested subagents in the verifier prompt; ВОПРОСЫ 1–3 are queue items.
+
+ПРАВКИ ПРОЧИТАНЫ: блок пуст («правок нет»).
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/docs/LINEJKA-podschety-kruzhok.md` — Markdown, any editor / GitHub preview
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `19415f16` — `lineika-podschety: survey of the COUNTING line and the circle — 7 sources, overlay for blocks and circle, holes (9 found, 2 live)` + `41de9530` — `lineika-podschety: verifier fixes — count labels match the counted stems; counterfeit-coin search is named nowhere` · `git_zona.py check --zone diskmat-57/docs/LINEJKA-podschety-kruzhok.md` → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
@@ -365,7 +425,9 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — критерий rc=0 из главной папки после влития, второй верификатор 7 из 7 — 0 расхождений, 3 подписи счёта исправлены в 41de9530; ветка влита и вывезена. Принято головой волны по поручению владельца 14.09.
+
+Клапан Г17: `check_sborki.py` на этом файле красный только по С3 — путь `/sessions/pensive-fervent-gauss/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` не существует на этой машине; причина дословно: «путь вшит шаблоном bootstrap_zahod.py (история цены из песочницы Cowork) во все заходы волны, к работе захода отношения не имеет; дефект генератора, не отчёта».
 
 **ВЕТКА РАБОТЫ:** `zahod/lineika-podschety`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -376,6 +438,6 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: влитие и вывоз ветки сделал сам заход, коммит артефакта уже в `arka/mat-kostyak`; вывоз основной ветки и гашение ветки выполнены этим же ходом приёмки напрямую через `git_zona.py`, без очереди.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*

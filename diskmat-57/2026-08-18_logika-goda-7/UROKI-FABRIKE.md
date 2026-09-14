@@ -115,3 +115,58 @@ grep -cE '^\*{0,2}ВЕРДИКТ:' UROKI-FABRIKE.md   # разошлось ⇒ �
 ЦЕНА: разнесение придётся переделывать по фазам — 27 реплик свёрнуты в один абзац, и проверить по нему, что ничего не потеряно, нельзя. Дороже другое: вечер кончился не тем, чего хотел владелец (ночным исследованием), а закрытием, которого он не просил. Инструментального гейта у правила «по фазам» нет: `sdelat_handoff.py` проверяет наличие отсечки, но не то, сколько реплик свёрнуто в одну запись, — одна запись на 27 реплик проходит зелёной.
 ДОМ: disciplina-handoff
 ВЕРДИКТ:
+
+---
+
+## Пункты очереди заходов, доставленные `dostavit_urok.py`
+
+> Дословные находки из секций `## ВОПРОСЫ` файлов-заходов — голос исполнителя, который об это споткнулся, не редактора. Разбирает их человек: находка описывает, что мешало, но задачей сама не становится.
+> Строка `ДОСТАВЛЕНО: <заход>#<N>` внизу каждой записи — та же метка, что стоит в источнике; по ней Г7 `priyomka.py` проверяет, что доставка не объявлена ложно.
+
+#### lineika-chisla#1
+
+1. Factory lesson: `dirizher.py gejty/progon` calls `check_sostav.py` WITHOUT `--koren`, so for a composition living in `materials` every zone is looked up in `disciplina` → false red «зоны нет на диске, и родительской папки тоже» on all 5 positions; after bypassing, the dirizher creates worktrees via `git_zona.py` without `GIT_ZONA_REPO` → all 5 lanes «не пущен · рабочей папки нет … завести её не удалось», wave launched with zero lanes.
+   ЦЕНА: the whole documentation wave of 14.09 did not start on the model; the head ran 5 zahody by hand, one by one.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: lineika-chisla#1 · 2026-09-14
+
+#### lineika-chisla#2
+
+2. Factory lesson: the zahod text itself orders `python3 …/git_zona.py worktree add …` and `check --zone …` without `GIT_ZONA_REPO`; in `materials` the first returns rc=2 «GIT_ZONA_REPO не выставлена … НИЧЕГО НЕ СДЕЛАНО», and `check --zone` run from the worktree with `GIT_ZONA_REPO=<main folder>` answers «проверять было НЕЧЕГО … rc=0» on a committed file — a green that proves nothing. Correct form from a worktree: `GIT_ZONA_REPO=$PWD`.
+   ЦЕНА: an executor following the text verbatim fails its very first move; Г1 passes on the wrong tree.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: lineika-chisla#2 · 2026-09-14
+
+#### lineika-chisla#3
+
+3. Factory lesson: the zone contract orders «завёл новый .md — регистрируешь его сам» via `register_doc.py`, but the door refuses any path outside `_studio/ obzory/ _illustracii/ _meta/` (rc=2 «Документы проектов живут в своих индексах»). For a `diskmat-57/docs/*.md` zone the clause cannot be executed, and the project index is outside the zone.
+   ЦЕНА: a mandatory contract clause is unexecutable for every project-doc zahod; LINEJKA-chisla.md is not in any index.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: lineika-chisla#3 · 2026-09-14
+
+#### lineika-grafy#4
+
+4. Factory lesson (same class as ВОПРОСЫ 1–3 of kod_lineika-chisla.md, repeated here): the substring hole check `t.count(w)` gives false «тема у нас есть» on homonyms — «противн» = «противника» (Игры), «крайн» = «крайние случаи» (Арифметика 1), «дерев» = «дерево вариантов», «Эйлер» = «круги Эйлера» — and false «есть» from non-block fields (`sluzhebnoe`, kruzhok). A criterion-level check that can be green on the wrong meaning.
+   ЦЕНА: 4 of 9 hole candidates would be silently dropped by the literal command; caught only by reading contexts.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: lineika-grafy#4 · 2026-09-14
+
+#### lineika-podschety#4
+
+4. Factory lesson: a verifier subagent given «сплошная выборка 100 %» spawned its own sub-subagents and returned «жду субагентов» twice instead of a report; its children finished later and did find 3 real discrepancies. The verifier clause does not say «без своих субагентов».
+   ЦЕНА: one extra verifier run (≈170k tokens) and a delayed merge; without reading the late children's output the 3 fixes would have been lost.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: lineika-podschety#4 · 2026-09-14
+
+#### karta-dokumentov#4
+
+4. The zahod's file-count snapshot (11 in `docs/`, 33 in the arc) did not match the disk at the start of the session (9 in `docs/`), i.e. the snapshot was wrong already at build time, not merely stale.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: karta-dokumentov#4 · 2026-09-14
+
+#### koncepcia-goda#4
+
+4. Factory lesson: the first draft of a decision-grounded concept had 10 unsupported or mis-cited claims (axis name credited to Р63 instead of Р67, a В-number off scope, 4 non-verbatim quotes, 2 words without any row) — all caught only by the claim-by-claim verifier. For documents whose clause is «every claim cites an Р-row», the verifier is not optional polish.
+   ЦЕНА: 10 defects in a document the owner decides from tomorrow; one verifier pass ≈210k tokens.
+   ДОМ: UROKI-FABRIKE.md
+ДОСТАВЛЕНО: koncepcia-goda#4 · 2026-09-14

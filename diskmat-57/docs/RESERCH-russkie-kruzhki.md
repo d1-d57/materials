@@ -139,3 +139,34 @@
   3. **Геометрия.** Ровно одна задача из шести каждый год (2026 №4, 2025 №4). Владелец геометрию не ведёт сознательно — значит это принятая потеря примерно 8 баллов из 40, и её стоит называть вслух, а не обнаруживать в феврале.
 - ЧТО У НАС УЖЕ ЕСТЬ ПОД ЭТО: инвариант (Чётность, Игры), раскраски и чередование, разумный перебор (Р72), счёт (Подсчёты 1 и 2), передача информации (Кодировка).
 - ⚠ НЕ ПРОВЕРЕНО: у МП с 2020 года есть второй трек — «Математический праздник в Математической вертикали», где задачи проще. На какой трек идёт наш класс — вопрос владельцу, от него зависит уровень подготовки.
+
+---
+
+## Пункты очереди заходов, доставленные `dostavit_urok.py`
+
+> Дословные находки из секций `## ВОПРОСЫ` файлов-заходов — голос исполнителя, который об это споткнулся, не редактора. Разбирает их человек: находка описывает, что мешало, но задачей сама не становится.
+> Строка `ДОСТАВЛЕНО: <заход>#<N>` внизу каждой записи — та же метка, что стоит в источнике; по ней Г7 `priyomka.py` проверяет, что доставка не объявлена ложно.
+
+#### lineika-chisla#6
+
+6. Registry entry `kanel-belov-kovaldzhi-nestandartnye` copies the «Содержание» page numbers, which are shifted against the real section starts in the PDF (Чётность 12→13, Инварианты 24→29, Делимость и остатки 40→45, Алгоритм Евклида 44→47; found by the verifier with `pdftotext -f/-l`).
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+ДОСТАВЛЕНО: lineika-chisla#6 · 2026-09-14
+
+#### lineika-grafy#1
+
+1. The input names two books wrongly, checked against the PDF title pages: issue 10 is «Задачи о турнирах» by Zaslavsky, Frenkin, Shapovalov (zahod and registry say «Турниры и таблицы»); issue 11 «Логические задачи» is by Raskina and Shnol (registry entry «11-Logika» and decision Р80 say Shapovalov). Also the annotation page of 11-Logika.pdf repeats the annotation of the tournaments book.
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+ДОСТАВЛЕНО: lineika-grafy#1 · 2026-09-14
+
+#### lineika-podschety#1
+
+1. Registry entry `shapovalov-konstrukcii` is wrong in the opposite direction from what it claims: it says the file's TOC is «Как построить пример?», but the title page and annotation of `_fond/biblioteka/shapovalov-konstrukcii.pdf` say «Математические конструкции: от хижин к дворцам» (issue 13, 2016); «Как построить пример?» is cited inside as the author's previous book. The zahod's name for source 3 is correct.
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+ДОСТАВЛЕНО: lineika-podschety#1 · 2026-09-14
+
+#### koncepcia-goda#3
+
+3. `RESERCH-russkie-kruzhki.md` (Матпраздник entry) attributes to Р75 «к МП готовимся в первые две четверти»; the Р75 row has no quarters.
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+ДОСТАВЛЕНО: koncepcia-goda#3 · 2026-09-14

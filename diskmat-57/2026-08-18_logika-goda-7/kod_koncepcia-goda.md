@@ -279,7 +279,30 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: head of the documentation wave (Claude Code, Opus 5), by hand (dirizher launched 0 lanes).
+
+1. §0.1 git contour — done; worktree `../materials-wt/koncepcia-goda`, branch verified.
+2. Inputs (all five exist): `god.json` (quarter sums by command: blocks 51 + tests 15 = 66 lessons, off-grid 4, circle 33), `RESHENIYA.md` (84 rows: Р1–Р83 plus Р61а, no gaps — by command), `OTKRYTYE-VOPROSY.md`, `RESERCH-russkie-kruzhki.md`, the three `LINEJKA-*.md` of this wave (and `KARTA-DOKUMENTOV.md`, not required).
+3. Six sections; every statement about the course carries an Р-number, or sits in РАЗВИЛКИ as undecided. Facts read from `god.json` are marked as file facts, not decisions.
+4. РАЗВИЛКИ: raised from В-questions to «from which principle do we choose», plus pairs of decisions pulling apart (found so far: Р58↔Р67 on estimation-and-example, Р83/Р82↔Р27/Р53/Р75 on what the circle is, Р6↔Р51/Р58 on arithmetic, Р41↔Р26 on what a sheet is built around, Р59↔Р66 on backward reasoning, Р19↔Р51/Р53 on the level). Each: question · 2–3 views · what each changes in the year.
+5. Criterion note: it counts distinct «Р\d+» — Р61а counts as Р61; fine.
+6. Commit by path, criterion, verifier (every claim → an Р-row or marked undecided), merge, post-check, push, request.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
+
+1. Р58 and Р67 (same day, 13.09) contradict on «оценка плюс пример» (main programme as a method vs stays on the circle) — raised as fork 2 in KONCEPCIA-goda.md; the owner has to cancel one of them in `RESHENIYA.md`.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. The 8 lessons freed from probability have a principle (Р58) but no open question of their own in the register; В21 covers only dates/volume after the 15.09 start.
+   ДОМ: ../docs/OTKRYTYE-VOPROSY.md
+   ДОСТАВЛЕНО: koncepcia-goda#2
+3. `RESERCH-russkie-kruzhki.md` (Матпраздник entry) attributes to Р75 «к МП готовимся в первые две четверти»; the Р75 row has no quarters.
+   ДОМ: ../docs/RESERCH-russkie-kruzhki.md
+   ДОСТАВЛЕНО: koncepcia-goda#3
+4. Factory lesson: the first draft of a decision-grounded concept had 10 unsupported or mis-cited claims (axis name credited to Р63 instead of Р67, a В-number off scope, 4 non-verbatim quotes, 2 words without any row) — all caught only by the claim-by-claim verifier. For documents whose clause is «every claim cites an Р-row», the verifier is not optional polish.
+   ЦЕНА: 10 defects in a document the owner decides from tomorrow; one verifier pass ≈210k tokens.
+   ДОМ: UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: koncepcia-goda#4
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -312,22 +335,75 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+СНИМОК ВХОДА: (subagent of the git contour, verbatim)
+```
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+(пусто)
+
+$ git --no-optional-locks status --porcelain | wc -l
+      94
+
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       2
+
+$ git_zona.py zayavki
+Открытых заявок: 4
+   · 2026-08-25T0042-otkaz-studio (blokiruet) — ОТКАЗ ГИТ-ОПЕРАЦИИ: коммит зоны _studio
+   · 2026-09-11T2101-cowork-11-09-2026-materials-disciplina — КОММИТ по итогам сессии (Даня), 3 зоны materials + 1 файл disciplina
+   · 2026-09-14T0217-14-09-diskmat-57-2026-08 (blokiruet) — коммит закрытия сессии diskmat-57
+   · 2026-09-14T0339-arka-mat-kostyak-zahod-karta-dokumentov — вывоз arka/mat-kostyak, невывезено 2 коммита
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+- Пункт 0: `_studio/zhurnal/_INFRA-git/INCIDENTY.md` — `8667e27c`.
+- Пункт 1: `2026-09-14T0339-arka-mat-kostyak-zahod-karta-dokumentov` — `vyvezti --yes` (797ce2d0, 62664e8e, 8667e27c), закрыта; три прочие застряли ранее.
+- Пункт 2: вливать нечего (0 невлитых zahod/*).
+- Пункт 3: `check` — 137 путей содержательной работы, не коммитил.
+- Пункт 4: гашения нет по заданию.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — `2026-08-25T0042-otkaz-studio`, `2026-09-11T2101-cowork-11-09-2026-materials-disciplina`, `2026-09-14T0217-14-09-diskmat-57-2026-08` — вне мандата контура; 137 путей содержательной работы — не зона контура.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**What was done and why.** Year concept in exactly six sections: ГОД ЦЕЛИКОМ, ЧЕТВЕРТЬ, КРУЖОК, ЗАНЯТИЕ, СКВОЗНЫЕ ИДЕИ, РАЗВИЛКИ. Every statement about the course carries an Р-row; facts read from `god.json` are marked as file facts; the undecided sits in РАЗВИЛКИ. No decisions made, `god.json` untouched, no anchor problems.
+
+**Verdict:** развилок найдено 11, просмотрено решений 84 из 84 (Р1–Р83 and Р61а). Forks: circle as continuation vs olympiad line; estimation-and-example (Р58 vs Р67); where methods are introduced (В23, Р21, Р69); whose arithmetic (Р6 vs Р51/Р58, В19); level of rigour (Р19 vs Р51/Р53/Р81); what a sheet is built around (Р41/Р26/Р68, Р59 vs Р66); how lines alternate; name or only show big ideas (Р15/Р17/Р64/Р70, В18); how much of the year goes to measurement (15 of 66 lessons are tests); homework under AI (В5); coordination with the school teacher (Р48/Р76, В6).
+
+**Divergences found (file vs decisions):** `god.json` still carries Вероятность 1/2 (8 lessons), domain D, «проценты и доли» in Разгон and I-quarter dates «1 сентября — 25 октября»; per-quarter lessons in `god.json` 16/16/20/14 vs Р74 12/16/22/16 (both total 66). All inputs existed, including the three LINEJKA-*.md and KARTA-DOKUMENTOV.md of this wave.
+
+**How checked:** criterion in the worktree and from the main folder after merge → `разделы [True×6] ссылок на решения 60 развилок 11`, rc=0; `check_termin.py` green.
+
+**Verifier (fresh sonnet, no nested subagents, claim by claim, ≈150 claims, 11 of 11 forks):** 10 discrepancies, all fixed in `797a445c` — 4th axis named by Р67 not Р63; В21 does not cover the 8 freed lessons; «обязательный» and «принимают ассистенты» had no row; the alternation claim contradicted the file; circle IV topic list incomplete; four quotes (Р52, Р83, Р21, Р22) made verbatim. All 11 forks confirmed as genuinely undecided with three parts each. Final line: «выдано 10 позиций из 10 найденных».
+
+**Git contour subagent — six lines verbatim:**
+1) заявок было 4, закрыто 1, застряло 3 (2026-08-25T0042-otkaz-studio, 2026-09-11T2101-cowork-11-09-2026-materials-disciplina, 2026-09-14T0217-14-09-diskmat-57-2026-08)
+2) влито 0 из 0 названных — `--no-merged` дал 0 zahod-веток, вливать нечего; основная ветка — arka/mat-kostyak (снята командой `doctor`)
+3) хвост Cowork: забрано 1 (INCIDENTY.md, коммит 8667e27c) / осталось 0 (KARTA.md, VERDIKTY.md, UROKI-FABRIKE.md, выгрузки арок не изменялись)
+4) погашено 0 / не погашено 0, rc=— (по пункту 4 задания гашение веток делает аналитик при приёмке; названных веток не поступало)
+5) необратимое: push arka/mat-kostyak → origin (3 коммита, fast-forward, восстановимо `git revert`); удалений и force-операций не было
+6) выдано 4 позиций из 4 найденных
+
+**Not touched:** everything outside `diskmat-57/docs/KONCEPCIA-goda.md`, including `god.json`; this zahod file not committed; registration door refuses project paths — not called.
+
+**Hygiene §4.1:** Г1 `check --zone` ✅ (worktree and main after merge). Г2 not applicable. Г3 no-merged 0 → 0. Г4 no new `.py`. Г5 not registered (door refuses project paths). Г6 commits touch only the zone path.
+
+**Final git hygiene:** вне git своей зоны 0 · merged into `arka/mat-kostyak` without conflicts, HEAD `797a445c` · post-check from main: criterion rc=0, `check --zone` ✅ · невлитых 0 · own branch pushed, `@{u}..` = 0 · main 2 commits ahead — request `2026-09-14T0401-arka-mat-kostyak-zahod-koncepcia-goda`.
+
+**Необратимое:** необратимого нет.
+
+**Run time + tokens:** channel `app` — not applicable.
+
+**ПОВТОРЯЕМОСТЬ:** ВОПРОСЫ 4 repeats on every decision-grounded document of this project — verifier stays mandatory; ВОПРОСЫ 1–3 are owner/queue items.
+
+ПРАВКИ ПРОЧИТАНЫ: блок пуст («правок нет»).
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/docs/KONCEPCIA-goda.md` — Markdown, any editor / GitHub preview
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `7ca035d9` — `koncepcia-goda: year concept — year, quarter, circle, lesson, cross-cutting ideas, 11 forks (every claim cites an R-row)` + `797a445c` — `koncepcia-goda: verifier fixes — 4th axis named by R67 not R63, V21 scope, alternation described by file, circle IV topics, four quotes made verbatim, two unsupported words removed` · `git_zona.py check --zone diskmat-57/docs/KONCEPCIA-goda.md` → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
@@ -342,7 +418,9 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — критерий rc=0 (60 ссылок на решения, 11 развилок), верификатор утверждение за утверждением — 10 расхождений исправлены в 797a445c, все 11 развилок подтверждены нерешёнными; ветка влита и вывезена. Принято головой волны по поручению владельца 14.09.
+
+Клапан Г17: `check_sborki.py` на этом файле красный только по С3 — путь `/sessions/pensive-fervent-gauss/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` не существует на этой машине; причина дословно: «путь вшит шаблоном bootstrap_zahod.py (история цены из песочницы Cowork) во все заходы волны, к работе захода отношения не имеет; дефект генератора, не отчёта».
 
 **ВЕТКА РАБОТЫ:** `zahod/koncepcia-goda`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -353,6 +431,6 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: влитие и вывоз ветки сделал сам заход, коммит артефакта уже в `arka/mat-kostyak`; вывоз основной ветки и гашение ветки выполнены этим же ходом приёмки напрямую через `git_zona.py`, без очереди.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
