@@ -628,15 +628,18 @@ def lenta_kruzhka(ch):
     out = []
     for tema in k.get('temy') or []:
         span = tema['nedel'] * 2          # лента размечена в УРОКАХ, неделя = два урока
+        domen = tema.get('domen')         # форма занятия (разнобой/олимпиада/...) домена не несёт
+        cv = 'var(--d-%s)' % domen if domen else 'var(--ktr)'
+        dm = '<span class="dm">%s</span>' % E(DOMENY[domen]) if domen else ''
         out.append(
-            '<a class="blok kr-chast" style="--sp:%d;--c:var(--d-%s)" '
+            '<a class="blok kr-chast" style="--sp:%d;--c:%s" '
             'href="%sblok-%s.html">'
             '<span class="im">%s</span><span class="pz">%s</span>'
-            '<span class="niz"><span class="dm">%s</span>'
+            '<span class="niz">%s'
             '<span class="ch">%d %s</span></span></a>'
-            % (span, tema['domen'], PREFIKS, k['slug'], E(tema['imya']),
+            % (span, cv, PREFIKS, k['slug'], E(tema['imya']),
                '' if tema['nedel'] < 2 else E(RAZD.join(upakovat_chto(tema['chto']))),
-               E(DOMENY[tema['domen']]),
+               dm,
                tema['nedel'], 'недели' if 2 <= tema['nedel'] <= 4 else 'неделя'))
     return ''.join(out)
 
