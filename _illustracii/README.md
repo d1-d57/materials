@@ -36,4 +36,4 @@
 Довод содержательный, а не про удобство: **инструмент доводится частотой вызовов**, а запертый внутри слайдов он получает вызовы только на деках. Разбор и порядок выноса — `_studio/zhurnal/2026-08-05_faza-lenty/RAZDELENIE-issledovanie.md §6, §8, §9`.
 
 ---
-*Индекс документов — `docs/KARTA.md`. Вход исполнителя — `CLAUDE.md`. Новый `.md` регистрируется дверью `python3 _generator/tools/register_doc.py <путь> "<описание>"`.*
+*Индекс документов — `docs/KARTA.md`. Вход исполнителя — `CLAUDE.md`. Новый `.md` регистрируется дверью `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 ../disciplina/_generator/tools/register_doc.py <путь> "<описание>"`.*

@@ -7,7 +7,7 @@
 | Вид | Папка | Что это |
 |---|---|---|
 | 🧠 **ФАБРИКА** | `_studio/` | **Как делать.** Методология, стандарты, конвейер, дисциплина, борд задач. Мозг всей работы. |
-| 🔧 **ДВИЖКИ** | `_generator/` | **Чем собирать.** `build_doc.py` (документ), `build_deck.py` (слайды), гейты. Руки. |
+| 🔧 **ДВИЖКИ** | `../disciplina/_generator/` | **Чем собирать.** `build_doc.py` (документ), `build_deck.py` (слайды), гейты. Руки. Вынесены 25.08 в плагин disciplina; в `_generator/` здесь остались только указатели-заглушки `PEREEHAL`. |
 | 🔩 **СЛУЖЕБНЫЕ** | `_meta/`, `_illustracii/`, `_fond/`, `sayt/` | **Не проекты, в §3 их не искать.** `_meta/` — дисциплина работы (заход, git, арка, источник правды); `_illustracii/` — фабрика иллюстраций; `_fond/` — фонд задач (`zadachi/bank/`, `zadachi/arhiv-lmsh57-2025/`); `sayt/` — Hugo-сайт публикации (`d1-d57.github.io/materials/`). |
 | 📚 **ПРОЕКТЫ** | все прочие | **Что делаем.** Конкретные курсы, лекции, исследовательские нити (§3). |
 
@@ -37,15 +37,15 @@
 | **разобрать тему для себя** (обзор, карта входа) | `obzory/README.md` → тот же `STANDART-teksta.md` | паспорт в шапке обязателен, иначе обзор не найдётся; список — командой, не руками |
 | **собрать HTML — ДОКУМЕНТ** (текст для чтения: лекция, статья, обзор) | `../disciplina/_generator/build_doc.py` → контракт `_generator/DVIZHKI.md` | **новый генератор НЕ писать**; номера параграфов руками НЕ ставить |
 | **собрать HTML — ДЕК** (слайды, презентация) | `../disciplina/_generator/build_deck.py` → `_studio/konvejer/FORMAT-ISTOCHNIKA.md` | фикс-канвас 1440×810; правка = markdown, не HTML |
-| **после ЛЮБОЙ сборки документа** | `python3 _generator/tools/check_view.py <src>` | **обязательный гейт**: ловит «текст съеден при отрисовке» |
-| **после написания содержательного текста** | `python3 _generator/tools/check_termin.py <src>` | **обязательный гейт**: ловит термин, употреблённый РАНЬШЕ своего определения. Чинится перестановкой определения вверх, не дописыванием |
+| **после ЛЮБОЙ сборки документа** | `python3 ../disciplina/_generator/tools/check_view.py <src>` | **обязательный гейт**: ловит «текст съеден при отрисовке» |
+| **после написания содержательного текста** | `python3 ../disciplina/_generator/tools/check_termin.py <src>` | **обязательный гейт**: ловит термин, употреблённый РАНЬШЕ своего определения. Чинится перестановкой определения вверх, не дописыванием |
 | **🖼 работаешь с ИЗОБРАЖЕНИЕМ** (схема, диаграмма, график — для текста ИЛИ для слайда) | `_illustracii/` → ядро `_illustracii/DISCIPLINA.md` | отдельная фабрика; внутри рисунка только МЕТКА, проза — в подпись; **вышло плохо → чинить СЛОВАРЬ** |
 | **собрать заход в Claude Code** | скилл `agentic-coding-session-brief` + `_studio/docs/kak-delat/RUKOVODSTVO-zahodami.md` | один заход = одна задача; критерий, который может ПРОВАЛИТЬСЯ |
 | **вести многосоставную работу** | `_studio/docs/kak-delat/ARKA.md` | арка: дневник + мастер + ритуал конца |
 | **финальный русский мат-текст** | `math-russian-terminology` → `russian-editor`; термины — `catalan/spravochnik/TERMINY-russkie.md` | глоссарий проекта ВЫШЕ веба |
 | **программа короткого курса** | `_studio/docs/kak-delat/PROGRAMMA-KURSA.md` | лёгкий профиль, без полного конвейера |
 | **материалы к индивидуальному занятию** (ДЗ, подборка на доску, журнал ученика) | `ucheniki/START-HERE.md` → `ucheniki/METOD.md` | метод общий, журнал у каждого свой; сперва согласовать набор задач, потом собирать файл |
-| **ЛЮБАЯ работа с git** (коммит, «что-то не коммитится», «кто-то работает параллельно») | `python3 _generator/tools/git_zona.py doctor` | **руками git не трогаем.** Всё через этот файл: `doctor` → `plan` → `commit`. Непонятный вывод — целиком в чат Claude |
+| **ЛЮБАЯ работа с git** (коммит, «что-то не коммитится», «кто-то работает параллельно») | `python3 ../disciplina/_generator/tools/git_zona.py doctor` | **руками git не трогаем.** Всё через этот файл: `doctor` → `plan` → `commit`. Непонятный вывод — целиком в чат Claude |
 
 ## §2а. Git — шесть команд, больше знать нечего
 
@@ -56,12 +56,12 @@
 
 ```
 cd /Users/ivanyakovlev/Documents/GitHub/materials
-python3 _generator/tools/git_zona.py doctor          # что с репо прямо сейчас
-python3 _generator/tools/git_zona.py plan            # собрать черновик коммитов
-python3 _generator/tools/git_zona.py commit --push   # закоммитить и вывезти на GitHub
-python3 _generator/tools/git_zona.py check           # что осталось вне git
-python3 _generator/tools/git_zona.py clean           # снять мёртвые локи и мусор
-python3 _generator/tools/git_zona.py untrack --yes   # убрать из git то, что в .gitignore
+python3 ../disciplina/_generator/tools/git_zona.py doctor          # что с репо прямо сейчас
+python3 ../disciplina/_generator/tools/git_zona.py plan            # собрать черновик коммитов
+python3 ../disciplina/_generator/tools/git_zona.py commit --push   # закоммитить и вывезти на GitHub
+python3 ../disciplina/_generator/tools/git_zona.py check           # что осталось вне git
+python3 ../disciplina/_generator/tools/git_zona.py clean           # снять мёртвые локи и мусор
+python3 ../disciplina/_generator/tools/git_zona.py untrack --yes   # убрать из git то, что в .gitignore
 ```
 
 **Не помнишь, какая нужна — `doctor`.** Он называет состояние и следующий шаг.

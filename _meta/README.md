@@ -50,4 +50,4 @@ done
 Вердикт ресёрча `_studio/zhurnal/2026-08-05_faza-lenty/RESERCH-skill-ili-papka.md §6, §8`: проверка одна — **дописывается ли файл по ходу работы**. Дописывается — папка, нет — скилл. Четыре документа `disciplina/` — чистый текст «как делать» и по этой проверке метят в скиллы (все влезают в 500 строк); `POKRYTIE.md`, `UROKI.md`, `zhurnal/` дописываются и остаются папкой. Пока форма выноса в плагин не выбрана владельцем, дом один и он здесь: **у папки есть ворота, у ненаписанного скилла — нет.**
 
 ---
-*Индекс документов — `docs/KARTA.md`. Вход исполнителя — `CLAUDE.md`. Новый `.md` регистрируется дверью `python3 _generator/tools/register_doc.py <путь> "<описание>"`.*
+*Индекс документов — `docs/KARTA.md`. Вход исполнителя — `CLAUDE.md`. Новый `.md` регистрируется дверью `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 ../disciplina/_generator/tools/register_doc.py <путь> "<описание>"`.*

@@ -20,8 +20,8 @@
 
 ## Дисциплина
 
-- **Завёл новый `.md` — регистрируешь ТЕМ ЖЕ ходом, одной командой:** `python3 _generator/tools/register_doc.py <путь> "<описание>"` (из корня репо). Индекс — `docs/KARTA.md §6`, свой, не студийный. Руками в §6 не писать: разъехавшиеся дверь и ворота 5 не оставляют легального хода, кроме `--no-verify`.
-- **Git — только через `_generator/tools/git_zona.py`**, голым `git` не трогать. Канон — `../_studio/docs/kak-delat/GIT-disciplina.md`.
+- **Завёл новый `.md` — регистрируешь ТЕМ ЖЕ ходом, одной командой:** `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 ../disciplina/_generator/tools/register_doc.py <путь> "<описание>"` (из корня репо). Индекс — `docs/KARTA.md §6`, свой, не студийный. Руками в §6 не писать: разъехавшиеся дверь и ворота 5 не оставляют легального хода, кроме `--no-verify`.
+- **Git — только через `../disciplina/_generator/tools/git_zona.py`** (с `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials` — без неё инструмент судит дерево disciplina), голым `git` не трогать. Канон — `../_studio/docs/kak-delat/GIT-disciplina.md`.
 - **Проверяется глазом то, что глазом и живёт.** Машинного гейта на «красиво» нет и быть не может; что реально краснеет — перечислено в `POKRYTIE.md`.
 - **Цвет — только классом или токеном.** Литеральный hex и `stroke="black"` означают, что рисунок не сядет в палитру и не перекрасится темой.
 
