@@ -2,7 +2,7 @@
 
 > **КОГДА читать:** когда `dolg_repozitoriev.py` печатает «вынесено» и хочется понять,
 > почему чужой долг не краснеет. · **ЧТО дописывать сюда:** ТОЛЬКО строку выноса по
-> формату ниже. · **КУДА дальше:** сам счётчик — `_generator/tools/dolg_repozitoriev.py`,
+> формату ниже. · **КУДА дальше:** сам счётчик — `../disciplina/_generator/tools/dolg_repozitoriev.py`,
 > канон git — `disciplina/skills/disciplina-git/GIT-disciplina.md` (репозиторий `disciplina`; копия в `materials/_meta/disciplina/` снесена 2026-08-25).
 
 ## Зачем этот файл
@@ -31,7 +31,7 @@
 означало бы тихо снятый гейт.
 
 Вернуть репозиторий в счёт — удалить его строку. Проверить, что вынос действует:
-`python3 _generator/tools/dolg_repozitoriev.py` (вынесенные печатаются под чертой
+`GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 ../disciplina/_generator/tools/dolg_repozitoriev.py` (вынесенные печатаются под чертой
 «вынесено из счёта»), а разово судить всех — `--vse`.
 
 ## Список
