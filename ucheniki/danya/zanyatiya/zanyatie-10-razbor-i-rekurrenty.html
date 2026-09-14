@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие №10 — план</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.6;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+
+  header.mast{padding:52px 0 14px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+          color:var(--rubric);margin-bottom:10px;}
+  h1{font-family:"Old Standard TT",Georgia,serif;font-size:33px;font-weight:400;line-height:1.15;}
+  .data{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin-top:8px;}
+  .cel{margin:18px 0 0;padding:14px 16px;background:var(--panel);border-left:3px solid var(--accent);
+       font-size:16px;color:var(--ink-soft);}
+  .cel b{color:var(--ink);}
+  .cel p+p{margin-top:8px;}
+  .cel.trev{border-left-color:var(--rubric);}
+
+  .plan{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 8px;font-family:"PT Sans",sans-serif;font-size:12px;}
+  .plan span{padding:3px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft);white-space:nowrap;}
+  .plan span b{color:var(--ink);font-weight:700;}
+
+  section.z{padding:30px 0 6px;border-top:1px solid var(--rule);margin-top:26px;}
+  .hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .num{font-family:"Old Standard TT",serif;font-size:26px;color:var(--rubric);line-height:1;}
+  h2{font-family:"Old Standard TT",Georgia,serif;font-size:23px;font-weight:400;flex:1;min-width:200px;}
+  h3{font-family:"Old Standard TT",Georgia,serif;font-size:18px;font-weight:400;margin:18px 0 2px;}
+  .meta{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--ink-faint);white-space:nowrap;}
+  .meta i{font-style:normal;color:var(--accent);}
+  .meta.new i{color:var(--rubric);}
+
+  details.cond{margin:10px 0 16px;}
+  details.cond summary{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;
+       display:inline-block;border-bottom:1px dotted var(--rule);padding-bottom:2px;}
+  details.cond summary::-webkit-details-marker{display:none;}
+  details.cond summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details.cond[open] summary{margin-bottom:9px;}
+  .usl{background:var(--panel);border:1px solid var(--rule);padding:13px 16px;font-size:15.5px;color:var(--ink-soft);}
+  .usl p+p{margin-top:7px;}
+
+  .pole{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:7px 0;align-items:start;}
+  .pole+.pole{border-top:1px dotted var(--rule);}
+  .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+       color:var(--ink-faint);padding-top:5px;}
+  .lab.ok{color:var(--accent);}
+  .lab.hole{color:var(--rubric);}
+  .pole p+p{margin-top:6px;}
+  ul.q{list-style:none;}
+  ul.q li{position:relative;padding-left:20px;margin-bottom:6px;}
+  ul.q li::before{content:"—";position:absolute;left:0;color:var(--accent);}
+  ul.q li em{font-style:italic;color:var(--ink-soft);}
+  .tih{color:var(--ink-soft);font-size:15.5px;}
+  .verdict{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.06em;padding:1px 7px;
+       border:1px solid var(--rule);border-radius:2px;white-space:nowrap;}
+  .verdict.ok{color:var(--accent);border-color:var(--accent);}
+  .verdict.half{color:var(--ink-faint);}
+  .verdict.bad{color:var(--rubric);border-color:var(--rubric);}
+  table.ch{border-collapse:collapse;font-family:"PT Sans",sans-serif;font-size:14px;margin-top:6px;}
+  table.ch td,table.ch th{border:1px solid var(--rule);padding:4px 11px;text-align:left;}
+  table.ch th{color:var(--ink-faint);font-weight:400;font-size:12px;}
+
+  footer{margin-top:36px;padding-top:16px;border-top:2px solid var(--ink);
+         font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);}
+  footer b{font-family:"PT Serif",serif;color:var(--ink);}
+  footer p+p{margin-top:7px;}
+  @media (max-width:560px){
+    .pole{grid-template-columns:1fr;gap:2px;}
+    .lab{padding-top:0;}
+    h1{font-size:27px;} h2{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Занятие №10 · план</div>
+  <h1>Где рвётся индукция и как считать объекты</h1>
+  <div class="data">11 сентября 2026 · разбор ДЗ после №9 · полтора часа</div>
+</header>
+
+<div class="cel">
+  <p><b>Почему это.</b> Сдано два задания из пяти. В первом он сам увидел шаг через три и сам
+  поставил три базы — то, чего не увидел в монетах месяц назад. Во втором провалил все три пункта,
+  и промах в двух из них буквально один и тот же. Значит первая половина занятия — не «разбор ДЗ»,
+  а одна конкретная дыра: <b>что именно обязана уметь индукция</b>. Вторая половина — новое:
+  считать объекты рекуррентой, вход в числа Каталана через многоугольники, которые ему зашли на №9.</p>
+  <p><b>Как вести.</b> Не останавливать и не говорить, что делать. Где он не видит шага —
+  подсовывать не подсказку, а неверное рассуждение или просьбу построить объект. Одну задачу
+  не держать 50 минут: не пошло за 20 — снимать.</p>
+</div>
+
+<div class="plan">
+  <span><b>0.</b> Что сдано · 5</span>
+  <span><b>1.</b> Три ложных доказательства · 30</span>
+  <span><b>2.</b> Самый тяжёлый камень · 20</span>
+  <span><b>3.</b> Домино и рекуррента · 10</span>
+  <span><b>4.</b> Триангуляции · 25</span>
+</div>
+
+<!-- 0 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">0</span>
+    <h2>Итог ДЗ после №9</h2>
+    <span class="meta">сверка · <i>5 мин</i></span>
+  </div>
+
+  <table class="ch">
+    <tr><th>задача</th><th>вердикт</th><th>коротко</th></tr>
+    <tr><td>Квадрат на n квадратов</td><td><span class="verdict ok">верно</span></td><td>шаг через три и три базы — сам</td></tr>
+    <tr><td>Три ложных доказательства</td><td><span class="verdict bad">не взял</span></td><td>ни один пункт; промах общий</td></tr>
+    <tr><td>Самый тяжёлый камень</td><td><span class="verdict half">нет</span></td><td>в тетради не видно</td></tr>
+    <tr><td>Домино 2×n</td><td><span class="verdict half">нет</span></td><td>в тетради не видно</td></tr>
+    <tr><td>Чётность неокрашенных рёбер</td><td><span class="verdict half">нет</span></td><td>в тетради не видно</td></tr>
+  </table>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    Три последние — не сделал или не сдал? От ответа зависит, берём ли камень блоком 2 или
+    отдаём его назад в дом.
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Сказать вслух</div><div>
+    Про первую задачу — прямо и сразу: <em>«ты сам понял, что шаг прыгает через три, и поэтому
+    баз нужно три. В монетах у тебя был ровно такой же шаг, и ты его не заметил.»</em>
+    Это единственная за три набора задача, где он поймал форму шага без подсказки.
+  </div></div>
+
+  <div class="pole"><div class="lab">Добить за минуту</div><div>
+    <ul class="q">
+      <li>А если бы ты доказал только для 6 и 7 — какие n остались бы без доказательства?
+        <em>(8, 11, 14, … — целая цепочка; три базы запускают три независимые цепочки)</em></li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 1 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">1</span>
+    <h2>Три ложных доказательства</h2>
+    <span class="meta new">центральный блок · <i>30 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>что он написал</summary>
+    <div class="usl">
+      <p><b>(а)</b> «А если изначальный треугольник был остроугольный и его разрезали по острому углу?»</p>
+      <p><b>(б)</b> «Не обозначено n, и если оно больше двух, то это не всегда правда. Если у прямых
+      есть точка пересечения, они не всегда совпадают. И у меня есть контрпример на само утверждение.»
+      Рисунки: две пересекающиеся прямые; три прямые.</p>
+      <p><b>(в)</b> «Но добавлять рёбра в граф можно не бесконечно, рано или поздно он станет полным.
+      А если из добавленной вершины не выходит 2 ребра? А если выходят, то куда?»</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab hole">Диагноз</div><div>
+    <p>Настоящая ошибка в (а) и в (в) — одна и та же: <b>шаг строит не всякий объект размера n+1</b>.
+    Индукция обязана разобрать любой объект, а не только те, что собраны её собственным шагом.
+    Он не назвал этого ни разу.</p>
+    <p>И второе, важнее: <b>он не отделяет «утверждение ложно» от «в доказательстве дыра».</b>
+    В (б) свалил в кучу и то и другое. В (в), где утверждение как раз ложно, — не проверил вовсе,
+    хотя двумя строчками выше строил контрпримеры охотно.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Как вести</div><div>
+    Сразу разложить на два разных вопроса и заставить держать их порознь на всех трёх пунктах:
+    <b>(1)</b> утверждение верно или нет? <b>(2)</b> в каком именно переходе рассуждение врёт?
+    Дальше — по одной просьбе на пункт, ответов не давать.
+  </div></div>
+
+  <h3>(б) — начать отсюда, здесь он ближе всего</h3>
+  <div class="pole"><div class="lab">Просьба</div><div>
+    <ul class="q">
+      <li>Пройди по шагу с n = 2, 3, 4, 5 и скажи, на каком из них он врёт, а на каких честен.
+        <em>(ломается ровно один переход, 2 → 3: у «первых двух» и «последних двух» общая точка
+        одна, p₂, а не две. Дальше шаг безупречен — цепочка порвана в самом начале)</em></li>
+      <li>Ты написал «если у прямых есть точка пересечения, они не всегда совпадают» — это верно.
+        В каком месте доказательства этим пользуются и почему там этого мало?</li>
+    </ul>
+  </div></div>
+
+  <h3>(а) — здесь он попал дальше, чем сам понял</h3>
+  <div class="pole"><div class="lab">Просьба</div><div>
+    <ul class="q">
+      <li>Нарисуй разбиение на 4 треугольника, которое <b>нельзя</b> получить делением одного
+        треугольника из разбиения на 3. <em>(средние линии: склей любые два соседних — выйдет
+        трапеция или параллелограмм, не треугольник. Отсюда сам выйдет на «шаг строит не все»)</em></li>
+      <li>А теперь посмотри на это же разбиение ещё раз: все четыре треугольника какие?</li>
+    </ul>
+  </div></div>
+
+  <div class="cel trev">
+    <p><b>Проверь меня, это находка.</b> Утверждение (а) <b>ложно</b>. Разрежь остроугольный
+    треугольник средними линиями на четыре — все четыре подобны исходному, значит все остроугольные.
+    Контрпример при n = 4. То есть ложны все три утверждения, а задача просит не контрпример,
+    а место обрыва — на этом и держится весь блок.</p>
+    <p>И Данина реплика «а если изначальный был остроугольный?» целилась ровно сюда. Сказать ему
+    это прямо: интуиция шла дальше, чем ключ, которым я эту задачу заводил. Карточку
+    <code>lozhnye-indukcii</code> после занятия поправлю.</p>
+  </div>
+
+  <h3>(в) — оставить напоследок, здесь он промахнулся полностью</h3>
+  <div class="pole"><div class="lab">Просьба</div><div>
+    <ul class="q">
+      <li>Попробуй сломать само утверждение. <em>(два треугольника, соединённые одним ребром: все
+        степени ≥ 2, граф связен, но это ребро — мост)</em></li>
+      <li>Теперь возьми свой контрпример и убери из него одну вершину — получился граф, к которому
+        применимо предположение индукции? <em>(нет: степени падают ниже двух. Значит его граф
+        шагом не строится вовсе — та же дыра, что в пункте (а))</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если встанет</div><div>
+    Приём с №9 работает: дать не указание, а ещё одно неверное рассуждение с той же дырой и
+    попросить найти её. «Все коровы одного цвета» уже отработаны — можно сослаться на них прямо:
+    <em>«чем вот это похоже на коров?»</em>
+  </div></div>
+</section>
+
+<!-- 2 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">2</span>
+    <h2>Самый тяжёлый камень</h2>
+    <span class="meta">несданное · <i>20 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие и ключ</summary>
+    <div class="usl">
+      <p>Дано n различных по весу камней и весы, сравнивающие любые два. Какое наименьшее число
+      взвешиваний нужно, чтобы найти самый тяжёлый? <b>(б)</b> Изменится ли ответ, если порядок
+      взвешиваний надо указать заранее?</p>
+      <p class="tih">Ответ: n − 1, и в (б) тот же. Пример — турнир на выбывание. Оценка: граф
+      сравнений обязан быть связным, иначе в двух компонентах сидит по своему максимуму и сказать,
+      который тяжелее, нельзя; связный граф на n вершинах имеет не меньше n − 1 ребра.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Это задача на «догадайся, что здесь дерево» — тот жанр, который ты просил вместо
+    «дано дерево, посчитайте». Граф в условии не назван ни разу, его надо ввести самому.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Пример он даст сразу, турниром. Вся ценность в оценке: <em>«докажи, что меньше нельзя»</em>.</li>
+      <li>Если пойдёт через «кандидатов» (каждое взвешивание убивает не больше одного) — это законно
+        и даже короче. Тогда дожать вторым языком: <em>«нарисуй граф, где вершины — камни, а рёбра —
+        проведённые сравнения. Что будет, если он несвязен?»</em></li>
+      <li>В конце — обе половины на месте? <em>(его сквозная болячка; спрашивать всегда)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Снимать</div><div>
+    Если за 20 минут не пошло — снять и вернуть в дом. Додавливать нельзя, это демотивирует
+    (урок №6, НОД+НОК).
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">3</span>
+    <h2>Домино 2×n</h2>
+    <span class="meta new">разгон · <i>10 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие и ключ</summary>
+    <div class="usl">
+      <p>Сколькими способами прямоугольник 2 × n можно разрезать на доминошки 1 × 2?</p>
+      <p class="tih">Ответ: 1, 2, 3, 5, 8, 13, 21, 34 при n = 1…8 — числа Фибоначчи. Разбор по
+      левому столбцу: вертикальная доминошка оставляет 2 × (n−1), две горизонтальные — 2 × (n−2).
+      Проверено перебором до n = 10.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Он её не сдал, и это удачно: она нужна не как ДЗ, а как <b>образец приёма</b> перед главным
+    блоком. Десять минут, не больше. Смысл один: посмотреть на край объекта и разложить по тому,
+    что там стоит.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Посчитай руками n = 1, 2, 3, 4. <em>(1, 2, 3, 5 — малые случаи он сам не смотрит, просить прямо)</em></li>
+      <li>Посмотри на самый левый столбец. Сколько вообще бывает вариантов, чем он закрыт?
+        <em>(два, и каждый отрезает кусок известной длины)</em></li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 4 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">4</span>
+    <h2>Сколько триангуляций у многоугольника</h2>
+    <span class="meta new">новое · <i>25 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие и ключ</summary>
+    <div class="usl">
+      <p>Выпуклый n-угольник режут непересекающимися диагоналями на треугольники. Сколькими
+      способами это можно сделать?</p>
+      <p class="tih">2, 5, 14, 42 при n = 4, 5, 6, 7 — числа Каталана. Разбор по той стороне,
+      которая лежит в каком-то одном треугольнике: третья вершина этого треугольника делит
+      многоугольник на два меньших, и ответы перемножаются. Эти же числа он уже видел в ДЗ после
+      №7 — там триангуляции пересчитывались перебором.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab ok">Зачем здесь</div><div>
+    <p>Твоё решение от 30.08: заходить не с формулы Кэли, а с вопроса «как вообще считать объекты»,
+    начиная с простого. Здесь всё сходится: многоугольники он рисовал с удовольствием на №9,
+    рекуррента только что показана на домино, а числа 2, 5, 14, 42 он уже встречал — узнавание
+    сработает на него.</p>
+    <p>Дальше отсюда открыты обе двери: биекция со скобочными последовательностями (его любимый
+    жанр неожиданного соответствия) и обратно к деревьям.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Посчитай руками четырёхугольник и пятиугольник. <em>(2 и 5)</em></li>
+      <li>Домино мы разложили по левому столбцу. А здесь по чему раскладывать?
+        <em>(не подсказывать; если встанет — «выбери одну сторону и посмотри, в каком она треугольнике»)</em></li>
+      <li>Когда появится произведение двух меньших ответов, а не сумма — спросить, почему именно
+        произведение. <em>(две части режутся независимо)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если пойдёт</div><div>
+    Проверить гипотезу на шестиугольнике: рекуррента даёт 14. Дальше — вопрос на дом,
+    а не на урок: <em>«а можно ли записать триангуляцию строчкой, как мы записывали разбиение
+    домино?»</em>
+  </div></div>
+</section>
+
+<footer>
+  <p><b>Чего сегодня не трогаем.</b> Код Прюфера и формула Кэли — план
+  <code>zanyatie-10-metod.html</code> остаётся в резерве целиком, по твоему решению от 30.08.
+  Чётность неокрашенных рёбер и остовы — тоже не сегодня, они держатся на несданном камне.</p>
+  <p><b>Долги после занятия.</b> Поправить карточку <code>lozhnye-indukcii</code>: в пункте (а)
+  утверждение ложно, контрпример — средние линии. Занести итоги ДЗ после №9 в поля
+  <code>itog:</code> пяти карточек и в <code>ZHURNAL.md</code>. Спросить про три несданные задачи.</p>
+  <p><b>Формат.</b> Полтора часа, одну задачу не держать 50 минут, прямых указаний не давать —
+  вместо них неверное рассуждение или просьба построить объект.</p>
+</footer>
+
+</div>
+</body>
+</html>

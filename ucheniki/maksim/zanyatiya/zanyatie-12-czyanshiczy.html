@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ферзя в угол</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.62;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px 90px;}
+  header.mast{padding:58px 0 18px;border-bottom:2px solid var(--ink);margin-bottom:8px;}
+  .kicker{font-family:"PT Sans",sans-serif;letter-spacing:.32em;text-transform:uppercase;
+       font-size:11px;color:var(--rubric);font-weight:700;margin:0 0 12px;}
+  h1{font-family:"Old Standard TT",serif;font-weight:700;font-size:46px;line-height:1.0;margin:0;}
+  .date{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin:14px 0 0;letter-spacing:.04em;}
+  .preambula{margin:26px 0 4px;padding:20px 22px;background:var(--panel);border:1px solid var(--rule);
+     border-left:3px solid var(--accent);border-radius:2px;font-size:15.5px;}
+  .preambula h2{font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;
+     text-transform:uppercase;color:var(--accent);margin:0 0 10px;}
+  .preambula p+p{margin-top:9px;}
+  ol{list-style:none;counter-reset:p;margin-top:8px;}
+  li{counter-increment:p;padding:26px 0 24px;border-bottom:1px solid var(--rule);
+     display:grid;grid-template-columns:46px 1fr;gap:6px 18px;}
+  li:last-child{border-bottom:none;}
+  li::before{content:counter(p);grid-row:1/3;font-family:"Old Standard TT",serif;font-style:italic;
+     font-weight:700;font-size:30px;color:var(--rubric);line-height:1;padding-top:2px;}
+  li.zvezda::before{content:"\2605";font-style:normal;font-size:22px;padding-top:6px;color:var(--accent);}
+  li.rubrika{counter-increment:none;display:block;border-bottom:none;padding:34px 0 0;
+     font-family:"PT Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.28em;
+     text-transform:uppercase;color:var(--rubric);}
+  li.rubrika::before{content:none;}
+  li.rubrika+li{padding-top:14px;}
+  .tag,.cond,.hint,details,.spoiler{grid-column:2;}
+  .tag{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+     color:var(--ink-faint);margin:0 0 8px;}
+  .cond p+p{margin-top:10px;}
+  .hint{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     margin:12px 0 0;padding-left:14px;border-left:2px solid var(--accent);}
+  details{margin:10px 0 0;}
+  summary{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+     color:var(--ink-faint);cursor:pointer;list-style:none;display:inline-block;
+     border:1px solid var(--rule);border-radius:3px;padding:3px 10px;}
+  summary::-webkit-details-marker{display:none;}
+  summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details[open] summary{margin-bottom:8px;}
+  .spoiler{font-family:"PT Serif";font-style:italic;color:var(--ink-soft);font-size:15px;
+     padding-left:14px;border-left:2px solid var(--rubric);}
+  .spoiler p+p{margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <p class="kicker">Занятие 12</p>
+    <h1>Ферзя в угол</h1>
+    <p class="date">25 августа 2026</p>
+  </header>
+
+  <div class="preambula"><h2>Как устроено занятие</h2><p>Решения по домашней работе не пришли, поэтому разбор не планируется. Если Максим что-то делал, начать стоит с его вопросов, а дальше идти по этой серии.</p><p>Занятие целиком про одну игру. Пункты идут подряд и складываются в исследование: сыграть, разметить позиции, узнать в игре знакомую фигуру, посмотреть на накопившуюся таблицу и вытащить из неё правило.</p><p>Разметка здесь займёт больше времени, чем обычно, и это не потеря темпа. В прежних играх проигрышные позиции подчинялись кратности, и перебор обрывался рано; тут кратности нет, поэтому таблица должна накопиться, прежде чем в ней станет что-то видно.</p><p><strong>Главное место — пункт (в).</strong> Его сквозной провал в том, что гипотезу из картинки он сам не выдвигает. В домашней работе после десятого занятия он впервые выдвинул её сам, но не проверил. Здесь обе половины стоят рядом: сначала увидеть закономерность в столбике пар, потом проверить её предсказанием следующей пары. Стоит дать столбик и помолчать; если не пойдёт, спрашивать не «что видишь», а «сравни первую пару со второй».</p><p><strong>Чем кончить.</strong> Если пункт (г) взят, сказать, что оба потока чисел задаются золотым сечением: n-я пара — это целые части n·φ и n·φ². Само φ он видел на первом занятии. Полное доказательство есть в статье «Кванта», оно на целых частях и вполне подъёмное, но саму статью пока не отдавать — у неё отдельный вход.</p><p><strong>Чего не делать.</strong> Не выкладывать формулу до пункта (г), иначе исчезает вся работа. И не называть игру нимом Витхоффа вслух: название гуглится за секунду вместе с ответом.</p><p>В конце — вторая задача про запас, на случай если игра пойдёт быстро.</p></div>
+
+  <ol>
+    <li>
+      <p class="tag">теория игр · разметка позиций, изоморфизм с ферзём, гипотеза из наблюдений</p>
+      <div class="cond"><p>В игре цзяньшицзы перед игроками две кучки камней. За ход разрешается либо взять любое число камней из одной кучки, либо взять поровну камней из обеих сразу. Кто не может сделать ход, проигрывает.</p><p>(а) Поиграйте несколько партий и найдите проигрышные позиции с маленькими кучками. Позиция проигрышна для того, чей ход, если любой ход из неё ведёт в выигрышную.</p><p>(б) Отметьте позицию (a, b) как клетку доски: a клеток вправо, b клеток вверх. Какой знакомой фигурой оказывается ход в этой игре и куда она движется?</p><p>(в) Выпишите найденные проигрышные пары подряд и посмотрите на них. Что происходит с разностью чисел в паре? А какие числа вообще встречаются среди пар?</p><p>(г) По этим двум наблюдениям попробуйте предсказать следующие пары, не размечая доску дальше.</p></div>
+      <details><summary>подсказка</summary><div class="spoiler"><p>В пункте (б) посмотрите, куда можно сдвинуться из клетки: влево на сколько угодно, вниз на сколько угодно, наискосок к началу координат.</p></div></details>
+      <details><summary>ещё подсказка</summary><div class="spoiler"><p>В пункте (в) сравните пары по порядку: первая, вторая, третья. Отдельно выпишите все числа, которые встретились, и проверьте, не пропущено ли какое-нибудь маленькое число и не встретилось ли какое-то дважды.</p></div></details>
+      <details><summary>ответ</summary><div class="spoiler"><p>Первые проигрышные пары: (1, 2), (3, 5), (4, 7), (6, 10), (8, 13), (9, 15), (11, 18), (12, 20), (14, 23), (16, 26).</p><p>Ход в этой игре — это ход ферзя, идущего к углу доски: влево, вниз или наискосок. Выигрывает тот, кто поставит ферзя в угол.</p><p>Разность чисел в n-й паре равна n. Каждое натуральное число встречается среди пар ровно один раз.</p></div></details>
+      <details><summary>решение</summary><div class="spoiler"><p><strong>(б)</strong> Пусть кучки — это координаты клетки: a вправо, b вверх. Взять камни из первой кучки значит сдвинуться влево, из второй — вниз, поровну из обеих — наискосок вниз-влево. Это в точности ходы ферзя, которому разрешено двигаться только в сторону угла. Игра кончается, когда ферзь попал в угол (0, 0) и ходить больше некуда.</p><p><strong>(а)</strong> Размечаем клетки с конца, как размечали позиции в других играх. Клетка (0, 0) проигрышна для того, чей ход. Любая клетка, откуда можно попасть в проигрышную, — выигрышная. Клетка, из которой все ходы ведут в выигрышные, — проигрышная.</p><p>Первые проигрышные клетки получаются такие: (1, 2), (3, 5), (4, 7), (6, 10), (8, 13), (9, 15), (11, 18), (12, 20), (14, 23), (16, 26). Пары записаны меньшим числом вперёд; симметричные им (2, 1), (5, 3) и так далее тоже проигрышны.</p><p><strong>(в)</strong> Два наблюдения бросаются в глаза. Во-первых, разности: 2 − 1 = 1, 5 − 3 = 2, 7 − 4 = 3, 10 − 6 = 4, и дальше так же — разность n-й пары равна её номеру. Во-вторых, числа: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 — все на месте, ни одно не пропущено и ни одно не повторилось.</p><p><strong>(г)</strong> Этих двух наблюдений хватает, чтобы строить пары дальше без разметки. Меньшее число очередной пары — наименьшее натуральное, которое ещё не встречалось; большее получается прибавлением номера пары. Скажем, после (16, 26) не встречались ещё 17, 18 занято, значит одиннадцатая пара начинается с 17, а разность равна 11: выходит (17, 28).</p><p>Правило это работает, но пока оно только угадано из таблицы — доказательства, что размеченная доска и дальше будет вести себя так же, у нас нет.</p></div></details>
+    </li>
+
+    <li>
+      <p class="tag">конструктив · решётка из двух шагов</p>
+      <div class="cond"><p>Магический квадрат 3×3 бывает не только из чисел от 1 до 9. Возьмём девять различных чисел и попробуем расставить их так, чтобы суммы по строкам, столбцам и диагоналям совпали.</p><p>(а) Получится ли это для чисел 1, 2, 3, 4, 5, 6, 7, 8, 10?</p><p>(б) А для чисел 2, 5, 8, 9, 12, 15, 16, 19, 22?</p><p>(в) Какое число обязано стоять в центре, если квадрат сложить удалось?</p></div>
+      <details><summary>подсказка</summary><div class="spoiler"><p>В пункте (в) повторите тот подсчёт, которым для чисел от 1 до 9 получается пятёрка в центре: сложите четыре линии, проходящие через центральную клетку.</p></div></details>
+      <details><summary>ответ</summary><div class="spoiler"><p>(а) Нельзя.</p><p>(б) Можно, общая сумма равна 36.</p><p>(в) В центре стоит среднее арифметическое всех девяти чисел, то есть их сумма, делённая на девять.</p></div></details>
+      <details><summary>решение</summary><div class="spoiler"><p><strong>(в)</strong> Начнём с центра: из него получается всё остальное. Четыре линии через центральную клетку покрывают все девять клеток, причём центральная попадает во все четыре, а остальные восемь — по одному разу. Значит учетверённая сумма линии равна сумме всех девяти чисел плюс центр, взятый ещё трижды.</p><p>С другой стороны, три строки дают сумму линии трижды и покрывают все числа по разу, так что сумма линии это сумма всех чисел, делённая на три.</p><p>Подставим одно в другое: сумма всех чисел, делённая на три и умноженная на четыре, равна сумме всех чисел плюс утроенный центр. Отсюда утроенный центр равен трети общей суммы, то есть сам центр равен сумме, делённой на девять. Это и есть среднее арифметическое всех девяти чисел.</p><p><strong>(а)</strong> Сумма чисел 1, 2, 3, 4, 5, 6, 7, 8, 10 равна 46, и она не делится на три. А сумма линии обязана быть третью от неё. Значит квадрата нет.</p><p><strong>(б)</strong> Сумма равна 108, треть от неё — 36, девятая часть — 12, так что в центре должно стоять число 12, и оно в наборе есть. Одна из расстановок такая: в первой строке 5, 16, 15, во второй 22, 12, 2, в третьей 9, 8, 19. Все восемь линий дают 36.</p><p><strong>Что общего у подходящих наборов.</strong> Числа 2, 5, 8, 9, 12, 15, 16, 19, 22 устроены так. Берём 2 и прибавляем к нему шаг 3 ноль, один или два раза, а потом ещё шаг 7, тоже ноль, один или два раза. Получается решётка три на три из двух независимых шагов. Любой такой набор годится, и расставляется он ровно тем же узором, что числа от 1 до 9: там шаги были 1 и 3.</p><p><strong>Для преподавателя.</strong> Пункт (а) отсекается делимостью, и это стоит отметить отдельно: иногда ответ «нельзя» получается раньше всякого перебора. Общая конструкция в конце — то место, где у этого ученика алгебра работает лучше картинки: набор задаётся двумя шагами, а не списком.</p></div></details>
+    </li>
+  </ol>
+</div>
+</body>
+</html>
