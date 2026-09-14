@@ -1,0 +1,138 @@
+\documentclass[10pt,a4paper]{article}
+%% LuaLaTeX: на нём собран «Путеводитель Тьюринга», и только он умеет
+%% microtype целиком — растяжение глифов и трекинг, которыми строка
+%% подбирается сама. XeLaTeX эти два средства не поддерживает вовсе,
+%% pdfLaTeX не годится: кириллических пакетов в среде сборки нет.
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+%% Начертания названы явно: без этого fontspec подставляет вместо курсива
+%% ЖИРНЫЙ курсив, и все \textit в листке выходят жирными (проверено рендером).
+%% Source Serif 4 — тот же шрифт, что выбран в html-конспектах проекта
+%% (--serif в view.html). Файлы лежат рядом, в shrifty/, а не берутся
+%% из системы: сборка должна давать один и тот же PDF в любой среде.
+\setmainfont{SourceSerifPro}[
+  Path           = shrifty/,
+  Extension      = .ttf,
+  UprightFont    = *_400Regular,
+  ItalicFont     = *_400Regular_Italic,
+  BoldFont       = *_700Bold,
+  BoldItalicFont = *_700Bold_Italic]
+\usepackage[left=11mm,right=13mm,top=18mm,bottom=14mm]{geometry}
+\usepackage{amsmath,amssymb}
+%% microtype с настройками из эталона владельца (_studio/konvejer/07-verstka/
+%% etalon-tex/1.base-packages.sty): выступающая пунктуация и растяжение глифов
+%% дают строке подобраться, и висящее на следующей строке слово втягивается
+%% обратно — без этого приходится подгонять полосу руками.
+%% Развилка по компилятору, а не выбор одного из двух. Целевой — LuaLaTeX:
+%% на нём собран «Путеводитель Тьюринга» и только он умеет microtype целиком.
+%% Но в песочнице, где собирается превью, luatex сломан (нет luatexbase.sty,
+%% не грузятся шрифты Latin Modern, поставить неоткуда), и там работает
+%% XeLaTeX — а он expansion и tracking не поддерживает и падает на них.
+%% Так один и тот же .tex собирается в обеих средах, и в целевой — полностью.
+\usepackage{iftex}
+\ifLuaTeX
+  \usepackage[protrusion=true,expansion=true,tracking=true,
+              stretch=50,shrink=30,final]{microtype}
+\else
+  \usepackage[protrusion=true,final]{microtype}
+\fi
+\emergencystretch=1em
+\linespread{0.98}
+\frenchspacing
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+%% Окно для отметки перед задачей — как в листках 179 школы: ученик отмечает
+%% сданное сам. Ширина подобрана по образцу 06_Графы.pdf.
+%% Окно для плюса. Размеры из архива 179 (\shag=1.7cm, высота 0.5\baselineskip),
+%% ширина ужата: там окно на весь плюс с подписью, здесь хватает плюса.
+\newlength{\shirinaokna}\setlength{\shirinaokna}{12mm}
+\newlength{\vysotaokna}\setlength{\vysotaokna}{0.7\baselineskip}
+\newcommand{\okno}{\framebox[\shirinaokna]{\rule{0pt}{\vysotaokna}}}
+\newlength{\shirinanomera}\setlength{\shirinanomera}{9mm}
+\newlength{\zazor}\setlength{\zazor}{0.6em}
+
+%% Абзац задачи. Висячего отступа НЕТ намеренно: в листках 179 продолжение
+%% строки начинается у левого поля, а не под текстом первой строки, и весь
+%% текст листка стоит на одном левом крае. Окно и номер — обычный текст
+%% в начале первой строки, а не колонка на поле. Висячий вариант пробовался
+%% 03.09 и отвергнут владельцем: «почему „доползти до любой другой“ должно
+%% начинаться там же, где „из спичек“».
+\newcommand{\blok}[1]{\par\noindent #1\par}
+
+%% Номер в боксе постоянной ширины: без него однозначные и двузначные номера
+%% дают колонку разной ширины, и текст задач стоит на двух разных вертикалях.
+\newcommand{\nomer}[2]{\makebox[\shirinanomera][l]{%
+  \fbox{\rule{0pt}{\vysotaokna}\textbf{#1}$^{#2}$}}}
+%% Термин при первом употреблении. Одна команда на весь листок: выделение
+%% значит «у слова специальный смысл», а не «мне тут захотелось курсива».
+\newcommand{\term}[1]{\textit{#1}}
+%% Пустое место вместо окна — там, где плюс ставится не за задачу, а за пункты.
+\newcommand{\pusto}{\hspace*{\shirinaokna}}
+%% Знак письменной сдачи. Стандартный теховский кинжал, а не картинка пера:
+%% pifont-перо в кегле листка не читается вовсе (проверено рендером 02.09).
+%% Знак письменной сдачи — надстрочный, чтобы не съедал строку и не лез
+%% в текст условия.
+\newcommand{\pero}{\textsuperscript{\dag}\;}
+\newcommand{\zvezdy}{%
+  \par\medskip
+  \centerline{\rule{0.3\linewidth}{0.4pt}\quad $*$\ \ $*$\ \ $*$\quad
+              \rule{0.3\linewidth}{0.4pt}}%
+  \par\medskip}
+
+\begin{document}
+\centerline{\textit{Школа № 179. КЛ. 2026/2027 уч.год}}
+\par\medskip\centerline{\rule{0.62\linewidth}{0.4pt}}\par\smallskip
+\centerline{\textbf{1$a$. \MakeUppercase{Деревья}}}\par\smallskip
+\begin{samepage}
+\blok{\nomer{1}{\circ}\hspace{\zazor}Шесть компьютеров стоят в кабинете, и ни один ни с одним не соединён. Каждый день системный администратор соединяет кабелем какие-нибудь два. \term{Автономной зоной} назовём набор компьютеров, между любыми двумя из которых можно передать данные — напрямую или через другие компьютеры, — и такой, что ни с одним компьютером снаружи обмена нет.}
+\blok{\okno\hspace{\zazor}\textbf{а)} Как может измениться число автономных зон за один день?}
+\blok{\okno\hspace{\zazor}\textbf{б)} Какого наименьшего числа кабелей хватит, чтобы все шесть компьютеров оказались в одной зоне?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{2}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Из спичек длины 1 сложена клетчатая доска 8 $\times$ 8. Жук хочет, чтобы с любой клетки он мог доползти до любой другой, не переползая через спички. Какое наименьшее число спичек придётся убрать?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{3}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Даны восемь камней, все разного веса. Есть весы, позволяющие сравнить по весу любые два камня. Какое наименьшее число взвешиваний нужно, чтобы наверняка найти самый тяжёлый камень?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{4}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Сколько рёбер куба максимум можно перекусить посередине, чтобы он не распался на части?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{5}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Волейбольная сетка имеет вид прямоугольника 3 $\times$ 5 клеток. Какое наибольшее число верёвочек можно перерезать, чтобы сетка не распалась на куски?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{6}{\circ}\hspace{\zazor}В классе 20 человек. \term{Компанией} назовём набор ребят, любые двое из которых связаны цепочкой знакомств внутри этого набора и который ни с кем снаружи не знаком.}
+\blok{\okno\hspace{\zazor}\textbf{а)} В классе ровно 16 пар знакомых. На какое наименьшее число компаний может разбиться класс?}
+\blok{\okno\hspace{\zazor}\textbf{б)} Класс разбился ровно на четыре компании. Какое наименьшее число пар знакомых в нём?}
+\end{samepage}\par\vspace{7pt}
+\zvezdy
+\begin{samepage}
+\blok{\nomer{7}{\circ}\hspace{\zazor}Дан граф с $n$ вершинами. Докажите, что\hspace{\zazor}\okno\hspace{\zazor}\textbf{а)} если граф связен, то в нём не менее $n-1$ ребра;}
+\blok{\okno\hspace{\zazor}\textbf{б)} если граф распадается на $k$ компонент связности, то в нём не менее $n-k$ рёбер;}
+\blok{\okno\hspace{\zazor}\textbf{в)} если в связном графе есть цикл, то любое ребро этого цикла можно удалить (концы остаются на месте), и граф останется связным.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{8}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Пусть граф связен. Докажите, что следующие свойства равносильны:\ \textbullet\ в графе нет циклов;\ \textbullet\ при удалении любого ребра граф перестаёт быть связным;\ \textbullet\ рёбер на одно меньше, чем вершин.}
+\blok{Граф, обладающий этими свойствами, называется \term{деревом}.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{9}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Два графа называют \term{изоморфными}, если вершины одного можно занумеровать вершинами другого так, что рёбра перейдут в рёбра. Сколько существует попарно неизоморфных деревьев на шести вершинах? Нарисуйте их все.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{10}{\circ}\hspace{\zazor}\okno\hspace{\zazor}\textbf{а)} В связном графе 9 вершин и 14 рёбер. Какое наименьшее число рёбер надо удалить, чтобы в графе не осталось ни одного цикла?\hspace{\zazor}\okno\hspace{\zazor}\textbf{б)} Докажите, что из любого связного графа можно выкинуть часть рёбер так, чтобы получилось дерево с теми же вершинами. Такое дерево называют \term{остовом} исходного графа.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{11}{\circ}\hspace{\zazor}Вершину степени 1 называют \term{висячей}, или \term{листом}.}
+\blok{\okno\hspace{\zazor}\textbf{а)} Докажите, что в дереве больше чем с одной вершиной есть висячая вершина. \textit{(идите по рёбрам, каждый раз выбирая то, по которому ещё не шли)}\hspace{\zazor}\okno\hspace{\zazor}\textbf{б)} Докажите, что таких вершин хотя бы две.}
+\blok{\okno\hspace{\zazor}\textbf{в)} Сколько висячих вершин может быть у дерева с $n$ вершинами?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{12}{\star}\hspace{\zazor}\okno\hspace{\zazor}Система станций метро устроена так, что из каждой станции можно проехать в каждую. Докажите, что одну из станций можно закрыть, запретив проезжать через неё, так, что это свойство сохранится для оставшихся.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{13}{\star}\hspace{\zazor}$N$-угольник разбит на треугольники несколькими диагоналями, не пересекающимися нигде, кроме вершин. Построим граф, соответствующий этому разбиению: отметим внутри каждого треугольника точку, соединяя две точки ребром ровно в том случае, когда соответствующие точкам треугольники имеют общую сторону. Докажите, что\hspace{\zazor}\okno\hspace{\zazor}\textbf{а)} этот граф будет деревом;\hspace{\zazor}\okno\hspace{\zazor}\textbf{б)} хотя бы у двух треугольников разбиения две стороны совпадают со сторонами $N$-угольника (если треугольников больше одного).}
+\end{samepage}\par\vspace{7pt}
+\end{document}

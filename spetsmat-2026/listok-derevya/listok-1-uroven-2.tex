@@ -1,0 +1,153 @@
+\documentclass[10pt,a4paper]{article}
+%% ДВА ДВИЖКА, ОДИН ФАЙЛ. У нас листок собирает LuaLaTeX (только он умеет
+%% microtype целиком), а у коллег, которым .tex отдают на просмотр, стоит
+%% обычный TeX Live с pdfLaTeX и Computer Modern — тем самым набором, которым
+%% листки собирались в прошлом году. Файл обязан собираться и там, и там
+%% (решение владельца 04.09). Ветка pdfLaTeX в песочнице не проверяется:
+%% кириллических пакетов для него здесь нет, она написана по эталонному PDF.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T2A]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[russian]{babel}
+\else
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+%% Начертания названы явно: без этого fontspec подставляет вместо курсива
+%% ЖИРНЫЙ курсив, и все \textit в листке выходят жирными (проверено рендером).
+%% Source Serif 4 — тот же шрифт, что выбран в html-конспектах проекта
+%% (--serif в view.html). Файлы лежат рядом, в shrifty/, а не берутся
+%% из системы: сборка должна давать один и тот же PDF в любой среде.
+\setmainfont{SourceSerifPro}[
+  Path           = shrifty/,
+  Extension      = .ttf,
+  UprightFont    = *_400Regular,
+  ItalicFont     = *_400Regular_Italic,
+  BoldFont       = *_700Bold,
+  BoldItalicFont = *_700Bold_Italic]
+\fi
+\usepackage[left=11mm,right=13mm,top=18mm,bottom=14mm]{geometry}
+\usepackage{amsmath,amssymb}
+%% microtype с настройками из эталона владельца (_studio/konvejer/07-verstka/
+%% etalon-tex/1.base-packages.sty): выступающая пунктуация и растяжение глифов
+%% дают строке подобраться, и висящее на следующей строке слово втягивается
+%% обратно — без этого приходится подгонять полосу руками.
+%% Развилка по компилятору, а не выбор одного из двух. Целевой — LuaLaTeX:
+%% на нём собран «Путеводитель Тьюринга» и только он умеет microtype целиком.
+%% Но в песочнице, где собирается превью, luatex сломан (нет luatexbase.sty,
+%% не грузятся шрифты Latin Modern, поставить неоткуда), и там работает
+%% XeLaTeX — а он expansion и tracking не поддерживает и падает на них.
+%% Так один и тот же .tex собирается в обеих средах, и в целевой — полностью.
+\ifLuaTeX
+  \usepackage[protrusion=true,expansion=true,tracking=true,
+              stretch=50,shrink=30,final]{microtype}
+\else
+  \usepackage[protrusion=true,final]{microtype}
+\fi
+\emergencystretch=1em
+\linespread{0.98}
+\frenchspacing
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+%% Окно для отметки перед задачей — как в листках 179 школы: ученик отмечает
+%% сданное сам. Ширина подобрана по образцу 06_Графы.pdf.
+%% Окно для плюса. Размеры из архива 179 (\shag=1.7cm, высота 0.5\baselineskip),
+%% ширина ужата: там окно на весь плюс с подписью, здесь хватает плюса.
+\newlength{\shirinaokna}\setlength{\shirinaokna}{12mm}
+\newlength{\vysotaokna}\setlength{\vysotaokna}{0.7\baselineskip}
+\newcommand{\okno}{\framebox[\shirinaokna]{\rule{0pt}{\vysotaokna}}}
+\newlength{\shirinanomera}\setlength{\shirinanomera}{9mm}
+\newlength{\zazor}\setlength{\zazor}{0.6em}
+
+%% Абзац задачи. Висячего отступа НЕТ намеренно: в листках 179 продолжение
+%% строки начинается у левого поля, а не под текстом первой строки, и весь
+%% текст листка стоит на одном левом крае. Окно и номер — обычный текст
+%% в начале первой строки, а не колонка на поле. Висячий вариант пробовался
+%% 03.09 и отвергнут владельцем: «почему „доползти до любой другой“ должно
+%% начинаться там же, где „из спичек“».
+\newcommand{\blok}[1]{\par\noindent #1\par}
+
+%% Номер в боксе постоянной ширины: без него однозначные и двузначные номера
+%% дают колонку разной ширины, и текст задач стоит на двух разных вертикалях.
+\newcommand{\nomer}[2]{\makebox[\shirinanomera][l]{%
+  \fbox{\rule{0pt}{\vysotaokna}\textbf{#1}$^{#2}$}}}
+%% Термин при первом употреблении. Одна команда на весь листок: выделение
+%% значит «у слова специальный смысл», а не «мне тут захотелось курсива».
+\newcommand{\term}[1]{\textit{#1}}
+%% Пустое место вместо окна — там, где плюс ставится не за задачу, а за пункты.
+\newcommand{\pusto}{\hspace*{\shirinaokna}}
+%% Знак письменной сдачи. Стандартный теховский кинжал, а не картинка пера:
+%% pifont-перо в кегле листка не читается вовсе (проверено рендером 02.09).
+%% Знак письменной сдачи — надстрочный, чтобы не съедал строку и не лез
+%% в текст условия.
+\newcommand{\pero}{\textsuperscript{\dag}\;}
+\newcommand{\zvezdy}{%
+  \par\medskip
+  \centerline{\rule{0.3\linewidth}{0.4pt}\quad $*$\ \ $*$\ \ $*$\quad
+              \rule{0.3\linewidth}{0.4pt}}%
+  \par\medskip}
+
+\begin{document}
+\centerline{\textit{Школа № 179. КЛ. 2026/2027 уч.год}}
+\par\medskip\centerline{\rule{0.62\linewidth}{0.4pt}}\par\smallskip
+\centerline{\large\textbf{1$\alpha$. \textsc{Деревья}}}\par\smallskip
+\blok{\term{Деревом} называют связный граф без циклов.}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{1}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Два графа \term{изоморфны}, если вершины одного можно занумеровать вершинами другого так, что рёбра перейдут в рёбра. Сколько существует попарно неизоморфных деревьев на шести вершинах? Нарисуйте их.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{2}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Вершину степени 1 называют \term{висячей}, или \term{листом}. Докажите, что в дереве, у которого больше одной вершины, есть висячая вершина, и что таких вершин хотя бы две.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{3}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Докажите, что в дереве с $n$ вершинами ровно $n-1$ ребро.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{4}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Сколько рёбер в \term{лесу} — графе без циклов — с $n$ вершинами и $k$ компонентами связности?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{5}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Докажите, что из любого связного графа можно выкинуть часть рёбер так, чтобы получилось дерево с теми же вершинами. Такое дерево называют \term{остовом}, или \term{остовным деревом}, графа.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{6}{\circ}\hspace{\zazor}\okno\hspace{\zazor}В графе $n$ вершин и $m$ рёбер. Докажите, что компонент связности в нём не меньше $n-m$.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{7}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Пусть граф связен и имеет $n$ вершин. Докажите, что следующие свойства равносильны:}
+\vspace{3pt}
+\blok{\hspace{\zazor}\textbf{\large$\bullet$}\ рёбер ровно $n-1$;}
+\blok{\hspace{\zazor}\textbf{\large$\bullet$}\ при удалении любого ребра граф перестаёт быть связным;}
+\blok{\hspace{\zazor}\textbf{\large$\bullet$}\ в графе нет циклов;}
+\blok{\hspace{\zazor}\textbf{\large$\bullet$}\ любые две вершины соединены ровно одним путём.}
+\blok{Таким образом, любое из этих свойств можно взять за определение дерева.}
+\end{samepage}\par\vspace{7pt}
+\zvezdy
+\begin{samepage}
+\blok{\nomer{8}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Даны $n$ различных по весу камней и весы, позволяющие сравнить любые два из них. Какое наименьшее число взвешиваний нужно, чтобы наверняка найти самый тяжёлый камень?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{9}{}\hspace{\zazor}\okno\hspace{\zazor}Сколько рёбер может быть в несвязном графе с $n$ вершинами?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{10}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Докажите, что из любого связного графа, в котором больше одной вершины, можно удалить вершину вместе со всеми выходящими из неё рёбрами так, что граф останется связным.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{11}{}\hspace{\zazor}\okno\hspace{\zazor}В связном графе 10 вершин и 19 рёбер. Докажите, что в нём найдётся цикл, после уничтожения всех рёбер которого граф не потеряет связность.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{12}{}\hspace{\zazor}\okno\hspace{\zazor}В стране 100 городов, некоторые из которых соединены авиалиниями. Известно, что из любого города можно долететь до любого другого, возможно с пересадками. Докажите, что можно побывать в каждом городе, совершив не более 198 перелётов.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{13}{}\hspace{\zazor}\okno\hspace{\zazor}Дано дерево с $n$ вершинами. Сколькими способами можно раскрасить его вершины в $k$ цветов так, чтобы концы любого ребра были разного цвета?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{14}{}\hspace{\zazor}Выпуклый $n$-угольник разрезали на треугольники непересекающимися диагоналями.}
+\blok{\okno\hspace{\zazor}\textbf{а)}$^{\circ}$ Докажите, что треугольников получилось на один больше, чем проведённых диагоналей.}
+\blok{\okno\hspace{\zazor}\textbf{б)}$^{\circ}$ Докажите, что хотя бы у двух треугольников по две стороны лежат на границе многоугольника.}
+\blok{\okno\hspace{\zazor}\textbf{в)}$^{\star}$ Сколькими способами можно так разрезать многоугольник? Вершины занумерованы: разрезания, отличающиеся поворотом, считаются различными.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{15}{\star}\hspace{\zazor}\okno\hspace{\zazor}Хозяйка испекла пирог и знает, что придут либо ровно $p$, либо ровно $q$ гостей, причём $p$ и $q$ взаимно просты. На какое наименьшее число не обязательно равных кусков можно разрезать пирог, чтобы в любом случае разделить его между гостями поровну?}
+\end{samepage}\par\vspace{7pt}
+\end{document}

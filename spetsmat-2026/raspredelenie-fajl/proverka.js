@@ -1,5 +1,9 @@
 const fs=require('fs'), {JSDOM}=require('jsdom');
-const PUT='/sessions/fervent-beautiful-mccarthy/mnt/materials/spetsmat-2026/raspredelenie-fajl/raspredelenie.html';
+// Путь берётся ОТ САМОЙ ПРОБЫ, а не вписан: вписанный абсолютный путь был путём
+// песочницы и на машине владельца не существовал вовсе — проба не запускалась.
+// Первый аргумент перебивает: `node proverka.js <любой собранный файл>`.
+const path = require('path');
+const PUT = process.argv[2] || path.join(__dirname, 'raspredelenie.html');
 let pamyat={};
 const okno=()=>new JSDOM(fs.readFileSync(PUT,'utf8'),{runScripts:'dangerously',url:'https://p.local/',
  beforeParse(w){w.localStorage.__proto__.setItem=(k,v)=>{pamyat[k]=v};
@@ -28,7 +32,8 @@ t('кнопка выгрузки ровно одна', d.querySelectorAll('#skac
 const niz=d.querySelector('.niz');
 t('сводка внизу существует', !!niz);
 t('сводка — последний блок страницы', d.getElementById('telo').lastElementChild===niz);
-t('внизу видно, кто без преподавателя', /Без преподавателя — 11/.test(niz.textContent), niz.textContent.slice(0,58));
+const nadoNet=dom.window.eval("sostoyanie.shkolniki.filter(s=>s.prepodavatel===null).length");
+t('внизу видно, кто без преподавателя', new RegExp('Без преподавателя — '+nadoNet).test(niz.textContent), 'ждут '+nadoNet);
 t('и отдельно — кто ВНЕ ГРУПП', /Вне групп/.test(niz.textContent));
 t('и преподаватели с малым числом рядом', /Меньше трёх/.test(niz.textContent));
 
@@ -43,7 +48,8 @@ t('порядок в строке: имя, потом число, потом г�
   JSON.stringify(olga.textContent.replace(/\s+/g,''))+' при '+olgaN+' школьниках');
 t('группа — выпадающий список', olga.querySelector('select[data-p]').options.length===3);
 t('группа выделена цветом', /g-[ВДН]/.test(olga.querySelector('select').className), olga.querySelector('select').className);
-t('Ольга красная (меньше трёх)', olga.classList.contains('malo'));
+const olgaN2=dom.window.eval("(()=>{const id=sostoyanie.prepodavateli.find(p=>p.imya==='Ольга Рыжая').id;return sostoyanie.shkolniki.filter(s=>s.prepodavatel===id).length})()");
+t('краснота у преподавателя = меньше трёх', olga.classList.contains('malo')===(olgaN2<3), 'у Ольги '+olgaN2);
 
 // К5 — перевод преподавателя уводит школьников с ним
 const vanya=dom.window.eval("sostoyanie.prepodavateli.find(p=>p.imya==='Ваня Яковлев').id");
@@ -86,8 +92,12 @@ t('таблетка и есть крестик', tabl.every(x=>x.dataset.snyat &
 t('порядок: имя · число · таблетки, одной строкой',
   svanya.querySelector('.imya').nextElementSibling===svanya.querySelector('.n')
   && svanya.querySelector('.n').nextElementSibling===tabl[0]);
-const olgaK=karty.find(k=>/Ольга/.test(k.textContent));
-t('у кого мало — имя красное', olgaK.classList.contains('malo'));
+// Кто именно недогружен — СЧИТАЕТСЯ, а не помнится: владелец правит распределение,
+// и вписанная фамилия протухает на первой же его правке.
+const maloImena=dom.window.eval("(()=>{const sch={};sostoyanie.shkolniki.forEach(s=>{if(s.prepodavatel)sch[s.prepodavatel]=(sch[s.prepodavatel]||0)+1});return sostoyanie.prepodavateli.filter(p=>p.aktiven&&p.gruppa==='В'&&(sch[p.id]||0)<3).map(p=>p.imya)})()");
+t('красные карточки — ровно у недогруженных',
+  karty.filter(k=>k.classList.contains('malo')).length===maloImena.length,
+  maloImena.length? maloImena.join(', ') : 'в группе В недогруженных нет');
 t('у КАЖДОГО преподавателя рядом число школьников', karty.every(k=>{
   const n=k.querySelector('.n'); if(!n) return false;
   return +n.textContent === k.querySelectorAll('.tabl').length;

@@ -1,0 +1,138 @@
+\documentclass[10pt,a4paper]{article}
+%% LuaLaTeX: на нём собран «Путеводитель Тьюринга», и только он умеет
+%% microtype целиком — растяжение глифов и трекинг, которыми строка
+%% подбирается сама. XeLaTeX эти два средства не поддерживает вовсе,
+%% pdfLaTeX не годится: кириллических пакетов в среде сборки нет.
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+%% Начертания названы явно: без этого fontspec подставляет вместо курсива
+%% ЖИРНЫЙ курсив, и все \textit в листке выходят жирными (проверено рендером).
+%% Source Serif 4 — тот же шрифт, что выбран в html-конспектах проекта
+%% (--serif в view.html). Файлы лежат рядом, в shrifty/, а не берутся
+%% из системы: сборка должна давать один и тот же PDF в любой среде.
+\setmainfont{SourceSerifPro}[
+  Path           = shrifty/,
+  Extension      = .ttf,
+  UprightFont    = *_400Regular,
+  ItalicFont     = *_400Regular_Italic,
+  BoldFont       = *_700Bold,
+  BoldItalicFont = *_700Bold_Italic]
+\usepackage[left=11mm,right=13mm,top=18mm,bottom=14mm]{geometry}
+\usepackage{amsmath,amssymb}
+%% microtype с настройками из эталона владельца (_studio/konvejer/07-verstka/
+%% etalon-tex/1.base-packages.sty): выступающая пунктуация и растяжение глифов
+%% дают строке подобраться, и висящее на следующей строке слово втягивается
+%% обратно — без этого приходится подгонять полосу руками.
+%% Развилка по компилятору, а не выбор одного из двух. Целевой — LuaLaTeX:
+%% на нём собран «Путеводитель Тьюринга» и только он умеет microtype целиком.
+%% Но в песочнице, где собирается превью, luatex сломан (нет luatexbase.sty,
+%% не грузятся шрифты Latin Modern, поставить неоткуда), и там работает
+%% XeLaTeX — а он expansion и tracking не поддерживает и падает на них.
+%% Так один и тот же .tex собирается в обеих средах, и в целевой — полностью.
+\usepackage{iftex}
+\ifLuaTeX
+  \usepackage[protrusion=true,expansion=true,tracking=true,
+              stretch=50,shrink=30,final]{microtype}
+\else
+  \usepackage[protrusion=true,final]{microtype}
+\fi
+\emergencystretch=1em
+\linespread{0.98}
+\frenchspacing
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+%% Окно для отметки перед задачей — как в листках 179 школы: ученик отмечает
+%% сданное сам. Ширина подобрана по образцу 06_Графы.pdf.
+%% Окно для плюса. Размеры из архива 179 (\shag=1.7cm, высота 0.5\baselineskip),
+%% ширина ужата: там окно на весь плюс с подписью, здесь хватает плюса.
+\newlength{\shirinaokna}\setlength{\shirinaokna}{12mm}
+\newlength{\vysotaokna}\setlength{\vysotaokna}{0.7\baselineskip}
+\newcommand{\okno}{\framebox[\shirinaokna]{\rule{0pt}{\vysotaokna}}}
+\newlength{\shirinanomera}\setlength{\shirinanomera}{9mm}
+\newlength{\zazor}\setlength{\zazor}{0.6em}
+
+%% Абзац задачи. Висячего отступа НЕТ намеренно: в листках 179 продолжение
+%% строки начинается у левого поля, а не под текстом первой строки, и весь
+%% текст листка стоит на одном левом крае. Окно и номер — обычный текст
+%% в начале первой строки, а не колонка на поле. Висячий вариант пробовался
+%% 03.09 и отвергнут владельцем: «почему „доползти до любой другой“ должно
+%% начинаться там же, где „из спичек“».
+\newcommand{\blok}[1]{\par\noindent #1\par}
+
+%% Номер в боксе постоянной ширины: без него однозначные и двузначные номера
+%% дают колонку разной ширины, и текст задач стоит на двух разных вертикалях.
+\newcommand{\nomer}[2]{\makebox[\shirinanomera][l]{%
+  \fbox{\rule{0pt}{\vysotaokna}\textbf{#1}$^{#2}$}}}
+%% Термин при первом употреблении. Одна команда на весь листок: выделение
+%% значит «у слова специальный смысл», а не «мне тут захотелось курсива».
+\newcommand{\term}[1]{\textit{#1}}
+%% Пустое место вместо окна — там, где плюс ставится не за задачу, а за пункты.
+\newcommand{\pusto}{\hspace*{\shirinaokna}}
+%% Знак письменной сдачи. Стандартный теховский кинжал, а не картинка пера:
+%% pifont-перо в кегле листка не читается вовсе (проверено рендером 02.09).
+%% Знак письменной сдачи — надстрочный, чтобы не съедал строку и не лез
+%% в текст условия.
+\newcommand{\pero}{\textsuperscript{\dag}\;}
+\newcommand{\zvezdy}{%
+  \par\medskip
+  \centerline{\rule{0.3\linewidth}{0.4pt}\quad $*$\ \ $*$\ \ $*$\quad
+              \rule{0.3\linewidth}{0.4pt}}%
+  \par\medskip}
+
+\begin{document}
+\centerline{\textit{Школа № 179. КЛ. 2026/2027 уч.год}}
+\par\medskip\centerline{\rule{0.62\linewidth}{0.4pt}}\par\smallskip
+\centerline{\textbf{2. \MakeUppercase{Деревья}}}\par\medskip
+\begin{samepage}
+\blok{\nomer{1}{\circ}\hspace{\zazor}\okno\hspace{\zazor}\term{Деревом} называют связный граф без циклов. Два графа изоморфны, если вершины одного можно занумеровать вершинами другого так, что рёбра перейдут в рёбра. Сколько существует попарно неизоморфных деревьев на шести вершинах? Нарисуйте их все.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{2}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Вершину степени 1 называют \term{висячей}, или \term{листом}. Докажите, что в дереве, у которого больше одной вершины, есть висячая вершина, и что таких вершин хотя бы две.}
+\blok{\textit{(рассмотрим самый длинный простой путь в дереве)}}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{3}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Докажите, что в дереве с $n$ вершинами ровно $n-1$ ребро.}
+\blok{\textit{(снимем висячую вершину вместе с выходящим из неё ребром)}}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{4}{\circ}\hspace{\zazor}\okno\hspace{\zazor}\term{Лесом} называют граф без циклов. В лесу $n$ вершин, и он распадается ровно на $k$ связных кусков. Сколько в нём рёбер?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{5}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Докажите, что из любого связного графа можно выкинуть часть рёбер так, чтобы получилось дерево с теми же вершинами. Такое дерево называют \term{остовом} графа.}
+\blok{\textit{(если в графе есть цикл, любое его ребро можно удалить, не потеряв связности)}}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{6}{\circ}\hspace{\zazor}В графе $n$ вершин и $m$ рёбер. Докажите, что}
+\blok{\okno\hspace{\zazor}\textbf{а)} если граф связен, то рёбер не меньше $n-1$;}
+\blok{\okno\hspace{\zazor}\textbf{б)} компонент связности в нём не меньше $n-m$.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{7}{\dag}\hspace{\zazor}\okno\hspace{\zazor}Пусть граф связен и имеет $n$ вершин. Докажите, что следующие свойства равносильны:\ \textbullet\ рёбер ровно $n-1$;\ \textbullet\ при удалении любого ребра граф перестаёт быть связным;\ \textbullet\ в графе нет циклов;\ \textbullet\ любые две вершины соединены ровно одним простым путём.}
+\blok{Таким образом, любое из этих свойств можно взять за определение дерева.}
+\end{samepage}\par\vspace{7pt}
+\zvezdy
+\begin{samepage}
+\blok{\nomer{8}{\circ}\hspace{\zazor}\okno\hspace{\zazor}В дереве нет вершин степени 2. Докажите, что висячих вершин в нём больше половины.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{9}{\circ}\hspace{\zazor}\okno\hspace{\zazor}Сколько циклов может быть в связном графе с $n$ вершинами и $n+1$ рёбрами?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{10}{}\hspace{\zazor}\okno\hspace{\zazor}Может ли в каком-то связном графе быть в точности два различных остовных дерева?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{11}{}\hspace{\zazor}\okno\hspace{\zazor}Дано дерево с $n$ вершинами. Сколькими способами можно раскрасить его вершины в $k$ цветов так, чтобы концы любого ребра были разного цвета?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{12}{\star}\hspace{\zazor}\okno\hspace{\zazor}В графе $n$ вершин, причём $n$ $\geqslant$ 3. Докажите, что можно покрасить не более $n-1$ его рёбер так, чтобы из каждой вершины выходило чётное число неокрашенных рёбер.}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{13}{\star}\hspace{\zazor}\okno\hspace{\zazor}Граф устроен так: $n$ вершин выстроены в путь, и ещё одна вершина соединена рёбрами со всеми ними. Сколько у такого графа остовов?}
+\end{samepage}\par\vspace{7pt}
+\begin{samepage}
+\blok{\nomer{14}{\star}\hspace{\zazor}\okno\hspace{\zazor}В стране несколько городов, некоторые пары городов соединены дорогами, причём между каждыми двумя городами существует единственный несамопересекающийся путь по дорогам. Известно, что в стране ровно 100 городов, из которых выходит по одной дороге. Докажите, что можно построить 50 новых дорог так, что после этого даже при закрытии любой дороги можно будет из каждого города попасть в любой другой.}
+\end{samepage}\par\vspace{7pt}
+\end{document}

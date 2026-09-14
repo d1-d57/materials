@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Деревья — Листок 1 · базовый</title>
+<style>
+  @page{ size:A4; margin:14mm 16mm; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:#000;
+    font:10.7pt/1.34 Georgia,"Times New Roman",serif;}
+  .sheet{max-width:180mm;margin:0 auto;padding:12mm 6mm}
+  .head{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid #000;padding-bottom:5px;margin-bottom:12px}
+  .head .t{font-weight:700;font-size:12pt;letter-spacing:.02em}
+  .head .m{font-size:9.5pt}
+  ol.zad{margin:0;padding:0;list-style:none}
+  ol.zad>li{position:relative;padding-left:22px;margin:0 0 8px;
+    break-inside:avoid;page-break-inside:avoid}
+  ol.zad>li.cherta{border-top:1px solid #000;padding-top:9px;margin-top:12px}
+  ol.zad>li>.n{position:absolute;left:0;top:0;font-weight:700}
+  /* top отсчитывается от padding-box: без этого номер уезжает под черту */
+  ol.zad>li.cherta>.n{top:9px}
+  .pero{font-size:.72em;vertical-align:super;line-height:0}
+  ol.pod{margin:2px 0 0;padding:0;list-style:none}
+  ol.pod>li{position:relative;padding-left:20px;margin:1px 0}
+  ol.pod>li>.b{position:absolute;left:0;top:0}
+  .hvost{margin-top:2px;font-style:italic}
+  var{font-style:italic;font-family:"Times New Roman",Georgia,serif}
+  .legenda{margin-top:14px;padding-top:5px;border-top:1px solid #bbb;
+    font-size:9pt;font-style:italic}
+  @media screen{ body{background:#eceae6;padding:18px 0}
+    .sheet{background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.14);padding:16mm} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="head">
+    <span class="t">Деревья</span>
+    <span class="m">Листок 1 · базовый</span>
+  </div>
+
+<ol class="zad">
+<li><span class="n">1.</span>
+Шесть компьютеров стоят в кабинете, и ни один ни с одним не соединён. Каждый день системный администратор соединяет кабелем какие-нибудь два. <i>Автономной зоной</i> назовём набор компьютеров, между любыми двумя из которых можно передать данные — напрямую или через другие компьютеры, — и такой, что ни с одним компьютером снаружи обмена нет.
+<ol class="pod">
+<li><span class="b">а)</span> Приведите пример: как за пять дней все шесть компьютеров могли оказаться в одной автономной зоне?</li>
+<li><span class="b">б)</span> Как может измениться число автономных зон за один день?</li>
+<li><span class="b">в)</span> Какого наименьшего числа кабелей хватит, чтобы все шесть компьютеров оказались в одной зоне?</li>
+<li><span class="b">г)</span> Все шесть компьютеров в одной зоне, кабелей ровно пять. Ночью мышь перегрызла два кабеля. Сколько автономных зон стало? Зависит ли ответ от того, какие именно кабели перегрызены?</li>
+</ol>
+</li>
+<li><span class="n">2.</span>
+Из спичек длины 1 сложена клетчатая доска 8 × 8. Жук хочет, чтобы с любой клетки он мог доползти до любой другой, не переползая через спички. Какое наименьшее число спичек придётся убрать?
+</li>
+<li><span class="n">3.</span>
+Даны восемь камней, все разного веса. Есть весы, позволяющие сравнить по весу любые два камня. Какое наименьшее число взвешиваний нужно, чтобы наверняка найти самый тяжёлый камень?
+</li>
+<li><span class="n">4.</span>
+Сколько рёбер куба максимум можно перекусить посередине, чтобы он не распался на части?
+</li>
+<li><span class="n">5.</span>
+Волейбольная сетка имеет вид прямоугольника 3 × 5 клеток. Какое наибольшее число верёвочек можно перерезать, чтобы сетка не распалась на куски?
+</li>
+<li><span class="n">6.</span>
+В классе 20 человек. <i>Компанией</i> назовём набор ребят, любые двое из которых связаны цепочкой знакомств внутри этого набора и который ни с кем снаружи не знаком.
+<ol class="pod">
+<li><span class="b">а)</span> В классе ровно 16 пар знакомых. На какое наименьшее число компаний может разбиться класс?</li>
+<li><span class="b">б)</span> Класс разбился ровно на четыре компании. Какое наименьшее число пар знакомых в нём?</li>
+</ol>
+</li>
+<li class="cherta"><span class="n">7.</span>
+Дан граф с <var>n</var> вершинами. Докажите, что
+<ol class="pod">
+<li><span class="b">а)</span> если граф связен, то в нём не менее <var>n−1</var> ребра;</li>
+<li><span class="b">б)</span> если граф распадается на <var>k</var> компонент связности, то в нём не менее <var>n−k</var> рёбер;</li>
+<li><span class="b">в)</span> если в связном графе есть цикл, то любое ребро этого цикла можно удалить (концы остаются на месте), и граф останется связным.</li>
+</ol>
+</li>
+<li><span class="n">8.<span class="pero">✒</span></span>
+Связный граф, в котором нет циклов, называется <b>деревом</b>. Пусть граф связен и имеет <var>n</var> вершин. Докажите, что следующие свойства равносильны:
+<ol class="pod">
+<li><span class="b">а)</span> в графе нет циклов;</li>
+<li><span class="b">б)</span> для любого ребра после его удаления из одного конца этого ребра в другой пройти нельзя;</li>
+<li><span class="b">в)</span> рёбер ровно <var>n−1</var>.</li>
+</ol>
+<div class="hvost">Достаточно доказать три перехода по кругу: а ⇒ б, б ⇒ в, в ⇒ а.</div>
+</li>
+<li><span class="n">9.</span>
+Два графа называют <i>изоморфными</i>, если вершины одного можно занумеровать вершинами другого так, что рёбра перейдут в рёбра. Сколько существует попарно неизоморфных деревьев на шести вершинах? Нарисуйте их все.
+</li>
+<li><span class="n">10.</span>
+<ol class="pod">
+<li><span class="b">а)</span> В связном графе 9 вершин и 14 рёбер. Какое наименьшее число рёбер надо удалить, чтобы в графе не осталось ни одного цикла?</li>
+<li><span class="b">б)</span> Докажите, что из любого связного графа можно выкинуть часть рёбер так, чтобы получилось дерево с теми же вершинами. Такое дерево называют <b>остовом</b> исходного графа.</li>
+</ol>
+</li>
+<li><span class="n">11.</span>
+Вершину степени 1 называют <b>висячей</b>, или <b>листом</b>.
+<ol class="pod">
+<li><span class="b">а)</span> Докажите, что в дереве, у которого больше одной вершины, есть висячая вершина.</li>
+<li><span class="b">б)</span> Докажите, что таких вершин хотя бы две.</li>
+<li><span class="b">в)</span> Сколько висячих вершин может быть у дерева с <var>n</var> вершинами?</li>
+</ol>
+<div class="hvost">Подсказка к пункту а): пойдите из любой вершины и шагайте по рёбрам, не возвращаясь в ту вершину, откуда пришли.</div>
+</li>
+<li><span class="n">12*.</span>
+Система станций метро устроена так, что из каждой станции можно проехать в каждую. Докажите, что одну из станций можно закрыть, запретив проезжать через неё, так, что это свойство сохранится для оставшихся.
+</li>
+<li><span class="n">13*.</span>
+Выпуклый <var>n</var>-угольник разрезали на треугольники непересекающимися диагоналями.
+<ol class="pod">
+<li><span class="b">а)</span> Сколько получилось треугольников и сколько провели диагоналей? Докажите, что иначе быть не может.</li>
+<li><span class="b">б)</span> Назовём треугольник разрезания <i>угловым</i>, если две его стороны — стороны исходного <var>n</var>-угольника. Докажите, что угловой треугольник обязательно найдётся и что таких треугольников не меньше двух.</li>
+</ol>
+</li>
+</ol>
+<div class="legenda">✒ — решение нужно записать полностью · * — задача необязательная.</div>
+</div>
+</body>
+</html>
