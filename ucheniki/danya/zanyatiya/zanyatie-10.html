@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие №10 — план разбора</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Sans:wght@0,400;0,700&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#f4eede;--panel:#fbf7ec;--ink:#2a2520;--ink-soft:#5d5446;--ink-faint:#8a7f6c;
+        --rule:#d8cdb4;--rubric:#9e2b25;--accent:#3a6b5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:radial-gradient(1100px 560px at 82% -12%, #f8f2e3 0%, rgba(248,242,227,0) 60%),var(--paper);
+       color:var(--ink);font-family:"PT Serif",Georgia,serif;font-size:17px;line-height:1.6;
+       -webkit-font-smoothing:antialiased;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 24px 80px;}
+  header.mast{padding:52px 0 14px;border-bottom:2px solid var(--ink);}
+  .kicker{font-family:"PT Sans",sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+          color:var(--rubric);margin-bottom:10px;}
+  h1{font-family:"Old Standard TT",Georgia,serif;font-size:33px;font-weight:400;line-height:1.15;}
+  .data{font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-faint);margin-top:8px;}
+  .cel{margin:18px 0 0;padding:14px 16px;background:var(--panel);border-left:3px solid var(--accent);
+       font-size:16px;color:var(--ink-soft);}
+  .cel b{color:var(--ink);}
+  .cel p+p{margin-top:8px;}
+  .plan{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 8px;font-family:"PT Sans",sans-serif;font-size:12px;}
+  .plan span{padding:3px 9px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-soft);white-space:nowrap;}
+  .plan span b{color:var(--ink);font-weight:700;}
+  section.z{padding:30px 0 6px;border-top:1px solid var(--rule);margin-top:26px;}
+  .hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+  .num{font-family:"Old Standard TT",serif;font-size:26px;color:var(--rubric);line-height:1;}
+  h2{font-family:"Old Standard TT",Georgia,serif;font-size:23px;font-weight:400;flex:1;min-width:200px;}
+  .meta{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--ink-faint);white-space:nowrap;}
+  .meta i{font-style:normal;color:var(--accent);}
+  .meta.new i{color:var(--rubric);}
+  details.cond{margin:10px 0 16px;}
+  details.cond summary{font-family:"PT Sans",sans-serif;font-size:11.5px;letter-spacing:.1em;
+       text-transform:uppercase;color:var(--ink-faint);cursor:pointer;list-style:none;
+       display:inline-block;border-bottom:1px dotted var(--rule);padding-bottom:2px;}
+  details.cond summary::-webkit-details-marker{display:none;}
+  details.cond summary:hover{color:var(--rubric);border-color:var(--rubric);}
+  details.cond[open] summary{margin-bottom:9px;}
+  .usl{background:var(--panel);border:1px solid var(--rule);padding:13px 16px;font-size:15.5px;color:var(--ink-soft);}
+  .usl p+p{margin-top:7px;}
+  .pole{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:7px 0;align-items:start;}
+  .pole+.pole{border-top:1px dotted var(--rule);}
+  .lab{font-family:"PT Sans",sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+       color:var(--ink-faint);padding-top:5px;}
+  .lab.ok{color:var(--accent);}
+  .lab.hole{color:var(--rubric);}
+  .pole p+p{margin-top:6px;}
+  ul.q{list-style:none;}
+  ul.q li{position:relative;padding-left:20px;margin-bottom:6px;}
+  ul.q li::before{content:"—";position:absolute;left:0;color:var(--accent);}
+  ul.q li em{font-style:italic;}
+  .tih{color:var(--ink-soft);font-size:15.5px;}
+  table.ch{border-collapse:collapse;font-family:"PT Sans",sans-serif;font-size:14px;margin-top:6px;}
+  table.ch td,table.ch th{border:1px solid var(--rule);padding:4px 11px;text-align:center;}
+  table.ch th{color:var(--ink-faint);font-weight:400;font-size:12px;}
+  footer{margin-top:36px;padding-top:16px;border-top:2px solid var(--ink);
+         font-family:"PT Sans",sans-serif;font-size:13px;color:var(--ink-soft);}
+  footer b{font-family:"PT Serif",serif;color:var(--ink);}
+  footer p+p{margin-top:7px;}
+  @media (max-width:560px){.pole{grid-template-columns:1fr;gap:2px;}.lab{padding-top:0;}h1{font-size:27px;}h2{font-size:20px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Занятие №10 · план</div>
+  <h1>Считать объекты: от домино к триангуляциям</h1>
+  <div class="data">17 сентября 2026 · разбор ДЗ после №9 + новое</div>
+</header>
+
+<div class="cel">
+  <p><b>Что сдано.</b> Квадраты — чисто и полностью. Ложные индукции — три возражения, из них одно
+  почти попадает, два мимо. Домино — верный замысел и неверный счёт. <b>Не сданы две:</b> камни
+  и чётность неокрашенных рёбер.</p>
+  <p><b>Куда ведём.</b> Домино — не отдельная задача, а первый счёт объектов рекуррентой. Та же
+  машина считает триангуляции многоугольника, который он любит, и приводит к числам Каталана.
+  Это и есть сюжет ближайших занятий.</p>
+</div>
+
+<div class="plan">
+  <span><b>1.</b> Домино · 25</span>
+  <span><b>2.</b> Ложные индукции · 20</span>
+  <span><b>3.</b> Камни · 15</span>
+  <span><b>4.</b> Триангуляции · 25</span>
+  <span><b>в резерве</b> чётность рёбер</span>
+</div>
+
+<!-- 1 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">1</span>
+    <h2>Домино 2 × n</h2>
+    <span class="meta">разбор · <i>25 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие и ответ</summary>
+    <div class="usl">
+      <p>Сколькими способами прямоугольник 2 × n можно разрезать на прямоугольники 1 × 2?</p>
+      <p class="tih">Ответ: 1, 2, 3, 5, 8, 13, … — число Фибоначчи F<sub>n+1</sub>.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Сдал</div><div>
+    Увидел главное: горизонтальных всегда чётное число, они ложатся парами в квадрат 2 × 2, значит
+    достаточно расставить пары, остальное закроется вертикальными. Дальше для x пар написал
+    (n − 1)! / (n − 1 − x)!
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Засчитано</div><div>
+    Замысел верный и хороший — разбор по числу горизонтальных пар. Это законный способ, он просто
+    длиннее того, что задумывался.
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    <p>Формула неверна, и это видно на маленьком случае. При n = 4 она даёт 1 + 3 + 6 = 10, а
+    замощений всего 5 — можно пересчитать руками за минуту.</p>
+    <p>Сбой там, где он всегда: посчитал <b>упорядоченно</b>. Пары одинаковы, переставлять их между
+    собой нельзя, а факториал сверху именно это и делает.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Проверь свою формулу при n = 4. Сколько выходит и сколько на самом деле?</li>
+      <li>Если пар x, то на что распадается полоса? <em>(x широких кусков 2 × 2 и n − 2x узких —
+          всего n − x штук, стоящих в ряд)</em></li>
+      <li>Значит выбрать надо что? <em>(какие из n − x мест широкие: C(n − x, x))</em></li>
+      <li>Сложи по всем x при n = 4, 5, 6. <em>(1+3+1 = 5, 1+4+3 = 8, 1+5+6+1 = 13)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Второй путь, вдвое короче: посмотреть только на <b>левый столбец</b>. Либо он закрыт одной
+    вертикальной — остаётся 2 × (n − 1); либо двумя горизонтальными — остаётся 2 × (n − 2). Отсюда
+    сразу a<sub>n</sub> = a<sub>n−1</sub> + a<sub>n−2</sub>. Сравнить два решения вслух: одно
+    считает все случаи, другое сводит задачу к меньшей. Второе — то, что понадобится дальше.
+  </div></div>
+</section>
+
+<!-- 2 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">2</span>
+    <h2>Три ложных доказательства</h2>
+    <span class="meta">разбор · <i>20 мин</i></span>
+  </div>
+
+  <div class="pole"><div class="lab">Сдал</div><div>
+    <p><b>(а) треугольники:</b> «а если исходный треугольник был остроугольный и его разрезали по
+       острому углу?» — ищет дыру в базе.</p>
+    <p><b>(б) точки:</b> «не обозначено n; если у прямых есть точка пересечения, они не всегда
+       совпадают» плюс рисунок-контрпример к самому утверждению.</p>
+    <p><b>(в) граф:</b> «добавлять рёбра можно не бесконечно, рано или поздно граф станет полным.
+       А если из добавленной вершины не выходит двух рёбер? А если выходят, то куда?»</p>
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Засчитано</div><div>
+    В (б) он у цели: одна общая точка не заставляет прямые совпасть — нужны две. В (в) вопрос
+    «а если из добавленной вершины не выходит двух рёбер» — правильный: шаг покрывает не все графы.
+  </div></div>
+
+  <div class="pole"><div class="lab hole">Дырка</div><div>
+    <p>Ни в одном пункте он не назвал <b>место</b> разрыва. В (б) цепочка рвётся ровно один раз —
+    при переходе от двух точек к трём, а дальше шаг честный; это надо произнести.</p>
+    <p>В (а) он ищет ошибку в базе, а база верна. Ошибка в шаге: тот разбирает только разбиения,
+    полученные делением одного треугольника, а бывают другие.</p>
+    <p>В (в) он не заметил главного — <b>само утверждение ложно</b>. Контрпримера нет.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>(б) При каком именно n твой довод перестаёт работать? Проверь переход 2 → 3.</li>
+      <li>(а) База верна — проверь. Тогда где ошибка? <em>(всякое ли разбиение на n треугольников
+          получается делением одного из разбиения на n − 1?)</em></li>
+      <li>(в) Попробуй построить граф, где все степени не меньше двух, но какое-то ребро убрать
+          нельзя. <em>(два треугольника, соединённые одним ребром)</em></li>
+      <li>И общий вопрос ко всем трём: <b>что именно доказывает это рассуждение, если оно вообще
+          что-то доказывает?</b></li>
+    </ul>
+  </div></div>
+</section>
+
+<!-- 3 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">3</span>
+    <h2>Самый тяжёлый камень</h2>
+    <span class="meta">не сдана · <i>15 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Есть n различных по весу камней и весы, сравнивающие любые два. Какое наименьшее число
+         взвешиваний нужно, чтобы найти самый тяжёлый? (б) Изменится ли ответ, если порядок
+         взвешиваний надо назвать заранее?</p>
+      <p class="tih">Ответ: n − 1, и в пункте (б) тот же.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Задача на то, чтобы <b>увидеть граф самому</b>: в условии нет ни вершин, ни рёбер. Пример
+    строится турниром, а оценка — тем, что граф сравнений обязан быть связным.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Десять камней. Хватит ли восьми взвешиваний? Почему нет?</li>
+      <li>Нарисуй, что мы сравнивали: точки — камни, отрезок — взвешивание. Что будет, если
+          картинка распалась на два куска? <em>(в каждом свой чемпион, и они не сравнивались)</em></li>
+      <li>Сколько рёбер нужно связному графу на n вершинах?</li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab">Довесок</div><div>
+    Пункт (б) — про то, что турнир годится и при заранее объявленном порядке. Заодно спросить,
+    сколько взвешиваний нужно, чтобы найти <b>второй</b> по тяжести. <em>(ответ не n, а меньше —
+    открытая ветка на потом)</em>
+  </div></div>
+</section>
+
+<!-- 4 -->
+<section class="z">
+  <div class="hd">
+    <span class="num">4</span>
+    <h2>Сколько триангуляций у многоугольника</h2>
+    <span class="meta new">новое · <i>25 мин</i></span>
+  </div>
+
+  <details class="cond"><summary>условие</summary>
+    <div class="usl">
+      <p>Сколькими способами выпуклый n-угольник можно разрезать на треугольники непересекающимися
+         диагоналями?</p>
+      <p class="tih">Ответ: 1, 2, 5, 14, 42, 132 при n = 3, 4, 5, 6, 7, 8 — числа Каталана.
+         Проверено перебором.</p>
+    </div>
+  </details>
+
+  <div class="pole"><div class="lab">Зачем здесь</div><div>
+    Ровно та же машина, что в домино, только на объекте, который он весь месяц любит. Он уже знает,
+    что треугольников всегда n − 2; теперь вопрос не «сколько кусков», а <b>сколько разных
+    разрезаний</b>. Это вход в числа Каталана, и дальше — в биекции между ними.
+  </div></div>
+
+  <div class="pole"><div class="lab">Спросить</div><div>
+    <ul class="q">
+      <li>Посчитай руками: четырёхугольник, пятиугольник. <em>(2 и 5 — пусть рисует)</em></li>
+      <li>Шестиугольник он считать устанет — вот и повод: как свести к меньшим?</li>
+      <li>Зафиксируй одну сторону. В каком треугольнике она лежит? <em>(третья вершина —
+          любая из остальных, и она делит многоугольник на два поменьше)</em></li>
+      <li>Что получается, если сложить по всем положениям третьей вершины? <em>(произведения
+          ответов для двух кусков — та самая рекуррента)</em></li>
+    </ul>
+  </div></div>
+
+  <div class="pole"><div class="lab ok">Что должно остаться</div><div>
+    <table class="ch">
+      <tr><th>n</th><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+      <tr><th>триангуляций</th><td>1</td><td>2</td><td>5</td><td>14</td><td>42</td><td>132</td></tr>
+    </table>
+    <p style="margin-top:8px">Формулу не выводить — важно, что числа получены его собственной
+    рекуррентой и что приём тот же, что в домино: <b>свести к меньшим кускам и сложить</b>.</p>
+  </div></div>
+
+  <div class="pole"><div class="lab">Если пойдёт</div><div>
+    Числа 1, 2, 5, 14, 42 стоит оставить висеть — они встретятся ещё не раз, и в следующий раз
+    можно показать, что то же самое считают скобочные последовательности и пути. Сегодня
+    не называть — пусть будет находкой.
+  </div></div>
+</section>
+
+<footer>
+  <p><b>В резерве, если останется время:</b> чётность неокрашенных рёбер (не сдана) — там нужно
+  остовное дерево, которое так и не введено третье занятие подряд. Готовая цепочка пунктов лежит
+  в <span style="font-family:'PT Sans',sans-serif">zanyatie-08-metod.html</span>, блок 5.</p>
+  <p><b>На дом отсюда:</b> триангуляции семиугольника посчитать до конца · сто городов и
+  199 авиалиний (после того, как введён остов) · две несданные из прошлого ДЗ.</p>
+</footer>
+
+</div>
+</body>
+</html>
