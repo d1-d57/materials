@@ -1,6 +1,8 @@
 ---
-tab: Карта картотеки
+opisanie: справочник-реестр областей каталанских объектов
+sloj: 4
 status: chernovik
+tab: Карта картотеки
 poryadok: 0
 registr: рабочий
 ---
