@@ -801,7 +801,57 @@ _Carried by name (one line each, or the single word `none`):_
 - L24 — the mandate's STAGES `S<n>` are read as POSITIONS by the closing law; ids with a letter suffix are invisible; home `bootstrap_mandate.py` / `check_zakon_zakrytiya.py`
 - L25 — `dubli.py` counts generated views as duplicates of their source; home `kurs-puti-i-volny/tools/dubli.py`
 
+**Inherited by the arc and carried by name — 43 lessons without a verdict in `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md`.** The machine counter (`schet_nezakrytogo.uroki_bez_verdikta`) counts them arc-wide, so the closing law sees a delta of +43 although this wave was born 25 and closed 22. They were not born tonight and were not judged tonight; they move to the next mandate as position **N11** (judge the arc's inherited lessons in batches of ten on a free model):
+- У6. Верификатор отчитался «10 из 10», проверив одну строку в ослабленном виде — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У7. Гейт Г14 берёт имя ветки из любого места файла и путает работу с влитием — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У11. Упавший коммит порождает заявку, которая блокирует тот же коммит — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У8. Числа состояния репозитория, снятые из песочницы Cowork, врут про рабочие папки — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У9. Дверь регистрации не знает корней проектных папок — документ курса зарегистрировать негде — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У10. Дверь регистрации из worktree отказывает файлам materials без GIT_ZONA_REPO — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У12. Отключение инструментов диспетчерами сломало сборку захода из Cowork — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У13. Генератор порождает заход, который не проходит собственный гейт сборки — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У14. Приёмка едва не забраковала верный результат — виноват был её собственный код — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У15. Аналитик задал заходу разметку ЧУЖОГО движка, и ни один гейт этого не увидел — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У16. 🔴 КОРЕНЬ: скилл, покрывающий задачу, не поднят НИ РАЗУ за сессию — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У17. Утверждение записано прозой с вкраплением формул вместо «Пусть → Тогда» — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У18. Служебная метка проверки уехала в тело утверждения — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У19. Мотивировка выдана за утверждение — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У20. Отрицание оформлено как утверждение — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У21. Перечисление чисел вместо формулы — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У22. Гейты считают структуру и слепы к жанру — четыре круга подряд — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У23. Аналитик выдавал текст, не перечитав его как читатель — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У24. Регрессию структуры между кругами не ловит ничто — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У25. Требование приёмки протекло в жанр документа — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У26. 🔴 Ложное число доехало в ДВА документа, потому что проверка брала одну точку вместо ряда — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У27. `raise SystemExit` посреди файла: всё ниже не исполнялось никогда — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У28. Нулевая выборка читается как зелёный — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У29. Гейт проверяет только служебные строки, а ссылки в прозе — нет — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У30. Мёртвый канал субагента не отличим от честного «мало нашлось» — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У31. Две объявленные слепые зоны остались открытыми и не поставлены в план — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У32. Счётчик уроков врёт в самом хэндоффе — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У33. Межфайловые ссылки не проверяет никто — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У34. 🔴 КОРЕНЬ СЕССИИ: текст собран из ОДНОГО источника при девяти доступных, и это не покраснело нигде — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У35. Гейт сверяет перебор с перебором, а замкнутую формулу не проверяет вовсе — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У36. Два документа согласованы каждый сам с собой и расходятся друг с другом — класс, невидимый счётом в принципе — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У37. Исправление, сделанное счётом без чтения соседнего документа, ломает верное — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У38. Голый `git status` из Cowork берёт `index.lock` — правило есть, нарушается на слове «просто посмотреть» — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У39. 🔴 ЗАМЕЧАНИЕ К СКИЛЛУ: дисциплина git выдаёт команду, которая молча ничего не делает — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У40. Гейт, который ничего не нашёл, зелёным не бывает — та же поломка второй раз, теперь у меня — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У41. Разведка тремя параллельными заходами окупилась за один ход — и должна идти ДО письма, а не после — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У42. ЗАМЕЧАНИЕ К СКИЛЛУ: `check_zhanr` Ж3 запрещает слово «охват» в теле блока — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У43. Критерий готовности потребовал зелёного от гейта, который к этому жанру неприменим — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У44. В песочнице Cowork запись в `.git` ПРОХОДИТ, а удаление — нет: любая проба оставляет мину — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У45. Узкий отрицательный вердикт верификатора пересказан как утверждение о пустоте — дважды за сессию — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У46. Критерий готовности, который не может провалиться, — и это поймал ДО-верификатор, а не автор — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У47. Мой собственный гейт краснел на прозе о токене, а не на токене — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+- У48. Инструменты фабрики работают в песочнице Cowork, если объявить три переменные среды — inherited, `UROKI-FABRIKE.md` of this arc (born 25.08–03.09, before this wave), no verdict
+
 Harvest, verdicts and follow-up passes N1–N8: `UROKI-volny-noch-puti-i-volny.md` in this arc. Law amendments in DOPOLNENIYA: **2** (Д2 promoted into the course's form — `punkty.md` + `plany.py`, decision record pending V3; Д3 dropped as a law amendment with the reason «a one-night budget permission, recorded in the journal, not a standing rule»).
+
+**ДОЛГ УСЛОВИЯ (а):** `N9` — record the wave baseline `BAZA-VOLNY-<wave>.json` (`delta_bazy.py`) as the FIRST move of the next wave; tonight none was taken at start and a baseline cannot be reconstructed after the fact.
+**ДОЛГ УСЛОВИЯ (б):** `N1` — build the carriers of the 12 RULE lessons (follow-up passes N1–N8 in `UROKI-volny-noch-puti-i-volny.md`), each in its named skill of the `disciplina` repo, so that each rule has a check that goes red.
+**ДОЛГ УСЛОВИЯ (в):** `N10` — write the runner's restart history into the arc journal machine-readably, so «restarted for a permanent cause» becomes judgeable; tonight's 5 dead launches and 4 reworks are in the prose journal only.
+**ДОЛГ УСЛОВИЯ (г):** `N9` — the same baseline gives the paid-position count; tonight's paid positions and their causes are listed in «WHAT WAS ASSEMBLED AND LAUNCHED» and in the journal (escalations of P2 and P3 with cause class).
 
 ### LINE-BY-LINE ANSWER TO EVERY FINALIZED ITEM
 

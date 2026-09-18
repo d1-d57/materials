@@ -99,3 +99,10 @@
 - **Failure clauses:** (a) ❌ INDEKS.md self-description (V1) · (b) ❌ 20 pairs: 6 generated views + 7 RASSKAZ↔LEKCIYA-v2 (V2, L25) · (c) ✅ · (d) ✅ 39 % · (e) ✅ · (f) ✅.
 - **Usage:** weekly 39 %, 5-hour 15 %, head context 468k (47 %).
 - **ГОЛОВА О СЕБЕ:** the head spent ≈470k of its own context against a budget of 400k — 1.2× — mostly on reading factory tooling in rounds 0–3 and on writing briefs by hand-edited Python heredocs. ЦЕНА: the head alone cost more than any single position; the cheapest improvement is a brief-writing door that fills §2 from a short spec.
+
+## Round 11 — 2026-09-19 02:33 MSK — closing law run by ZK1 (the head), wave closed with debt
+
+- **ZK1 = the head's last move** (CIKL duty 12). `check_zakon_zakrytiya.py` on the mandate: rc=0, «ЗАКРЫТИЕ С ДОЛГОМ ЗАКОННО» — (а) → N9, (б) → N1, (в) → N10, (г) → N9; (д) ✅; judgements (е) ✅ after the P1–P7 renaming, (з) ✅ after 43 inherited arc lessons were carried by name (N11). `bootstrap_mandate.py --lint` ✅. 🔴 One `--tiho` run printed rc=1 and the next full run rc=0 on the same tree — not reproduced; ЦЕНА: a closing gate whose code is not stable between two runs is judged by the output line, not by rc alone (L26, carried to N11's batch).
+- **Health of debt homes (printed by the law, not a condition):** `check_snimok_dolga.py` 34 snapshot lines name no ref — inherited, not this wave's.
+- **Final state:** STATUS `CLOSED-S-DOLGOM`; 7 of 7 work positions `принято`; owner questions V1 (INDEKS self-description), V2 (LEKCIYA-v2 vs RASSKAZ-god), V3 (Д2 into ZAMYSEL). Weekly usage 39 % (ceiling 45 %). Not pushed: the registry commit `42d8a3d9` in `disciplina` — its push is held by an open foreign git заявка on `main` there; left to that queue.
+- **ГОЛОВА О СЕБЕ, final:** the product the owner reads today — `plan/src/lekciya-1.md` and `chetvert-1.md` — came from ONE Opus position of 216k; the head spent ≈2× that on leading. The factory's overhead, not the mathematics, was the cost of the night. ЦЕНА: head ≈490k context vs 400k budget.
