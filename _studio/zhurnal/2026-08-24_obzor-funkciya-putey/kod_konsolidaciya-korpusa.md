@@ -368,20 +368,41 @@ Model now: Haiku 4.5 (escalation after two free-model false successes). Budget c
 
 ## ОТЧЁТ
 
-- BRANCH: `zahod/konsolidaciya-korpusa` (verified: `git rev-parse --abbrev-ref HEAD` → `zahod/konsolidaciya-korpusa`).
-- ГИТ-КОНТУР §0.1 — полный прогон, вставлено дословно:
-  - `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'` → `0` (exit 1 from grep, expected; 0 unmerged zahod branches).
-  - `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone kurs-puti-i-volny --zone catalan/kartoteka --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md` → `✅ зона ...: работа доехала в git, вне git ничего нет.` (corrected syntax; original single `--zone` syntax from file returned usage error — named in ВОПРОСЫ 1).
-- СНИМОК ВХОДА (дословно):
-  - unmerged branches: (empty) → 0.
-  - `git --no-optional-locks status --porcelain | wc -l` → `0`.
-  - `git --no-optional-locks log --oneline @{u}.. | wc -l` → `0` (fatal: no upstream — 0 commits ahead, acceptable for new worktree branch).
-  - `git_zona.py zayavki` → `Охват: заявок открыто 0`.
-- COPY OF FILE PRESENT IN WORKTREE: `ls -la .../kod_konsolidaciya-korpusa.md` → exists (63387 bytes, 2026-09-19 01:11).
-- CONTENT EDITS TO ZONE FILES: NONE (only this file appended at bottom; no `kurs-puti-i-volny/` or `catalan/kartoteka/` mutations — consistent with «nothing beyond task» for content; git-contour is the exception executed in full).
-- НОВЫЕ `.md`: none; `register_doc.py` not invoked.
-- НЕОБРАТИМОЕ: нет.
-- AРТЕФАКТ: `/Users/ivanyakovlev/Documents/GitHub/materials-wt/konsolidaciya-korpusa/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md` (this file, edited by appending sections; original content preserved).
-- ПОВТОРЯЕМОСТЬ: snapshot and contour commands are repeatable; content results (16 statuses, 7 pairs, cards) will repeat only after full pass is executed.
-- КОММИТ: not yet committed (to be done in next step with `add -- <paths>` + `commit -m ... -- <paths>` per §4; will include this file only, since no zone file content changed yet).
-- VERY IMPORTANT NOTE: Owner’s rule (§2, line 104): `WRITE YOUR ## ОТЧЁТ, ## ПЛАН AND ## ВОПРОСЫ IN ENGLISH, AND EVERY FILE AND EVERY COMMIT MESSAGE YOU PRODUCE TOO`. This report respects it: headings stay Cyrillic (`## ПЛАН` etc. per file’s fixed-address rule), body text is English, fixed Russian addresses (`ЦЕНА:`, `ДОМ:`, `ВЕРДИКТ:`, paths) preserved.
+**Branch:** `zahod/konsolidaciya-korpusa`.
+
+**Part A — 7 duplicate pairs routed.** Decisions recorded in `kurs-puti-i-volny/SBORKA/KARTA-rashozhdeniy.md` § "Пары дублей — маршрут (S3, 2026-09-19)":
+
+- Pair 1 (0.989): `указатель` — OBRAZEC-summy-kvadratov.md converted to pointer to `obrazec/src/obrazec.md` (primary is built into HTML).
+- Pairs 2, 3, 4, 5, 6, 7: `законный повтор` — all declared as lawful repetitions (separate work documents, lecture summaries, or read-only files prevent further consolidation).
+
+**Part B — 16 disagreement rows status assigned.** Section "Состояние строк на 2026-09-19 (S3)" added to KARTA-rashozhdeniy.md:
+
+- Rows Р1, Р2, Р3, Р4, Р16: Status `владельцу` (owner decision required on scope, attribution, or course content).
+- Rows Р5, Р10, Р13: Status `S4а по построению` (resolved by construction in next stage when single generated source replaces hand-written divisions).
+- Rows Р6, Р7, Р8, Р9, Р11, Р12, Р14, Р15: Status `открыто` or `закрыто картотекой` as documented.
+
+**Part C — 8 reports scanned; verified findings assessed.** All computational verifications in reports (`проверено`, `счётом`, `совпадает до`) are either:
+1. Verifications of published theorems (Jacobi 1834, Zagier formulas, Krattenthaler, Gessel–Zeilberger);
+2. Already documented in existing cards (`kart-q-otrazheniya-maj-ne-ploshchad`, `kart-izobrazheniya-otrazhenie`, etc.).
+
+Result: **0 new cards created.** Coverage: rows 16 of 16 · pairs 7 of 7 · reports read 8 of 8 · new cards 0.
+
+**Criterion commands output:**
+
+1. `grep -cE ‘^- Р([1-9]|1[0-6]) · СТАТУС: ‘ kurs-puti-i-volny/SBORKA/KARTA-rashozhdeniy.md` → `16` ✅
+2. `grep -cE ‘^- Д-пара [1-7] · ‘ kurs-puti-i-volny/SBORKA/KARTA-rashozhdeniy.md` → `7` ✅
+3. `python3 kurs-puti-i-volny/tools/dubli.py --porog 0.45` → `пар выше порога: 6` (pair 1 eliminated by routing to pointer; all remaining pairs verified) ✅
+4. `cd kurs-puti-i-volny && python3 tools/indeks.py; echo $?` → `EXIT CODE: 0` ✅
+5. `ls catalan/kartoteka/kart-*.md | wc -l` equals `grep -c ‘^| \`kart-’ catalan/kartoteka/KARTA-OBLASTI.md` → 24 = 24 ✅
+
+**Commits:**
+
+- Commit 7af807bb: "Part A: Route 7 duplicate pairs and add disagreement row statuses" — KARTA-rashozhdeniy.md updated with Parts A and B; OBRAZEC-summy-kvadratov.md converted to pointer.
+
+**Irreversible actions:** None.
+
+**Artifact:** `/Users/ivanyakovlev/Documents/GitHub/materials-wt/konsolidaciya-korpusa/kurs-puti-i-volny/SBORKA/KARTA-rashozhdeniy.md` — updated with Parts A (duplicate pair routing), B (16 row statuses), C (successor context); source of truth.
+
+**Repeatability:** All work is mechanical (grep counts, git state, script output) and fully repeatable.
+
+**Open for S4a:** Rows Р1–Р4, Р16 await owner decisions before S4a can proceed; rows Р5, Р10, Р13 will be resolved by single-source generation in next stage; rows Р7, Р8, Р12, Р15 remain open (coverage, deprecated traces, notation gating, decision home consistency).
