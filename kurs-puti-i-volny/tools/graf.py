@@ -14,7 +14,7 @@ import os, sys, re, argparse, tempfile, collections, pathlib
 script_file = pathlib.Path(__file__).resolve()
 tools_dir = script_file.parent
 kpv_dir = tools_dir.parent
-SBORKA_DIR = kpv_dir.parent / 'SBORKA'
+SBORKA_DIR = kpv_dir / 'SBORKA'  # head repair 19.09: was kpv_dir.parent — wrote outputs to the repo root
 
 # Find GitHub root by going up until we find a directory containing 'disciplina'
 current = kpv_dir.parent
@@ -288,9 +288,11 @@ def section_6(links, contains):
 def gate_c(узлы, links):
     # plan anchors: id matching ^(god|chast|chetvert|lekciya)-
     # Exact semantics:
-    # - chast-X is NOT an orphan iff it has outgoing links edge to id starting with god-
-    # - chetvert-X iff to id starting with chast-
-    # - lekciya-X iff to id starting with chetvert-
+    # - an anchor is NOT an orphan iff it has an outgoing links edge to an anchor of a
+    #   STRICTLY HIGHER level (god < chast < chetvert < lekciya): clause (c) of the wave
+    #   mandate says «an outgoing [[…]] upward». Head repair 19.09: the analysis part of the
+    #   year has no `chast` level, so its quarter anchors link `god-*` directly; the old
+    #   one-level-up rule counted those 6 as orphans although they do link upward.
     # - god-* is exempt (NOT counted as orphans)
     # orphans = count of non-exempt plan anchors without such edge
 
@@ -316,10 +318,11 @@ def gate_c(узлы, links):
             continue
 
         # check if anchor_id has outgoing link to parent level
-        required_parent = parent_map[level]
+        order = ['god', 'chast', 'chetvert', 'lekciya']
+        higher = tuple(l + '-' for l in order[:order.index(level)])
         has_parent_link = False
         for source, target in links:
-            if source == anchor_id and target.startswith(required_parent + '-'):
+            if source == anchor_id and target.startswith(higher):
                 has_parent_link = True
                 break
 
@@ -342,6 +345,8 @@ def main():
         # override indeks MATERIALS
         indeks.MATERIALS = os.path.abspath(args.koren)
         indeks.ДОМА = [("test", args.koren)]
+        global SBORKA_DIR
+        SBORKA_DIR = pathlib.Path(args.koren).resolve() / 'SBORKA'  # fixture runs never write into the tree
 
     nodes, contains, links, узлы, файлы = собери_граф()
     # compute in-degree for top nodes

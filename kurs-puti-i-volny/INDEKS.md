@@ -38,8 +38,16 @@
 | `kurs-puti-i-volny/otchety/RAZBOR-i-perestroyka.md` | разбор результатов и переустройства [...] | zhivoy |  |
 | `kurs-puti-i-volny/otchety/ZAMETKI.md` | отчёт: ZAMETKI | zhivoy |  |
 | `kurs-puti-i-volny/otchety/ZAPISKA-iz-simmetrii.md` | записка выводов из симметрии [...] | zhivoy |  |
+| `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` | часть «до анализа» курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: пункты с chast=do-analiza, поле teorema | — | 27 |
+| `kurs-puti-i-volny/plan/src/chetvert-1.md` | четверть 1 курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: все четыре ⭐-поля целиком | — | 6 |
+| `kurs-puti-i-volny/plan/src/chetvert-2.md` | четверть 2 курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: все четыре ⭐-поля целиком | — | 8 |
+| `kurs-puti-i-volny/plan/src/chetvert-3.md` | четверть 3 курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: все четыре ⭐-поля целиком | — | 9 |
+| `kurs-puti-i-volny/plan/src/chetvert-4.md` | четверть 4 курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: все четыре ⭐-поля целиком | — | 10 |
+| `kurs-puti-i-volny/plan/src/god.md` | год курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: каждый пункт одной строкой (imya + vopros) | — | 33 |
 | `kurs-puti-i-volny/plan/src/karkas.md` | каркас-дорожная карта курса 32 темы (третья редакция) | chernovik |  |
+| `kurs-puti-i-volny/plan/src/lekciya-1.md` | лекция 1 курса «Пути и волны» — вид, порождённый tools/plany.py из punkty.md: пункт p-01 развёрнутый из его raskadrovka | — | 1 |
 | `kurs-puti-i-volny/plan/src/plan.md` | план расписания занятий (ЗАБРАКОВАН) | chernovik |  |
+| `kurs-puti-i-volny/plan/src/punkty.md` | единый дом списка пунктов курса «Пути и волны» — атом живёт здесь один раз, планы всех уровней порождаются из этого файла tools/plany.py | zhivoy | 34 |
 | `kurs-puti-i-volny/plan/src/voprosy.md` | список вопросов для каждого занятия | chernovik |  |
 | `kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md` | исполнительский заход с поручением [...] | zhivoy |  |
 | `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md` | исполнительский заход с поручением [...] | zabrakovan |  |
@@ -134,7 +142,7 @@
 | `kart-tri-normirovki-ploshchadi` | находка | площадь считается тремя несовместимыми способами в четырёх наших файлах | `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` |
 | `kart-tri-prochteniya-plus-predel` | мостик | прочтений резольвенты ТРИ, а предел — не четвёртое, а режим, в котором три расходятся | `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` |
 
-## Узлы графа — якоря в документах (71)
+## Узлы графа — якоря в документах (199)
 
 Ссылаться на часть документа, а не на документ целиком.
 
@@ -143,13 +151,107 @@
 | `ballotnye` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `bine` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `binom-porog` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `chast-p-01` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-02` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-03` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-04` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-05` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-06` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-07` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-08` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-09` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-10` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-11` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-12` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-13` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-14` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-15` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-16` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-17` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-18` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-19` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-20` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-21` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-22` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-23` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-24` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-25` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-26` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
+| `chast-p-27` | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` |
 | `chebyshev` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `chetvert-p-01` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-02` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-03` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-04` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-05` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-06` | `kurs-puti-i-volny/plan/src/chetvert-1.md` |
+| `chetvert-p-07` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-08` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-09` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-10` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-11` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-12` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-13` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-14` | `kurs-puti-i-volny/plan/src/chetvert-2.md` |
+| `chetvert-p-15` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-16` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-17` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-18` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-19` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-20` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-21` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-22` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-23` | `kurs-puti-i-volny/plan/src/chetvert-3.md` |
+| `chetvert-p-24` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-25` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-26` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-27` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-28` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-29` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-30` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-31` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-32` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
+| `chetvert-p-33` | `kurs-puti-i-volny/plan/src/chetvert-4.md` |
 | `dvoyki-m2` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `dvoystvennost` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `edinicy-m1` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `fibonachchi` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `finish` | `kurs-puti-i-volny/plan/src/punkty.md` |
 | `formula-katalana` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `gaussov-binom` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `god-p-01` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-02` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-03` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-04` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-05` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-06` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-07` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-08` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-09` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-10` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-11` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-12` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-13` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-14` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-15` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-16` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-17` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-18` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-19` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-20` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-21` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-22` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-23` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-24` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-25` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-26` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-27` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-28` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-29` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-30` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-31` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-32` | `kurs-puti-i-volny/plan/src/god.md` |
+| `god-p-33` | `kurs-puti-i-volny/plan/src/god.md` |
 | `izobrazheniya` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `katalan-schet` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `lek-ballot` | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/00-obshchee.md` |
@@ -187,12 +289,46 @@
 | `lek-uravnenie-shaga` | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/03-raznostnye.md` |
 | `lek-ves` | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/00-obshchee.md` |
 | `lek-yakobi` | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/04-funkcionalnoe.md` |
+| `lekciya-p-01` | `kurs-puti-i-volny/plan/src/lekciya-1.md` |
 | `lestnica-potolka` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `modulyarnost` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `net-q-spektra` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `normirovka-monom` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `obekt` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `otrazhenie` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `p-01` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-02` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-03` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-04` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-05` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-06` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-07` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-08` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-09` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-10` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-11` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-12` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-13` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-14` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-15` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-16` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-17` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-18` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-19` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-20` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-21` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-22` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-23` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-24` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-25` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-26` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-27` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-28` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-29` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-30` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-31` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-32` | `kurs-puti-i-volny/plan/src/punkty.md` |
+| `p-33` | `kurs-puti-i-volny/plan/src/punkty.md` |
 | `pervyy-vozvrat` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `ploshchad` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `ploshchad-sdvig` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
