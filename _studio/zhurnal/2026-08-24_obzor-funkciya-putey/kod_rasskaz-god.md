@@ -278,7 +278,32 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+**Owner's notes accepted as amendments to this zahod file** (measured today, not written into the file itself, so recorded here instead): run §0.1 myself, no git-contour subagent; the item list `kurs-puti-i-volny/plan/src/punkty.md` exists (33 items `p-01`…`p-33`) — read only ids and coordinates (`doska`/`ves`), the `imya`/`vopros` fields are still empty; `register_doc.py` refuses `kurs-puti-i-volny/RASSKAZ-god.md` (outside `_studio/`) — **registration is skipped by design**, the course index (`kurs-puti-i-volny/tools/indeks.py`) reads the `opisanie:` header directly, which criterion clause 5 below confirms; commit AND push as I go, by explicit path only; the fresh reader (§3) is a haiku subagent given only the file path and the three questions; budget ceiling 250k tokens; do not touch `kurs-puti-i-volny/plan/src/` (a parallel executor's zone).
+
+**Diagnosis — five causes of dullness** (read chapters 1 «Две дроби» and 3 «Зверинец» in full first, as instructed; confirmed systemic by grepping all 8 chapters):
+
+1. **Ritual "checked by counting" footnotes appended after nearly every claim** turn a story into a QA log. E.g. ch3: *«Все четыре ряда посчитаны перебором до $n=7$ и совпадают: $1,1,2,5,14,42,132,429$.»* — a verification ticket, not a sentence a reader wants. All 9 files carry these (18 hits total, grep `Проверено|проверено`).
+2. **The `> поле:`/`поле:insight … |` margin-note tag sits between the reader and the best line**, turning discoveries into labelled inserts instead of prose in the narrator's own voice. E.g. ch3: *«поле:insight Формула и соответствие — разные знания | Формула Каталана говорит, сколько маршрутов. Биекция говорит, почему их столько же…»* — the label is genre apparatus from Ghys's margin layout (`ZAMYSEL.md §1`: "вёрстка с боковыми полями"), which the intended two-column `view.html` renders as an actual margin but which reads as bureaucratic markup in plain text. 41 such tags across the 8 chapters.
+3. **Every chapter opens with nine lines of production YAML** (`tab`/`status`/`poryadok`/`registr`/`nomera`/`tema`/`oblast`/`data`/`adresat`/`opisanie`) the reader never asked for, sitting before the title itself — e.g. `02-koridor.md` lines 1–11, `adresat: взрослый читатель, владеющий техникой, но не знакомый с q-рядами`. Internal bookkeeping presented as the chapter's first words.
+4. **Every chapter ends on a `> поле:foot Черновик 2026-09-03…` draft-status note addressed to the analyst**, landing right after the chapter's dramatic closing line and undercutting it — e.g. after ch2's closing hook *«…посыплются вещи, которые в школьном курсе стоят в разных главах»* comes *«Черновик 2026-09-03. Таблица квадратов проверена счётом; формула… здесь взята вперёд; теорема Нивена — чёрный ящик со ссылкой.»* Same pattern in all 8 files.
+5. **Sheer accumulated length turns a good rhetorical shape into a predictable template.** The same three-beat pattern — childlike question → hand-count with a table → counted-by-computer footnote — repeats with almost no variation across all eight 13–18 KB chapters (140 KB total), so by chapter 4 a reader can predict the shape of the next section before reading it (compare ch1 §"Считаем руками" and ch3 §"Одна стенка" — identical shape, different content).
+
+None of these are math problems — the mathematics, the throughline, and the two detective knots (André, Rogers) are already sound and were not touched.
+
+**Rewrite plan against these five causes:** strip all production YAML headers and draft-status footers (causes 3, 4) — the new file carries one clean YAML header per the "What to write" spec, not per chapter. Fold every `поле:`/`поле:insight` box into ordinary flowing prose, keeping the sentence but dropping the label (cause 2). Cut the mechanical "проверено…" tickets; keep a verification detail only where it is itself part of the story (e.g. Ramanujan's fraction matching to forty digits) (cause 1). Compress ruthlessly chapter by chapter rather than trimming evenly, since cause 5 is about accumulated volume, not any one paragraph — target ≈45–55 % of source length per chapter while preserving every formula, both knots, all five figures, and the chapter-to-chapter throughline hooks.
+
+**Figures:** the five `.svg` files in `LEKCIYA-v2/` (`koridor-marshrut.svg`, `mnogougolniki.svg`, `biekcia-derevo-marshrut.svg`, `otrazhenie.svg`, `ploshchad-dva-marshruta.svg`) match the five inline `<svg>` figures in chapters 1–5 by `viewBox` (verified). Referencing them by relative path instead of inlining the raw SVG markup also does a large part of the length-compression work for free, since the inline SVG markup itself ran to 2–3 KB per figure.
+
+**Item links `[[p-NN]]`:** `punkty.md`'s 33 items carry only a board coordinate (`doska`: pryamaya/luch/otrezok/predel) and a weight flag (`ves`) — `imya`/`vopros` are still empty, so there is no way to match items to chapters by content, only by board level. I link each chapter to 2–3 representative item ids at the board level its mathematics operates on (pryamaya p-01…04, luch p-05…14, otrezok p-15…27, predel p-28…33); chapters 7–8 get no item links because the architecture file (`00-arhitektura.md` "Пятое место") and `ZAMYSEL.md` both say this material sits **outside the year's 33 items**, in a planned separate form. This is a coarse, coordinate-based mapping, not a verified one-to-one correspondence — flagged as a queue item below since a future pass that fills in `imya`/`vopros` could re-derive it precisely.
+
+**Length arithmetic:** source ≈140 KB (139 851 bytes) across 9 files; target 45 000–65 000 characters. Aimed for ≈52 000 characters, i.e. roughly 37 % of source length, achieved by the cuts above plus reference-not-inline figures.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
+
+1. `[[p-NN]]` links in `kurs-puti-i-volny/RASSKAZ-god.md` are coordinate-based (board level only), not content-verified, because `punkty.md`'s `imya`/`vopros` fields are still empty for all 33 items. Once a future pass fills those fields, the chapter-to-item links should be re-derived from content and could well change.
+   ДОМ: kurs-puti-i-volny/plan/src/punkty.md
+   ДОСТАВЛЕНО: нет
+
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -305,21 +330,27 @@ grep -n '<как механизм назван в вызывающем коде>
 > какие были. Пустой снимок = красный.
 
 **СНИМОК ВХОДА** *(команды и их ВЫВОД, а не пересказ; снять ПЕРВЫМ ходом, до всякой работы)*
+
+Run by the executor itself per owner's note ("no git-contour subagent"), with `GIT_ZONA_REPO="$PWD"` exported.
+
 ```
-git --no-optional-locks branch --no-merged <основная>     # невлитые
-git --no-optional-locks status --porcelain | wc -l        # не закоммичено
-git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
-python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'
+0
+$ git --no-optional-locks status --porcelain | wc -l
+13   # pre-existing dirt: other people's uncommitted files (PULS-CHASOVOGO log, INCIDENTY.md,
+     # diskmat-57 drafts, _fond svg) + this zahod's own new files — none of it mine to touch/commit
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+0
+$ python3 ../disciplina/_generator/tools/git_zona.py zayavki
+... (prints 12 historical "переадресовано" routing entries, none addressed to this arc)
+Охват: заявок открыто 0, переадресовано 12, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
 ```
-<сюда — вывод, дословно>
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Nothing to merge/purge/deliver: unmerged `zahod/*` = 0, open заявки addressed to this arc = 0. This is the "contour already empty" case named in §0.1 — no hygiene work needed before starting.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
-*(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
-правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
-не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
+*(there were no debts belonging to this arc's git contour to close — the 13 dirty paths at input are other people's uncommitted work in a shared folder, out of this executor's rights to touch, per contract.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
 **АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
