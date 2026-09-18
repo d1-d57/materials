@@ -106,3 +106,9 @@
 - **Health of debt homes (printed by the law, not a condition):** `check_snimok_dolga.py` 34 snapshot lines name no ref — inherited, not this wave's.
 - **Final state:** STATUS `CLOSED-S-DOLGOM`; 7 of 7 work positions `принято`; owner questions V1 (INDEKS self-description), V2 (LEKCIYA-v2 vs RASSKAZ-god), V3 (Д2 into ZAMYSEL). Weekly usage 39 % (ceiling 45 %). Not pushed: the registry commit `42d8a3d9` in `disciplina` — its push is held by an open foreign git заявка on `main` there; left to that queue.
 - **ГОЛОВА О СЕБЕ, final:** the product the owner reads today — `plan/src/lekciya-1.md` and `chetvert-1.md` — came from ONE Opus position of 216k; the head spent ≈2× that on leading. The factory's overhead, not the mathematics, was the cost of the night. ЦЕНА: head ≈490k context vs 400k budget.
+
+## Round 12 — 2026-09-19 02:35 MSK — Stop hook rounds after closing
+
+- The Stop hook refused the stop twice, both times rightly: (1) the verdicts lived only in the mandate, the hook reads `## ФАЗА ПРИЁМКИ` of each kod file — copied there (`bfd90daf`); (2) ZK1 was declared in the composition with no file on disk — created through `bootstrap_zahod.py`, law output recorded, verdict `принято` (`f82472cd`). ЦЕНА: 2 extra rounds; `--append-verdict` writes one home of two (lesson L27, carried).
+- L26 refined by measurement: the law exits rc=1 only when run in the same command right after commit+push; three separate runs → rc=0, rc=0, rc=0, output «закон закрытия соблюдён» each time.
+- Positions without verdict: 0 of 8 declared, 8 of 8 files on disk.
