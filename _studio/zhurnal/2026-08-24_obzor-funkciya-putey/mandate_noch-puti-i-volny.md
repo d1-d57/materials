@@ -695,6 +695,12 @@ host-side и пишет в `.git` законно.
 
 **Как голова исполняет.** Процент снимается `get_usage` каждый круг и пишется в строку круга. **42 %** — не запускать ничего, кроме цепочки к лекции 1 (S4а → S4б); S4в (рассказ про год) переводится на меньшую модель или уходит долгом. **44 %** — доводить начатое, писать журнал и закрываться, не спрашивая. Порядок отказа: сначала S4в, потом верификаторы на Sonnet заменяются Haiku; S4б (Opus, лекция 1) не режется.
 
+### Д4 · 2026-09-19 01:15 (owner in chat, as «Д3»; renumbered by the head because Д3 was already taken) · ТИП: `НОВАЯ-РАБОТА` · СТАТУС: исполнено 01:20, кроме Stop-хука
+
+**Text.** (1) Heart and watchman: no `SERDCE-VOLNY-noch-puti-i-volny.md`, and the global `VOLNA-AKTIVNAYA` names a foreign arc (`2026-08-20_poryadok-v-metaskillah`, 17.09) — raise the wave onto ourselves with `podnyat_volnu.py podnyat` and beat the heart every round. (2) The model registry is two days stale — refresh it ONCE with `modeli.py zhivost` before the next free launch and record the data date. (3) Check the sleep lock.
+
+**Done, measured:** heart file created and beaten; `podnyat_volnu.py podnyat` → sleep lock ✅ (pid 39418, ppid 1), heart ✅, watchman under launchd ✅ (pid 39423, agent `com.ivanyakovlev.disciplina.chasovoj.noch-puti-i-volny`), wave pointer ✅ `VOLNA-AKTIVNAYA-sp-1860e32aa0e7ff14` (the head id is written by the hook on the first Stop). ❌ **Stop hook: registered in all three scopes, but a synthetic Stop payload returns rc=0 with empty stdout, not `decision=block`** — carried as a debt, not repaired by the head (the hook lives in the factory). The legacy bare `VOLNA-AKTIVNAYA` file with the foreign arc was left untouched: the tool now reads per-session pointers. Registry: `modeli.py zhivost` refused to probe («в песочнице opencode нет» — false, opencode is at `~/.opencode/bin/opencode`) and printed a loop for the owner's terminal; the head ran that loop itself — result in the journal.
+
 ## HALF TWO — WRITTEN BY THE ORCHESTRATOR, ON RETURN
 
 > Not written yet: the wave has not returned. STATUS stays `OPEN` until it has, and
@@ -711,6 +717,7 @@ host-side и пишет в `.git` законно.
 ### VERDICTS
 
 - **kod_pasporta-korpusa.md** — принято — S1 (Haiku 4.5, 137k tokens, 7 min, 8 commits): 80 of 81 files described, 17 of 24 cards linked from the corpus (88 links, 0 dangling), successor file written and registered. Head found and repaired by script (75a7e11a): 24 card descriptions were ONE identical placeholder naming the wrong project; the edit lay outside the brief's zone because the brief listed the cards in DOLG while forbidding catalan/kartoteka — a brief defect, not an executor one. Residual red: 'без описания: 1' is INDEKS.md itself, which the closed generator cannot describe — question V1 to the owner.
+- **kod_konsolidaciya-korpusa.md** — принято — S3 after two free false successes (codestral chat-only, inkling-small did only §0.1), escalated to Haiku 4.5: 130k tokens, 5 min, merged 4d88fc6e. Head re-ran the criterion: 16 of 16 rows with a status, 7 of 7 pairs routed, dubli 7->6 (pair 1 made a pointer, header kept), indeks rc=0, cards 24=24. Minimal work: 0 rows closed by edit, 0 new cards from 8 reports; rows Р6 and Р14 were mislabelled 'closed by card index' and relabelled open by the head (fcaac71d).
 ### WHAT WAS EXCLUDED AND WHY
 
 <NOT FILLED>
