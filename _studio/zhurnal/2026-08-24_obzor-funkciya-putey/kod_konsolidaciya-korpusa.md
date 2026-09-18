@@ -327,7 +327,11 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-09-19 01:13 · the content work (parts A, B, C) IS the task — do it now
+
+Written by the wave head after the previous executor stopped after §0.1. «Ничего сверх задачи» means: nothing BEYOND parts A, B, C. **Parts A, B, C of `## 2. ЗАДАЧА` ARE the task and must all be done**; the git contour is already done (commit `f9d2c277`) — do not repeat it. Continue from the point of the break: read `## 2. ЗАДАЧА` and do A → B → C, committing after each, then the successor section, then the criterion, then `## ОТЧЁТ` (replace the previous executor's report; keep its §0.1 outputs).
+You work in THIS worktree (`materials-wt/konsolidaciya-korpusa`, branch `zahod/konsolidaciya-korpusa`). Commit with `GIT_ZONA_REPO="$PWD" python3 ../../disciplina/_generator/tools/git_zona.py commit --zone kurs-puti-i-volny --zone catalan/kartoteka --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md -m "<what>"` (no `--push` from the worktree). Last move: merge into the main line with the `vlit-v-osnovnuyu` command of the final hygiene block.
+Model now: Haiku 4.5 (escalation after two free-model false successes). Budget ceiling 220k tokens.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
