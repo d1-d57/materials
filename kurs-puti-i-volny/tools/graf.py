@@ -9,14 +9,31 @@ Writes ZAMER-grafa.md and graf-rebra.tsv to the SBORKA folder next to graf.py.
 import os, sys, re, argparse, tempfile, collections, pathlib
 
 # --- path setup ---
-HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
-SBORKA_DIR = pathlib.Path(__file__).resolve().parent.parent / 'SBORKA'
+# Graf.py location: either materials/kurs-puti-i-volny/tools/ or worktree/...../kurs-puti-i-volny/tools/
+# Calculate paths using __file__ for robustness
+script_file = pathlib.Path(__file__).resolve()
+tools_dir = script_file.parent
+kpv_dir = tools_dir.parent
+SBORKA_DIR = kpv_dir.parent / 'SBORKA'
 
-# import primitives
-sys.path.insert(0, os.path.join(REPO, '..', 'disciplina', '_generator', 'tools', 'reserch'))
+# Find GitHub root by going up until we find a directory containing 'disciplina'
+current = kpv_dir.parent
+while current.parent != current:  # Stop at filesystem root
+    if (current / 'disciplina').exists():
+        github_root = current
+        break
+    current = current.parent
+else:
+    # Fallback: assume standard directory structure
+    # From tools dir: up 2 (to materials/graf-korpusa), up 1 (to GitHub or materials-wt), then find GitHub
+    github_root = kpv_dir.parent.parent.parent
+
+# import primitives from disciplina
+sys.path.insert(0, str(github_root / 'disciplina' / '_generator' / 'tools' / 'reserch'))
 import topsort_karty
-sys.path.insert(0, os.path.join(REPO, 'kurs-puti-i-volny', 'tools'))
+
+# import indeks from current location (same tools directory)
+sys.path.insert(0, str(tools_dir))
 import indeks
 
 RE_ЯКОРЬ = indeks.RE_ЯКОРЬ
