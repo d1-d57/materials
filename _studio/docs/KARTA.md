@@ -83,6 +83,12 @@
 
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md`** (паспортизация корпуса курса: описания в шапки, ссылки на картотеку, читаемый индекс)
+
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/mandate_noch-puti-i-volny.md`** (MANDATE — two halves, two authors; status OPEN/CLOSED/REFUSED/CLOSED-S-DOLGOM lives in the file)
+
 **`_studio/zhurnal/2026-09-13_uchenik-misha/HANDOFF-2026-09-14.md`** (Хэндофф в сессию 2026-09-14 (арка 2026-09-13_uchenik-misha): вход владельцем не назначен, дефолт — набор Мише на занятие 20.09)
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/NAVIGATOR.md`** (навигатор арки 2026-09-13_uchenik-misha (ориентация, читается первым): Приём третьего ученика (Миша, 3 класс) и постановка цикла занятий с измерением. Главное отличие от Дани и Максима: у тех богат отбор задач, но измерения занятия нет ни у кого — здесь оно заводится впервые (взял сам N из M, минута проседания) и должно доехать до остальных учеников.)
