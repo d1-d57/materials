@@ -1,8 +1,3 @@
----
-opisanie: указатель-навигатор по содержанию курса
-sloj: 2
-status: zhivoy
----
 <!-- 🤖 СОБРАН ГЕНЕРАТОРОМ `tools/indeks.py`. РУКАМИ НЕ ПРАВИТЬ: правка
      будет стёрта следующим прогоном. Описание файла живёт в ЕГО шапке,
      поле `opisanie:`. Нет описания — правь файл, не этот индекс. -->
@@ -19,37 +14,37 @@ status: zhivoy
 | файл | о чём | статус | узлов |
 |---|---|---|---|
 | `kurs-puti-i-volny/ARHITEKTURA.md` | карта домов: где какая информация лежит, что с чем связано, какие белые пятна | zhivoy |  |
-| `kurs-puti-i-volny/CHITAT.md` | ⚠ Что почитать *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/HREBET-kursa.md` | ⚠ Хребет курса: от путей Дика до ADE *(описания в шапке нет)* | — |  |
+| `kurs-puti-i-volny/CHITAT.md` | проверенный список литературы и ссылок для курса | zhivoy |  |
+| `kurs-puti-i-volny/HREBET-kursa.md` | позвоночник-дорожная карта курса по четвертям | zhivoy |  |
 | `kurs-puti-i-volny/INDEKS.md` | ⚠ ИНДЕКС ЗНАНИЯ — курс «Пути и волны» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/KOSTYAK.md` | ⚠ Костяк: одна задача, посчитанная дважды *(описания в шапке нет)* | — |  |
+| `kurs-puti-i-volny/KOSTYAK.md` | математический скелет с излагаемыми теоремами (УСТАРЕЛ) | zhivoy |  |
 | `kurs-puti-i-volny/OBEKT.md` | весь курс на двух страницах: объект, во что он вырождается, четыре взгляда, два направления рассказа | zhivoy |  |
-| `kurs-puti-i-volny/OBOZNACHENIYA.md` | ⚠ ОБОЗНАЧЕНИЯ — «Пути и волны» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md` | ⚠ Сколькими способами число есть сумма четырёх квадратов *(описания в шапке нет)* | — |  |
+| `kurs-puti-i-volny/OBOZNACHENIYA.md` | единая система обозначений и терминологии | zhivoy |  |
+| `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md` | образец от задачи к формуле: суммы квадратов | zhivoy |  |
 | `kurs-puti-i-volny/PAZL.md` | сетка «специализация × взгляд»: что знаем, где дыры, в каком порядке копать | zhivoy |  |
-| `kurs-puti-i-volny/PERESTROYKA.md` | ⚠ ПЕРЕСТРОЙКА — цель, развилка, план *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/RAZVEDKA-metody-i-obrazcy.md` | ⚠ Разведка методов и образцов: производящая функция, изучаемая через уравнения на неё *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/README.md` | ⚠ Пути и волны *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/REESTR-reserchey.md` | ⚠ РЕЕСТР ресёрчей курса «пути и волны» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/SLOVAR.md` | ⚠ СЛОВАРЬ — «Пути и волны» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/ZAMYSEL.md` | ⚠ ЗАМЫСЕЛ — «Пути и волны» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/anons.md` | ⚠ Анонс курса *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/obrazec/src/obrazec.md` | ⚠ Сколькими способами число есть сумма четырёх квадратов *(описания в шапке нет)* | chernovik |  |
-| `kurs-puti-i-volny/otchety/GRANICA-chto-vidno-na-okruzhnosti.md` | ⚠ Граница: что из теории модулярных форм видно на одномерной окружности *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/KARTA-mosta.md` | ⚠ Карта моста: что теория модулярных форм реально даёт задаче о блуждании *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/OPTIKA-odna-funkciya.md` | ⚠ Оптика: весь курс как исследование одной цепной дроби *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/OTCHET-okruzhnost.md` | ⚠ Отчёт по заходу: проще ли на окружности? *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md` | ⚠ Два способа посчитать одно и то же *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/RAZBOR-i-perestroyka.md` | ⚠ Разбор текста и предлагаемая перестройка *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/ZAMETKI.md` | ⚠ Заметки к обзору «Пути ограниченной высоты и тригонометрия» *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/otchety/ZAPISKA-iz-simmetrii.md` | ⚠ Записка: как считать на окружности из симметрии *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/plan/src/karkas.md` | ⚠ Каркас года: 32 темы *(описания в шапке нет)* | chernovik |  |
-| `kurs-puti-i-volny/plan/src/plan.md` | ⚠ Пути и волны: 32 занятия *(описания в шапке нет)* | chernovik |  |
-| `kurs-puti-i-volny/plan/src/voprosy.md` | ⚠ Список вопросов, из которых собирается год *(описания в шапке нет)* | chernovik |  |
-| `kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md` | ⚠ Заход: не является ли $F(z,q)$ формой Якоби *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md` | ⚠ ОТМЕНЁН — см. `ZAHOD-okruzhnost.md` *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost.md` | ⚠ Заход: проще ли на окружности? *(описания в шапке нет)* | — |  |
-| `kurs-puti-i-volny/zahody/ZAHOD-sverka-koncepcii.md` | ⚠ Заход: сверка концепции, потом модулярность *(описания в шапке нет)* | — |  |
+| `kurs-puti-i-volny/PERESTROYKA.md` | реестр решений о содержании и перестановках | zhivoy |  |
+| `kurs-puti-i-volny/RAZVEDKA-metody-i-obrazcy.md` | обзор методов и образцов композиции | zhivoy |  |
+| `kurs-puti-i-volny/README.md` | вход в курс: цель, состояние, долги | zhivoy |  |
+| `kurs-puti-i-volny/REESTR-reserchey.md` | реестр исследовательских ходов и вердиктов | zhivoy |  |
+| `kurs-puti-i-volny/SLOVAR.md` | словарь понятий и связей курса | zhivoy |  |
+| `kurs-puti-i-volny/ZAMYSEL.md` | дом решений: что и зачем рассказываем | zhivoy |  |
+| `kurs-puti-i-volny/anons.md` | готовый анонс для постера или внешнего текста | zhivoy |  |
+| `kurs-puti-i-volny/obrazec/src/obrazec.md` | образец рассказа от вопроса к формуле | chernovik |  |
+| `kurs-puti-i-volny/otchety/GRANICA-chto-vidno-na-okruzhnosti.md` | отчёт о граничных явлениях на окружности [...] | zhivoy |  |
+| `kurs-puti-i-volny/otchety/KARTA-mosta.md` | картограф исследования: местность и маршруты [...] | zhivoy |  |
+| `kurs-puti-i-volny/otchety/OPTIKA-odna-funkciya.md` | оптический взгляд: одна функция многими способами [...] | zhivoy |  |
+| `kurs-puti-i-volny/otchety/OTCHET-okruzhnost.md` | отчёт о фактах и наблюдениях на окружности [...] | zhivoy |  |
+| `kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md` | рассказ двумя способами (УСТАРЕЛ) [...] | zabrakovan |  |
+| `kurs-puti-i-volny/otchety/RAZBOR-i-perestroyka.md` | разбор результатов и переустройства [...] | zhivoy |  |
+| `kurs-puti-i-volny/otchety/ZAMETKI.md` | отчёт: ZAMETKI | zhivoy |  |
+| `kurs-puti-i-volny/otchety/ZAPISKA-iz-simmetrii.md` | записка выводов из симметрии [...] | zhivoy |  |
+| `kurs-puti-i-volny/plan/src/karkas.md` | каркас-дорожная карта курса 32 темы (третья редакция) | chernovik |  |
+| `kurs-puti-i-volny/plan/src/plan.md` | план расписания занятий (ЗАБРАКОВАН) | chernovik |  |
+| `kurs-puti-i-volny/plan/src/voprosy.md` | список вопросов для каждого занятия | chernovik |  |
+| `kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md` | исполнительский заход с поручением [...] | zhivoy |  |
+| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md` | исполнительский заход с поручением [...] | zabrakovan |  |
+| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost.md` | исполнительский заход с поручением [...] | zhivoy |  |
+| `kurs-puti-i-volny/zahody/ZAHOD-sverka-koncepcii.md` | исполнительский заход с поручением [...] | zhivoy |  |
 
 ### обзор и лекция
 
@@ -64,51 +59,51 @@ status: zhivoy
 | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/06-bolshie-chisla.md` | гл.6 — что видно на больших числах: показатель n^{-3/2}, спектральная щель, тэта-симметрия как предел равенства двух счётов; покрывает блок 7 | chernovik |  |
 | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/07-vozvrashchenie.md` | гл.7 — дробь коридора есть дробь из письма; многочлены Шура, тождества Роджерса — Рамануджана; закольцовка: переключатель это площадь | chernovik |  |
 | `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/08-za-dveryu.md` | гл.8 — честная граница объекта: что из него НЕ выводится и почему это интереснее; анонс материала вне года | chernovik |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/00-obshchee.md` | ⚠ Функция путей: один объект и четыре взгляда на него *(описания в шапке нет)* | chernovik | 11 |
-| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/01-kombinatornyy.md` | ⚠ Взгляд 1. Комбинаторный: каждый коэффициент отдельно *(описания в шапке нет)* | chernovik | 6 |
-| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/02-algebraicheskiy.md` | ⚠ Взгляд 2. Алгебраический: уравнение вместо перебора *(описания в шапке нет)* | chernovik | 6 |
-| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/03-raznostnye.md` | ⚠ Взгляд 3. Разностные уравнения: откуда в комбинаторной задаче косинусы *(описания в шапке нет)* | chernovik | 6 |
-| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/04-funkcionalnoe.md` | ⚠ Взгляд 4. Функциональное уравнение посложнее: модулярность и асимптотика *(описания в шапке нет)* | chernovik | 6 |
-| `obzory/funkciya-putey-i-ee-uravneniya/RAZVEDKA-2026-09-03.md` | ⚠ РАЗВЕДКА 03.09: что вскрылось под скелетом *(описания в шапке нет)* | chernovik |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` | ⚠ СКЕЛЕТ изложения: функция путей и её уравнения *(описания в шапке нет)* | chernovik | 36 |
-| `obzory/funkciya-putey-i-ee-uravneniya/SVEDENIE-kursa.md` | ⚠ СВЕДЕНИЕ плана курса «Пути и волны» к общим теоремам скелета *(описания в шапке нет)* | chernovik |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R1-obekt-u-ludej.md` | ⚠ Р1 — веб-ресёрч: есть ли объект у людей? *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R2-obrazcy-zhanra.md` | ⚠ R2 — образцы жанра: «один объект → несколько теорем о нём → классика выпадает специализациями» *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R3-teoremy-kandidaty.md` | ⚠ R3 — ТЕОРЕМЫ-КАНДИДАТЫ (веб-ресёрчер) *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R4-otrezok-okruzhnost.md` | ⚠ Р4 — Выводится ли ОКРУЖНОСТЬ из ОТРЕЗКА честным переходом? *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/src/BLOKI.md` | ⚠ Карта блоков: функция путей и её уравнения *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/src/RESERCH.md` | ⚠ RESERCH — что уже есть и чего нет (точечный добор) *(описания в шапке нет)* | — |  |
-| `obzory/funkciya-putey-i-ee-uravneniya/src/obzor.md` | ⚠ Производящая функция путей и её уравнения *(описания в шапке нет)* | chernovik |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/00-obshchee.md` | архитектура 8-главного изложения [...] | chernovik | 11 |
+| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/01-kombinatornyy.md` | глава изложения: живая лекция с разборкой [...] | chernovik | 6 |
+| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/02-algebraicheskiy.md` | глава изложения: живая лекция с разборкой [...] | chernovik | 6 |
+| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/03-raznostnye.md` | глава изложения: живая лекция с разборкой [...] | chernovik | 6 |
+| `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/04-funkcionalnoe.md` | глава изложения: живая лекция с разборкой [...] | chernovik | 6 |
+| `obzory/funkciya-putey-i-ee-uravneniya/RAZVEDKA-2026-09-03.md` | разведка-диагностика: проверка объектов и ошибок [...] | chernovik |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` | скелет-фундамент: 5 определений и 4 теоремы | chernovik | 36 |
+| `obzory/funkciya-putey-i-ee-uravneniya/SVEDENIE-kursa.md` | сведение плана к главным теоремам [...] | chernovik |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R1-obekt-u-ludej.md` | разведка: объект у людей и ближайшие соседи [...] | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R2-obrazcy-zhanra.md` | разведка: образцы жанра и композиции [...] | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R3-teoremy-kandidaty.md` | разведка: 16 теорем-кандидатов на центральную [...] | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/reserch/R4-otrezok-okruzhnost.md` | разведка: путь от отрезка к окружности [...] | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/src/BLOKI.md` | блоки-сборные единицы изложения | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/src/RESERCH.md` | скважина ресёрча: навигатор по исследовательским ходам | zhivoy |  |
+| `obzory/funkciya-putey-i-ee-uravneniya/src/obzor.md` | обзор (ЗАБРАКОВАН: изложение непонятно) | chernovik |  |
 
 ### картотека
 
 | файл | о чём | статус | узлов |
 |---|---|---|---|
-| `catalan/kartoteka/KARTA-OBLASTI.md` | ⚠ КАРТА ОБЛАСТИ — картотека находок курса «Пути и волны» *(описания в шапке нет)* | chernovik |  |
-| `catalan/kartoteka/kart-al-salam-ismail-dom.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-centralnaya-para.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-chebyshev-smysl.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-dom-teorem-vienno.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-dva-q-katalana.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-eyler-vypadaet.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-izobrazheniya-otrazhenie.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-jtp-mesto.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-normirovka-starta.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-obshchee-prostee.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-okruzhnost-kanal.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-polosa-ili-okruzhnost.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-polyusa-spektr.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-porog-ngr.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-potolok-est-finitizaciya.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-predel-q-zamknuto.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-q-kontinuanty.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-q-menyaet-tip-spektra.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-q-otrazheniya-maj-ne-ploshchad.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-q-spektr-granica.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-rr-dve-storony.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-starter-parametr.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` | ⚠  *(описания в шапке нет)* | — | 1 |
-| `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` | ⚠  *(описания в шапке нет)* | — | 1 |
+| `catalan/kartoteka/KARTA-OBLASTI.md` | справочник-реестр областей каталанских объектов | chernovik |  |
+| `catalan/kartoteka/kart-al-salam-ismail-dom.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-centralnaya-para.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-chebyshev-smysl.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-dom-teorem-vienno.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-dva-q-katalana.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-eyler-vypadaet.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-izobrazheniya-otrazhenie.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-jtp-mesto.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-normirovka-starta.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-obshchee-prostee.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-okruzhnost-kanal.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-polosa-ili-okruzhnost.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-polyusa-spektr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-porog-ngr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-potolok-est-finitizaciya.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-predel-q-zamknuto.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-kontinuanty.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-menyaet-tip-spektra.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-otrazheniya-maj-ne-ploshchad.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-spektr-granica.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-rr-dve-storony.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-starter-parametr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
 
 ## Узлы графа — карточки (24)
 
