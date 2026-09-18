@@ -91,3 +91,11 @@
 - **S4б (Opus, 203k at first stop):** 5 content commits — p-01 with a 9-beat 90-minute storyboard, p-02…p-06, level blocks; ⭐ gate green, `lekciya-1.md` 17 409 characters, 0 forbidden words. Its fresh Sonnet reader (102k): **7 of 7 strong**, all mathematics re-checked independently (35 subspaces at q=2, 2156 ways to change 100 rubles, E[S²]=n, Franel numbers). Two remarks: p-02 title weakest; the last 4 minutes for homework are tight. The executor is applying them now; report pending.
 - 🔴 **Generator defect found by the head reading the product:** `lekciya-1.md` shows «p-01» instead of the item's name, and the level blocks (`obobshchenie`, `svod`) do not reach any view — the mandate requires every plan to OPEN with its generalisation sentence. Repair after S4б closes: a small Haiku position on `tools/plany.py` rendering only.
 - **Usage:** weekly **39 %**, 5-hour 14 %, head context 420k (42 %). Paid so far: Haiku 423k, Sonnet 493k, Opus ≥203k + reader 102k Sonnet.
+
+## Round 10 — 2026-09-19 02:31 MSK — P5 and P7 accepted, knowledge phase, bottom half written
+
+- **P5 (S4б) accepted:** Opus 216k + fresh Sonnet reader 102k — 7 of 7 strong, all mathematics independently re-checked. **P7 (S4г) accepted:** Haiku 119k, views now open with their generalisation sentence and show item names. Ids renamed P1–P7 for the closing law (lesson L24).
+- **Knowledge phase:** harvested 22 lessons (`UROKI-volny-noch-puti-i-volny.md`), judged 22 of 22 by inkling:free in two batches: RULE 12, DEBT 10, dismissed 0; 3 more born after the harvest and CARRIED by name (L23–L25). BORN 25 · CLOSED 22 · CARRIED 3 · DELTA 3. Follow-up passes N1–N8 named for the next mandate. ЦЕНА of the first judging attempt: parallel opencode runs locked the local database, ≈7 min.
+- **Failure clauses:** (a) ❌ INDEKS.md self-description (V1) · (b) ❌ 20 pairs: 6 generated views + 7 RASSKAZ↔LEKCIYA-v2 (V2, L25) · (c) ✅ · (d) ✅ 39 % · (e) ✅ · (f) ✅.
+- **Usage:** weekly 39 %, 5-hour 15 %, head context 468k (47 %).
+- **ГОЛОВА О СЕБЕ:** the head spent ≈470k of its own context against a budget of 400k — 1.2× — mostly on reading factory tooling in rounds 0–3 and on writing briefs by hand-edited Python heredocs. ЦЕНА: the head alone cost more than any single position; the cheapest improvement is a brief-writing door that fills §2 from a short spec.

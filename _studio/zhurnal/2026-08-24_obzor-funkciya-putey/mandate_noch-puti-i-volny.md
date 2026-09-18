@@ -2,9 +2,9 @@
 
 <!-- assembled by bootstrap_mandate.py; two halves, two authors; do not merge them -->
 
-**STATUS:** `OPEN`
+**STATUS:** `CLOSED-S-DOLGOM`
 **TOP_HALF_STATUS:** `COMPLETE`
-**BOTTOM_HALF_STATUS:** `PENDING`
+**BOTTOM_HALF_STATUS:** `COMPLETE`
 **ARC:** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey`
 **JOURNAL:** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/ZHURNAL-volny-noch-puti-i-volny.md`
 **ASSEMBLED:** `2026-09-19`
@@ -191,7 +191,9 @@ ZK1|zakon-zakrytiya-noch-puti-i-volny|opus|_studio/zhurnal/2026-08-24_obzor-funk
 
 ### SCALE
 
-7 stages with dependencies, 9-12 positions; one night, 6 hours target; at most 2 positions in parallel and never two on the same model. S7 (the first-lecture plan) has a deadline outside the wave and is finished even if the stop threshold is hit; S5 is the first stage to drop if something must be dropped
+7 stages with dependencies, 9-12 positions; one night, 6 hours target; at most 2 positions in parallel and never two on the same model. stage 7 (the first-lecture plan) has a deadline outside the wave and is finished even if the stop threshold is hit; stage 5 is the first stage to drop if something must be dropped
+
+> **Reconciled by the wave head, 2026-09-19, after owner addition Д2 (00:58).** The stage labels in the sentence above were STAGES, not positions; they now read «stage 5», «stage 7». The POSITIONS of this wave are exactly **P1–P7** (7 work positions) and the closing position **ZK1**, as in `VOLNA-noch-puti-i-volny-SOSTAV.txt`: P1 passports (stage 1) · P2 graph statistics (stage 2) · P3 consolidation (stage 3) · P4 item architecture (Д2) · P5 filling of quarter 1 and lecture 1 (stages 6 and 7) · P6 year story (stage 4) · P7 rendering repair of the views. Stage 5 (first part) is a generated view built by P4 and filled at level by P5.
 
 ### WHAT COUNTS AS FAILURE
 
@@ -708,11 +710,26 @@ host-side и пишет в `.git` законно.
 
 ### WHAT WAS ASSEMBLED AND LAUNCHED
 
-<NOT FILLED>
+Seven work positions and the closing position, composition `VOLNA-noch-puti-i-volny-SOSTAV.txt` (P1–P7, ZK1). Every brief born from `bootstrap_zahod.py`, `check_zahod.py` rc=0 and `check_sborki.py` green before launch. Zeroth move (owner's Д1): the whole 18.09 corpus and the mandate committed and pushed — «вне git» 49 → 23, the rest foreign.
+- **P1** passports — Haiku 4.5 (brief was app-channel, free runner could not take it), 137k.
+- **P2** graph statistics `tools/graf.py` — inkling:free (partial) → inkling:free rework (false success) → Haiku 4.5 rework, 156k.
+- **P3** consolidation — codestral:free (chat-only, false success) → inkling-small:free (did §0.1 only) → **escalated** to Haiku 4.5, 130k.
+- **P4** item architecture (Д2) — Sonnet 5, 268k.
+- **P5** filling: lecture-1 storyboard, quarter-1 items, level summaries — Opus 5, 216k, plus a fresh Sonnet reader 102k.
+- **P6** year story `RASSKAZ-god.md` — Sonnet 5, 225k, plus a fresh Haiku reader.
+- **P7** rendering repair of `tools/plany.py` — Haiku 4.5, 119k.
+- Knowledge phase: lessons judged by inkling:free in two batches (0 tokens).
+Totals: Haiku ≈ 542k · Sonnet ≈ 595k · Opus ≈ 216k · free runs 7 · head context 468k. Weekly plan usage 38 % at 01:15 → **39 %** at close (owner's ceiling 45 %, Д3).
 
 ### WHAT IT REPAIRED ITSELF AND WHY IT WAS BROKEN
 
-<NOT FILLED>
+- **Launch line of the free runner, three defects, 5 dead launches** — relative arc path in the generated start block; `bootstrap_zahod.py --worktree` creates the worktree AND writes `worktree add` into the machine block (rc=2, empty log, retries cannot recover); two runners 20 s apart. Repaired by absolute paths, dropping untouched worktrees and moving untouched branches (`branch -f`, 0 own commits).
+- **24 identical placeholder descriptions of the card index** written by P1 («… каталанских объектов [...]», the wrong project) — rewritten from each card's own `суть:` line by script (`75a7e11a`).
+- **P3 mislabels** — rows Р6, Р14 relabelled open (`fcaac71d`).
+- **`graf.py`** — gate [c] one-level-up vs the mandate's «upward» (6 false orphans), outputs written to the repo root, fixture runs writing into the tree (`681b9aec`); stray fixture outputs removed (generated, untracked, minutes old).
+- **Heart and watchman** (owner's Д4): for ≈30 min the watchman guarded a foreign arc; raised onto this wave with `podnyat_volnu.py podnyat` (launchd pid 39423). Stop hook still does not block a synthetic payload — debt.
+- **Model registry** two days stale — `modeli.py zhivost` misdetected a sandbox; its loop run by the head, data 2026-09-19T01:32, 12 alive of 25.
+- **Closing law (е)** — mandate STAGES `S5/S7` read as POSITIONS; composition ids renamed P1–P7, SCALE reconciled with a dated note.
 
 ### VERDICTS
 
@@ -722,13 +739,20 @@ host-side и пишет в `.git` законно.
 - **kod_arhitektura-punkta.md** — принято — S4a Sonnet: 268k tokens (ceiling 150k exceeded 1.8x), 25 min, commits 4c30d5b9 c73b6ec9. Head re-run: plany.py --proverit rc=1 with exactly 24 empty star fields of p-01..p-06 and nothing else; --napolnennye none rc=0; 33 items; 7 views; owner's 19.09 shape encoded (p-01 line q off, p-02..04 line q on, p-05..06 ray). Clause 5 was red (6 orphans: analysis-part quarter anchors link god directly) — the gate, not the form, was wrong against the mandate's 'upward'; head repaired graf.py in 681b9aec, orphans 0 of 94. Weakness to carry: obobshchaetsya-v is a linear next-item chain, so the selection gate passes by construction.
 - **kod_rasskaz-god.md** — принято — S4v Sonnet: 225k tokens (ceiling 250k), 15 min, commits 5ea6c337 d9767463. Head re-run: zone in git, 52 547 characters (Python len; bare wc -m counts bytes in this locale), 8 anchors rasskaz-g1..g8, check_termin rc=0, indeks green; head read the opening: question before answer, counting by hand, first person — readable. Clause (e): fresh Haiku reader with only the file named one function F_m(x,y;z,q) as the throughline and four tools investigating one probability object — passes. Five causes of dullness diagnosed and removed by cutting scaffolding (verification footnotes, margin tags, YAML, draft footers, length).
 - **kod_napolnenie-chetverti.md** — принято — S4b Opus: 216k tokens (ceiling 200k, exceeded 8 %) + fresh Sonnet reader 102k; 6 commits, lecture-1 item committed first (ee55bbac). Head re-run: plan/src zone in git, plany.py --proverit rc=0 (quarter-1 star gate green), lekciya-1.md 17 571 characters, 0 forbidden words, [c] orphans 0 of 94. Head read the storyboard: the four-beat pattern run twice (meeting probability -> sum of squares -> cut and gap proofs -> (1+z)^n(1+z)^n; drunkard's spread -> committee -> derivative at 1), door to the quarter by area. Reader: 7 of 7 strong, all mathematics re-checked. The 1:2:3 problem excluded by the selection gate, with the reason. Open: level summaries written but not rendered (generator defect) -> repair position.
+- **kod_otrisovka-vidov.md** — принято — S4g Haiku: 119k tokens (ceiling 80k exceeded 1.5x), 5 min, commit 92f51408. Head re-run: plany.py rc=0 and --proverit rc=0; god.md and chetvert-1.md open with their bold generalisation sentence and summary; headings read 'p-NN · name'; [c] orphans 0 of 94; indeks green. The 21 'not written' lines in chast-1-do-analiza.md are the lawfully empty theorems of quarters 2-4 — the head's criterion 2 was worded wider than meant. The executor returned its report in chat and left the kod file's ОТЧЁТ empty — recorded, not blocking.
 ### WHAT WAS EXCLUDED AND WHY
 
-<NOT FILLED>
+- **Hand-written plans for stages 5, 6, 7** — replaced by owner's Д2 (amends F4): the plans are GENERATED views of one items file. Delivered as views `plan/src/chast-1-do-analiza.md`, `chetvert-1.md`, `lekciya-1.md`.
+- **⭐ fields of quarters 2–4** — by Д2 («harmful now, the form is not tried yet»); items exist with coordinates only.
+- **The 1:2:3 problem (1001, 2002, 3003)** — excluded by P5 through the mandate's own selection gate: a recurrence inside the triangle, not seeable at the level of the generating function.
+- **New cards from reports** — P3 read 8 of 8 reports and created 0; not re-opened by the head for lack of budget reason to doubt it beyond the two mislabels found.
 
 ### IRREVERSIBLE ACTIONS
 
-<NOT FILLED>
+- Branches `zahod/graf-korpusa`, `zahod/konsolidaciya-korpusa` moved with `git branch -f` to the main line while they had 0 own commits (verified `rev-list --count` = 0) — nothing lost, recoverable from reflog.
+- Worktrees `graf-korpusa` (twice, last with `--force` over 2 generated fixture files) and `konsolidaciya-korpusa` (twice) dropped — all their work merged first.
+- Deleted by the head: 2 generated untracked files `kurs-puti-i-volny/SBORKA/{ZAMER-grafa.md,graf-rebra.tsv}` (1 minute old, output of the head's own check run, regenerated later) and the stray root folder `SBORKA/` (fixture outputs). Nothing tracked was deleted.
+- `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md` body replaced by a pointer by P3 (duplicate pair 0.989 of `obrazec/src/obrazec.md`) — recoverable from git history.
 
 ### QUESTIONS TO THE OWNER — ANSWER IN PLACE, UNDER EACH
 
@@ -753,6 +777,13 @@ host-side и пишет в `.git` законно.
   USABLE ANSWER: «да» — the head adds a YAML header with `opisanie:` to the text `написать_индекс` emits and removes INDEKS.md from the DOLG file (one commit, reversible); or «нет» — clause (a) stays red and moves as a named debt.
 
 
+- **[V2] The year story now has two homes: `kurs-puti-i-volny/RASSKAZ-god.md` (the readable rewrite, 52 547 characters) and `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/` (the eight source chapters, 140 KB). What becomes of LEKCIYA-v2?**
+  BLOCKED: failure clause (b) — `dubli.py --porog 0.45` prints 20 pairs; 7 of the 13 new ones are `RASSKAZ-god.md` ↔ a LEKCIYA-v2 chapter (0.45–0.56). The mandate itself ordered the rewrite into a new file, so the second home is by construction; retiring the source is not the head's decision (the five figures live there).
+  USABLE ANSWER: «LEKCIYA-v2 → архив с указателем на RASSKAZ-god» (figures stay in place) · or «оставить оба, RASSKAZ-god — сжатие с адресом» (then the 7 pairs are a lawful repeat).
+- **[V3] Should owner's Д2 (the item is an atom; plans are generated views) be written into `kurs-puti-i-volny/ZAMYSEL.md` as a decision with an `id:`?**
+  BLOCKED: nothing technical — Д2 is already built (`plan/src/punkty.md`, `tools/plany.py`); but `ZAMYSEL.md` is in «Closed on 18.09, do not reopen», so the head did not write the decision there.
+  USABLE ANSWER: «да, id: punkt-atom» or «нет, достаточно предисловия punkty.md».
+
 ### CLOSING PHASE — KNOWLEDGE BALANCE
 
 > The four numbers below are the point of this section. `DELTA` is not
@@ -760,22 +791,32 @@ host-side и пишет в `.git` законно.
 > refuses a mismatch. `CARRIED` above zero REQUIRES the unjudged lessons
 > to be listed BY NAME underneath — carried is lawful, silent is not.
 
-**BORN:** `<NOT FILLED>`
-**CLOSED:** `<NOT FILLED>`
-**CARRIED:** `<NOT FILLED>`
-**DELTA:** `<NOT FILLED>`
+**BORN:** `25`
+**CLOSED:** `22`
+**CARRIED:** `3`
+**DELTA:** `3`
 
 _Carried by name (one line each, or the single word `none`):_
-<NOT FILLED>
+- L23 — two parallel `opencode run` share one local database («database is locked»); home `_generator/tools/orkestr.py`
+- L24 — the mandate's STAGES `S<n>` are read as POSITIONS by the closing law; ids with a letter suffix are invisible; home `bootstrap_mandate.py` / `check_zakon_zakrytiya.py`
+- L25 — `dubli.py` counts generated views as duplicates of their source; home `kurs-puti-i-volny/tools/dubli.py`
+
+Harvest, verdicts and follow-up passes N1–N8: `UROKI-volny-noch-puti-i-volny.md` in this arc. Law amendments in DOPOLNENIYA: **2** (Д2 promoted into the course's form — `punkty.md` + `plany.py`, decision record pending V3; Д3 dropped as a law amendment with the reason «a one-night budget permission, recorded in the journal, not a standing rule»).
 
 ### LINE-BY-LINE ANSWER TO EVERY FINALIZED ITEM
 
-<NOT FILLED>
+**Failure clauses of the top half, each by its command (2026-09-19):**
+- (a) ❌ `indeks.py` → `без описания: 1` — the one file is `INDEKS.md` itself (generator output); owner question V1.
+- (b) ❌ `dubli.py --porog 0.45` → 20 pairs against the baseline 7 (one baseline pair removed by P3): 13 new = 6 generated views ↔ their source (lesson L25) + 7 `RASSKAZ-god.md` ↔ LEKCIYA-v2 chapters (owner question V2).
+- (c) ✅ `graf.py` → `[c] Plan anchors: 94 · orphans: 0`; `indeks.py` resolves every id.
+- (d) ✅ weekly plan usage 39 % against the owner's ceiling 45 % (Д3); 5-hour window 15 %; head context 47 %.
+- (e) ✅ fresh Haiku reader of `RASSKAZ-god.md` alone named one function and four tools investigating one probability object.
+- (f) ✅ `kurs-puti-i-volny/plan/src/lekciya-1.md` 18 041 bytes, a 90-minute storyboard in 9 beats.
 
 > One line per finalized item, and every item of the top half must get one: `done` or `not done` with the reason. This field is the point of the whole artifact.
-- [F1] <NOT FILLED>
-- [F2] <NOT FILLED>
-- [F3] <NOT FILLED>
-- [F4] <NOT FILLED>
-- [F5] <NOT FILLED>
-- [F6] <NOT FILLED>
+- [F1] done — no second card index; P3 created 0 cards, P1's card headers fixed in place in `catalan/kartoteka/`.
+- [F2] done — `INDEKS.md` regenerated by `tools/indeks.py` only; never hand-edited (P1's hand header erased by the generator, and V1 asks how to describe the generator's own output).
+- [F3] done — no IWE, no normaliser installed; all anchors `<!--id:-->` intact (94 plan anchors resolve).
+- [F4] done, AMENDED by owner's Д2 — the linkage is machine-checked: views carry `god-p/chast-p/chetvert-p/lekciya-p` anchors with `[[…]]` upward, `graf.py [c]` → orphans 0, `plany.py --proverit` rc=0.
+- [F5] done — P1 wrote `SBORKA/SLEDUYUSHCHIY-ZAHOD.md`; P2 `## For the writing stages` in `ZAMER-grafa.md`; P3 `## Для S4а и писателей`; P4 `## Для наполнителя (S4б)` in `punkty.md`.
+- [F6] done — mechanics on free models (7 runs) and Haiku (4 positions), paid Sonnet/Opus only for form design, filling and the story; weekly usage 38 % → 39 %. Ceilings of BYUDZHET-ROLI exceeded by P4 (1.8×), P5 (1.08×), P7 (1.5×) — lesson L22.

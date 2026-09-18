@@ -1,0 +1,8 @@
+P1|pasporta-korpusa|haiku|kurs-puti-i-volny obzory/funkciya-putey-i-ee-uravneniya _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md|pryamoj
+P2|graf-korpusa|haiku|kurs-puti-i-volny/tools/graf.py kurs-puti-i-volny/SBORKA/ZAMER-grafa.md kurs-puti-i-volny/SBORKA/graf-rebra.tsv _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md|pryamoj
+P3|konsolidaciya-korpusa|haiku|kurs-puti-i-volny catalan/kartoteka _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md|pryamoj
+P4|arhitektura-punkta|sonnet|kurs-puti-i-volny/plan/src kurs-puti-i-volny/tools/plany.py _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_arhitektura-punkta.md|pryamoj
+P5|napolnenie-chetverti|opus|kurs-puti-i-volny/plan/src _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_napolnenie-chetverti.md|pryamoj
+P6|rasskaz-god|sonnet|kurs-puti-i-volny/RASSKAZ-god.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_rasskaz-god.md|pryamoj
+P7|otrisovka-vidov|haiku|kurs-puti-i-volny/tools/plany.py kurs-puti-i-volny/plan/src _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_otrisovka-vidov.md|pryamoj
+ZK1|zakon-zakrytiya-noch-puti-i-volny|opus|_studio/zhurnal/2026-08-24_obzor-funkciya-putey/mandate_noch-puti-i-volny.md|pryamoj
