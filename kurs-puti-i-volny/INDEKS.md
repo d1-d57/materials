@@ -23,6 +23,7 @@
 | `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md` | образец от задачи к формуле: суммы квадратов | zhivoy |  |
 | `kurs-puti-i-volny/PAZL.md` | сетка «специализация × взгляд»: что знаем, где дыры, в каком порядке копать | zhivoy |  |
 | `kurs-puti-i-volny/PERESTROYKA.md` | реестр решений о содержании и перестановках | zhivoy |  |
+| `kurs-puti-i-volny/RASSKAZ-god.md` | годовая история курса «Пути и волны» одним читаемым файлом — восемь глав об одной функции путей, от письма Рамануджана до площади под маршрутом | zhivoy | 8 |
 | `kurs-puti-i-volny/RAZVEDKA-metody-i-obrazcy.md` | обзор методов и образцов композиции | zhivoy |  |
 | `kurs-puti-i-volny/README.md` | вход в курс: цель, состояние, долги | zhivoy |  |
 | `kurs-puti-i-volny/REESTR-reserchey.md` | реестр исследовательских ходов и вердиктов | zhivoy |  |
@@ -142,7 +143,7 @@
 | `kart-tri-normirovki-ploshchadi` | находка | площадь считается тремя несовместимыми способами в четырёх наших файлах | `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` |
 | `kart-tri-prochteniya-plus-predel` | мостик | прочтений резольвенты ТРИ, а предел — не четвёртое, а режим, в котором три расходятся | `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` |
 
-## Узлы графа — якоря в документах (199)
+## Узлы графа — якоря в документах (207)
 
 Ссылаться на часть документа, а не на документ целиком.
 
@@ -338,6 +339,14 @@
 | `q-izobrazheniya` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `q-katalan` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `q-kontinuanty` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
+| `rasskaz-g1` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g2` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g3` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g4` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g5` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g6` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g7` | `kurs-puti-i-volny/RASSKAZ-god.md` |
+| `rasskaz-g8` | `kurs-puti-i-volny/RASSKAZ-god.md` |
 | `rodzhers-ramanudzhan` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `sdvig-gaussova` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
 | `spektr` | `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` |
