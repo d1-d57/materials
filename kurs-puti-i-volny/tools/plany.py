@@ -107,7 +107,7 @@ import kalendar_goda  # noqa: E402  (path set up above on purpose)
 ITEM_FIELDS = [
     "id", "imya", "vopros", "teorema", "zadacha", "doska", "ves",
     "chetvert", "polovina", "chast", "opiraetsya", "obobshchaetsya-v",
-    "adres", "iz-karkasa", "raskadrovka",
+    "adres", "iz-karkasa", "raskadrovka", "obobshchenie", "svod",
 ]
 STAR_FIELDS = ["imya", "vopros", "teorema", "zadacha"]
 LEVELS = ["god", "polugodie-1", "polugodie-2", "chast-do-analiza",
@@ -286,7 +286,11 @@ def _yaml_header(opisanie):
 def _level_open(levels, name, fallback_title):
     lvl = levels.get(name, {"obobshchenie": "", "svod": ""})
     lines = [f"# {fallback_title}", ""]
-    lines.append(f"**Обобщение:** {lvl['obobshchenie'] or '_(ещё не написано)_'}")
+    obobshchenie = lvl['obobshchenie'].strip()
+    if obobshchenie:
+        lines.append(f"**{obobshchenie}**")
+    else:
+        lines.append("_ещё не написано_")
     lines.append("")
     if lvl["svod"]:
         lines.append(lvl["svod"])
@@ -321,9 +325,10 @@ def view_chast_do_analiza(items, order, levels):
     for iid in order:
         if items[iid]["chast"].strip() != "do-analiza":
             continue
+        imya = _star_or_blank(items, iid, "imya") or "_(без названия)_"
         teorema = _star_or_blank(items, iid, "teorema")
         lines.append(f"<!--id: chast-{iid}-->")
-        lines.append(f"### {iid}")
+        lines.append(f"### {iid} · {imya}")
         lines.append(f"teorema: {teorema}" if teorema else "teorema: _(ещё не написано)_")
         lines.append(f"[[god-{iid}]]")
         lines.append("")
@@ -340,8 +345,9 @@ def view_chetvert(items, order, levels, n):
     for iid in order:
         if items[iid]["chetvert"].strip() != str(n):
             continue
+        imya = _star_or_blank(items, iid, "imya") or "_(без названия)_"
         lines.append(f"<!--id: chetvert-{iid}-->")
-        lines.append(f"### {iid}")
+        lines.append(f"### {iid} · {imya}")
         for f in STAR_FIELDS:
             v = _star_or_blank(items, iid, f)
             lines.append(f"{f}: {v}" if v else f"{f}:")
@@ -363,10 +369,15 @@ def view_chetvert(items, order, levels, n):
 
 def view_lekciya_1(items, order, levels):
     iid = "p-01"
-    lines = [GENERATED_BANNER, "", f"# Лекция 1 — {iid}", ""]
+    imya = _star_or_blank(items, iid, "imya") or "_(без названия)_"
+    lines = [GENERATED_BANNER, "", f"# Лекция 1 — {iid} · {imya}", ""]
+    vopros = _star_or_blank(items, iid, "vopros")
+    if vopros:
+        lines.append(f"**{vopros}**")
+        lines.append("")
     raskadrovka = items[iid]["raskadrovka"].strip()
     lines.append(f"<!--id: lekciya-{iid}-->")
-    lines.append(f"### {iid}")
+    lines.append(f"### {iid} · {imya}")
     if raskadrovka:
         for beat in raskadrovka.split("\n"):
             lines.append(f"- {beat}")
