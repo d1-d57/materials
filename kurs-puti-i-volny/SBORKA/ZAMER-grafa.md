@@ -13,13 +13,12 @@ Cascade from kart-polyusa-spektr: size=10 nodes: ['catalan/kartoteka/kart-centra
 Cascade from kart-izobrazheniya-otrazhenie: size=10 nodes: ['catalan/kartoteka/kart-centralnaya-para.md', 'catalan/kartoteka/kart-jtp-mesto.md', 'catalan/kartoteka/kart-porog-ngr.md', 'catalan/kartoteka/kart-q-otrazheniya-maj-ne-ploshchad.md', 'izobrazheniya', 'kart-izobrazheniya-otrazhenie', 'kurs-puti-i-volny/HREBET-kursa.md', 'kurs-puti-i-volny/OBEKT.md', 'kurs-puti-i-volny/PAZL.md', 'obzory/funkciya-putey-i-ee-uravneniya/SKELET.md']
 Cascade from kart-q-otrazheniya-maj-ne-ploshchad: size=9 nodes: ['catalan/kartoteka/kart-dom-teorem-vienno.md', 'catalan/kartoteka/kart-dva-q-katalana.md', 'catalan/kartoteka/kart-eyler-vypadaet.md', 'catalan/kartoteka/kart-izobrazheniya-otrazhenie.md', 'catalan/kartoteka/kart-jtp-mesto.md', 'catalan/kartoteka/kart-rr-dve-storony.md', 'kart-q-otrazheniya-maj-ne-ploshchad', 'kurs-puti-i-volny/PAZL.md', 'obzory/funkciya-putey-i-ee-uravneniya/RAZVEDKA-2026-09-03.md']
 Cascade from kart-chebyshev-smysl: size=9 nodes: ['catalan/kartoteka/kart-centralnaya-para.md', 'catalan/kartoteka/kart-dom-teorem-vienno.md', 'catalan/kartoteka/kart-polyusa-spektr.md', 'chebyshev', 'kart-chebyshev-smysl', 'kurs-puti-i-volny/HREBET-kursa.md', 'kurs-puti-i-volny/OBEKT.md', 'kurs-puti-i-volny/PAZL.md', 'obzory/funkciya-putey-i-ee-uravneniya/SKELET.md']
-[3] Depth (to be completed with component/cycle analysis)
-[4] Reachability from entry: reachable=1, unreachable files=0: []...
-[5] Whole corpus: nodes=176, edges links=116, contains=0
+[3] Depth: longest path length=2, chain=kurs-puti-i-volny/PAZL.md → kart-dom-teorem-vienno
+[4] Reachability from entry: 1/81 files reachable; unreachable: catalan/kartoteka/KARTA-OBLASTI.md, catalan/kartoteka/kart-al-salam-ismail-dom.md, catalan/kartoteka/kart-centralnaya-para.md, catalan/kartoteka/kart-chebyshev-smysl.md, catalan/kartoteka/kart-dom-teorem-vienno.md, catalan/kartoteka/kart-dva-q-katalana.md, catalan/kartoteka/kart-eyler-vypadaet.md, catalan/kartoteka/kart-izobrazheniya-otrazhenie.md, catalan/kartoteka/kart-jtp-mesto.md, catalan/kartoteka/kart-normirovka-starta.md, ... (70 more)
+[5] Whole corpus: nodes=176, edges: links=116, contains=71
 [6] Exported to /Users/ivanyakovlev/Documents/GitHub/materials-wt/graf-korpusa/kurs-puti-i-volny/SBORKA/graf-rebra.tsv
 [c] Plan anchors: 0 · orphans: 0
 
 ## For the writing stages
-Top in-degree hubs: [('kart-q-kontinuanty', 14), ('kart-polyusa-spektr', 13), ('kart-izobrazheniya-otrazhenie', 12), ('kart-q-otrazheniya-maj-ne-ploshchad', 12), ('kart-chebyshev-smysl', 11)]
-Depth and unreachable list: see sections [3]-[4] above.
-No cycles found in current corpus (no plan anchors yet).
+Top in-degree hub: kart-q-kontinuanty (degree=14)
+See sections [3]-[4] for depth and unreachable files.

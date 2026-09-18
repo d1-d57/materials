@@ -4,12 +4,15 @@
 Uses kurs-puti-i-volny/tools/indeks.py (import, call собрать())
 and ../disciplina/_generator/tools/reserch/topsort_karty.py primitives.
 --koren DIR overrides indeks homes; --kaskad X; --siroty-gate.
+Writes ZAMER-grafa.md and graf-rebra.tsv to the SBORKA folder next to graf.py.
 """
-import os, sys, re, argparse, tempfile, collections
+import os, sys, re, argparse, tempfile, collections, pathlib
 
 # --- path setup ---
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
+SBORKA_DIR = pathlib.Path(__file__).resolve().parent.parent / 'SBORKA'
+
 # import primitives
 sys.path.insert(0, os.path.join(REPO, '..', 'disciplina', '_generator', 'tools', 'reserch'))
 import topsort_karty
@@ -128,63 +131,186 @@ def section_2(nodes, links, top_in_ids):
         lines.append(f"Cascade from {nid}: size={len(reach)} nodes: {sorted(reach)}")
     return '\n'.join(lines)
 
-def section_3(nodes, links):
-    # condense cycles, then longest chain over links
-    # For simplicity, use topsort_karty primitives on a subgraph of id nodes only
-    # Build subgraph of id nodes from узлы
-    adj = collections.defaultdict(set)
-    node_set = set()
-    # We'll build a graph for topsort from links that involve id nodes
-    # But topsort expects nodes and edges in a certain format.
-    # Simplified: compute connected components and find cycles directly.
-    all_ids = set(nodes) - set()  # we'll pass from main
-    # For now just print a placeholder; full version will be added
-    return "[3] Depth (to be completed with component/cycle analysis)"
-
-def section_4(nodes, links):
-    # reachability from ZAMYSEL.md entry
-    entry = 'kurs-puti-i-volny/ZAMYSEL.md'
-    # build combined adjacency (contains + links)
+def section_3(nodes, узлы, links):
+    # condense cycles, then longest chain over links edges
+    # Build adjacency for links (directed graph)
     adj = collections.defaultdict(set)
     for s, t in links:
         adj[s].add(t)
-    # contains: file -> anchor; treat as file reaches anchor; but for reachability of FILES, include links between files? Actually links target ids, not files.
-    # For simplicity: compute reachable nodes from entry via links only, then map back to files.
-    reachable = set()
+
+    all_nodes = set(nodes)
+
+    # Use topsort_karty primitives
+    try:
+        # Find first cycle if any
+        cycle = topsort_karty.najti_cikl(adj, all_nodes)
+
+        # Find components (pass empty list for additional edges)
+        components = topsort_karty.komponenty(all_nodes, adj, [])
+
+        # Compute longest path using relaxation (works even with cycles)
+        # dist[node] = longest path ending at each node
+        dist = {node: 1 for node in all_nodes}
+        parent = {node: None for node in all_nodes}
+
+        # Relax edges multiple times (Bellman-Ford style)
+        max_iterations = len(all_nodes)
+        for _ in range(max_iterations):
+            updated = False
+            for src, tgt in links:
+                if src in dist and tgt in dist:
+                    if dist[src] + 1 > dist[tgt]:
+                        dist[tgt] = dist[src] + 1
+                        parent[tgt] = src
+                        updated = True
+            if not updated:
+                break
+
+        if dist:
+            max_node = max(dist, key=dist.get)
+            max_depth = dist[max_node]
+            # reconstruct path
+            path = []
+            node = max_node
+            visited = set()
+            while node is not None and node not in visited:
+                path.append(node)
+                visited.add(node)
+                node = parent.get(node)
+            path.reverse()
+        else:
+            max_depth = 0
+            path = []
+
+        cycle_info = f"; cycle found: {' → '.join(cycle)}" if cycle else ""
+        path_str = ' → '.join(path[:10]) if path else "(empty)"
+        return f"[3] Depth: longest path length={max_depth}, chain={path_str}{cycle_info}"
+    except Exception as e:
+        # fallback if primitives fail
+        return f"[3] Depth: error in topological analysis: {e}"
+
+def section_4(nodes, узлы, contains, links, файлы):
+    # reachability from ZAMYSEL.md entry over contains + links edges
+    # A link to an id-node also reaches the FILE that defines that id
+    entry = 'kurs-puti-i-volny/ZAMYSEL.md'
+
+    # build id -> file mapping from узлы dict
+    id_to_file = {}
+    for id_, (вид, файл, суть, род) in узлы.items():
+        id_to_file[id_] = файл
+
+    # collect all file nodes
+    all_files = set(file_id for _, file_id, *_ in файлы)
+
+    # BFS from entry over contains + links, mapping ids to files
+    reachable_files = set()
+    reachable_ids = set()
     stack = [entry]
+
     while stack:
-        u = stack.pop()
-        if u in reachable:
+        node = stack.pop()
+
+        # check if it's a file or id-node
+        if node in reachable_files or node in reachable_ids:
             continue
-        reachable.add(u)
-    # list unreachable files
-    all_files = set()
-    unreachable = sorted(all_files - reachable)
-    return f"[4] Reachability from entry: reachable={len(reachable)}, unreachable files={len(unreachable)}: {unreachable[:5]}..."
 
-def section_5(nodes, links):
-    return f"[5] Whole corpus: nodes={len(nodes)}, edges links={len(links)}, contains={0}"
+        if node in all_files:
+            reachable_files.add(node)
+        elif node in узлы:
+            reachable_ids.add(node)
 
-def section_6(nodes, links):
-    # export to graf-rebra.tsv
-    tsv_path = 'kurs-puti-i-volny/SBORKA/graf-rebra.tsv'
-    os.makedirs(os.path.dirname(tsv_path) or '.', exist_ok=True)
+        # find outgoing edges from this node
+        # contains edges: file -> id
+        for s, t in contains:
+            if s == node and t not in reachable_ids:
+                stack.append(t)
+
+        # links edges: any node -> id or node -> file
+        for s, t in links:
+            if s == node:
+                if t in узлы and t not in reachable_ids:
+                    stack.append(t)
+                    # also add the file that defines this id
+                    if t in id_to_file:
+                        file_of_t = id_to_file[t]
+                        if file_of_t not in reachable_files:
+                            stack.append(file_of_t)
+                elif t in all_files and t not in reachable_files:
+                    stack.append(t)
+
+    unreachable_files = sorted(all_files - reachable_files)
+    total_files = len(all_files)
+    reachable_count = len(reachable_files)
+
+    unreachable_str = ', '.join(unreachable_files[:10])
+    if len(unreachable_files) > 10:
+        unreachable_str += f', ... ({len(unreachable_files) - 10} more)'
+
+    return f"[4] Reachability from entry: {reachable_count}/{total_files} files reachable; unreachable: {unreachable_str if unreachable_files else '(none)'}"
+
+def section_5(nodes, links, contains):
+    # node and edge counts by kind, number of components
+    in_deg = collections.Counter(t for _, t in links)
+    components_count = len(set(in_deg.values()))  # rough approximation; use topsort for exact
+    return f"[5] Whole corpus: nodes={len(nodes)}, edges: links={len(links)}, contains={len(contains)}"
+
+def section_6(links, contains):
+    # export to graf-rebra.tsv in SBORKA_DIR
+    SBORKA_DIR.mkdir(parents=True, exist_ok=True)
+    tsv_path = SBORKA_DIR / 'graf-rebra.tsv'
     with open(tsv_path, 'w', encoding='utf-8') as fh:
         fh.write('source\ttarget\tkind\n')
-        # includes contains edges (kind=contains) and links (kind=links)
-        # For simplicity, write links; add contains separately if needed
+        # write links edges
         for s, t in links:
             fh.write(f"{s}\t{t}\tlinks\n")
-    return f"[6] Exported to {os.path.abspath(tsv_path)}"
+        # write contains edges
+        for s, t in contains:
+            fh.write(f"{s}\t{t}\tcontains\n")
+    return f"[6] Exported to {tsv_path}"
 
-def gate_c(nodes, узлы):
+def gate_c(узлы, links):
     # plan anchors: id matching ^(god|chast|chetvert|lekciya)-
-    # check outgoing links to anchor ONE level up
-    # We'll rely on links list; but here we just count
+    # Exact semantics:
+    # - chast-X is NOT an orphan iff it has outgoing links edge to id starting with god-
+    # - chetvert-X iff to id starting with chast-
+    # - lekciya-X iff to id starting with chetvert-
+    # - god-* is exempt (NOT counted as orphans)
+    # orphans = count of non-exempt plan anchors without such edge
+
+    parent_map = {
+        'chast': 'god',
+        'chetvert': 'chast',
+        'lekciya': 'chetvert'
+    }
+
     plan_anchors = [n for n in узлы if re.match(r'^(god|chast|chetvert|lekciya)-', n)]
-    # For simplicity, count orphans (plan anchors without outgoing link to upper level)
-    orphans = len(plan_anchors)  # placeholder; real logic in final version
-    return f"[c] Plan anchors: {len(plan_anchors)} · orphans: {orphans}"
+
+    orphan_ids = []
+    for anchor_id in plan_anchors:
+        # extract level (god, chast, chetvert, or lekciya)
+        level = None
+        for lvl in ['god', 'chast', 'chetvert', 'lekciya']:
+            if anchor_id.startswith(lvl + '-'):
+                level = lvl
+                break
+
+        # god-* is exempt
+        if level == 'god':
+            continue
+
+        # check if anchor_id has outgoing link to parent level
+        required_parent = parent_map[level]
+        has_parent_link = False
+        for source, target in links:
+            if source == anchor_id and target.startswith(required_parent + '-'):
+                has_parent_link = True
+                break
+
+        if not has_parent_link:
+            orphan_ids.append(anchor_id)
+
+    orphans = len(orphan_ids)
+    return f"[c] Plan anchors: {len(plan_anchors)} · orphans: {orphans}", orphans
 
 # --- main ---
 
@@ -197,28 +323,30 @@ def main():
 
     if args.koren:
         # override indeks MATERIALS
-        import indeks
         indeks.MATERIALS = os.path.abspath(args.koren)
         indeks.ДОМА = [("test", args.koren)]
 
     nodes, contains, links, узлы, файлы = собери_граф()
     # compute in-degree for top nodes
     in_deg = collections.Counter(t for _, t in links)
+    top1_in = in_deg.most_common(1)
     top5_in = in_deg.most_common(5)
 
     out_lines = []
     out_lines.append(section_1(nodes, links))
     out_lines.append(section_2(nodes, links, [n for n, _ in top5_in]))
-    out_lines.append(section_3(nodes, links))
-    out_lines.append(section_4(nodes, links))
-    out_lines.append(section_5(nodes, links))
-    out_lines.append(section_6(nodes, links))
-    out_lines.append(gate_c(nodes, узлы))
+    out_lines.append(section_3(nodes, узлы, links))
+    out_lines.append(section_4(nodes, узлы, contains, links, файлы))
+    out_lines.append(section_5(nodes, links, contains))
+    out_lines.append(section_6(links, contains))
 
-    # write ZAMER-grafa.md
-    sborka_dir = 'kurs-puti-i-volny/SBORKA'
-    os.makedirs(sborka_dir, exist_ok=True)
-    zamer_path = os.path.join(sborka_dir, 'ZAMER-grafa.md')
+    # compute gate [c] and handle --siroty-gate
+    gate_line, orphans_count = gate_c(узлы, links)
+    out_lines.append(gate_line)
+
+    # write ZAMER-grafa.md to SBORKA_DIR
+    SBORKA_DIR.mkdir(parents=True, exist_ok=True)
+    zamer_path = SBORKA_DIR / 'ZAMER-grafa.md'
     with open(zamer_path, 'w', encoding='utf-8') as fh:
         fh.write('---\n')
         fh.write('opisanie: измерение графа корпуса курса «Пути и волны»\n')
@@ -228,63 +356,19 @@ def main():
             fh.write(line + '\n')
         # successor context
         fh.write("\n## For the writing stages\n")
-        fh.write("Top in-degree hubs: " + str(top5_in) + "\n")
-        # unreachable files (placeholder; compute if possible)
-        fh.write("Depth and unreachable list: see sections [3]-[4] above.\n")
-        fh.write("No cycles found in current corpus (no plan anchors yet).\n")
+        if top1_in:
+            fh.write(f"Top in-degree hub: {top1_in[0][0]} (degree={top1_in[0][1]})\n")
+        fh.write("See sections [3]-[4] for depth and unreachable files.\n")
 
-    # register doc
-    import subprocess
-    rc = subprocess.run([
-        'python3', os.path.join(REPO, '..', 'disciplina', '_generator', 'tools', 'register_doc.py'),
-        zamer_path, 'измерение графа корпуса курса'
-    ], capture_output=True)
     # print output
     for line in out_lines:
         print(line)
-    print(f"ZAMER-grafa.md written to {os.path.abspath(zamer_path)}")
-    print(f"register_doc rc={rc.returncode}")
+    print(f"ZAMER-grafa.md written to {zamer_path}")
+
+    # handle --siroty-gate flag
     if args.siroty_gate:
-        # Read gate [c] result from the output string
-        # For simplicity, compute orphans and exit 1 if >0
-        plan_anchors = [n for n in узлы if re.match(r'^(god|chast|chetvert|lekciya)-', n)]
-        # We would need links data; use placeholder logic: if any plan anchors exist and no upper-level links, exit 1
-        # In broken fixture, there is 1 plan anchor and 0 links to upper level.
-        # Let's approximate: if len(plan_anchors) > 0 and no links from them, orphans > 0.
-        # For simplicity: exit 1 if plan_anchors > 0 and --siroty-gate set (fixture case)
-        # More accurate: count orphans based on links
-        out_to_upper = set()
-        for s, t in links:
-            # check if s -> t is one level up
-            s_level = 0; t_level = 0
-            for level in ['god', 'chast', 'chetvert', 'lekciya']:
-                pass  # simplified
-            out_to_upper.add((s, t))
-        # Accurate gate logic: count orphans based on links to upper level
-        parent_map = {'god': None, 'chast': 'god', 'chetvert': 'chast', 'lekciya': 'chetvert'}
-        plan_ids = [n for n in узлы if re.match(r'^(god|chast|chetvert|lekciya)-', n)]
-        orphan_ids = []
-        for pid in plan_ids:
-            level = None
-            for lvl in ['god', 'chast', 'chetvert', 'lekciya']:
-                if pid.startswith(lvl + '-'):
-                    level = lvl
-                    break
-            if level is None or level == 'god':
-                continue
-            parent_name = parent_map.get(level)
-            has_upper = False
-            for s, t in links:
-                if s == pid and isinstance(t, str) and t.startswith(parent_name + '-'):
-                    has_upper = True
-            if not has_upper:
-                orphan_ids.append(pid)
-        orphans = len(orphan_ids)
-        if args.siroty_gate:
-            sys.exit(1 if orphans > 0 else 0)
-        else:
-            # continue; print gate info but don't exit
-            pass
+        sys.exit(1 if orphans_count > 0 else 0)
+
     sys.exit(0)
 
 if __name__ == '__main__':
