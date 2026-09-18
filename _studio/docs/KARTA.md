@@ -929,6 +929,8 @@
 
 
 
+**`kurs-puti-i-volny/SBORKA/SLEDUYUSHCHIY-ZAHOD.md`** (Program and context for next executor: Q1 calendar, lecture plan, files to read, insights from corpus organization)
+
 ## §7. Модель памяти
 Две памяти: **долгая** (дома `docs/`) vs **локальная** (папка арки `zhurnal/<арка>/`). Долгую читаем раз на входе в арку, дальше на дистиллятах. Один дом на сущность; durable из арки → по домам при закрытии. «Осталось только в дневнике — не существует.» Механика — `kak-delat/ARKA.md`.
 

@@ -294,6 +294,42 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+**PART A: Headers for 78 files**
+1. Read `kurs-puti-i-volny/tools/DOLG-bez-opisaniya.txt` to get list of files
+2. For each file:
+   - Read first 40 lines + grep headings to understand content
+   - Look up status from `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md` sections A/B/C
+   - If not in registry, check for status banners in file (ЗАБРАКОВАН, АРХИВ, ЭТО МИШЕНЬ, frozen)
+   - Write YAML header with `opisanie:` (one phrase answering "when to read this"), `sloj:` (0-5), `status:` (zhivoy|istoricheskiy|zabrakovan|arhiv)
+   - Preserve existing fields (`tab:`, `poryadok:`, `registr:`, `data:`, `adresat:`)
+3. Commit after every ~20 files (4+ commits for A total)
+4. Verify: `cd kurs-puti-i-volny && python3 tools/indeks.py` shows `без описания: 0`
+
+**PART B: Links to cartoteka cards**
+1. Read index `catalan/kartoteka/KARTA-OBLAST.md` to list 24 cards
+2. For each card, grep corpus for matching topics
+3. Add `[[kart-id]]` reference next to relevant passages
+4. Only link where topic matches exactly; doubtful cases → ВОПРОСЫ
+5. One commit for B
+6. Verify: indeks.py shows `ссылок:` ≥12, no "❌ ссылка на несуществующий id"
+
+**PART C: Context for next executor**
+1. Create `kurs-puti-i-volny/SBORKA/SLEDUYUSHCHIY-ZAHOD.md`
+2. Include: lecture count from `proverki/kalendar_goda.py`, topics from `plan/src/karkas.md`, files to read, insights from this work
+3. Copy course shape from wave mandate with specific addresses
+4. Register file: `python3 ../disciplina/_generator/tools/register_doc.py`
+5. One commit for C
+
+**READING STRATEGY (budget-conscious)**:
+- Files 50–120 KB: read first 40 lines + `grep -n '^#' <file>` only
+- Open more only if purpose unclear
+- Statuses from `REESTR-tekstov.md` first, then from file banners
+
+**COMMIT RHYTHM** (item 5 of ПРАВКА 1):
+- After each ~20 files of part A: `GIT_ZONA_REPO="$PWD" python3 ../disciplina/_generator/tools/git_zona.py commit --zone kurs-puti-i-volny --zone obzory/funkciya-putey-i-ee-uravneniya --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md -m "<what>" --push`
+- After register_doc.py calls, add `--zone _studio/docs/KARTA.md` to commit
+- One commit each for parts B and C
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
