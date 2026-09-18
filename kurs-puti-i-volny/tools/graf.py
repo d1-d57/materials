@@ -245,9 +245,47 @@ def main():
     print(f"ZAMER-grafa.md written to {os.path.abspath(zamer_path)}")
     print(f"register_doc rc={rc.returncode}")
     if args.siroty_gate:
-        # gate should exit 1 if orphans > 0
-        # for fixture it will be >0; for live corpus 0
-        pass
+        # Read gate [c] result from the output string
+        # For simplicity, compute orphans and exit 1 if >0
+        plan_anchors = [n for n in узлы if re.match(r'^(god|chast|chetvert|lekciya)-', n)]
+        # We would need links data; use placeholder logic: if any plan anchors exist and no upper-level links, exit 1
+        # In broken fixture, there is 1 plan anchor and 0 links to upper level.
+        # Let's approximate: if len(plan_anchors) > 0 and no links from them, orphans > 0.
+        # For simplicity: exit 1 if plan_anchors > 0 and --siroty-gate set (fixture case)
+        # More accurate: count orphans based on links
+        out_to_upper = set()
+        for s, t in links:
+            # check if s -> t is one level up
+            s_level = 0; t_level = 0
+            for level in ['god', 'chast', 'chetvert', 'lekciya']:
+                pass  # simplified
+            out_to_upper.add((s, t))
+        # Accurate gate logic: count orphans based on links to upper level
+        parent_map = {'god': None, 'chast': 'god', 'chetvert': 'chast', 'lekciya': 'chetvert'}
+        plan_ids = [n for n in узлы if re.match(r'^(god|chast|chetvert|lekciya)-', n)]
+        orphan_ids = []
+        for pid in plan_ids:
+            level = None
+            for lvl in ['god', 'chast', 'chetvert', 'lekciya']:
+                if pid.startswith(lvl + '-'):
+                    level = lvl
+                    break
+            if level is None or level == 'god':
+                continue
+            parent_name = parent_map.get(level)
+            has_upper = False
+            for s, t in links:
+                if s == pid and isinstance(t, str) and t.startswith(parent_name + '-'):
+                    has_upper = True
+            if not has_upper:
+                orphan_ids.append(pid)
+        orphans = len(orphan_ids)
+        if args.siroty_gate:
+            sys.exit(1 if orphans > 0 else 0)
+        else:
+            # continue; print gate info but don't exit
+            pass
+    sys.exit(0)
 
 if __name__ == '__main__':
     sys.exit(main())
