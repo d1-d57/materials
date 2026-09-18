@@ -1,6 +1,8 @@
 ---
-tab: Вопросы года
+opisanie: список вопросов для каждого занятия
+sloj: 5
 status: chernovik
+tab: Вопросы года
 poryadok: 2
 registr: устный
 ---

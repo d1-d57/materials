@@ -1,6 +1,8 @@
 ---
-tab: План (забракован)
+opisanie: план расписания занятий (ЗАБРАКОВАН)
+sloj: 2
 status: chernovik
+tab: План (забракован)
 poryadok: 3
 registr: устный
 ---

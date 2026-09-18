@@ -1,6 +1,8 @@
 ---
-tab: Каркас
+opisanie: каркас-дорожная карта курса 32 темы (третья редакция)
+sloj: 0
 status: chernovik
+tab: Каркас
 poryadok: 1
 registr: устный
 ---

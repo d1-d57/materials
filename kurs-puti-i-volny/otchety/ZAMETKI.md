@@ -1,3 +1,8 @@
+---
+opisanie: отчёт: ZAMETKI
+sloj: 3
+status: zhivoy
+---
 # Заметки к обзору «Пути ограниченной высоты и тригонометрия»
 
 *Провенанс, незакрытые места, планы. Сам обзор — `../../obzory/puti-ogranichennoy-vysoty/src/obzor.md`, вид — `src/view.html`, числа — `../proverki/proverka.py`.*
