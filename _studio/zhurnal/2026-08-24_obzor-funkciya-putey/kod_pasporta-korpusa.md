@@ -351,7 +351,18 @@ python3 ../disciplina/_generator/tools/git_zona.py zayavki              # отк
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-09-19 01:12 · channel, model, place and reading method fixed by the wave head
+
+Written by the head of wave `noch-puti-i-volny` before launch (the process is not live yet). It overrides anything above that contradicts it.
+
+1. **Channel and model.** You are launched by the wave head as a Claude Code subagent, model **Haiku 4.5**, not Sonnet 5: the wave mandate makes TOKENS the binding constraint and this work is mechanical. Your budget ceiling is **220k tokens**; a ceiling is not a target.
+2. **Place.** Work in the MAIN folder, branch `arka/mat-kostyak`. Do NOT create a worktree — step 2 of §0.1 («заводи свою рабочую папку») is cancelled. This repository has **no local `main` branch**; the main line IS `arka/mat-kostyak`, so «merge your branch into the main one» in the final hygiene block has nothing to do — say so in one line. All your inputs are committed (head's commits `b0adaa12`, `8c5b4c80`; `git_zona.py check --zone kurs-puti-i-volny` was ✅ at 01:10).
+3. **The §0.1 git-contour subagent is NOT launched.** Run the two commands yourself and paste their output. Every `git_zona.py` call needs `GIT_ZONA_REPO="$PWD"` exported first, from the repo root, or it refuses.
+4. **Reading method — to fit the budget.** Several corpus files are 50–120 KB. For each file of `tools/DOLG-bez-opisaniya.txt`: read the first 40 lines plus the heading list (`grep -n '^#' <file>`); open more only if the purpose is still unclear. Never read a whole large file. Statuses: take from `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md` sections A/B/C FIRST, then from banners.
+5. **Commit rhythm.** Commit and push after every ~20 files of part A (so at least 4 commits for A), one for B, one for C: `GIT_ZONA_REPO="$PWD" python3 ../disciplina/_generator/tools/git_zona.py commit --zone kurs-puti-i-volny --zone obzory/funkciya-putey-i-ee-uravneniya --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md -m "<what>" --push` (add `--zone _studio/docs/KARTA.md` to the commit that follows a `register_doc.py` call). If the wave is cut off mid-way, what is committed survives; what is not, dies.
+6. **Verifier (§3)** — launch it as a subagent with model **haiku** as well.
+7. **Part C addendum.** The successor file `SBORKA/SLEDUYUSHCHIY-ZAHOD.md` must also state the course shape settled by the owner on 19.09 (it is in the wave mandate, not in karkas): lecture 1 = line with `q` off; quarter 1 = line with `q` on (Young diagrams, Gaussian binomials, partitions generating function); topics 5–6 (Euler pentagonal, Franklin) moved to the club by `SBORKA/KALENDAR-i-sostav.md`; no analysis in the first half (`ZAMYSEL.md` id `analiz-vo-vtoruyu-polovinu`). Do not re-derive it; copy it with those addresses.
+8. **Do not touch `## ФАЗА ПРИЁМКИ`** — the head writes the verdict.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 ../disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
