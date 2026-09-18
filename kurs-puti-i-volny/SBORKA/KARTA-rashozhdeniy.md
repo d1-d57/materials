@@ -278,7 +278,7 @@ status: zhivoy
 
 - Р5 · СТАТУС: S4а по построению · Arithmetic of reducibility misaligned: S4a stage will compute counts from dependency graph; resolved by construction in next stage.
 
-- Р6 · СТАТУС: закрыто картотекой · Twelve themes listed but thirteen enumerated: error in manual count; no card needed (arithmetic issue, already noted in KARTA-OBLASTI).
+- Р6 · СТАТУС: открыто · (head 19.09: relabelled — the card index does not close this row, the reason below says so itself) Twelve themes listed but thirteen enumerated: error in manual count; no card needed (arithmetic issue, already noted in KARTA-OBLASTI).
 
 - Р7 · СТАТУС: открыто · Coverage condition outdated: `ZAMYSEL` В10 holds pre-restructure diagnosis; LEKCIYA-v2 table shows newer coverage; **verification of actual coverage after chapter 3 and 6 written remains open**.
 
@@ -294,7 +294,7 @@ status: zhivoy
 
 - Р13 · СТАТУС: S4а по построению · Three decompositions of course structure: S4a replaces hand-written divisions with single generated source.
 
-- Р14 · СТАТУС: закрыто картотекой · Wrong address in warning: `OBOZNACHENIYA §3` warns about probabilistic normalization $3\pi^2/(2M^2)$ in KOSTYAK, but search finds it only in SVEDENIE; **warning address incorrect but issue documented in `kart-tri-normirovki-ploshchadi`**.
+- Р14 · СТАТУС: открыто · (head 19.09: relabelled — the card index does not close this row, the reason below says so itself) Wrong address in warning: `OBOZNACHENIYA §3` warns about probabilistic normalization $3\pi^2/(2M^2)$ in KOSTYAK, but search finds it only in SVEDENIE; **warning address incorrect but issue documented in `kart-tri-normirovki-ploshchadi`**.
 
 - Р15 · СТАТУС: открыто · ZAMYSEL violates own rules: copies table from `karkas.md` (currently in sync) and lists "32 themes" by number (should be command); section numbering В1…В7, В10, В9, В8 is out of order — **internal consistency of decision home degraded**.
 
