@@ -270,6 +270,10 @@ grep -n '<как механизм назван в вызывающем коде>
 🔴 **Отчёт без этих чисел не принимается.** «Я закоммитил» — не то же самое, что `status --porcelain`
 пустой: за одну сессию работа не доезжала трижды, каждый раз с честным «сделано» в отчёте.
 ## УРОКИ ФАБРИКЕ — (заполняет исполнитель; пусто — нормальный исход)
+
+### `wc -m` measures bytes, not characters, under this shell's default locale
+ЦЕНА: this shell's default locale is `US-ASCII` (`echo $LANG` → `US-ASCII`), under which `wc -m` on a Cyrillic file counts bytes, not Unicode codepoints — for `RASSKAZ-god.md` that is 90298 (`wc -m`/`wc -c`, both under `US-ASCII`) vs 52547 real characters (`LC_ALL=en_US.UTF-8 wc -m`, and independently confirmed with `python3 -c "len(open(f,encoding='utf-8').read())"`). Any zahod that writes or verifies a "N 000–M 000 characters" length criterion for Cyrillic text with the bare `wc -m` command specified literally in a zahod file will get a number roughly 1.7× too large and could wrongly fail a passing file, or (worse) undershoot a real target while a byte-based check looks satisfied. Cost avoided here only because I independently cross-checked with Python; a bare literal run of the criterion's own command would have read as a hard failure on a file that is actually within range. Fix belongs in `bootstrap_zahod.py`'s length-criterion template: specify `LC_ALL=en_US.UTF-8 wc -m` (or equivalent) whenever the criterion means characters, not `wc -m` bare.
+
 > Находка не про эту сессию, а закономерность про саму фабрику, годная другим заходам, — оформи как пункт очереди в `## ВОПРОСЫ` (формат там же) с `ДОМ: <эта арка>/UROKI-FABRIKE.md`, а не пиши прямо сюда неструктурированной строкой.
 > **Не про задачу — про САМУ ФАБРИКУ.** Ты работаешь с пустым контекстом и потому видишь то, чего не видит аналитик: он писал этот заход и ему приятно, что заход хорош. Сломался ВХОД (издание не то, id врёт, зона не содержит файла с ответом)? Критерий готовности кривой? Инструкция канона противоречит живому файлу? — сюда, строкой.
 > Формат жёсткий (по нему гейт): `### <что произошло>` / `ЦЕНА: <что сломалось и сколько стоило>`.
@@ -353,12 +357,79 @@ Nothing to merge/purge/deliver: unmerged `zahod/*` = 0, open заявки addres
 *(there were no debts belonging to this arc's git contour to close — the 13 dirty paths at input are other people's uncommitted work in a shared folder, out of this executor's rights to touch, per contract.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+
+**What was done + why.** Rewrote the year's promenade (`obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/00-arhitektura.md` + eight chapters, ≈140 KB) into one readable file `kurs-puti-i-volny/RASSKAZ-god.md` (≈52 000 characters), because the owner could not finish reading the source — it is dull, not wrong. This is a pure style rewrite: no theorem was re-derived, no new mathematics was added, the throughline, the eight-chapter order, both detective knots (André/reflection, Rogers/23 years) and all five SVG figures survive. Diagnosed five concrete causes of dullness first (§ПЛАН above, with quotes), then rewrote against them: dropped per-chapter production YAML headers and draft-status footers, folded `поле:`/`поле:insight` margin-note boxes into ordinary prose, cut mechanical "checked by counting" tickets, and referenced the five figures by relative path instead of inlining raw SVG (which also did much of the compression work). Added a YAML header (`opisanie:`/`sloj: 5`/`status: zhivoy`), one anchor id per chapter (`rasskaz-g1`…`g8`), and coordinate-based `[[p-NN]]` links to `punkty.md` items (method and caveat explained in `## ПЛАН`).
+
+**How verified** — each command run directly on the real file, return code first:
+
+1. `LC_ALL=en_US.UTF-8 wc -m kurs-puti-i-volny/RASSKAZ-god.md` → rc=0, **52547** (in range 45 000–65 000). ⚠ Plain `wc -m` under this shell's default `US-ASCII` locale counts **bytes**, not Unicode characters, and returns 90298 for the same file (confirmed with `wc -c` = 90298, `python3 -c "len(open(...).read())"` = 52547). The clause's intent is character length for Cyrillic prose, so I ran it with an explicit UTF-8 locale; flagging this as a queue item below since the next zahod that runs the bare criterion command in this same shell will see the same mismatch.
+2. `grep -c '<!--id: rasskaz-g' kurs-puti-i-volny/RASSKAZ-god.md` → rc=0, **8**.
+3. `grep -c 'Андре' …` → rc=0, **5**; `grep -c 'Роджерс' …` → rc=0, **9**; `grep -c '\.svg' …` → rc=0, **5**.
+4. `python3 ../disciplina/_generator/tools/check_termin.py kurs-puti-i-volny/RASSKAZ-god.md; echo $?` → rc=0, "✓ ЗЕЛЁНЫЙ: ни один термин не работает раньше своего определения".
+5. `cd kurs-puti-i-volny && python3 tools/indeks.py; echo $?` → rc=0, "✅ гейт зелёный", "без описания: 1 (унаследованных 1, новых 0)" — the new file is **not** in that count (it carries `opisanie:`); all 8 `rasskaz-g*` anchors registered, no dangling id reported.
+6. Fresh reader (§3, haiku subagent, given only the file path and the three questions) — reply pasted verbatim below. Answered all three, named the throughline object correctly, ended with the required marker line.
+
+**Coverage line:** chapters rewritten 8 of 8 · causes of dullness found 5, removed 5 (all five were structural/formatting causes — ritual verification footnotes, margin-note tag markup, per-chapter production YAML, draft-status footers, template fatigue from repeated three-beat shape — and all five were removable by cutting/folding without touching any mathematics; none required a partial fix).
+
+**Per-chapter length, source → new** (source bytes include that chapter's YAML header and inline SVG markup; new counts are characters in the rewritten prose, figures now referenced not inlined):
+- Гл.1 Две дроби: 15.1 KB → 6.7 KB
+- Гл.2 Коридор: 13.6 KB → 5.4 KB
+- Гл.3 Зверинец: 15.9 KB → 6.7 KB
+- Гл.4 Три способа: 16.4 KB → 6.8 KB
+- Гл.5 Площадь: 15.8 KB → 5.8 KB
+- Гл.6 Большие числа: 15.7 KB → 7.1 KB
+- Гл.7 Возвращение к письму: 12.7 KB → 6.1 KB
+- Гл.8 За дверью: 13.5 KB → 6.4 KB
+
+**Fresh reader's reply, verbatim** (haiku subagent, given only the file path and the three questions — nothing about the course):
+
+> Прочитал полностью. Вот три ответа на основе прочитанного:
+>
+> **1. Понравилось ли как законченный рассказ?**
+>
+> Да, это работает как завершённая история. Текст имеет ясную нарративную дугу: начинается с простого вопроса про маршруты в коридоре, разворачивается через несколько методов подсчёта, добавляет сложность со вторым счётчиком, а затем разрешает первоначальную тайну — связь с письмом Рамануджана. Финал убедителен: автор показывает, что граница объекта интереснее его достижений. Это не просто перечень фактов, а рассказ с кульминацией и осмыслением, где каждая глава опирается на предыдущие.
+>
+> **2. Куда ведёт автор — в чём нить сюжета?**
+>
+> Центральный объект — **производящая функция маршрутов** $F_m(x,y;\,z,q)$, которая выживает во всех вариациях условий. Эта функция служит линзой: в зависимости от того, что мы считаем (только длину маршрута или ещё площадь под ломаной) и при каких граничных условиях (коридор высоты $m$, луч, прямая), функция раскрывает разные сущности — биномиальные коэффициенты, числа Каталана, Фибоначчи, числа Шура, цепные дроби. Основной переключатель — второй счётчик (площадь), который превращает золотое сечение в формулу Рамануджана.
+>
+> **3. Видны ли инструменты, помогающие исследовать модель случайного блуждания?**
+>
+> Да, явно. Инструменты работают на разных масштабах одного явления:
+> - **Отражение** — для коротких путей (геометрический подсчёт)
+> - **Изображения** — для ограниченной области и коротких маршрутов
+> - **Спектр** (собственные числа оператора шага как $2\cos\frac{k\pi}{M}$) — для длинных маршрутов, показывает волновую структуру и время затухания памяти
+> - **Цепные дроби** — единственный метод, переживший включение второго счётчика, кодирует разложение по первому возвращению
+>
+> В главе 6 эти инструменты позволяют раскрыть вероятностное поведение: вероятность возврата домой спадает как $1/\sqrt{\pi n}$, первый возврат имеет показатель $-3/2$ (бесконечное среднее время), мосты равномерно распределены по высоте, время перемешивания растёт как квадрат ширины коридора. Это исследование одного вероятностного объекта четырьмя способами.
+>
+> выдано 3 позиций из 3 найденных
+
+**What was NOT touched:** the source in `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/` (read-only, unmodified); `kurs-puti-i-volny/plan/src/` (parallel executor's zone, not opened for writing, only `punkty.md` read for ids/coordinates); no math re-derived; no other file in `materials` edited by hand.
+
+**Necessary side effect outside the zone (not committed):** running the required criterion-clause-5 command, `python3 tools/indeks.py`, regenerated `kurs-puti-i-volny/INDEKS.md` in place (purely additive diff — one new row for `RASSKAZ-god.md` and its 8 anchor ids, verified with `git diff`, no other content touched, does not touch the parallel executor's `plan/src/`). This file is outside the contracted zone, so it was **not** added to the commit and is left uncommitted in the working tree for the owner/next pass to regenerate or commit as they see fit.
+
+**Открытое «возвращаться»:** the `[[p-NN]]` links are coordinate-based, not content-verified (queue item in `## ВОПРОСЫ`); the `LC_ALL` locale caveat for clause 1 (above) will recur for any future zahod measuring Cyrillic file length with bare `wc -m` in this shell.
+
+**ПОВТОРЯЕМОСТЬ находок:** the `wc -m`/locale mismatch (clause 1) **will repeat** on the next unit of work that measures a Cyrillic file's length with plain `wc -m` in this environment — it is an environment property, not specific to this file, so it belongs in the factory lesson below, not just a queue record. The five causes of dullness are properties of the *source* `LEKCIYA-v2` drafts specifically (production scaffolding left in reader-facing prose) — they will not automatically recur in unrelated future lectures unless the same drafting habit is repeated, so they stay a queue observation rather than an immediate fix elsewhere.
+
+**Время прогона + токены:** неприменимо — канал `app`, снимать неоткуда.
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/RASSKAZ-god.md` — открывать любым Markdown-просмотрщиком с поддержкой KaTeX (или как обычный текст; формулы в `$…$`/`$$…$$`).
+**РОД АРТЕФАКТА:** `исходник` (Markdown-текст — не собранный HTML/PDF; курс не прогоняет его через `build_doc.py`).
+**КОММИТ:** `5ea6c337` — «kurs-puti-i-volny: style rewrite of the year's promenade into one readable RASSKAZ-god.md (8 chapters, both knots and 5 figures kept)» · `git_zona.py check --zone kurs-puti-i-volny/RASSKAZ-god.md` → ✅ · `git_zona.py check --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_rasskaz-god.md` → ✅ · pushed to origin (`git_zona.py commit --push` reported "push прошёл — работа больше не только на этой машине").
+
+**НЕОБРАТИМОЕ:** необратимого нет.
+
+**ГИГИЕНА §4.1:**
+- Г1 (зона доехала в git) → ✅ ✅ (both zone-check commands green, shown above).
+- Г2 (второй репозиторий) → неприменимо: оба пути зоны лежат внутри `materials` (verified: `os.path.exists` from repo root for both).
+- Г3 (невлитых веток не прибавилось) → `git --no-optional-locks branch --no-merged arka/mat-kostyak` → пусто, было 0 на входе, осталось 0.
+- Г4 (новый инструмент) → неприменимо: ни одного нового `.py` не заведено.
+- Г5 (новый `.md` зарегистрирован) → **сознательно не выполнено**: `register_doc.py` отказывает путям вне `_studio/`, а `kurs-puti-i-volny/RASSKAZ-god.md` живёт вне неё; per the owner's explicit note (measured today), registration is skipped and the course's own index (`kurs-puti-i-volny/tools/indeks.py`, reading the `opisanie:` header) is the door instead — confirmed green in clause 5 above.
+- Г6 (в коммите нет чужих путей) → `git show --stat HEAD` показал ровно два пути зоны, ничего чужого.
+
+**ПОСЛЕДНИЙ ХОД — гит-гигиена:** ветка `arka/mat-kostyak` — рабочая по контракту, влитие в другую ветку не требуется (я и так работал прямо на ней, worktree не заводился). `git status --porcelain` на зоне пуст (обе команды `git_zona.py check --zone` зелёные); вне зоны остаются 13 путей — чужие незакоммиченные файлы (`PULS-CHASOVOGO-noch-puti-i-volny.log`, `INCIDENTY.md`, три `diskmat-57/...` черновика, два `_fond/zadachi/risunki/*.svg`, `scratchpad/`) плюс мой некоммитящийся побочный эффект `kurs-puti-i-volny/INDEKS.md` — ни один из них не мой, не трогал. `git log --oneline @{u}..` → 0, всё вывезено. Заявок эта работа не ставила: **заявок нет** — ни одна из пяти операций (влитие/коммит/вывоз/деплой/гашение) не понадобилась сверх обычного коммита+push своей зоны.
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
 > 🔴 **Пусто — значит заход не правился с момента выдачи.** Непустой блок читается ПЕРЕД продолжением работы: правка отменяет любое противоречащее ей место выше по файлу, каким бы категоричным оно ни было.
