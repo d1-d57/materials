@@ -314,6 +314,16 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+1. §0.1 git contour self-check myself (wave-head note: the subagent is not launched): `git branch --show-current`, `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'` (→ 0), `GIT_ZONA_REPO="$PWD" git_zona.py check --zone ... --zone ... --zone ...` (repeated `--zone` per path, per the wave-head's note — a single-`--zone` call with three paths is rejected) → rc=0, zone empty (nothing to check yet, expected before building anything).
+2. Read the six named anchors only: `karkas.md` (32 topics, blocks 1–7), `KALENDAR-i-sostav.md` (topics 5–6 moved to club, quarter breakdown 6/8/9/10), `kalendar_goda.py` output (confirms 6/8/9/10 = 33), `SLEDUYUSHCHIY-ZAHOD.md`, `indeks.py` docstring + `RE_ЯКОРЬ`/`RE_ССЫЛКА`, `graf.py --help` + the `gate_c` function body (the part of `[c]` I'm told to read).
+3. **Challenge a premise, per §1's own rule.** `SLEDUYUSHCHIY-ZAHOD.md`'s "Lecture-by-Lecture Plan (Q1)" lists lectures 1–6 as karkas topics 1–6 (i.e. it still includes topic 5 Pentagonal and topic 6 Franklin in Q1). That contradicts the owner's later, explicitly SETTLED course-shape table in this very brief ("topics 5–6 leave the main course for the club" + "Quarter 1 = lecture 1 + the q-line; the remaining Saturdays begin Catalan"). `SLEDUYUSHCHIY-ZAHOD.md` predates the 18–19.09 club decision and is stale on this one point. I followed the brief's settled table (it explicitly says it wins over karkas where they disagree), not the stale file — flagging this rather than silently picking one.
+4. Design the `punkty.md` item→karkas mapping: topics 1,2,3,4,7,8 → Q1 (6); 9–16 → Q2 (8); 17–25 → Q3 (9); 26 + 3 free slots (the "отрезок×вес-включён" gap named in `KALENDAR-i-sostav.md`) + 27–32 → Q4 (10). `doska` by wall count (0/1/2 walls → pryamaya/luch/otrezok; block 7 "Пределы" → predel, matching the owner's literal block name). `ves` per the owner's literal rule "board advances, weight switches on once and stays on": q-vykl only for p-01, q-vkl everywhere after. `opiraetsya`/`obobshchaetsya-v` as the plain linear chain karkas already reads in (translation of an existing order, not invented pedagogy), with a terminal `finish` anchor for `p-33` so the "every item generalises" gate has a legal target.
+5. Build `punkty.md` (preface + 8 level blocks + 33 items, all ⭐ empty) via a throwaway assembler script kept in `scratchpad/arhitektura-punkta/` (not part of the deliverable), then hand-build `tools/plany.py` (stdlib only) as the real, lasting generator + `--proverit` gates.
+6. Run criterion clauses 1–5 in the order given (they are ordered on purpose: `--proverit` runs BEFORE the plain generate, so "hand-edit / stale view" is correctly not flagged when a view simply doesn't exist yet).
+7. **Anticipated, documented gate gap (not fixed — outside my zone):** the brief's own linkage spec requires a `chetvert-pNN` section of an `analiz`-part item (block 7, quarter 4) to link `[[god-pNN]]` instead of `[[chast-pNN]]`, because those items have no `chast-*` level. `graf.py`'s `gate_c` hard-codes `chetvert`'s required parent prefix as `chast-` only, with no exception. I built the spec faithfully and documented the exact gap (and the one-line fix `graf.py` would need) in `plany.py`'s own docstring, then verified live that this produces exactly 6 named orphans (the 6 `analiz` items) and zero unexpected ones — i.e. criterion clause 5 genuinely reds, for a reason I predicted before running it, not a mechanism bug. Flagged as a queue item below rather than edited (read-only zone).
+8. Two-legged commit (`add` then `commit -- <paths>`) as soon as the mechanism was green, then push; spawn ONE fresh verifier subagent (mutation-tests `--proverit` five ways on a temp copy); write this report.
+9. Register new `.md`? Checked first — `register_doc.py` explicitly refuses any path outside `_studio/`/`obzory/`/`_illustracii/`/`_meta/` and says project/course docs use their OWN index. `korni.карта_для()` returns `None` for every path under `kurs-puti-i-volny/`. So none of the 8 new `.md` files (`punkty.md` + 7 views) register anywhere — they're indexed the course's own way, via `opisanie:` in the YAML header + `tools/indeks.py` (which I ran and confirmed green). No `_studio/docs/KARTA.md` edit was made or needed. Documented as a factory-level finding in `## ВОПРОСЫ` below, since the top-level contract clause about `register_doc.py` reads as unconditional and isn't, for this class of path.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
@@ -329,6 +339,16 @@ grep -n '<как механизм назван в вызывающем коде>
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. `graf.py`'s `gate_c` needs a small patch to accept the linkage this brief itself specifies: a `chetvert-pNN` anchor whose item has `chast: analiz` correctly links `[[god-pNN]]` (there is no `chast-pNN` for it — only `do-analiza` items get a `chast-*` level), but `gate_c`'s `parent_map = {'chetvert': 'chast', ...}` accepts ONLY a `chast-` prefixed target for any `chetvert-*` anchor, with no exception. Live-verified: `python3 kurs-puti-i-volny/tools/graf.py | grep -A3 '^[c]'` reads `orphans: 6`, and printing the orphan ids confirms they are exactly `chetvert-p-28`..`chetvert-p-33` (the six `analiz`-part items, quarter 4, block 7 "Пределы") — zero unexpected orphans elsewhere. The fix: in `gate_c`, when `level == 'chetvert'`, also accept a target starting with `god-` (or read the item's own `chast` field to pick the expected parent). `graf.py` is outside this position's zone (read-only) — documented in `tools/plany.py`'s own docstring in full detail, and criterion clause 5 below reports the real `orphans: 6`, not a claimed `0`.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. Factory-level finding, not specific to this task: the top-level contract clause "заВёл новый .md — регистрируешь через `register_doc.py`" reads as unconditional, but `register_doc.py` explicitly refuses any path outside `_studio/`, `obzory/`, `_illustracii/`, `_meta/` — verified live: it refused `kurs-puti-i-volny/plan/src/punkty.md` with the message "документы проектов живут в своих индексах — у курса, у лекции, у арки", and `korni.карта_для()` returns `None` for the same path (`kurs-puti-i-volny` is not one of the six roots in `КОРНИ_MATERIALS`). So for any project/course directory outside those four roots, the correct registration mechanism is the project's own index (here: `tools/indeks.py`, gated on `opisanie:` in the YAML header, which I used instead) — not `register_doc.py`. A future executor briefed with the generic contract clause and a course-internal file will hit the same wall; worth a one-line caveat in the bootstrap template ("register_doc.py only for `_studio/obzory/_illustracii/_meta` — course/project dirs register their own way").
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+3. `kurs-puti-i-volny/INDEKS.md` is left modified-but-uncommitted on disk (`git status --porcelain` shows ` M kurs-puti-i-volny/INDEKS.md`, +137/-1 lines) — a side effect of running `tools/indeks.py` as criterion clause 4 requires. It is outside this position's contracted zone (`plan/src`, `tools/plany.py`, this kod file only), so I did not commit it and did not revert it (both would be touching a path outside the zone in different directions). Whoever next commits inside `kurs-puti-i-volny/` should pick it up — the content is a correct, harmless regeneration reflecting the 8 new files.
+   ДОМ: kurs-puti-i-volny/INDEKS.md
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -340,30 +360,192 @@ grep -n '<как механизм назван в вызывающем коде>
 > 🔴 **СНИМОК ВХОДА снимается ДО работы.** Без него «все долги закрыты» непроверяемо: неизвестно,
 > какие были. Пустой снимок = красный.
 
-**СНИМОК ВХОДА** *(команды и их ВЫВОД, а не пересказ; снять ПЕРВЫМ ходом, до всякой работы)*
-```
-git --no-optional-locks branch --no-merged <основная>     # невлитые
-git --no-optional-locks status --porcelain | wc -l        # не закоммичено
-git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
-python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
-```
-<сюда — вывод, дословно>
+> **Note:** the §0.1 git-contour subagent was NOT launched this run (wave-head instruction: "run its
+> two commands yourself"). This section is filled by the EXECUTOR instead of that subagent, using the
+> same commands the contour subagent would run (`<основная>` read as `arka/mat-kostyak`, since that is
+> what `zahod/*` branches merge into in this brief's own §0.1/closing-warning usage — there is no local
+> `main` branch in this working copy, only `remotes/origin/main`).
 
-**ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+**СНИМОК ВХОДА** *(снят до any work, first move of the session)*
+```
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+(пусто — 0 строк)
+$ git --no-optional-locks status --porcelain | wc -l
+       9
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       0
+$ GIT_ZONA_REPO="$PWD" python3 .../git_zona.py zayavki
+✅ заявок нет
+(«ждут захода-разработчика» redirected queue: 12 items, none addressed to this position/zone;
+ POSTOYANNYE.md: 0 branches-not-to-merge; охват: заявок открыто 0, переадресовано 12,
+ постоянных исключений 1, сторож краснеет на 0)
+```
+The 9 uncommitted files at input were all OTHER writers' work, none touching my zone: `_studio/zhurnal/_INFRA-git/INCIDENTY.md` (modified) and 8 untracked files under `SBORKA/`, `_fond/zadachi/risunki/`, `diskmat-57/2026-08-18_logika-goda-7/` — none inside `kurs-puti-i-volny/plan/src`, `kurs-puti-i-volny/tools/plany.py`, or this kod file. Left untouched throughout, as required.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
-*(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
-правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
-не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
+**ЧТО СДЕЛАНО**
+Nothing for the git-contour half to do: all three contour numbers were already 0 at the snapshot
+(matches the brief's own printed snapshot at assembly time) and stayed 0 through the whole session
+(reverified at the end: `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'` → `0`).
+No merge, no vyvoz-of-someone-else's-branch, no gasheniye, no zayavka needed or created.
+My OWN work: committed `4c30d5b9` directly onto `arka/mat-kostyak` (no separate `zahod/*` branch or
+worktree was spawned — the wave-head's contract explicitly says to work in the main folder on
+`arka/mat-kostyak` itself, not to create one), then pushed it (`origin/arka/mat-kostyak`
+`d3bd0803..4c30d5b9`).
+
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
+*(all three contour numbers were 0 at input and remained 0; the 9 unrelated dirty files belong to other
+writers and are not this position's debt to close — named above, left alone.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+
+**What was done + why.** Built the FORM and MECHANISM for the course's item list, per Д2 (architecture and
+filling are separate positions): `kurs-puti-i-volny/plan/src/punkty.md` is now the single home of all 33
+session items (id, coordinate `doska`/`ves`, calendar `chetvert`/`polovina`/`chast`, graph edges
+`opiraetsya`/`obobshchaetsya-v`, `adres`, `iz-karkasa` translation material — all filled; the four ⭐
+fields `imya`/`vopros`/`teorema`/`zadacha` plus `raskadrovka` — empty everywhere, as mandated). Wrote NO
+narrative/pedagogical content. `kurs-puti-i-volny/tools/plany.py` (stdlib only) parses `punkty.md` and
+generates the seven views (year, part «до анализа», quarters 1–4, lecture 1) plus a `--proverit` gate
+family; a view is never hand-written, exactly like `tools/indeks.py`. `karkas.md` and `plan.md` got a
+2–4 line banner pointing to the new home; their bodies were not touched.
+
+**How verified.** All 5 readiness-criterion clauses run for real, verbatim (see below); `tools/indeks.py`
+green; `tools/graf.py`'s `[c]` gate run and its 6 orphans traced to source (see clause 5 and `## ВОПРОСЫ`
+#1); a hand sanity check that `--proverit` actually catches a real hand-edit (appended a line to
+`god.md`, confirmed rc=1, then restored it before committing); a FRESH subagent (no context of this
+session) mutation-tested `--proverit` five ways on a **temporary copy** — 5 of 5 caught, see below.
+
+**What was NOT touched.** `karkas.md`/`plan.md` bodies (banner only); `ZAMYSEL.md` (not read, not
+edited — closed document per the wave-head note, and not in the "read only these" list either);
+`graf.py`, `indeks.py` (read-only, per the read list); `_studio/docs/KARTA.md` (no `register_doc.py`
+call was made — see `## ВОПРОСЫ` #2 for why); the 9 other writers' dirty files at session start (none
+in my zone); `kurs-puti-i-volny/INDEKS.md` (regenerated by the criterion-4 command, left uncommitted —
+outside my zone, see `## ВОПРОСЫ` #3); no worktree, no branch switch, no `git checkout`.
+
+**Verifier result (fresh subagent, mutation-tested `--proverit` on a temp copy, 5 of 5):**
+```
+a) empty ⭐ field, quarter 1 : rc=1 — pass — "⭐ пусто: p-03.teorema"
+b) dangling id               : rc=1 — pass — "висячий id в obobshchaetsya-v пункта p-04: 'p-99'"
+c) orphan item (no obob.-v)  : rc=1 — pass — "без obobshchaetsya-v (...): p-07"
+d) wrong quarter count       : rc=1 — pass — "четверть 1: пунктов 7, занятий по календарю 6" (+ квартал 2)
+e) hand-edited generated view: rc=1 — pass — "вид разошёлся с генератором (правка руками?): god.md"
+Overall: 5 of 5 mutations caught, no false negatives, no misleading messages.
+выдано 5 позиций из 5 найденных
+```
+
+**Readiness criterion, clauses 1–5, verbatim (all run from the repo root, after the plain generate for
+clauses 3–5, matching the brief's own stated order — `--proverit` before the first plain generate for
+clause 1):**
+```
+$ python3 kurs-puti-i-volny/tools/plany.py --proverit; echo $?
+❌ 24 нарушения:
+  - ⭐ пусто: p-01.imya
+  - ⭐ пусто: p-01.vopros
+  - ⭐ пусто: p-01.teorema
+  - ⭐ пусто: p-01.zadacha
+  [... same 4 fields for p-02 .. p-06, 24 lines total, ALL of them ⭐-empty on quarter-1 items,
+       NO other kind of failure named ...]
+1
+
+$ python3 kurs-puti-i-volny/tools/plany.py --proverit --napolnennye none; echo $?
+✅ punkty.md чист
+0
+
+$ python3 kurs-puti-i-volny/tools/plany.py; echo $?
+wrote kurs-puti-i-volny/plan/src/god.md
+wrote kurs-puti-i-volny/plan/src/chast-1-do-analiza.md
+wrote kurs-puti-i-volny/plan/src/chetvert-1.md
+wrote kurs-puti-i-volny/plan/src/chetvert-2.md
+wrote kurs-puti-i-volny/plan/src/chetvert-3.md
+wrote kurs-puti-i-volny/plan/src/chetvert-4.md
+wrote kurs-puti-i-volny/plan/src/lekciya-1.md
+0
+
+$ grep -c '^<!--id: p-' kurs-puti-i-volny/plan/src/punkty.md
+33
+
+$ cd kurs-puti-i-volny && python3 tools/indeks.py; echo $?
+✍ INDEKS.md собран: 89 файлов, 223 узлов
+документов:          89
+узлов графа:         223  (карточек 24, якорей 199)
+ссылок:              182
+без описания:        1  (унаследованных 1, новых 0)
+⚠ унаследованный долг: 1 файлов без описания. Список — tools/DOLG-bez-opisaniya.txt
+✅ гейт зелёный
+0
+
+$ python3 kurs-puti-i-volny/tools/graf.py | grep -A3 '^[c]'
+[c] Plan anchors: 94 · orphans: 6
+```
+**Clause 5 did NOT reach `orphans 0` — this is a documented, predicted-before-running mismatch, not a
+build defect.** Traced live (script printing `gate_c`'s own orphan list): the 6 orphans are exactly
+`chetvert-p-28`..`chetvert-p-33` — the six `chast: analiz` items (quarter 4, block 7 «Пределы»). Per
+this brief's own linkage spec, an `analiz`-part item's `chetvert-pNN` section links `[[god-pNN]]`
+(it has no `chast-pNN`, only `do-analiza` items do); `graf.py`'s `gate_c` hard-codes `chetvert`'s
+required parent as `chast-` only, with no `god-` exception, so it counts these 6 as orphans regardless.
+Full analysis and the one-line fix `graf.py` needs are in `tools/plany.py`'s own docstring and in
+`## ВОПРОСЫ` #1 (`graf.py` is read-only to this position). Clauses 1–4 all pass exactly as specified;
+clause 1's `--napolnennye none` variant → `0` as specified.
+
+**Coverage line:** karkas topics mapped 30 of 32 (topics 1–4 → p-01..p-04 · topics 7–8 → p-05..p-06 ·
+topics 9–16 → p-07..p-14 · topics 17–25 → p-15..p-23 · topic 26 → p-24 · topics 27–32 → p-28..p-33 ·
+topics 5–6 left the main course for the club, `KALENDAR-i-sostav.md`, owner 18.09 · p-25/p-26/p-27 are
+the 3 free Q4 slots for the "отрезок×вес-включён" gap, no karkas topic) · views generated 7 of 7 ·
+gates proven red on mutation 5 of 5.
+
+**Open "return to."** #1 in `## ВОПРОСЫ` (the `graf.py [c]` gap) is the one item a future pass should
+close before anyone treats `orphans: 0` as achievable without it — right now it is structurally
+unreachable for the `analiz` part, by design, until `graf.py` gets the one-line fix.
+
+**Repeatability of findings.** None of the three `## ВОПРОСЫ` findings recur on the very next unit of
+work (S4б, the filler, only edits `punkty.md` field values for the 6 quarter-1 items — it does not run
+`graf.py`, does not create new `.md` files, and does not touch `INDEKS.md`) — legitimately queue items,
+not "class NEMEDLENNOE" fixes-before-next-run.
+
+**НЕОБРАТИМОЕ:** необратимого нет. No deletion, overwrite, rename, move, `git reset`/`checkout`
+over unsaved work, or edit outside the zone occurred.
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/plan/src/punkty.md` —
+open as plain Markdown (any text editor); the 7 generated views live alongside it in the same
+`kurs-puti-i-volny/plan/src/` directory (`god.md`, `chast-1-do-analiza.md`, `chetvert-1.md`..
+`chetvert-4.md`, `lekciya-1.md`), and the generator itself is
+`/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/tools/plany.py`.
+
+**РОД АРТЕФАКТА:** `исходник` (this zahod's product is code + the source-of-truth data file, not a
+rendered document — committed before this report, per the convention for `исходник`).
+
+**КОММИТ:** `4c30d5b9` — "kurs-puti-i-volny: punkty.md single home + tools/plany.py view generator" ·
+`git_zona.py check --zone kurs-puti-i-volny/plan/src` → ✅ · `--zone kurs-puti-i-volny/tools/plany.py`
+→ ✅ · `--zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_arhitektura-punkta.md` → ✅ (this kod
+file itself, with the `## ПЛАН`/`## ВОПРОСЫ`/`## ГИГИЕНА ВХОДА`/`## ОТЧЁТ` sections below, is committed
+separately as the session's closing move — see the final git-hygiene numbers above `## ПРАВКИ ПОСЛЕ
+ВЫДАЧИ`). Pushed: `origin/arka/mat-kostyak d3bd0803..4c30d5b9`.
+
+**PRAVKI PROCHITANY:** none — `## ПРАВКИ ПОСЛЕ ВЫДАЧИ` was empty (`<правок нет>`) both at start and at
+every re-check before writing this report.
+
+**Closing git hygiene (ran the full `## ⚠️🔴 WARNING` block):**
+```
+1 · ВСЕ КОММИТЫ: git --no-optional-locks status --porcelain -- kurs-puti-i-volny/plan/src kurs-puti-i-volny/tools/plany.py \
+    _studio/zhurnal/.../kod_arhitektura-punkta.md → empty (own zone: "вне git 0")
+2 · ВЛИТИЕ СВОЕЙ ВЕТКИ В ОСНОВНУЮ: NOT APPLICABLE — per the wave-head's explicit contract ("work in
+    this main folder, do not create a worktree, never switch branches"), this position committed
+    DIRECTLY onto `arka/mat-kostyak` in the shared main folder; there is no separate `zahod/*` branch
+    of its own to merge. `vlit-v-osnovnuyu`'s `branch` argument is a merge SOURCE (verified via
+    `--help`) — running it with `arka/mat-kostyak` while `arka/mat-kostyak` is itself the checked-out
+    branch would be a merge into itself, not the intended operation. Nothing skipped: the same commit
+    that would have been merged IS already on `arka/mat-kostyak`.
+3 · ПОСТ-ПРОВЕРКА ИЗ ГЛАВНОЙ ПАПКИ: this session ran everything from that exact folder throughout — the
+    5 criterion clauses above ARE the post-check; rerun once more after the final commit, unchanged
+    results (`plany.py --proverit --napolnennye none` → 0, `indeks.py` → 0).
+4 · ГАШЕНИЕ: `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'` → `0`
+    (unchanged from the input snapshot — no branch was created, none needs extinguishing).
+5 · ВЫВОЗ: `git --no-optional-locks log --oneline @{u}.. | wc -l` → `0` after the push above.
+6 · ПРОВЕРКА ФАКТОМ: вне git (своя зона) 0 · невлитых своих 0 (нет своей ветки) · невлитых чужих
+    (unmerged zahod/*) 0 · невывезенных своей ветки 0 · пост-проверка зелёная.
+```
+
+**ЗАЯВКИ, ПОСТАВЛЕННЫЕ ЭТИМ ЗАХОДОМ:** заявок нет — ни одна из пяти операций (влитие/коммит/вывоз/
+деплой/гашение) не встретила препятствия, требующего заявки.
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
 > 🔴 **Пусто — значит заход не правился с момента выдачи.** Непустой блок читается ПЕРЕД продолжением работы: правка отменяет любое противоречащее ей место выше по файлу, каким бы категоричным оно ни было.
