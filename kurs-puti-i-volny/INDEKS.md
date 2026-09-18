@@ -79,31 +79,31 @@
 
 | файл | о чём | статус | узлов |
 |---|---|---|---|
-| `catalan/kartoteka/KARTA-OBLASTI.md` | справочник-реестр областей каталанских объектов | chernovik |  |
-| `catalan/kartoteka/kart-al-salam-ismail-dom.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-centralnaya-para.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-chebyshev-smysl.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-dom-teorem-vienno.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-dva-q-katalana.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-eyler-vypadaet.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-izobrazheniya-otrazhenie.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-jtp-mesto.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-normirovka-starta.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-obshchee-prostee.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-okruzhnost-kanal.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-polosa-ili-okruzhnost.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-polyusa-spektr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-porog-ngr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-potolok-est-finitizaciya.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-predel-q-zamknuto.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-q-kontinuanty.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-q-menyaet-tip-spektra.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-q-otrazheniya-maj-ne-ploshchad.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-q-spektr-granica.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-rr-dve-storony.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-starter-parametr.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
-| `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` | карточка исследования в словаре каталанских объектов [...] | zhivoy | 1 |
+| `catalan/kartoteka/KARTA-OBLASTI.md` | индекс картотеки находок курса «Пути и волны» — 24 карточки по роду и шести нитям, резолв id; сюда идти ДО того, как объявить вопрос открытым | zhivoy |  |
+| `catalan/kartoteka/kart-al-salam-ismail-dom.md` | находка курса «Пути и волны» — наш $q$-объект — это в точности многочлены Аль-Салама — Исмаила, и название их статьи есть наш сюжет | zhivoy | 1 |
+| `catalan/kartoteka/kart-centralnaya-para.md` | находка курса «Пути и волны» — центральна не теорема, а ПАРА «определение объекта + связка изображения↔спектр» | zhivoy | 1 |
+| `catalan/kartoteka/kart-chebyshev-smysl.md` | находка курса «Пути и волны» — В4 — как думать про формулу Чебышёва | zhivoy | 1 |
+| `catalan/kartoteka/kart-dom-teorem-vienno.md` | находка курса «Пути и волны» — у наших теорем про Чебышёва и континуанты есть опубликованные прообразы, и они не названы | zhivoy | 1 |
+| `catalan/kartoteka/kart-dva-q-katalana.md` | утверждение курса «Пути и волны» — два разных $q$-Каталана, и замкнутая форма только у чужого | zhivoy | 1 |
+| `catalan/kartoteka/kart-eyler-vypadaet.md` | утверждение курса «Пути и волны» — пятиугольная теорема Эйлера из объекта НЕ выводится; её место занимает модуль 5 вместо 3 | zhivoy | 1 |
+| `catalan/kartoteka/kart-izobrazheniya-otrazhenie.md` | утверждение курса «Пути и волны» — метод изображений и принцип отражения — одно, не два сюжета | zhivoy | 1 |
+| `catalan/kartoteka/kart-jtp-mesto.md` | мостик курса «Пути и волны» — В2 — место тройного тождества Якоби: инструмент, не следствие | zhivoy | 1 |
+| `catalan/kartoteka/kart-normirovka-starta.md` | мостик курса «Пути и волны» — площадь от старта = стандартная площадь минус моном | zhivoy | 1 |
+| `catalan/kartoteka/kart-obshchee-prostee.md` | находка курса «Пути и волны» — В3 — общее доказывается не дороже частного, и часто проще | zhivoy | 1 |
+| `catalan/kartoteka/kart-okruzhnost-kanal.md` | мостик курса «Пути и волны» — окружность — второй канал оператора шага, а не предел отрезка | zhivoy | 1 |
+| `catalan/kartoteka/kart-polosa-ili-okruzhnost.md` | мостик курса «Пути и волны» — у двух несущих документов курса РАЗНЫЕ центральные объекты — развилка, не терминология | zhivoy | 1 |
+| `catalan/kartoteka/kart-polyusa-spektr.md` | мостик курса «Пути и волны» — полюса производящей функции = корни $U_{m+1}$ = собственные числа оператора шага | zhivoy | 1 |
+| `catalan/kartoteka/kart-porog-ngr.md` | утверждение курса «Пути и волны» — порог $n\ge r$ для биномиальной специализации точный | zhivoy | 1 |
+| `catalan/kartoteka/kart-potolok-est-finitizaciya.md` | находка курса «Пути и волны» — 🔴 высота полосы — параметр финитизации Роджерса — Рамануджана, а не техническое ограничение | zhivoy | 1 |
+| `catalan/kartoteka/kart-predel-q-zamknuto.md` | утверждение курса «Пути и волны» — при $m\to\infty$ и $q\ne1$ замкнутый ответ существует и он у людей есть | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-kontinuanty.md` | утверждение курса «Пути и волны» — В1 закрыт — при произвольных $x,y$ и весе площади замкнутая форма есть, это отношение $q$-континуант | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-menyaet-tip-spektra.md` | утверждение курса «Пути и волны» — $q$ не отнимает замкнутую форму спектра — он меняет ТИП предельного спектра | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-otrazheniya-maj-ne-ploshchad.md` | утверждение курса «Пути и волны» — изображения с гауссовыми биномами — про major index, НЕ про площадь | zhivoy | 1 |
+| `catalan/kartoteka/kart-q-spektr-granica.md` | мостик курса «Пути и волны» — при $q\ne1$ исчезает не спектр, а его замкнутая форма | zhivoy | 1 |
+| `catalan/kartoteka/kart-rr-dve-storony.md` | утверждение курса «Пути и волны» — конечные Роджерс — Рамануджан суть финитизация пары «сумма = произведение», а не двух записей одной стороны | zhivoy | 1 |
+| `catalan/kartoteka/kart-starter-parametr.md` | затравка курса «Пути и волны» — почему у функции путей старт обязан быть параметром | zhivoy | 1 |
+| `catalan/kartoteka/kart-tri-normirovki-ploshchadi.md` | находка курса «Пути и волны» — площадь считается тремя несовместимыми способами в четырёх наших файлах | zhivoy | 1 |
+| `catalan/kartoteka/kart-tri-prochteniya-plus-predel.md` | мостик курса «Пути и волны» — прочтений резольвенты ТРИ, а предел — не четвёртое, а режим, в котором три расходятся | zhivoy | 1 |
 
 ## Узлы графа — карточки (24)
 
