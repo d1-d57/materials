@@ -90,6 +90,9 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md`** (S2 of wave noch-puti-i-volny: tools/graf.py — graph statistics over the course corpus (degrees, cascade, depth, reachability, orphan plan anchors, edge export))
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md`** (S3 of wave noch-puti-i-volny: consolidation — route duplicate pairs, give every KARTA-rashozhdeniy row a status, move verified report findings into the card index)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md`** (паспортизация корпуса курса: описания в шапки, ссылки на картотеку, читаемый индекс)
 
 
