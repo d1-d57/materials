@@ -401,6 +401,10 @@ The wave head accepted nothing yet. Verdict: доработка. This is a RESTA
 5. `register_doc.py` refusing a path outside `_studio/` is expected — drop that step; the head records it.
 Then rerun the whole criterion, rewrite `## ОТЧЁТ`, and merge into `arka/mat-kostyak` with the `vlit-v-osnovnuyu` command of the final hygiene block.
 
+
+### ПРАВКА 2 · 2026-09-19 01:33 · model Haiku 4.5; one more defect: outputs must go to the tree the tool runs in
+
+The second free run changed nothing (verification only). You are now Haiku 4.5, a Claude Code subagent, working in this worktree. ПРАВКА 1 items 1–5 are still the task — do them, with code changes and commits. Add item 6: **graf.py writes `ZAMER-grafa.md` and `graf-rebra.tsv` into the MAIN tree** (`/Users/.../materials/…`) even when run from a worktree — it must write next to the `graf.py` that runs (`Path(__file__).resolve().parent.parent / 'SBORKA'`). Commit with `GIT_ZONA_REPO="$PWD" python3 ../../disciplina/_generator/tools/git_zona.py commit --zone kurs-puti-i-volny/tools/graf.py --zone kurs-puti-i-volny/SBORKA/ZAMER-grafa.md --zone kurs-puti-i-volny/SBORKA/graf-rebra.tsv --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md -m "<what>"`. Budget ceiling 120k tokens.
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
