@@ -77,3 +77,10 @@
 - **Usage:** weekly **39 %** at 01:39 (ceiling 45 %), 5-hour 12 %. Worktrees 16.
 - **S4а launched** on Sonnet (Claude Code subagent, main folder), ceiling 150k.
 - **ГОЛОВА О СЕБЕ:** my own check run of graf.py from the main tree was the thing that exposed the cross-tree output defect in round 6 — running the criterion MYSELF found a defect no report mentioned, second time tonight (first: S1's placeholder descriptions). ЦЕНА of skipping it: both defects would have shipped.
+
+## Round 8 — 2026-09-19 02:06 MSK — S4а accepted, S4б and S4в launched in parallel
+
+- **S4а accepted — `принято`.** Sonnet **268k** tokens (ceiling 150k, exceeded 1.8×), 25 min. 33 items in `plan/src/punkty.md`, generator `tools/plany.py` with 7 views and gates; ⭐ gate reds on exactly the 24 empty fields of quarter 1 (head re-run); mutation test 5/5 by a fresh subagent. The owner's 19.09 shape is encoded. Weakness carried: `obobshchaetsya-v` is a linear next-item chain, so the selection gate of Д2 passes by construction.
+- 🔴 **Two defects of S2's graf.py surfaced only at S4а acceptance, repaired by the head (`681b9aec`):** (1) gate [c] demanded exactly one level up and counted 6 analysis-part quarter anchors as orphans although they link `god-*` — the mandate says «upward», the gate said «one level up»; (2) `SBORKA_DIR = kpv_dir.parent / 'SBORKA'` wrote live outputs to the REPO ROOT — the S2 acceptance saw `ZAMER-grafa.md written to …/kurs-puti-i-volny/SBORKA` only because Haiku had run it before the regression. ЦЕНА: a gate accepted at S2 with fixtures green was wrong on the first real input; fixtures proved the mechanics, not the semantics against the mandate. **ГОЛОВА О СЕБЕ:** I wrote the one-level-up rule myself in ПРАВКА 1 of S2 — the defect was in my brief, not in the executor.
+- **Usage:** weekly **39 %** (unchanged by S4а), 5-hour 13 %, head context 400k / 1M (40 %).
+- **Launched:** S4б on **Opus** (ceiling 200k, lecture 1 first) ∥ S4в on **Sonnet** (ceiling 250k, RASSKAZ-god). Different models, disjoint zones (`plan/src` vs `RASSKAZ-god.md`), both in the main folder with path-only commits.
