@@ -443,7 +443,7 @@ Nothing to merge/purge/deliver: unmerged `zahod/*` = 0, open заявки addres
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — S4v Sonnet: 225k tokens (ceiling 250k), 15 min, commits 5ea6c337 d9767463. Head re-run: zone in git, 52 547 characters (Python len; bare wc -m counts bytes in this locale), 8 anchors rasskaz-g1..g8, check_termin rc=0, indeks green; head read the opening: question before answer, counting by hand, first person — readable. Clause (e): fresh Haiku reader with only the file named one function F_m(x,y;z,q) as the throughline and four tools investigating one probability object — passes. Five causes of dullness diagnosed and removed by cutting scaffolding (verification footnotes, margin tags, YAML, draft footers, length). (copied from the mandate's VERDICTS by the wave head at closing, 2026-09-19)
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -454,6 +454,6 @@ Nothing to merge/purge/deliver: unmerged `zahod/*` = 0, open заявки addres
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: the position worked in the main folder on `arka/mat-kostyak` and pushed its own commits; nothing to merge or extinguish.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*

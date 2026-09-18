@@ -409,7 +409,7 @@ The second free run changed nothing (verification only). You are now Haiku 4.5, 
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — S2: run 1 inkling:free (0 tokens) built graf.py with a lying gate [c] and unfinished [3]/[4]; run 2 inkling:free re-verified only (false success); run 3 Haiku 4.5 (156k tokens, 7 min) fixed it and merged 00819098. Head re-run on main: rc=0, 7 of 7 sections, export 116 links >= 88, gate [c] broken fixture rc=1 / fixed rc=0, live corpus plan anchors 0 orphans 0. Real finding: [4] reaches 1 of 81 files from ZAMYSEL.md because the entry file carries 0 [[id]] links. Minor: [3] tie-breaking is not deterministic between runs. (copied from the mandate's VERDICTS by the wave head at closing, 2026-09-19)
 
 **ВЕТКА РАБОТЫ:** `zahod/graf-korpusa`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -420,7 +420,7 @@ The second free run changed nothing (verification only). You are now Haiku 4.5, 
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: the branch was merged into `arka/mat-kostyak` by the position itself and its worktree dropped by the head.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
 

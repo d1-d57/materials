@@ -337,7 +337,7 @@ Model now: Haiku 4.5 (escalation after two free-model false successes). Budget c
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — S3 after two free false successes (codestral chat-only, inkling-small did only §0.1), escalated to Haiku 4.5: 130k tokens, 5 min, merged 4d88fc6e. Head re-ran the criterion: 16 of 16 rows with a status, 7 of 7 pairs routed, dubli 7->6 (pair 1 made a pointer, header kept), indeks rc=0, cards 24=24. Minimal work: 0 rows closed by edit, 0 new cards from 8 reports; rows Р6 and Р14 were mislabelled 'closed by card index' and relabelled open by the head (fcaac71d). (copied from the mandate's VERDICTS by the wave head at closing, 2026-09-19)
 
 **ВЕТКА РАБОТЫ:** `zahod/konsolidaciya-korpusa`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -348,7 +348,7 @@ Model now: Haiku 4.5 (escalation after two free-model false successes). Budget c
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: the branch was merged into `arka/mat-kostyak` by the position itself and its worktree dropped by the head.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
 
