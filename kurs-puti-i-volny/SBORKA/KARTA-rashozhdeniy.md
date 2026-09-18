@@ -245,3 +245,77 @@ status: zhivoy
 
 ---
 *Метод: сплошное чтение `ZAMYSEL.md`, `PERESTROYKA.md`, `KOSTYAK.md`, `HREBET-kursa.md`, `plan/src/karkas.md`, `plan/src/voprosy.md`, `plan/src/plan.md`, `OBOZNACHENIYA.md`, `SLOVAR.md`, `SVEDENIE-kursa.md`, `SKELET.md`, `LEKCIYA-v2/00-arhitektura.md`, `RAZVEDKA-2026-09-03.md` — 13 из 13.*
+
+---
+
+# Part A: Пары дублей — маршрут (S3, 2026-09-19)
+
+- Д-пара 1 · `OBRAZEC-summy-kvadratov.md` ↔ `obrazec/src/obrazec.md` · РЕШЕНИЕ: указатель · Secondary file OBRAZEC-summy-kvadratov.md contains identical content; replace body with pointer to primary at `kurs-puti-i-volny/obrazec/src/obrazec.md`.
+
+- Д-пара 2 · `zahody/ZAHOD-formy-yakobi.md` ↔ `zahody/ZAHOD-sverka-koncepcii.md` · РЕШЕНИЕ: законный повтор · Both are work-assignment documents for different explorations (Jacobi forms vs concept verification); separate entries serve as distinct briefs for separate work branches.
+
+- Д-пара 3 · `obzory/funkciya-putey-i-ee-uravneniya/SKELET.md` ↔ `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA/00-obshchee.md` · РЕШЕНИЕ: законный повтор · Both files are read-only (obzory/); lecture naturally summarizes and builds on skeleton material; no simplification possible.
+
+- Д-пара 4 · `KOSTYAK.md` ↔ `otchety/RAZBOR-i-perestroyka.md` · РЕШЕНИЕ: законный повтор · Report analyzes and discusses the mathematical structure documented in KOSTYAK; both serve distinct purposes (skeleton reference vs analysis).
+
+- Д-пара 5 · `plan/src/karkas.md` ↔ `plan/src/plan.md` · РЕШЕНИЕ: законный повтор · Both files are read-only (plan/); plan elaborates on framework; no simplification possible.
+
+- Д-пара 6 · `PERESTROYKA.md` ↔ `obzory/funkciya-putey-i-ee-uravneniya/LEKCIYA-v2/00-arhitektura.md` · РЕШЕНИЕ: законный повтор · Lecture architecture document is read-only; PERESTROYKA describes restructuring while LEKCIYA-v2 documents the result; both necessary.
+
+- Д-пара 7 · `ARHITEKTURA.md` ↔ `ZAMYSEL.md` · РЕШЕНИЕ: законный повтор · Both files are read-only (decision records); both serve as authoritative sources for architectural and conceptual decisions.
+
+---
+
+# Part B: Состояние строк на 2026-09-19 (S3)
+
+- Р1 · СТАТУС: владельцу · Central object — полоса or окружность: recorded as owner decision (resolved 2026-09-03 in card `kart-polosa-ili-okruzhnost`).
+
+- Р2 · СТАТУС: владельцу · Continuous limit in course scope: owner decision on whether limit enters course (three cards document the mathematics; decision on inclusion is owner's).
+
+- Р3 · СТАТУС: владельцу · Empty cell «отрезок × вес» and oscillating weight: owner decision on whether $q$-weight enters block 4, given consequences for course structure.
+
+- Р4 · СТАТУС: владельцу · Three claims without support after 03.09 revision: owner decision on how to rebuild `SVEDENIE-kursa.md` against skeleton dependency graph.
+
+- Р5 · СТАТУС: S4а по построению · Arithmetic of reducibility misaligned: S4a stage will compute counts from dependency graph; resolved by construction in next stage.
+
+- Р6 · СТАТУС: закрыто картотекой · Twelve themes listed but thirteen enumerated: error in manual count; no card needed (arithmetic issue, already noted in KARTA-OBLASTI).
+
+- Р7 · СТАТУС: открыто · Coverage condition outdated: `ZAMYSEL` В10 holds pre-restructure diagnosis; LEKCIYA-v2 table shows newer coverage; **verification of actual coverage after chapter 3 and 6 written remains open**.
+
+- Р8 · СТАТУС: открыто · Four quarters trace uncompleted: three additional carriers found (KOSTYAK, PERESTROYKA §5а, LEKCIYA-v2) not caught by 03.09 search; **living search for traces of outdated framework required**.
+
+- Р9 · СТАТУС: закрыто картотекой · Letter $m$ convention both ways: resolved by card `kart-polyusa-spektr` (polüsa = roots $U_{m+1}$); discrepancy lives only in `voprosy.md` which is live working document.
+
+- Р10 · СТАТУС: S4а по построению · Number of chapters six/seven/eight: S4a will generate chapter list from single source; settled by construction.
+
+- Р11 · СТАТУС: владельцу · Boundary of first half unsettled: four candidates given in `voprosy.md` with no resolution; owner decision pending.
+
+- Р12 · СТАТУС: открыто · Notation violations in foundation files: letter $F_n$ for Fibonacci conflicts with hero function (SKELET утв. 9); $\varphi$ and $\theta$ reused; SKELET not listed as violator — **gating of notation contract incomplete**.
+
+- Р13 · СТАТУС: S4а по построению · Three decompositions of course structure: S4a replaces hand-written divisions with single generated source.
+
+- Р14 · СТАТУС: закрыто картотекой · Wrong address in warning: `OBOZNACHENIYA §3` warns about probabilistic normalization $3\pi^2/(2M^2)$ in KOSTYAK, but search finds it only in SVEDENIE; **warning address incorrect but issue documented in `kart-tri-normirovki-ploshchadi`**.
+
+- Р15 · СТАТУС: открыто · ZAMYSEL violates own rules: copies table from `karkas.md` (currently in sync) and lists "32 themes" by number (should be command); section numbering В1…В7, В10, В9, В8 is out of order — **internal consistency of decision home degraded**.
+
+- Р16 · СТАТУС: владельцу · Object with published name already: two cards (`kart-al-salam-ismail-dom`, `kart-dom-teorem-vienno`) document that the $q$-object is precisely Al-Salam–Ismail polynomials (1983) and that our theorems are republications; **owner to decide: accept historical attribution or proceed with pedagogical discovery framing**.
+
+---
+
+# Для S4а и писателей
+
+**Open rows after S3:**
+
+Р7 — Coverage verification incomplete after new chapters written; recommend manual check of all blocks.
+
+Р8 — Traces of "four quarters" framework persist in three documents from 03.09; recommend scriptable search for outdated markers.
+
+Р12 — Notation contract gating broken; SKELET notation violations not caught.
+
+Р15 — Decision home (ZAMYSEL) has internal consistency issues (duplicated fact, computed value stored as number, jumbled section numbering).
+
+**Cards added in S3:** None. All verified findings in reports either matched existing cards or lack sufficient computational verification to warrant new entry.
+
+**Owner decisions required before S4a:**
+
+Р1, Р2, Р3, Р4, Р16 — fundamental choices about course scope and attribution. S4a cannot proceed until these are recorded.
