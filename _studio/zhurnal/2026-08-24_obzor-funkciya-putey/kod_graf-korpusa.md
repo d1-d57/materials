@@ -391,7 +391,15 @@ Time/progress: live run completed; 4 of 6 questions fully working, gate [c] prov
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-09-19 01:25 · rework: gate [c] lies, sections [3] and [4] unfinished
+
+The wave head accepted nothing yet. Verdict: доработка. This is a RESTART in the same branch — your previous commits are here; continue from them. Fix exactly these, commit after each:
+1. 🔴 **Gate [c] is wrong.** Your own report: on the fixed fixture it prints `orphans: 2` and exits 0. Required semantics, strictly: an anchor `chast-X` is NOT an orphan iff it has an outgoing `links` edge to an anchor whose id starts with `god-`; `chetvert-X` iff to an id starting with `chast-`; `lekciya-X` iff to an id starting with `chetvert-`; `god-*` anchors are exempt and are NOT counted as orphans. `orphans` = count of non-exempt plan anchors without such an edge; `--siroty-gate` exits 1 iff orphans > 0. On the fixed fixture it must print `plan anchors: 2 · orphans: 0` and exit 0; on the broken one `plan anchors: 1 · orphans: 1` and exit 1. Paste both.
+2. **[4] reachability:** BFS from the file node `kurs-puti-i-volny/ZAMYSEL.md` over `contains` AND `links` edges, where a link to an id-node also reaches the FILE that defines that id (edge id → its file). Print reachable/total file nodes and list the unreachable files.
+3. **[3] depth:** over `links` edges between id-nodes and files: condense cycles (`komponenty`/`najti_cikl`), longest path by dynamic programming over the topological order (`kan_poryadok`); print the length and the chain.
+4. **[5]** must print the `contains` count too.
+5. `register_doc.py` refusing a path outside `_studio/` is expected — drop that step; the head records it.
+Then rerun the whole criterion, rewrite `## ОТЧЁТ`, and merge into `arka/mat-kostyak` with the `vlit-v-osnovnuyu` command of the final hygiene block.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
