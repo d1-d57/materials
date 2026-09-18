@@ -352,22 +352,69 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+(taken by the executor itself, as the wave head ordered: no git-contour subagent; before any work)
+```
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak      → (empty), rc=0
+$ git --no-optional-locks status --porcelain | wc -l               → 12   (all of them other people's: _studio/zhurnal/…/PULS-CHASOVOGO…log, SERDCE-VOLNY…md, mandate_noch…md, _INFRA-git/INCIDENTY.md, _fond/zadachi/risunki/*.svg, diskmat-57/2026-08-18_logika-goda-7/*.md, scratchpad/)
+$ git --no-optional-locks log --oneline @{u}.. | wc -l             → 0
+$ git_zona.py zayavki                                              → ✅ заявок нет · «Охват: заявок открыто 0, переадресовано 12, …», rc=0
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'  → 0 (rc=1, grep's code for a zero count)
+$ git_zona.py check --zone kurs-puti-i-volny/plan/src _studio/…/kod_napolnenie-chetverti.md   → rc=2 «⛔ Не понял часть команды» (form in §0.1 lacks a second --zone)
+$ git_zona.py check --zone kurs-puti-i-volny/plan/src --zone _studio/…/kod_napolnenie-chetverti.md → ✅ «работа доехала в git, вне git ничего нет», rc=0
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Nothing to merge, push or close at entry (all three numbers 0). My own work was committed and pushed as I went: `ee55bbac`, `2f397d5e`, `545e1170`, `d7d123f9`, `b6103ca5`, plus the final commit named in `## ОТЧЁТ`. The 12 uncommitted paths belong to other people and are left alone.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да` (there were none of mine; the 12 uncommitted paths are other people's content work outside my zone)
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/plan/src/lekciya-1.md` — any Markdown viewer (lecture 1, minute by minute); the quarter is at `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/plan/src/chetvert-1.md`; the source is `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/plan/src/punkty.md`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `ee55bbac` (p-01 + storyboard, the deadline item) · `2f397d5e` (p-02, p-03) · `545e1170` (p-04–p-06) · `d7d123f9` (level blocks) · `b6103ca5` (VOPROSY) · the final commit carries this report and the homework-beat pacing edit; its hash is in the owner's chat message, because a commit cannot contain its own hash · `git_zona.py check --zone kurs-puti-i-volny/plan/src --zone _studio/…/kod_napolnenie-chetverti.md` → ✅
+
+ПРАВКИ ПОСЛЕ ВЫДАЧИ: none (block reads «<правок нет>»).
+
+**What was done and why.**
+- Part 1 (first, committed alone as `ee55bbac`): p-01 «Двое гуляют — один возвращается». The four ⭐ fields and a nine-beat `raskadrovka` (0–6, 6–18, 18–25, 25–37, 37–47, 47–60, 60–78, 78–86, 86–90 = 90 min). The lecture makes two full turns of the four-beat pattern. First turn: two walkers meeting = one walker returning → $\sum\binom nk^2=\binom{2n}n$ → cut the path (Vandermonde) and watch the gap (bijection) → $(1+z)^m(1+z)^n=(1+z)^{m+n}$. Second turn: the drunkard's mean square distance → committee with a chairman (and a secretary) → derivatives at $z=1$ → exactly $n$. Then the door to the quarter: the area polynomial $1+q+2q^2+q^3+q^4$ and «which rules survive?». Algebra appears only as packing, never as proof.
+- Examples in lecture 1: K = 4, each named with what it generalises into: Pascal by the last step → the one-step operator on the segment; Vandermonde / cut → every cut-and-glue of the year, the product of functions on the segment; the gap bijection (sum of squares = return, stmts 11–12) → a pair of walks read as one walk (plane walk = two line walks); committee/derivative → a statistic is a differential operator (area next quarter). Each homework problem carries its own ticket.
+- Dropped on the selection gate: the 1:2:3 row problem (1001:2002:3003). It is a recurrence inside the triangle and cannot be seen at the level of the generating function. The plan in the brief was otherwise kept: two turns of the pattern are the lecture's own logic, not a quota.
+- Part 2: p-02 «Что остаётся под путём» (distinct = odd, conjugation; problem: the ×3 version of the bijection), p-03 «Бином, который помнит площадь» (q-Pascal, symmetry, 35 subspaces; problem: the Fano plane), p-04 «Коробка без стенок» (partition product as the limit of the box; 100 rubles = 2156; problem: parts ≤3 → nearest integer to $(n+3)^2/12$), p-05 «Треугольник у основания» (convolution, $T=1+zT^2$; problem: bracketings), p-06 «Дерево внутри многоугольника» (dual binary tree, first-child/next-sibling; problem: tree walk → path that never goes below zero, the ray begins). Numbers checked by script: 2156; the Glaisher ×3 identity for n≤15; $(n+3)^2/12$ for n≤15; the closed plane walks 4, 36, 400; the Franel numbers 2, 10, 56, 346; the area polynomial.
+- Part 3: `obobshchenie` + `svod` written for `god`, `chast-do-analiza` and `chetvert-1` in `punkty.md`. 🔴 They do NOT render: `plany.py` drops level keys (queue item 1). The work-around is in words: the text sits in the single home and appears the moment the parser reads it. Quarters 2–4, their level blocks and both `polugodie` blocks are left empty.
+- Coverage: «items filled 6 of 6 in quarter 1 · level summaries 3 of 3 (written; 0 of 3 rendered, parser defect) · examples in lecture 1: 4, each with the name of what it generalises into».
+
+**КРИТЕРИЙ ГОТОВНОСТИ — verbatim, return code first:**
+```
+1. python3 kurs-puti-i-volny/tools/plany.py --proverit; echo $?
+   ✅ punkty.md чист
+   rc=0
+2. python3 kurs-puti-i-volny/tools/plany.py; echo $?
+   wrote …/god.md, …/chast-1-do-analiza.md, …/chetvert-1.md … chetvert-4.md, …/lekciya-1.md
+   rc=0
+   wc -m kurs-puti-i-volny/plan/src/lekciya-1.md → 17571   (≥ 6000)
+3. grep -ciE 'стирлинг|асимптот|каталан|пятиугольн|франклин|серпинск' kurs-puti-i-volny/plan/src/lekciya-1.md
+   0      (grep rc=1, its code for zero matches)
+4. cd kurs-puti-i-volny && python3 tools/indeks.py; echo $?
+   узлов графа: 223 (карточек 24, якорей 199) · ссылок: 182 · без описания: 1 (унаследованных 1, новых 0) · ✅ гейт зелёный
+   rc=0
+   python3 kurs-puti-i-volny/tools/graf.py | grep -A2 '^\[c\]'
+   [c] Plan anchors: 94 · orphans: 0
+   rc=0
+```
+Also: `check_termin.py punkty.md` → ✓ ЗЕЛЁНЫЙ, rc=0. In the lecture, «путь», $\binom nk$, «производящая функция» and $\mathbb E$ are each introduced before their first working use (one «6 путей» in beat 0–6 was changed to «6 исходов» for this).
+
+**Verifier (§3):** a fresh sonnet subagent that read ONLY `chetvert-1.md` and `lekciya-1.md`. Its reply is verbatim in the owner's chat message. It ended «выдано 7 позиций из 7 найденных». Verdicts: p-01 strong · p-02 strong (title called «marginal», the weakest of six) · p-03 strong · p-04 strong · p-05 strong (title «marginal», «most textbook») · p-06 strong · lecture strong. It found no mathematical error and no term used before it is introduced. Nothing was called dull, so no rewrite round was required. One follow-up was acted on: the 4-minute homework close was flagged as the only tight spot, and the beat now says that the homework is handed out as a sheet with hints. Not acted on: the two «marginal» titles (not dull) and the «1,1,2,…» vs «1,2,…» indexing remark (both are correct as written for their own indexing).
+
+**Not touched:** `tools/plany.py`, every generated view by hand, the preface/form of `punkty.md`, quarters 2–4, `RASSKAZ-god.md`, and the 12 uncommitted paths that belong to other people.
+**НЕОБРАТИМОЕ:** необратимого нет. Only additions inside ⭐ fields, `raskadrovka` and level fields, and every step is in git.
+**Время прогона + токены:** на канале `app` неприменимо.
+**ПОВТОРЯЕМОСТЬ:** this repeats: the level-key parser defect (queue 1) hits every future level fill, so it needs a brief before the next filling run. The §0.1 double-`--zone` form (queue 3) repeats on every two-path brief, so it is a factory fix. This does not repeat: the stale preface lines (queue 2), a one-time edit.
+**Hygiene Г1–Г6:** Г1: the zone check is ✅ (output below). Г2: неприменимо, the zone stays inside `materials`. Г3: `branch --no-merged` is empty, it was empty at entry too. Г4: no new `.py`. Г5: no new `.md`. Г6: `show --stat` of each commit lists only zone paths (checked for `ee55bbac`; the tool's live-file check printed «Все пути в git» after each commit).
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
