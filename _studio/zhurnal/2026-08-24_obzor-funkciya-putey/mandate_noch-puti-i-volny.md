@@ -582,7 +582,33 @@ S6 records this and does not re-open it.
 > `ОТМЕНА-РЕШЕНИЯ`. At closing each `ПРАВКА-ЗАКОНА` is promoted into a decision or dropped with a
 > named reason, and their COUNT is printed in the balance — it measures how good this mandate was.
 
-*(empty at assembly)*
+### Д1 · 2026-09-19 00:54 · ТИП: `НОВАЯ-РАБОТА` · СТАТУС: выдано голове в чат
+
+**Текст.** Нулевым ходом, ДО S1 и до любой другой работы: вывезти в git всё, что лежит вне его.
+
+**ОСНОВАНИЕ — замер, не впечатление.** `git_zona.py check` на момент выдачи мандата:
+**вне git 49 путей** — рождено и никогда не ставилось 21, правлено и не закоммичено 28. Среди
+рождённых — вся работа ночи 18–19.09: `kurs-puti-i-volny/ARHITEKTURA.md`, `OBEKT.md`, `PAZL.md`,
+`INDEKS.md`, вся папка `SBORKA/`, `tools/indeks.py`, `tools/dubli.py`, `proverki/kalendar_goda.py`,
+сам этот мандат и заход `kod_pasporta-korpusa.md`. Это существует в одном экземпляре и умирает от
+одного `git clean`.
+
+**Почему это не сделал аналитик.** Из песочницы Cowork коммит оставляет мёртвый `index.lock` и
+кладёт репозиторий — цена записана в `HANDOFF-2026-09-03.md` этой же арки. Голова работает
+host-side и пишет в `.git` законно.
+
+**Как.** `git_zona.py plan` → `git_zona.py commit --zone <зона>`, зонами, не одним ходом.
+Разумное деление: (1) `kurs-puti-i-volny` — ночная работа аналитика; (2) папка этой арки — мандат,
+заход, журнал; (3) `obzory/funkciya-putey-i-ee-uravneniya` — шапки восьми глав прогулки.
+⚠ Звал `register_doc.py` — `_studio/docs/KARTA.md` уезжает в ТОТ ЖЕ коммит.
+⚠ `--no-optional-locks` обязателен: у владельца может идти параллельная ручная работа.
+
+**Чего НЕ делать.** Не коммитить чужое: в 49 путях есть работа других проектов
+(`diskmat-57/`, `_fond/`, `spetsmat-2026/`) — она не наша, пальцем не трогать, в отчёт строкой.
+
+**Готово, когда:** `git_zona.py check` по трём названным зонам зелёный, и число «вне git» в целом
+по дереву упало не меньше чем на 21 — то есть ни один рождённый ночью файл больше не сирота.
+
 
 ## HALF TWO — WRITTEN BY THE ORCHESTRATOR, ON RETURN
 

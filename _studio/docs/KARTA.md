@@ -84,6 +84,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-09-19.md`** (Выгрузка сессии 2026-09-19 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_pasporta-korpusa.md`** (паспортизация корпуса курса: описания в шапки, ссылки на картотеку, читаемый индекс)
 
 
