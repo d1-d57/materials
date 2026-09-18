@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# TOOL-CONTRACT: called-by-hand — the owner reruns it after each lesson
 """Class infographic: who of the kids is where.
 
 Reads the per-lesson hand-in CSVs of one day and writes one self-contained
