@@ -291,6 +291,21 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor, 2026-09-19. Branch checked: `arka/mat-kostyak`. Read: this brief in full; preface and «Для наполнителя (S4б)» of `punkty.md`; `OBEKT.md` §1–2; boiler statement list, statements 10–12 and Problem 1. No card of `catalan/kartoteka/` is named by any quarter-1 `adres`, so none read. Parser of `tools/plany.py` read (not edited) only to learn how a multi-line `raskadrovka` is carried: every non-blank line that is not a known `ключ:` is a continuation and becomes one bullet in `lekciya-1.md`; so one beat = one line.
+
+1. Part 1 first. Lecture 1 = two full turns of the four-beat pattern on the bare line, then the door to quarter 1.
+   - Turn 1 (main): «two walkers meet» and «one walker returns home» give the same numbers → identity $\sum\binom nk^2=\binom{2n}n$ → two proofs (cut the path = Vandermonde; watch the gap = bijection, stmts 10–12) → packing $(1+z)^m(1+z)^n=(1+z)^{m+n}$: cutting a path is multiplying generating functions. Ticket: every cut-and-glue of the year, the transfer on the segment.
+   - Turn 2: «how far does a drunkard get in $n$ steps» → sums $\sum k\binom nk$, $\sum k(k-1)\binom nk$ → committee with a chairman (and a secretary) → derivatives of $(1+z)^n$ at $z=1$; mean square distance is exactly $n$. Ticket: a statistic is a differential operator — exactly how the area statistic arrives next quarter.
+   - Close: count paths in the box by area — $1+q+2q^2+q^3+q^4$ for $n=4,k=2$ — which rules survive? This opens the quarter (and p-03 later puts $q=2$ into the very same polynomial → 35).
+   - Homework: four GF-seeable problems (biased coin parity = value at $-1$; planar walk = product of two line walks; alternating squares $(1-z^2)^n$; three walkers — no single binomial, a coefficient of a product: preparation for p-04).
+   - Dropped on the selection gate: the 1:2:3 row problem (a recurrence inside the triangle, not seeable at GF level). Named in the report.
+2. Regenerate, check `lekciya-1.md`, commit+push p-01 alone.
+3. Part 2: p-02…p-06, commit after p-02/p-03, after p-04/p-05, after p-06.
+4. Part 3: level blocks `chetvert-1`, `chast-do-analiza`, `god`; quarters 2–4 and both `polugodie` blocks stay empty (not in the brief's list).
+5. Criterion clauses 1–4, fresh reader (sonnet, only the two views), one rewrite round if an item is called dull, final hygiene, report.
+
+Criterion remarks (before work): §0.1's second command as printed is missing a second `--zone` and exits rc=2 «Не понял часть команды»; I ran the corrected form (rc=0, ✅). Clause 3's grep is fine. No other objection.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
