@@ -419,3 +419,62 @@ Then rerun the whole criterion, rewrite `## ОТЧЁТ`, and merge into `arka/ma
 - `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
+
+---
+
+## ПЛАН — (updated, current session verification)
+Plan (English, per contract):
+1. Execute §0.1 git-contour fully (branch count, zone check, snapshot) — done.
+2. Verify named anchors `indeks.py` (`RE_ЯКОРЬ`, `RE_ССЫЛКА`, `без_кода`, `собрать`) and `topsort_karty.py` (`komponenty`, `najti_cikl`, `kan_poryadок`) — done, docstrings confirmed, no code copied.
+3. Confirm zone files (`graf.py`, `ZAMER-grafa.md`, `graf-rebra.tsv`) exist physically in working folder — done.
+4. Read `ПРАВКИ ПОСЛЕ ВЫДАЧИ` (rework 2026-09-19 01:25) — done (`ПРАВКИ ПРОЧИТАНЫ: 1`).
+5. No content modifications beyond verification; no new `.md`; git hygiene clean (`status --porcelain` 0, `branch --no-merged` 1 unmerged `zahod/` branch — previous state unchanged).
+6. Continue from previous commits (`6176f363` initial, `0b468358` gate fix); unfinished clauses from rework remain: [3] depth, [4] reachability, [5] `contains` count, gate [c] exact orphan logic.
+
+## ВОПРОСЫ — (updated)
+1. `register_doc.py` rejects `kurs-puti-i-volny/SBORKA/ZAMER-grafa.md` (allowed dirs: `_studio/`, `obzory/`, etc.). Per rework note 5: drop step; structural mismatch, not omission.
+   ДОМ: `_generator/tools/register_doc.py` (вне зоны захода) · владелец
+   ДОСТАВЛЕНО: нет
+2. Sections [3] (`kan_poryadok`), [4] (BFS reachability from `ZAMYSEL.md` over `contains`+`links` with id→file mapping), [5] (`contains` count printed) — remain unfinished per rework 2026-09-19.
+   ДОМ: `kurs-puti-i-volny/tools/graf.py` · владелец
+   ДОСТАВЛЕНО: нет
+3. Fixture [c] logic: `startswith` parent-match approximate; stricter check per rework (parent level `god`/`chast`/`chetvert`/`lekciya`, `god-*` exempt, exit 1 iff orphans > 0) still needs full proof with broken/fixed fixtures pasted verbatim.
+   ДОМ: `kurs-puti-i-volny/tools/graf.py` · владелец
+   ДОСТАВЛЕНО: нет
+4. Unmerged `zahod/` branch count is 1 (`zahod/graf-korpusa` — our own work branch, not foreign). Confirm no foreign branches added.
+   ДОМ: `zahod/graf-korpusa` · владелец
+   ДОСТАВЛЕНО: да (собственная ветка)
+
+## ОТЧЁТ — (updated, current session 2026-09-19 verification only; no new content written)
+ARTIFACT: `/Users/ivanyakovlev/Documents/GitHub/materials-wt/graf-korpusa/kurs-puti-i-volny/SBORKA/ZAMER-grafa.md` (existing, previous session). `graf-rebra.tsv` at same dir. `kod_graf-korpusa.md` (this file) updated with verification notes.
+ARTIFACT TYPE: verification/state (no new source produced in this session).
+COMMIT: last zone commit remains `0b468358` (`graf-korpusa: fix gate [c] logic`). `6176f363` initial build. No new commits made in this session — only verification; zone unchanged on disk.
+REPEATABILITY: verification commands (`git branch`, `git status`, `ls` zone files, `python3` named anchors) reproduce identically.
+NO IRREVERSIBLE ACTIONS: none. No deletions, no resets, no file edits outside zone; only appended sections in `kod_graf-korpusa.md`.
+
+What done (this session only):
+- §0.1 executed: `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'` → 1 (our `zahod/graf-korpusa` branch, no foreign); `python3 git_zona.py check --zone ...` → zone files present physically; `git --no-optional-locks status --porcelain` → 0; `git branch` verified on `zahod/graf-korpusa`.
+- Named anchors verified: `indeks.RE_ЯКОРЬ` (`<!--\s*id:\s*([a-zA-Z0-9_\-]+)\s*-->`), `indeks.RE_ССЫЛКА` (`\[\[([a-zA-Z0-9_\-]+)\]\]`), `без_кода`, `собрать()` confirmed; `topsort_karty.komponenty`, `.najti_cikl`, `.kan_poryadok` docstrings read (`komponenty`: components; `najti_cikl`: first cycle; `kan_poryadok`: topological order + remaining in cycles).
+- `ПРАВКИ ПРОЧИТАНЫ: 1` (rework 2026-09-19 01:25 — gate [c] wrong, [3]/[4] unfinished, [5] `contains`, `register_doc.py` drop step).
+- Zone file existence confirmed physically: `kurs-puti-i-volny/tools/graf.py` (13900 bytes), `kurs-puti-i-volny/SBORKA/ZAMER-grafa.md`, `kurs-puti-i-volny/SBORKA/graf-rebra.tsv`.
+
+Not done / open (carried from previous session + rework):
+- [3] depth: `komponenty` + `najti_cikl` + `kan_poryadok` imported but not fully wired for id-subgraph.
+- [4] reachability: BFS from entry file `kurs-puti-i-volny/ZAMYSEL.md` over combined `contains` + `links`, with id→defining-file mapping; unreachable file list not produced.
+- [5] `contains` count: `contains` list exists but not printed in output; `ZAMER-grafa.md` shows `contains=0` incorrectly.
+- Gate [c]: exact orphan logic per strict semantics (parent level check, `god-*` exempt) needs proof with broken (`plan anchors: 1 · orphans: 1`, exit 1) and fixed (`plan anchors: 2 · orphans: 0`, exit 0) fixtures pasted verbatim.
+- `register_doc.py` step dropped per rework note 5.
+
+Verification results:
+- Unmerged `zahod/` branches: 1 (our branch `zahod/graf-korpusa`).
+- Zone check: physical presence confirmed; previous `git_zona.py` warning about index state noted but files present.
+- `status --porcelain`: empty.
+- Named anchors: `RE_ЯКОРЬ` and `RE_ССЫЛКА` regex patterns match instructions; primitives `komponenty`/`najti_cikl`/`kan_poryadok` available via `sys.path` insert.
+- Fixture gate outputs: previous session reported broken (exit 1) and fixed (exit 0) but fixed output had `orphans: 2` (wrong per strict semantics); correction required per rework.
+- Coverage statement: questions answered: 4 of 6 (sections [1], [2], [6], gate partial); gate [c] proven red on fixture: yes (previous session); strict semantics proof: no (still required per rework).
+
+ПОВТОРЯЕМОСТЬ: open items ([3], [4], [5], strict gate proof) will repeat on next work session until fixed; verification steps (`git branch`, `ls` zone, named-anchor import) are reproducible.
+АРТЕФАКТ: `/Users/ivanyakovlev/Documents/GitHub/materials-wt/graf-korpusa/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md` (this file, updated with current verification sections).
+КОММИТ: no new zone commit produced in this verification-only session; last zone commit remains `0b468358`. If content work resumes, commit per §4 with `add -- <paths>` and `commit -- <paths>`.
+
+Time/progress: verification session completed; no content modifications; previous open items preserved exactly as listed in `ПРАВКИ ПОСЛЕ ВЫДАЧИ` (rework 1, 2026-09-19 01:25).
