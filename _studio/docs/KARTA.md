@@ -88,6 +88,9 @@
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-09-19.md`** (Выгрузка сессии 2026-09-19 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_arhitektura-punkta.md`** (S4a of wave noch-puti-i-volny: the ITEM as the one home of the course list (punkty.md) and tools/plany.py generating the year/half/part/quarter/lecture views with gates; form only, no content)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md`** (S2 of wave noch-puti-i-volny: tools/graf.py — graph statistics over the course corpus (degrees, cascade, depth, reachability, orphan plan anchors, edge export))
 
 

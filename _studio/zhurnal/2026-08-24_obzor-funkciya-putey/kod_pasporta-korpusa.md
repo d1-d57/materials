@@ -499,7 +499,7 @@ Written by the head of wave `noch-puti-i-volny` before launch (the process is no
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 ../disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — criterion re-run by the head (2026-09-19 01:08): `git_zona.py check` ✅ on all three zones; `indeks.py` rc=0, `ссылок: 88`, no dangling id; `без описания: 1` = INDEKS.md itself (closed generator cannot describe its own output → owner question V1 in the mandate); 24 identical placeholder card descriptions repaired by the head by script in `75a7e11a`; the out-of-zone edit of `catalan/kartoteka/` is a brief defect (DOLG listed the cards, the zone forbade them).
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 ../disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -510,6 +510,6 @@ Written by the head of wave `noch-puti-i-volny` before launch (the process is no
 > Ставится командой: `python3 ../disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: the position worked in the main folder on `arka/mat-kostyak` itself — nothing to merge, nothing to extinguish; the head pushed the three unpushed commits.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
