@@ -269,6 +269,22 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Plan (English, per contract):
+1. Build `kurs-puti-i-volny/tools/graf.py` using standard library only.
+2. Import `indeks` (from `kurs-puti-i-volny/tools/indeks.py`) and call `собрать()`.
+3. Import primitives `komponenty`, `najti_cikl`, `kan_poryadok` from `../disciplina/_generator/tools/reserch/`.
+4. Build nodes (file paths + id nodes from cards/anchors) and edges (`contains`, `links` with nearest preceding anchor attribution).
+5. Answer six questions [1]-[6] and gate [c] (`plan anchors` / `orphans`).
+6. Write `kurs-puti-i-volny/SBORKA/ZAMER-grafa.md` (with YAML header `opisanie:`) and `graf-rebra.tsv`; register new `.md` via `register_doc.py`.
+7. Add `## For the writing stages` at end of `ZAMER-grafa.md`.
+8. Prove gate [c] red on broken fixture (`chast-01` without link, then with `god-01` link) — criteria 3.
+9. Run all success criteria (live run, export count, gate red, cascade, registered doc).
+10. Commit zone after each working step (`add --` + `commit -- <paths>` + `git_zona.py check --zone`).
+11. Final hygiene (§4.1): branch unmerged, zone clean, new `.md` registered, no foreign paths in commit, register_doc line present in KARTA.md.
+12. Write `## ОТЧЁТ` (English), `## ВОПРОСЫ`, commit, merge branch, post-check from main folder.
+
+No speculation; only zone paths changed.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
