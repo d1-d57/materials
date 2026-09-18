@@ -289,6 +289,9 @@ grep -n '<как механизм назван в вызывающем коде>
 > **ЦЕНА обязательна.** Без неё это наблюдение, а не урок, и в канон оно не пойдёт. Не знаешь цены — не пиши.
 > **Не сочиняй.** Пустая секция — законный отчёт. Выдуманный урок хуже отсутствующего: он попадёт в канон, который читают ВСЕ будущие проекты.
 
+### The §0.1 zone self-check is printed in a form the tool rejects
+ЦЕНА: `git_zona.py check --zone A B` (verbatim from §0.1 of this brief, assembled by `bootstrap_zahod.py`) exits rc=2 «Не понял часть команды»; the first gate of the run failed as written and had to be re-run by hand as `--zone A --zone B`. Queue item 3 in `## ВОПРОСЫ`.
+
 ## ПЛАН — (заполняет исполнитель)
 
 Executor, 2026-09-19. Branch checked: `arka/mat-kostyak`. Read: this brief in full; preface and «Для наполнителя (S4б)» of `punkty.md`; `OBEKT.md` §1–2; boiler statement list, statements 10–12 and Problem 1. No card of `catalan/kartoteka/` is named by any quarter-1 `adres`, so none read. Parser of `tools/plany.py` read (not edited) only to learn how a multi-line `raskadrovka` is carried: every non-blank line that is not a known `ключ:` is a continuation and becomes one bullet in `lekciya-1.md`; so one beat = one line.
@@ -320,6 +323,16 @@ Criterion remarks (before work): §0.1's second command as printed is missing a 
 > rc=0 — все дома достижимы; rc=1 — назван дом, которого нет (команда печатает какой именно). Тот же разбор гоняет `Г7` приёмки, и у него храповик: у ЭТОГО захода база 0, поэтому первый же недостижимый дом здесь — красный на приёмке, а не запись, которую через неделю никто не найдёт.
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
+
+1. The form cannot show the level summaries. `tools/plany.py` `_parse_fields()` keeps only keys in `ITEM_FIELDS` (`if m and m.group(1) in ITEM_FIELDS`), and `obobshchenie`/`svod` are not in that list, so every `### Уровень:` block parses empty and every view prints «**Обобщение:** _(ещё не написано)_». The three blocks I was asked to fill (`god`, `chast-do-analiza`, `chetvert-1`) ARE written in `punkty.md` (commit `d7d123f9`) and will show up with no further text edits once the parser reads level keys (for example, give `_parse_fields` the allowed key list as a parameter). I did not touch the tool (forbidden by the brief). This will happen again: every future level fill and every view is affected, so it needs its own brief before the next filling run, not a queue entry.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/PLAN.md
+   ДОСТАВЛЕНО: нет
+2. The preface of `punkty.md` now says things that are no longer true: «в этом файле она везде пуста» (about `raskadrovka`), «Оба поля пусты в этой сдаче» (levels), «Сейчас, с пустыми ⭐-полями, тот же гейт красный». I left it as it was: it is part of the form, and my job was to fill the form, not change it. The architect position should update it.
+   ДОМ: kurs-puti-i-volny/plan/src/punkty.md
+   ДОСТАВЛЕНО: нет
+3. Lesson for the factory. §0.1 prints the zone self-check as `git_zona.py check --zone A B`, and with that form the tool exits rc=2 «Не понял часть команды». It needs `--zone A --zone B`. The template gives the first gate command in a form the tool refuses, so every two-path zone hits this on its first move.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
