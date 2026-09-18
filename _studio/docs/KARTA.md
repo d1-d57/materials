@@ -111,6 +111,9 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_rasskaz-god.md`** (S4v of wave noch-puti-i-volny: RASSKAZ-god.md — the year story, a readable style rewrite of LEKCIYA-v2 (same content, same throughline, two detective knots, five figures), not a first draft)
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_zakon-zakrytiya-noch-puti-i-volny.md`** (ZK1 of wave noch-puti-i-volny: the closing law over the mandate — record of the run and its verdict)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/mandate_noch-puti-i-volny.md`** (MANDATE — two halves, two authors; status OPEN/CLOSED/REFUSED/CLOSED-S-DOLGOM lives in the file)
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/HANDOFF-2026-09-14.md`** (Хэндофф в сессию 2026-09-14 (арка 2026-09-13_uchenik-misha): вход владельцем не назначен, дефолт — набор Мише на занятие 20.09)
