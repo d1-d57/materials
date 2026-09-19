@@ -3,6 +3,8 @@ opisanie: вход в курс: цель, состояние, долги
 sloj: 0
 status: zhivoy
 ---
+🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
+> УСТАРЕЛ — frozen at 2026-08-05 (kurs-puti-i-volny/ARHITEKTURA.md:100); cancelled by entries centralnyj-obekt-okruzhnost (kurs-puti-i-volny/ZAMYSEL.md:290) and chetyre-chetverti (kurs-puti-i-volny/ZAMYSEL.md:321); the entry point is ZAMYSEL.md.
 # Пути и волны
 
 **Годовой курс для старшеклассников. Одна задача — посчитать пути, — которую весь год считают двумя способами: по путям и по волнам. Каждое совпадение двух ответов оказывается тождеством; в конце это модулярность.**

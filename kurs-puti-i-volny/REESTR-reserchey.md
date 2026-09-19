@@ -15,6 +15,8 @@ status: zhivoy
 
 ## Позиции
 
+> 🚫 ОТМЕНЕНО ЗАПИСЬЮ chetyre-chetverti — kurs-puti-i-volny/ZAMYSEL.md:321. The register keeps HREBET-kursa.md as the central position of the year plan; the quarter framing is cancelled, the rows of this register stay valid.
+
 ### Линия хребта и плана года
 
 | № | путь от корня репо | родился | что здесь добыто | статус | связи |

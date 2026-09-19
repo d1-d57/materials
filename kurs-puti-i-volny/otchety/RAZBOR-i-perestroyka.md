@@ -75,6 +75,8 @@ $$\sum_{\substack{\text{пути }0\to y\\ N\text{ шагов}}} q^{\text{пло
 
 **Первое.** $q$-счёт свободных путей — это в точности **гауссов бином**, тот самый объект второй четверти. То есть $q$-слой курса подключается сюда без единого нового понятия.
 
+> 🚫 ОТМЕНЕНО ЗАПИСЬЮ centralnyj-obekt-okruzhnost — kurs-puti-i-volny/ZAMYSEL.md:290. The circle as the carrying object is cancelled (2026-09-02); the circle = strip identity itself stands (kurs-puti-i-volny/ZAMYSEL.md:292).
+
 **Второе, ради которого всё.** Показатель $m$ **квадратичен по концу пути**. Подставляем $y=jn$, то есть считаем по обмоткам на окружности:
 
 $$\sum_{\substack{\text{замкнутые пути}\\ \text{по }\mathbb{Z}_n}} q^{\text{площадь подъёма}}\;=\;\sum_{j\in\mathbb Z} q^{\frac{n^{2}}{4}j^{2}+\frac{n(N+1)}{2}j-\frac{N^{2}}{4}}\begin{bmatrix}N\\ \frac{N+jn}{2}\end{bmatrix}_{q^{2}}.$$

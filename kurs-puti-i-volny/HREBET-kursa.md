@@ -11,6 +11,8 @@ status: zhivoy
 
 ---
 
+> 🚫 ОТМЕНЕНО ЗАПИСЬЮ chetyre-chetverti — kurs-puti-i-volny/ZAMYSEL.md:321. The quarter framing of the year below is cancelled (replaced by plan/src/karkas.md); the measurements and materials in this file stay valid.
+
 ## Хребет: четыре четверти
 
 **Порядок переставлен 04.08** — не по предмету, а по **методу**: сначала весь точный счёт комбинаторными средствами, потом асимптотика аналитическими, потом то, что выживает на других досках.

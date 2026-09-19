@@ -3,6 +3,8 @@ opisanie: математический скелет с излагаемыми т
 sloj: 0
 status: zhivoy
 ---
+🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
+> УСТАРЕЛ — cancelled by entry centralnyj-obekt-okruzhnost, kurs-puti-i-volny/ZAMYSEL.md:290 (2026-09-02); kept as a source of material, not as truth (kurs-puti-i-volny/ARHITEKTURA.md:98).
 # Костяк: одна задача, посчитанная дважды
 
 > 🔴 **ЭТОТ ДОКУМЕНТ ОТСТАЛ — 2026-09-03. Источник истины по составу курса: `plan/src/karkas.md` (32 темы, третья редакция).**

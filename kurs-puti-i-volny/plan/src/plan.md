@@ -6,6 +6,8 @@ tab: План (забракован)
 poryadok: 3
 registr: устный
 ---
+🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
+> ОТМЕНЁН — rejected by the owner 2026-08-06 (field «ЗАБРАКОВАН» in this file); the composition moved to plan/src/punkty.md (kurs-puti-i-volny/ARHITEKTURA.md:99).
 
 # Пути и волны: 32 занятия
 

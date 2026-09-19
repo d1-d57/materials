@@ -3,6 +3,8 @@ opisanie: исполнительский заход с поручением [...
 sloj: 3
 status: zhivoy
 ---
+🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
+> ОТМЕНЁН — this brief stands on the cancelled frame of entry centralnyj-obekt-okruzhnost, kurs-puti-i-volny/ZAMYSEL.md:302 (cancelled 2026-09-02); do not run it as is.
 # Заход: не является ли $F(z,q)$ формой Якоби
 
 *05.08.2026. Самоценный: переписку читать не нужно, всё нужное здесь. Написан в конце длинной сессии, для продолжения в новом чате.*
