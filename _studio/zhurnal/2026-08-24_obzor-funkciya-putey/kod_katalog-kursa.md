@@ -304,6 +304,18 @@ grep -n '<как механизм назван в вызывающем коде>
 > **ЦЕНА обязательна.** Без неё это наблюдение, а не урок, и в канон оно не пойдёт. Не знаешь цены — не пиши.
 > **Не сочиняй.** Пустая секция — законный отчёт. Выдуманный урок хуже отсутствующего: он попадёт в канон, который читают ВСЕ будущие проекты.
 
+### The self-check command printed in §0.1 fails as written
+ЦЕНА: `git_zona.py check --zone A B C` without `GIT_ZONA_REPO=` and without repeating `--zone` before each path exits rc=2 with no verdict; the заход demands its output pasted verbatim into ОТЧЁТ, so the pasted evidence would have proved nothing. The Г1 hygiene lines have the same missing variable. Cost here: one wasted run and a rewrite of every zone-check command. Repeats on every заход built from this template.
+
+### The generated заход writes dead sandbox paths into its own «история цены» links
+ЦЕНА: the П1 criterion "the dead-path count must print 0" was unreachable as delivered: all 16 hits sat inside the заход file itself (15 generated links plus one quotation in my own plan), so a hand edit of the generated file was needed before the criterion could pass. The template re-creates them in every new заход, and 51 more had already been hand-fixed by the analyst in six older files. Repeats on the next заход, so it is a заход before the next run, not a queue item.
+
+### A new `check_*` tool has no lawful home: the заход names no call point, and the only real one is a shared hook outside every zone
+ЦЕНА: the pre-commit hook refuses a new judging tool without a live call point, and the only place that can call it is `.githooks/pre-commit`, shared by both repositories and by the running wave. `check_arhiv.py` and its fixture (21 traps, 11 mutants, all caught) therefore sit untracked in the sibling repository, and clause Г4 of this заход is red by construction. Repeats for every new gate a заход asks for.
+
+### The заход named a file outside its own zone as a target to mark
+ЦЕНА: `SVEDENIE-kursa.md:75` is listed as a candidate for a mark, but the file lies in `obzory/` (read-only, and interview item 2 excluded `obzory/`); two more addresses in `ZAMYSEL.md` are bare names that resolve nowhere. Live run 2 could therefore end only as «green with a hole» (3 unresolved addresses), not clean. Repeats for any заход that names its targets in prose; a bootstrap check «every named target lies inside the zone» would catch it in seconds.
+
 ## ПЛАН — (заполняет исполнитель)
 
 Written before any action. Read: this file only (ПРАВКИ ПОСЛЕ ВЫДАЧИ = empty, none to apply). Start state: `git branch --show-current` → `arka/mat-kostyak` (NOT the contract branch).
@@ -355,6 +367,46 @@ Written before any action. Read: this file only (ПРАВКИ ПОСЛЕ ВЫД�
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. DECISION FOR THE OWNER — `check_arhiv.py` has no live call point, so it cannot be committed. `disciplina/_generator/tools/check_arhiv.py` and `disciplina/_generator/tools/fixtures/arhiv/PROGNAT.sh` are complete and tested (fixture: 21 traps + 11 mutants, all caught) but the shared pre-commit hook refuses a new judging tool nothing calls (`check_tool_contract.py` → one finding, «живая точка вызова»). Both files sit UNTRACKED in the `disciplina` working tree; a backup copy is in `materials/scratchpad/katalog-kursa/backup-disciplina/`. Two lawful ways out, both outside the zone I was given: (a) add one stanza to `disciplina/.githooks/pre-commit` that runs the gate when `kurs-puti-i-volny/ZAMYSEL.md` or a file it names is staged (shared by both repositories and by the running wave — I did not touch it); (b) enter it as a conscious debt with `check_tool_contract.py --baza-vnesti check_arhiv.py --prichina …` (lowers the ratchet — the owner's call). Until then the lever exists but nothing runs it.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
+2. DECISION FOR THE OWNER — five foreign untracked files sit inside my zone `diskmat-57/2026-08-18_logika-goda-7/`: `HANDOFF-2026-09-19.md`, `TZ-zakrytie-sessii-2026-09-18.md`, `VYGRUZKA-2026-09-18.md`, `VYGRUZKA-2026-09-18-2.md`, `VYGRUZKA-2026-09-18-3.md` (created 2026-09-18 23:45–23:59 by another session; the VYGRUZKA files are a raw dump of the owner's verbatim replies). They are not in П1's list, so I left them: `git_zona.py check --zone diskmat-57/2026-08-18_logika-goda-7` stays red on exactly these five, and committing them would put raw dialogue on a branch that may reach a public remote. Commit as they are, commit without the VYGRUZKA files, or leave.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
+3. Three addresses named by `ZAMYSEL.md` §5 resolve nowhere because they are bare file names: `src/obzor.md:22` (entry centralnyj-obekt-okruzhnost), `kod_obzor-funkciya-putey.md:26` (zhanr-burbaki), `SVEDENIE-kursa.md:75` (chetyre-chetverti). All three files exist (`obzory/funkciya-putey-i-ee-uravneniya/SVEDENIE-kursa.md`, `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_obzor-funkciya-putey.md`, and a `src/obzor.md` — which exists in more than one survey, so the bare name is ambiguous). `SVEDENIE` and the `src/obzor.md` files lie in `obzory/`, outside this заход's zone, so they carry NO mark yet; the `kod_obzor…` заход lies in my zone but the gate cannot see it, and I did not mark what the gate cannot check. Proposed fix: write the three addresses as full paths from the repository root in `ZAMYSEL.md`; then `check_arhiv.py` resolves them, goes red on the unmarked ones, and a separate заход marks them. Run with `--strogo` to see this state today (rc=1).
+   ДОМ: kurs-puti-i-volny/ZAMYSEL.md
+   ДОСТАВЛЕНО: нет
+
+4. The entries of `ZAMYSEL.md` §5 do not name every place that stands on a cancelled decision, so the gate cannot see them: `HREBET-kursa.md` section «Ответ: отрезок есть свёрнутая окружность» (about line 183) stands on the cancelled circle decision (`SBORKA/KARTA-rashozhdeniy.md` names it, `ZAMYSEL.md` does not); `plan/src/voprosy.md` group C keeps the cancelled `m+1` convention in the same file as the canonical one (`ARHITEKTURA.md:139`), and no `отменено:` entry covers it. Add both to the «where it still lies» blocks; the gate then demands their marks.
+   ДОМ: kurs-puti-i-volny/ZAMYSEL.md
+   ДОСТАВЛЕНО: нет
+
+5. Two homes disagree about where the composition of the course lives: `ZAMYSEL.md` §4 («Дом состава — `plan/src/karkas.md`») and `ARHITEKTURA.md` line 37 say `karkas.md`; the first lines of `plan/src/karkas.md` and `plan/src/plan.md` say the composition moved to `plan/src/punkty.md`. I catalogued `karkas.md` as `живой` (its own header keeps it as the raw source that `punkty.md` cites) and did not touch either claim.
+   ДОМ: kurs-puti-i-volny/ZAMYSEL.md
+   ДОСТАВЛЕНО: нет
+
+6. The valve text of this заход says the red assembly gate on eight waiting заходs comes from `ISTORII-CEN-zahoda.md` which «is in neither repository». Measured today: the file EXISTS (`disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md`, 9722 bytes, dated 13.09), and `check_sborki.py` on those eight files is red for three of them for other reasons — two name worktree folders that no longer exist (`materials-wt/graf-korpusa`, `materials-wt/konsolidaciya-korpusa`), one lacks the «4.1 ГИГИЕНА» section; this заход itself is green (0 red of 1). Output kept in `materials/scratchpad/katalog-kursa/sborki-8.txt`.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+
+7. П5 deviation, decision for the owner: the заход asks for a `materials` entry with `ворота=нет` and `регистрация=добровольна` «exactly the softness in force today». It is not in force: today `_studio` has `ворота=True` and `регистрация=обязательна`. A new soft row would have SWITCHED OFF the registration gate of `_studio` in `materials`. I registered `materials` with the table it already received by silent fallback (`КОРНИ_MATERIALS`), so behaviour is identical (checked: the same roots and `корень_пути` answers before and after; only the «not in registry» line is gone) and gates were not switched on or off. If gates really should be off for `materials`, that is a new decision.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
+8. Style question: the cancellation marks and banners I wrote carry an English gloss after a fixed Russian token (rule of the заход: files I produce are English). In Russian course files a Russian gloss may read better; changing it is a one-line replacement per mark, and `check_arhiv.py` does not look at the gloss.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
+9. Lessons for the factory from `## УРОКИ ФАБРИКЕ` above (four items, each with its price), to be carried into the arc's lesson file: the broken §0.1 self-check command; the dead sandbox paths generated into every заход; the lawful-home problem of a new `check_*` tool; the target file named outside the zone.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+
+10. Found by the independent verifier while judging `SBORKA/SLEDUYUSHCHIY-ZAHOD.md`: the file, written as the hand-over to the next executor, contradicts the owner decisions of 2026-09-19 that `ZAMYSEL.md` records — it moves topics 5–6 to the circle club at line 32 but still schedules the pentagonal lectures 5–6 at lines 61–70, and it postpones analysis at line 34 but keeps «Return to zero ~1/√πn» at line 42, which `ZAMYSEL.md:247` removes from the first half-year. I catalogued it `живой` (fresh, dated 2026-09-19) and did not edit it.
+   ДОМ: kurs-puti-i-volny/SBORKA/SLEDUYUSHCHIY-ZAHOD.md
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -373,23 +425,98 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+taken as the first action, on `arka/mat-kostyak`, before any work (commands run one by one, outputs verbatim):
+```
+$ git --no-optional-locks branch --show-current
+arka/mat-kostyak
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+(empty)
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'
+0
+$ git --no-optional-locks status --porcelain | wc -l
+      19
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+      0
+$ GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials git_zona.py zayavki     (rc=0)
+Охват: заявок открыто 0, переадресовано 12, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
+```
+The 19 uncommitted entries at entry: 9 modified (`_studio/docs/KARTA.md`, `HANDOFF-2026-08-25.md`, `HANDOFF-2026-09-20.md`, arc `SESSIYA.md`, `kod_pasporta-korpusa.md`, `kod_svod-i-skelet.md`, `_studio/zhurnal/_INFRA-git/INCIDENTY.md`, `diskmat-57/…/HANDOFF-2026-09-14.md`, `diskmat-57/…/SESSIYA.md`) and 10 untracked (`_fond/zadachi/risunki/cherepashka-pole.svg`, `korol-pole.svg`, `kod_katalog-kursa.md`, `diskmat-57/…/HANDOFF-2026-09-19.md`, `TZ-zakrytie-sessii-2026-09-18.md`, `VYGRUZKA-2026-09-18.md`, `-2.md`, `-3.md`, `kurs-puti-i-volny/PLAN-goda-krupno.md`, root `scratchpad/`). The section is labelled «filled by the git-contour subagent», but §0.1 says the contour is empty and no subagent is to be called, so I took the snapshot myself.
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+committed in `materials` on `arka/katalog-kursa`: `110b6acf` (P1, the analyst's accumulated work: 9 of the 19 entry entries), `e40500a7` (P3 marks), `c8a67242` (P2 catalogue), `4abb58f3` (banner address fix), `2e513d86` (post-verification status fixes); committed in `disciplina` on `main`: `4b85d059` (`korni.py`, P5). Merge, export and requests: see the last-move block of ## ОТЧЁТ (filled after the merge).
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — remaining, by name, and why my rights do not cover them:
+- `diskmat-57/2026-08-18_logika-goda-7/{HANDOFF-2026-09-19.md, TZ-zakrytie-sessii-2026-09-18.md, VYGRUZKA-2026-09-18.md, VYGRUZKA-2026-09-18-2.md, VYGRUZKA-2026-09-18-3.md}` — another session's content, not in П1; the VYGRUZKA files hold verbatim owner replies and the branch may reach a public remote; the owner decides (ВОПРОСЫ 2).
+- `_studio/zhurnal/_INFRA-git/INCIDENTY.md` (autolog line), `_fond/zadachi/risunki/{cherepashka-pole,korol-pole}.svg`, root `scratchpad/` (other people's material; my own folder there, `scratchpad/katalog-kursa/`, is scratch and stays untracked) — outside my zone, not mine.
+- `disciplina`: 7 uncommitted entries of the running wave (`.hook-otkaz-chuzhoj-volny.log`, `SOSTOYANIE-VOLNY-2-ochered.md`, a `puls` file, four `VOLNA-AKTIVNAYA-*` markers) — live work of another agent; and my own `_generator/tools/check_arhiv.py` + `_generator/tools/fixtures/arhiv/` — untracked because the pre-commit hook refuses a new judging tool without a live call point, which needs the owner (ВОПРОСЫ 1).
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/kurs-puti-i-volny/SBORKA/REESTR-tekstov.md` — Markdown, any editor; the catalogue is section «E. Catalogue» at the end (48 rows). The gate and its fixture: `/Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_arhiv.py` and `…/fixtures/arhiv/PROGNAT.sh` (untracked, see ВОПРОСЫ 1).
+**РОД АРТЕФАКТА:** исходник
+**КОММИТ:** `2e513d86` (last work commit in `materials`, branch `arka/katalog-kursa`; full list in the last-move block below) — `P2/P3 fix after independent verification …` · `git_zona.py check --zone kurs-puti-i-volny` → ✅; `--zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey` → ✅ after the report commit (see block below); `--zone diskmat-57/2026-08-18_logika-goda-7` → ❌ on exactly five foreign untracked files (ВОПРОСЫ 2), not mine.
+
+ПРАВКИ ПРОЧИТАНЫ: none to read — the block «ПРАВКИ ПОСЛЕ ВЫДАЧИ» was `<правок нет>` at start and again just before this report.
+
+### What I did and why
+- **Entry.** `git branch --show-current` → `arka/mat-kostyak`; the заход was read whole; the plan was written into `## ПЛАН` before any action (with four amendments after the entry snapshot). §0.1 overrides the «no checkout» contract line, so I ran `checkout -b arka/katalog-kursa` in the main folder after the self-check commands.
+- **П1 (`110b6acf`).** The analyst's accumulated work is saved first: 51 dead sandbox paths in 6 files (verified from the diff: 46 removed lines, every one containing `/sessions/`), the arc diary, `PLAN-goda-krupno.md`, this file with its KARTA registration line. The dead-path count is 0 (see below).
+- **П4, tool.** `check_arhiv.py`: parses the `отменено:` entries of `ZAMYSEL.md`, takes the addresses each entry names under «where it still lies», and demands that every resolved file carries a banner in its first 10 lines or a section mark within 8 lines of the named line, both naming the cancelling entry id. Coverage «проверено X из Y» is printed with the verdict (Y counted from the raw text before parsing; X = 0 or X < Y is red), the blind zones are printed always. Fixture: 21 traps and 11 mutants (each mutant is the tool broken by one anchored replacement; the matching trap must change its exit code): all caught. Only the standard library; no GNU-only flags.
+- **П3.** Two piles, as required: **7 files carry a whole-file banner** (`KOSTYAK.md`, `README.md`, `plan/src/plan.md`, `otchety/RASSKAZ-dva-sposoba.md`, `zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md`, `zahody/ZAHOD-formy-yakobi.md`, `zahody/ZAHOD-sverka-koncepcii.md`) and **4 files carry only a section mark** (`HREBET-kursa.md`, `REESTR-reserchey.md`, `otchety/RAZBOR-i-perestroyka.md`, `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/NAVIGATOR.md`). `HREBET-kursa.md` got NO banner, as instructed. `karkas.md` and `voprosy.md` were checked and are alive (raw source / home of questions), no marks.
+- **П2.** The existing `SBORKA/REESTR-tekstov.md` is extended with section E: 48 rows = path · phrase · status · `file:line` + quote (≤12 words). A script verified every quote sits on its stated line before the table was written. Statuses: 32 `живой` · 9 `порождаемый` · 5 `устарел` · 2 `отменён` · 0 `архив` (counted by command, see below).
+- **П5.** `materials` registered in `КОРНИ_ПО_РЕПО` (`4b85d059` in `disciplina`) — with the table it already received by silent fallback, NOT with a new soft row; see the deviation below and ВОПРОСЫ 7.
+
+### How it was checked — the five clauses
+**(а)** `python3 -c "import pathlib; print(len(list(pathlib.Path('kurs-puti-i-volny').rglob('*.md'))))"` → `48`. Coverage command (in section E of the registry) → `покрыто 48 из 48`. It can go red: on a temp copy, deleting a row, using a status outside the list, and stripping `:line` from an address each give `покрыто 47 из 48`.
+**(б) live run on the real object**, `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_arhiv.py kurs-puti-i-volny/ZAMYSEL.md` (full outputs: `materials/scratchpad/katalog-kursa/run1-before-P3.txt`, `run2-after-P3.txt`):
+```
+BEFORE П3 (right after the tool was written):  rc=1
+  проверено 4 из 4 записей отменено:  (… 1 without a 'where it still lies' block …)
+  addresses named 14 · resolved 11 · marked 0 · unmarked 11 · unresolved 3
+  ✗ КРАСНЫЙ — 1 finding(s):  · 11 named address(es) carry no cancellation mark
+  ✗ no mark: … KOSTYAK.md:29, KOSTYAK.md:195, otchety/RAZBOR-i-perestroyka.md:75, zahody/ZAHOD-formy-yakobi.md:26,
+    zahody/ZAHOD-sverka-koncepcii.md:35, README.md:42, README.md:33, …/NAVIGATOR.md:7, HREBET-kursa.md:9,
+    README.md:14, REESTR-reserchey.md:17
+AFTER П3:  rc=0
+  проверено 4 из 4 записей отменено: …
+  addresses named 14 · resolved 11 · marked 11 · unmarked 0 · unresolved 3
+  ✓ ЗЕЛЁНЫЙ С ДЫРОЙ: every resolved address is marked, but 3 address(es) could not be resolved and stay unjudged (use --strogo …)
+with --strogo after П3: rc=1
+```
+Red on the sick file, green on the healed one. **The green carries a hole:** 3 addresses of `ZAMYSEL.md` (`src/obzor.md:22`, `kod_obzor-funkciya-putey.md:26`, `SVEDENIE-kursa.md:75`) are bare names and resolve nowhere, and `SVEDENIE-kursa.md` and the `src/obzor.md` files lie in `obzory/`, outside my zone (ВОПРОСЫ 3). Rc=0 here means «every address the gate can see is marked», not «the whole cancelled corpus is marked».
+**(в)** `KANON_KOREN=… GIT_ZONA_REPO=… python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/bootstrap_zahod.py --help` (absolute path: the relative `disciplina/…` of the заход does not resolve from `materials/`). Before: rc=0, the output began with the line `korni: 🔴 таблица по умолчанию, репозиторий `materials` не в реестре КОРНИ_ПО_РЕПО (6 корней: teoriya-kategoriy, teorkat-vvedenie, _studio, obzory, _illustracii, _meta); подстановка НЕ объявлена — корень процесса /Users/ivanyakovlev/Documents/GitHub/materials. Ворота, регистрация и выбор журнала пойдут по чужой таблице. …`; occurrences of «не в реестре»: 1. After: rc=0, occurrences 0, and `diff` of the whole output before/after is exactly that one removed line. Also unchanged (checked by a snapshot script): the list of roots and the `корень_пути` answers for seven sample paths (`_studio` still `ворота=True, регистрация=обязательна`); only the substitution flag changed. `fixtures/korni/PROGNAT.sh`, `fixtures/korni_svip/PROGNAT.sh` → all green; `check_tool_contract.py korni.py` → rc=0.
+**(г) verifier.** A fresh subagent, never shown the catalogue, got 21 paths (10 `живой`, 4 `отменён`, 4 `порождаемый`, 3 `устарел` as I first judged them) with only the address to open, and judged each file itself. Its answer ended with the mandatory line `выдано 21 позиций из 21 найденных`. **Agreement on first pass: 17 of 21.** Disagreements: `ZAHOD-formy-yakobi.md` and `ZAHOD-sverka-koncepcii.md` (I: `отменён`, it: `устарел` — its argument that `ZAMYSEL.md:302` cancels the frame, not the briefs, is right; **I adopted it**, changed both statuses and both banner words); `HREBET-kursa.md` (I: `живой` with a section mark, it: `устарел`, confidence medium, because `ARHITEKTURA.md:98` calls the whole file historical — I kept `живой`: only one section is cancelled and the заход itself says the rest is used, but I changed my cited address to `ZAMYSEL.md:323` «сама последовательность методов верна и полезна как оптика»); `zahody/ZAHOD-okruzhnost.md` (I: `живой`, it: `архив`, confidence low — kept, the brief was executed but no record cancels it). **After adopting its two corrections: 19 of 21 agree** (that second number is not independent). Its other finding I queued (ВОПРОСЫ 10). I did NOT adopt its address for `RASSKAZ-god.md` (`ARHITEKTURA.md:24` speaks about `LEKCIYA-v2/`, not about that file), so `RASSKAZ-god.md` stays self-attested.
+**(д)** `git --no-optional-locks show --stat` of each own commit (`materials`): `110b6acf` — 10 files: `_studio/docs/KARTA.md` (this заход's registration line, per the contract), 7 files of the analyst's dead-path/diary work in the two arcs, `kod_katalog-kursa.md`, `kurs-puti-i-volny/PLAN-goda-krupno.md`; `e40500a7` — 11 files (7 banners + 4 marks, 22 insertions); `c8a67242` — `REESTR-tekstov.md` only (72 insertions); `4abb58f3` — two banner files (2 lines); `2e513d86` — `REESTR-tekstov.md` + two banner files. `disciplina`: `4b85d059` — `_generator/tools/korni.py` only (5 insertions, 1 deletion). Only my paths in every commit.
+
+### Deviations from the заход, stated plainly
+1. **§0.1 self-check command as printed fails (rc=2)**; I ran it as `GIT_ZONA_REPO=… git_zona.py check --zone A --zone B --zone C` per zone. Result after П1: `kurs-puti-i-volny` ✅, arc ✅, `diskmat-57` ❌ on five foreign files.
+2. **П1 criterion**: the count was 16, all inside this заход file (not in the analyst's six files); I fixed my own plan quote and the 15 generated «история цены» prefixes with the same canonical prefix; the command now prints `0` (whole repo, as written).
+3. **Statuses in the заход's candidate list**: the заход wanted `SVEDENIE-kursa.md:75` marked; it lies in `obzory/`, outside the zone — not marked.
+4. **П5** is not a new soft row (see ВОПРОСЫ 7): a `ворота=нет` row would have switched off `_studio` registration in `materials`.
+5. **Commit in `disciplina`**: `korni.py` committed on `main` (`4b85d059`); the tool and fixture could NOT be committed (hook, ВОПРОСЫ 1). No push in `disciplina`. That repository is on `main` with a running wave, so I did not switch its branch.
+6. **Language**: gloss text of the marks and banners is English (заход rule) after fixed Russian tokens (ВОПРОСЫ 8).
+
+### What I did NOT touch
+`obzory/`, the Catalan card index, `_studio/docs/` (except the one KARTA line that was already there), the shared `.githooks/pre-commit`, the 8 waiting заходs, the five foreign untracked files, `ZAMYSEL.md` itself (only read), any file of the wave in `disciplina`.
+
+### Hygiene items of §4.1
+- **Г1** zone checks: `kurs-puti-i-volny` ✅ · arc ✅ after the report commit (final numbers below) · `diskmat-57/2026-08-18_logika-goda-7` ❌ (5 foreign paths) · `kod_katalog-kursa.md` — in the final block.
+- **Г2** applicable (a second repository was touched): `git -C …/disciplina status --porcelain` is NOT empty — 7 entries of the running wave plus my untracked `check_arhiv.py` and `fixtures/arhiv/`; nothing of mine is uncommitted there except those two.
+- **Г3** and **Г6** — final block.
+- **Г4** `python3 _generator/tools/check_tool_contract.py _generator/tools/check_arhiv.py` → **rc=1**, one finding: `[живая точка вызова] инструмент нигде не упоминается как вызываемый (хук/другой инструмент/шаг сборки) …` (the other checks — input fixture, three exits, no GNU-isms — pass; the fixture `PROGNAT.sh` itself ✅). Red by construction, ВОПРОСЫ 1.
+- **Г5** `grep -c 'kod_katalog-kursa.md' _studio/docs/KARTA.md` → `1`; I created no other `.md` (`PLAN-goda-krupno.md` is the analyst's file, carried in П1).
+
+### Other lines
+- **Not proven by me:** truthfulness of any cancellation (the gate does not judge it); that the 3 unresolved addresses are truly unmarked; the two statuses on which the verifier and I still differ (`HREBET-kursa.md`, `ZAHOD-okruzhnost.md`); the seven rows whose evidence is the row's own file (`OBRAZEC-summy-kvadratov.md`, `PLAN-goda-krupno.md`, `RASSKAZ-god.md`, `SLEDUYUSHCHIY-ZAHOD.md`, `ZAMYSEL.md`, `karkas.md`, `punkty.md`) — `RASSKAZ-god.md`, `PLAN-goda-krupno.md` and `SLEDUYUSHCHIY-ZAHOD.md` have **no independent confirmation** (self-attested only), and `ZAMYSEL.md`, `karkas.md`, `punkty.md` carry self-declared roles.
+- **Line numbers drift:** after my two banner insertions the addresses `ZAHOD-formy-yakobi.md:26` and `ZAHOD-sverka-koncepcii.md:35` in `ZAMYSEL.md` point two lines above the content they meant (the gate is unaffected: it sees the banner in the first 10 lines). Unavoidable for `file:line` addresses.
+- **Finding, not for the queue:** the заход's «valve» text says the red assembly gate comes from `ISTORII-CEN-zahoda.md`, «absent from both repositories». It exists (`disciplina/_studio/docs/kak-delat/`, 9722 bytes) and `check_sborki.py` is red on 3 of the 8 waiting заходs for other reasons (ВОПРОСЫ 6; output in `scratchpad/katalog-kursa/sborki-8.txt`).
+- **Open, to come back to:** ВОПРОСЫ 1 (call point for the gate — the lever does not run until someone wires it), 2, 3, 4. Without wiring, a document that becomes cancelled tomorrow is still not caught by anything at commit time.
+- **ПОВТОРЯЕМОСТЬ.** Will repeat on the next unit of work, therefore a заход BEFORE the next run, not queue items: (1) the printed §0.1 self-check command fails; (2) the template writes dead sandbox paths into every заход; (3) a new `check_*` tool has no lawful place to be wired; (4) a target file named outside the zone. Will not repeat, queue is enough: the five foreign files in `diskmat-57`, the `SLEDUYUSHCHIY-ZAHOD.md` contradictions, the `ZAMYSEL.md` address forms.
+- **Time and tokens:** not applicable on channel `app` (no run log exists here).
+- **НЕОБРАТИМОЕ:** необратимого нет. Reversible actions, listed for completeness: created branch `arka/katalog-kursa` (delete to undo); five commits in `materials`, one in `disciplina` (revert by hash); a `git restore --staged` on my two own paths in `disciplina` after the hook refused them (index only); moved my own scratch output into `materials/scratchpad/katalog-kursa/`; two in-place edits of this заход file (dead-path prefix, plan text). Nothing deleted, nothing overwritten outside git, no push.
+
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
 > 🔴 **Пусто — значит заход не правился с момента выдачи.** Непустой блок читается ПЕРЕД продолжением работы: правка отменяет любое противоречащее ей место выше по файлу, каким бы категоричным оно ни было.
