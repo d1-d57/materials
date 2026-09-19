@@ -13,7 +13,7 @@ cd /Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey && ope
 ```
 
 ── СЧЁТ НЕЗАКРЫТОГО (печать, не гейт) ──
-🔴 снимок при сборке 2026-08-24, ПРОВЕРЬ ПЕРВЫМ ХОДОМ: `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/schet_nezakrytogo.py _studio/zhurnal/2026-08-24_obzor-funkciya-putey`
+🔴 снимок при сборке 2026-08-24, ПРОВЕРЬ ПЕРВЫМ ХОДОМ: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/schet_nezakrytogo.py _studio/zhurnal/2026-08-24_obzor-funkciya-putey`
 Область: «_studio/zhurnal/2026-08-24_obzor-funkciya-putey» — сужены пункты 1, 3, 4; долги (2) глобальны намеренно (DOLG.md не размечен по записям).
 Приоритет владельца: разобрать инциденты важнее, потом закрыть долги — неразобранный инцидент это повторяющаяся ошибка, долг может подождать.
   1. инцидентов без вердикта             : 0
@@ -38,10 +38,10 @@ cd /Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey && ope
 8. Окружность — не центр; правильный общий объект отрезок
 
 ## КОНТРАКТ ЗОНЫ (обязателен — не удалять; вписан Cowork)
-- **МЕСТО РАБОТЫ:** **рабочая папка `/sessions/eloquent-kind-feynman/mnt/GitHub/materials-wt/obzor-funkciya-putey`** — ТОЛЬКО ДЛЯ КОДА (worktree захода, ветка `arka/obzor-funkciya-putey` в ней уже стоит). 🔴 `git checkout` в основной папке ЗАПРЕЩЁН: рядом идут другие заходы, переключение подменит файлы у них под ногами. 🔴 **Сам файл-заход (этот `.md`) при этом остаётся в ОСНОВНОЙ папке репозитория** — один экземпляр, не копия в рабочей папке: ПЛАН/ВОПРОСЫ/ОТЧЁТ/УРОКИ пишешь в него по абсолютному пути, названному в стартовой строке, а сам файл НЕ коммитишь — это делает аналитик при приёмке (цена обратного правила — полсуток 03.08: отчёт писали в рабочую папку, владелец и приёмка её не видели, приёмка трижды объявила отчёт пустым).
+- **МЕСТО РАБОТЫ:** **рабочая папка `/Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey`** — ТОЛЬКО ДЛЯ КОДА (worktree захода, ветка `arka/obzor-funkciya-putey` в ней уже стоит). 🔴 `git checkout` в основной папке ЗАПРЕЩЁН: рядом идут другие заходы, переключение подменит файлы у них под ногами. 🔴 **Сам файл-заход (этот `.md`) при этом остаётся в ОСНОВНОЙ папке репозитория** — один экземпляр, не копия в рабочей папке: ПЛАН/ВОПРОСЫ/ОТЧЁТ/УРОКИ пишешь в него по абсолютному пути, названному в стартовой строке, а сам файл НЕ коммитишь — это делает аналитик при приёмке (цена обратного правила — полсуток 03.08: отчёт писали в рабочую папку, владелец и приёмка её не видели, приёмка трижды объявила отчёт пустым).
 - **ВЕТКА РАБОТЫ захода — обязано быть `arka/obzor-funkciya-putey`.** *(Дописано аналитиком при приёмке 2026-08-25; меняется форма, не смысл — ветку контракт уже называл прозой в «МЕСТЕ РАБОТЫ». `izvlech_vetku` в `priyomka.py` распознаёт два вида: `--branch <имя>` и `обязано быть \`<имя>\``. В worktree-режиме генератор пишет `cd`, а `--branch` не пишет вовсе — в задании его 0 вхождений; Г14 падал в резервный режим «судить весь текст» и брал ПЕРВОЕ вхождение по файлу — цитату исполнителя из отчёта о ПОГАШЕННОЙ чужой ветке `zahod/sajt-kursa-diskmat-57`. Тот же класс, что в докстринге `izvlech_vetku` объявлен починенным: починка закрывает только случай, когда `--branch` в задании ЕСТЬ.)*
 - **ЗОНА (можно менять):** `kurs-puti-i-volny/` `obzory/funkciya-putey-i-ee-uravneniya/`. Всё вне — **READ-ONLY**: не править, не двигать, не удалять, не рефакторить «заодно».
-- 🔴 **ЗАВЁЛ НОВЫЙ `.md` — РЕГИСТРИРУЕШЬ ЕГО САМ, ТЕМ ЖЕ ХОДОМ, ОДНОЙ КОМАНДОЙ:** `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/register_doc.py <путь> "<описание>"` (из корня репо). `_studio/docs/` тебе по-прежнему READ-ONLY **для правки руками** — дверь ровно одна, и это она. Дверь идемпотентна (повторный вызов дубля не заведёт) и отказывает на пути вне `_studio/`, на несуществующем файле и на пустом описании. Свой файл-заход регистрировать не нужно: он рождается зарегистрированным из `bootstrap_zahod.py`. **Красный хук на ТВОЁМ новом `.md` — это не повод для `--no-verify`, а повод позвать дверь.** *Почему правило существует и почему оно теперь исполнимо: 26.07 оно записано с ценой в пять документов-сирот и через два дня повторилось дословно. Дальше стало хуже: до 30.07 указания «зарегистрируй» и «`docs/` только на чтение» противоречили друг другу, выход был ровно один — обойти хук, и по автологу `_INFRA-git/INCIDENTY.md` это 28 обходов `--no-verify` из 56 срывов коммита, 27 из них по одной этой причине (48 % всей боли с коммитами, тринадцать исполнителей подряд). Обходить больше нечего.*
+- 🔴 **ЗАВЁЛ НОВЫЙ `.md` — РЕГИСТРИРУЕШЬ ЕГО САМ, ТЕМ ЖЕ ХОДОМ, ОДНОЙ КОМАНДОЙ:** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/register_doc.py <путь> "<описание>"` (из корня репо). `_studio/docs/` тебе по-прежнему READ-ONLY **для правки руками** — дверь ровно одна, и это она. Дверь идемпотентна (повторный вызов дубля не заведёт) и отказывает на пути вне `_studio/`, на несуществующем файле и на пустом описании. Свой файл-заход регистрировать не нужно: он рождается зарегистрированным из `bootstrap_zahod.py`. **Красный хук на ТВОЁМ новом `.md` — это не повод для `--no-verify`, а повод позвать дверь.** *Почему правило существует и почему оно теперь исполнимо: 26.07 оно записано с ценой в пять документов-сирот и через два дня повторилось дословно. Дальше стало хуже: до 30.07 указания «зарегистрируй» и «`docs/` только на чтение» противоречили друг другу, выход был ровно один — обойти хук, и по автологу `_INFRA-git/INCIDENTY.md` это 28 обходов `--no-verify` из 56 срывов коммита, 27 из них по одной этой причине (48 % всей боли с коммитами, тринадцать исполнителей подряд). Обходить больше нечего.*
 - **КОММИТ:** два хода — `add` по своим путям, затем `commit` **с теми же путями после `--`** (полная форма и цена каждого хода — §4). НИКОГДА `-A` / `.` / `commit -am`, и никогда `commit` без путей. Субагенты не коммитят. **`--no-optional-locks` обязателен:** обычный git переписывает индекс, берёт `.git/index.lock` и роняет параллельный ручной коммит владельца.
 - 🔴 **Звал `register_doc.py` — допиши `_studio/docs/KARTA.md` к своим путям В ОБОИХ ходах.** Строка регистрации лежит физически в нём. Ворота 5 читают `§6` **с диска**, а не из индекса: коммит без этого файла пройдёт ЗЕЛЁНЫМ, документ уедет сиротой, а строка умрёт при первом `checkout` (дата данных 2026-07-30, найдено верификацией захода «kod_registracia-bez-obhoda.md»).
 - **ЗАПРЕТ:** ничего за пределами зоны, даже если «мешает» или «чинится в одну строку». Нашёл проблему вне зоны → в отчёт, не трогай.
@@ -55,7 +55,7 @@ cd /Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey && ope
 
 **1. ВЕСЬ КОНТУР — В СУБАГЕНТА, ОДНИМ ХОДОМ, ДО СВОЕЙ ПАПКИ.** Очередь заявок, влитие названных веток в ОСНОВНУЮ, что забрать в git по ходу и что погасить после — на содержание твоей задачи не влияют. Запусти ОДНОГО субагента, дождись его и вставь его шесть строк в `## ОТЧЁТ` дословно; сам эти пункты не исполняй. У него ОТДЕЛЬНЫЕ ПРАВА, объявленные в его же промпте: главная папка, основная ветка, вывоз — и ничего сверх; зону захода он не коммитит, её коммитишь ты последним ходом. 🔴 ОТВЕТ ЛЮБОГО субагента, которого ты запускаешь (не только этого), обязан КОНЧАТЬСЯ строкой «выдано N позиций из M найденных»: канал мог оборвать его молча, и без этой строки усечение неотличимо от честного «мало нашлось». Нет строки — ответ усечён, в `## ОТЧЁТ` не вставляй, перезапроси. Полный текст задания печатает команда:
 ```
-python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/bootstrap_zahod.py --zadanie-subagentu --vlit arka/obzor-funkciya-putey --vlit zahod/chistka-hvostov --vlit zahod/sajt-kursa-diskmat-57 --zone kurs-puti-i-volny/ --zone obzory/funkciya-putey-i-ee-uravneniya/ --kommitit 'ВСЕ 57 незакоммиченных путей в основной папке — владелец сказал «закоммитить всё», включая чужую работу (fibonacci, ucheniki, diskmat-57, _fond, .gitignore, README)' --kommitit 'папку арки _studio/zhurnal/2026-08-24_obzor-funkciya-putey целиком (сейчас untracked — из-за этого её файлы не видны с рабочих веток)' --kommitit 'свою зону по ходу работы: реестр в kurs-puti-i-volny/, скелет в obzory/funkciya-putey-i-ee-uravneniya/' --zakryt 'мёртвые рабочие папки: 12 из 13 worktree помечены prunable — погасить после влития через git_zona.py poteri' --zakryt 'влитые чужие ветки zahod/chistka-hvostov и zahod/sajt-kursa-diskmat-57 — после подтверждённого влития' --zakryt '🔴 НЕ гасить ветку arka/obzor-funkciya-putey и папку materials-wt/obzor-funkciya-putey: на них идёт ЭТА работа. Влить её в основную — да; удалить — нет'
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/bootstrap_zahod.py --zadanie-subagentu --vlit arka/obzor-funkciya-putey --vlit zahod/chistka-hvostov --vlit zahod/sajt-kursa-diskmat-57 --zone kurs-puti-i-volny/ --zone obzory/funkciya-putey-i-ee-uravneniya/ --kommitit 'ВСЕ 57 незакоммиченных путей в основной папке — владелец сказал «закоммитить всё», включая чужую работу (fibonacci, ucheniki, diskmat-57, _fond, .gitignore, README)' --kommitit 'папку арки _studio/zhurnal/2026-08-24_obzor-funkciya-putey целиком (сейчас untracked — из-за этого её файлы не видны с рабочих веток)' --kommitit 'свою зону по ходу работы: реестр в kurs-puti-i-volny/, скелет в obzory/funkciya-putey-i-ee-uravneniya/' --zakryt 'мёртвые рабочие папки: 12 из 13 worktree помечены prunable — погасить после влития через git_zona.py poteri' --zakryt 'влитые чужие ветки zahod/chistka-hvostov и zahod/sajt-kursa-diskmat-57 — после подтверждённого влития' --zakryt '🔴 НЕ гасить ветку arka/obzor-funkciya-putey и папку materials-wt/obzor-funkciya-putey: на них идёт ЭТА работа. Влить её в основную — да; удалить — нет'
 ```
 
 🔴 ГРАНИЦА ПРАВ, ТРИ ОТВЕТА (та же, что в самом задании субагенту — одно место в тексте, а не пересказ): **кто вливает** — субагент, в ОСНОВНУЮ ветку; **кто закрывает заявки** — субагент, `zayavka-zakryt`; **кто коммитит пути ВНЕ зоны захода** — субагент (хвост Cowork и что назовёт пункт 3 его задания). Ты коммитишь ТОЛЬКО зону этого захода, последним ходом (§4).
@@ -67,7 +67,7 @@ python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/b
 
 - деплоя в этом заходе нет.
 
-- `cd /sessions/eloquent-kind-feynman/mnt/GitHub/materials-wt/obzor-funkciya-putey` — рабочая папка ДЛЯ КОДА. Ветку НЕ переключай: `arka/obzor-funkciya-putey` в ней уже стоит.
+- `cd /Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey` — рабочая папка ДЛЯ КОДА. Ветку НЕ переключай: `arka/obzor-funkciya-putey` в ней уже стоит.
 - Проверить, что на месте: `git rev-parse --abbrev-ref HEAD` → должно быть `arka/obzor-funkciya-putey`.
 - ПЛАН/ВОПРОСЫ/ОТЧЁТ/УРОКИ ФАБРИКЕ пиши в ЭТОТ файл — он в основной папке, не копируй его в рабочую.
 - Точка отката: `git add `kurs-puti-i-volny/` `obzory/funkciya-putey-i-ee-uravneniya/`` → commit (или zip), если зона не чиста в HEAD (не фабрикуй, если чиста).
@@ -92,7 +92,7 @@ python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/b
 🔴 **Код возврата — ПЕРВЫМ, до содержательного вывода команды.** «Отработала» и «упала, а я читаю прошлое состояние» выглядят одинаково; сначала `echo $?`, потом выводы. То же с гейтами. *Цена 21.07: `rc=128` (сбой прав окружения) четырежды прочитан как результат — едва не откатили верное правило по ложным данным.*
 Предпосылки/развилки назвать вслух; минимум без спекуляций; хирургия (строка → к заданию); критерий, который может провалиться. Якорные замены — abort при ≠1. Сохранять по умолчанию. **Оспорить ложную предпосылку — включая КРИТЕРИЙ ГОТОВНОСТИ: считаешь его кривым — скажи в `## ПЛАН`, ДО работы, и предложи поправку.** Субагенты: ≤5, рейт-лимит = отступить + доложить (не слепой ретрай).
 
-🔴 **Пишешь содержательный текст — термин НЕ употребляется раньше, чем определён**, включая заголовки, подводки и формулировки теорем. «Определение в тексте есть» не считается: если оно ниже первого рабочего употребления, читатель встаёт ровно там. Чинится ПЕРЕСТАНОВКОЙ определения вверх, не дописыванием пояснения. Гейт: `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/check_termin.py <src>` (exit 1 при нарушении). Канон — `../docs/kak-delat/STANDART-teksta.md` правило 11. *Цена 30.07: теорема пользовалась словом «ординал», определение стояло строкой ниже; поймал владелец, ни один гейт не увидел, раздел переписан дважды.*
+🔴 **Пишешь содержательный текст — термин НЕ употребляется раньше, чем определён**, включая заголовки, подводки и формулировки теорем. «Определение в тексте есть» не считается: если оно ниже первого рабочего употребления, читатель встаёт ровно там. Чинится ПЕРЕСТАНОВКОЙ определения вверх, не дописыванием пояснения. Гейт: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_termin.py <src>` (exit 1 при нарушении). Канон — `../docs/kak-delat/STANDART-teksta.md` правило 11. *Цена 30.07: теорема пользовалась словом «ординал», определение стояло строкой ниже; поймал владелец, ни один гейт не увидел, раздел переписан дважды.*
 
 ## 2. ЗАДАЧА
 
@@ -219,7 +219,7 @@ python3 obzory/funkciya-putey-i-ee-uravneniya/src/proverka_chisel.py   # печ�
 ```
 git --no-optional-locks add -- kurs-puti-i-volny/ obzory/funkciya-putey-i-ee-uravneniya/                     # вводит НОВЫЕ пути в индекс
 git --no-optional-locks commit -m "<зона>: <что сделано>" -- kurs-puti-i-volny/ obzory/funkciya-putey-i-ee-uravneniya/   # отсекает всё чужое
-python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py check --zone <зона>   # из корня репо; должен быть ✅
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone <зона>   # из корня репо; должен быть ✅
 git --no-optional-locks show --stat                        # обязаны быть ТОЛЬКО твои пути
 ```
 🔴 **ОБА хода обязательны, ни один не лишний** (полное «почему» и цена — `../docs/kak-delat/GIT-disciplina.md §3`):
@@ -229,7 +229,7 @@ git --no-optional-locks show --stat                        # обязаны бы
 - Красное на ТВОИХ путях (новый `.md` не зарегистрирован в `../../docs/KARTA.md §6`, битая ссылка) — **чини, не обходи**: там только твоё, обходить нечего.
 - Красное на ЧУЖОМ, унаследованном долге (ворота дают сотни ❌ старых нарушений) — законный обход, но ТОЛЬКО с причиной; голый `--no-verify` инструмент отклонит, а причина сама уедет в `INCIDENTY.md`:
 ```
-python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py commit --zone <зона> \
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py commit --zone <зона> \
     --no-verify "чужой долг: <что именно покраснело>" -m "<что и зачем>" --push
 ```
 Ту же причину назови отдельной строкой отчёта долгом. *Урок 9: обход был законен по канону и не существовал в инструменте — первый же коммит владельца встал на чужом долге.*
@@ -248,10 +248,10 @@ python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/g
 
 **ЗОНА ГИГИЕНЫ:** `kurs-puti-i-volny/` `obzory/funkciya-putey-i-ee-uravneniya/`
 
-- **Г1. Зона доехала в git.** `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py check --zone kurs-puti-i-volny/` → ✅; `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py check --zone obzory/funkciya-putey-i-ee-uravneniya/` → ✅. Красное на любой из команд — отчёт не принимается: приёмка гоняет их все первым ходом.
+- **Г1. Зона доехала в git.** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone kurs-puti-i-volny/` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone obzory/funkciya-putey-i-ee-uravneniya/` → ✅. Красное на любой из команд — отчёт не принимается: приёмка гоняет их все первым ходом.
 - **Г2. Второй репозиторий.** **неприменимо, и это проверено при сборке, а не предположено:** все пути зоны лежат внутри репозитория `materials` (тот же критерий, что у С2 `check_sborki.py`). Зона расширилась за его пределы по ходу — пункт снова применим; команда та же, что в применимом случае: `cd ../<репозиторий> && git --no-optional-locks status --porcelain` → пусто. *Команда названа и здесь нарочно (находка верификатора): пункт, который объявлен неприменимым и не говорит, ЧТО делать, когда станет применим, исполнить в этот момент нечем.*
 - **Г3. Невлитых веток не прибавилось.** `git --no-optional-locks branch --no-merged arka/mat-kostyak` — число сравни с тем, что было на входе. Выросло — назови, чьи ветки и почему они законны.
-- **Г4. Новый инструмент имеет живую точку вызова.** Завёл `.py` в `_generator/**` — `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/check_tool_contract.py <свои новые файлы>` → rc=0. Ни одного нового `.py` — так и напиши. *Инструмент без точки вызова зелен ровно потому, что его никто не звал.*
+- **Г4. Новый инструмент имеет живую точку вызова.** Завёл `.py` в `_generator/**` — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_tool_contract.py <свои новые файлы>` → rc=0. Ни одного нового `.py` — так и напиши. *Инструмент без точки вызова зелен ровно потому, что его никто не звал.*
 - **Г5. Новый `.md` зарегистрирован.** Завёл — звал ли ты `register_doc.py` и лежит ли строка на диске: `grep -c '<имя файла>' <карта своего корня>` → 1. Карту своего корня называет `korni.карта_для('<путь>')`, руками её не угадывай.
 - **Г6. В коммите нет чужих путей.** `git --no-optional-locks show --stat` — только твои пути. Чужой путь в своём коммите — это чужая работа, унесённая твоим `commit` без `--`.
 
@@ -291,7 +291,7 @@ done
 **2 · ВЛИТИЕ СВОЕЙ ВЕТКИ В ОСНОВНУЮ.** Только после того, как шаг 1 дал «вне git 0» на своей
 зоне — влитие отказывает на грязном дереве:
 ```
-python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py vlit-v-osnovnuyu arka/obzor-funkciya-putey --zone <своя зона> \
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py vlit-v-osnovnuyu arka/obzor-funkciya-putey --zone <своя зона> \
     --vsyo-ravno "своя рабочая папка ещё жива — влитие последним ходом захода, штатно"
 ```
 Конфликт — ЗАКОННЫЙ исход, не повод форсировать: разрешай по существу, если понимаешь обе
@@ -299,15 +299,15 @@ python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/g
 строка в отчёт и заявка на влитие (`git_zona.py zayavka --rod git-operaciya`).
 
 **3 · ПОСТ-ПРОВЕРКА ИЗ ГЛАВНОЙ ПАПКИ.** Отвечает на вопрос «механизм ВСТАЛ», а не «коммит
-виден»: прогон изменённого механизма из `/sessions/eloquent-kind-feynman/mnt/GitHub/materials`, НЕ из рабочей папки `/sessions/eloquent-kind-feynman/mnt/GitHub/materials-wt/obzor-funkciya-putey` плюс `grep` по ЖИВОМУ файлу,
+виден»: прогон изменённого механизма из `/Users/ivanyakovlev/Documents/GitHub/materials`, НЕ из рабочей папки `/Users/ivanyakovlev/Documents/GitHub/materials-wt/obzor-funkciya-putey` плюс `grep` по ЖИВОМУ файлу,
 который его зовёт (хук, конвейер, генератор):
 ```
-cd /sessions/eloquent-kind-feynman/mnt/GitHub/materials && <команда прогона механизма, который заход менял> && echo $?
+cd /Users/ivanyakovlev/Documents/GitHub/materials && <команда прогона механизма, который заход менял> && echo $?
 grep -n '<как механизм назван в вызывающем коде>' <живая точка вызова>
 ```
 🔴 **Красная пост-проверка = ОТКАТ ВЛИТИЯ И СТРОКА В ОТЧЁТ**, а не «доложу, пусть приёмка
 решает»: `git_zona.py vlit-v-osnovnuyu --abort`, если слияние ещё не закоммичено, иначе
-`git -C /sessions/eloquent-kind-feynman/mnt/GitHub/materials --no-optional-locks reset --hard <хэш ДО влития>`. Заход, который влил
+`git -C /Users/ivanyakovlev/Documents/GitHub/materials --no-optional-locks reset --hard <хэш ДО влития>`. Заход, который влил
 и сломал `main`, обязан вернуть `main` сам.
 
 **4 · ГАШЕНИЕ.** Невлитого не осталось: `git --no-optional-locks branch --no-merged arka/mat-kostyak`.
@@ -333,7 +333,7 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
-**Маппинг путей (предпосылка, проговоряю до работы):** файл-заход смешивает песочничные пути `/sessions/eloquent-kind-feynman/mnt/GitHub/...` и реальные `/Users/ivanyakovlev/Documents/GitHub/...` (сам гейт check_termin в п.В уже выписан реальным путём). Считаю их одним и тем же корнем; все команды исполняю с реальными. Если какой-то инструмент не найдётся по реальному пути — стоп и вопрос.
+**Маппинг путей (предпосылка, проговоряю до работы):** файл-заход смешивает песочничные пути `/Users/ivanyakovlev/Documents/GitHub/...` и реальные `/Users/ivanyakovlev/Documents/GitHub/...` (сам гейт check_termin в п.В уже выписан реальным путём). Считаю их одним и тем же корнем; все команды исполняю с реальными. Если какой-то инструмент не найдётся по реальному пути — стоп и вопрос.
 
 **Порядок (строго):**
 
@@ -388,7 +388,7 @@ grep -n '<как механизм назван в вызывающем коде>
 git --no-optional-locks branch --no-merged <основная>     # невлитые
 git --no-optional-locks status --porcelain | wc -l        # не закоммичено
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
-python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
 $ git --no-optional-locks branch --no-merged arka/mat-kostyak     # невлитые
@@ -472,7 +472,7 @@ WARNING-контур последним ходом: вне git — рабоча�
 <правок нет>
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
-> 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
+> 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
 **ВЕРДИКТ:** `принято` (после дочистки аналитиком 2026-08-25, см. «Дочистка» ниже; исходный вердикт был `доработка`) — все три фазы сданы и перегнаны приёмкой по живым файлам (зоны ✅, 4 хэша существуют, 29 позиций реестра, 12 строк таблицы, `proverka_chisel.py` rc=0, `check_termin.py` rc=0), но **одна из десяти строк таблицы специализаций проверена слабее, чем заявлена**, а вердикт «10 из 10» несёт весь скелет.
@@ -546,12 +546,12 @@ WARNING-контур последним ходом: вне git — рабоча�
 **Найденное сверх пула:** девять скриптов `kurs-puti-i-volny/proverki/` — не попали в пул аналитика, потому что тот собирался только по `.md`, а счёт первой волны тоже ресёрч.
 
 **ВЕТКА РАБОТЫ:** `arka/obzor-funkciya-putey`
-*(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
+*(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
 
 **ЗАЯВКИ, ПОСТАВЛЕННЫЕ ЭТОЙ ПРИЁМКОЙ — ПРОДУБЛИРУЙ СЮДА ТО, ЧТО УЖЕ ЛЕЖИТ В СПИСКЕ:**
 > Адрес списка: `/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/_INFRA-git/zayavki`
-> Читается командой (из любой папки, в том числе из worktree): `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py zayavki`
-> Ставится командой: `python3 /sessions/eloquent-kind-feynman/mnt/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
+> Читается командой (из любой папки, в том числе из worktree): `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki`
+> Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
 заявок нет: ни одна из пяти операций не понадобилась — влитие сделано самим заходом (все три ветки, невлитых 0), коммит зон прошёл (обе ✅), вывоз выполнен (`@{u}..` = 0), деплоя в заходе нет, гашение не требуется (`prunable` 0 из 14). Две ЧУЖИЕ заявки (`2026-08-24T2212`, `T2215`, зона `_generator/tools` захода `odin-istochnik-kopij`) приёмка РАЗОБРАЛА, но закрыть из песочницы не может — команда закрытия отдана владельцу.

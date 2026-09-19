@@ -97,6 +97,9 @@
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md`** (S2 of wave noch-puti-i-volny: tools/graf.py — graph statistics over the course corpus (degrees, cascade, depth, reachability, orphan plan anchors, edge export))
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_katalog-kursa.md`** (каталог 48 файлов курса «Пути и волны» со статусом каждого, рычаг check_arhiv.py против отменённого документа без баннера, строка materials в реестре корней)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md`** (S3 of wave noch-puti-i-volny: consolidation — route duplicate pairs, give every KARTA-rashozhdeniy row a status, move verified report findings into the card index)
 
 
