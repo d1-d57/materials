@@ -4,7 +4,7 @@ sloj: 3
 status: zhivoy
 ---
 🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
-> ОТМЕНЁН — this brief stands on the cancelled frame of entry centralnyj-obekt-okruzhnost, kurs-puti-i-volny/ZAMYSEL.md:302 (cancelled 2026-09-02); do not run it as is.
+> УСТАРЕЛ — this brief stands on the cancelled frame of entry centralnyj-obekt-okruzhnost, kurs-puti-i-volny/ZAMYSEL.md:302 (cancelled 2026-09-02); do not run it as is.
 # Заход: сверка концепции, потом модулярность
 
 *Написан 05.08.2026 в конце длинной сессии, для вставки в новый чат. Самоценный.*
