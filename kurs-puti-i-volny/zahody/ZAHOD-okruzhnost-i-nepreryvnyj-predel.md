@@ -4,7 +4,7 @@ sloj: 3
 status: zabrakovan
 ---
 🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
-> ОТМЕНЁН — the owner redefined the frame the same day (kurs-puti-i-volny/REESTR-reserchey.md:35); see ZAHOD-okruzhnost.md.
+> ОТМЕНЁН — the owner redefined the frame the same day (kurs-puti-i-volny/REESTR-reserchey.md:37); see ZAHOD-okruzhnost.md.
 # ОТМЕНЁН — см. `ZAHOD-okruzhnost.md`
 
 Первая версия захода 04.08.2026. Владелец переопределил рамку в тот же день:

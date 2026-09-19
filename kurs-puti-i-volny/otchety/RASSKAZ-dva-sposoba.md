@@ -4,7 +4,7 @@ sloj: 3
 status: zabrakovan
 ---
 🗄 АРХИВ — ГЕЙТ НЕ СУДИТ
-> УСТАРЕЛ — written on a spine that was abandoned (kurs-puti-i-volny/REESTR-reserchey.md:43); keep as a draft, not as a plan.
+> УСТАРЕЛ — written on a spine that was abandoned (kurs-puti-i-volny/REESTR-reserchey.md:45); keep as a draft, not as a plan.
 # Два способа посчитать одно и то же
 
 *Самостоятельный рассказ. Начинается с задачи про случайное блуждание, кончается функциональным уравнением дзета-функции Римана. Ничего, кроме комплексных чисел и одного интеграла, не нужно. Всё, помеченное «проверено», пересчитано; скрипт рядом.*
