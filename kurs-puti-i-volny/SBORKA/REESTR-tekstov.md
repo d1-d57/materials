@@ -131,3 +131,75 @@ status: zhivoy
 
 ---
 *Открыто 44 файла, `wc -c` по 54. Статусы взяты из самих файлов и из `REESTR-reserchey.md`; ни один не выведен по догадке.*
+
+
+---
+
+## E. Catalogue: every course file with its status and a confirming address
+
+*Added 2026-09-19 (task katalog-kursa) to finish this registry, not to start a second one. The number of files is a command, not a figure:*
+
+```bash
+python3 -c "import pathlib; print(len(list(pathlib.Path('kurs-puti-i-volny').rglob('*.md'))))"
+```
+
+*Coverage of the table below — prints «покрыто X из N»; X below N is red (a row counts only with a closed-list status and an address of the form `file:line`):*
+
+```bash
+python3 -c 'import pathlib,re;n={str(p) for p in pathlib.Path("kurs-puti-i-volny").rglob("*.md")};t=pathlib.Path("kurs-puti-i-volny/SBORKA/REESTR-tekstov.md").read_text(encoding="utf-8");r=set(re.findall(r"^\| \x60(kurs-puti-i-volny/[^\x60]+\.md)\x60 \| .+ \| (?:живой|устарел|отменён|порождаемый|архив) \| .*\S:\d+.*\|$",t,re.M));print("покрыто",len(r&n),"из",len(n))'
+```
+
+**Closed list of statuses:** `живой` · `устарел` · `отменён` · `порождаемый` (built by a tool, never edited by hand) · `архив`. No sixth category. **A status without an address is forbidden:** the address is `file:line` plus a quote of at most 12 words that shows the status. Where the address is the row's own file, the status is self-attested and there is no independent confirmation.
+
+**Cancelled files say so about themselves.** A file that is cancelled as a whole carries the banner `🗄 АРХИВ — ГЕЙТ НЕ СУДИТ` in its first 10 lines plus one line naming what cancelled it; a live file with one cancelled section carries a line starting `🚫 ОТМЕНЕНО ЗАПИСЬЮ <entry id>` next to that section. Both must name the entry of `ZAMYSEL.md` §5 that cancelled it. The check — with its coverage and its blind zones printed — is `python3 ../disciplina/_generator/tools/check_arhiv.py kurs-puti-i-volny/ZAMYSEL.md` (run from `materials/`).
+
+| path | what it is | status | confirming address |
+|---|---|---|---|
+| `kurs-puti-i-volny/ARHITEKTURA.md` | map of homes: where each kind of information lives and what feeds what | живой | `kurs-puti-i-volny/ZAMYSEL.md:14` «Сразу вторым — ARHITEKTURA.md: где какая информация лежит» |
+| `kurs-puti-i-volny/CHITAT.md` | checked reading list and links for the course | живой | `kurs-puti-i-volny/ARHITEKTURA.md:89` «что почитать | CHITAT.md» |
+| `kurs-puti-i-volny/HREBET-kursa.md` | 2026-08 research digest: the year by quarters, materials per board, ending in the duality of two formulas; the quarter framing is cancelled, the rest stands | живой | `kurs-puti-i-volny/ARHITEKTURA.md:98` «Богатые и местами единственные носители материала» |
+| `kurs-puti-i-volny/INDEKS.md` | generated index of the corpus built from the file headers | порождаемый | `kurs-puti-i-volny/INDEKS.md:1` «СОБРАН ГЕНЕРАТОРОМ tools/indeks.py. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/KOSTYAK.md` | mathematical skeleton «one problem counted twice» of the pre-rebuild course | устарел | `kurs-puti-i-volny/KOSTYAK.md:2` «математический скелет с излагаемыми теоремами (УСТАРЕЛ)» |
+| `kurs-puti-i-volny/OBEKT.md` | the whole course on two pages: the object, its degenerations, four views, two directions of the story | живой | `kurs-puti-i-volny/ARHITEKTURA.md:78` «что такое объект и во что он вырождается | OBEKT.md» |
+| `kurs-puti-i-volny/OBOZNACHENIYA.md` | single home of notation: one letter, one meaning | живой | `kurs-puti-i-volny/ARHITEKTURA.md:82` «буква | OBOZNACHENIYA.md» |
+| `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md` | pointer stub to the sum-of-four-squares sample kept in obrazec/src/obrazec.md | живой | `kurs-puti-i-volny/OBRAZEC-summy-kvadratov.md:7` «Указатель — см. obrazec/src/obrazec.md» |
+| `kurs-puti-i-volny/PAZL.md` | grid «specialization × view»: what is known, where the holes are, in which order to dig | живой | `kurs-puti-i-volny/ARHITEKTURA.md:79` «PAZL.md, сетка «специализация × взгляд»» |
+| `kurs-puti-i-volny/PERESTROYKA.md` | record of the restructuring: goal, fork, plan (2026-09-03) | живой | `kurs-puti-i-volny/ZAMYSEL.md:207` «Разбор и предложение из семи глав — PERESTROYKA.md §5б–5в» |
+| `kurs-puti-i-volny/PLAN-goda-krupno.md` | year at a glance: one object, two generalization axes, seven blocks (draft of 2026-09-19) | живой | `kurs-puti-i-volny/PLAN-goda-krupno.md:14` «Собран 2026-09-19 по решениям владельца» |
+| `kurs-puti-i-volny/RASSKAZ-god.md` | year story in eight chapters about one path function, in a single readable file | живой | `kurs-puti-i-volny/RASSKAZ-god.md:2` «годовая история курса «Пути и волны» одним читаемым файлом» |
+| `kurs-puti-i-volny/RAZVEDKA-metody-i-obrazcy.md` | map of about 17 sources of the figure «count → generating function → equation → asymptotics» | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:53` «В первый текст не вошла никак» |
+| `kurs-puti-i-volny/README.md` | course entry page as of 2026-08-05: goal, state, debts | устарел | `kurs-puti-i-volny/ARHITEKTURA.md:100` «заморожен на 05.08, описывает курс до перестройки» |
+| `kurs-puti-i-volny/REESTR-reserchey.md` | numbered register of research moves with verdicts | живой | `kurs-puti-i-volny/ARHITEKTURA.md:88` «что уже делалось и зачем | REESTR-reserchey.md» |
+| `kurs-puti-i-volny/SBORKA/KALENDAR-i-sostav.md` | real class calendar against the 32-topic composition, counted by command | живой | `kurs-puti-i-volny/ARHITEKTURA.md:101` «счётные своды от 18.09 (расхождения, реестр текстов, календарь)» |
+| `kurs-puti-i-volny/SBORKA/KARTA-rashozhdeniy.md` | map of the places where course documents contradict each other | живой | `kurs-puti-i-volny/ARHITEKTURA.md:235` «Расхождения — SBORKA/KARTA-rashozhdeniy.md» |
+| `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md` | this registry: what is written, in what state, whose verdict; debts; the catalogue of all files | живой | `kurs-puti-i-volny/ARHITEKTURA.md:101` «счётные своды от 18.09 (расхождения, реестр текстов, календарь)» |
+| `kurs-puti-i-volny/SBORKA/RESHENIE-instrumenty.md` | decision not to install IWE and what is built instead (2026-09-18) | живой | `kurs-puti-i-volny/ARHITEKTURA.md:101` «счётные своды от 18.09 (расхождения, реестр текстов, календарь)» |
+| `kurs-puti-i-volny/SBORKA/SLEDUYUSHCHIY-ZAHOD.md` | program and calendar for the next executor's work on the corpus | живой | `kurs-puti-i-volny/SBORKA/SLEDUYUSHCHIY-ZAHOD.md:23` «Course Shape (Owner Decision 2026-09-19)» |
+| `kurs-puti-i-volny/SBORKA/ZAMER-grafa.md` | measurement of the corpus link graph, written by tools/graf.py | порождаемый | `kurs-puti-i-volny/tools/graf.py:7` «Writes ZAMER-grafa.md and graf-rebra.tsv to the SBORKA folder» |
+| `kurs-puti-i-volny/SLOVAR.md` | single home of words: which word names which concept | живой | `kurs-puti-i-volny/ZAMYSEL.md:48` «OBOZNACHENIYA.md · SLOVAR.md» |
+| `kurs-puti-i-volny/ZAMYSEL.md` | decision home: what the course tells and why; cancelled decisions with their traces | живой | `kurs-puti-i-volny/ZAMYSEL.md:8` «Единственный дом решений о том, ЧТО мы рассказываем и ЗАЧЕМ» |
+| `kurs-puti-i-volny/anons.md` | ready announcement text for a poster or an external audience | живой | `kurs-puti-i-volny/ARHITEKTURA.md:90` «формулировка замысла для внешнего читателя | anons.md» |
+| `kurs-puti-i-volny/obrazec/src/obrazec.md` | source of the sum-of-four-squares sample text, embedded into the output HTML | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:51` «образец арки для финала» |
+| `kurs-puti-i-volny/otchety/GRANICA-chto-vidno-na-okruzhnosti.md` | report: what modular-form theory shows on the one-dimensional circle | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/otchety/KARTA-mosta.md` | report: what modular forms really give the walk problem, and where it is a stretch | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/otchety/OPTIKA-odna-funkciya.md` | report: the whole course as a study of one continued fraction (2026-08-06) | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «Самый поздний и сжатый ответ на «про что курс»» |
+| `kurs-puti-i-volny/otchety/OTCHET-okruzhnost.md` | report answering the brief «is it simpler on the circle», with checked / from memory / unchecked marks | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md` | story «two ways to count the same thing» ending at the zeta functional equation | устарел | `kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md:2` «рассказ двумя способами (УСТАРЕЛ)» |
+| `kurs-puti-i-volny/otchety/RAZBOR-i-perestroyka.md` | analysis of the rejected circle survey and where the entrance to modularity was found | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/otchety/ZAMETKI.md` | provenance notes, open places and plans for the accepted survey | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/otchety/ZAPISKA-iz-simmetrii.md` | note on counting on the circle from symmetry, with a verdict on sources | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:50` «восемь файлов (кроме забракованного» |
+| `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md` | generated view: the «before analysis» part of the year | порождаемый | `kurs-puti-i-volny/plan/src/chast-1-do-analiza.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/chetvert-1.md` | generated view: quarter 1 | порождаемый | `kurs-puti-i-volny/plan/src/chetvert-1.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/chetvert-2.md` | generated view: quarter 2 (still «not yet written») | порождаемый | `kurs-puti-i-volny/plan/src/chetvert-2.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/chetvert-3.md` | generated view: quarter 3 (still «not yet written») | порождаемый | `kurs-puti-i-volny/plan/src/chetvert-3.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/chetvert-4.md` | generated view: quarter 4 (still «not yet written») | порождаемый | `kurs-puti-i-volny/plan/src/chetvert-4.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/god.md` | generated view: the year, one line per point | порождаемый | `kurs-puti-i-volny/plan/src/god.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/karkas.md` | 32-topic skeleton, third edition; now the raw source that punkty.md cites | живой | `kurs-puti-i-volny/plan/src/karkas.md:14` «Этот файл остаётся источником ПЕРЕВОДА» |
+| `kurs-puti-i-volny/plan/src/lekciya-1.md` | generated view: lecture 1 expanded from its storyboard | порождаемый | `kurs-puti-i-volny/plan/src/lekciya-1.md:5` «СОБРАН ГЕНЕРАТОРОМ tools/plany.py ИЗ punkty.md. РУКАМИ НЕ ПРАВИТЬ» |
+| `kurs-puti-i-volny/plan/src/plan.md` | rejected schedule of 32 sessions, kept as a historical draft | отменён | `kurs-puti-i-volny/plan/src/plan.md:19` «ЗАБРАКОВАН владельцем 06.08» |
+| `kurs-puti-i-volny/plan/src/punkty.md` | single home of the list of course points; source of the generated plan views | живой | `kurs-puti-i-volny/plan/src/punkty.md:7` «Пункты курса «Пути и волны» — единый дом» |
+| `kurs-puti-i-volny/plan/src/voprosy.md` | list of the questions the year is assembled from, in groups | живой | `kurs-puti-i-volny/ARHITEKTURA.md:85` «открытый вопрос года | plan/src/voprosy.md» |
+| `kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md` | executor brief: is F(z,q) a Jacobi form; stands on the cancelled circle frame | отменён | `kurs-puti-i-volny/ZAMYSEL.md:302` «задания исполнителям, стоящие на отменённой рамке» |
+| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md` | first version of the circle brief, cancelled the same day | отменён | `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md:8` «ОТМЕНЁН — см. ZAHOD-okruzhnost.md» |
+| `kurs-puti-i-volny/zahody/ZAHOD-okruzhnost.md` | brief that started the circle line: is it simpler on the circle | живой | `kurs-puti-i-volny/SBORKA/REESTR-tekstov.md:55` «Живые заходы ZAHOD-okruzhnost.md» |
+| `kurs-puti-i-volny/zahody/ZAHOD-sverka-koncepcii.md` | executor brief: reconcile the concept, then modularity; stands on the cancelled circle frame | отменён | `kurs-puti-i-volny/ZAMYSEL.md:302` «задания исполнителям, стоящие на отменённой рамке» |
