@@ -398,6 +398,19 @@ grep -n '<как механизм назван в вызывающем коде>
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+
+**Step A:** not skipped — `gh` was logged in; all three repositories exist (see ## ОТЧЁТ). Morning questions to the owner are in `uborka-materials/VOPROSY-UTRO.md` (11 lines), not here.
+
+1. A tool in `disciplina` wrote into a folder literally named `--help/` in the main checkout (`--help/KORPUS-RYCHAGOV.jsonl`, `--help/_generator/tools/gejt_proby.py`, `--help/_studio/zhurnal/proba/KORPUS-RYCHAGOV.jsonl`, untracked; found while parking the main checkout): some tool takes its first argument as an output path without rejecting flags. It will repeat every time someone asks that tool for `--help`. I did not look for which tool.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` run from this pass's worktree printed "no file fell into the area" and gave no counts, although the folder exists in the worktree — the first-move check of the brief is not executable from a worktree.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. The census (pass 1) counted "52 loose .md files" in `spetsmat-bot-wt/`; live: `find spetsmat-bot-wt -maxdepth 1 -type f | wc -l` → 0 — they are READMEs inside worktrees plus one non-git folder `etalon-raspil/`.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но

@@ -51,3 +51,25 @@ None (after fixing the substring-match bug described above).
 | move | 16 | 0 |
 
 checked 255 of 255 removals, 0 failures
+
+## Batch 3 — 2026-09-25 02:24
+
+**Input:** `actions.tsv` confirmed frozen (stable line count across a repeat check, no concurrent writer). Full file copied to `/tmp/uborka/verify/actions_full3.tsv` at **2026-09-25 02:24:55** (921 data rows; 416 of them `tombstone`/`drop-worktree`/`move`, matching the expected M ≈ 416).
+
+**Script:** same `/tmp/uborka/verify/verify.py`, pointed at the new snapshot, plus one new check added to `check_tombstone` and one new row shape:
+- New row shape: step **E3-B4** `tombstone` rows for `disciplina`, `spetsmat-bot`, `ankety`, `arhiv-london-avgust-2026`, `matproekty-179`, `moskva`, `sayt-sistemy-konstantinova` — same `<repo>#<branch>` object shape and `last commit <sha40>` note shape as the existing `materials`-only tombstone rows, so no parsing changes were needed; repo path resolves to `/Users/ivanyakovlev/Documents/GitHub/<repo>` for all of them (verified all seven exist locally with a `.git`). 161 such rows, alongside the 14 pre-existing `B4` rows = 175 tombstone rows total.
+- New check, applied to **every** tombstone row (not just the new ones): after confirming the last commit is an ancestor of (or equal to) the remote sha, also run `git -C <repo> rev-parse -q --verify refs/heads/<branch>` (branch taken from `object`, i.e. the tombstoned branch itself, not `saved_ref`) and require it to **fail** — confirming the local branch was actually deleted, not just tagged. Sanity-checked the check itself: ran the same `rev-parse -q --verify` against a branch known to exist (`ankety`'s `main`) and confirmed it correctly returns exit 0/prints a sha, so the check discriminates rather than trivially passing.
+
+### Failures
+
+None.
+
+### Counts per action kind
+
+| action | checked | failures |
+|---|---|---|
+| tombstone | 175 | 0 |
+| drop-worktree | 225 | 0 |
+| move | 16 | 0 |
+
+checked 416 of 416 removals, 0 failures
