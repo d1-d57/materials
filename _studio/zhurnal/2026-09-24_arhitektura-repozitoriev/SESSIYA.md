@@ -189,3 +189,15 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: how to reconcile many repos with one intellectual space?
 > - M: The owner accepts the draft architecture. The core worry: many repos break the "one soup" where related courses, research and lecture drafts sit side by side and connect. Also the fear of losing repos without folder-like navigation and "where did we do something similar" search. Cancelled topics must be kept, not thrown away. Organizational projects (festival sites, 10th-grade projects) are not part of the soup; they only need to reference each other's code.
 > - note: part of the transcript is garbled ("Rod Jo Shuet Materials", "Алых Трусах" = «Алых Парусах»). The meaning is taken from context: "this is what materials is for".
+
+## 2026-09-24, 16:55 (UTC) — четвёртый круг: разрез бульона, поля, точка входа
+
+Владелец: сайт выносим; теги вместо организаций; ученики и класс 7И — организационные, задачная база общая;
+поля карточки — через интервью по 30–40 прошлым материалам (четыре решения → `RESHENIYA.md`, пункты 57–66).
+Спор: владелец допускает несколько долгоживущих основных веток в одном репозитории, аналитик возражает (п.59).
+Ресёрч (источники в п.65–66): Claude Code Projects закрывают идею стартового репозитория. Найдена причина, по
+которой плагин «Дисциплина» не пришёл в облако: плагины из `.claude/settings.json` там не грузятся.
+
+- **Q** — Q: how to cut the soup, how to search, where to start a cloud session?
+> - M: Site moves out. Tags, not organizations. Kids' and olympiad content (problem bank, circles, kids' courses) is one soup, adult higher math and popsci is another; the border is fuzzy. Students and the 57-school 7I class are organizational and private but draw on the shared problem bank. The 179 class site is pure code. Search should be automatic, via rich fields on every content unit. The fields are to be designed by interviewing the owner on 30–40 past materials and built into the material-creation skill. The owner wants a single cloud entry point that can find any project across all repos.
+> - note: the owner floated long-lived parallel main branches per course. The analyst disagrees; open.
