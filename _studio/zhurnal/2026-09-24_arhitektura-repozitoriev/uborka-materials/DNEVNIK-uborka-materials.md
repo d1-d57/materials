@@ -19,3 +19,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** step C (materials-wt worktrees), then B4 for the branches it frees, then step F verifier.
 - **surprise:** any B5 merge into `arka/mat-kostyak` would move HEAD of the main checkout (it has that branch checked out), which step D forbids — so in `materials` B5 cannot happen tonight at all. `zahod/perepis-diska` also fails (b) on the letter.
 - **question:** 2 lines added to VOPROSY-UTRO.md.
+
+## 2026-09-25 01:50 — step C (materials-wt worktrees) + B4 round 2
+- **done:** `/tmp/uborka/wt.py <materials> <materials-wt/> C`: 16 of 16 other worktrees handled — 9 dirty ones parked to `park/2026-09-25/wt-<name>` (verified by `ls-remote`), all 16 dropped via `git_zona.py worktree drop <path> --force` after the HEAD/park ref was verified on GitHub; porcelain of every tree equal before/after park. 0 kept for local-only files. 4 empty folders in materials-wt (sajt-kursa-wt, slajdy-media-wt, sloi-i-obrez-wt, vlitie-i-vitrina-kursa-wt) moved to Trash. B4 round 2: 10 more in-trunk branches tombstoned; 4 refused (zahod/chistka-hvostov, dobivka-dolgov, vlit-i-uspokoitsya, vlitie-i-vitrina-kursa — tool refusal, see actions.tsv). materials main porcelain still 147.
+- **next:** step F verifier on all removals so far (A, B4, C) in background; step D meanwhile (snapshot only, no removal).
+- **surprise:** `materials-wt/disciplina` is a symlink to `~/Documents/GitHub/disciplina` (it makes `../disciplina` resolve from inside a materials worktree) — left in place.
+- **question:** none.
