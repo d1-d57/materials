@@ -197,6 +197,18 @@
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/REPORT.md`** (Disk census report of the owner's Mac (pass kod_perepis-diska): funnel counters, chronology, duplicates, surprises)
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/DNEVNIK-uborka-materials.md`** (Night log of pass uborka-materials (repository cleanup))
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/REPORT.md`** (Final report of pass uborka-materials, opens with THE WORLD THIS MORNING)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/VOPROSY-UTRO.md`** (Morning questions to the owner from pass uborka-materials)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/verifier.md`** (Step F verifier results of pass uborka-materials)
+
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
 **`docs/pochemu-i-videnie/`:** `pochemu-i-videnie/RESHENIYA.md`.
 **`docs/sostoyanie/`:** `sostoyanie/OTKRYTYE-ZADACHI.md` · `sostoyanie/SVODKI.md`. · `OTCHYOT-2026-07-31-pochemu-krugi.md` (Отчёт владельцу 31.07: почему получаются круги правок — семь механизмов, десять рецидивов, три незакрытых класса, числа по 437 файлам журнала)

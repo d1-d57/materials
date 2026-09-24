@@ -1,0 +1,5 @@
+branch	in_trunk	ahead_of_trunk	behind_trunk	last_commit_date	files_changed	top_dirs	merge_dry_run	checked_out_in	proposal
+design-system	yes	0	75	2026-06-17	0		n/a	-	already-in-trunk
+main	yes	0	0	2026-09-25	0		n/a	-	already-in-trunk
+predeploy	yes	0	58	2026-06-17	0		n/a	-	already-in-trunk
+tagging	no	219	1	2026-09-25	1124	tools:870,"tools:141,"docs:58,mapcat:23,seed:20,tag_outputs:2	clean	/Users/ivanyakovlev/Documents/GitHub/sayt-sistemy-konstantinova	clean-merge-candidate
