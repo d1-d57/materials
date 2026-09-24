@@ -220,3 +220,26 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: order, naming, knowledge bases, scope of the sweep?
 > - M: Sweep first (a Mac executor finds everything uncommitted, unpushed or unmerged, including whole local-only repos), materials first, others as far as feasible. Then prefixes via renames, if safe; then tags. Every skill phase must emit a generator-built typed document; functions build databases of repos, skills, levers and readings, with RELATIONS (lever closes rule closes lesson), forming a graph that shows gaps. Semantic search via embeddings. No single knowledge base: bases split by mathematical field. This arc produces only the plan; execution runs in arcs and overnight waves.
 > - note:
+
+## 2026-09-24, 20:48 (UTC) — седьмой круг: что на Mac и воронка подметания
+
+Владелец: почти всё в `~/Documents/GitHub`, книги — отдельной папкой в `~/Documents`; есть проект вне GitHub
+(«Готовимся к ЕГЭ»), мусор в «Загрузках» и в корне домашней папки, дубли вариантов проектов. Модель — Opus.
+Список «сам / стоп» принят (→ `RESHENIYA.md`). Требование: воронка массовых правил, не чтение каждого проекта
+(п.85–91).
+
+**Предложенная воронка (п.91), к согласованию:**
+0. Перепись только на чтение: для каждого репозитория и каждой папки — есть ли remote, ветки, влита ли, запушена ли,
+   число грязных и неотслеживаемых файлов, worktree, дата, вес; для не-git-папок — вес, дата, типы файлов.
+1. Уже в порядке (чисто, всё запушено и лежит в стволе) → ничего не делать; влитые ветки и мёртвые worktree убрать.
+2. Незапушенные коммиты → запушить ветку как есть (это резервная копия, а не слияние).
+3. Грязное дерево → закоммитить как есть в ветку-парковку `park/<дата>`, запушить. Сортировать потом.
+4. Дубли: папки с тем же `origin` — это просто лишние чекауты; после 2–3 убрать.
+5. Проект вне git → приватный архивный репозиторий, запушить как есть.
+6. Бинарники (PDF, djvu, фото) → никогда в git; книги — в «Математические книги».
+7. Мусор (Загрузки, корень, «Claude») → карантинная папка, не удаление; владелец стирает через срок.
+Остаток (конфликты, неясное) — список владельцу.
+
+- **Q** — Q: where is the work on the Mac, and how should the sweep run?
+> - M: Almost everything is in ~/Documents/GitHub; books sit in a separate folder in Documents. Known outliers: the unarchived "Prepare for the Unified State Exam" project, stray Claude files in the home root, a "Claude" folder, Downloads junk, and duplicate or variant project folders. Opus executor. Must be mass-processed by rules, funnel-style, reading content only for the last few percent.
+> - note: the transcript contains an aside to someone in the room ("switch off the light"), ignored.
