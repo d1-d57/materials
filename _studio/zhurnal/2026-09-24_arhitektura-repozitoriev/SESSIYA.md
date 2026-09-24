@@ -258,3 +258,11 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: what is unclear about parking, quarantine and reporting?
 > - M: Unfinished work is rare (a session dropped before its handoff), and each parked item deserves a deep look later. No quarantine: delete, but never unnoticed. The census should also produce a dated chronology of projects (Cowork from about early June, disciplina about a month later, waves from about late August), rebuilt as a function, not kept as a diary. The owner stays out of the executor–analyst loop: the executor commits reports and questions into the arc, the analyst answers, following the zahod discipline.
 > - note:
+
+## 2026-09-24, 21:23 (UTC) — владелец запустил заход 1; ПРАВКА 1
+
+Владелец запустил `kod_perepis-diska.md` на Mac. Ответил ему: генератор работает в облаке; хуков здесь нет (п.101);
+следить за ходом можно только через GitHub (п.102). По просьбе владельца в заход внесена ПРАВКА 1: пуш после
+каждого коммита, промежуточные TSV, дневник хода `perepis/DNEVNIK.md` (запись на каждом этапе и не реже раза в
+30 минут), вопросы без ожидания ответа, и способ читать новые правки из ветки аналитика (копия захода у
+исполнителя сама не обновляется). Фоновый опрос `git ls-remote` за веткой `zahod/perepis-diska` запущен.
