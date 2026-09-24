@@ -243,3 +243,18 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: where is the work on the Mac, and how should the sweep run?
 > - M: Almost everything is in ~/Documents/GitHub; books sit in a separate folder in Documents. Known outliers: the unarchived "Prepare for the Unified State Exam" project, stray Claude files in the home root, a "Claude" folder, Downloads junk, and duplicate or variant project folders. Opus executor. Must be mass-processed by rules, funnel-style, reading content only for the last few percent.
 > - note: the transcript contains an aside to someone in the room ("switch off the light"), ignored.
+
+## 2026-09-24, 21:04 (UTC) — восьмой круг и сборка захода 1 подметания
+
+Владелец: парковка принята; карантина нет, но каждое удаление должно быть видно; летопись дат проектов как
+функция; в цикле «исполнитель ↔ аналитик» он не участвует (три решения → `RESHENIYA.md`, п.92–97).
+Собран заход `kod_perepis-diska.md` генератором `bootstrap_zahod.py` (`GIT_ZONA_REPO` → materials). Правки после
+генератора, все механические и названные: пути `/home/user/...` → `/Users/ivanyakovlev/Documents/GitHub/...`;
+стартовый блок под Mac (fetch ветки сессии + worktree); раздел «ЗАДАЧА» с настоящим критерием; явная отмена
+шагов 2–3 WARNING-блока (влития нет). `check_zahod.py` → rc=0. Рабочая папка, которую генератор завёл в облаке,
+снята. Находки по генератору и линтеру → п.99–100. `git_zona.py` уже умеет `poteri`/`zakryt-vetku`/`mogily`/`voskresit`,
+то есть журнал удалений («надгробия») для захода 2 есть готовый.
+
+- **Q** — Q: what is unclear about parking, quarantine and reporting?
+> - M: Unfinished work is rare (a session dropped before its handoff), and each parked item deserves a deep look later. No quarantine: delete, but never unnoticed. The census should also produce a dated chronology of projects (Cowork from about early June, disciplina about a month later, waves from about late August), rebuilt as a function, not kept as a diary. The owner stays out of the executor–analyst loop: the executor commits reports and questions into the arc, the analyst answers, following the zahod discipline.
+> - note:

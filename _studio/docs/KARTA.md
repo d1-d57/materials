@@ -185,6 +185,9 @@
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/VYGRUZKA-2026-09-24.md`** (Выгрузка сессии 2026-09-24 — сырьё для дневника арки 2026-09-24_arhitektura-repozitoriev)
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_perepis-diska.md`** (перепись Mac только на чтение: все git-репозитории и не-git папки, их состояние и даты — основа воронки подметания и летописи проектов)
+
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
 **`docs/pochemu-i-videnie/`:** `pochemu-i-videnie/RESHENIYA.md`.
 **`docs/sostoyanie/`:** `sostoyanie/OTKRYTYE-ZADACHI.md` · `sostoyanie/SVODKI.md`. · `OTCHYOT-2026-07-31-pochemu-krugi.md` (Отчёт владельцу 31.07: почему получаются круги правок — семь механизмов, десять рецидивов, три незакрытых класса, числа по 437 файлам журнала)
