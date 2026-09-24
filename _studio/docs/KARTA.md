@@ -163,10 +163,16 @@
 
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/RESHENIYA.md`** (decisions of the arc's sessions)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SESSIYA.md`** (дневник арки 2026-09-24_arhitektura-repozitoriev)
 
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SOSTOYANIE.md`** (состояние арки 2026-09-24_arhitektura-repozitoriev — что сделано/осталось, чем измерено, дом разведки)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SPISOK-DEL.md`** (arc-wide numbered registry of items: owner's pains, findings, open questions)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/TZ.md`** (контракт арки 2026-09-24_arhitektura-repozitoriev)
 

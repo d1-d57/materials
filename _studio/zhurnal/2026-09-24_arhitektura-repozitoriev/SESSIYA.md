@@ -90,3 +90,44 @@ GitHub для облачного доступа. По ходу всплыла к
 
 <!-- РЕПЛИКИ РАЗНЕСЕНЫ: Sdc28-В017 · Sdc28-В018 · Sdc28-В019 · Sdc28-В020 · Sdc28-В021 -->
 
+
+## 2026-09-24, 15:40 (UTC) — облачная сессия: вход, плагин, монолог владельца
+
+**Вход.** Хэндофф лежит только в `origin/arka/mat-kostyak` (коммит `42826e76`). Выданная сессии ветка
+`claude/bold-faraday-wq09ql` была копией `main` (сайт) — пересоздана от `arka/mat-kostyak`, см. `RESHENIYA.md`.
+
+**Плагин.** Владелец ставил «Дисциплину» в Customize, но в сессии её нет: `ListPlugins` и `SearchPlugins`
+вернули пусто, скиллов `disciplina-*` нет в списке и после регистрации репозитория. Обход: к сессии подключён
+`d1-d57/disciplina` (клон `/home/user/disciplina`), `SKILL.md` читаются напрямую, двери `reshenie.py` и
+`register_doc.py` запускаются оттуда с корнем `materials` → `SPISOK-DEL.md` п.20.
+
+**Расхождение правил.** Хэндофф требовал вопросы «да/нет»; `disciplina-intervyu` (решение владельца 02.09) —
+открытые. Дальше вопросы открытые → `RESHENIYA.md`, `SPISOK-DEL.md` п.22.
+
+**Три вопроса «ПЕРВОГО ХОДА»** владелец закрыл монологом по существу: (1) да, полное интервью, не чек-лист;
+(2) веха «закрыть `arka/mat-kostyak` + освежить карты» не отменена, но тема шире — вся система хранения,
+включая саму «Дисциплину»; (3) вынос курсов не решён — это гипотеза интервью.
+
+### INTERVIEW — RENDERED IN ENGLISH FROM A RUSSIAN CONVERSATION — 2026-09-24
+
+> ИНТЕРВЬЮ ПРОВЕДЕНО: да (2026-09-24, живой разговор в облачной сессии). The record is the English
+> rendering of the settled meaning, not a quotation; the owner's text came through a speech model.
+
+- **Q1** — Q: what is the problem, in your own terms?
+> - M: Moving to cloud Claude Code, the owner cannot find where things are. An executor reported that a course "does not exist". Materials was meant as the single place for educational content, but it holds too many unrelated things and dozens of unmerged branches, partly branches opened "to plug in a function" and forgotten.
+> - note: the "course not found" cause was already diagnosed on 24.09 (default branch = site); told the owner.
+- **Q2** — Q: what outcome do you want?
+> - M: Total order across the whole system, done once and done smartly: one line of work instead of many branches; possibly several repos, but classified into a clear hierarchy (fear of 150 flat repos, unsure what is normal). Maps must not go stale: build them by functions or a script-built table, not prose.
+> - note:
+- **Q3** — Q: what should materials be?
+> - M: A living archive and catalog of teaching material. No code except HTML and math visualizations. Branches exist only because of parallel executors. Hypothesis: one course, one repo, one executor. The site (links to past lectures and slides) is a separate thing that currently lives in materials/main. Hypothesis: one-off lectures stay with the site, big courses go to separate repos.
+> - note: hypotheses, not decisions.
+- **Q4** — Q: what else is in scope?
+> - M: (a) Standard cards for every material, produced by a generator from filled fields, forming a searchable catalog. (b) Sources (books, scans, articles, video, photos) must leave git; literature is shared across projects; open question how the cloud reads them. (c) A research Zettelkasten, shared across projects, maybe a separate global knowledge map; scope unknown. (d) Disciplina itself may be fundamentally wrong (git hygiene, acceptance, zahod writing) and must be reviewed. (e) Use the "wave" tool from disciplina. (f) Maybe a local-Claude pass on the Mac to see uncommitted work.
+> - note: the owner said something like "fight it first", but whether that means disciplina or materials is unclear. Re-asked in chat.
+- **Q5** — Q: how should this session work?
+> - M: Deep interview mixed with research. Keep a diary and a numbered table of items: build a long list, then clean it, then execute. Nothing may be lost.
+> - note:
+
+**Сделано этим ходом:** заведён `SPISOK-DEL.md` (26 пунктов, блоки А–Е), три решения в `RESHENIYA.md`,
+запущена фоновая инвентаризация: ветки `materials`, тяжёлые файлы, код, список репозиториев аккаунта.
