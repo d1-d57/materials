@@ -175,3 +175,17 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q9** — Q (asked by the analyst as urgent): student data in a public repo?
 > - M: Not critical, no surnames, no history scrub. Split private and public repos in the future. Write "not critical" in capitals in several places so executors stop raising it.
 > - note: the analyst's framing was the error; recorded as a factory lesson.
+
+## 2026-09-24, 16:24 (UTC) — третий круг: главный вопрос «бульон vs репозитории»
+
+Черновик целевой архитектуры владелец принял без возражений. Он поднял главный концептуальный вопрос:
+репозитории нужны как единицы правки, но ценность — в едином интеллектуальном пространстве, где всё рядом
+(`SPISOK-DEL.md` п.50–54). Ресёрч возможностей GitHub → п.55. Источники:
+[changelog: org custom properties GA 2026-01-13](https://github.blog/changelog/2026-01-13-organization-custom-properties-now-generally-available/),
+[docs: custom properties в организации](https://docs.github.com/en/organizations/managing-organization-settings/managing-custom-properties-for-repositories-in-your-organization),
+[discussion: запрос на папки репозиториев](https://github.com/orgs/community/discussions/17662).
+Гипотеза аналитика — п.56: разрезать по оси «идеи / организация», а не по курсам. Вынесена владельцу на обсуждение.
+
+- **Q** — Q: how to reconcile many repos with one intellectual space?
+> - M: The owner accepts the draft architecture. The core worry: many repos break the "one soup" where related courses, research and lecture drafts sit side by side and connect. Also the fear of losing repos without folder-like navigation and "where did we do something similar" search. Cancelled topics must be kept, not thrown away. Organizational projects (festival sites, 10th-grade projects) are not part of the soup; they only need to reference each other's code.
+> - note: part of the transcript is garbled ("Rod Jo Shuet Materials", "Алых Трусах" = «Алых Парусах»). The meaning is taken from context: "this is what materials is for".
