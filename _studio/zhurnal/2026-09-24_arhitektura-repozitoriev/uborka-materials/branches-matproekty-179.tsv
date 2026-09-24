@@ -1,0 +1,6 @@
+branch	in_trunk	ahead_of_trunk	behind_trunk	last_commit_date	files_changed	top_dirs	merge_dry_run	checked_out_in	proposal
+main	yes	0	0	2026-09-20	0		n/a	-	already-in-trunk
+zahod/nepodtverzhdennye	yes	0	0	2026-09-20	0		n/a	/Users/ivanyakovlev/Documents/GitHub/matproekty-179	already-in-trunk
+zahod/privatnost-monorepo	yes	0	11	2026-09-20	0		n/a	-	already-in-trunk
+zahod/svodka-po-rukovoditelyam	yes	0	2	2026-09-20	0		n/a	-	already-in-trunk
+zahod/uvedomlenie-shkolnika	yes	0	15	2026-09-20	0		n/a	-	already-in-trunk
