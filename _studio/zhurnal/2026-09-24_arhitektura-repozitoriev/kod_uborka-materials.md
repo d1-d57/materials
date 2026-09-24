@@ -377,6 +377,12 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+- Baselines (measured 2026-09-25 01:45): Y_b = 24 local branches in `materials` (`git -C ~/Documents/GitHub/materials for-each-ref refs/heads | wc -l`); Y_w = 17 worktrees under `materials-wt` (`worktree list | grep -c materials-wt`), 16 of them besides this pass's own; `materials` main checkout porcelain = 147 lines.
+- Order A → G as written; every step: DNEVNIK entry, zone commit, push, check for ПРАВКА.
+- Mechanics by shell/Python scripts in `/tmp/uborka/`, summaries only.
+- Decision inside my zone (named, not asked): a worktree whose removal would lose files that are NOT on GitHub even after parking (files over 5 MB kept out of the park, or `.gitignore`d files other than obvious caches such as `__pycache__`, `.DS_Store`, `node_modules`, `.ruff_cache`) is NOT dropped: it gets `skip` + one line in `VOPROSY-UTRO.md`. Reason: the park respects `.gitignore` and the 5 MB guard, so `worktree drop --force` would silently delete exactly those files, and the Trash is emptied in the morning. This tightens the law of the pass, it does not loosen it.
+- Criterion challenge: none; criterion (4) is measured before/after step D as written; I also record the number at the start (147).
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
