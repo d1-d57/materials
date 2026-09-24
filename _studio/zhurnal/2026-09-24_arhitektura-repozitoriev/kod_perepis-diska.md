@@ -1026,11 +1026,24 @@ MODEL: besplatnaya
 
 **Если ты это читаешь, уже закончив часть работы по старой редакции:** ничего не переделывай. Закоммить и запушь то, что есть, напиши в `DNEVNIK.md` одну задним числом помеченную запись «before ПРАВКА 1: done …» и дальше работай по правке.
 
+### ПРАВКА 2 · 2026-09-24 21:29 (UTC) · ответ на вопрос дневника: ретро-запись засчитана, решения ПЛАНа приняты
+
+1. **Your DNEVNIK question — answer: yes.** One retroactive entry plus entries from now on is accepted. The clause of ПРАВКА 1 "`grep -c '^## ' perepis/DNEVNIK.md` → не меньше 10" is **cancelled** for this pass: ПРАВКА 1 arrived after the census was done, and inventing entries would be the only defect here. Do not add filler entries.
+2. **Your four decisions in `## ПЛАН` are accepted as made** (worktree branches judged on the worktree row; `R4-dup` among main checkouts only; `R5/R6/R7` by the largest content class; new codes `R9-wt-done`, `R10-wt-residue`, `R0-holder`, `R0-empty`). The analyst spot-checked `materials` chronology against GitHub (`git log --remotes=origin --format=%cI | cut -c1-7 | sort | uniq -c`): June 5 and July 529 match your table exactly; first commit 2026-06-13 matches.
+3. **The false green you found in §0.1** (`branch --no-merged claude/bold-faraday-wq09ql` fails, `grep -c` prints 0) is accepted as a factory lesson; your workaround against `origin/…` is the right one. Nothing to fix inside this pass.
+4. **What is still owed:** `## ОТЧЁТ` (with the lines `ПРАВКИ ПРОЧИТАНЫ: 1, 2`, АРТЕФАКТ, КОММИТ, НЕОБРАТИМОЕ, ПОВТОРЯЕМОСТЬ), the hygiene block §4.1, the WARNING steps 1, 4, 5, 6 (steps 2–3 stay cancelled by §2.6), and a final push. Then stop: do not start any cleanup.
+
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — критерий проверен аналитиком по файлам ветки, не по словам отчёта: 7 файлов в `perepis/`; `repos.tsv` 352 строки при Y = 352 (проверено 352 из 352); `porcelain_before != porcelain_after` — 0 строк; пустых `funnel_rule` — 0; ветка на GitHub. Летопись `materials` сверена с GitHub (`git log --remotes=origin --format=%cI | cut -c1-7 | sort | uniq -c`): июнь 5 и июль 529 совпали, первый коммит 13.06 совпал. ПРАВКИ ПРОЧИТАНЫ: 1 — законно: ПРАВКА 2 пришла после сдачи и лишь подтверждает сделанное. Критерий ПРАВКИ 1 «≥10 записей дневника» снят ПРАВКОЙ 2.
+
+**Красные гейты `priyomka.py` на этом файле — разобраны поимённо, ни один не брак исполнителя (прогон 2026-09-24, облако):**
+- **Г3, Г17 (С3 ×4)** — пути `/Users/ivanyakovlev/...` не существуют на машине приёмки: заход собран в облаке, исполнен на Mac, принят в облаке. Файлы на месте по сути: `perepis/REPORT.md` влит в ветку арки; `ISTORII-CEN-zahoda.md` есть в `disciplina/_studio/docs/kak-delat/`. Среда, не содержание → `SPISOK-DEL.md` п.99, арка Ж.
+- **Г14, Г18** — гейты считают «свои коммиты» диапазоном `основа..ветка` ПОСЛЕ влития, где он пуст; до влития коммитов было 6 (`6e01325c` … `58efc233`, по ходу, с пушем). Плюс имя дневника: ПРАВКА 1 аналитика назвала его `DNEVNIK.md`, гейт ищет `DNEVNIK-*.md` — ошибка аналитика, не исполнителя.
+- **Г19 (Н11)** — утверждения летописи в `## ОТЧЁТ` без имени файла; их команды названы в `perepis/REPORT.md` §3, куда отчёт отсылает.
+- **Г0, Г10** — незакоммиченный файл приёмки и невывезенный merge-коммит на момент прогона; закрываются коммитом и пушем этой приёмки. `main` в «невлитых» — витрина сайта, законно.
 
 **ВЕТКА РАБОТЫ:** `zahod/perepis-diska`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -1041,13 +1054,6 @@ MODEL: besplatnaya
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: ветка `zahod/perepis-diska` влита аналитиком в `claude/bold-faraday-wq09ql` (ветку арки) merge-коммитом этой приёмки; коммитить, вывозить, деплоить нечего; гашение ветки и worktree `perepis-diska` на Mac — пункт захода 2 (подметание), не этой приёмки.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
-
-### ПРАВКА 2 · 2026-09-24 21:29 (UTC) · ответ на вопрос дневника: ретро-запись засчитана, решения ПЛАНа приняты
-
-1. **Your DNEVNIK question — answer: yes.** One retroactive entry plus entries from now on is accepted. The clause of ПРАВКА 1 "`grep -c '^## ' perepis/DNEVNIK.md` → не меньше 10" is **cancelled** for this pass: ПРАВКА 1 arrived after the census was done, and inventing entries would be the only defect here. Do not add filler entries.
-2. **Your four decisions in `## ПЛАН` are accepted as made** (worktree branches judged on the worktree row; `R4-dup` among main checkouts only; `R5/R6/R7` by the largest content class; new codes `R9-wt-done`, `R10-wt-residue`, `R0-holder`, `R0-empty`). The analyst spot-checked `materials` chronology against GitHub (`git log --remotes=origin --format=%cI | cut -c1-7 | sort | uniq -c`): June 5 and July 529 match your table exactly; first commit 2026-06-13 matches.
-3. **The false green you found in §0.1** (`branch --no-merged claude/bold-faraday-wq09ql` fails, `grep -c` prints 0) is accepted as a factory lesson; your workaround against `origin/…` is the right one. Nothing to fix inside this pass.
-4. **What is still owed:** `## ОТЧЁТ` (with the lines `ПРАВКИ ПРОЧИТАНЫ: 1, 2`, АРТЕФАКТ, КОММИТ, НЕОБРАТИМОЕ, ПОВТОРЯЕМОСТЬ), the hygiene block §4.1, the WARNING steps 1, 4, 5, 6 (steps 2–3 stay cancelled by §2.6), and a final push. Then stop: do not start any cleanup.
