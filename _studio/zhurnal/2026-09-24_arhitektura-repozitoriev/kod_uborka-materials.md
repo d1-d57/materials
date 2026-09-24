@@ -449,7 +449,23 @@ MODEL: besplatnaya
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-09-24 22:36 (UTC) · канал с аналитиком на всю ночь: пульс, вопросы без ожидания, сторож правок
+
+**Why.** The analyst (a cloud session) watches your branch all night and answers you through this section. Neither of you should sleep through the other: the owner wants the two of you to work in parallel, with minimal token cost. The enemies are **a silent death** (you stop and nobody can tell stopped from busy) and **a correction that sits unread for hours**.
+
+1. **Pulse.** Besides the DNEVNIK entry at the end of every step, if you work on one step longer than **45 minutes without a push**, commit and push a one-line pulse entry: `## <date> — pulse: <step>, <N of M done>`. The analyst treats **70 minutes without any push as a stall.** A pulse costs you nothing and is the only way to tell "busy" from "dead".
+
+2. **Questions to the analyst — do not wait for an answer.** When you want the analyst's judgement, not the owner's, write a DNEVNIK line that starts exactly with `QUESTION-FOR-ANALYST:` followed by the question and `DEFAULT: <what you do meanwhile>`, then push and carry on with the default. The analyst wakes on that line and answers with a new ПРАВКА here. Morning questions for the OWNER still go to `VOPROSY-UTRO.md`, as written.
+
+3. **Your own watcher for corrections — so you read them within 10 minutes, not at the end of a long step.** Once, right after reading this correction, start this as a BACKGROUND command (your harness wakes you when it exits):
+   ```
+   B0=$(git ls-remote origin refs/heads/claude/bold-faraday-wq09ql | cut -f1); while [ "$(git ls-remote origin refs/heads/claude/bold-faraday-wq09ql | cut -f1)" = "$B0" ]; do sleep 600; done; echo "analyst pushed: read ## ПРАВКИ ПОСЛЕ ВЫДАЧИ"
+   ```
+   When it fires: fetch, read the new ПРАВКА (command in §2.1), write `read ПРАВКА N` into DNEVNIK, restart the watcher, continue. Not every push of the analyst carries a correction; if there is no new number, just restart the watcher.
+
+4. **Free models and Python, per the owner.** Mechanics stay in Python/shell scripts, as written. If you want a SCOUT (read-only investigation of a branch or a folder, returning a short verdict) or the step F verifier as a subagent, you may use a free model through the factory's own engine (`opencode`, the model name taken from `~/Documents/GitHub/disciplina/_generator/tools/modeli.py`). Probe its liveness first with one trivial prompt. Dead or silent → use your own subagent instead and write one DNEVNIK line about it. Never give a free model a write, push, merge or removal: those stay with your scripts and your judgement.
+
+5. **When you finish or stop for any reason** (budget, limit, an unrecoverable error): the last push must carry a DNEVNIK entry starting with `FINAL:` or `STOPPED:` and the reason. That line is what the analyst and the owner read first.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
