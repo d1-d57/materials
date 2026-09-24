@@ -302,6 +302,26 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Written 2026-09-25 before the census starts.
+
+**Coverage target, measured before the census.** `find ~/Documents/GitHub -maxdepth 4 -name .git | wc -l` → **Y = 352** (13 `.git` directories = main checkouts, 339 `.git` files = linked worktrees). The same `find` prints `Permission denied` on `~/Documents/GitHub/proba-dolg-nedostupnaya-fixture`: it contributes nothing to Y, and I list it as a folder row that could not be read.
+
+**Premises I checked and found false or off (stated before work, per §1):**
+1. The base ref `claude/bold-faraday-wq09ql` does not exist as a LOCAL branch in the worktree (`fatal: malformed object name`), so the §0.1 command literally returns 0 by failing. I ran it against `origin/claude/bold-faraday-wq09ql` instead: `zahod/*` not merged = 0; all not-merged local branches = 1 (`main`, the showcase/default branch, not mine).
+2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` refuses with rc=1: "under the area not a single file" (the tool reads the main checkout, where the arc folder does not exist yet; it only exists on the brief's branch). The 0/0/0/0 numbers in the header could therefore NOT be re-verified; this is reported, not fixed (outside zone).
+3. §2.2 says `R1-ok` needs "every local branch pushed". With 339 worktrees, every branch that is checked out in a worktree also exists as a local branch of its main checkout. **Decision:** a branch checked out in a linked worktree is judged on that worktree's row; a main checkout is judged on its own HEAD plus the branches NOT checked out anywhere else. Otherwise every main would count the same unpushed branch as its worktree, and the numbers would double.
+4. `R4-dup` ("same origin_url as another row") would, taken literally, tag all 339 worktrees, because a worktree shares the origin of its main by construction. **Decision:** `R4-dup` compares main checkouts only. For worktrees I propose a new code, `R9-wt-done`: a clean worktree whose HEAD commit is already in `origin/<default>`. It can be dropped with `worktree remove` and nothing is lost. The strict analyst version (no R9) is also written, as an extra last column `funnel_rule_strict`, so the analyst can compare both Counters. Columns 8/9 (`porcelain_before/after`) stay where the criterion expects them.
+5. `R5-norepo` vs `R6-books` vs `R7-junk` with "first match wins" would make a books folder holding one `.md` into R5. **Decision:** R5 = text+code is the LARGEST content class and the root is R1/R2; R6 = books is the largest class (any root); R7 = remaining rows in R3/R4 (Downloads, home root, `~/Claude`) whose newest mtime is ≥ 2026-06-01 (the Claude-session era; this is a heuristic on dates and names, because the brief forbids reading content); everything else = R8. A folder under R1 that holds only git trees (the `*-wt` containers, `spetsmat` holding `spetsmat_db`) gets a new code `R0-holder`: its content is already in `repos.tsv`. Loose top-level files in R3 and R4 get one pseudo-row each (`<root>/[loose files]`), so that they are counted.
+
+**Method.**
+- One disposable Python script, `/tmp/perepis-diska/perepis.py` (the brief names `/tmp` explicitly), with a thread pool. No subagents: one script covers all five roots in one pass and keeps `porcelain_before` and `porcelain_after` in one process, so the "nothing changed" proof holds together.
+- Order inside the script: (1) `porcelain_before` for all 352 trees FIRST; (2) `git fetch --prune origin` once per main checkout, because worktrees share refs with their main; (3) all other measurements; (4) `porcelain_after` LAST. Outputs go to `/tmp/perepis-diska/out/` and are copied into the zone only after the script ends, so my own worktree's row does not change during the measurement. The plan commit lands BEFORE the run for the same reason.
+- File sizes and mtimes: one filesystem walk that skips `.git` and gives every file to the git tree it is nearest to, so a nested tree (`materials/carshering/carsharing_archive`) is not counted twice.
+- Content is never read, except the first `#` line of `README.md`/`CLAUDE.md`. Session `*.jsonl` files: mtimes only.
+- Chronology uses commit dates (`git log --all --format=%cI`) and `.git`-file mtimes (worktree creation). What the data cannot see (Cowork's own storage lives in `~/Library`, which is skipped) is named in the report, not guessed.
+
+**Readiness criterion:** accepted as written; the run can fail it (X≠Y, porcelain mismatch, a missing push).
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
@@ -316,6 +336,27 @@ grep -n '<как механизм назван в вызывающем коде>
 > rc=0 — все дома достижимы; rc=1 — назван дом, которого нет (команда печатает какой именно). Тот же разбор гоняет `Г7` приёмки, и у него храповик: у ЭТОГО захода база 0, поэтому первый же недостижимый дом здесь — красный на приёмке, а не запись, которую через неделю никто не найдёт.
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
+
+1. The §0.1 self-check `git --no-optional-locks branch --no-merged claude/bold-faraday-wq09ql | grep -c 'zahod/'` can never be red in a worktree made by the starter message. The base exists there only as `origin/claude/bold-faraday-wq09ql`, so `git` fails with `fatal: malformed object name`, and `grep -c` still prints `0`. The generator should emit the `origin/…` form, or check that the ref exists. The same false green hits Г3 and step 4 of the WARNING block.
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` (the brief's "check first" command) refuses with rc=1 ("under the area not a single file"). The arc folder exists only on the brief's branch, not where the tool reads. As a result, the header's 0/0/0/0 for this pass could not be re-verified.
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+3. For pass 2, rules. (a) `R4-dup` is unreachable under "first match wins": every repository is R1/R2 (clean) or R3 (dirty) before R4 is ever tested. Also, no two main checkouts share an origin. It is better as a flag column. (b) Proposed new codes, with counts in `perepis/REPORT.md` §2: `R9-wt-done` (110 worktrees), `R10-wt-residue` (44), `R0-holder` (4), `R0-empty` (2).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+   ДОСТАВЛЕНО: нет
+4. Tracked files that tools rewrite in every worktree make finished worktrees look dirty:
+   - `disciplina`: `_generator/tools/.hook-otkaz-chuzhoj-volny.log`, `doma/zahody/MODELI-ZHIVOST.json`, `.githooks/zamer-skillov.json`;
+   - `spetsmat-bot`: `docs/index.html`;
+   - `materials`: `teorkat-vvedenie/L2/dist/index.html`.
+
+   Under the strict rules they add 44 worktrees to R3-park. Candidates: untrack plus `.gitignore`, or write the files outside the tree. This will repeat on every new worktree, so it is a pass, not a queue entry (see ОТЧЁТ, repeatability).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+   ДОСТАВЛЕНО: нет
+5. Three repositories have no remote and exist only on this disk: `london-avgust-2026`, `materials/carshering/carsharing_archive` (nested inside `materials`) and `spetsmat/spetsmat_db`. Also, `materials/kurs leto 2026/6-lending/lendingi` has its own `.git` at depth 6, outside the census predicate. Where these four should live is the owner's decision.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
@@ -335,23 +376,600 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+Taken by the executor (no git-contour subagent was called: §0.1 says the contour was empty at build time). Worktree `materials-wt/perepis-diska`, before any work. The base is given as `origin/claude/bold-faraday-wq09ql`, because the local form fails (see ВОПРОСЫ 1).
+```
+$ git --no-optional-locks branch --no-merged origin/claude/bold-faraday-wq09ql
+  main
+$ git --no-optional-locks status --porcelain | wc -l
+       0
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       0
+$ python3 …/git_zona.py zayavki     (last line)
+Охват: заявок открыто 13, переадресовано 12, закрыто недавно (sdelano) 76, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Nothing was merged, pushed or closed at entry. This pass is read-only outside its zone (§2.5), so the 13 open requests belong to other people and are not mine to close.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет`. Here is what remains and why:
+- The 13 open requests of `git_zona.py zayavki`: closing them is the committer role's job at the wave entry/exit (§0.1), and this pass is forbidden to change any repository.
+- The branch `main` is not merged into the base: it is the showcase/default branch, and merging it is the owner's decision (WARNING step 4).
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+ПРАВКИ ПРОЧИТАНЫ: 1
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials-wt/perepis-diska/_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/REPORT.md`. Open it in any Markdown viewer. The raw rows are in the five `*.tsv` files next to it; open them in Numbers or Excel.
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `собранный`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `b6c409b5` — `perepis-diska: census TSVs (352 of 352 trees) and REPORT.md`. The other commits are `6e01325c` (plan), `3e2afe3a` (queue items), the DNEVNIK commit, and this report commit. Every commit was pushed to `origin/zahod/perepis-diska` (ПРАВКА 1). · `git_zona.py check --zone` on both zone paths → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+
+### What was done, and why
+- **A READ-ONLY census of the five roots, R1–R5**, done by one disposable script, `/tmp/perepis-diska/perepis.py` (the full text is below). The script collects five TSV files and `REPORT.md` into `perepis/`. Why: pass 2 (the cleanup) is to be written from numbers, not from reading projects.
+- **Coverage: checked 352 of 352.** Y = `find ~/Documents/GitHub -maxdepth 4 -name .git | wc -l` = 352. It was written into `## ПЛАН` before the census (commit `6e01325c`). `awk -F'\t' 'NR>1' perepis/repos.tsv | wc -l` → 352.
+- **Nothing changed:** `awk -F'\t' 'NR>1 && $8!=$9' perepis/repos.tsv | wc -l` → 0. Two full runs of the script both gave 0.
+- **Distribution:** `repos.tsv` Counter sums to 352 and `folders.tsv` Counter sums to 28, equal to the row counts. No row has an empty `funnel_rule` (`REPORT.md` §2).
+- **Pushed:** `git --no-optional-locks ls-remote origin zahod/perepis-diska` prints one line.
+
+### Main findings (details in REPORT.md)
+- **Worktrees dominate the disk.** 339 of the 352 trees are linked worktrees. `disciplina-wt` alone is 52 GB out of 65 GB (`du -sh`).
+- **154 worktrees, about 19 GB, can go by two mass rules:** `R9-wt-done` (110, clean and merged) and the proposed `R10-wt-residue` (44, only scratchpad or generated residue).
+- **`R4-dup` never fires under "first match wins", and it has no data anyway:** no two main checkouts share an origin.
+- **Three repositories have no remote:**
+  - `london-avgust-2026`;
+  - `carsharing_archive`, nested in `materials`;
+  - `spetsmat_db`, nested in `spetsmat`.
+
+  One more git tree lies at depth 6, outside Y: `materials/kurs leto 2026/6-lending/lendingi`.
+- **Branches:** 57 local branches are neither in the default branch nor pushed.
+- **The owner's recollection, checked against the data:**
+  - Early-June start: consistent (first commit 2026-06-06).
+  - "Disciplina about a month later": refuted. The first commit is 2026-08-06, about two months after the start.
+  - Waves since late August: confirmed (the first `volna` file appears 08-30; 10 worktrees were created on 08-25; 307 in September).
+  - Orchestrator: a path containing `orkestr` already exists on 07-10.
+
+### How it was checked
+Each check was run as a command, not remembered:
+- the criterion commands above;
+- `git_zona.py check --zone` on both zone paths → ✅;
+- `bootstrap_zahod.py --proverit-doma` → rc=0 (5 items, 0 unreachable).
+
+### What was NOT touched
+- **No other repository was changed.** No `commit`, `push`, `stash`, `checkout`, `reset`, `prune`, `gc` or `branch -d` anywhere except my own branch.
+- **The only change in other repositories was `git fetch --prune origin`**, which §2.2 allows. It ran once in each of the 10 repositories that have an origin, and it updated only remote-tracking refs.
+- **No file content was read**, except the first `#` line of `README.md`/`CLAUDE.md`. Residue classes come from `git status` path names only.
+- **The script lives in `/tmp`, not in `materials`.**
+
+### Other required lines
+- **Outside the zone:** only `_studio/docs/KARTA.md`, two registration lines written by `register_doc.py`, as the zone contract requires.
+- **Verifier:** not needed (§3).
+- **Time and tokens:** n/a on the `app` channel.
+- **ПОВТОРЯЕМОСТЬ.** ВОПРОСЫ 1 (the false green from the local base ref) repeats on EVERY brief built with the same starter message, so it is a pass before the next wave, not a queue entry. ВОПРОСЫ 4 (tracked files that tools rewrite) repeats on every new worktree. The census numbers themselves do not repeat.
+- **НЕОБРАТИМОЕ:** none. The only side effect outside my zone is `git fetch --prune origin` in 10 repositories. It deleted only remote-tracking refs of branches that no longer exist on GitHub, and `git fetch` restores any ref that comes back.
+
+### WARNING block, as amended by §2.6 (steps 2 and 3 cancelled: no merge)
+```
+step 1  vne git:  git -C materials-wt/perepis-diska status --porcelain | wc -l   →  0   (the only repository I wrote to)
+step 4  git --no-optional-locks branch --no-merged origin/claude/bold-faraday-wq09ql  →  main, * zahod/perepis-diska
+        main — the showcase/default branch, not mine to merge; zahod/perepis-diska — deliberately NOT merged (§2.6), read by the analyst from GitHub
+step 5  git --no-optional-locks log --oneline @{u}.. | wc -l  →  0
+step 6  post-check: cancelled by §2.6 (no merge happened)
+Г1 ✅ ✅ · Г2 not applicable (the zone is inside materials) · Г3 not-merged count unchanged apart from my own branch · Г4 no new .py in the repository (the script is in /tmp) · Г5 grep -c perepis/REPORT.md KARTA.md → 1, perepis/DNEVNIK.md → 1 · Г6 my commits touch only the zone plus _studio/docs/KARTA.md
+worktree drop: NOT run (§2.6)
+```
+
+### The script (final version, rerun with `python3 /tmp/perepis-diska/perepis.py <outdir>`)
+```python
+#!/usr/bin/env python3
+"""Read-only census of the owner's Mac disk (pass kod_perepis-diska).
+
+Order: porcelain_before for every tree -> fetch --prune per repository ->
+all other measurements -> porcelain_after. Outputs go to OUT (not into any repo).
+Never reads file content except the first '#' line of README.md / CLAUDE.md.
+"""
+import os, sys, subprocess, json, datetime, collections, concurrent.futures as cf
+
+HOME = os.path.expanduser('~')
+R1 = os.path.join(HOME, 'Documents/GitHub')
+R2 = os.path.join(HOME, 'Documents')
+R3 = os.path.join(HOME, 'Downloads')
+R4 = HOME
+R5 = os.path.join(HOME, '.claude/projects')
+OUT = sys.argv[1] if len(sys.argv) > 1 else '/tmp/perepis-diska/out'
+os.makedirs(OUT, exist_ok=True)
+
+BOOKS = {'pdf', 'djvu', 'epub'}
+IMAGES = {'png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'heic', 'tif', 'tiff', 'bmp'}
+TEXT = {'md', 'html', 'htm', 'tex', 'txt'}
+CODE = {'py', 'sh', 'js'}
+CLAUDE_ERA = datetime.datetime(2026, 6, 1).timestamp()
+ENV = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_SSH_COMMAND='ssh -o BatchMode=yes -o ConnectTimeout=15')
+LOG = open(os.path.join(OUT, 'run.log'), 'w')
+
+
+def log(*a):
+    print(*a, file=LOG, flush=True)
+
+
+def git(path, *args, timeout=120):
+    try:
+        p = subprocess.run(['git', '-C', path, '--no-optional-locks', *args], capture_output=True,
+                           text=True, timeout=timeout, env=ENV)
+        return p.returncode, p.stdout, p.stderr
+    except subprocess.TimeoutExpired:
+        return 124, '', 'timeout'
+
+
+def ts(t):
+    return datetime.datetime.fromtimestamp(t).strftime('%Y-%m-%dT%H:%M') if t else ''
+
+
+def ext_of(name):
+    return name.rsplit('.', 1)[1].lower() if '.' in name[1:] else ''
+
+
+def klass(ext):
+    if ext in BOOKS: return 'n_books'
+    if ext in IMAGES: return 'n_images'
+    if ext in TEXT: return 'n_text'
+    if ext in CODE: return 'n_code'
+    return 'n_other'
+
+
+def write_tsv(name, cols, rows):
+    with open(os.path.join(OUT, name), 'w') as f:
+        f.write('\t'.join(cols) + '\n')
+        for r in rows:
+            f.write('\t'.join(str(r.get(c, '')).replace('\t', ' ').replace('\n', ' ') for c in cols) + '\n')
+
+
+# ---------- discovery (same predicate as the coverage command) ----------
+p = subprocess.run(['find', R1, '-maxdepth', '4', '-name', '.git'], capture_output=True, text=True)
+dot_gits = sorted(l for l in p.stdout.splitlines() if l)
+find_errors = [l for l in p.stderr.splitlines() if l]
+trees = [os.path.dirname(g) for g in dot_gits]
+kind = {os.path.dirname(g): ('main' if os.path.isdir(g) else 'worktree') for g in dot_gits}
+log('Y =', len(trees), 'find stderr:', find_errors)
+
+
+def porcelain(t):
+    rc, out, err = git(t, 'status', '--porcelain')
+    if rc != 0:
+        return {'n': 'err', 'dirty': 'err', 'untr': 'err', 'err': err.strip()[:200]}
+    lines = [l for l in out.splitlines() if l]
+    u = sum(1 for l in lines if l.startswith('??'))
+    return {'n': len(lines), 'dirty': len(lines) - u, 'untr': u, 'err': '', 'lines': lines}
+
+
+# residue = names only (status paths), never content. Proposed R10 rule.
+GEN_NAMES = ('.log', 'MODELI-ZHIVOST.json', 'zamer-skillov.json', '/dist/', 'docs/index.html')
+
+
+def residue_class(lines):
+    if not lines:
+        return ''
+    kinds = set()
+    for l in lines:
+        code, path = l[:2], l[3:].strip('"')
+        if code == '??' and 'scratchpad' in path:
+            kinds.add('scratch')
+        elif code.strip() in ('M', '??') and any(g in path for g in GEN_NAMES):
+            kinds.add('generated')
+        else:
+            return 'work'
+    return '+'.join(sorted(kinds)) + '-only'
+
+
+with cf.ThreadPoolExecutor(12) as ex:
+    before = dict(zip(trees, ex.map(porcelain, trees)))
+log('porcelain_before done')
+
+# ---------- per-tree static facts ----------
+
+
+def facts(t):
+    f = {}
+    rc, out, _ = git(t, 'rev-parse', '--path-format=absolute', '--git-common-dir')
+    f['common'] = os.path.realpath(out.strip()) if rc == 0 else ''
+    rc, out, _ = git(t, 'config', '--get', 'remote.origin.url')
+    f['origin_url'] = out.strip() if rc == 0 and out.strip() else 'none'
+    rc, out, _ = git(t, 'symbolic-ref', '--short', '-q', 'HEAD')
+    f['head_branch'] = out.strip() if rc == 0 else '(detached)'
+    rc, out, _ = git(t, 'rev-parse', '-q', '--verify', 'HEAD')
+    f['head_sha'] = out.strip() if rc == 0 else ''
+    return f
+
+
+with cf.ThreadPoolExecutor(12) as ex:
+    F = dict(zip(trees, ex.map(facts, trees)))
+
+# one fetch per repository (worktrees share refs with their main)
+repos = {}
+for t in trees:
+    c = F[t]['common']
+    if c and (c not in repos or kind[t] == 'main'):
+        repos[c] = t
+
+
+def fetch(c):
+    t = repos[c]
+    if F[t]['origin_url'] == 'none':
+        return c, 'no-origin'
+    rc, _, err = git(t, 'fetch', '--prune', 'origin', timeout=180)
+    return c, 'ok' if rc == 0 else 'failed: ' + err.strip().splitlines()[-1][:150] if err.strip() else 'failed'
+
+
+with cf.ThreadPoolExecutor(6) as ex:
+    FETCH = dict(ex.map(fetch, list(repos)))
+log('fetch:', json.dumps(FETCH, indent=1))
+
+
+def repo_facts(c):
+    t = repos[c]
+    r = {}
+    rc, out, _ = git(t, 'symbolic-ref', '-q', '--short', 'refs/remotes/origin/HEAD')
+    d = out.strip()
+    r['default'] = d[len('origin/'):] if rc == 0 and d.startswith('origin/') else 'none'
+    fmt = '%(refname:short)\t%(upstream:short)\t%(upstream:track,nobracket)\t%(committerdate:iso-strict)\t%(worktreepath)'
+    rc, out, _ = git(t, 'for-each-ref', '--format=' + fmt, 'refs/heads')
+    merged = set()
+    if r['default'] != 'none':
+        rc2, o2, _ = git(t, 'for-each-ref', '--merged=origin/' + r['default'], '--format=%(refname:short)', 'refs/heads')
+        merged = set(o2.split()) if rc2 == 0 else set()
+    br = []
+    for line in out.splitlines():
+        name, up, track, date, wtp = (line.split('\t') + [''] * 5)[:5]
+        ahead = behind = 'n/a'
+        has_up = 'no'
+        if up:
+            if track == 'gone':
+                has_up = 'gone'
+            else:
+                has_up = 'yes'
+                ahead = behind = 0
+                for part in track.split(','):
+                    part = part.strip()
+                    if part.startswith('ahead '): ahead = int(part[6:])
+                    if part.startswith('behind '): behind = int(part[7:])
+        if not FETCH.get(c, '').startswith('ok') and FETCH.get(c) != 'no-origin':
+            ind = 'fetch_failed'
+        elif r['default'] == 'none':
+            ind = 'n/a'
+        else:
+            ind = 'yes' if name in merged else 'no'
+        br.append({'branch': name, 'has_upstream': has_up, 'ahead': ahead, 'behind': behind,
+                   'in_default': ind, 'last_commit_date': date[:16], 'wtp': os.path.realpath(wtp) if wtp else ''})
+    r['branches'] = br
+    # all-ref commit dates for chronology
+    rc, out, _ = git(t, 'log', '--all', '--format=%cI', timeout=300)
+    r['all_dates'] = [l[:10] for l in out.splitlines() if l]
+    return c, r
+
+
+with cf.ThreadPoolExecutor(8) as ex:
+    RF = dict(ex.map(repo_facts, list(repos)))
+
+
+def history(t):
+    h = {}
+    rc, out, _ = git(t, 'log', '--max-parents=0', '--format=%cI', 'HEAD')
+    ds = sorted(l[:16] for l in out.splitlines() if l)
+    h['first_commit_date'] = ds[0] if ds else ''
+    rc, out, _ = git(t, 'log', '-1', '--format=%cI', 'HEAD')
+    h['last_commit_date'] = out.strip()[:16]
+    rc, out, _ = git(t, 'rev-list', '--count', 'HEAD')
+    h['commit_count'] = out.strip() if rc == 0 else '0'
+    c = F[t]['common']
+    d = RF.get(c, {}).get('default', 'none')
+    h['head_in_default'] = ''
+    if d != 'none' and F[t]['head_sha']:
+        rc, _, _ = git(t, 'merge-base', '--is-ancestor', 'HEAD', 'origin/' + d)
+        h['head_in_default'] = 'yes' if rc == 0 else 'no'
+    if F[t]['head_branch'] == '(detached)' and F[t]['head_sha']:
+        rc, out, _ = git(t, 'branch', '-r', '--contains', 'HEAD')
+        h['detached_on_remote'] = 'yes' if out.strip() else 'no'
+    title = ''
+    for fn in ('README.md', 'CLAUDE.md'):
+        fp = os.path.join(t, fn)
+        if os.path.isfile(fp):
+            try:
+                with open(fp, encoding='utf-8', errors='replace') as fh:
+                    for line in fh:
+                        if line.startswith('#'):
+                            title = line.lstrip('#').strip()
+                            break
+            except OSError:
+                pass
+        if title:
+            break
+    h['readme_title'] = title
+    try:
+        st = os.stat(os.path.join(t, '.git'))
+        h['dotgit_birth'] = ts(getattr(st, 'st_birthtime', st.st_mtime))
+    except OSError:
+        h['dotgit_birth'] = ''
+    return t, h
+
+
+with cf.ThreadPoolExecutor(12) as ex:
+    H = dict(ex.map(history, trees))
+log('history done')
+
+# ---------- filesystem walk ----------
+tree_set = set(trees)
+extra_trees = []          # git trees found by the walk beyond the Y predicate
+stat_tree = collections.defaultdict(lambda: {'size': 0, 'newest': 0})
+bigs = []                 # (size, path, owner-tree-or-None)
+walk_errors = []
+
+
+def walk(root, cb, prune_trees=False, owner=None):
+    """Iterative walk, skips .git, does not follow symlinks. cb(path, st, owner)."""
+    stack = [(root, owner)]
+    while stack:
+        d, own = stack.pop()
+        try:
+            it = list(os.scandir(d))
+        except OSError as e:
+            walk_errors.append(f'{d}: {e.strerror}')
+            continue
+        names = {e.name for e in it}
+        if '.git' in names and d != root:
+            if d in tree_set:
+                own = d
+            else:
+                extra_trees.append(d)
+                own = d
+            if prune_trees:
+                continue
+        for e in it:
+            if e.name == '.git':
+                continue
+            try:
+                if e.is_symlink():
+                    continue
+                if e.is_dir(follow_symlinks=False):
+                    stack.append((e.path, own))
+                elif e.is_file(follow_symlinks=False):
+                    cb(e.path, e.stat(follow_symlinks=False), own)
+            except OSError as ex_:
+                walk_errors.append(f'{e.path}: {ex_.strerror}')
+
+
+def big(path, st, own):
+    if st.st_size > 1024 * 1024:
+        bigs.append((st.st_size, path, own))
+
+
+def r1cb(path, st, own):
+    if own:
+        s = stat_tree[own]
+        s['size'] += st.st_size
+        s['newest'] = max(s['newest'], st.st_mtime)
+    big(path, st, own)
+
+
+walk(R1, r1cb)
+log('R1 walk done; extra trees', len(extra_trees))
+
+
+def folder_row(path, root_tag, files_only=None, prune_trees=True):
+    row = {'path': path, 'root': root_tag, 'size_b': 0, 'file_count': 0, 'oldest': 0, 'newest': 0,
+           'n_books': 0, 'n_images': 0, 'n_text': 0, 'n_code': 0, 'n_other': 0, 'n_trees': 0}
+    nt_before = len(extra_trees)
+
+    def cb(p_, st, own):
+        if own and prune_trees:
+            return
+        row['size_b'] += st.st_size
+        row['file_count'] += 1
+        row['oldest'] = min(row['oldest'] or st.st_mtime, st.st_mtime)
+        row['newest'] = max(row['newest'], st.st_mtime)
+        row[klass(ext_of(os.path.basename(p_)))] += 1
+        if root_tag != 'R1':
+            big(p_, st, None)
+
+    if files_only is not None:
+        for fp in files_only:
+            try:
+                cb(fp, os.stat(fp, follow_symlinks=False), None)
+            except OSError as e:
+                walk_errors.append(f'{fp}: {e.strerror}')
+    else:
+        walk(path, cb, prune_trees=prune_trees)
+    row['n_trees'] = sum(1 for t in trees if t.startswith(path + '/'))
+    return row
+
+
+folders = []
+# R1: non-git top-level folders
+for e in sorted(os.scandir(R1), key=lambda e: e.name):
+    if e.is_dir(follow_symlinks=False) and e.path not in tree_set and not e.name.startswith('.'):
+        folders.append(folder_row(e.path, 'R1'))
+# R2: ~/Documents top level except GitHub
+loose = []
+for e in sorted(os.scandir(R2), key=lambda e: e.name):
+    if e.name.startswith('.') or e.name == 'GitHub':
+        continue
+    if e.is_dir(follow_symlinks=False):
+        folders.append(folder_row(e.path, 'R2', prune_trees=False))
+    elif e.is_file(follow_symlinks=False):
+        loose.append(e.path)
+if loose:
+    folders.append(folder_row(R2 + '/[loose files]', 'R2', files_only=loose))
+# R3: ~/Downloads
+if os.path.isdir(R3):
+    loose = []
+    for e in sorted(os.scandir(R3), key=lambda e: e.name):
+        if e.name.startswith('.'):
+            continue
+        if e.is_dir(follow_symlinks=False):
+            folders.append(folder_row(e.path, 'R3', prune_trees=False))
+        elif e.is_file(follow_symlinks=False):
+            loose.append(e.path)
+    folders.append(folder_row(R3 + '/[loose files]', 'R3', files_only=loose))
+# R4: ~ top-level files (not dotfiles) + folders named like Claude in ~ and ~/Documents
+loose = [e.path for e in os.scandir(R4) if not e.name.startswith('.') and e.is_file(follow_symlinks=False)]
+folders.append(folder_row(R4 + '/[loose files]', 'R4', files_only=sorted(loose)))
+for base in (R4, R2):
+    for e in sorted(os.scandir(base), key=lambda e: e.name):
+        if 'claude' in e.name.lower() and not e.name.startswith('.') and e.is_dir(follow_symlinks=False):
+            folders.append(folder_row(e.path, 'R4', prune_trees=False))
+log('folders done', len(folders))
+
+# ---------- funnel ----------
+origin_groups = collections.defaultdict(list)
+for t in trees:
+    if kind[t] == 'main' and F[t]['origin_url'] != 'none':
+        origin_groups[F[t]['origin_url']].append(t)
+dup_of = {t: u for u, ts_ in origin_groups.items() if len(ts_) > 1 for t in ts_}
+
+
+def branch_ok(b):
+    return b['in_default'] == 'yes' or (b['has_upstream'] == 'yes' and b['ahead'] == 0)
+
+
+rows = []
+for t in trees:
+    f, h, pb = F[t], H[t], before[t]
+    c = f['common']
+    rf = RF.get(c, {'default': 'none', 'branches': []})
+    brs = rf['branches']
+    rt = os.path.realpath(t)
+    if kind[t] == 'main':
+        rel = [b for b in brs if not b['wtp'] or b['wtp'] == rt]
+    else:
+        rel = [b for b in brs if b['branch'] == f['head_branch']]
+    if f['head_branch'] == '(detached)':
+        head_ok = h.get('head_in_default') == 'yes' or h.get('detached_on_remote') == 'yes'
+    else:
+        head_ok = all(branch_ok(b) for b in brs if b['branch'] == f['head_branch'])
+    all_ok = head_ok and all(branch_ok(b) for b in rel)
+    dirty = pb['n'] == 'err' or pb['n'] > 0
+    if dirty:
+        strict = 'R3-park'
+    elif all_ok:
+        strict = 'R1-ok'
+    else:
+        strict = 'R2-push'
+    rule = strict
+    res = residue_class(pb.get('lines', []))
+    if kind[t] == 'worktree' and not dirty and h.get('head_in_default') == 'yes':
+        rule = 'R9-wt-done'
+    elif kind[t] == 'worktree' and dirty and res != 'work' and h.get('head_in_default') == 'yes':
+        rule = 'R10-wt-residue'
+    rows.append({
+        'path': t, 'kind': kind[t], 'origin_url': f['origin_url'], 'head_branch': f['head_branch'],
+        'default_branch': rf['default'], 'dirty_tracked': pb['dirty'], 'untracked': pb['untr'],
+        'porcelain_before': pb['n'], 'porcelain_after': '',
+        'size_mb': round(stat_tree[t]['size'] / 2**20, 1), 'first_commit_date': h['first_commit_date'],
+        'last_commit_date': h['last_commit_date'], 'commit_count': h['commit_count'],
+        'newest_file_mtime': ts(stat_tree[t]['newest']), 'readme_title': h['readme_title'],
+        'funnel_rule': rule, 'funnel_rule_strict': strict, 'dup_group': dup_of.get(t, ''),
+        'fetch': FETCH.get(c, ''), 'head_in_default': h.get('head_in_default', ''),
+        'dirty_class': res, 'common_dir': c, 'dotgit_birth': h['dotgit_birth'], 'status_err': pb['err'],
+    })
+
+branch_rows = []
+for t in trees:
+    if kind[t] != 'main':
+        continue
+    for b in RF.get(F[t]['common'], {}).get('branches', []):
+        branch_rows.append({'repo_path': t, **b, 'checked_out_in': b['wtp']})
+
+for r in folders:
+    order = sorted(['n_books', 'n_images', 'n_text', 'n_code', 'n_other'], key=lambda k: -r[k])
+    top = order[0] if r[order[0]] > 0 else None
+    textcode = r['n_text'] + r['n_code']
+    biggest = max(r['n_books'], r['n_images'], r['n_other'])
+    if r['root'] == 'R1' and r['n_trees'] > 0 and r['file_count'] <= 10 and r['size_b'] < 2**20:
+        rule = 'R0-holder'
+    elif r['file_count'] == 0 and not any(e.startswith(r['path'] + ':') for e in walk_errors):
+        rule = 'R0-empty'
+    elif r['root'] in ('R1', 'R2') and textcode > 0 and textcode >= biggest:
+        rule = 'R5-norepo'
+    elif top == 'n_books':
+        rule = 'R6-books'
+    elif r['root'] in ('R3', 'R4') and r['newest'] >= CLAUDE_ERA:
+        rule = 'R7-junk'
+    else:
+        rule = 'R8-unclear'
+    r['funnel_rule'] = rule
+    r['size_mb'] = round(r['size_b'] / 2**20, 1)
+    r['oldest_mtime'] = ts(r['oldest'])
+    r['newest_mtime'] = ts(r['newest'])
+
+# ---------- sessions ----------
+sessions = []
+if os.path.isdir(R5):
+    for e in sorted(os.scandir(R5), key=lambda e: e.name):
+        if not e.is_dir(follow_symlinks=False):
+            continue
+        ms = []
+        for j in os.scandir(e.path):
+            if j.name.endswith('.jsonl') and j.is_file(follow_symlinks=False):
+                ms.append(j.stat().st_mtime)
+        sessions.append({'project_dir': e.name, 'jsonl_count': len(ms),
+                         'oldest_mtime': ts(min(ms)) if ms else '', 'newest_mtime': ts(max(ms)) if ms else ''})
+
+# ---------- big files ----------
+bigs.sort(reverse=True)
+big_rows = []
+seen = set()
+for size, path, own in bigs:
+    if path in seen:
+        continue
+    seen.add(path)
+    if own:
+        rc, _, _ = git(own, 'ls-files', '--error-unmatch', '--', os.path.relpath(path, own))
+        tr = 'yes' if rc == 0 else 'no'
+    else:
+        tr = 'not-a-repo'
+    big_rows.append({'path': path, 'size_mb': round(size / 2**20, 1), 'ext': ext_of(os.path.basename(path)),
+                     'tracked_in_git': tr})
+    if len(big_rows) == 100:
+        break
+# duplicate groups by (basename, size) over ALL >1MB files, for the report
+dupgroups = collections.defaultdict(list)
+for size, path, own in bigs:
+    dupgroups[(os.path.basename(path), size)].append(path)
+
+# ---------- porcelain_after LAST ----------
+with cf.ThreadPoolExecutor(12) as ex:
+    after = dict(zip(trees, ex.map(porcelain, trees)))
+for r in rows:
+    r['porcelain_after'] = after[r['path']]['n']
+
+REPO_COLS = ['path', 'kind', 'origin_url', 'head_branch', 'default_branch', 'dirty_tracked', 'untracked',
+             'porcelain_before', 'porcelain_after', 'size_mb', 'first_commit_date', 'last_commit_date',
+             'commit_count', 'newest_file_mtime', 'readme_title', 'funnel_rule',
+             'funnel_rule_strict', 'dup_group', 'fetch', 'head_in_default', 'dotgit_birth', 'status_err', 'dirty_class']
+write_tsv('repos.tsv', REPO_COLS, rows)
+write_tsv('branches.tsv', ['repo_path', 'branch', 'has_upstream', 'ahead', 'behind', 'in_default',
+                           'last_commit_date', 'checked_out_in'], branch_rows)
+write_tsv('folders.tsv', ['path', 'size_mb', 'file_count', 'oldest_mtime', 'newest_mtime', 'n_books', 'n_images',
+                          'n_text', 'n_code', 'n_other', 'funnel_rule', 'root', 'n_trees'], folders)
+write_tsv('sessions.tsv', ['project_dir', 'jsonl_count', 'oldest_mtime', 'newest_mtime'], sessions)
+write_tsv('big-files.tsv', ['path', 'size_mb', 'ext', 'tracked_in_git'], big_rows)
+
+# side data for the report (not one of the six deliverables)
+json.dump({
+    'Y': len(trees), 'find_errors': find_errors, 'walk_errors': walk_errors[:200], 'n_walk_errors': len(walk_errors),
+    'extra_trees': sorted(set(extra_trees)), 'fetch': FETCH,
+    'all_dates': {c: collections.Counter(d[:7] for d in RF[c]['all_dates']) for c in RF},
+    'repo_of_common': repos,
+    'dup_files': [{'name': k[0], 'size_mb': round(k[1] / 2**20, 1), 'n': len(v), 'paths': v[:6]}
+                  for k, v in sorted(dupgroups.items(), key=lambda kv: -kv[0][1] * len(kv[1])) if len(v) > 1][:60],
+    'n_big_total': len(bigs),
+}, open(os.path.join(OUT, 'side.json'), 'w'), ensure_ascii=False, indent=1, default=list)
+log('done')
+print('rows', len(rows), 'branches', len(branch_rows), 'folders', len(folders), 'sessions', len(sessions),
+      'big', len(big_rows))
+```
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=2 · simvolov=32552 · rc=0

@@ -1,0 +1,29 @@
+path	size_mb	file_count	oldest_mtime	newest_mtime	n_books	n_images	n_text	n_code	n_other	funnel_rule	root	n_trees
+/Users/ivanyakovlev/Documents/GitHub/ankety-wt	0.0	0			0	0	0	0	0	R0-empty	R1	0
+/Users/ivanyakovlev/Documents/GitHub/disciplina-wt	0.0	7	2026-09-02T22:26	2026-09-02T22:37	0	0	0	2	5	R0-holder	R1	226
+/Users/ivanyakovlev/Documents/GitHub/matemdigest-map-wt	0.0	0			0	0	0	0	0	R0-holder	R1	1
+/Users/ivanyakovlev/Documents/GitHub/materials-wt	0.0	1	2026-08-30T18:22	2026-08-30T18:22	0	0	0	0	1	R0-holder	R1	16
+/Users/ivanyakovlev/Documents/GitHub/matproekty-179-wt	0.0	1	2026-09-18T22:29	2026-09-18T22:29	0	0	0	1	0	R0-holder	R1	2
+/Users/ivanyakovlev/Documents/GitHub/moskva-wt	0.0	0			0	0	0	0	0	R0-empty	R1	0
+/Users/ivanyakovlev/Documents/GitHub/nlogn-otsluzhka	0.5	23	2026-08-07T18:48	2026-08-09T00:48	0	0	19	0	4	R5-norepo	R1	0
+/Users/ivanyakovlev/Documents/GitHub/proba-dolg-nedostupnaya-fixture	0.0	0			0	0	0	0	0	R8-unclear	R1	0
+/Users/ivanyakovlev/Documents/GitHub/scratchpad	0.2	5	2026-08-25T03:27	2026-08-25T03:30	0	0	5	0	0	R5-norepo	R1	0
+/Users/ivanyakovlev/Documents/GitHub/spetsmat	122.5	1097	2022-08-26T17:27	2026-09-01T15:04	66	185	263	70	513	R8-unclear	R1	1
+/Users/ivanyakovlev/Documents/GitHub/spetsmat-179	6.6	28	2026-09-03T12:34	2026-09-03T12:52	21	0	4	1	2	R6-books	R1	0
+/Users/ivanyakovlev/Documents/GitHub/spetsmat-bot-wt	3.1	55	2026-09-07T03:58	2026-09-07T04:26	0	0	52	3	0	R5-norepo	R1	94
+/Users/ivanyakovlev/Documents/Zoom	0.0	1	2026-08-19T00:12	2026-08-19T00:12	0	0	0	0	1	R8-unclear	R2	0
+/Users/ivanyakovlev/Documents/huggingface	0.0	2	2026-04-11T13:54	2026-04-11T13:54	0	0	0	0	2	R8-unclear	R2	0
+/Users/ivanyakovlev/Documents/Готовимся к ЕГЭ	130.6	81	2026-06-22T19:00	2026-07-06T23:54	14	0	66	0	1	R5-norepo	R2	0
+/Users/ivanyakovlev/Documents/Книги	1707.4	683	2000-04-03T17:16	2026-09-19T16:34	279	224	82	2	96	R6-books	R2	0
+/Users/ivanyakovlev/Documents/клипы	66.6	2	2026-09-18T02:39	2026-09-18T11:12	0	0	0	0	2	R8-unclear	R2	0
+/Users/ivanyakovlev/Documents/мои документы	11.1	10	2026-04-09T20:38	2026-09-18T14:17	4	5	0	0	1	R8-unclear	R2	0
+/Users/ivanyakovlev/Downloads/4-5 заславский	0.1	10	2026-08-20T16:37	2026-08-20T22:00	0	0	10	0	0	R7-junk	R3	0
+/Users/ivanyakovlev/Downloads/7И	8.7	57	2026-09-15T12:36	2026-09-18T12:24	0	53	0	0	4	R7-junk	R3	0
+/Users/ivanyakovlev/Downloads/Брессу - Доказательства и подтверждения. Как была доказана гипотеза о знакочередующихся матрицах.pdf	11.0	1	2026-09-19T22:32	2026-09-19T22:32	1	0	0	0	0	R6-books	R3	0
+/Users/ivanyakovlev/Downloads/Листки 	6.5	20	2025-09-12T07:52	2026-05-04T06:08	20	0	0	0	0	R6-books	R3	0
+/Users/ivanyakovlev/Downloads/Скриншоты	33.7	12	2026-07-11T09:16	2026-09-11T10:46	0	10	0	0	2	R7-junk	R3	0
+/Users/ivanyakovlev/Downloads/Спецмат_179__25_29	10.2	167	2026-09-21T17:45	2026-09-21T17:45	1	69	83	0	14	R7-junk	R3	0
+/Users/ivanyakovlev/Downloads/книжки	169.4	22	2026-09-13T12:25	2026-09-15T12:35	21	0	0	0	1	R6-books	R3	0
+/Users/ivanyakovlev/Downloads/[loose files]	89.1	38	2026-06-23T20:13	2026-09-24T22:39	26	3	4	0	5	R6-books	R3	0
+/Users/ivanyakovlev/[loose files]	13.3	5	2026-08-16T04:51	2026-09-11T01:21	0	0	0	0	5	R7-junk	R4	0
+/Users/ivanyakovlev/Claude	1.0	44	2026-07-03T22:29	2026-09-24T13:36	0	1	43	0	0	R7-junk	R4	0
