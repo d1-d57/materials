@@ -210,3 +210,13 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: where do Projects, branches and the soup split stand?
 > - M: "Projects" for the owner means Cowork projects, which already map tasks to repos or folders; Claude Code Projects is a different product. The owner agrees on one trunk. The owner leans to splitting content into three repos by audience (circle/olympiad, academic, popsci) with organizational projects outside, drawing on them. Cross-repo context must come from machine-generated cards and an automatic "have we done something similar?" check. Branches must be small, sized and statused. Tag everything, but only after merging and syncing everything (GitHub and Mac byte-identical).
 > - note: in the transcript "Тодогор" is unclear; it is read as "the materials project" and not re-asked, since it does not change the decision.
+
+## 2026-09-24, 17:33 (UTC) — шестой круг: порядок, переименования, граф фабрики
+
+Три решения → `RESHENIYA.md` (арка = только план; подметание → префиксы → теги; картотеки по областям).
+Пункты 75–84. Ресёрч переименования (п.78): GitHub Pages при переименовании НЕ перенаправляется, поэтому
+предложено оставить сайт под именем `materials`. `PLAN.md` перестроен: шаги этой арки + карта исполнительских арок А–Ж.
+
+- **Q** — Q: order, naming, knowledge bases, scope of the sweep?
+> - M: Sweep first (a Mac executor finds everything uncommitted, unpushed or unmerged, including whole local-only repos), materials first, others as far as feasible. Then prefixes via renames, if safe; then tags. Every skill phase must emit a generator-built typed document; functions build databases of repos, skills, levers and readings, with RELATIONS (lever closes rule closes lesson), forming a graph that shows gaps. Semantic search via embeddings. No single knowledge base: bases split by mathematical field. This arc produces only the plan; execution runs in arcs and overnight waves.
+> - note:
