@@ -27,3 +27,27 @@ None.
 | move | 7 | 0 |
 
 checked 37 of 37 removals, 0 failures
+
+## Batch 2 — 2026-09-25 02:12
+
+**Input:** `actions.tsv` was confirmed frozen this time (no concurrent writer — line count stable across repeated checks). Full file copied to `/tmp/uborka/verify/actions_full.tsv` at **2026-09-25 02:12:28** (722 data rows; 255 of them `tombstone`/`drop-worktree`/`move`, matching the expected M).
+
+**Script:** same `/tmp/uborka/verify/verify.py` as Batch 1, pointed at the new snapshot, plus two new row shapes it already handled generically without changes:
+- `drop-worktree` rows from step **E2** for `disciplina`, `spetsmat-bot`, `matemdigest-map` (main repo parsed from `git -C <path>` in `restore`, same as step-C rows) — 209 such rows, alongside the 16 step-C rows already covered = 225 total.
+- `move` rows from step **E4** with `saved_ref` `-` and note "empty folder" — 9 such rows, alongside the 4 step-C + 3 step-A rows already covered = 16 total.
+
+**Bug found and fixed mid-run:** the first pass reported 2 false-positive failures — `disciplina-wt/uzel-f0-sostav` and `disciplina-wt/uzel-f7-registraciya` — as "still listed in `git worktree list`". Investigation showed the paths do NOT exist on disk and are NOT in `git worktree list`; the script's check `if wt_path in out2` was doing a **substring** match against the whole `worktree list` output, and `.../uzel-f0-sostav` is a substring of the still-registered `.../uzel-f0-sostav-2` (a *different*, deliberately kept worktree — see the `skip` row for it: "saved, NOT dropped: ignored files not on GitHub"). Fixed to match the exact first column of each `worktree list` line instead of substring, and re-ran the full 255-row check. Re-verified directly with `ls` (path missing) and `git worktree list | grep` (only the `-2` variants remain, correctly) before trusting the fix.
+
+### Failures
+
+None (after fixing the substring-match bug described above).
+
+### Counts per action kind
+
+| action | checked | failures |
+|---|---|---|
+| tombstone | 14 | 0 |
+| drop-worktree | 225 | 0 |
+| move | 16 | 0 |
+
+checked 255 of 255 removals, 0 failures

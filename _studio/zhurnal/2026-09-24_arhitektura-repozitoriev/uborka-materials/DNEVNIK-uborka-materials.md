@@ -43,3 +43,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** verifier batch 2 (running) → B4 tombstones in 11 repos (192 candidates, dry run) → verifier batch 3 → G2 report.
 - **surprise:** `vlit-v-osnovnuyu` committed its own incident autolog (08f19aa0d) before the merge — the tool's standard behaviour, now on origin/main too. Action kind `merge` is not in the action list of §2.1; I used `merge` for that one row.
 - **question:** 114 kept worktrees → grouped lines in VOPROSY-UTRO.md (after the verifier).
+
+## 2026-09-25 02:25 — E3 B4 (tombstones in 11 repos) + G2 report
+- **done:** verifier batch 2: `checked 255 of 255 removals, 0 failures`. B4 via `/tmp/uborka/b4.sh <repo>`: 161 tombstones (disciplina 135, spetsmat-bot 16, london 3, matproekty-179 3, sayt 2, ankety 1, moskva 1); 31 refusals (all "an older tombstone of that name exists"). Default branches never touched. `du -sh ~/Documents/GitHub`: 66G → 17G. REPORT.md written (THE WORLD THIS MORNING + counters). E3 push rows relabelled from step B to E3-B2 (118 rows; they were logged under B by the script default).
+- **next:** verifier batch 3 (running) → ## ОТЧЁТ in the brief → final hygiene.
+- **surprise:** the row logger crashed on a refusal text cut in the middle of a Cyrillic character (`cut -c` is byte-based on macOS) — 2 refusal rows lost their text; re-added by hand-free script with a note; logger fixed.
+- **question:** none.
