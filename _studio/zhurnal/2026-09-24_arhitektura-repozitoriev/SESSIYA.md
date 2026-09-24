@@ -138,3 +138,40 @@ GitHub для облачного доступа. По ходу всплыла к
 числа — команда). Перепроверено лично: 45 из 49 веток влиты в `arka/mat-kostyak`; `.git` = 1,0 ГБ;
 `materials` публичный, а профили и журналы учеников лежат в `arka/mat-kostyak`. 🔴 Последнее вынесено владельцу
 как вопрос первой очереди → `SPISOK-DEL.md` п.27. Остальное — п.28–33.
+
+## 2026-09-24, 16:14 (UTC) — второй круг интервью: ответы владельца
+
+Владелец ответил голосом на восемь вопросов (транскрипт — вложение чата, не в репозитории) и развернул
+тему письменно. Пункты — `SPISOK-DEL.md` п.34–49; три решения — `RESHENIYA.md`; урок — `UROKI-FABRIKE.md`.
+
+### INTERVIEW — RENDERED IN ENGLISH FROM A RUSSIAN CONVERSATION — 2026-09-24 (round 2)
+
+> ИНТЕРВЬЮ ПРОВЕДЕНО: да (2026-09-24). English rendering of the settled meaning, not a quotation.
+
+- **Q1** — Q: what moves to the cloud and what stays on the Mac?
+> - M: No split by place. The system must hold ONE version: the Mac and GitHub must match byte for byte. A separate zahod for a local executor must check this before big cloud work and update the Mac afterwards.
+> - note: the transcript garbles the opening ("станция октября"); the meaning is clear from the rest.
+- **Q2** — Q: who reads the site, and what belongs on it?
+> - M: The site is the owner's internal self-report and portfolio. Its links are shared in Telegram because a page can be improved later, which a file cannot. It is the prototype of a future personal site with news, an event calendar and pages for festivals (about 15 in 1.5 years, and their traces are dissolving). It may be the only public repo.
+> - note:
+- **Q3** — Q: a typical year?
+> - M: Five big parallel tracks in September (see SPISOK item 38), plus students and one-off lectures. Research reviews run 3–4 times a week in normal times.
+> - note:
+- **Q4** — Q: books?
+> - M: Several dozen, attached to different courses; part already moved out of git into a books folder on disk. Current state unknown; investigate on the Mac. A month ago an executor claimed the history would clean itself in two weeks.
+> - note: Google Drive as cloud storage was not answered. Still open.
+- **Q5** — Q: the card index?
+> - M: Several card indexes exist; combinatorics lives in the catalan project. The goal is a unified knowledge base across the owner's areas of math, with one source of truth. Problem bank (circle math) and theorem card index are two different units.
+> - note:
+- **Q6** — Q: recent discipline failures?
+> - M: Failures are a property of a big system, not specific incidents. The live one is visible now: uncommitted, unpushed and unmerged work. Fix it in a targeted way, in zahod and acceptance, not by rewriting skills.
+> - note:
+- **Q7** — Q: "fight it first": disciplina or materials?
+> - M: The owner does not remember; the likely meaning is "be disciplined globally". Not a priority ordering.
+> - note: re-asked; resolved as "no ordering intended".
+- **Q8** — Q: who else works in these repos?
+> - M: Only the owner works in materials. A colleague used and modified the disciplina plugin, disabled parts of it and left.
+> - note:
+- **Q9** — Q (asked by the analyst as urgent): student data in a public repo?
+> - M: Not critical, no surnames, no history scrub. Split private and public repos in the future. Write "not critical" in capitals in several places so executors stop raising it.
+> - note: the analyst's framing was the error; recorded as a factory lesson.
