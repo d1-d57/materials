@@ -302,6 +302,26 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Written 2026-09-25 before the census starts.
+
+**Coverage target, measured before the census.** `find ~/Documents/GitHub -maxdepth 4 -name .git | wc -l` → **Y = 352** (13 `.git` directories = main checkouts, 339 `.git` files = linked worktrees). The same `find` prints `Permission denied` on `~/Documents/GitHub/proba-dolg-nedostupnaya-fixture`: it contributes nothing to Y, and I list it as a folder row that could not be read.
+
+**Premises I checked and found false or off (stated before work, per §1):**
+1. The base ref `claude/bold-faraday-wq09ql` does not exist as a LOCAL branch in the worktree (`fatal: malformed object name`), so the §0.1 command literally returns 0 by failing. I ran it against `origin/claude/bold-faraday-wq09ql` instead: `zahod/*` not merged = 0; all not-merged local branches = 1 (`main`, the showcase/default branch, not mine).
+2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` refuses with rc=1: "under the area not a single file" (the tool reads the main checkout, where the arc folder does not exist yet; it only exists on the brief's branch). The 0/0/0/0 numbers in the header could therefore NOT be re-verified; this is reported, not fixed (outside zone).
+3. §2.2 says `R1-ok` needs "every local branch pushed". With 339 worktrees, every branch that is checked out in a worktree also exists as a local branch of its main checkout. **Decision:** a branch checked out in a linked worktree is judged on that worktree's row; a main checkout is judged on its own HEAD plus the branches NOT checked out anywhere else. Otherwise every main would count the same unpushed branch as its worktree, and the numbers would double.
+4. `R4-dup` ("same origin_url as another row") would, taken literally, tag all 339 worktrees, because a worktree shares the origin of its main by construction. **Decision:** `R4-dup` compares main checkouts only. For worktrees I propose a new code, `R9-wt-done`: a clean worktree whose HEAD commit is already in `origin/<default>`. It can be dropped with `worktree remove` and nothing is lost. The strict analyst version (no R9) is also written, as an extra last column `funnel_rule_strict`, so the analyst can compare both Counters. Columns 8/9 (`porcelain_before/after`) stay where the criterion expects them.
+5. `R5-norepo` vs `R6-books` vs `R7-junk` with "first match wins" would make a books folder holding one `.md` into R5. **Decision:** R5 = text+code is the LARGEST content class and the root is R1/R2; R6 = books is the largest class (any root); R7 = remaining rows in R3/R4 (Downloads, home root, `~/Claude`) whose newest mtime is ≥ 2026-06-01 (the Claude-session era; this is a heuristic on dates and names, because the brief forbids reading content); everything else = R8. A folder under R1 that holds only git trees (the `*-wt` containers, `spetsmat` holding `spetsmat_db`) gets a new code `R0-holder`: its content is already in `repos.tsv`. Loose top-level files in R3 and R4 get one pseudo-row each (`<root>/[loose files]`), so that they are counted.
+
+**Method.**
+- One disposable Python script, `/tmp/perepis-diska/perepis.py` (the brief names `/tmp` explicitly), with a thread pool. No subagents: one script covers all five roots in one pass and keeps `porcelain_before` and `porcelain_after` in one process, so the "nothing changed" proof holds together.
+- Order inside the script: (1) `porcelain_before` for all 352 trees FIRST; (2) `git fetch --prune origin` once per main checkout, because worktrees share refs with their main; (3) all other measurements; (4) `porcelain_after` LAST. Outputs go to `/tmp/perepis-diska/out/` and are copied into the zone only after the script ends, so my own worktree's row does not change during the measurement. The plan commit lands BEFORE the run for the same reason.
+- File sizes and mtimes: one filesystem walk that skips `.git` and gives every file to the git tree it is nearest to, so a nested tree (`materials/carshering/carsharing_archive`) is not counted twice.
+- Content is never read, except the first `#` line of `README.md`/`CLAUDE.md`. Session `*.jsonl` files: mtimes only.
+- Chronology uses commit dates (`git log --all --format=%cI`) and `.git`-file mtimes (worktree creation). What the data cannot see (Cowork's own storage lives in `~/Library`, which is skipped) is named in the report, not guessed.
+
+**Readiness criterion:** accepted as written; the run can fail it (X≠Y, porcelain mismatch, a missing push).
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
