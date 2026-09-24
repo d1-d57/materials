@@ -49,3 +49,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** verifier batch 3 (running) → ## ОТЧЁТ in the brief → final hygiene.
 - **surprise:** the row logger crashed on a refusal text cut in the middle of a Cyrillic character (`cut -c` is byte-based on macOS) — 2 refusal rows lost their text; re-added by hand-free script with a note; logger fixed.
 - **question:** none.
+
+## 2026-09-25 02:33 — FINAL: all steps A–G done
+- **done:** verifier batch 3 `checked 416 of 416 removals, 0 failures`. Dirty main checkouts of disciplina, ankety, matema-fest, matproekty-179, spetsmat-bot, vanya parked as `park/2026-09-25/<repo>-main` (porcelain equal before/after each). ## ВОПРОСЫ and ## ОТЧЁТ written in the brief. `du -sh ~/Documents/GitHub` 66G → 17G. No ПРАВКА after ПРАВКА 1.
+- **next:** morning — the owner answers `VOPROSY-UTRO.md`; the analyst accepts from branch `zahod/uborka-materials`.
+- **surprise:** the big-file guard of §2.3 (`xargs … stat`) broke on disciplina's untracked folder literally named `--help/`; checked afterwards in Python: no file over 5 MB went into any park.
+- **question:** none.

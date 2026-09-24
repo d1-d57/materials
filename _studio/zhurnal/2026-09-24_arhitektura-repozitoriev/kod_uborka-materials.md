@@ -440,11 +440,47 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+ПРАВКИ ПРОЧИТАНЫ: 1
+
+**What was done and why (details: `uborka-materials/REPORT.md`, log: `DNEVNIK-uborka-materials.md`, every action with its restore command: `actions.tsv`, 927 rows).**
+- A: 3 disk-only repositories → private GitHub repos `d1-d57/sayt-sistemy-konstantinova`, `d1-d57/arhiv-london-avgust-2026`, `d1-d57/arhiv-carsharing-issledovanie`; dirt committed as "archive snapshot"; every branch verified hash-for-hash; `KARTOCHKA.md` in each; moved as specified (carsharing → Trash).
+- B/E3: all local branches of 12 repos pushed (131) or parked (1); 12 tables `branches-<repo>.tsv`; 175 in-trunk branches tombstoned via `git_zona.py zakryt-vetku`; 37 refusals (older tombstone of same name) left; 1 merge (`zahod/git-bez-zamkov` → disciplina `main`, result tree = old tree).
+- C/E2: 225 worktrees dropped (202 dirty ones parked first to `park/2026-09-25/wt-<name>`); 114 saved but kept because they hold git-ignored local files (databases, scratch folders) that a drop would destroy — decision named in ## ПЛАН, list in `kept-worktrees.tsv`, question in `VOPROSY-UTRO.md`.
+- D: materials main checkout parked to `park/2026-09-25/materials-main` (62dda697); porcelain 147 before = 147 after. Same snapshot (beyond the brief, read-only for the trees) for the dirty main checkouts of disciplina, ankety, matema-fest, matproekty-179, spetsmat-bot, vanya.
+- E1 `hooks.tsv`; E4 15 empty folders → Trash, 4 owner-content folders → questions; G1 `arki-otkrytye.tsv` (35 open of 61); G2 `REPORT.md`.
+
+**Verification:** step F verifier (separate subagent, own script `/tmp/uborka/verify/verify.py`, ls-remote + merge-base per row), three batches; last line of `verifier.md`: `checked 416 of 416 removals, 0 failures`.
+
+**Criterion:** (1) `ls uborka-materials/ | wc -l` → 20 (≥ 8, all 8 named files present); (2) `branches-materials.tsv` checked 24 of Y_b = 24; 16 of 16 other materials-wt worktrees have rows; (3) K = 0 over all 416 removals; (4) materials porcelain 147 before D = 147 after D; (5) `gh repo view` succeeds for all 3, `KARTOCHKA.md` on origin in each (`gh api …/contents/KARTOCHKA.md`); (6) counters printed in REPORT.md, both sums = row counts; (7) VOPROSY-UTRO.md and arki-otkrytye.tsv exist; worktree containers 226/226, 94/94, 2/2, 1/1 have rows; REPORT opens with THE WORLD THIS MORNING and states du 66G → 17G; (8) `git ls-remote origin zahod/uborka-materials` prints one line.
+
+**§0.1 contour, verbatim:** `git --no-optional-locks branch --no-merged claude/bold-faraday-wq09ql | grep -c 'zahod/'` — the bare name does not exist in the worktree; with `origin/claude/bold-faraday-wq09ql` → `0`. `git_zona.py check --zone …/uborka-materials/` at start → `✅ … проверять было НЕЧЕГО — зоны ещё нет`, rc=0.
+
+**Not touched:** file contents (except 3 cards); `materials/main` and any site branch; remote branches (none deleted); `~/Downloads`, books; the owner's working trees (all porcelain counts equal before/after); `materials-wt/disciplina` symlink; the spetsmat-bot worktree at `/private/tmp/baseline-759ef40`; `proba-dolg-nedostupnaya-fixture`.
+
+**НЕОБРАТИМОЕ (each: what · where · how restored):**
+- 225 worktree folders deleted by `git_zona.py worktree drop --force` · disciplina-wt 188, spetsmat-bot-wt 20, materials-wt 16, matemdigest-map-wt 1 · `git worktree add` + checkout of the park ref, exact command per row in `actions.tsv` `restore`; git-ignored files of those 225 (only caches, `.opencode` npm installs, lock/log files by the rule in ## ПЛАН) are not restorable.
+- 175 local branches deleted (tombstoned) · 12 repos · `git_zona.py voskresit --branch <b>` (per row), commits also in `origin/<trunk>`.
+- 1 merge commit on disciplina `main` (beea8ce5f, plus tool autolog 08f19aa0d), pushed · `git revert -m 1 beea8ce5f`.
+- 3 folders moved/renamed · `spetsmat/spetsmat_db` → `sayt-sistemy-konstantinova`, `london-avgust-2026` → `arhiv-london-avgust-2026`, `materials/carshering/carsharing_archive` → `~/.Trash/carsharing_archive-2026-09-25` · `mv` back (per row).
+- 15 empty folders → `~/.Trash/…-2026-09-25` · `mv` back (per row).
+- 3 GitHub repositories created; 210 `park/2026-09-25/*` and 131 pushed branches on GitHub · removable only by the owner.
+- carsharing's stale empty `.git/index.lock` (2026-07-10) moved to `/tmp/uborka/carsharing-index.lock.stale-2026-07-10` (now in Trash with the repo anyway).
+- `/tmp/uborka/` holds scripts and temp indexes; it will vanish on reboot.
+
+**Returns / open:** answers in `VOPROSY-UTRO.md` (11 lines); 114 kept worktrees; `zahod/perepis-diska` and `zahod/kanaly-razvedka-sud-pochinka` merges for the daytime; 35 open arcs.
+
+**Время прогона + токены:** на канале `app` НЕПРИМЕНИМО.
+
+**ПОВТОРЯЕМОСТЬ находок:** (1) folder `--help/` written by some disciplina tool — repeats on every `--help` call → a pass before the next run (queue item 1 in ## ВОПРОСЫ). (2) `schet_nezakrytogo.py` gives no counts from a worktree — repeats on every brief that asks for it as a first move → worth fixing before the next brief. (3) worktrees of spetsmat-bot accumulate git-ignored databases — repeats on every spetsmat-bot pass, any future cleanup meets it again. The census "52 loose files" miscount does not repeat.
+
+**Hygiene Г1–Г6:** Г1 both `git_zona.py check --zone` → ✅ (after the final commit, re-run in the FINAL diary entry). Г2 applicable (I touched 12 repos): `status --porcelain | wc -l` per repo — materials 147, disciplina 206, ankety 1, matema-fest 1, matproekty-179 9, spetsmat-bot 8, vanya 11 — all the owner's own pre-existing work, equal to the numbers before the pass, each snapshot parked on GitHub; sayt, london, matemdigest-map, matproekty-179-stranica, moskva 0. Г3 `branch --no-merged origin/claude/bold-faraday-wq09ql` → `main`, `zahod/uborka-materials` (this pass's own branch — delivery by push, §2.5; `main` is the site). Г4 no new `.py` in `_generator/**` (scripts live in `/tmp/uborka/`). Г5 4 new `.md` registered by `register_doc.py`, `grep -c` in `_studio/docs/KARTA.md` → 1 each. Г6 `git show --stat` of each commit: only zone paths + `_studio/docs/KARTA.md`.
+WARNING steps: 1 — вне git in my zone 0; 2, 3 — CANCELLED by §2.5; 4 — see Г3; 5 — `git log --oneline @{u}.. | wc -l` → 0; 6 — numbers above.
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials-wt/uborka-materials/_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/REPORT.md` — any Markdown viewer (starts with THE WORLD THIS MORNING); questions: `/Users/ivanyakovlev/Documents/GitHub/materials-wt/uborka-materials/_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/VOPROSY-UTRO.md`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `собранный`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `1022a662` — `uborka-materials: verifier batch 3, main-checkout parks, ВОПРОСЫ` (last commit before this report; the report itself goes in the FINAL commit, its hash is in the FINAL diary entry) · `git_zona.py check --zone` → ✅ on both zone paths
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
