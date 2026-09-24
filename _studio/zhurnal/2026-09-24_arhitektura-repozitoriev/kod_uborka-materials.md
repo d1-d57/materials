@@ -431,7 +431,36 @@ MODEL: besplatnaya
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-09-24 22:24 (UTC) · больше воли: вся уборка до хорошего состояния, слияния там, где понятно, расследование там, где сомнение
+
+**Why.** The owner read the brief and found it too timid: "what kind of overnight pass is this, if it merges nothing and removes nothing". Nothing has ever been lost in this factory; the owner empties the Trash first thing in the morning and will not inspect files by hand. **The safety net is GitHub plus the step F verifier, not the Trash and not the owner.** The enemy of this correction is **a night spent on a timid pass that leaves the mess in place**. The opposite enemy is still real: **two tools overwriting each other, or work built on an unmerged branch**. Those are the owner's two remembered incidents, and the rules below target exactly them.
+
+**Every point below overrides anything contradicting it above** (including §2.0 «СТОП ДО ЦЕЛИ» and §2.4).
+
+1. **Scope grows to ALL repositories of the census, after steps A–D on materials:**
+   - E2 — `disciplina-wt` (226 worktrees) and `spetsmat-bot-wt` (94), then `matproekty-179-wt` and `matemdigest-map-wt`: the same moves as step C (park if dirty → verify on origin → `worktree drop`). `R9-wt-done` and `R10-wt-residue` from `perepis/repos.tsv` go first, as scripted batches: 154 worktrees, about 19 GB.
+   - E3 — then the local branches of every main checkout: push what is not on origin (as in B2), a table like B3 per repository (`uborka-materials/branches-<repo>.tsv`), and tombstones for branches fully in that repository's default branch.
+   - 🔴 **Active-work guard — the owner's first incident.** `disciplina` runs parallel waves. Never drop a worktree that looks alive: any file (outside `.git`) modified in the last 6 hours (`find <wt> -path '*/.git' -prune -o -type f -newermt '-6 hours' -print -quit` prints something), or any process with its working directory inside it (`lsof -a -d cwd +D <wt> 2>/dev/null | head -1`). Alive → `skip` with the reason.
+
+2. **Merging is allowed where it is understood**, only through the factory door and only on three conditions at once:
+   (a) `git merge-tree --write-tree <trunk> <branch>` → clean;
+   (b) the branch is a `zahod/*` or `arka/*` whose brief (`kod_<тема>.md`) is found on the branch or the trunk AND has `ВЕРДИКТ:` with `принято` in its `## ФАЗА ПРИЁМКИ`. An accepted pass that was never merged is the owner's second incident in the making ("a tool built on an unmerged branch");
+   (c) none of the branch's changed paths is dirty in the main checkout (`git -C <main> status --porcelain -- <paths>` is empty), so the owner's live work is never touched.
+   Door: `GIT_ZONA_REPO=<repo> python3 ~/Documents/GitHub/disciplina/_generator/tools/git_zona.py vlit-v-osnovnuyu <branch> --zone <its top dirs>`. Refusal, conflict or any doubt → no merge, the row gets `proposal` and an investigation note (point 3). Trunks: `materials` → `arka/mat-kostyak` (NOT `main`: `main` is the published site, never merge into it); every other repository → its default branch. **`disciplina`: no merges tonight at all**: its waves may be running, so push + table only.
+
+3. **Doubt means investigation, not a stop.** For a branch or worktree you cannot classify by the rules, look deeper: commit messages (`git log --oneline <trunk>..<branch>`), the diff stat, and the arc diary `_studio/zhurnal/<arc>/SESSIYA.md` or the brief `kod_<тема>.md` if they name it. Decide when the data decides. When it does not, write ONE line into `uborka-materials/VOPROSY-UTRO.md`: `<object> — <what it is, one line> — PROPOSED: <your default action> — because <one line>`. The owner will confirm these in the morning in one batch; most answers will be "yes, do it". Aim for questions the owner can answer from memory of the project, not from reading code.
+
+4. **Removal.** Worktrees go by `worktree drop` (their content is in git and verified on origin). Folders outside git that the plan orders removed go to `~/.Trash/`. The owner empties it in the morning, so **the ONLY recovery is GitHub**: never remove anything whose `saved_ref` is not verified on origin. The step F verifier now covers ALL repositories and runs after each batch, not once at the end: K > 0 → stop removals everywhere.
+
+5. **Token economy — a long night on a small budget.**
+   - You, the lead on Opus, keep your context lean: all measuring and acting is done by **scripts written to `/tmp/uborka/`** that print summaries, not raw lists; read tables with `head`/`awk`, never whole.
+   - Mechanical batches (R9/R10 drops per container, pushes per repository) go to **subagents on Sonnet** (`model: sonnet`). Give each one fixed script, one repository and one batch, and have it end with "delivered N of M". Judgement (merges under point 2, investigations under point 3) stays with you on Opus.
+   - Free models: not tonight.
+   - Aim to stay under about 150k tokens of your own context. When close, finish the current step, write a DNEVNIK entry "stopped at budget: done X, left Y", push, and stop cleanly. Unfinished steps are the next pass, not a failure.
+
+6. **Order, strictly:** A → B → C → D (as written) → E (hooks) → E2 → E3 → F after each batch → REPORT. Each step ends with a DNEVNIK entry and a push, so a stop at any moment leaves a readable state.
+
+**The criterion grows, it does not shrink:** add `VOPROSY-UTRO.md` (may be empty, stating "no questions"); `actions.tsv` covers every worktree in all four `*-wt` containers (drop, park, skip with reason, or "not reached: budget"); `verifier.md` checks ALL removals across ALL repositories with K = 0; `REPORT.md` adds `Counter(action)` per repository and the GB freed (`du -sh ~/Documents/GitHub` before and after).
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
