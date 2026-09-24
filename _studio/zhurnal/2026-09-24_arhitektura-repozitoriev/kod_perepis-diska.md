@@ -426,3 +426,10 @@ MODEL: besplatnaya
 - `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
+
+### ПРАВКА 2 · 2026-09-24 21:29 (UTC) · ответ на вопрос дневника: ретро-запись засчитана, решения ПЛАНа приняты
+
+1. **Your DNEVNIK question — answer: yes.** One retroactive entry plus entries from now on is accepted. The clause of ПРАВКА 1 "`grep -c '^## ' perepis/DNEVNIK.md` → не меньше 10" is **cancelled** for this pass: ПРАВКА 1 arrived after the census was done, and inventing entries would be the only defect here. Do not add filler entries.
+2. **Your four decisions in `## ПЛАН` are accepted as made** (worktree branches judged on the worktree row; `R4-dup` among main checkouts only; `R5/R6/R7` by the largest content class; new codes `R9-wt-done`, `R10-wt-residue`, `R0-holder`, `R0-empty`). The analyst spot-checked `materials` chronology against GitHub (`git log --remotes=origin --format=%cI | cut -c1-7 | sort | uniq -c`): June 5 and July 529 match your table exactly; first commit 2026-06-13 matches.
+3. **The false green you found in §0.1** (`branch --no-merged claude/bold-faraday-wq09ql` fails, `grep -c` prints 0) is accepted as a factory lesson; your workaround against `origin/…` is the right one. Nothing to fix inside this pass.
+4. **What is still owed:** `## ОТЧЁТ` (with the lines `ПРАВКИ ПРОЧИТАНЫ: 1, 2`, АРТЕФАКТ, КОММИТ, НЕОБРАТИМОЕ, ПОВТОРЯЕМОСТЬ), the hygiene block §4.1, the WARNING steps 1, 4, 5, 6 (steps 2–3 stay cancelled by §2.6), and a final push. Then stop: do not start any cleanup.
