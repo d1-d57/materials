@@ -88,6 +88,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-09-19-2.md`** (Выгрузка сессии 2026-09-19 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-09-19.md`** (Выгрузка сессии 2026-09-19 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
 
 
@@ -121,6 +124,9 @@
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/HANDOFF-2026-09-14.md`** (Хэндофф в сессию 2026-09-14 (арка 2026-09-13_uchenik-misha): вход владельцем не назначен, дефолт — набор Мише на занятие 20.09)
 
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/HANDOFF-2026-09-21.md`** (Хэндофф в сессию 2026-09-21 (арка 2026-09-13_uchenik-misha): интерактивный проект к занятию 27.09, первым ходом — источники на малые случаи)
+
 **`_studio/zhurnal/2026-09-13_uchenik-misha/NAVIGATOR.md`** (навигатор арки 2026-09-13_uchenik-misha (ориентация, читается первым): Приём третьего ученика (Миша, 3 класс) и постановка цикла занятий с измерением. Главное отличие от Дани и Максима: у тех богат отбор задач, но измерения занятия нет ни у кого — здесь оно заводится впервые (взял сам N из M, минута проседания) и должно доехать до остальных учеников.)
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/PLAN.md`** (план арки 2026-09-13_uchenik-misha)
@@ -139,6 +145,30 @@
 
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/VYGRUZKA-2026-09-13.md`** (Выгрузка сессии 2026-09-13 — сырьё для дневника арки 2026-09-13_uchenik-misha)
+
+
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/VYGRUZKA-2026-09-20-2.md`** (Выгрузка сессии 2026-09-20 — сырьё для дневника арки 2026-09-13_uchenik-misha)
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/VYGRUZKA-2026-09-20.md`** (Выгрузка сессии 2026-09-20 — сырьё для дневника арки 2026-09-13_uchenik-misha)
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/NAVIGATOR.md`** (навигатор арки 2026-09-24_arhitektura-repozitoriev (ориентация, читается первым): Развести опубликованный Hugo-сайт materials/main и рабочий контент курсов по репозиториям, закрыть просроченную arka/mat-kostyak, дать materials/GitHub понятную навигируемую структуру)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md`** (план арки 2026-09-24_arhitektura-repozitoriev)
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SESSIYA.md`** (дневник арки 2026-09-24_arhitektura-repozitoriev)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SOSTOYANIE.md`** (состояние арки 2026-09-24_arhitektura-repozitoriev — что сделано/осталось, чем измерено, дом разведки)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/TZ.md`** (контракт арки 2026-09-24_arhitektura-repozitoriev)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/UROKI-FABRIKE.md`** (уроки арки 2026-09-24_arhitektura-repozitoriev с ценой, вход закрывающей сессии)
 
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
 **`docs/pochemu-i-videnie/`:** `pochemu-i-videnie/RESHENIYA.md`.
