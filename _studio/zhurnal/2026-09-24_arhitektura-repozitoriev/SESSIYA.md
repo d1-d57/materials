@@ -201,3 +201,12 @@ GitHub для облачного доступа. По ходу всплыла к
 - **Q** — Q: how to cut the soup, how to search, where to start a cloud session?
 > - M: Site moves out. Tags, not organizations. Kids' and olympiad content (problem bank, circles, kids' courses) is one soup, adult higher math and popsci is another; the border is fuzzy. Students and the 57-school 7I class are organizational and private but draw on the shared problem bank. The 179 class site is pure code. Search should be automatic, via rich fields on every content unit. The fields are to be designed by interviewing the owner on 30–40 past materials and built into the material-creation skill. The owner wants a single cloud entry point that can find any project across all repos.
 > - note: the owner floated long-lived parallel main branches per course. The analyst disagrees; open.
+
+## 2026-09-24, 17:12 (UTC) — пятый круг: разрез по аудитории, «делали ли уже», порядок
+
+Три решения → `RESHENIYA.md`: один ствол; три контентных репозитория по аудитории; сначала подмести, потом тегировать.
+Пункты 67–74.
+
+- **Q** — Q: where do Projects, branches and the soup split stand?
+> - M: "Projects" for the owner means Cowork projects, which already map tasks to repos or folders; Claude Code Projects is a different product. The owner agrees on one trunk. The owner leans to splitting content into three repos by audience (circle/olympiad, academic, popsci) with organizational projects outside, drawing on them. Cross-repo context must come from machine-generated cards and an automatic "have we done something similar?" check. Branches must be small, sized and statused. Tag everything, but only after merging and syncing everything (GitHub and Mac byte-identical).
+> - note: in the transcript "Тодогор" is unclear; it is read as "the materials project" and not re-asked, since it does not change the decision.
