@@ -293,3 +293,15 @@ porcelain до/после — 0; пустых правил — 0. Выбороч
 - **Q** — Q: what to do with the census findings?
 > - M: New pass 2. Remove everything the mass rules allow; merge the 57 disk-only branches; push the disk-only repos as private GitHub repos and move them out of other folders. london-avgust-2026 is an archive; moskva was rebuilt on its model; separate repo or merged into moskva are both acceptable. carsharing_archive is an irrelevant two-day study, leaning to delete. spetsmat_db is the owner's first Claude Code project, a Konstantinov-system database, must not be lost. Repo names must carry a kind word (course, site, archive…). Books: dedupe, categorize, consolidate. Correction: the first skill dates from early July (a slides skill for the Scarlet Sails school), outside git; the split into disciplines came in early August.
 > - note: "Держи волк" in the transcript is read as the 17-copy djvu (Genkin–Itenberg–Fomin); the owner asked to delete it. Re-asked in chat, because it is a book, not junk.
+
+## 2026-09-24, 22:12 (UTC) — заход 2: ночная уборка materials
+
+Владелец назвал `spetsmat_db` → `sayt-sistemy-konstantinova` и попросил долгий заход без вопросов на ночь (два
+решения → `RESHENIYA.md`). Сборка: генератор сначала отказал — прошлый заход лежал со штампом «ЖДЁТ» и красным
+С3 (пути Mac). Аналитик пропустил шаг `--sudit-sborku` после дозаполнения захода 1 — промах; исправлено судом с
+клапаном (межмашинный заход), затем отказ «незакоммиченный заход в арке» — закоммичено. Заход 2
+`kod_uborka-materials.md`: шаги A (три репозитория без копии, карточки по черновой схеме), B (ветки materials по
+стволу `arka/mat-kostyak`, таблица со статистикой и сухим прогоном `merge-tree`), C (worktree materials-wt: парковка
+снимком и снятие), D (снимок основной папки без изменений), E (хуки — только запись), F (верификатор всех
+снятий). Слияний и правок содержимого нет. `check_zahod.py` → 0; суд сборки — клапан. Облако репозитории
+создавать не может (п.128) — создаёт исполнитель через `gh`.
