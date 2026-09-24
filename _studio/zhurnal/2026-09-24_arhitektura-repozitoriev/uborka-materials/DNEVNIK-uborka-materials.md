@@ -25,3 +25,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** step F verifier on all removals so far (A, B4, C) in background; step D meanwhile (snapshot only, no removal).
 - **surprise:** `materials-wt/disciplina` is a symlink to `~/Documents/GitHub/disciplina` (it makes `../disciplina` resolve from inside a materials worktree) — left in place.
 - **question:** none.
+
+## 2026-09-25 01:51 — step D (materials main checkout) + E1 (hooks)
+- **done:** D: snapshot parked with a temp index (§2.3) as 62dda697 → `origin/park/2026-09-25/materials-main` (`ls-remote` prints it). Porcelain before D = 147, after D = 147; HEAD unchanged; index file md5 identical before/after. 0 files >5 MB. The snapshot differs from HEAD by 184 files (+25854/−310). E1: `hooks.tsv` — 13 rows (12 main checkouts + carsharing in Trash), `git config --get core.hooksPath`.
+- **next:** wait for the verifier of batch 1, then E2 (worktree containers), E3 (branches of the other repos).
+- **surprise:** in zsh `"$C:refs/..."` is the `:r` modifier — the first push of the park failed with a mangled refspec; fixed with `${C}`. Nothing else was affected (the worktree script is Python).
+- **question:** none.
