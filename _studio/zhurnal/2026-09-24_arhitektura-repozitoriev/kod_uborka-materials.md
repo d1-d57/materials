@@ -13,7 +13,7 @@
 ```
 Модель: Opus 5.
 
-Ты исполнитель на Mac владельца, ночной заход: владелец спит и ни на что не ответит. Открой Claude Code в папке ~/Documents/GitHub/materials и сделай три хода:
+Ты исполнитель на Mac владельца, ночной заход: владелец спит и ни на что не ответит; сегодня на этом Mac больше ничего не работает — у тебя полные права, по правилам захода. Открой Claude Code в папке ~/Documents/GitHub/materials и сделай три хода:
 
 1. git --no-optional-locks fetch origin claude/bold-faraday-wq09ql
 2. git --no-optional-locks worktree add ../materials-wt/uborka-materials -b zahod/uborka-materials origin/claude/bold-faraday-wq09ql
@@ -112,11 +112,15 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 
 The owner is cleaning up the Mac so that GitHub holds one true copy of all work. Pass 1 (a read-only census, accepted) found: 352 git trees on the disk, of which 13 are repositories and 339 are linked worktrees; 3 repositories exist only on this disk; 57 local branches exist only on this disk. Its data is on your branch in `_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/` (`repos.tsv`, `branches.tsv`, `REPORT.md`). It is a few hours old: **measure live, use the census only as a map.**
 
-**This pass runs overnight. The owner is asleep and will not answer anything.** Every decision you may need is already made below. Where something is unclear, you do NOT choose on the owner's behalf: you **skip that object, write it into `## ВОПРОСЫ` and `DNEVNIK-uborka-materials.md`, and continue with the next object.** A skipped object is a lawful outcome; a guessed one is the only defect.
+**This pass runs overnight. The owner is asleep and will not answer anything. Nothing else runs on this Mac tonight — no waves, no other sessions, in any repository (owner, 2026-09-24).** You have full rights over every repository of the census. The owner's words: *«slowly, attentively, in parts, making intermediate plans, deciding the design of the work and its principles, bring this to a good state — as far as one night allows»*, and *«we must wake up not in a brand-new world, but in a world where we understand what to do and how to work»*.
 
-**The law of this pass — save first, remove second.** Nothing is removed from the disk until the analyst's zero-loss condition holds for it: *every commit it holds is reachable from a ref that exists on GitHub*, checked by command right before the removal. Removals are logged in `actions.tsv` with the command that restores them.
+**The law of this pass — save first, then act freely.** Nothing is removed until *every commit it holds is reachable from a ref that exists on GitHub*, checked by command right before the removal. The owner empties the Trash in the morning, so **GitHub is the only recovery**; the step F verifier is the net. Every action is a row in `actions.tsv` with the command that restores it.
 
-🔴 **СТОП ДО ЦЕЛИ.** You deliver: everything saved to GitHub, the three disk-only repositories on GitHub with cards, the `materials` branches laid out in a table with statistics, redundant `materials-wt` worktrees removed. You do NOT deliver: any merge into `arka/mat-kostyak` or `main`, any content edit, any work on `disciplina`, `spetsmat-bot` or other repositories (next pass), any deletion of remote branches, books, Downloads. Merges are decided by the analyst from your table.
+**Doubt means investigation, not a stop.** For an object you cannot classify by the rules: read its commit messages (`git log --oneline <trunk>..<branch>`), its diff stat, and the arc diary `SESSIYA.md` or the brief `kod_<тема>.md` if they name it. Decide when the data decides. When it does not, write ONE line into `uborka-materials/VOPROSY-UTRO.md`: `<object> — <what it is> — PROPOSED: <your default action> — because <one line>`, leave the object saved but untouched, and go on. The owner will confirm these in one morning batch; most answers will be "yes, do it". Ask what the owner remembers about the PROJECT, never what is in the code.
+
+**Token economy — a long night on a small budget.** The mechanics here are deterministic git operations: **do them with SCRIPTS you write into `/tmp/uborka/`, not with models.** A script that pushes 40 branches costs you one command and one summary line; a subagent doing the same costs its whole context. Scripts print summaries (counts, failures), never raw lists; read tables with `head`/`awk`. Your own Opus judgement is spent only where a script cannot decide: merges (step B5/E3) and investigations. No subagents except the step F verifier. Aim to stay under about 150k tokens of context; when close, finish the current step, write a DNEVNIK entry "stopped at budget: done X, left Y", push, stop cleanly. Unfinished steps are the next pass, not a failure.
+
+🔴 **СТОП ДО ЦЕЛИ — what this pass does NOT deliver:** content edits (except the three `KARTOCHKA.md`); merges into `main` of `materials` (it is the published site); deletion of remote branches; books, `~/Downloads`, `~/Documents/Книги`; renaming repositories other than the three new ones. Everything else about repository state is in scope.
 
 ### 2.1 Order of work — steps A → F, each ends with a DNEVNIK entry, a commit and a push
 
@@ -157,6 +161,12 @@ B2. **Save**: every local branch that is not on origin, or is ahead of its origi
 B3. **Lay out**: one row per local branch into `uborka-materials/branches-materials.tsv`: `branch` · `in_trunk` (`git merge-base --is-ancestor <branch> origin/arka/mat-kostyak`) · `ahead_of_trunk` / `behind_trunk` (`git rev-list --left-right --count origin/arka/mat-kostyak...<branch>`) · `last_commit_date` · `files_changed` and `top_dirs` (`git diff --name-only origin/arka/mat-kostyak...<branch> | cut -d/ -f1 | sort | uniq -c`) · `merge_dry_run` (`git merge-tree --write-tree origin/arka/mat-kostyak <branch>`: rc 0 → `clean`, rc 1 → `conflict:<paths>`; this command changes nothing) · `checked_out_in` (worktree path or `-`) · `proposal` (one of `already-in-trunk` · `clean-merge-candidate` · `conflict` · `stale` = older than 30 days and ≤ 3 commits ahead) — a PROPOSAL, you do not act on it.
 B4. **Remove only what is provably in the trunk**: a branch with `in_trunk=yes` that is not checked out anywhere → `python3 ~/Documents/GitHub/disciplina/_generator/tools/git_zona.py zakryt-vetku --branch <branch>` (it leaves a tombstone; `git_zona.py voskresit` restores). Run from `~/Documents/GitHub/materials` with `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials`. Its refusal → `skip`, not a workaround.
 
+B5. **Merge where it is understood** — three conditions at once, or no merge:
+   (a) `merge_dry_run` = `clean`;
+   (b) the branch is a `zahod/*` or `arka/*` whose brief `kod_<тема>.md` exists on the branch or the trunk AND carries `ВЕРДИКТ:` with `принято` in its `## ФАЗА ПРИЁМКИ` (an accepted pass that was never merged is exactly the owner's remembered incident "a tool built on an unmerged branch");
+   (c) none of the branch's changed paths is dirty in the main checkout (`git -C <main> status --porcelain -- <paths>` is empty), so the owner's live work is never touched.
+   Door: `GIT_ZONA_REPO=<repo> python3 ~/Documents/GitHub/disciplina/_generator/tools/git_zona.py vlit-v-osnovnuyu <branch> --zone <its top dirs>`, then push the trunk (`git push origin <trunk>`, never `--force`). A refusal or a conflict is not a problem to solve: the row keeps its `proposal`, investigation per §2.0.
+
 #### Step C — the `materials-wt` worktrees
 
 Y_w = `git -C ~/Documents/GitHub/materials worktree list | grep -c materials-wt` — into `## ПЛАН`. Your own worktree `uborka-materials` is excluded from every action. For each other worktree:
@@ -169,13 +179,21 @@ The heaviest one, `materials-wt/modeli` (843 changed lines at census time), goes
 
 `~/Documents/GitHub/materials` on `arka/mat-kostyak` holds the owner's live uncommitted work (40 changed + 107 new files at census time). **Its working tree, index and HEAD must stay exactly as they are.** Park a snapshot (2.3) to `park/2026-09-25/materials-main`, push, verify. Proof: `git status --porcelain | wc -l` before and after D is equal (write both numbers into the diary).
 
-#### Step E — hooks, record only
+#### Step E — every other repository
 
-For each of the 13 main checkouts (`perepis/repos.tsv`, `kind=main`, paths updated by your moves): `git config --get core.hooksPath` (empty → `none`) into `uborka-materials/hooks.tsv`. Change nothing.
+E1. Hooks, record only: for each of the 13 main checkouts (`perepis/repos.tsv`, `kind=main`, paths updated by your moves) `git config --get core.hooksPath` (empty → `none`) into `uborka-materials/hooks.tsv`.
+E2. Worktrees of `disciplina-wt` (226), `spetsmat-bot-wt` (94), `matproekty-179-wt`, `matemdigest-map-wt`: the step C moves (park if dirty → verify on origin → `worktree drop`), as scripted batches per container. `R9-wt-done` and `R10-wt-residue` of `perepis/repos.tsv` go first (154 worktrees, about 19 GB); re-check each by command, the census is hours old.
+E3. Local branches of every main checkout: B2 (push), B3 (one table per repository: `uborka-materials/branches-<repo>.tsv`), B4 (tombstones), B5 (merges). Trunk = the repository's default branch; for `materials` it stays `arka/mat-kostyak`.
+E4. The 52 loose `.md` files in `~/Documents/GitHub/spetsmat-bot-wt/` (outside any git tree), `~/Documents/GitHub/scratchpad`, and the other `R5-norepo` / `R0-empty` folders of `perepis/folders.tsv`: investigate per §2.0; empty folders → Trash; owner content → a line in `VOPROSY-UTRO.md` with a proposed home. Do not guess a home.
 
-#### Step F — verifier (a separate subagent, after C and D)
+#### Step F — verifier (a separate subagent, after EVERY batch of removals, in every repository)
 
 Mandate wider than yours: it gets `actions.tsv` and for EVERY row with action `tombstone`, `drop-worktree` or `move` checks by command that `saved_ref` exists on GitHub (`git ls-remote origin <ref>`) and contains the object's last commit (`git merge-base --is-ancestor`). It writes `uborka-materials/verifier.md` and ends with "checked N of M removals, K failures". **K > 0 → stop all further removals, restore what can be restored (`git_zona.py voskresit`, `git worktree add`, move back from Trash), and report.**
+
+#### Step G — open arcs and the morning map (read-only)
+
+G1. Open arcs: in `materials/_studio/zhurnal/` and `disciplina/_studio/zhurnal/` (and `disciplina/zhurnal/` if it exists) list every arc folder whose `PLAN.md` lacks the banner `АРКА ЗАКРЫТА` in its first 8 lines: `uborka-materials/arki-otkrytye.tsv` with `repo` · `arc` · `created` (folder date) · `last_change` (`git log -1 --format=%ci -- <folder>`) · `files` · `has_HANDOFF` (yes/no). The owner says dozens were opened and never closed; this table is tomorrow's input, you close nothing.
+G2. **`REPORT.md` opens with a section "THE WORLD THIS MORNING"** — written for the owner, plain language, no git jargon, at most 25 lines: which folders were moved or renamed and where they are now; which repositories were created; which branches were merged and into what; how much disk was freed; what the owner should do first; where the morning questions are. The owner must be able to start working from this section alone.
 
 ### 2.2 The card — `KARTOCHKA.md`, a draft schema
 
@@ -208,8 +226,7 @@ cd <tree>
 IDX=/tmp/uborka/idx-<name>; mkdir -p /tmp/uborka
 cp "$(git rev-parse --git-path index)" "$IDX"
 GIT_INDEX_FILE="$IDX" git --no-optional-locks add -A
-GIT_INDEX_FILE="$IDX" git --no-optional-locks diff --cached --name-only --diff-filter=AM -z > /tmp/uborka/staged-<name>.bin
-python3 -c 'import os,sys; [print(p) for p in open(sys.argv[1],"rb").read().decode("utf-8","replace").split("\0") if p and os.path.isfile(p) and os.path.getsize(p)>5*1024*1024]' /tmp/uborka/staged-<name>.bin > /tmp/uborka/big-<name>.txt
+GIT_INDEX_FILE="$IDX" git --no-optional-locks diff --cached --name-only --diff-filter=AM -z | xargs -0 -I{} sh -c 'test $(stat -f%z "{}") -gt 5242880 && echo "{}"' > /tmp/uborka/big-<name>.txt
 # every path in big-<name>.txt: GIT_INDEX_FILE="$IDX" git rm --cached -q -- "<path>"  (list them in `note`)
 TREE=$(GIT_INDEX_FILE="$IDX" git --no-optional-locks write-tree)
 C=$(git commit-tree "$TREE" -p HEAD -m "park snapshot 2026-09-25 of <name> (pass uborka-materials)")
@@ -220,14 +237,15 @@ If `git status --porcelain` in the tree is equal before and after — the park d
 
 ### 2.4 Forbidden — each line names its enemy
 
-- any `merge`, `rebase`, `reset`, `checkout` of another branch, `stash`, `--force` push, deletion of a REMOTE branch — **enemy: a night-time decision the owner did not make**;
-- any edit of file content outside your zone and the three `KARTOCHKA.md` — **enemy: a cleanup that silently rewrites work**;
-- `rm` of anything — use `mv` to `~/.Trash/` where removal is ordered — **enemy: an unnoticed loss, the owner's main fear**;
-- touching `disciplina`, `disciplina-wt`, `spetsmat-bot`, `spetsmat-bot-wt`, other repositories, `~/Downloads`, `~/Documents/Книги` — **enemy: scope creep overnight**;
+- `--force` push, deletion of a REMOTE branch, `reset --hard`, `rebase` of a pushed branch — **enemy: rewriting what GitHub already holds, the only recovery**;
+- any merge not passing all three conditions of B5, and any merge into `materials/main` — **enemy: a night-time decision the owner would not recognize in the morning**;
+- edits of file content, except the three `KARTOCHKA.md` — **enemy: a cleanup that silently rewrites work**;
+- `rm` — removal is `worktree drop` (after verification) or `mv` to `~/.Trash/` — **enemy: a loss nobody saw**;
+- `~/Downloads`, `~/Documents/Книги`, books anywhere — **enemy: scope creep; books get their own pass**;
 - personal data of students is NOT a finding (owner, 24.09) — **enemy: a false alarm the owner asked to stop**.
 
 **КРИТЕРИЙ ГОТОВНОСТИ (может ПРОВАЛИТЬСЯ):**
-The whole criterion is a живой прогон на реальном объекте — the owner's Mac, there is no fixture. (1) `uborka-materials/` holds `DNEVNIK-uborka-materials.md`, `actions.tsv`, `branches-materials.tsv`, `hooks.tsv`, `verifier.md`, `REPORT.md` (`ls _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/ | wc -l` → 6 or more); (2) **coverage**: `branches-materials.tsv` has Y_b rows ("checked X of Y_b", X = Y_b); every one of the Y_w worktrees has at least one row in `actions.tsv` (drop, park or skip); (3) **zero loss**: `verifier.md` ends with "K failures" where K = 0, over ALL removals; (4) **main checkout untouched**: `git -C ~/Documents/GitHub/materials status --porcelain | wc -l` before D = after D; (5) **three repositories**: `gh repo view d1-d57/<name> --json name` succeeds for each of the three, each has `KARTOCHKA.md` on origin — or each is named in `## ВОПРОСЫ` as `skip` with its reason; (6) `REPORT.md` prints `Counter(action)` over `actions.tsv` and `Counter(proposal)` over `branches-materials.tsv`, both summing to their row counts; (7) branch `zahod/uborka-materials` is on GitHub (`git ls-remote origin zahod/uborka-materials` prints one line).
+The whole criterion is a живой прогон на реальном объекте — the owner's Mac, there is no fixture. (1) `uborka-materials/` holds `DNEVNIK-uborka-materials.md`, `actions.tsv`, `branches-materials.tsv`, `hooks.tsv`, `verifier.md`, `VOPROSY-UTRO.md`, `arki-otkrytye.tsv`, `REPORT.md` (`ls _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/ | wc -l` → 8 or more); (2) **coverage**: `branches-materials.tsv` has Y_b rows ("checked X of Y_b", X = Y_b); every one of the Y_w worktrees has at least one row in `actions.tsv` (drop, park or skip); (3) **zero loss**: `verifier.md` ends with "K failures" where K = 0, over ALL removals in ALL repositories; (4) **main checkout untouched**: `git -C ~/Documents/GitHub/materials status --porcelain | wc -l` before D = after D; (5) **three repositories**: `gh repo view d1-d57/<name> --json name` succeeds for each of the three, each has `KARTOCHKA.md` on origin — or each is named in `## ВОПРОСЫ` as `skip` with its reason; (6) `REPORT.md` prints `Counter(action)` over `actions.tsv` and `Counter(proposal)` over `branches-materials.tsv`, both summing to their row counts; (7) `VOPROSY-UTRO.md` and `arki-otkrytye.tsv` exist; every worktree of the four `*-wt` containers has a row in `actions.tsv` (drop, park, skip with reason, or `not-reached: budget`); `REPORT.md` opens with "THE WORLD THIS MORNING" and states `du -sh ~/Documents/GitHub` before and after; (8) branch `zahod/uborka-materials` is on GitHub (`git ls-remote origin zahod/uborka-materials` prints one line).
 **Отрицательный вердикт несёт ОХВАТ В СЕБЕ:** не «дыр не найдено», а «дыр не найдено, проверено X из Y». Без охвата вердикт не принимается — «проверено 2 из 9» и «проверено 9 из 9» выглядят одинаково.
 
 ### 2.5 Delivery — this pass does NOT merge
@@ -431,36 +449,7 @@ MODEL: besplatnaya
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-### ПРАВКА 1 · 2026-09-24 22:24 (UTC) · больше воли: вся уборка до хорошего состояния, слияния там, где понятно, расследование там, где сомнение
-
-**Why.** The owner read the brief and found it too timid: "what kind of overnight pass is this, if it merges nothing and removes nothing". Nothing has ever been lost in this factory; the owner empties the Trash first thing in the morning and will not inspect files by hand. **The safety net is GitHub plus the step F verifier, not the Trash and not the owner.** The enemy of this correction is **a night spent on a timid pass that leaves the mess in place**. The opposite enemy is still real: **two tools overwriting each other, or work built on an unmerged branch**. Those are the owner's two remembered incidents, and the rules below target exactly them.
-
-**Every point below overrides anything contradicting it above** (including §2.0 «СТОП ДО ЦЕЛИ» and §2.4).
-
-1. **Scope grows to ALL repositories of the census, after steps A–D on materials:**
-   - E2 — `disciplina-wt` (226 worktrees) and `spetsmat-bot-wt` (94), then `matproekty-179-wt` and `matemdigest-map-wt`: the same moves as step C (park if dirty → verify on origin → `worktree drop`). `R9-wt-done` and `R10-wt-residue` from `perepis/repos.tsv` go first, as scripted batches: 154 worktrees, about 19 GB.
-   - E3 — then the local branches of every main checkout: push what is not on origin (as in B2), a table like B3 per repository (`uborka-materials/branches-<repo>.tsv`), and tombstones for branches fully in that repository's default branch.
-   - 🔴 **Active-work guard — the owner's first incident.** `disciplina` runs parallel waves. Never drop a worktree that looks alive: any file (outside `.git`) modified in the last 6 hours (`find <wt> -path '*/.git' -prune -o -type f -newermt '-6 hours' -print -quit` prints something), or any process with its working directory inside it (`lsof -a -d cwd +D <wt> 2>/dev/null | head -1`). Alive → `skip` with the reason.
-
-2. **Merging is allowed where it is understood**, only through the factory door and only on three conditions at once:
-   (a) `git merge-tree --write-tree <trunk> <branch>` → clean;
-   (b) the branch is a `zahod/*` or `arka/*` whose brief (`kod_<тема>.md`) is found on the branch or the trunk AND has `ВЕРДИКТ:` with `принято` in its `## ФАЗА ПРИЁМКИ`. An accepted pass that was never merged is the owner's second incident in the making ("a tool built on an unmerged branch");
-   (c) none of the branch's changed paths is dirty in the main checkout (`git -C <main> status --porcelain -- <paths>` is empty), so the owner's live work is never touched.
-   Door: `GIT_ZONA_REPO=<repo> python3 ~/Documents/GitHub/disciplina/_generator/tools/git_zona.py vlit-v-osnovnuyu <branch> --zone <its top dirs>`. Refusal, conflict or any doubt → no merge, the row gets `proposal` and an investigation note (point 3). Trunks: `materials` → `arka/mat-kostyak` (NOT `main`: `main` is the published site, never merge into it); every other repository → its default branch. **`disciplina`: no merges tonight at all**: its waves may be running, so push + table only.
-
-3. **Doubt means investigation, not a stop.** For a branch or worktree you cannot classify by the rules, look deeper: commit messages (`git log --oneline <trunk>..<branch>`), the diff stat, and the arc diary `_studio/zhurnal/<arc>/SESSIYA.md` or the brief `kod_<тема>.md` if they name it. Decide when the data decides. When it does not, write ONE line into `uborka-materials/VOPROSY-UTRO.md`: `<object> — <what it is, one line> — PROPOSED: <your default action> — because <one line>`. The owner will confirm these in the morning in one batch; most answers will be "yes, do it". Aim for questions the owner can answer from memory of the project, not from reading code.
-
-4. **Removal.** Worktrees go by `worktree drop` (their content is in git and verified on origin). Folders outside git that the plan orders removed go to `~/.Trash/`. The owner empties it in the morning, so **the ONLY recovery is GitHub**: never remove anything whose `saved_ref` is not verified on origin. The step F verifier now covers ALL repositories and runs after each batch, not once at the end: K > 0 → stop removals everywhere.
-
-5. **Token economy — a long night on a small budget.**
-   - You, the lead on Opus, keep your context lean: all measuring and acting is done by **scripts written to `/tmp/uborka/`** that print summaries, not raw lists; read tables with `head`/`awk`, never whole.
-   - Mechanical batches (R9/R10 drops per container, pushes per repository) go to **subagents on Sonnet** (`model: sonnet`). Give each one fixed script, one repository and one batch, and have it end with "delivered N of M". Judgement (merges under point 2, investigations under point 3) stays with you on Opus.
-   - Free models: not tonight.
-   - Aim to stay under about 150k tokens of your own context. When close, finish the current step, write a DNEVNIK entry "stopped at budget: done X, left Y", push, and stop cleanly. Unfinished steps are the next pass, not a failure.
-
-6. **Order, strictly:** A → B → C → D (as written) → E (hooks) → E2 → E3 → F after each batch → REPORT. Each step ends with a DNEVNIK entry and a push, so a stop at any moment leaves a readable state.
-
-**The criterion grows, it does not shrink:** add `VOPROSY-UTRO.md` (may be empty, stating "no questions"); `actions.tsv` covers every worktree in all four `*-wt` containers (drop, park, skip with reason, or "not reached: budget"); `verifier.md` checks ALL removals across ALL repositories with K = 0; `REPORT.md` adds `Counter(action)` per repository and the GB freed (`du -sh ~/Documents/GitHub` before and after).
+<правок нет>
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
