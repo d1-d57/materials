@@ -616,7 +616,7 @@ p.formula{line-height:calc(var(--lh) * 0.80)}
         background-size:100% 100%, 100% 100%;
         background-repeat:no-repeat, no-repeat; }
 
-.zone.board{ background:var(--board); } :root{ --x-sluzh:32px; --x-delta:32px; } .zone.copy{ padding:4px 18px 12px 64px; display:flex; flex-direction:column; justify-content:flex-start; } .zone.copy > *{ flex:0 0 auto; } .zone.copy > .zagolovok + *{ margin-top:auto; } .zone.copy > *:first-child:not(.zagolovok){ margin-top:auto; } .zone.copy > *:last-child{ margin-bottom:auto; } .zagolovok{ font-family:var(--font-display); text-transform:uppercase; font-size:var(--t-frametitle); line-height:var(--lh-frametitle); margin-bottom:4px; color:var(--accent); hyphens:none; -webkit-hyphens:none; -ms-hyphens:none; } .bullets{ list-style:none; padding-left:32px; } .bullets li{ position:relative; } .bullets li::before{ content:''; position:absolute; left:-30px; top:.55em; width:9px; height:9px; border-radius:50%; background:var(--ink); } .tg-link{ color:inherit; text-decoration:none; cursor:pointer; }
+.zone.board{ background:var(--board); } :root{ --x-sluzh:32px; --x-delta:32px; } .zone.copy{ padding:4px 18px 4px 64px; display:flex; flex-direction:column; justify-content:flex-start; } .zone.copy > *{ flex:0 0 auto; } .zone.copy > .zagolovok + *{ margin-top:auto; } .zone.copy > *:first-child:not(.zagolovok){ margin-top:auto; } .zone.copy > *:last-child{ margin-bottom:auto; } .zagolovok{ font-family:var(--font-display); text-transform:uppercase; font-size:var(--t-frametitle); line-height:var(--lh-frametitle); margin-bottom:4px; color:var(--accent); hyphens:none; -webkit-hyphens:none; -ms-hyphens:none; } .bullets{ list-style:none; padding-left:32px; } .bullets li{ position:relative; } .bullets li::before{ content:''; position:absolute; left:-30px; top:.55em; width:9px; height:9px; border-radius:50%; background:var(--ink); } .tg-link{ color:inherit; text-decoration:none; cursor:pointer; }
 #oblozhka .bg{ position:absolute; inset:0; } #oblozhka .bg img{ width:100%; height:100%; object-fit:fill; display:block; } #oblozhka .title{ position:absolute; left:94.5px; top:109.8px; width:806.4px; font-family:var(--font-display); font-size:98.4px; line-height:120.6px; color:var(--accent); } #oblozhka .sub{ position:absolute; left:97.2px; top:468.0px; width:806.4px; font-family:var(--font-body); font-size:50.8px; line-height:60.3px; color:var(--ink); } #oblozhka .dateplace{ position:absolute; left:97.2px; bottom:65.7px; width:806.4px; font-family:var(--font-body); font-size:33.3px; line-height:41.3px; color:var(--steel); }
 #vizitka .grid{ position:absolute; inset:0; display:grid; grid-template-columns:607px 56px 1fr; grid-template-rows:107px 1fr; } #vizitka .board{ grid-area:1/1/3/2; background:var(--board); position:relative; } #vizitka .brd-title{ position:absolute; left:36px; top:34px; font-size:var(--t-frametitle-n); } #vizitka .p-photo{ position:absolute; left:81px; top:181px; width:448px; height:448px; } #vizitka .p-photo img{ width:100%; height:100%; object-fit:cover; } #vizitka .copy{ grid-area:2/3; padding-left:18px; }
 #napominanie .grid{ position:absolute; inset:0; display:grid; padding:24px 46px 24px 0; }
@@ -1374,18 +1374,30 @@ function paintBleed(slide) {
     // на самом `.slide` ничего не различает; признак служебного слайда —
     // backgroundIMAGE==='none' (шорткод `background:var(--board)` в `tipy.py`
     // сбрасывает и его). 🔴 Проверка `el===slide` обязана идти ПЕРВОЙ, до
-    // `isOpaque` — опаковость проверяется на промежуточных зонах ДО того, как
-    // обход дойдёт до `.slide`, иначе `isOpaque` срабатывает на самом `.slide`
-    // раньше, чем цикл успевает его различить, и угол блокируется ВЕЗДЕ —
-    // на всех 26 слайдах без исключения (нашёл верификатор фактом: обе
-    // переменные 'none' на каждом слайде, включая обычный текстовый без единой
-    // закрывающей зоны). Та же путаница цвет/картинка, что уже поймана ниже
-    // во фолбэке null — здесь тот же признак, применённый ко всей цепочке.
+    // блокировки по картинке — та же логика порядка, что уже была здесь.
     const slideBlocked = () => getComputedStyle(slide).backgroundImage === 'none';
+    // ПОДЛОЖКА vs ИЛЛЮСТРАЦИЯ (заход kadr-uzor-i-vmeshchenie, Э1). Было:
+    // `isOpaque(getComputedStyle(el).backgroundColor)` на ЛЮБОМ предке — но
+    // `.zone.board` (зелёная подложка, `tipy.py:91`) непрозрачна ПО ПОСТРОЕНИЮ,
+    // и `_ill_zone` навешивает тот же класс `board` на полосу С картинкой
+    // (`cls="board"`, `tipy.py:_ill_zone`) — то есть цвет одинаково опаковый и
+    // там, где угла ничто не закрывает, и там, где под ним лежит иллюстрация.
+    // Узор гас на КАЖДОМ слайде с зелёной зоной, с картинкой или без —
+    // владелец увидел ровно это: «поверх зелёного он наносится, поверх
+    // иллюстраций — нет» означает, что признак «непрозрачен» здесь неверный
+    // сигнал вовсе, сама подложка ДОЛЖНА быть проходимой.
+    // Настоящая иллюстрация физически рисуется НЕ через CSS-фон: `.panel`
+    // (единственный контейнер картинки, `_ill_zone`) несёт `background:none`
+    // (base.css:140), а `<img>/<svg>/<canvas>` внутри нет своего
+    // background-color — значит `isOpaque(backgroundColor)` не увидел бы
+    // иллюстрацию, даже если бы искал её специально. Верный признак —
+    // принадлежность `.panel`: он один на все типы вёрстки (`_ill_zone` —
+    // единственный источник панелей), не завязан на конкретный `tip_verstki`.
+    const isIllustration = e => e.classList && e.classList.contains('panel');
     if (!el) return slideBlocked();
     while (el && el !== document.documentElement) {
       if (el === slide) return slideBlocked();
-      if (isOpaque(getComputedStyle(el).backgroundColor)) return true;
+      if (isIllustration(el)) return true;
       el = el.parentElement;
     }
     return false;
