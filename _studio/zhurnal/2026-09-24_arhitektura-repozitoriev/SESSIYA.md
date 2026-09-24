@@ -284,3 +284,12 @@ porcelain до/после — 0; пустых правил — 0. Выбороч
 ошибка аналитика в имени дневника (п.113), незакоммиченная на момент прогона приёмка. Попутно поправлен промах
 аналитика: ПРАВКА 2 при первом переносе попала внутрь команды `sed` ПРАВКИ 1 (поиск заголовка по подстроке);
 ПРАВКА 1 сверена с опубликованной редакцией `9e950bdd` — не изменилась.
+
+## 2026-09-24, 21:41 (UTC) — решения владельца по переписи
+
+Три решения → `RESHENIYA.md`; пункты 114–120. Поправка летописи: первый скилл в начале июля жил вне git — вывод
+переписи «опровергнуто» ОТОЗВАН как основанный на неполном источнике (оговорка переписи сработала).
+
+- **Q** — Q: what to do with the census findings?
+> - M: New pass 2. Remove everything the mass rules allow; merge the 57 disk-only branches; push the disk-only repos as private GitHub repos and move them out of other folders. london-avgust-2026 is an archive; moskva was rebuilt on its model; separate repo or merged into moskva are both acceptable. carsharing_archive is an irrelevant two-day study, leaning to delete. spetsmat_db is the owner's first Claude Code project, a Konstantinov-system database, must not be lost. Repo names must carry a kind word (course, site, archive…). Books: dedupe, categorize, consolidate. Correction: the first skill dates from early July (a slides skill for the Scarlet Sails school), outside git; the split into disciplines came in early August.
+> - note: "Держи волк" in the transcript is read as the 17-copy djvu (Genkin–Itenberg–Fomin); the owner asked to delete it. Re-asked in chat, because it is a book, not junk.
