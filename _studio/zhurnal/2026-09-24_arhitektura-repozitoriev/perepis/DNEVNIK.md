@@ -13,3 +13,9 @@ Newest entry at the bottom. Times come from `date`. Each number is followed by t
 - **next:** fill `## ОТЧЁТ`, run the hygiene block, push after every commit.
 - **surprise:** ПРАВКА 1 arrived after the census was finished, so its criterion "≥10 entries with start/end for each root" cannot be met honestly. I did not invent the missing entries.
 - **question:** is one retroactive entry plus the entries from now on enough to count? My choice: yes, per the correction's own "ничего не переделывай" clause.
+
+## 2026-09-25 00:28 — report written, delivery
+- **done:** `## ОТЧЁТ` and the entry snapshot are filled, and the script is attached (`fa5488e8`, pushed). Checks: `git_zona.py check --zone` on both zone paths → ✅; `bootstrap_zahod.py --proverit-doma` → rc=0; `ls perepis/ | wc -l` → 7.
+- **next:** the analyst's acceptance. No merge and no `worktree drop` (§2.6).
+- **surprise:** none. Checked for new corrections with `git show origin/claude/bold-faraday-wq09ql:…kod_perepis-diska.md | grep '^### ПРАВКА'`: only ПРАВКА 1.
+- **question:** none.
