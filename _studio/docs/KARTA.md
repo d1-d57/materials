@@ -157,6 +157,9 @@
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/HANDOFF-2026-09-25.md`** (Хэндофф в сессию 2026-09-25)
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/INVENTAR-2026-09-24.md`** (inventory snapshot 2026-09-24: branches, tree, binaries, code, repos — each number with its command)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/NAVIGATOR.md`** (навигатор арки 2026-09-24_arhitektura-repozitoriev (ориентация, читается первым): Развести опубликованный Hugo-сайт materials/main и рабочий контент курсов по репозиториям, закрыть просроченную arka/mat-kostyak, дать materials/GitHub понятную навигируемую структуру)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md`** (план арки 2026-09-24_arhitektura-repozitoriev)
