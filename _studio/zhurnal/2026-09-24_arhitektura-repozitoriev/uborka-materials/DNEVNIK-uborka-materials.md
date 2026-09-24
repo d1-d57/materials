@@ -31,3 +31,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** wait for the verifier of batch 1, then E2 (worktree containers), E3 (branches of the other repos).
 - **surprise:** in zsh `"$C:refs/..."` is the `:r` modifier — the first push of the park failed with a mangled refspec; fixed with `${C}`. Nothing else was affected (the worktree script is Python).
 - **question:** none.
+
+## 2026-09-25 01:57 — E3 (branches of 11 repos, save + layout), G1, E4; E2 running
+- **done:** E3 B2/B3: `branches.py` over 11 repos, trunk = `origin/HEAD` (all `origin/main`): pushed 117 branches (disciplina 72, spetsmat-bot 42, ankety 1, matemdigest-map 1, matproekty-179 1), parked 1 (spetsmat-bot, non-fast-forward), failed 0; tables `branches-<repo>.tsv`. matemdigest-map: 2 branches have histories unrelated to main → proposal `conflict` (merge_dry_run `conflict:unrelated-histories`). Verifier batch 1: `checked 37 of 37 removals, 0 failures`. G1: `arki-otkrytye.tsv` — 61 arc folders, 35 without the `АРКА ЗАКРЫТА` banner (materials 19, disciplina 16). E4: ankety-wt, moskva-wt empty → Trash; 4 owner-content objects → VOPROSY-UTRO.md.
+- **next:** E2 finishes (spetsmat-bot-wt, disciplina-wt) → verifier batch 2 → E3 B4/B5 → G2 report.
+- **surprise:** the census's "52 loose .md in spetsmat-bot-wt" are not loose: `find spetsmat-bot-wt -maxdepth 1 -type f` → 0; they are READMEs inside worktrees plus one non-git folder `etalon-raspil/` (55 files). Many spetsmat-bot worktrees hold git-ignored databases (`data/*.db`, `-wal`, `-shm`) and `secrets/` — those worktrees are saved but kept (plan rule), not dropped.
+- **question:** none new for the analyst.
