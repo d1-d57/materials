@@ -1,0 +1,270 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Малые случаи — часть вторая</title><style>@page { size: A4; margin: 10mm 12mm; }
+body { font-family:"PT Serif",Georgia,serif; color:#1f1b17; background:#fff; font-size:11.5pt; line-height:1.38; max-width:192mm; margin:0 auto; }
+h1 { font-size:16pt; margin:0 0 1mm; }
+.lead { font-size:10pt; color:#55504a; font-style:italic; margin:0 0 4mm; }
+h2 { font-size:12.5pt; color:#9e2b25; margin:5.5mm 0 1.5mm; border-bottom:1px solid #d8d0c4; padding-bottom:.7mm; }
+.step { font-size:10pt; color:#3a6b5f; font-style:italic; margin:0 0 2mm; }
+.p { margin:0 0 1.6mm; padding-left:7.5mm; text-indent:-7.5mm; }
+.p .n { display:inline-block; width:7.5mm; text-indent:0; color:#9a9188; font-size:10pt; }
+.fill { display:block; border-bottom:1.1px solid #1f1b17; height:5.2mm; margin:.6mm 0 2mm 7.5mm; }
+.fill.half { width:calc(50% - 7.5mm); display:inline-block; vertical-align:bottom; }
+u.s { display:inline-block; min-width:10mm; border-bottom:1.1px solid #1f1b17; text-decoration:none; }
+u.m { display:inline-block; min-width:22mm; border-bottom:1.1px solid #1f1b17; text-decoration:none; }
+.pick { font-size:10pt; color:#55504a; }
+table.t { border-collapse:collapse; margin:2mm 0 2.5mm 7.5mm; font-size:10.5pt; }
+table.t td, table.t th { border:1px solid #1f1b17; padding:1.3mm 2.5mm; text-align:center; min-width:11mm; height:7mm; }
+table.t th { background:#f2ede4; font-weight:normal; font-size:9.5pt; text-align:right; min-width:32mm; padding-right:3mm; }
+.fig { text-align:center; margin:2.5mm 0; }
+svg.bratya { width:64mm; } svg.portal { width:56mm; } svg.bakterii { width:96mm; } svg.cards { width:148mm; }
+svg.g4 { width:46mm; } svg.g3 { width:40mm; } svg.g2 { width:23mm; }
+.grids { display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-end; gap:5mm 7mm; margin:3mm 0; }
+.lines { margin:1.5mm 0 2.5mm 7.5mm; }
+.lines .fill { margin:0 0 3.4mm 0; }
+.two { display:flex; gap:6mm; align-items:flex-start; }
+.two .txt { flex:1; }
+.note { font-size:9.5pt; color:#55504a; margin:1mm 0 2mm 7.5mm; }
+.pb { page-break-before:always; }</style></head><body>
+<h1>Малые случаи — часть вторая</h1>
+<p class="lead">Тот же приём: сперва совсем маленький случай, потом побольше, и только потом большое число.</p>
+<h2>2. Остров рыцарей и лжецов</h2>
+<p class="step">На острове живут рыцари — они всегда говорят правду, и лжецы — они всегда лгут. Больше там никого нет.</p>
+<div class="p"><span class="n">1</span> Лжец сказал: «у меня есть собака». Есть ли у него собака? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">2</span> Лжец сказал: «моему дедушке <b>самое меньшее сто</b> лет». Значит дедушке <b>меньше</b> ста. Сколько лет ему может быть самое большее? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Волк соврал: «в этом доме <b>не меньше десяти</b> поросят». Сколько поросят самое большее? <u class="s">&nbsp;</u></div>
+<p class="step">Дальше будем проверять догадки. Догадка — это предположение, кто перед нами. Если из догадки выходит чепуха, значит догадка неверна.</p>
+<div class="p"><span class="n">4</span> Может ли житель острова сказать про себя «я лжец»? Проверь обе догадки.</div>
+<div class="p" style="text-indent:0;padding-left:15mm">Он рыцарь — тогда сказал правду, значит он лжец. Складно? <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Он лжец — тогда соврал, значит он не лжец. Складно? <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Вывод: так сказать <u class="m">&nbsp;</u></div>
+<div class="two"><div class="txt">
+<div class="p"><span class="n">5</span> Иван и Пётр — братья. Иван сказал: <b>«мы оба лжецы»</b>.</div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван рыцарь — тогда <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван лжец — тогда <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван — <u class="s">&nbsp;</u> , Пётр — <u class="s">&nbsp;</u></div>
+</div><div><svg class="bratya" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" role="img">
+  <title>Два мальчика: правый говорит</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="100.0" cy="112.0" r="18.0"/>
+    <path d="M100.0,130.0 Q99.0,162.0 100.0,194.0"/>
+    <path d="M99.0,144.0 Q86.3,159.9 77.0,178.0"/>
+    <path d="M101.0,144.0 Q113.7,159.9 123.0,178.0"/>
+    <path d="M100.0,194.0 Q90.2,210.4 83.0,228.0"/>
+    <path d="M100.0,194.0 Q109.8,210.4 117.0,228.0"/>
+    <path d="M76.0,228.0 Q81.0,228.3 86.0,228.0" stroke-width="1.6"/>
+    <path d="M114.0,228.0 Q119.0,228.3 124.0,228.0" stroke-width="1.6"/>
+    <circle cx="250.0" cy="112.0" r="18.0"/>
+    <path d="M250.0,130.0 Q249.0,162.0 250.0,194.0"/>
+    <path d="M249.0,144.0 Q236.3,159.9 227.0,178.0"/>
+    <path d="M251.0,140.0 Q263.3,133.1 274.0,124.0 Q279.9,114.4 284.0,104.0"/>
+    <path d="M250.0,194.0 Q240.2,210.4 233.0,228.0"/>
+    <path d="M250.0,194.0 Q259.8,210.4 267.0,228.0"/>
+    <path d="M226.0,228.0 Q231.0,228.3 236.0,228.0" stroke-width="1.6"/>
+    <path d="M264.0,228.0 Q269.0,228.3 274.0,228.0" stroke-width="1.6"/>
+    <path d="M261.67,71.71 C257.98,70.93 245.59,69.27 239.51,67.01 C233.44,64.76 228.67,61.37 225.23,58.20 C221.79,55.04 219.92,51.46 218.89,48.01 C217.86,44.55 217.42,40.85 219.05,37.48 C220.68,34.10 224.24,30.64 228.66,27.77 C233.09,24.91 239.24,22.41 245.62,20.30 C251.99,18.19 259.25,16.14 266.89,15.12 C274.52,14.10 283.59,13.66 291.43,14.19 C299.27,14.72 307.09,16.53 313.92,18.31 C320.74,20.08 326.90,22.32 332.37,24.82 C337.84,27.32 343.52,30.13 346.73,33.30 C349.94,36.46 351.65,40.31 351.62,43.81 C351.59,47.30 349.40,50.97 346.56,54.26 C343.72,57.55 339.81,60.91 334.59,63.54 C329.38,66.16 322.37,68.52 315.26,70.00 C308.15,71.48 295.82,72.01 291.94,72.41" stroke-width="1.7"/>
+    <path d="M261.7,71.7 Q253.9,79.6 248.0,89.0" stroke-width="1.7"/>
+    <path d="M248.0,89.0 Q270.5,82.2 291.9,72.4" stroke-width="1.7"/>
+    <text x="100.0" y="254" text-anchor="middle" fill="#1f1b17" stroke="none" font-family="'PT Serif', Georgia, serif" font-size="24" style="font-size:24px">И</text>
+    <text x="250.0" y="254" text-anchor="middle" fill="#1f1b17" stroke="none" font-family="'PT Serif', Georgia, serif" font-size="24" style="font-size:24px">П</text>
+  </g>
+</svg></div></div>
+<div class="p"><span class="n">6</span> В другой раз Иван сказал: <b>«хотя бы один из нас — лжец»</b>. Это не то же самое, что в задаче 5: «хотя бы один» — значит один или оба.</div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван рыцарь — тогда <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван лжец — тогда <u class="m">&nbsp;</u></div>
+<div class="p" style="text-indent:0;padding-left:15mm">Иван — <u class="s">&nbsp;</u> , Пётр — <u class="s">&nbsp;</u></div>
+<h2>3. Обратный ход</h2>
+<p class="step">Идём <b>с конца</b>: начинаем с готового ответа и движемся назад, заменяя каждое действие на обратное. Прибавили — вычти. Умножили — раздели.</p>
+<div class="p"><span class="n">1</span> Задумал число, прибавил 3, получил <b>10</b>. Какое задумал? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">2</span> Задумал число, прибавил 4, умножил на 2, получил <b>20</b>. Какое задумал? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Задумал число, умножил на 2, вычел 5, получил <b>13</b>. Какое задумал? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">4</span> Кира задумала число, прибавила 5, разделила на 3, умножила на 4, вычла 6, разделила на 7 и получила <b>2</b>.</div>
+<div class="p" style="text-indent:0;padding-left:7.5mm">Иди слева направо, от готового ответа. Над каждой стрелкой написано, что делать.</div><div class="p" style="text-indent:0;padding-left:7.5mm;font-size:11pt"><b>2</b> &nbsp;—·7→&nbsp; <u class="s">&nbsp;</u> &nbsp;—+6→&nbsp; <u class="s">&nbsp;</u> &nbsp;—:4→&nbsp; <u class="s">&nbsp;</u> &nbsp;—·3→&nbsp; <u class="s">&nbsp;</u> &nbsp;—−5→&nbsp; <u class="s">&nbsp;</u></div>
+<div class="fig"><svg class="bakterii" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img">
+  <title>Четыре чашки Петри: 1, 2, 4 и 8 бактерий</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M121.78,62.00 C121.84,71.08 118.05,81.96 112.65,89.36 C107.26,96.75 98.07,103.60 89.42,106.36 C80.76,109.13 69.47,108.71 60.73,105.92 C51.99,103.13 42.31,96.95 36.97,89.63 C31.63,82.31 28.62,71.17 28.68,62.00 C28.74,52.83 32.00,41.99 37.33,34.63 C42.66,27.27 51.95,20.69 60.64,17.82 C69.34,14.94 80.89,14.53 89.50,17.37 C98.11,20.22 106.91,27.47 112.29,34.90 C117.67,42.34 121.73,52.92 121.78,62.00 Z" stroke-width="1.9"/>
+    <path d="M114.60,62.00 C114.64,69.73 111.62,79.07 107.04,85.28 C102.46,91.49 94.49,96.87 87.11,99.26 C79.73,101.65 70.13,101.98 62.77,99.65 C55.41,97.32 47.47,91.56 42.95,85.28 C38.44,79.01 35.63,69.73 35.66,62.00 C35.70,54.27 38.67,45.18 43.18,38.88 C47.69,32.58 55.38,26.57 62.71,24.19 C70.04,21.80 79.81,22.13 87.16,24.58 C94.51,27.02 102.24,32.65 106.81,38.89 C111.39,45.12 114.56,54.27 114.60,62.00 Z" stroke-width="1.5"/>
+    <circle cx="72.0" cy="58.0" r="4" fill="#1f1b17" stroke="none"/>
+    <path d="M241.58,62.00 C241.59,71.15 238.20,82.16 232.81,89.47 C227.43,96.79 217.97,103.02 209.26,105.88 C200.54,108.73 189.15,109.36 180.51,106.60 C171.86,103.84 162.74,96.75 157.40,89.32 C152.06,81.89 148.46,71.10 148.47,62.00 C148.49,52.90 152.16,42.19 157.49,34.75 C162.83,27.30 171.85,20.11 180.49,17.33 C189.12,14.55 200.57,15.18 209.28,18.05 C217.98,20.93 227.34,27.27 232.72,34.60 C238.10,41.92 241.56,52.85 241.58,62.00 Z" stroke-width="1.9"/>
+    <path d="M234.73,62.00 C234.67,69.69 231.13,78.62 226.56,84.93 C221.99,91.24 214.59,97.43 207.30,99.86 C200.01,102.28 190.20,101.92 182.82,99.48 C175.45,97.04 167.56,91.45 163.06,85.21 C158.55,78.96 155.85,69.78 155.79,62.00 C155.73,54.22 158.18,44.73 162.70,38.53 C167.22,32.33 175.49,27.14 182.91,24.79 C190.33,22.43 199.88,22.07 207.22,24.40 C214.55,26.74 222.33,32.54 226.92,38.81 C231.50,45.08 234.79,54.31 234.73,62.00 Z" stroke-width="1.5"/>
+    <circle cx="182.0" cy="52.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="206.0" cy="70.0" r="4" fill="#1f1b17" stroke="none"/>
+    <path d="M361.78,62.00 C361.73,71.09 357.78,81.77 352.39,89.17 C347.00,96.56 338.06,103.53 329.43,106.40 C320.79,109.26 309.26,109.22 300.58,106.37 C291.91,103.53 282.69,96.73 277.37,89.34 C272.06,81.94 268.73,71.15 268.68,62.00 C268.63,52.85 271.74,41.80 277.07,34.44 C282.40,27.08 291.94,20.62 300.65,17.85 C309.37,15.08 320.68,15.03 329.35,17.83 C338.03,20.62 347.29,27.25 352.70,34.61 C358.10,41.97 361.83,52.91 361.78,62.00 Z" stroke-width="1.9"/>
+    <path d="M354.08,62.00 C354.10,69.78 351.67,79.14 347.19,85.39 C342.71,91.64 334.58,97.15 327.18,99.49 C319.79,101.84 310.15,101.88 302.82,99.48 C295.49,97.08 287.81,91.36 283.19,85.11 C278.58,78.86 275.12,69.69 275.14,62.00 C275.17,54.31 278.72,45.25 283.33,38.99 C287.94,32.73 295.48,26.85 302.79,24.42 C310.10,21.99 319.84,22.02 327.22,24.41 C334.59,26.79 342.58,32.45 347.05,38.71 C351.53,44.98 354.06,54.22 354.08,62.00 Z" stroke-width="1.5"/>
+    <circle cx="300.0" cy="48.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="326.0" cy="54.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="305.0" cy="74.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="329.0" cy="78.0" r="4" fill="#1f1b17" stroke="none"/>
+    <path d="M481.40,62.00 C481.36,71.13 477.89,81.87 472.56,89.29 C467.24,96.71 458.12,103.68 449.46,106.50 C440.80,109.33 429.29,109.11 420.63,106.23 C411.97,103.36 402.89,96.62 397.50,89.25 C392.11,81.87 388.34,71.11 388.30,62.00 C388.26,52.89 391.84,41.91 397.24,34.56 C402.64,27.22 412.00,20.77 420.69,17.96 C429.38,15.14 440.71,14.92 449.40,17.69 C458.09,20.45 467.49,27.14 472.82,34.52 C478.16,41.91 481.45,52.87 481.40,62.00 Z" stroke-width="1.9"/>
+    <path d="M474.59,62.00 C474.63,69.73 471.63,79.07 467.04,85.28 C462.46,91.49 454.48,96.86 447.10,99.25 C439.72,101.65 430.12,101.99 422.76,99.66 C415.41,97.33 407.48,91.55 402.96,85.28 C398.44,79.00 395.62,69.73 395.66,62.00 C395.70,54.27 398.67,45.19 403.18,38.88 C407.69,32.58 415.38,26.56 422.71,24.18 C430.04,21.80 439.80,22.14 447.16,24.59 C454.51,27.04 462.25,32.64 466.82,38.88 C471.40,45.12 474.56,54.27 474.59,62.00 Z" stroke-width="1.5"/>
+    <circle cx="418.0" cy="45.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="441.0" cy="39.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="456.0" cy="55.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="425.0" cy="60.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="447.0" cy="64.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="413.0" cy="68.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="434.0" cy="80.0" r="4" fill="#1f1b17" stroke="none"/>
+    <circle cx="456.0" cy="79.0" r="4" fill="#1f1b17" stroke="none"/>
+    <path d="M32.0,128.0 Q141.0,129.4 250.0,129.2 Q359.5,129.4 469.0,128.0" stroke-width="1.8"/>
+    <path d="M469.0,132.0 L478.0,128.0 L469.0,124.0 Z" fill="#1f1b17" stroke="none"/>
+  </g>
+</svg></div>
+<p class="step">Бактерий в чашке каждый час становится вдвое больше.</p>
+<div class="p"><span class="n">5</span> В 20:00 их было <b>1600</b>. Сколько было в 19:00? <u class="s">&nbsp;</u> &nbsp; А в 18:00? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">6</span> Во сколько их было <b>400</b>? <u class="s">&nbsp;</u> &nbsp; А <b>100</b>? <u class="s">&nbsp;</u></div>
+<div class="two"><div class="txt">
+<p class="step">В игре есть портал: когда герой проходит сквозь него, монеты <b>удваиваются</b>, но страж сразу забирает <b>24</b> монеты.</p>
+<div class="p"><span class="n">7</span> Герой прошёл портал <b>один</b> раз, и монет не осталось. Сколько было? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> Прошёл <b>два</b> раза, и монет не осталось. Сколько было? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">9</span> Прошёл <b>три</b> раза, и монет не осталось. Сколько было? <u class="s">&nbsp;</u></div>
+</div><div><svg class="portal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" role="img">
+  <title>Каменный портал: монеты слева, страж справа</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,-12)">
+    <path d="M12.0,228.0 Q81.0,229.5 150.0,229.5 Q225.0,227.5 300.0,227.0 Q354.0,228.8 408.0,229.0" stroke-width="1.6"/>
+    <path d="M130,226 L130,130 A75,75 0 0,1 280,130 L280,226" stroke-width="2"/>
+    <path d="M160,226 L160,130 A45,45 0 0,1 250,130 L250,226" stroke-width="1.8"/>
+    <path d="M130.0,150.0 Q145.0,150.5 160.0,150.0" stroke-width="1.5"/>
+    <path d="M250.0,150.0 Q265.0,150.5 280.0,150.0" stroke-width="1.5"/>
+    <path d="M130.0,176.0 Q145.0,176.5 160.0,176.0" stroke-width="1.5"/>
+    <path d="M250.0,176.0 Q265.0,176.5 280.0,176.0" stroke-width="1.5"/>
+    <path d="M130.0,202.0 Q145.0,202.5 160.0,202.0" stroke-width="1.5"/>
+    <path d="M250.0,202.0 Q265.0,202.5 280.0,202.0" stroke-width="1.5"/>
+    <path d="M161.0,120.6 Q146.4,117.1 131.6,114.4" stroke-width="1.5"/>
+    <path d="M168.6,103.5 Q156.7,94.4 144.3,85.9" stroke-width="1.5"/>
+    <path d="M182.5,91.0 Q175.3,77.8 167.5,65.0" stroke-width="1.5"/>
+    <path d="M200.3,85.2 Q199.1,70.3 197.2,55.4" stroke-width="1.5"/>
+    <path d="M218.9,87.2 Q223.9,73.1 228.2,58.7" stroke-width="1.5"/>
+    <path d="M235.1,96.6 Q245.4,85.7 255.2,74.3" stroke-width="1.5"/>
+    <path d="M249.0,120.6 Q263.8,117.9 278.4,114.4" stroke-width="1.5"/>
+    <path d="M168.0,225.0 Q183.8,189.0 197.0,152.0 Q205.0,152.0 213.0,152.0 Q228.8,188.0 242.0,225.0 Q205.0,225.0 168.0,225.0 Z" fill="#f2ede4" stroke="none"/>
+    <path d="M168.0,225.0 Q183.8,189.0 197.0,152.0" stroke-width="1.6"/>
+    <path d="M242.0,225.0 Q226.2,189.0 213.0,152.0" stroke-width="1.6"/>
+    <path d="M197.0,152.0 Q205.0,152.3 213.0,152.0" stroke-width="1.5"/>
+    <path d="M194.0,208.0 Q205.0,208.3 216.0,208.0" stroke-width="1.5"/>
+    <path d="M197.5,186.0 Q205.0,186.3 212.5,186.0" stroke-width="1.5"/>
+    <path d="M200.5,168.0 Q205.0,168.3 209.5,168.0" stroke-width="1.5"/>
+    <path d="M81.42,220.00 C81.47,221.10 79.92,222.43 77.91,223.33 C75.90,224.23 72.53,225.09 69.34,225.42 C66.16,225.74 62.06,225.62 58.79,225.28 C55.52,224.95 51.71,224.29 49.74,223.41 C47.78,222.53 46.96,221.12 47.01,220.00 C47.07,218.88 48.12,217.56 50.07,216.67 C52.02,215.77 55.49,215.00 58.71,214.64 C61.94,214.28 66.28,214.15 69.42,214.50 C72.57,214.86 75.58,215.83 77.58,216.75 C79.58,217.67 81.36,218.90 81.42,220.00 Z" stroke-width="1.6" fill="#f2ede4"/>
+    <path d="M81.21,210.00 C81.20,211.12 80.01,212.47 78.01,213.35 C76.01,214.23 72.45,214.92 69.20,215.28 C65.96,215.64 61.73,215.84 58.56,215.51 C55.40,215.18 52.18,214.22 50.22,213.30 C48.26,212.38 46.81,211.10 46.80,210.00 C46.79,208.90 48.21,207.61 50.18,206.69 C52.14,205.77 55.40,204.82 58.57,204.50 C61.74,204.17 65.95,204.38 69.19,204.73 C72.44,205.09 76.05,205.76 78.05,206.64 C80.06,207.51 81.22,208.88 81.21,210.00 Z" stroke-width="1.6" fill="#f2ede4"/>
+    <path d="M81.34,200.00 C81.28,201.10 79.61,202.34 77.62,203.26 C75.64,204.18 72.58,205.15 69.43,205.50 C66.28,205.85 61.94,205.72 58.72,205.36 C55.50,204.99 52.07,204.22 50.10,203.33 C48.14,202.43 46.98,201.12 46.93,200.00 C46.87,198.88 47.81,197.48 49.78,196.60 C51.76,195.72 55.53,195.06 58.79,194.72 C62.05,194.38 66.16,194.25 69.35,194.58 C72.54,194.90 75.94,195.76 77.94,196.66 C79.94,197.57 81.39,198.90 81.34,200.00 Z" stroke-width="1.6" fill="#f2ede4"/>
+    <path d="M80.85,190.00 C80.87,191.12 80.08,192.49 78.15,193.39 C76.23,194.28 72.55,195.05 69.30,195.38 C66.06,195.71 61.89,195.72 58.70,195.37 C55.52,195.03 52.24,194.20 50.19,193.30 C48.15,192.41 46.42,191.10 46.44,190.00 C46.46,188.90 48.28,187.63 50.32,186.73 C52.36,185.83 55.50,184.95 58.67,184.60 C61.84,184.24 66.11,184.25 69.33,184.59 C72.56,184.93 76.11,185.74 78.03,186.64 C79.95,187.54 80.83,188.88 80.85,190.00 Z" stroke-width="1.6" fill="#f2ede4"/>
+    <path d="M47.0,220.0 Q47.5,205.0 47.0,190.0" stroke-width="1.5"/>
+    <path d="M81.0,220.0 Q80.5,205.0 81.0,190.0" stroke-width="1.5"/>
+    <path d="M357.20,142.00 C357.19,144.38 356.19,147.19 354.78,149.10 C353.36,151.02 350.99,152.71 348.73,153.48 C346.47,154.24 343.45,154.43 341.20,153.70 C338.95,152.97 336.62,151.04 335.24,149.09 C333.86,147.14 332.94,144.38 332.92,142.00 C332.90,139.62 333.74,136.76 335.13,134.83 C336.51,132.89 338.96,131.08 341.22,130.38 C343.49,129.68 346.43,129.86 348.70,130.60 C350.98,131.34 353.47,132.92 354.89,134.82 C356.30,136.72 357.22,139.62 357.20,142.00 Z" stroke-width="1.7"/>
+    <path d="M345.0,154.0 Q344.6,157.5 345.0,161.0" stroke-width="1.7"/>
+    <path d="M331.0,162.0 Q345.0,162.8 359.0,162.0 Q360.9,193.2 366.0,224.0 Q345.0,223.2 324.0,224.0 Q325.9,192.8 331.0,162.0 Z" stroke-width="1.7" fill="#f2ede4"/>
+    <path d="M358.0,170.0 Q366.8,174.9 374.0,182.0" stroke-width="1.7"/>
+    <path d="M375.0,122.0 Q374.1,174.0 375.0,226.0" stroke-width="1.8"/>
+    <path d="M375.0,104.0 Q371.8,112.8 370.5,122.0" stroke-width="1.6"/>
+    <path d="M375.0,104.0 Q378.2,112.8 379.5,122.0" stroke-width="1.6"/>
+  </g>
+</svg></div></div>
+<div class="pb"></div>
+<h2>4. Магический квадрат</h2>
+<p class="step">Надо расставить числа от 1 до 9, каждое по одному разу, так, чтобы суммы по трём строкам, трём столбцам и обеим диагоналям были одинаковые.</p>
+<div class="p"><span class="n">1</span> Попробуй просто так. Дай себе пять минут.</div>
+<div class="grids"><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg></div>
+<p class="step">Подбирать можно долго. Выясним вместо этого, что про этот квадрат известно <b>заранее</b> — ещё до того, как в нём что-то написано.</p>
+<div class="p"><span class="n">2</span> Сложи все числа от 1 до 9. Получилось <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Сколько в квадрате строк? <u class="s">&nbsp;</u> &nbsp; Три строки вместе — это все девять чисел, и суммы у них равны. Значит одна строка даёт <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">4</span> Назови любые три разных числа от 1 до 9 с суммой 15. <u class="m">&nbsp;</u> &nbsp; Ещё одну тройку. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">5</span> Теперь выпиши <b>все</b> такие тройки. Сначала те, где есть 1. Потом где есть 2. И так дальше — тогда ни одной не потеряешь. Строчек нарочно больше, чем нужно.</div>
+<div class="lines"><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span></div>
+<div class="p"><span class="n">6</span> Сколько троек получилось всего? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">7</span> Посмотри на пустой квадрат. Сколько линий проходит через <b>центральную</b> клетку — считай строку, столбец и обе диагонали? <u class="s">&nbsp;</u> &nbsp; Через <b>угловую</b>? <u class="s">&nbsp;</u> &nbsp; Через <b>середину стороны</b>? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> Число, которое стоит в клетке, входит во все тройки, идущие по её линиям. Посчитай по своему списку, в скольких тройках встречается каждое число.</div>
+<table class="t"><tr><th>число</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><th>в скольких тройках</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+<div class="p"><span class="n">9</span> Может ли <b>9</b> стоять в центре? Сравни две цифры: сколько линий через центр и в скольких тройках есть 9. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">10</span> Какое число встречается чаще всех? <u class="s">&nbsp;</u> &nbsp; Значит в центре стоит <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">11</span> Какие числа встречаются ровно в трёх тройках? <u class="m">&nbsp;</u> &nbsp; Значит их место — <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">12</span> Теперь заполни квадрат. Подбирать почти не придётся.</div>
+<div class="grids"><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg></div>
+<div class="pb"></div>
+<h2>5. Разрежь квадрат</h2>
+<p class="step">Разрезаем на <b>две одинаковые</b> части. Резать можно только по линиям клеток. Способы, которые получаются друг из друга поворотом или отражением, считаются одним и тем же.</p>
+<div class="p"><span class="n">1</span> Начнём с маленького. Разрежь квадрат 2×2 на две одинаковые части. Сколько получилось разных способов? <u class="s">&nbsp;</u></div>
+<div class="grids"><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg></div>
+<div class="p"><span class="n">2</span> Теперь квадрат 4×4. Найди сначала <b>два</b> способа — самые простые.</div>
+<div class="grids"><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg></div>
+<div class="p"><span class="n">3</span> Найди ещё четыре. Здесь линия разреза уже не прямая — она может поворачивать.</div>
+<div class="grids"><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg></div>
+<div class="p"><span class="n">4</span> Возьми любой свой способ и отметь на нём середину квадрата. Проходит ли линия разреза через эту точку? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">5</span> Проверь остальные пять. У всех так? <u class="m">&nbsp;</u> &nbsp; Почему иначе быть не может?</div><span class="fill"></span>
+<h2>6. Игра «Пятнадцать»</h2>
+<p class="step">Играют двое. На столе девять карточек с числами от 1 до 9. По очереди берут себе по одной. Выигрывает тот, у кого <b>первого</b> окажутся три карточки с суммой ровно 15. Карточки обратно не кладут.</p>
+<div class="fig"><svg class="cards" viewBox="0 0 466 62" role="img"><title>Девять карточек с числами от одного до девяти</title><g fill="none" stroke="#1f1b17" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="3" width="44" height="56" rx="5"/><rect x="54" y="3" width="44" height="56" rx="5"/><rect x="106" y="3" width="44" height="56" rx="5"/><rect x="158" y="3" width="44" height="56" rx="5"/><rect x="210" y="3" width="44" height="56" rx="5"/><rect x="262" y="3" width="44" height="56" rx="5"/><rect x="314" y="3" width="44" height="56" rx="5"/><rect x="366" y="3" width="44" height="56" rx="5"/><rect x="418" y="3" width="44" height="56" rx="5"/></g><g font-family="Georgia,serif" font-size="26" fill="#1f1b17" text-anchor="middle"><text x="24" y="41">1</text><text x="76" y="41">2</text><text x="128" y="41">3</text><text x="180" y="41">4</text><text x="232" y="41">5</text><text x="284" y="41">6</text><text x="336" y="41">7</text><text x="388" y="41">8</text><text x="440" y="41">9</text></g></svg></div>
+<div class="p"><span class="n">1</span> Прежде чем играть: у тебя на руках 2 и 6. Какую карточку надо взять, чтобы выиграть? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">2</span> У соперника 4 и 9. Какую карточку нельзя ему отдавать? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Сыграйте четыре партии. Кто выиграл: <u class="s">&nbsp;</u> <u class="s">&nbsp;</u> <u class="s">&nbsp;</u> <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">4</span> Список троек с суммой 15 у тебя уже есть — в задаче 4. Заново считать не надо. Сколько их? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">5</span> Сколько в магическом квадрате строк, столбцов и диагоналей, если считать всё вместе? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">6</span> Возьми заполненный квадрат и найди в нём тройку 4 + 9 + 2. Как она там лежит? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">7</span> Найди так же тройку 2 + 7 + 6 и тройку 1 + 5 + 9. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> Значит «взять карточку с числом» — это то же самое, что…</div><span class="fill"></span>
+<div class="p"><span class="n">9</span> В какую игру вы играли на самом деле? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">10</span> Сыграйте ещё партию, глядя на квадрат. Изменилось ли, как ты выбираешь?</div><span class="fill"></span>
+</body></html>

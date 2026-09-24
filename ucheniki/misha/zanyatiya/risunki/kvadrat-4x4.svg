@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg>

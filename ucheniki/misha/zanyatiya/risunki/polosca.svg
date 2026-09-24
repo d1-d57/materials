@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" role="img">
+  <title>Полоска бумаги, разрезанная на три части</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30.0,62.0 Q145.0,62.3 260.0,61.4 Q375.0,61.2 490.0,62.0 Q489.6,82.0 490.0,102.0 Q375.0,102.9 260.0,102.6 Q145.0,101.8 30.0,102.0 Q30.4,82.0 30.0,62.0 Z" fill="#f2ede4"/>
+    <path d="M122.0,58.0 Q121.3,85.0 122.0,112.0" stroke-width="1.6" stroke-dasharray="5 5"/>
+    <path d="M214.0,58.0 Q213.3,85.0 214.0,112.0" stroke-width="1.6" stroke-dasharray="5 5"/>
+    <circle cx="199" cy="11" r="7.5" stroke-width="1.7"/>
+    <circle cx="229" cy="11" r="7.5" stroke-width="1.7"/>
+    <path d="M203.5,17.2 Q206.6,23.5 211.0,29.0" stroke-width="1.7"/>
+    <path d="M224.5,17.2 Q221.4,23.5 217.0,29.0" stroke-width="1.7"/>
+    <path d="M210.5,28.0 Q215.9,43.2 228.0,54.0 Q220.2,40.3 210.5,28.0 Z" stroke-width="1.6"/>
+    <path d="M217.5,28.0 Q212.1,43.2 200.0,54.0 Q207.8,40.3 217.5,28.0 Z" stroke-width="1.6"/>
+    <circle cx="214.0" cy="34.0" r="1.7" fill="#1f1b17" stroke="none"/>
+  </g>
+</svg>

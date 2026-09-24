@@ -1,0 +1,35 @@
+── TRAPS ──
+  ✓ zdorovaya (banner + section mark)      : exit 0
+  ✓ bez-pometki (file named, no mark)      : exit 1
+  ✓ banner-nizhe-10 (banner at line 12)    : exit 1
+  ✓ pometka-daleko (mark 25 lines away)    : exit 1
+  ✓ granica posle-8 (named 5, mark 13)     : exit 0
+  ✓ granica posle-9 (named 5, mark 14)     : exit 1
+  ✓ granica do-8 (named 20, mark 12)     : exit 0
+  ✓ granica do-9 (named 20, mark 11)     : exit 1
+  ✓ chuzhoj-id (banner of another entry)   : exit 1
+  ✓ bez-zagolovka (coverage 0 of 1)        : exit 1
+  ✓ prodolzhenie (bare :N inherits a.md)   : exit 1
+  ✓ neraz (unresolved is reported, green)  : exit 0
+  ✓ neraz --strogo (unresolved is red)     : exit 1
+  ✓ vse-neraz (saw no file)                : exit 1
+  ✓ bez-bloka (entry without addresses)    : exit 0
+  ✓ pustoj (0 entries, said out loud)      : exit 0
+  ✓ koren (file at the root, not beside)   : exit 0
+  ✓ misuse: no argument                    : exit 2
+  ✓ misuse: no such file                   : exit 2
+  ✓ misuse: unknown flag                   : exit 2
+  ✓ misuse: negative window                : exit 2
+── MUTANTS (the tool is broken on purpose; the trap must change its exit code) ──
+  ✓ M1  banner window 10 -> 40            : original exit 1, mutant exit 0 - caught by trap banner-nizhe-10
+  ✓ M2  banner needs no entry id          : original exit 1, mutant exit 0 - caught by trap chuzhoj-id
+  ✓ M3  default section window 8 -> 200   : original exit 1, mutant exit 0 - caught by trap pometka-daleko
+  ✓ M4  coverage zero/partial is not red  : original exit 1, mutant exit 0 - caught by trap bez-zagolovka
+  ✓ M5  unmarked counted as marked        : original exit 1, mutant exit 0 - caught by trap bez-pometki
+  ✓ M6  bare :N does not inherit the file : original exit 1, mutant exit 0 - caught by trap prodolzhenie
+  ✓ M7  --strogo ignores unresolved       : original exit 1, mutant exit 0 - caught by trap neraz
+  ✓ M8  'saw no file' is not red          : original exit 1, mutant exit 0 - caught by trap vse-neraz
+  ✓ M9  root resolution step removed      : original exit 0, mutant exit 1 - caught by trap koren
+  ✓ M10 window after the line +3          : original exit 1, mutant exit 0 - caught by trap g-posle-9
+  ✓ M11 window before the line +3         : original exit 1, mutant exit 0 - caught by trap g-do-9
+── TOTAL: mutants caught 11 of 11 · everything as expected
