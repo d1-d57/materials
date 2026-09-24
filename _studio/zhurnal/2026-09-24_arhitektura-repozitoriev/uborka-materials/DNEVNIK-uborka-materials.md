@@ -13,3 +13,9 @@ Running log of the night pass. Entry form: date — step; done · next · surpri
 - **next:** step B (materials branches).
 - **surprise:** ssh to GitHub fails ("Host key verification failed"), so origin uses https (gh credential helper) instead of git@github.com. carsharing_archive had a stale empty `.git/index.lock` from 2026-07-10 — moved aside to /tmp/uborka/, not deleted. Old-path mentions are text only (docs and code comments), none is a live import; listed in actions.tsv notes, not edited.
 - **question:** carsharing_archive_backup_2026-06-25 → VOPROSY-UTRO.md.
+
+## 2026-09-25 01:47 — step B (materials branches)
+- **done:** `fetch --prune`; Y_b = 24. B2: 12 branches pushed (not on origin or ahead), 0 parked, 0 failed (`/tmp/uborka/branches.py … --push`). B3: `branches-materials.tsv` 24 rows = Y_b; proposals: already-in-trunk 21, clean-merge-candidate 2 (zahod/perepis-diska, this pass's own branch), conflict 1 (main). B4: 4 branches closed with tombstones (arka/katalog-kursa, zahod/graf-korpusa, zahod/konsolidaciya-korpusa, zahod/proba-podnyat-volnu-samotest); 2 refused by the tool (tombstone already exists) → skip; 13 in-trunk branches are still checked out in worktrees → B4 again after step C. B5: 0 merges.
+- **next:** step C (materials-wt worktrees), then B4 for the branches it frees, then step F verifier.
+- **surprise:** any B5 merge into `arka/mat-kostyak` would move HEAD of the main checkout (it has that branch checked out), which step D forbids — so in `materials` B5 cannot happen tonight at all. `zahod/perepis-diska` also fails (b) on the letter.
+- **question:** 2 lines added to VOPROSY-UTRO.md.
