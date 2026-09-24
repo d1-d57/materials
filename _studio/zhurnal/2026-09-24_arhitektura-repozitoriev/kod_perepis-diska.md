@@ -337,6 +337,27 @@ Written 2026-09-25 before the census starts.
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. The §0.1 self-check `git --no-optional-locks branch --no-merged claude/bold-faraday-wq09ql | grep -c 'zahod/'` can never be red in a worktree made by the starter message. The base exists there only as `origin/claude/bold-faraday-wq09ql`, so `git` fails with `fatal: malformed object name`, and `grep -c` still prints `0`. The generator should emit the `origin/…` form, or check that the ref exists. The same false green hits Г3 and step 4 of the WARNING block.
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` (the brief's "check first" command) refuses with rc=1 ("under the area not a single file"). The arc folder exists only on the brief's branch, not where the tool reads. As a result, the header's 0/0/0/0 for this pass could not be re-verified.
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+3. For pass 2, rules. (a) `R4-dup` is unreachable under "first match wins": every repository is R1/R2 (clean) or R3 (dirty) before R4 is ever tested. Also, no two main checkouts share an origin. It is better as a flag column. (b) Proposed new codes, with counts in `perepis/REPORT.md` §2: `R9-wt-done` (110 worktrees), `R10-wt-residue` (44), `R0-holder` (4), `R0-empty` (2).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+   ДОСТАВЛЕНО: нет
+4. Tracked files that tools rewrite in every worktree make finished worktrees look dirty:
+   - `disciplina`: `_generator/tools/.hook-otkaz-chuzhoj-volny.log`, `doma/zahody/MODELI-ZHIVOST.json`, `.githooks/zamer-skillov.json`;
+   - `spetsmat-bot`: `docs/index.html`;
+   - `materials`: `teorkat-vvedenie/L2/dist/index.html`.
+
+   Under the strict rules they add 44 worktrees to R3-park. Candidates: untrack plus `.gitignore`, or write the files outside the tree. This will repeat on every new worktree, so it is a pass, not a queue entry (see ОТЧЁТ, repeatability).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+   ДОСТАВЛЕНО: нет
+5. Three repositories have no remote and exist only on this disk: `london-avgust-2026`, `materials/carshering/carsharing_archive` (nested inside `materials`) and `spetsmat/spetsmat_db`. Also, `materials/kurs leto 2026/6-lending/lendingi` has its own `.git` at depth 6, outside the census predicate. Where these four should live is the owner's decision.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
