@@ -189,6 +189,9 @@
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_perepis-diska.md`** (перепись Mac только на чтение: все git-репозитории и не-git папки, их состояние и даты — основа воронки подметания и летописи проектов)
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/DNEVNIK.md`** (running log of the census pass)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/REPORT.md`** (Disk census report of the owner's Mac (pass kod_perepis-diska): funnel counters, chronology, duplicates, surprises)
 
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
