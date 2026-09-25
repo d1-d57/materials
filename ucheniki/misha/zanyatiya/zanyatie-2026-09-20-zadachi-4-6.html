@@ -1,0 +1,152 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Задачи 4–6</title><style>@page { size: A4; margin: 10mm 12mm; }
+body { font-family:"PT Serif",Georgia,serif; color:#1f1b17; background:#fff; font-size:11.5pt; line-height:1.4; max-width:192mm; margin:0 auto; }
+h1 { font-size:16pt; margin:0 0 1mm; }
+.lead { font-size:11pt; color:#1f1b17; margin:0 0 5mm; }
+h2 { font-size:13pt; color:#9e2b25; margin:6mm 0 2mm; border-bottom:1px solid #d8d0c4; padding-bottom:.8mm; }
+.usl { font-size:12.5pt; color:#1f1b17; line-height:1.42; margin:0 0 3mm; }
+.hint { font-size:10.5pt; color:#3a6b5f; font-style:italic; margin:0 0 2.5mm 7.5mm; }
+.p { margin:0 0 1.8mm; padding-left:7.5mm; text-indent:-7.5mm; font-size:11.5pt; }
+.p .n { display:inline-block; width:7.5mm; text-indent:0; color:#9a9188; font-size:10pt; }
+.sub { margin:0 0 1.8mm 15mm; font-size:11.5pt; }
+.fill { display:block; border-bottom:1.1px solid #1f1b17; height:5.4mm; margin:.6mm 0 2.2mm 7.5mm; }
+.fill.half { width:calc(50% - 7.5mm); display:inline-block; vertical-align:bottom; }
+u.s { display:inline-block; min-width:10mm; border-bottom:1.1px solid #1f1b17; text-decoration:none; }
+u.m { display:inline-block; min-width:24mm; border-bottom:1.1px solid #1f1b17; text-decoration:none; }
+table.t { border-collapse:collapse; margin:2.5mm 0 3mm 7.5mm; font-size:11pt; }
+table.t td, table.t th { border:1px solid #1f1b17; padding:1.5mm 2.5mm; text-align:center; min-width:11mm; height:7.5mm; }
+table.t th { background:#f2ede4; font-weight:normal; font-size:10pt; text-align:right; min-width:36mm; padding-right:3mm; }
+.fig { text-align:center; margin:3mm 0; }
+svg.cards { width:150mm; } svg.g4 { width:46mm; } svg.g3 { width:40mm; } svg.g2 { width:23mm; }
+.grids { display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-end; gap:5mm 7mm; margin:3.5mm 0; }
+.lines { margin:2mm 0 3mm 7.5mm; }
+.lines .fill { margin:0 0 3.6mm 0; }
+.pb { page-break-before:always; }</style></head><body>
+<h1>Задачи 4, 5 и 6</h1>
+<h2>4. Магический квадрат</h2>
+<p class="usl">В квадрате 3×3 надо расставить числа от 1 до 9, каждое ровно по одному разу, так, чтобы суммы по трём строкам, трём столбцам и обеим диагоналям были одинаковые.</p>
+<div class="p"><span class="n">1</span> Попробуй просто так. Дай себе пять минут.</div>
+<div class="grids"><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg></div>
+<p class="usl">Подбирать можно долго. Выясним лучше, что про этот квадрат известно <b>заранее</b> — ещё до того, как в нём что-то написано.</p>
+<div class="p"><span class="n">2</span> Сложи все числа от 1 до 9. Получилось <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Сколько в квадрате строк? <u class="s">&nbsp;</u> &nbsp; Три строки вместе — это все девять чисел, и суммы у них равны. Значит одна строка даёт <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">4</span> Назови три разных числа от 1 до 9 с суммой 15. <u class="m">&nbsp;</u> &nbsp; Ещё одну такую тройку. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">5</span> Теперь выпиши <b>все</b> такие тройки. Сначала те, где есть 1. Потом где есть 2. И так дальше — тогда ни одной не потеряешь. Строчек нарочно больше, чем нужно.</div>
+<div class="lines"><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span><span class="fill half"></span>&nbsp;&nbsp;<span class="fill half"></span></div>
+<div class="p"><span class="n">6</span> Сколько троек получилось всего? <u class="s">&nbsp;</u></div>
+<p class="usl">Теперь посмотрим на пустой квадрат. Линия — это строка, столбец или диагональ.</p>
+<div class="p"><span class="n">7</span> Проведи карандашом все линии, которые проходят через <b>центральную</b> клетку. Сколько их? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> Теперь через <b>угловую</b> клетку. Сколько? <u class="s">&nbsp;</u> &nbsp; Через <b>середину стороны</b>? <u class="s">&nbsp;</u></div>
+<div class="grids"><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg></div>
+<p class="usl">Соединим два наблюдения. Если число стоит в клетке, то каждая линия через эту клетку даёт тройку с суммой 15. Значит <b>сколько линий через клетку — во стольких тройках должно быть её число</b>.</p>
+<div class="p"><span class="n">9</span> Возьми число <b>5</b>. Найди в своём списке все тройки, где оно есть. Сколько их? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">10</span> Возьми число <b>9</b>. Сколько троек с девяткой? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">11</span> Может ли <b>9</b> стоять в центре? Сравни ответ пункта 10 с ответом пункта 7.</div><span class="fill"></span>
+<div class="p"><span class="n">12</span> Может ли <b>9</b> стоять в углу? Сравни с ответом пункта 8. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">13</span> Заполни таблицу — по своему списку троек.</div>
+<table class="t"><tr><th>число</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td></tr><tr><th>в скольких тройках</th><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>
+<div class="p"><span class="n">14</span> Какое число встречается чаще всех? <u class="s">&nbsp;</u> &nbsp; Значит в центре стоит <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">15</span> Выпиши числа, которые встречаются ровно в трёх тройках. <u class="m">&nbsp;</u> &nbsp; Их место — <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">16</span> Оставшиеся числа встречаются в двух тройках. Их место — <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">17</span> Теперь заполни квадрат. Начни с центра, потом углы.</div>
+<div class="grids"><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg><svg class="g3" viewBox="0 0 184 184" role="img"><title>Пустой квадрат три на три</title><g fill="none" stroke="#a89f94" stroke-linecap="round"><rect x="2" y="2" width="180" height="180" stroke-width="2.4"/><line x1="62" y1="2" x2="62" y2="182" stroke-width="1.5"/><line x1="122" y1="2" x2="122" y2="182" stroke-width="1.5"/><line x1="2" y1="62" x2="182" y2="62" stroke-width="1.5"/><line x1="2" y1="122" x2="182" y2="122" stroke-width="1.5"/></g></svg></div>
+<div class="pb"></div>
+<h2>5. Разрежь квадрат</h2>
+<p class="usl">Квадрат надо разрезать на <b>две одинаковые</b> части. Резать можно только по линиям клеток. Два способа считаются одинаковыми, если один получается из другого поворотом или отражением.</p>
+<div class="p"><span class="n">1</span> Начнём с маленького: квадрат 2×2. Нарисуй все способы, какие найдёшь.</div>
+<div class="grids"><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg><svg class="g2" viewBox="0 0 94 94" role="img"><title>Пустая сетка два на два</title><g fill="none" stroke="#1f1b17" stroke-linecap="round"><rect x="2" y="2" width="90" height="90" stroke-width="2.4"/><line x1="47" y1="2" x2="47" y2="92" stroke-width="1.5"/><line x1="2" y1="47" x2="92" y2="47" stroke-width="1.5"/></g></svg></div>
+<div class="p"><span class="n">2</span> Сколько разных способов получилось? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> Теперь квадрат 4×4. Найди два самых простых способа.</div>
+<div class="grids"><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg></div>
+<p class="hint">Дальше линия разреза уже не прямая — она может поворачивать. Главное, чтобы части совпали, если одну из них повернуть.</p>
+<div class="p"><span class="n">4</span> Найди ещё четыре способа.</div>
+<div class="grids"><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg><svg class="g4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img">
+  <title>Пустая сетка четыре на четыре</title>
+  <g fill="none" stroke="#1f1b17" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48,4 L48,180" stroke-width="1.5"/>
+    <path d="M4,48 L180,48" stroke-width="1.5"/>
+    <path d="M92,4 L92,180" stroke-width="1.5"/>
+    <path d="M4,92 L180,92" stroke-width="1.5"/>
+    <path d="M136,4 L136,180" stroke-width="1.5"/>
+    <path d="M4,136 L180,136" stroke-width="1.5"/>
+    <path d="M4,4 L180,4 L180,180 L4,180 Z" stroke-width="2.4"/>
+  </g>
+</svg></div>
+<div class="p"><span class="n">5</span> Поставь точку ровно в середине квадрата — там, где сходятся четыре центральные клетки. Проходит ли через неё линия разреза в первом твоём способе? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">6</span> Проверь остальные пять. У всех так? <u class="m">&nbsp;</u></div>
+<p class="usl">Две части одинаковые, значит одну можно повернуть и положить на другую.</p>
+<div class="p"><span class="n">7</span> Возьми любой свой способ и закрась одну часть. Куда переедет закрашенная часть, если повернуть квадрат на пол-оборота? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> А куда при этом переедет сама середина квадрата? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">9</span> Объясни, почему линия разреза обязана проходить через середину.</div><span class="fill"></span><span class="fill"></span>
+<div class="pb"></div>
+<h2>6. Игра «Пятнадцать»</h2>
+<p class="usl">Играют двое. На столе девять карточек с числами от 1 до 9. Игроки по очереди берут себе по одной карточке. Выигрывает тот, у кого <b>первого</b> окажутся три карточки с суммой ровно 15. Взятые карточки обратно не кладут.</p>
+<div class="fig"><svg class="cards" viewBox="0 0 466 62" role="img"><title>Девять карточек с числами от одного до девяти</title><g fill="none" stroke="#1f1b17" stroke-width="1.6" stroke-linecap="round"><rect x="2" y="3" width="44" height="56" rx="5"/><rect x="54" y="3" width="44" height="56" rx="5"/><rect x="106" y="3" width="44" height="56" rx="5"/><rect x="158" y="3" width="44" height="56" rx="5"/><rect x="210" y="3" width="44" height="56" rx="5"/><rect x="262" y="3" width="44" height="56" rx="5"/><rect x="314" y="3" width="44" height="56" rx="5"/><rect x="366" y="3" width="44" height="56" rx="5"/><rect x="418" y="3" width="44" height="56" rx="5"/></g><g font-family="Georgia,serif" font-size="26" fill="#1f1b17" text-anchor="middle"><text x="24" y="41">1</text><text x="76" y="41">2</text><text x="128" y="41">3</text><text x="180" y="41">4</text><text x="232" y="41">5</text><text x="284" y="41">6</text><text x="336" y="41">7</text><text x="388" y="41">8</text><text x="440" y="41">9</text></g></svg></div>
+<div class="p"><span class="n">1</span> У тебя на руках 2 и 6. Какую карточку взять, чтобы сразу выиграть? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">2</span> У соперника 4 и 9. Какую карточку нельзя ему оставлять? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">3</span> У тебя 3 и 5. Сколько есть карточек, которыми можно выиграть? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">4</span> Сыграйте четыре партии. Кто выиграл: <u class="s">&nbsp;</u> <u class="s">&nbsp;</u> <u class="s">&nbsp;</u> <u class="s">&nbsp;</u></div>
+<p class="usl">Теперь положи рядом свой заполненный магический квадрат из задачи 4.</p>
+<div class="p"><span class="n">5</span> Сколько троек с суммой 15 в твоём списке? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">6</span> Сколько в квадрате строк, столбцов и диагоналей вместе? <u class="s">&nbsp;</u></div>
+<div class="p"><span class="n">7</span> Найди в квадрате тройку 4 + 9 + 2. Как она там лежит? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">8</span> Найди тройку 2 + 7 + 6. <u class="m">&nbsp;</u> &nbsp; И тройку 1 + 5 + 9. <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">9</span> Получается, каждой тройке отвечает своя линия квадрата, и наоборот. Значит взять карточку с числом — то же самое, что…</div><span class="fill"></span>
+<div class="p"><span class="n">10</span> А собрать тройку с суммой 15 — то же самое, что…</div><span class="fill"></span>
+<div class="p"><span class="n">11</span> В какую игру вы играли на самом деле? <u class="m">&nbsp;</u></div>
+<div class="p"><span class="n">12</span> Сыграйте ещё партию, глядя на квадрат. Изменилось ли, как ты выбираешь?</div><span class="fill"></span>
+</body></html>

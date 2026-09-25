@@ -1,0 +1,11 @@
+ИМЯ_РЕПО materials
+КОРНИ_ПО_УМОЛЧАНИЮ False
+roots ['teoriya-kategoriy', 'teorkat-vvedenie', '_studio', 'obzory', '_illustracii', '_meta']
+ПРИЧИНА ''
+корень_пути _studio/docs/x.md -> Корень(имя='_studio', карта='_studio/docs/KARTA.md', журнал='_studio/zhurnal', ворота=True, регистрация='обязательна', рама=False)
+корень_пути kurs-puti-i-volny/ZAMYSEL.md -> None
+корень_пути obzory/a/b.md -> Корень(имя='obzory', карта='_studio/docs/KARTA.md', журнал=None, ворота=False, регистрация='добровольна', рама=False)
+корень_пути _illustracii/x.md -> Корень(имя='_illustracii', карта='_illustracii/docs/KARTA.md', журнал='_illustracii/zhurnal', ворота=True, регистрация='обязательна', рама=False)
+корень_пути teorkat-vvedenie/a.md -> Корень(имя='teorkat-vvedenie', карта=None, журнал=None, ворота=True, регистрация='нет', рама=True)
+корень_пути diskmat-57/x.md -> None
+корень_пути README.md -> None

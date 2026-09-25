@@ -1,0 +1,62 @@
+### 0.1 cmd1
+0
+### zones
+✅ зона kurs-puti-i-volny: работа доехала в git, вне git ничего нет.
+❌ зона _studio/zhurnal/2026-08-24_obzor-funkciya-putey: вне git 1 путей (рождено и никогда не ставилось — 0, правлено и не закоммичено — 1).
+❌ зона diskmat-57/2026-08-18_logika-goda-7: вне git 5 путей (рождено и никогда не ставилось — 5, правлено и не закоммичено — 0).
+### (a)
+48
+покрыто 48 из 48
+### piles
+       8
+       4
+### status counts
+{'живой': 32, 'порождаемый': 9, 'устарел': 5, 'отменён': 2}
+### stat per commit
+-- 110b6acf
+110b6acf P1: save analyst's accumulated work before the course catalogue task (canonical paths replace 51 dead sandbox paths in 6 files, arc diary, PL
+
+ _studio/docs/KARTA.md                              |   3 +
+ .../HANDOFF-2026-08-25.md                          |   4 +-
+ .../HANDOFF-2026-09-20.md                          |   8 +-
+ .../2026-08-24_obzor-funkciya-putey/SESSIYA.md     | 115 ++++++
+ .../kod_katalog-kursa.md                           | 419 +++++++++++++++++++++
+ .../kod_pasporta-korpusa.md                        |  30 +-
+ .../kod_svod-i-skelet.md                           |  40 +-
+ .../2026-08-18_logika-goda-7/HANDOFF-2026-09-14.md |   8 +-
+ diskmat-57/2026-08-18_logika-goda-7/SESSIYA.md     |   2 +-
+ kurs-puti-i-volny/PLAN-goda-krupno.md              | 242 ++++++++++++
+ 10 files changed, 825 insertions(+), 46 deletions(-)
+-- e40500a7
+e40500a7 P3: mark cancelled course files named by ZAMYSEL entries - 7 whole-file archive banners, 4 section cancellation marks
+
+ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/NAVIGATOR.md      | 2 ++
+ kurs-puti-i-volny/HREBET-kursa.md                                 | 2 ++
+ kurs-puti-i-volny/KOSTYAK.md                                      | 2 ++
+ kurs-puti-i-volny/README.md                                       | 2 ++
+ kurs-puti-i-volny/REESTR-reserchey.md                             | 2 ++
+ kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md                  | 2 ++
+ kurs-puti-i-volny/otchety/RAZBOR-i-perestroyka.md                 | 2 ++
+ kurs-puti-i-volny/plan/src/plan.md                                | 2 ++
+ kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md                    | 2 ++
+ kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md | 2 ++
+ kurs-puti-i-volny/zahody/ZAHOD-sverka-koncepcii.md                | 2 ++
+ 11 files changed, 22 insertions(+)
+-- c8a67242
+c8a67242 P2: extend the existing course text registry with a catalogue of all 48 course files - status from the closed list plus a verified file:line 
+
+ kurs-puti-i-volny/SBORKA/REESTR-tekstov.md | 72 ++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+-- 4abb58f3
+4abb58f3 P3 fix: two banner addresses pointed at pre-insertion line numbers of REESTR-reserchey.md (35 -> 37, 43 -> 45)
+
+ kurs-puti-i-volny/otchety/RASSKAZ-dva-sposoba.md                  | 2 +-
+ kurs-puti-i-volny/zahody/ZAHOD-okruzhnost-i-nepreryvnyj-predel.md | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+-- 2e513d86
+2e513d86 P2/P3 fix after independent verification: two executor briefs standing on the cancelled circle frame are 'устарел', not 'отменё�
+
+ kurs-puti-i-volny/SBORKA/REESTR-tekstov.md         | 6 +++---
+ kurs-puti-i-volny/zahody/ZAHOD-formy-yakobi.md     | 2 +-
+ kurs-puti-i-volny/zahody/ZAHOD-sverka-koncepcii.md | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)

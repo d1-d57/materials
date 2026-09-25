@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Игра «Пятнадцать» и магический квадрат</title>
+<style>
+  :root{
+    --bumaga:#faf7f1;
+    --tekst:#1f1b17;
+    --akcent:#9e2b25;
+    --zelen:#3a6b5f;
+    --liniya:#d8d0c4;
+    --tiho:#6f665c;
+    --karta:#fffdf8;
+    --pole:#f2ede4;
+  }
+  *{ box-sizing:border-box }
+
+  html,body{ background:var(--bumaga); }
+  body{
+    margin:0;
+    color:var(--tekst);
+    font-family:Georgia,"PT Serif",serif;
+    font-size:17px;
+    line-height:1.55;
+  }
+  .list{ max-width:960px; margin:0 auto; padding:40px 28px 80px }
+
+  h1{ font-size:30px; font-weight:normal; margin:0 0 6px }
+  .podzag{ color:var(--tiho); font-style:italic; margin:0 0 34px }
+  h2{
+    font-size:22px; font-weight:normal; color:var(--akcent);
+    margin:0 0 14px; padding-bottom:7px; border-bottom:1px solid var(--liniya);
+  }
+  section{ margin:0 0 54px }
+  section:last-of-type{ margin-bottom:0 }
+  p{ margin:0 0 12px }
+  .pravila{ color:var(--tiho) }
+  .melko{ font-size:14px; color:var(--tiho) }
+
+  /* ——— кнопки ——— */
+  button{
+    font-family:inherit; font-size:16px; color:var(--tekst);
+    background:var(--karta); border:1px solid #b9b0a4; border-radius:6px;
+    padding:10px 18px; cursor:pointer;
+    transition:border-color .15s linear, color .15s linear, background-color .15s linear;
+  }
+  button:hover:not(:disabled){ border-color:var(--akcent); color:var(--akcent) }
+  button:disabled{ color:#a8a096; border-color:var(--liniya); cursor:default }
+  button.glavnaya{ border-color:var(--akcent); color:var(--akcent) }
+  button.glavnaya:hover:not(:disabled){ background:#f7efe9 }
+  .knopki{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:18px 0 0 }
+
+  /* ——— карточки игры ——— */
+  .ryad{ display:flex; gap:10px; flex-wrap:wrap; margin:6px 0 0 }
+  .karta{
+    width:72px; height:92px; padding:0;
+    font-family:inherit; font-size:34px; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--karta); color:var(--tekst);
+    border:1px solid var(--liniya); border-radius:7px;
+    transition:border-color .15s linear, background-color .15s linear, color .15s linear;
+  }
+  button.karta{ cursor:pointer }
+  button.karta:hover:not(:disabled){ border-color:var(--akcent); color:var(--akcent); background:#fdf7f3 }
+  .karta.pusto{ border-style:dashed; border-color:#e6e0d6; background:transparent; visibility:visible }
+  .karta.pusto span{ visibility:hidden }
+  .karta.pobeda{ border:2px solid var(--zelen); color:var(--zelen); background:#eef3f1 }
+
+  .zony{ display:flex; gap:26px; flex-wrap:wrap; margin:26px 0 0 }
+  /* 418px = пять карточек по 72 + четыре зазора по 10 + отступы лотка:
+     пятая карточка человека не должна переносить лоток на вторую строку */
+  .zona{ flex:1 1 418px; min-width:418px }
+  .zona h3{
+    font-size:15px; font-weight:normal; color:var(--tiho);
+    margin:0 0 8px; letter-spacing:.03em; text-transform:uppercase;
+  }
+  .lotok{
+    display:flex; gap:10px; flex-wrap:wrap;
+    min-height:112px; padding:9px;
+    border:1px solid var(--liniya); border-radius:7px; background:var(--pole);
+  }
+
+  .status{
+    min-height:58px; margin:24px 0 0; padding:12px 16px;
+    border-left:3px solid var(--liniya); background:var(--pole); border-radius:0 6px 6px 0;
+  }
+  .status.est-itog{ border-left-color:var(--zelen) }
+  .schet{ margin:16px 0 0; color:var(--tiho) }
+  .schet b{ color:var(--tekst); font-weight:normal }
+
+  /* ——— магический квадрат ——— */
+  .kvadrat{
+    display:grid; grid-template-columns:repeat(5,auto);
+    gap:10px; justify-content:start; align-items:center; margin:18px 0 0;
+  }
+  .kletka{
+    width:76px; height:76px; padding:0;
+    font-family:inherit; font-size:34px; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--karta); color:var(--tekst);
+    border:1px solid #b9b0a4; border-radius:7px; cursor:pointer;
+    transition:border-color .15s linear, background-color .15s linear;
+  }
+  .kletka:hover{ border-color:var(--akcent) }
+  .kletka.vybrana{ outline:2px solid var(--akcent); outline-offset:-2px; background:#fdf7f3 }
+  .summa{
+    min-width:60px; height:42px; padding:0 10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px; color:var(--tiho);
+    background:var(--pole); border:1px solid var(--liniya); border-radius:6px;
+    transition:color .15s linear, border-color .15s linear, background-color .15s linear;
+  }
+  .summa.pyatnadcat{ color:var(--zelen); border-color:var(--zelen); background:#eef3f1 }
+  .dyrka{ width:60px; height:1px }
+
+  .palitra{ display:flex; gap:10px; flex-wrap:wrap; margin:22px 0 0; align-items:center }
+  .cifra{
+    width:56px; height:56px; padding:0;
+    font-family:inherit; font-size:24px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .cifra.zanyata{ color:#a8a096; background:var(--pole) }
+  .steret{ height:56px }
+
+  .otvet{ min-height:52px; margin:20px 0 0 }
+  .otvet div{ margin:0 0 4px }
+  .otvet .horosho{ color:var(--zelen) }
+
+  /* ——— связь ——— */
+  .svyaz{ margin:14px 0 0 }
+  .svyaz-verh{ display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start }
+  .troiki{ list-style:none; margin:0; padding:0; columns:2; column-gap:34px; min-width:300px }
+  .troiki li{ margin:0 0 6px; break-inside:avoid }
+  .troiki .gde{ color:var(--tiho) }
+  .vyvod{ margin:22px 0 0; padding:14px 18px; background:var(--pole); border-left:3px solid var(--zelen); border-radius:0 6px 6px 0 }
+</style>
+</head>
+<body>
+<div class="list">
+
+  <h1>Игра «Пятнадцать» и магический квадрат</h1>
+  <p class="podzag">Занятие 20 сентября. Сначала играем, потом заполняем квадрат, и только в самом конце открываем, что это одно и то же.</p>
+
+  <!-- ======================= 1. ИГРА ======================= -->
+  <section id="igra">
+    <h2>Игра «Пятнадцать»</h2>
+    <p class="pravila">
+      На столе девять карточек с числами от 1 до 9. Вы с компьютером по очереди берёте себе по одной карточке,
+      первый ход твой. Выигрывает тот, у кого первого окажутся три карточки с суммой ровно 15.
+      Карточки не возвращаются. Если все девять разобраны и тройки с суммой 15 нет ни у кого — ничья.
+    </p>
+
+    <div class="ryad" id="stol"></div>
+
+    <div class="zony">
+      <div class="zona">
+        <h3>Мои карточки</h3>
+        <div class="lotok" id="lotok-moi"></div>
+      </div>
+      <div class="zona">
+        <h3>Карточки компьютера</h3>
+        <div class="lotok" id="lotok-komp"></div>
+      </div>
+    </div>
+
+    <p class="status" id="status"></p>
+
+    <div class="knopki">
+      <button type="button" class="glavnaya" id="knopka-zanovo">Сыграть ещё</button>
+    </div>
+
+    <p class="schet" id="schet"></p>
+    <p class="melko">Карточку можно взять мышкой или просто нажать на клавиатуре цифру от 1 до 9.</p>
+  </section>
+
+  <!-- ======================= 2. КВАДРАТ ======================= -->
+  <section id="kvadrat-blok">
+    <h2>Магический квадрат 3×3</h2>
+    <p class="pravila">
+      Расставь числа от 1 до 9, каждое по одному разу, так, чтобы суммы по трём строкам, трём столбцам
+      и обеим диагоналям были одинаковые. Выбери клетку и нажми цифру — мышкой или на клавиатуре.
+    </p>
+
+    <div class="kvadrat" id="setka"></div>
+    <p class="melko" id="kv-poyasnenie">
+      Справа — суммы строк, снизу — суммы столбцов, в углах — суммы двух диагоналей.
+      Сумма считается по заполненным клеткам; зелёной становится только целая линия из трёх чисел с суммой 15.
+    </p>
+
+    <div class="palitra" id="palitra"></div>
+
+    <div class="knopki">
+      <button type="button" class="glavnaya" id="knopka-proverit">Проверить</button>
+      <button type="button" id="knopka-ochistit">Очистить</button>
+      <button type="button" id="knopka-podskazka">Показать подсказку</button>
+    </div>
+
+    <div class="otvet" id="kv-otvet"></div>
+  </section>
+
+  <!-- ======================= 3. СВЯЗЬ ======================= -->
+  <section id="svyaz-blok">
+    <h2>Что общего</h2>
+    <p class="pravila">Нажимай только после того, как поиграл в «Пятнадцать» и собрал квадрат.</p>
+    <div class="knopki">
+      <button type="button" class="glavnaya" id="knopka-svyaz">Показать связь</button>
+    </div>
+    <div class="svyaz" id="svyaz-vyvod"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- общее: все тройки разных чисел 1…9 с суммой 15 ---------- */
+  var TROIKI = [];
+  for (var a = 1; a <= 9; a++)
+    for (var b = a + 1; b <= 9; b++)
+      for (var c = b + 1; c <= 9; c++)
+        if (a + b + c === 15) TROIKI.push([a, b, c]);
+
+  var KVADRAT = [2, 7, 6, 9, 5, 1, 4, 3, 8];
+
+  function soderzhit(nabor, x) { return nabor.indexOf(x) !== -1; }
+
+  function najtiTroiku(nabor) {
+    for (var i = 0; i < TROIKI.length; i++) {
+      var t = TROIKI[i];
+      if (soderzhit(nabor, t[0]) && soderzhit(nabor, t[1]) && soderzhit(nabor, t[2])) return t;
+    }
+    return null;
+  }
+
+  /* =========================================================
+     БЛОК 1. Игра «Пятнадцать»
+     ========================================================= */
+  var stolEl = document.getElementById('stol');
+  var lotokMoiEl = document.getElementById('lotok-moi');
+  var lotokKompEl = document.getElementById('lotok-komp');
+  var statusEl = document.getElementById('status');
+  var schetEl = document.getElementById('schet');
+  var knopkaZanovo = document.getElementById('knopka-zanovo');
+
+  var stol, moi, komp, konec, pobeditel, pobTroika, zanyato;
+  var schet = { chelovek: 0, komp: 0, nichya: 0 };
+
+  function novayaPartiya() {
+    stol = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    moi = [];
+    komp = [];
+    konec = false;
+    pobeditel = null;
+    pobTroika = null;
+    zanyato = false;
+    narisovatIgru('Твой ход. Возьми любую карточку.');
+  }
+
+  function kartaEl(n, vzyata, podsvetit) {
+    var el;
+    if (vzyata) {
+      el = document.createElement('div');
+      el.className = 'karta' + (podsvetit ? ' pobeda' : '');
+    } else {
+      el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'karta';
+      el.addEventListener('click', function () { hodCheloveka(n); });
+    }
+    var s = document.createElement('span');
+    s.textContent = String(n);
+    el.appendChild(s);
+    return el;
+  }
+
+  function pustoyEl() {
+    var el = document.createElement('div');
+    el.className = 'karta pusto';
+    var s = document.createElement('span');
+    s.textContent = '0';
+    el.appendChild(s);
+    return el;
+  }
+
+  function narisovatIgru(tekst) {
+    stolEl.textContent = '';
+    for (var n = 1; n <= 9; n++) {
+      if (soderzhit(stol, n) && !konec) stolEl.appendChild(kartaEl(n, false, false));
+      else if (soderzhit(stol, n)) stolEl.appendChild(kartaEl(n, true, false));
+      else stolEl.appendChild(pustoyEl());
+    }
+
+    lotokMoiEl.textContent = '';
+    for (var i = 0; i < moi.length; i++) {
+      var p1 = (pobeditel === 'chelovek' && pobTroika && soderzhit(pobTroika, moi[i]));
+      lotokMoiEl.appendChild(kartaEl(moi[i], true, p1));
+    }
+
+    lotokKompEl.textContent = '';
+    for (var j = 0; j < komp.length; j++) {
+      var p2 = (pobeditel === 'komp' && pobTroika && soderzhit(pobTroika, komp[j]));
+      lotokKompEl.appendChild(kartaEl(komp[j], true, p2));
+    }
+
+    statusEl.textContent = tekst;
+    statusEl.className = 'status' + (konec ? ' est-itog' : '');
+
+    schetEl.innerHTML = 'Счёт: ты — <b>' + schet.chelovek + '</b>, компьютер — <b>' + schet.komp +
+      '</b>, ничьих — <b>' + schet.nichya + '</b>.';
+  }
+
+  function vzyat(kto, n) {
+    stol.splice(stol.indexOf(n), 1);
+    (kto === 'chelovek' ? moi : komp).push(n);
+    (kto === 'chelovek' ? moi : komp).sort(function (x, y) { return x - y; });
+  }
+
+  function itogPosleHoda(kto) {
+    var nabor = (kto === 'chelovek' ? moi : komp);
+    var t = najtiTroiku(nabor);
+    if (t) {
+      konec = true;
+      pobeditel = kto;
+      pobTroika = t;
+      schet[kto === 'chelovek' ? 'chelovek' : 'komp']++;
+      var summa = t[0] + ' + ' + t[1] + ' + ' + t[2] + ' = 15';
+      return (kto === 'chelovek')
+        ? 'Ты выиграл. Твоя тройка: ' + summa + '.'
+        : 'Выиграл компьютер. Его тройка: ' + summa + '.';
+    }
+    if (stol.length === 0) {
+      konec = true;
+      pobeditel = 'nichya';
+      schet.nichya++;
+      return 'Ничья: все девять карточек разобраны, тройки с суммой 15 нет ни у кого.';
+    }
+    return null;
+  }
+
+  function hodCheloveka(n) {
+    if (konec || zanyato || !soderzhit(stol, n)) return;
+    /* снимаем выбор клетки квадрата, чтобы цифры с клавиатуры шли в игру */
+    if (vybrana >= 0) { vybrana = -1; narisovatKvadrat(); }
+    zanyato = true;
+    vzyat('chelovek', n);
+    var itog = itogPosleHoda('chelovek');
+    if (itog) { zanyato = false; narisovatIgru(itog); return; }
+    narisovatIgru('Компьютер думает…');
+    window.setTimeout(hodKompa, 450);
+  }
+
+  /* карточка, которой ход завершается победой набора */
+  function vyigryshnaya(nabor) {
+    for (var i = 0; i < stol.length; i++) {
+      if (najtiTroiku(nabor.concat([stol[i]]))) return stol[i];
+    }
+    return null;
+  }
+
+  /* разумные ходы: карточки, которые ещё могут войти в тройку компьютера */
+  function razumnye(nabor) {
+    var res = [];
+    for (var i = 0; i < stol.length; i++) {
+      var c = stol[i];
+      for (var k = 0; k < TROIKI.length; k++) {
+        var t = TROIKI[k];
+        if (!soderzhit(t, c)) continue;
+        var zhivaya = true;
+        for (var m = 0; m < 3; m++) {
+          var x = t[m];
+          if (x !== c && !soderzhit(nabor, x) && !soderzhit(stol, x)) { zhivaya = false; break; }
+        }
+        if (zhivaya) { res.push(c); break; }
+      }
+    }
+    return res.length ? res : stol.slice();
+  }
+
+  function hodKompa() {
+    if (konec) { zanyato = false; return; }
+    var hod = vyigryshnaya(komp);              /* 1. выиграть, если можно */
+    if (hod === null) hod = vyigryshnaya(moi); /* 2. иначе не дать выиграть сопернику */
+    if (hod === null) {                        /* 3. иначе случайно из разумных */
+      var sp = razumnye(komp);
+      hod = sp[Math.floor(Math.random() * sp.length)];
+    }
+    vzyat('komp', hod);
+    var itog = itogPosleHoda('komp');
+    zanyato = false;
+    narisovatIgru(itog ? itog : 'Компьютер взял ' + hod + '. Твой ход.');
+  }
+
+  knopkaZanovo.addEventListener('click', novayaPartiya);
+
+  /* =========================================================
+     БЛОК 2. Магический квадрат
+     ========================================================= */
+  var setkaEl = document.getElementById('setka');
+  var palitraEl = document.getElementById('palitra');
+  var otvetEl = document.getElementById('kv-otvet');
+
+  var kletki = [null, null, null, null, null, null, null, null, null];
+  var vybrana = -1;
+  var podskazok = 0;
+
+  var LINII = [
+    { ind: [0, 1, 2], imya: 'сумма первой строки', kratko: 'первая строка' },
+    { ind: [3, 4, 5], imya: 'сумма второй строки', kratko: 'вторая строка' },
+    { ind: [6, 7, 8], imya: 'сумма третьей строки', kratko: 'третья строка' },
+    { ind: [0, 3, 6], imya: 'сумма первого столбца', kratko: 'первый столбец' },
+    { ind: [1, 4, 7], imya: 'сумма второго столбца', kratko: 'второй столбец' },
+    { ind: [2, 5, 8], imya: 'сумма третьего столбца', kratko: 'третий столбец' },
+    { ind: [0, 4, 8], imya: 'сумма диагонали сверху слева вниз направо', kratko: 'диагональ сверху слева' },
+    { ind: [2, 4, 6], imya: 'сумма диагонали сверху справа вниз налево', kratko: 'диагональ сверху справа' }
+  ];
+
+  var kletkaEls = [];
+  var summaEls = {};
+
+  function sdelatSummu(klyuch, imya) {
+    var el = document.createElement('div');
+    el.className = 'summa';
+    el.title = imya;
+    summaEls[klyuch] = el;
+    return el;
+  }
+
+  function dyrka() {
+    var el = document.createElement('div');
+    el.className = 'dyrka';
+    return el;
+  }
+
+  function postroitSetku() {
+    setkaEl.textContent = '';
+
+    /* строка 1: угловая сумма диагонали ↘ и пустоты */
+    setkaEl.appendChild(sdelatSummu('d1', LINII[6].imya));
+    for (var i = 0; i < 4; i++) setkaEl.appendChild(dyrka());
+
+    /* строки 2–4: пустота, три клетки, сумма строки */
+    for (var r = 0; r < 3; r++) {
+      setkaEl.appendChild(dyrka());
+      for (var c = 0; c < 3; c++) {
+        (function (ind) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'kletka';
+          b.addEventListener('click', function () {
+            vybrana = (vybrana === ind) ? -1 : ind;
+            narisovatKvadrat();
+          });
+          kletkaEls[ind] = b;
+          setkaEl.appendChild(b);
+        })(r * 3 + c);
+      }
+      setkaEl.appendChild(sdelatSummu('s' + r, LINII[r].imya));
+    }
+
+    /* строка 5: угловая сумма диагонали ↗, три суммы столбцов, пустота */
+    setkaEl.appendChild(sdelatSummu('d2', LINII[7].imya));
+    for (var k = 0; k < 3; k++) setkaEl.appendChild(sdelatSummu('st' + k, LINII[3 + k].imya));
+    setkaEl.appendChild(dyrka());
+  }
+
+  function postroitPalitru() {
+    palitraEl.textContent = '';
+    for (var n = 1; n <= 9; n++) {
+      (function (chislo) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'cifra';
+        b.textContent = String(chislo);
+        b.addEventListener('click', function () { postavit(chislo); });
+        palitraEl.appendChild(b);
+      })(n);
+    }
+    var st = document.createElement('button');
+    st.type = 'button';
+    st.className = 'steret';
+    st.textContent = 'Стереть клетку';
+    st.addEventListener('click', function () { postavit(null); });
+    palitraEl.appendChild(st);
+  }
+
+  function pervayaPustaya() {
+    for (var i = 0; i < 9; i++) if (kletki[i] === null) return i;
+    return -1;
+  }
+
+  /* следующая пустая клетка после ind, по кругу */
+  function sleduyushchayaPustaya(ind) {
+    for (var k = 1; k <= 9; k++) {
+      var i = (ind + k) % 9;
+      if (kletki[i] === null) return i;
+    }
+    return -1;
+  }
+
+  function postavit(chislo) {
+    var ind = (vybrana >= 0) ? vybrana : pervayaPustaya();
+    if (ind < 0) return;
+    kletki[ind] = chislo;
+    if (chislo === null) vybrana = ind;
+    else vybrana = sleduyushchayaPustaya(ind);
+    otvetEl.textContent = '';
+    narisovatKvadrat();
+  }
+
+  function summaLinii(ind) {
+    var s = 0, polnaya = true, pusto = true;
+    for (var i = 0; i < 3; i++) {
+      var v = kletki[ind[i]];
+      if (v === null) polnaya = false;
+      else { s += v; pusto = false; }
+    }
+    return { summa: s, polnaya: polnaya, pusto: pusto };
+  }
+
+  function obnovitSummu(el, ind) {
+    var r = summaLinii(ind);
+    el.textContent = r.pusto ? '—' : String(r.summa);
+    el.className = 'summa' + (r.polnaya && r.summa === 15 ? ' pyatnadcat' : '');
+  }
+
+  function narisovatKvadrat() {
+    for (var i = 0; i < 9; i++) {
+      kletkaEls[i].textContent = (kletki[i] === null) ? '' : String(kletki[i]);
+      kletkaEls[i].className = 'kletka' + (vybrana === i ? ' vybrana' : '');
+    }
+    for (var r = 0; r < 3; r++) obnovitSummu(summaEls['s' + r], LINII[r].ind);
+    for (var c = 0; c < 3; c++) obnovitSummu(summaEls['st' + c], LINII[3 + c].ind);
+    obnovitSummu(summaEls.d1, LINII[6].ind);
+    obnovitSummu(summaEls.d2, LINII[7].ind);
+
+    var deti = palitraEl.getElementsByClassName('cifra');
+    for (var k = 0; k < deti.length; k++) {
+      var chislo = k + 1;
+      var stoit = false;
+      for (var m = 0; m < 9; m++) if (kletki[m] === chislo) stoit = true;
+      deti[k].className = 'cifra' + (stoit ? ' zanyata' : '');
+    }
+  }
+
+  function skazat(tekst, horosho) {
+    var d = document.createElement('div');
+    d.textContent = tekst;
+    if (horosho) d.className = 'horosho';
+    otvetEl.appendChild(d);
+  }
+
+  document.getElementById('knopka-proverit').addEventListener('click', function () {
+    otvetEl.textContent = '';
+    var pustyh = 0, i;
+    for (i = 0; i < 9; i++) if (kletki[i] === null) pustyh++;
+    if (pustyh > 0) {
+      skazat('Заполнены ещё не все клетки: пустых осталось ' + pustyh + '.', false);
+      return;
+    }
+
+    var horoshih = 0;
+    for (i = 0; i < 8; i++) if (summaLinii(LINII[i].ind).summa === 15) horoshih++;
+    if (horoshih === 8) skazat('Все восемь сумм равны 15.', true);
+    else skazat('Равны 15 пока ' + horoshih + ' суммы из восьми.', false);
+
+    var skolko = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    for (i = 0; i < 9; i++) skolko[kletki[i]]++;
+    var lishnie = [], propushchennye = [];
+    for (i = 1; i <= 9; i++) {
+      if (skolko[i] === 0) propushchennye.push(i);
+      if (skolko[i] > 1) lishnie.push(i);
+    }
+    if (!lishnie.length && !propushchennye.length) {
+      skazat('Каждое число от 1 до 9 стоит ровно один раз.', true);
+    } else {
+      var chasti = [];
+      if (lishnie.length) chasti.push('повторяются: ' + lishnie.join(', '));
+      if (propushchennye.length) chasti.push('совсем нет: ' + propushchennye.join(', '));
+      skazat('Числа пока не все разные — ' + chasti.join('; ') + '.', false);
+    }
+
+    if (horoshih === 8 && !lishnie.length && !propushchennye.length) {
+      skazat('Это магический квадрат. Готово.', true);
+    }
+  });
+
+  document.getElementById('knopka-ochistit').addEventListener('click', function () {
+    for (var i = 0; i < 9; i++) kletki[i] = null;
+    vybrana = -1;
+    otvetEl.textContent = '';
+    narisovatKvadrat();
+  });
+
+  var knopkaPodskazka = document.getElementById('knopka-podskazka');
+  knopkaPodskazka.addEventListener('click', function () {
+    otvetEl.textContent = '';
+    podskazok++;
+    if (podskazok === 1) {
+      skazat('Подсказка: сложи все числа от 1 до 9 и раздели на 3.', false);
+    } else if (podskazok === 2) {
+      skazat('Подсказка: посчитай, в скольких тройках с суммой 15 встречается каждое число.', false);
+      knopkaPodskazka.disabled = true;
+    }
+  });
+
+  /* ---------- клавиатура: цифры в квадрат, если клетка выбрана, иначе в игру ---------- */
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var cel = e.target && e.target.tagName;
+    if (cel === 'INPUT' || cel === 'TEXTAREA') return;
+
+    if ((e.key === 'Backspace' || e.key === 'Delete') && vybrana >= 0) {
+      e.preventDefault();
+      postavit(null);
+      return;
+    }
+    if (/^[1-9]$/.test(e.key)) {
+      var n = parseInt(e.key, 10);
+      if (vybrana >= 0) { e.preventDefault(); postavit(n); }
+      else if (!konec && !zanyato) { e.preventDefault(); hodCheloveka(n); }
+    }
+  });
+
+  /* =========================================================
+     БЛОК 3. Что общего
+     ========================================================= */
+  function liniiKvadrata() {
+    var spisok = [];
+    for (var i = 0; i < LINII.length; i++) {
+      var ind = LINII[i].ind;
+      var chisla = [KVADRAT[ind[0]], KVADRAT[ind[1]], KVADRAT[ind[2]]];
+      spisok.push({ chisla: chisla, gde: LINII[i].kratko, summa: chisla[0] + chisla[1] + chisla[2] });
+    }
+    return spisok;
+  }
+
+  function risunokKvadrata() {
+    var poz = [60, 150, 240];
+    var s = '<svg width="320" height="320" viewBox="0 0 300 300" role="img" ' +
+            'aria-label="Магический квадрат 2 7 6 / 9 5 1 / 4 3 8 с восемью линиями">';
+    s += '<rect x="15" y="15" width="270" height="270" fill="none" stroke="#d8d0c4" stroke-width="1"/>';
+    var i;
+    for (i = 0; i < 3; i++) {
+      s += '<line x1="30" y1="' + poz[i] + '" x2="270" y2="' + poz[i] +
+           '" stroke="#3a6b5f" stroke-width="2" opacity="0.5"/>';
+      s += '<line x1="' + poz[i] + '" y1="30" x2="' + poz[i] +
+           '" y2="270" stroke="#3a6b5f" stroke-width="2" opacity="0.5"/>';
+    }
+    s += '<line x1="30" y1="30" x2="270" y2="270" stroke="#3a6b5f" stroke-width="2" opacity="0.5"/>';
+    s += '<line x1="270" y1="30" x2="30" y2="270" stroke="#3a6b5f" stroke-width="2" opacity="0.5"/>';
+    for (i = 0; i < 9; i++) {
+      var x = poz[i % 3], y = poz[Math.floor(i / 3)];
+      s += '<circle cx="' + x + '" cy="' + y + '" r="27" fill="#faf7f1"/>';
+      s += '<text x="' + x + '" y="' + (y + 11) + '" text-anchor="middle" ' +
+           'font-family="Georgia, serif" font-size="32" fill="#1f1b17">' + KVADRAT[i] + '</text>';
+    }
+    s += '</svg>';
+    return s;
+  }
+
+  document.getElementById('knopka-svyaz').addEventListener('click', function () {
+    var vyvod = document.getElementById('svyaz-vyvod');
+    if (vyvod.firstChild) return;
+
+    var spisok = liniiKvadrata();
+    var punkty = '';
+    for (var i = 0; i < spisok.length; i++) {
+      punkty += '<li>' + spisok[i].chisla.join(' + ') + ' = ' + spisok[i].summa +
+                ' <span class="gde">— ' + spisok[i].gde + '</span></li>';
+    }
+
+    var vseSovpali = true;
+    for (var k = 0; k < spisok.length; k++) {
+      var ch = spisok[k].chisla.slice().sort(function (p, q) { return p - q; }).join('');
+      var najdena = false;
+      for (var m = 0; m < TROIKI.length; m++) if (TROIKI[m].join('') === ch) najdena = true;
+      if (!najdena || spisok[k].summa !== 15) vseSovpali = false;
+    }
+
+    var html = '';
+    html += '<div class="svyaz-verh">' + risunokKvadrata() +
+            '<ul class="troiki">' + punkty + '</ul></div>';
+    html += '<p>Троек разных чисел от 1 до 9 с суммой 15 ровно ' + TROIKI.length +
+            ', и линий в этом квадрате тоже ' + spisok.length +
+            ': три строки, три столбца и две диагонали. ' +
+            (vseSovpali
+              ? 'Это одни и те же восемь троек — ни одной лишней, ни одной потерянной.'
+              : 'Проверь список: совпали не все.') + '</p>';
+    html += '<div class="vyvod">Взять карточку в игре «Пятнадцать» — то же самое, что занять клетку этого квадрата. ' +
+            'Собрать тройку с суммой 15 — то же самое, что занять целую линию. ' +
+            'Значит «Пятнадцать» и есть крестики-нолики, только записанные числами.</div>';
+
+    vyvod.innerHTML = html;
+    this.disabled = true;
+  });
+
+  /* ---------- старт ---------- */
+  postroitSetku();
+  postroitPalitru();
+  narisovatKvadrat();
+  novayaPartiya();
+})();
+</script>
+</body>
+</html>
