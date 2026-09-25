@@ -15,3 +15,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** step 2 — classify all 868 branches.
 - **surprise:** `matproekty-179-stranica` (remote `d1-d57/projects`) has only 1 branch, so nothing to clean there; kept in the table for coverage.
 - **question:** none.
+
+## 2026-09-25 11:44 — step 2 + step 6 judgement: classify
+
+- **done:** `/tmp/chistka/step2_classify.py` (tips from `ls-remote`, `merge-base --is-ancestor tip origin/<trunk>`) → `classes.tsv`, 868 rows = 868 in `before.tsv`: merged 631, park 208, unmerged 13, keep-trunk 11, keep-named 5, missing objects 0. Unmerged judged: tag+delete 9 (6 named by the brief + vneshnie-istorii, git-odna-dver, nadzor-zvonit as old and superseded), keep 3 (own branch, vid-blokov-vnedrenie, generator-rychaga), merge 1 (sayt tagging).
+- **next:** step 3 — merge sayt `tagging` into `main`.
+- **surprise:** park count is 208, not 209; disciplina `zahod/git-bez-zamkov` (q3) is already class merged.
+- **question:** none (two keep proposals in VOPROSY 3–4).
