@@ -250,36 +250,16 @@
 
 
 
-**`_studio/zhurnal/2026-09-25_navigaciya/NAVIGATOR.md`** (навигатор арки 2026-09-25_navigaciya (ориентация, читается первым): Навигация по репозиториям: карточка-анкета в корне каждого репозитория, функция-таблица со статистикой, система папок и префиксов, метки GitHub = теги Finder, три состояния (в работе / в архиве / на паузе). Первое звено цепочки «станция и память».)
-
-**`_studio/zhurnal/2026-09-25_navigaciya/PLAN.md`** (план арки 2026-09-25_navigaciya)
 
 
 
 
-**`_studio/zhurnal/2026-09-25_navigaciya/RESERCH.md`** (выжимка ресёрча арки Навигация 25.09 и указатели на полные отчёты)
-
-**`_studio/zhurnal/2026-09-25_navigaciya/SESSIYA.md`** (дневник арки 2026-09-25_navigaciya)
-
-
-**`_studio/zhurnal/2026-09-25_navigaciya/SOSTOYANIE.md`** (состояние арки 2026-09-25_navigaciya — что сделано/осталось, чем измерено, дом разведки)
-
-**`_studio/zhurnal/2026-09-25_navigaciya/TZ.md`** (контракт арки 2026-09-25_navigaciya)
-
-
-**`_studio/zhurnal/2026-09-25_navigaciya/UROKI-FABRIKE.md`** (уроки арки 2026-09-25_navigaciya с ценой, вход закрывающей сессии)
 
 
 
 
 **`_studio/zhurnal/2026-09-25_navigaciya/kod_istoriya-sessij.md`** (разово изучить историю сессий Cowork и Claude Code: таблица-анкета, фасетная типология, затем удаление сырья по команде аналитика)
 
-**`_studio/zhurnal/2026-09-25_navigaciya/reserch/kartochki-sostoyaniya-papki.md`** (ресёрч: карточки репозиториев, состояния, системы папок, синонимы, черновик полей — с источниками)
-
-
-**`_studio/zhurnal/2026-09-25_navigaciya/reserch/marshrutizator-sessij.md`** (ресёрч: маршрутизатор сессий в трёх средах Claude, история сессий — с источниками)
-
-**`_studio/zhurnal/2026-09-25_navigaciya/reserch/metki-github-finder.md`** (ресёрч: GitHub topics, Finder-теги, Google Drive — с источниками)
 
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
 **`docs/pochemu-i-videnie/`:** `pochemu-i-videnie/RESHENIYA.md`.
