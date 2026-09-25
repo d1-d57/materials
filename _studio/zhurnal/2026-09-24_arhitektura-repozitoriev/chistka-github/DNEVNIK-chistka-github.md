@@ -134,3 +134,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** final verifier run with criteria 2/4/5, then report and merge.
 - **surprise:** `~/.Trash` is not listable from this session (macOS privacy), but `mv` into it works.
 - **question:** none.
+
+## 2026-09-25 12:29 — FINAL: done, merged, verified
+
+- **done:** `REPORT.md` written. `zahod/chistka-github` merged into `arka/mat-kostyak` with `git_zona.py merge` (fast-forward 1acaf9ac..0d7e97bd, no conflicts) and pushed. Criterion 7: `git merge-base --is-ancestor origin/zahod/chistka-github origin/arka/mat-kostyak` rc=0. Post-check from the main folder: `git_zona.py check --zone` ✅ on both zone paths; `grep -c chistka-github/REPORT.md _studio/docs/KARTA.md` → 1. Outside git: 0 in each of the 11 repositories touched (`status --porcelain | wc -l`). Unpushed on own branch: 0. Unmerged vs `origin/claude/bold-faraday-wq09ql`: + arka/mat-kostyak main * zahod/chistka-github — `main` (published site, never merged by a pass) and `zahod/chistka-github` (this pass; it is in `arka/mat-kostyak`, and the analyst's branch picks it up on its next merge from the trunk). This entry is merged the same way right after. Background watcher stopped; it never fired (no ПРАВКА).
+- **next:** acceptance by the analyst; the owner decides VOPROSY 3–4.
+- **surprise:** none beyond VOPROSY 1–2.
+- **question:** none.

@@ -482,3 +482,5 @@ MODEL: besplatnaya
 - `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
+
+**WARNING-block result (after the merge):** commits: outside git 0 in all 11 repos touched · merge: `git_zona.py merge` of `zahod/chistka-github` into `arka/mat-kostyak`, fast-forward 1acaf9ac..0d7e97bd, pushed · post-check from `../../materials`: `git_zona.py check --zone` ✅ ×2, criterion 7 rc=0 — **green** · cleanup: unmerged vs `origin/claude/bold-faraday-wq09ql` = `main` (the site, must not be merged) + `zahod/chistka-github` (merged into the trunk; it grew Г3 from 1 to 2 and is legitimate) · push: `git log --oneline @{u}.. | wc -l` → 0 on the own branch.
