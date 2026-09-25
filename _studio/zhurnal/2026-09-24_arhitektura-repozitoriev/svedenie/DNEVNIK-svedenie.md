@@ -58,3 +58,9 @@ vanya 0
 - **next:** step 3, the 114 kept worktrees.
 - **surprise:** in `materials` the door `vlit-v-osnovnuyu` targets `main` = the published site; it refused on the zone check, nothing merged, `main` = origin/main = c9257e84 unchanged. I used `git_zona.py merge` into the current `arka/mat-kostyak` instead → VOPROSY #14. Four conflict branches were judged by a read-only subagent («выдано 4 позиций из 4 найденных»).
 - **question:** none for the analyst.
+
+## 2026-09-25 10:57 — step 3: kept worktrees
+- **done:** 114 of 114 rows of `kept-worktrees.tsv` have a `drop-worktree` row, verified yes. Method: `mv` to `~/.Trash/svedenie-2026-09-25-worktrees/<repo>-wt/<name>` + `git worktree prune` (12 GB now in the Trash; restore command in each row). Worktrees left: spetsmat-bot 2 (main + `/private/tmp/baseline-759ef40`), disciplina 1, matproekty-179 1. 46 of them held non-ignored changes; each was dropped only after its non-ignored tree equalled its `origin/park/…` snapshot tree → VOPROSY #17.
+- **next:** step 4, default branch of materials.
+- **surprise:** premise of step 3 only partly true (46 dirty, all saved in park). My own slip: I moved `disciplina-wt/` to the Trash although it held a hidden `.logi-volny-10/`; moved it back within a minute, nothing lost → VOPROSY #15.
+- **question:** none.
