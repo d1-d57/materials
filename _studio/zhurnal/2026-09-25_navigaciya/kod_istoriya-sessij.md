@@ -319,6 +319,17 @@ grep -n '<как механизм назван в вызывающем коде>
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+
+1. СТОП 3 decision for step 6. Say «УДАЛИТЬ» and name the scope per UDALENIE.md rows (1 Cowork · 2 outputs/uploads · 3 Code-tab cards · 4 Claude Code · 5 scratch), plus the fate of row 2 (copy out to `~/cowork-fajly/` first, or let it go). The executor can quarantine rows 4 and 5 itself; rows 1 and 3 need Claude Desktop closed, so the owner runs them from Terminal.app.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. Typology v0.2, a repeating class: the model labels math lectures and digests `nauchpop` because briefs call the factory «научно-популярных лекций». Every future relabel will repeat it. Fix: in the prompt and in a post-rule, «научпоп» about a mathematical subject → OBLAST `matematika`; `nauchpop` only for a non-math subject. Separately, STADIYA as a single dominant value should be dropped in favour of `stadii`.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. Factory lesson: 409 of 689 briefs `kod_*.md` in `disciplina` carry an UNFILLED template КОНТЕКСТ («<проект в 1–2 фразы>. Прошлый этап: <состояние>. ЦЕЛЬ: <что закрыть>»). The real task sits only in `## 2. ЗАДАЧА`, and any reader of the brief head (an executor, the next analyst, this analysis) sees no context. ЦЕНА: the first model probe here labelled 36/50 and 39/50 of such sessions wrongly and was thrown away (2 batches ≈170k Haiku tokens, 2 more stopped mid-run). Suggested lever: `check_sborki.py` goes red on a КОНТЕКСТ that still holds the template placeholder.
+   ДОМ: _studio/zhurnal/2026-09-25_navigaciya/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -356,6 +367,7 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 - 2026-09-25 · PROBE FINDING, fixed before the full run: first 2 batches came back 36/50 and 39/50 `kod`. Cause 1: many briefs have an UNFILLED template КОНТЕКСТ («<проект в 1–2 фразы>»), so the model saw no task → extraction now takes `## 2. ЗАДАЧА`. Cause 2: the model read "writes Python" as `kod` for orchestrator/gate briefs → prompt got clarifications derived from the analyst's rules (rules themselves kept verbatim). Probe labels discarded; 2 running batches stopped; batches 00–04 relaunched.
 - 2026-09-25 · model pass in progress: 17 of 35 batches labelled (≤5 Haiku subagents at a time, every answer ended «выдано 50 позиций из 50»); control batch 01 after the fix: orchestrator briefs → `disciplina`, spetsmat site → `kod`+`matematika`. One subagent wrote to a mangled path (literal `*` in dir name) — file moved into place, stray empty dirs removed. Next: batches 17–34, then `llm_svesti` + `sobrat`, fresh blind check.
 - 2026-09-25 · model pass done: 35/35 batches, valid labels 1717 of 1735 (18 title-only sessions left empty by the model in batches 20 and 23 → v0 labels kept); hand fixes (60) keep precedence. Owner-typed now: disciplina 791 · kod 378 · material 276 · issledovanie 199 · organizaciya 91; 621 sessions carry several stages in `stadii`. ⚠ At one moment 6 subagents ran in parallel (limit 5), for a few minutes, while launching the last two batches. Next: fresh blind check on 30 new sessions.
+- 2026-09-25 · fresh blind check (30 new Cowork sessions, 0 overlap with sample 1, same stratification): ZADACHA 22/30 · FORMA 30/30 · STADIYA 11/30 · OBLAST 20/30 → target not reached, no second pass (ПРАВКА 4). TIPOLOGIYA.md v0.1 (66 lines) and UDALENIE.md written. СТОП 3.
 
 ### СТОП 1 — progress report (2026-09-25)
 ПРАВКИ ПРОЧИТАНЫ: none (block «<правок нет>» at start).
@@ -455,6 +467,68 @@ No global caches were touched (`~/.cache/huggingface` and `~/.cache/uv` do not e
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
 **КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+
+
+### СТОП 3 — progress report (2026-09-25)
+ПРАВКИ ПРОЧИТАНЫ: 1, 2, 3, 4.
+
+**ПРАВКА 4, sharpening pass (one pass, as ordered).**
+- Setup: 1735 owner-typed sessions → Haiku, 35 batches of ≤50. Input = title + PROJECT + ≤3 owner messages + brief extract + tools. The analyst's distinction rules are in the prompt verbatim, plus clarifications derived from them after a probe.
+- Probe finding: two cheap defects, fixed before the full run (details in «Ход работы»).
+- Result: valid model labels for 1717 of 1735. 18 title-only sessions were left empty by the model, so they keep v0 labels. The 60 hand fixes keep precedence.
+- Every subagent answer ended «выдано N позиций из M»; batch 23 honestly said «46 из 50».
+- Machine runs (1709) untouched.
+- New column `stadii`: 621 owner sessions carry more than one stage.
+
+**Fresh blind check** (30 new Cowork sessions, 0 overlap with sample 1, same stratification). The answer ended «выдано 30 позиций из 30 найденных».
+
+| axis | agreement | target |
+|---|---|---|
+| ZADACHA | **22 of 30** | ≥24 ❌ |
+| FORMA | **30 of 30** | — |
+| STADIYA (dominant) | **11 of 30** | ≥24 ❌ |
+| OBLAST | **20 of 30** | — |
+| all four | 6 of 30 | — |
+
+**Target not reached. v0.1 stays a draft; no second pass (ПРАВКА 4, point 3).** What the numbers say:
+- ZADACHA improved from 19 to 22. Where the blind labeller was confident, it agrees 11 of 11.
+- OBLAST: 5 of 10 misses are the model's `nauchpop` for math lectures and digests. The briefs say «фабрика научно-популярных лекций», and the lectures are about math. This is a systematic class and it will repeat (see ВОПРОСЫ 2). No patch was applied: a patch fitted to the check sample would be a hidden second pass.
+- STADIYA fell from 18 to 11. The dominant stage of a long session is not a stable quantity: the blind labeller hesitated on 9 of 30. `stadii` shares at least one stage with the blind labels in 22 of 30. TIPOLOGIYA rules 3–4 were therefore rewritten to fire on "stage anywhere in `stadii`", not on the dominant one.
+
+**Criteria:**
+
+| criterion | result |
+|---|---|
+| (a) | 3444 = 3444 ✅ |
+| (b), over the 4 axis columns (ПРАВКА 4, point 4) | 0 ✅ |
+| (v) | 66 ≤ 80 ✅ |
+| (g) | printed for both checks ✅ |
+| (d) | not applicable yet: no «УДАЛИТЬ» |
+
+**Step 5, deletion manifest.** `disciplina: analitika/sessii/UDALENIE.md`. Per source it gives paths, counts and sizes:
+
+| source | count | size |
+|---|---|---|
+| Cowork | 630 cards / 493 dirs | 7.42 GiB |
+| — of which `outputs/` | 15 395 files | 1.33 GiB |
+| — of which `uploads/` | 936 files | 1.07 GiB |
+| Code tab | 640 + 8 cards | 256 MiB |
+| Claude Code | 2605 transcripts / 812 dirs | 3.06 GiB |
+| raw-text scratch | — | ~17 MiB |
+
+`outputs/` and `uploads/` are a separate line with 10 example names each. The manifest also lists what is KEPT in every variant, including **14 `~/.claude/projects/*/memory/` folders**, the current session and live sessions.
+
+It describes the owner's script `clear_cowork_old.sh` (read, not run):
+- it moves Cowork only, by cutoff date, into `~/cowork-karantin-<date>/`;
+- restore = move back;
+- **it quits Claude Desktop first, so this executor, living inside Claude Desktop, cannot run it** — the owner runs it from Terminal.app with cutoff `2026-09-26` to take all 630.
+
+The manifest proposes an order: quarantine everywhere, recount after each step, and the owner empties quarantines as the only irreversible step.
+
+**Commits at СТОП 3:**
+- disciplina: `2e47158aa` (model pass), `1218b0e32` (typology v0.1, check 2, manifest), pushed.
+- materials: this file, commit below.
+- Nothing deleted; raw history untouched.
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=2 · simvolov=34303 · rc=0
