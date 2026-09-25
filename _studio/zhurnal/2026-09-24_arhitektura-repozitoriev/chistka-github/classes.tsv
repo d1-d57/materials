@@ -1,0 +1,869 @@
+repo	branch	class	tip	last_commit	ahead
+materials	arka/katalog-kursa	merged	0c6ec15c348bd48418280a8302e60908ac3a577d	2026-09-19	
+materials	arka/konsolidacia-l1	merged	64fbb0da4746119abe74ba9278bcf69388ee2d4f	2026-07-26	
+materials	arka/mat-kostyak	keep-trunk	1acaf9ac97de1581e58318ede29337e8aee84e94	2026-09-25	
+materials	arka/obzor-funkciya-putey	merged	97541b1f59a281c992b05ab6744fa3191354416b	2026-08-25	
+materials	arka/poisk-listochki	merged	0cd9da881edcc5449cf2be9aaf9c8bbc0fce7178	2026-07-26	
+materials	arka/vneshnie-istorii	unmerged	dc40bfe7bfca40a96acb90fa1dc48b46bab9a30d	2026-07-23	4
+materials	buffon-zahod-01	merged	d9343027973a8ba12e55fe5bbb54bcd13329056b	2026-07-11	
+materials	claude/bold-faraday-wq09ql	keep-named	4491b7e59ca490dcbe338e7fcd345130f2706d9b	2026-09-25	
+materials	fibonacci-l1	merged	66940892729df27b31edd94dfe2b81263386d86b	2026-07-12	
+materials	main	keep-named	c9257e842157572bb6db34f662d3636a08c0baba	2026-09-14	
+materials	park/2026-09-25/materials-main	park	62dda697ab365f111cd9523ba4315c8bef59a44f	2026-09-25	1
+materials	park/2026-09-25/wt-dovodka-solvera	park	086b40017fe924ec9bb125c3a56ddf0f7a288ddd	2026-09-25	1
+materials	park/2026-09-25/wt-kadr-uzor-i-vmeshchenie	park	aef965fd3b13b066628eaa6541d46293da7ea1ae	2026-09-25	1
+materials	park/2026-09-25/wt-modeli	park	eb63638786425f5ac3c846694123441dd2082aa4	2026-09-25	1
+materials	park/2026-09-25/wt-obratnyj-progon	park	74800f3c6af96d836dbb4273275ff9d4ce8c9f84	2026-09-25	1
+materials	park/2026-09-25/wt-obzor-funkciya-putey	park	fd0a86e15f41b08b3048eaf3dfeee4604d45c9ba	2026-09-25	1
+materials	park/2026-09-25/wt-polya-i-uzor	park	254a19642084cd3743cb5a89543a4af1f23d1763	2026-09-25	1
+materials	park/2026-09-25/wt-sajt-cveta-i-setka	park	58e50703d347ab97a1adc1b1b64cf0aad9cc4a52	2026-09-25	1
+materials	park/2026-09-25/wt-sluzhebnye-slajdy	park	0ef8cf44940ebc46dc294f91d938b282524d7442	2026-09-25	1
+materials	park/2026-09-25/wt-solver-v3-dyhanie	park	e867d7da4d3fb3355d08351d0224e128355a0d26	2026-09-25	1
+materials	teorkat-istochniki	merged	38d648b3903df1dc8069e1643bc2404212bf5c9f	2026-07-21	
+materials	zahod/arhitektura-doma	merged	cec488d9f7fee814512feb0a48d2a067a1d0a750	2026-08-15	
+materials	zahod/chistka-github	unmerged	aaeae5426390c94ad7cad1b4f97965bf9a5b23df	2026-09-25	6
+materials	zahod/chistka-hvostov	merged	70c888dd9f4dbb3b2905c2ed63c158cc77f905a7	2026-08-16	
+materials	zahod/dek-paskal-v2	merged	e86f026306bff2b643c7254050cd34b2c8bd98bb	2026-07-28	
+materials	zahod/dobivka-dolgov	merged	8fce8cf5e7f68b1a962d969a75c3b0b68a9ca1fb	2026-08-16	
+materials	zahod/dobivka-spornyh	merged	da9cc7f71f02faa84868b14c2d883e67a478c045	2026-08-14	
+materials	zahod/dolgi-nol	merged	be97b27c822fa51c2fcd07cec08ad9db760b98f2	2026-08-14	
+materials	zahod/dovodka-fazy-intervyu	merged	a0e3e18c1b73087c4dbc7d3a9fee86c9d1137f5c	2026-08-05	
+materials	zahod/dovodka-solvera	merged	c7da6fda858018a795518b6ad93b19457e26064e	2026-08-15	
+materials	zahod/git-kontur	merged	f8f1981687a5ffb8532239659aafc6e0ad38a108	2026-08-14	
+materials	zahod/graf-korpusa	merged	840fd842921d0fa7e63128ab660b16b7d2907de9	2026-09-19	
+materials	zahod/infografika-klassa	merged	0f353d1cb1ac0b3f23c70047829a80a1d7b72ad3	2026-09-18	
+materials	zahod/kadr-uzor-i-vmeshchenie	merged	8db7cd147d0c7861794d6fef115af04c1db3180e	2026-08-15	
+materials	zahod/karta-dokumentov	merged	62664e8e03aebd9203bd05a2f55a83f9a835893e	2026-09-14	
+materials	zahod/koncepcia-goda	merged	797a445c5b7187fb12c94660be8701ac37d40dda	2026-09-14	
+materials	zahod/konflikty	merged	f9cf5f5bf7a3bf12603615498ca1702adea76627	2026-08-14	
+materials	zahod/konsolidaciya-i-git-kontur	merged	4b669c05b60b0681f74be83778905d9b76435687	2026-08-07	
+materials	zahod/konsolidaciya-korpusa	merged	1a8dba131e32e6e7e8bf34b6287f67864cf2ee9f	2026-09-19	
+materials	zahod/lineika-chisla	merged	05877ffb91b1e24268d8cf284c2fcd0b3c51ed32	2026-09-14	
+materials	zahod/lineika-grafy	merged	a99a19600827ced4505734e4a4061497cc468b4f	2026-09-14	
+materials	zahod/lineika-podschety	merged	41de95307e0aa2c8d9f7d4c8a60f9820de7dc706	2026-09-14	
+materials	zahod/mikropravki-chitaemosti	merged	7d4be430ae5b65893e4ff8f77e8ec597ae069724	2026-08-12	
+materials	zahod/modeli-arn	merged	7e55389653e2e9a7ec66b87c7b5c1142e2bd24b7	2026-08-11	
+materials	zahod/nositel	merged	727fac86eab27892be548262b4498ba623efd492	2026-08-13	
+materials	zahod/nositeli-gen	merged	1dcc83953b6f05002369937f4315c1f757f09d9c	2026-08-14	
+materials	zahod/obratnyj-progon	merged	9c24b76505bf1aae199538548f9cdaaf79c5e7fe	2026-08-07	
+materials	zahod/perepis-diska	merged	58efc23383540b954bba53f42480c8886c592d22	2026-09-25	
+materials	zahod/polya-i-uzor	merged	e12fc8575529449093a92f37c42e3d5ef0386b46	2026-08-15	
+materials	zahod/porozhdenie-kartochki	merged	5fd1e08a640b10bb1b73f017984da251e3470faf	2026-08-11	
+materials	zahod/pravki-diktovki	merged	cf663b62fd73d7db4fa38f65e7250f114db0adb4	2026-07-31	
+materials	zahod/proba-podnyat-volnu-samotest	merged	fcaac71df75fa6dad3c0deb265c7025b28fbb1cd	2026-09-19	
+materials	zahod/proba-smeta	merged	f4d6d99895704a0236d386a007f9c4154f0764f5	2026-08-12	
+materials	zahod/reserch-russkie-kruzhki	merged	a95fc3a107b93adafe489cea54282603c60b74a8	2026-09-14	
+materials	zahod/rychagi	merged	f4fe0e9c29a028d94e9aa101fdf937f894fa563b	2026-08-15	
+materials	zahod/rychagi-2	merged	c9753bc0bea1d17966527a7f27d702c1fbb8ee08	2026-08-15	
+materials	zahod/rychagi-3	merged	44e4fee7888175d2c4cd7328700a00e6b3c93b2a	2026-08-15	
+materials	zahod/sajt-cveta-i-setka	merged	2d1a22adefc916a7763aa094a23199349697ff20	2026-09-14	
+materials	zahod/sayt-drakon	merged	5a03519b8eadf6fea8db8262881595bf5a01b0a0	2026-07-31	
+materials	zahod/sceny-iz-blokov	merged	765912aaa08319c36ae79d1e1164cbd78f89011f	2026-08-14	
+materials	zahod/sluzhebnye-slajdy	merged	3e611063a7ad92a789099a5210fba3e285450516	2026-08-15	
+materials	zahod/solver-v3-dyhanie	merged	d5c4e57aafde73122c5afdac04ae3177a205b2bf	2026-08-07	
+materials	zahod/svedenie	merged	681c898f0dbe4246e15b81653241857291d42a2f	2026-09-25	
+materials	zahod/tipologia-slajdov	merged	b81ddb6e668d2ebb94de0c30ab9dd9bb1d9f3737	2026-08-11	
+materials	zahod/uborka-materials	merged	666b4077078fa61434d322d812f1d33c145486de	2026-09-25	
+materials	zahod/uborka-pered-pauzoj	merged	34c9a4eef904515065c17e760ae1142af58ff413	2026-08-15	
+materials	zahod/vid-blokov-issledovanie	merged	b39a8be0552349113d4e5076be01aaadc197a176	2026-08-14	
+materials	zahod/vid-blokov-vnedrenie	unmerged	add14e21950c9a3d5d5904717eecd4208846af73	2026-08-15	1
+materials	zahod/vlit-i-uspokoitsya	merged	e6fd580d13697bf772feb6e02c9abd9c609eee89	2026-08-16	
+materials	zahod/vlitie-i-vitrina-kursa	merged	e21a4bae3f900640726b9c8e5fd2e795e4604cf0	2026-08-16	
+materials	zahod/vyvoz	merged	5f009e6a6d75eaae3f15670339e15f5e2747b1ec	2026-08-10	
+materials	zahod/zakony-v-gejt	merged	e0affeaf93be5470990542a5643871353e6b7bd2	2026-08-12	
+materials	zahod/zamer-blokov-l2	merged	8a57459765a76b8081413bc4a4b658e06867209c	2026-08-11	
+materials	zahod/zapusk-samodostatochen	merged	54ee0d20da9a753cfd1c5290f1ae9dc1ebda6542	2026-08-11	
+materials	zahod/zayavki-podklyuchenie	merged	a26dba19e39cb4d10360402e3b05ae6d93090d20	2026-08-11	
+materials	zahod/zayavki-yadro	merged	915bb08109aa2eb571b9c2f2ce52fb9a15d41d28	2026-08-11	
+disciplina	main	keep-trunk	fc4661ba199d7f9852087532dffe2d11fa5fef1f	2026-09-25	
+disciplina	maks	merged	985947519d26b116e258f09fcc31d7f6f3396ead	2026-08-24	
+disciplina	maks-koren-ot-maksa	merged	81ece5ec772a15f46e68af3595ce368c1507812a	2026-08-23	
+disciplina	park/2026-09-25/disciplina-main	park	173c0783ff910d23b1d7493460a4dc8666dc2ef8	2026-09-25	1
+disciplina	park/2026-09-25/wt-avariynyj-kommit	park	af9911ddce3be1345527d7b8f48dfdebc598e705	2026-09-25	1
+disciplina	park/2026-09-25/wt-baza-i-srez-pri-podyome	park	caf270464bdd1d1e3e3fa0ea6144e7f9803a7576	2026-09-25	1
+disciplina	park/2026-09-25/wt-chasovoj-ne-podnimaet-zakrytuyu	park	740cf3b98b95691629cba88faa79c7b1549641ce	2026-09-25	1
+disciplina	park/2026-09-25/wt-chasovoj-ne-umiraet-molcha	park	501d0c6ef5140ddcdabe995f41f0ffc3a9a5970d	2026-09-25	1
+disciplina	park/2026-09-25/wt-chasovoj-zhurnal-volny	park	55ef1222bea8d4de604e487880955750aa1737c0	2026-09-25	1
+disciplina	park/2026-09-25/wt-diagnoz-odnoj-komandoj	park	c5d492e95d666d23a0fd9d0e43a07aca3e8ba8c0	2026-09-25	1
+disciplina	park/2026-09-25/wt-diagnoz-orkestratora	park	06c19d5bc13468cf7f889b2dd9391135d6270c3e	2026-09-25	1
+disciplina	park/2026-09-25/wt-dirizher-lozhnyj-uspeh-retry-i-vremya	park	0aeec065963196191fc31782a760397a60129fff	2026-09-25	1
+disciplina	park/2026-09-25/wt-dirizher-po-zameru	park	4ba244d96401767bde622c4175d4489e67fb9c3b	2026-09-25	1
+disciplina	park/2026-09-25/wt-dirizher-sostoyanie-volny-storozh-spasenie-dobor	park	49b001ba16edb4db784a33fffc56928ccd4b01ea	2026-09-25	1
+disciplina	park/2026-09-25/wt-dobor-s-mesta	park	f6fcad4e1b620a01fe8d1fe691a116d9f3b9a747	2026-09-25	6
+disciplina	park/2026-09-25/wt-dolg-zakrytyj-delom-vozvrashchaetsya-v-dom	park	6e9d4269a4bb1a0f66faa1b17bf1031ff0e21cc6	2026-09-25	1
+disciplina	park/2026-09-25/wt-dolgi-orkestratora-ishod	park	5ede67e075324a5f9cb5507b322ffb043491ad00	2026-09-25	1
+disciplina	park/2026-09-25/wt-dolgi-orkestratora-peresud	park	819b3d4d9d99ba3b5e457249e244a2de113317f1	2026-09-25	1
+disciplina	park/2026-09-25/wt-dopolnenie-kak-zapis	park	d6341c67fc4745650a3d6b384dcc26da2506273f	2026-09-25	1
+disciplina	park/2026-09-25/wt-dver-nahodki	park	99c781b933d29d0d5fa80f54abba03466b1cb1f6	2026-09-25	1
+disciplina	park/2026-09-25/wt-dver-verdikta-incidenta	park	bd670db601426e451af4316a46980bed9a3fa01d	2026-09-25	1
+disciplina	park/2026-09-25/wt-etap-20-i-perenos	park	530b2705cf3420a729e3097e0820f896b73c5fc9	2026-09-25	1
+disciplina	park/2026-09-25/wt-gejt-postroeno-ne-podklyucheno	park	c1f65deb2e66703e67f77d1051aa98d65b848956	2026-09-25	1
+disciplina	park/2026-09-25/wt-gejt-sborki-v-generator	park	1d4a2b0120212563ff0fe5099bea5f38da160f58	2026-09-25	1
+disciplina	park/2026-09-25/wt-generator-pravila	park	d3147e3dac21a33f88d002fc33abf0c989b429ea	2026-09-25	1
+disciplina	park/2026-09-25/wt-generator-rychaga	park	1b808af3ead6776e8e6a2fb17dec8773ea777249	2026-09-25	2
+disciplina	park/2026-09-25/wt-git-bez-zamkov	park	de24609feda973bee887e3cf29f0bde250758c05	2026-09-25	1
+disciplina	park/2026-09-25/wt-git-zona-zona-shire-kontrakta	park	4f85e78c8509c2ef9ce8e499e9e0fd605218ac59	2026-09-25	3
+disciplina	park/2026-09-25/wt-gromkij-otkaz-podlozhka	park	b354ff5567474b64cc5589fea860e53d158eef8f	2026-09-25	1
+disciplina	park/2026-09-25/wt-huk-obryv-api	park	41564aa7d3b95034bae462af1e004ac439947296	2026-09-25	1
+disciplina	park/2026-09-25/wt-huk-serdce-avto	park	71bf618adb55d5d46114efda64a5a40ca282185e	2026-09-25	1
+disciplina	park/2026-09-25/wt-huk-start-sessii	park	349c7dbd8d0a6ea66ea893b535f7b39d59b63c0e	2026-09-25	1
+disciplina	park/2026-09-25/wt-huk-stop-golovy	park	78e976501d4aae190969968e18b0691f59fd14fa	2026-09-25	1
+disciplina	park/2026-09-25/wt-huk-zapret-udaleniya	park	cd29fd0d5db17a4736b10a9e424b5a73ccaff6c6	2026-09-25	1
+disciplina	park/2026-09-25/wt-huki-karkas	park	63d23119fd48d3ce27cdf46cca66297c906aecdd	2026-09-25	1
+disciplina	park/2026-09-25/wt-hvosty-vynosa	park	efa030f4ab104db3bdd931e3f91ba42c71073615	2026-09-25	1
+disciplina	park/2026-09-25/wt-izmerit-karantin	park	b79c03202c7385a6a258499d7c69dddc76f695dd	2026-09-25	1
+disciplina	park/2026-09-25/wt-kakie-fikstury	park	94a9ab80c8ca9b6efee8f74dfb71919386cda854	2026-09-25	1
+disciplina	park/2026-09-25/wt-kanaly-razvedka-sud-pochinka	park	bc32572359a438bf56745e3e662f9d9a301c474b	2026-09-25	1
+disciplina	park/2026-09-25/wt-karta-gejtov-odnoj-komandoj	park	600310a84a287a5743c927fd00dfa7a972e176f3	2026-09-25	1
+disciplina	park/2026-09-25/wt-karta-mashiny-v2	park	1212d85386b2a00e2f5214129b37744371ed5b2a	2026-09-25	1
+disciplina	park/2026-09-25/wt-klassy-incidentov-2	park	70eaeee898a91644bf7c72d8664de2d08eb7a9bc	2026-09-25	1
+disciplina	park/2026-09-25/wt-klassy-otkaza-v-dom-orkestratora	park	c303d8441d42c1db7a5050af8423b3262dd46f1c	2026-09-25	1
+disciplina	park/2026-09-25/wt-kontekst-vedushchego-v-stroke-kruga	park	3e1d24dbb453bc03f1a34d27588b6971306c3e3c	2026-09-25	1
+disciplina	park/2026-09-25/wt-kontrakt-roli-prinuzhdaetsya	park	381f30b33ea7dfb35ca85b94778f248a0e605f24	2026-09-25	1
+disciplina	park/2026-09-25/wt-kontury-upravleniya	park	d74dc2baa73f848f10bf9412f58f3c45ada672c0	2026-09-25	1
+disciplina	park/2026-09-25/wt-konvejer-suda-urokov	park	55cbd43cb0caf4a1333c24ec77c2ec689aaf68c2	2026-09-25	1
+disciplina	park/2026-09-25/wt-korpus-generatorov-i-tipov	park	7ee13f7a4a7276caab9949392e6a4d31b2026ace	2026-09-25	1
+disciplina	park/2026-09-25/wt-korpus-mehanika	park	54b28295f627eec29237062029ab1a8fbd57273f	2026-09-25	1
+disciplina	park/2026-09-25/wt-korpus-pravil-i-rychagov	park	b6b4afa92054155d36054553ba8ad57a1be13660	2026-09-25	1
+disciplina	park/2026-09-25/wt-korpus-urokov	park	3fa34742460854b527cd65f4d69a2148e795fd5e	2026-09-25	1
+disciplina	park/2026-09-25/wt-krug-rychag-i-utrennij-otchyot	park	4d57361036b70f59fa1a630caceacadba6ea384e	2026-09-25	1
+disciplina	park/2026-09-25/wt-kuski-sostava-bez-zapora	park	0c92bad2f5bc589e6701fb6029611d9163a83db7	2026-09-25	1
+disciplina	park/2026-09-25/wt-limit-kak-limit	park	7ad3ea8d901f0c04820da1ae61ede226294e7d6d	2026-09-25	1
+disciplina	park/2026-09-25/wt-mandat-slovar-statusov	park	b1bc0a08a73f751845ed52e7758c68a2fffab24d	2026-09-25	1
+disciplina	park/2026-09-25/wt-mandat-tolko-po-sobrannomu-sostavu	park	19528d13f4f0c337a8ef492356ba0e9ddebb45d5	2026-09-25	1
+disciplina	park/2026-09-25/wt-mest-zanyato-v-stroke-kruga	park	0ca44dff57e5d1829c19a78c2ab05eff50daf0ae	2026-09-25	1
+disciplina	park/2026-09-25/wt-metka-dostavki-ot-kornya	park	d2a065b37ebb437cb9a42fb895fe612c9804a782	2026-09-25	1
+disciplina	park/2026-09-25/wt-minuty-kruga	park	368d5d5338414d584848db9e18f19d7a98951002	2026-09-25	1
+disciplina	park/2026-09-25/wt-monotonnost-zakona	park	1cd439a0583dc8c5ad4e9ff231dac786ac2ab56f	2026-09-25	1
+disciplina	park/2026-09-25/wt-mutaciya-zakona-zakrytiya	park	b1eddf00590ad7cf2f592fec65c99509b8814f0a	2026-09-25	1
+disciplina	park/2026-09-25/wt-nadzor-volny-iz-cowork	park	1562595dad106dcbf000a6b51da2556d9ab6eb57	2026-09-25	1
+disciplina	park/2026-09-25/wt-opis-komponentov	park	a3d23510573a27d99c9f3e7e7d066b55e56cb2b0	2026-09-25	1
+disciplina	park/2026-09-25/wt-opisaniya-i-yazyk	park	f29ff24d4d6de1a9b16e4e717e4878802f3318e2	2026-09-25	1
+disciplina	park/2026-09-25/wt-ostatok-generatora	park	9b747f7758ba0bc61c282352d4cef8a9365913d9	2026-09-25	1
+disciplina	park/2026-09-25/wt-peredacha-golovy-odnoj-komandoj	park	ec0728419aa9748d35350d0b5a772ed7f4b7bb31	2026-09-25	1
+disciplina	park/2026-09-25/wt-peredacha-ne-stiraet-ruchnoe	park	e1577e6017ec547c863d1373108fb36eb1b67489	2026-09-25	1
+disciplina	park/2026-09-25/wt-perevod-korpusa-1	park	c41acea1c8c249edb6c90937d0eb084514abb63a	2026-09-25	1
+disciplina	park/2026-09-25/wt-perevod-korpusa-3	park	6a69485210e59f6b2da8d21f42a9e2746c173d22	2026-09-25	1
+disciplina	park/2026-09-25/wt-perevod-workflow-obzor	park	760de18ea12082dce86e7c3736df35249fd1de98	2026-09-25	1
+disciplina	park/2026-09-25/wt-perimetr-gejtov-skilly	park	c727d54c35077193cd036214c7a8ff92f2d34bd1	2026-09-25	1
+disciplina	park/2026-09-25/wt-plagin-md-hook-matcher	park	d5755233f865c3740e6925f852e38a332106ea97	2026-09-25	1
+disciplina	park/2026-09-25/wt-pochta-dver	park	293789170d7303b98f06035c7523a3ffd08b6661	2026-09-25	1
+disciplina	park/2026-09-25/wt-podyom-iz-osnovnogo-dereva	park	c522be4580721e44dd32f4a1390687673e219a35	2026-09-25	1
+disciplina	park/2026-09-25/wt-pole-zakryt-u-uroka	park	4a14f9a899d1eddcc9d6ed4c8e600128b3231eae	2026-09-25	1
+disciplina	park/2026-09-25/wt-potok-3-skilly	park	2c8827c992138d43c90afaf73943d99ded6b720e	2026-09-25	1
+disciplina	park/2026-09-25/wt-potok-4-vynos	park	de525bed939468b7dad0ec4e557078a55f69560c	2026-09-25	1
+disciplina	park/2026-09-25/wt-potolok-iz-mandata	park	0ebc3b0583cd4f442b48edb15287cbd8fc3a18c8	2026-09-25	1
+disciplina	park/2026-09-25/wt-pozitsiya-lyogkaya	park	aacb563152dc1959d6ac40144039df35ba5e6c29	2026-09-25	1
+disciplina	park/2026-09-25/wt-pre-commit-obhod-dveryu	park	f9e1ccb2155b8525e8d880903b1adf06a32e2fb8	2026-09-25	1
+disciplina	park/2026-09-25/wt-pre-commit-odin-diff	park	225077085b9513f3697aa1093ace2e8fbd7ebc12	2026-09-25	1
+disciplina	park/2026-09-25/wt-predlozhenie-yadra-skilla	park	41ae8a4ba4df880a7efd662d8bcd7c0e6616b6cb	2026-09-25	1
+disciplina	park/2026-09-25/wt-privyazka-golovy-k-huku	park	b2718839610eedaca9945e46d532787ea1469bca	2026-09-25	1
+disciplina	park/2026-09-25/wt-priyomka-cherez-priyomshchika	park	8b7902f8abe78bf6d676b43474cfeff8cd2cc9b8	2026-09-25	1
+disciplina	park/2026-09-25/wt-priyomka-trebuet-gejt-sborki	park	73b19f73340bb63a033e95124cea879a83e94f5b	2026-09-25	1
+disciplina	park/2026-09-25/wt-priyomka-volny-5	park	8143a06d613ba47ed41ebc82e395706e2dca8e81	2026-09-25	1
+disciplina	park/2026-09-25/wt-priyomshchik-kak-rol	park	f67f5d6a1b1852c9be13150855cc207ef156d300	2026-09-25	1
+disciplina	park/2026-09-25/wt-puls-statusline	park	e7a2001f86c4c080885e241fa34f2790b719ac87	2026-09-25	1
+disciplina	park/2026-09-25/wt-puskovaya-tablica-komandoj	park	a3672df2fe5266ed517229fb315cc557021e3f93	2026-09-25	1
+disciplina	park/2026-09-25/wt-pustoj-pul-sobytie	park	951e0a5b106d34fdddba4d35066c5ac22340ea57	2026-09-25	1
+disciplina	park/2026-09-25/wt-puti-generator-i-linter	park	0cc27397d75405f392f8eda888309602f3908c3e	2026-09-25	1
+disciplina	park/2026-09-25/wt-razrez-plan-lekcii-2	park	a51888ec3de7e5a71ec1c07cb540f5a2abd3185e	2026-09-25	1
+disciplina	park/2026-09-25/wt-razrez-slajdy	park	0cfc53d722fdb4223075b9cbf0a5482e42e8d29f	2026-09-25	1
+disciplina	park/2026-09-25/wt-reestr-zhivosti-chto-meryaet	park	7b1059784c5670dd84e0d306bce8c4c9163fce4a	2026-09-25	1
+disciplina	park/2026-09-25/wt-registraciya-pri-puske	park	e6c5dd5c3814e3a5319e03c66850e725986044ef	2026-09-25	1
+disciplina	park/2026-09-25/wt-rezolver-fajl-v-skille	park	d395dafefeaa1d28b60bcf8a098c4270e95ef5a6	2026-09-25	1
+disciplina	park/2026-09-25/wt-rol-subagenta-kontrakt	park	6a9ea13b11a9995c9a59c0f036350190c886e648	2026-09-25	1
+disciplina	park/2026-09-25/wt-roli-i-dver-brifa	park	c0fbe445b3107cdd828bf74d080e04dd30cff1ba	2026-09-25	5
+disciplina	park/2026-09-25/wt-roli-po-kontraktu-i-kommiter	park	909b78bf2d8c70b514f3ebcfb075357c0415c45b	2026-09-25	1
+disciplina	park/2026-09-25/wt-rychagi-illustracii-matematika-2	park	3ca8cf173b286dd7a1b877d9426ee2995f598a45	2026-09-25	1
+disciplina	park/2026-09-25/wt-sborka-s4-s7	park	5a8e3cbe9b5c5f42c49deddba0f344b086618704	2026-09-25	1
+disciplina	park/2026-09-25/wt-sborshchik-chetyre-roli	park	058ab31ef741b9c383d79c7e19ed4790b1ba4cfe	2026-09-25	1
+disciplina	park/2026-09-25/wt-schetchik-bez-rychaga	park	4ac0b2ae4fdf80716f1630b0900eff93e65ea291	2026-09-25	1
+disciplina	park/2026-09-25/wt-sdk-pilot	park	03859f77f90e29a03d06c294bf26e07bc0ba3a4a	2026-09-25	1
+disciplina	park/2026-09-25/wt-skill-dajdzhest-dovodka	park	7a84e994ca25a30c4b14150ef0e5fe4f616638d9	2026-09-25	1
+disciplina	park/2026-09-25/wt-skill-reserch-dovodka	park	8fafb5e3edf50a049b239b9b71833dd45e940bb7	2026-09-25	1
+disciplina	park/2026-09-25/wt-skvoznoj-progon	park	19411b9d885ee7b200e1187fdd8ef864f751e0e0	2026-09-25	1
+disciplina	park/2026-09-25/wt-slabye-mesta	park	e474c29c7e06c7b62108ba7ad3d23d70a9a5182b	2026-09-25	1
+disciplina	park/2026-09-25/wt-slim-preambula-zahoda	park	aae5f3b765dc5e2853f7961dc8b190f84d458c7d	2026-09-25	1
+disciplina	park/2026-09-25/wt-snimok-dolga-nazyvaet-ref	park	f7f7d374f09807307da97159df9902b1a6d72a3b	2026-09-25	1
+disciplina	park/2026-09-25/wt-snimok-nazyvaet-avtora	park	38554193515d9d70d0702d0af6c0c63e44e8a7e5	2026-09-25	2
+disciplina	park/2026-09-25/wt-sostav-mnozhestva-i-mandat	park	0375b43fa0fb012a1fba829fe57176ea0c82a71c	2026-09-25	1
+disciplina	park/2026-09-25/wt-sostav-s-zavisimostyami	park	f2552caa13d65fc929838ed6ef5d958825e112e1	2026-09-25	1
+disciplina	park/2026-09-25/wt-sostav-zhurnal-i-prichiny-po-id	park	0aa7d7168c2bacbc577538751106ebe221a4ce4f	2026-09-25	1
+disciplina	park/2026-09-25/wt-sostav-zona-chuzhoj-volny	park	54afcf10ecc43cf1a2e2d402f87aa0fcd47a6fb0	2026-09-25	1
+disciplina	park/2026-09-25/wt-sovet-pri-sborke-zahoda	park	e0add5b8deaf4c6576c04715ca790903e6218e23	2026-09-25	1
+disciplina	park/2026-09-25/wt-srok-voskresheniya-parametrom	park	dde5b441d8080e856780189f3f4c0dfc4adbbbeb	2026-09-25	1
+disciplina	park/2026-09-25/wt-stroka-kruga-polya	park	2094459f3949a1fd0712139fb1cfb0e762551676	2026-09-25	1
+disciplina	park/2026-09-25/wt-sudit-urok	park	d46506a29662507b78226155f8dff15a378d1204	2026-09-25	1
+disciplina	park/2026-09-25/wt-sudya-ne-perepisyvaet-cheloveka	park	bbc65c5ce2fda985f1f1bb2ecf0a6f20aa802528	2026-09-25	1
+disciplina	park/2026-09-25/wt-svedenie-uzlov-1	park	c7a18d755d4e319fa17ef1fe0088457b9af3ff19	2026-09-25	1
+disciplina	park/2026-09-25/wt-svedenie-uzlov-2	park	050fc902e5eca9b2450d5ab82c638bdc162e743e	2026-09-25	1
+disciplina	park/2026-09-25/wt-svedenie-uzlov-3	park	f0fb9722ed7e8a364997dd448b928c06b9c35812	2026-09-25	1
+disciplina	park/2026-09-25/wt-sverka-otchyota-s-diskom	park	0fc7f841b737c1c05efa3375dd1bf0a7dd1ece5a	2026-09-25	1
+disciplina	park/2026-09-25/wt-svyaz-cepi	park	a9c97862779c53b5b48f2a76f4a94790d7e8ae3a	2026-09-25	1
+disciplina	park/2026-09-25/wt-svyaz-cepi-reestr	park	d27e1cea5317dd05319bd795be295fcb86542e4c	2026-09-25	1
+disciplina	park/2026-09-25/wt-tip-i-dom-mashinoj	park	04fc144843cf3d21e2b5f7a2995d656a559d0532	2026-09-25	1
+disciplina	park/2026-09-25/wt-tipologiya-urokov	park	8b4fede23b167e42f8ea3443f6010605ce032165	2026-09-25	1
+disciplina	park/2026-09-25/wt-tyazhelaya-po-odnoj	park	3f73531068830774134e54032774b74860be4eff	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f0-sborka	park	6f3ea0c245901749e5c86cf58f5627c52c66d006	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f0-sostav	park	baf4cb631a47faf3ae3361ac91f53ff3740765ba	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f0-sostav-2	park	4e9dbd1073ba5b8067df471e136d4756f1b7505d	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f0-zahod	park	d046dfa23c6817c96c2f6e3215c81ec44c4edd84	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f0-zahod-2	park	d190462a39ecbbbb1857d11d69306e2a671a74b0	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f2-worktree	park	171fcdbbc14ceb3cb4268626bf7db2462be904c9	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f3-gigiena	park	40db2b4f7825b27c4d85fb96fb8f983f23c34754	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f3-kruglinia	park	598827dd64caa7c890b6a9245eecd09e61e88752	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f3-processy	park	20fdc29a8daf63391ac081f747e5d73ccf7e5420	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f5-konvejer	park	61ec8775b5f87eda12739cd348c7eeb49ca30483	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f5-nezakrytoe	park	bb8b778b85ae5b09c67c0046fd958656122bfe9a	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f5-zakon	park	ad92471b5247c08a2c099f320fddcc6e9e466377	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f5-zakon-2	park	8790b8fddb4ce5cc863bc9cf1dcf2ef8a80cca0d	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f6-dostavka	park	7535dcd6bf75c5d10b136087cca53f55c8e0d3f7	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-hook	park	8b9e51bd2eb4f0f6a807ed7c2351ce93f5313c90	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-podklyuchen	park	4c9f9576b82257860d390c7729d02d6aa683f30e	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-registraciya	park	3fdfd5f87d45479e94d64f654a99b62e5df86b34	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-registraciya-2	park	21ff4e87e4a6df6762ed49ec11bca162ad91dcf0	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-sessiya	park	e48e6f2b56e004fca86eb741800be96867865c25	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-f7-stend	park	d47f47d5997348d728931db80d6ed4c8821ee32d	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-fa-pesochnica	park	c07f79b15ecf3f30edd6c561345daf35308eddd1	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-fa-razvedka	park	9358f9476b82e944cb8c42b6156db6833b34f1df	2026-09-25	1
+disciplina	park/2026-09-25/wt-uzel-fa-roli	park	6a4eb310f6b5b41dcd09f791359f456a950293ed	2026-09-25	1
+disciplina	park/2026-09-25/wt-ves-bez-obhoda-istorii	park	ac4f170461c98a00751c7ff078e3379ae9bd2c05	2026-09-25	1
+disciplina	park/2026-09-25/wt-vynos-dvizhkov-2	park	753658e82cd185a07006b0b1779d36a0687bf4cc	2026-09-25	1
+disciplina	park/2026-09-25/wt-workflow-lekcia	park	4576ee5b6501c0613c33a76177c53dfab3ce59a3	2026-09-25	1
+disciplina	park/2026-09-25/wt-yashchik-golovy	park	9c685c552f055730a62712d228f59f8ec38bb307	2026-09-25	1
+disciplina	park/2026-09-25/wt-zadanie-subagentu-bez-protivorechij	park	32af7c20dff879f7cb4f03b270e75cddc789c110	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-fixture-starye-lovushki	park	4409bdd056bd87db0932a17c8d24b49b89b2e053	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-nahodki	park	065869574fe36a62829a6ae8625fe540686299b4	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-zakrytiya-ohvat-i-uslovie-g	park	bab0b5885e6566c542cacfd1984cbc52766f3b97	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-zakrytiya-stend	park	d81f8a27d647158adeb6b01916c1b27e43e609a7	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-zakrytiya-sudit-sostav	park	af7b0928cf15aa3798bc963ff9c49081f682089d	2026-09-25	1
+disciplina	park/2026-09-25/wt-zakon-zakrytiya-volna-14	park	71ca0320a9d4e2c8e691bd43d24632e64ac6f967	2026-09-25	1
+disciplina	park/2026-09-25/wt-zamer-mashiny	park	01c162adbe88c298ff02d6659199f8eff9921eb3	2026-09-25	1
+disciplina	park/2026-09-25/wt-zhdat-do-karantina	park	6ccbdaf1cfe6a3e7cfb969690be2e0e9005ad3d8	2026-09-25	1
+disciplina	park/2026-09-25/wt-zhivost-pered-kazhdym-zahodom	park	fb044d0cfa6a0d0b79d1e1c331d4a9b3a9cac6dc	2026-09-25	1
+disciplina	zahod/99-pereadresovannyh-zayavok-verdikt-kazhdoj	merged	f636131bae4d261956bd263137c48831bc048501	2026-09-06	
+disciplina	zahod/SL-G1-derevo-i-adresa	merged	9cd639ed24c0de26e3a6fc190ba014297346f0f7	2026-08-31	
+disciplina	zahod/SL-G2-byudzhet	merged	be5940410a2866bbd66664ef7d789d92b75173e2	2026-09-01	
+disciplina	zahod/SL-G3-kesh-formul-i-pejsing	merged	8431528dfe9e171db24953e1c782cada08873dbd	2026-08-31	
+disciplina	zahod/SL-G5-solver-i-svg	merged	382ecf30409e0e4025348c931842f5a299cc0549	2026-08-31	
+disciplina	zahod/SL-G6-gigiena-i-pokrytie	merged	06e3d3a68c0d2d65bd1c5d68b81a347f9f50c3b3	2026-08-31	
+disciplina	zahod/adres-punkta-odnoznachnyj	merged	25b026a617cb79e80c2afbf1cb899c19f9726fa6	2026-09-02	
+disciplina	zahod/adresa-dostavki-i-dva-schyota	merged	ed7974dcb38a88bced6b36690e25859c9d125304	2026-09-06	
+disciplina	zahod/adresa-materials-i-lozhnye-predposylki	merged	ecc349ec3f5ee8b8a587bf2c0c353d680073971e	2026-09-02	
+disciplina	zahod/aktualnyj-listok-naverh-i-dedlajn	merged	c9de854d1671b735889fa49c84b385e47d9918cc	2026-09-07	
+disciplina	zahod/ankety-cloudflare	merged	34d6e36998dffde5525df85db9d2a5170f2bf7c1	2026-08-29	
+disciplina	zahod/arhitektura-adresa	merged	dcded37063c7dda8b1b4271263dfda8a59a4ec78	2026-08-26	
+disciplina	zahod/arhitektura-slajdov	merged	f6b7c8d791ec2ebc0f084a90bde2531939f0b012	2026-08-07	
+disciplina	zahod/arki-bez-intervyu	merged	00a06677876f6e6ba94c5ee1802c96582b560cb2	2026-08-31	
+disciplina	zahod/avariynyj-kommit	merged	dfb48a7da8aa4959584d1ef9e02f4d23d42f3a12	2026-09-20	
+disciplina	zahod/baza-i-srez-pri-podyome	merged	9ceedcb38a9a27325da93a394553893b3c2368a2	2026-09-23	
+disciplina	zahod/biblioteka-knig-vne-git-so-shemoj-adresacii	merged	dbd8d17c7825f22baa6c3d0901f75feadc1ea435	2026-09-02	
+disciplina	zahod/bityje-adresa-dolgov	merged	673f60a5e6db411bac1e405829c15cf7916046b4	2026-09-02	
+disciplina	zahod/bootstrap-kriterij-i-shablon	merged	0c8c741c1399413b8dd4479f8abfa595f7574f66	2026-08-31	
+disciplina	zahod/bootstrap-otkazy	merged	ebf34a5d978950f1add03bcb2fb4e7202f2a106c	2026-08-31	
+disciplina	zahod/bootstrap-vyvoz-svoej-vetki	merged	90337fc13e78a031d38302a7d8e8e78c15ff4a2a	2026-08-30	
+disciplina	zahod/byudzhety-i-rashod	unmerged	e45e2a26ddeff42723374e1014a97a3536f3b305	2026-09-17	3
+disciplina	zahod/called-by-hand-ne-dlya-sudyashchih	merged	f1dce853c39bbc432482aac6b3a23525bce1e0e1	2026-09-06	
+disciplina	zahod/cena-volny-snimaetsya-instrumentom	merged	c59a67577c4274aaa74643b45bfe2ac37493de9e	2026-09-06	
+disciplina	zahod/chasovoj-ne-podnimaet-zakrytuyu	merged	747bb0b3ef9869dddec2b91406bc92b56784bbb6	2026-09-21	
+disciplina	zahod/chasovoj-ne-umiraet-molcha	merged	d638f8db33c28d69d705ab59709a9f2c3d96e648	2026-09-23	
+disciplina	zahod/chasovoj-podnimaet-a-ne-pechataet	merged	c2a6edb6bb8080b8b46bd4195de4304f893d215b	2026-09-13	
+disciplina	zahod/chasovoj-zhurnal-volny	merged	2309528a5ac35b5bf00b604a2a01f13ea4bb926f	2026-09-23	
+disciplina	zahod/check-sborki-forma	merged	ea6b7d145db1d03a21ae8e7557095c40a7039f71	2026-08-30	
+disciplina	zahod/check-sborki-pajp-i-otsutstvie	merged	69e49dac5cc641376c2e6e6cfee38f46212f27fb	2026-09-02	
+disciplina	zahod/check-styka	merged	fe9b38fe2bd39a4b426933d1ca62120bb5b76944	2026-08-31	
+disciplina	zahod/check-uroki-adres-i-papka	merged	02f468d7248afedf5888140bf38dfac343f4e6a3	2026-09-02	
+disciplina	zahod/check-yazyk-ohvat	merged	c4ede00c0c34b0efb02a6356a7a9532299850c93	2026-08-31	
+disciplina	zahod/check-zahod-kalibrovka-klauz	merged	6394c3c9bf98e63e7b882227dbab4b1b528d3e23	2026-09-05	
+disciplina	zahod/check-zahod-proza-ne-komanda	merged	bab0fd08b97e4b8b30ed5fea5a8cb81806ce4852	2026-09-01	
+disciplina	zahod/check-zahod-z23-z24	merged	f7081723b2a93e2792197a788f1e5531b95b9d33	2026-08-31	
+disciplina	zahod/dajdzhest-i-kanal	merged	d91f238b26337f033b7800217e9f0336823c28fc	2026-09-06	
+disciplina	zahod/dajdzhest-otvyazka-ot-repo	merged	5517f5b544fe3753e8817a5e2985317e75b1d680	2026-08-31	
+disciplina	zahod/deck-import-i-vizitka	merged	4c6a6a6a71f3f3a10f00a5f22a2e90a0b26fbfe7	2026-08-31	
+disciplina	zahod/defekty-generatora-zahodov	merged	2a3700668504918967875eea213c174a382ab020	2026-08-30	
+disciplina	zahod/delta-k-bazovoj-linii-instrumentom	merged	ef995eb32163ee6d8bd91f046bfc1d3aab171182	2026-09-06	
+disciplina	zahod/denezhnye-puly-i-proba-zhivosti-modeli	merged	214b0aa982628ecc628cc042a1a38a837d2c9cd7	2026-09-04	
+disciplina	zahod/dengi-v-stroke-kruga	merged	ee27d370dbbb0e2b611cea72722615f9d1ea8fdd	2026-09-21	
+disciplina	zahod/diagnoz-odnoj-komandoj	merged	fbc643ccfe41965c2b4f51ecad3995ed345d8313	2026-09-23	
+disciplina	zahod/diagnoz-orkestratora	merged	9d56cc020eb4c65e9363086c97ae2c725915d1d1	2026-09-23	
+disciplina	zahod/dirizher-klass-prichiny-mashinno	merged	9500e64d39165374e10c96a4bbd70d2275b2ed53	2026-09-17	
+disciplina	zahod/dirizher-lozhnyj-uspeh-retry-i-vremya	merged	2d1667082bfdc04d35d493240f4897e394160317	2026-09-13	
+disciplina	zahod/dirizher-otkaz-perezapusk-i-byudzhet	merged	74612d7348c64a503e8e1d1fb7fcbb1a7fcdd21d	2026-09-06	
+disciplina	zahod/dirizher-po-zameru	merged	68c9c41465d4fc0884d300cd040c6de150e1d6e9	2026-09-24	
+disciplina	zahod/dirizher-sostoyanie-volny-storozh-spasenie-dobor	merged	418bfe576bb8208ebbdcf313347fe12fcc76db51	2026-09-04	
+disciplina	zahod/dirizher-tri-priznaka	merged	f13c832d51c49d805106bac443089206cba17c55	2026-08-31	
+disciplina	zahod/dirizher-zavisimost-i-dolgi	merged	7691910c4b6da582993d728416a5c28fe364c555	2026-08-31	
+disciplina	zahod/disciplina-priyomka-osi	merged	416a0773d1a6f8b0be6ce5ab18168d80a73b201b	2026-08-31	
+disciplina	zahod/dnevnik-fikstura-min-replik	merged	18b3282a28e34e5e64f663caf38a18b76665c159	2026-08-31	
+disciplina	zahod/dnevnik-i-handoff	merged	3196e15e85b9069b0909344ee6a57ae241d50414	2026-08-31	
+disciplina	zahod/dobivka-servera	merged	bbecafdaea0b227bd54f7dad9f9695090f68dcc8	2026-09-06	
+disciplina	zahod/dobor-chetyre-zhivyh-defekta	merged	3cfb882074b4262b428b1cb4e53c1ba9d2746331	2026-09-13	
+disciplina	zahod/dobor-model-v-stroke	merged	cb8ac93b6247b807e4b85f1b395fee01577cca73	2026-08-31	
+disciplina	zahod/dobor-s-mesta	unmerged	943f3598ae9dd64e2b6d9d1dd281f46506d88eb5	2026-09-24	5
+disciplina	zahod/dokument-celej	merged	35e9c77ebe8052022869eb4a1364b5a9c276f0f2	2026-09-02	
+disciplina	zahod/dolg-git	merged	dad4c700c1ef0fe4bc04497318ee03f66bbb981f	2026-08-23	
+disciplina	zahod/dolg-id-razreshenie	merged	f14edab6850d30eebc19349fae310f87d1383fc9	2026-08-31	
+disciplina	zahod/dolg-istochnika	merged	71cedc2da1b708438cad90ee74ddcc73db5d680c	2026-08-23	
+disciplina	zahod/dolg-kachestva	merged	a4c0cf68aeb1ea6cf9f67cfaaac3978980cc4584	2026-08-23	
+disciplina	zahod/dolg-kt	merged	908dc3ed88d91a784732eed877a65f8d75e786d8	2026-08-23	
+disciplina	zahod/dolg-mat-bloka	merged	0f09ca328a1ec03fb9249d064eea8af795966332	2026-08-23	
+disciplina	zahod/dolg-priyomki	merged	f1bb0753f1d9d9b6c21b587cee1e3b108b343bc4	2026-08-23	
+disciplina	zahod/dolg-zahoda	merged	ee7635266ed3dce08a4db990e31451c7561f96b2	2026-08-23	
+disciplina	zahod/dolg-zakrytyj-delom-vozvrashchaetsya-v-dom	merged	114519594930b6cad13bf407e3938396eef64aaf	2026-09-13	
+disciplina	zahod/dolgi-orkestratora-ishod	merged	6ea775b5c8b32f672ba1230937fe89cd5f81c59e	2026-09-21	
+disciplina	zahod/dolgi-orkestratora-peresud	merged	3678aed46b21dba3dc7c511707e9766f00dc46de	2026-09-23	
+disciplina	zahod/dom-obyazatelen-v-moment-rozhdeniya	merged	3dd87b9544b027d56ecd90dd94625890aa96c2b9	2026-09-06	
+disciplina	zahod/doma-meta-102-zapisi-bez-rychaga	merged	22bb8942c6f86a4d88c3ecd15d61f333eb9eccd1	2026-09-02	
+disciplina	zahod/doma-stil-vypusk-kt-kanal	merged	76a70ba3dbf99ad9ef3d6726d0904b05a47a6b63	2026-09-06	
+disciplina	zahod/dopolnenie-kak-zapis	merged	aac885f451c604a2f9f88ea1fb4da199589fb97b	2026-09-20	
+disciplina	zahod/dostavka-ocheredi-mehanicheskaya	merged	e28024c90ebe329e5c8c714d91f439bfb3cf69cc	2026-08-31	
+disciplina	zahod/dostavka-zakonov	merged	80e4fe0323cd08d13725e95f8b7e0042990cdaf5	2026-08-24	
+disciplina	zahod/dve-na-odnoj-modeli	merged	014da6f81dada30f6c65aa5e50bd6994c91843db	2026-09-20	
+disciplina	zahod/dve-na-odnoj-modeli-2	merged	07f1a6b33f2684edb3c8ff18baa783d0824ab874	2026-09-21	
+disciplina	zahod/dve-na-odnoj-modeli-3	merged	5b1dfbf1311c72631e976d220a3c0148e4b98a16	2026-09-21	
+disciplina	zahod/dvenadcat-pravil-golovy-v-dom-skilla	merged	909bff41779c56f3ca7d299a00718b041e46cea0	2026-09-04	
+disciplina	zahod/dver-nahodki	merged	f11c94587ce11b1930a1cad59184463b408e948e	2026-09-23	
+disciplina	zahod/dver-sessii-sverka-dnevnik	merged	2798b8aeedc3334705b39a54974e370a6ba14d77	2026-09-04	
+disciplina	zahod/dver-sessii-sverka-i-dnevnik	merged	9a8d60faddd2e1efcad25a91371c591fa9831f78	2026-09-06	
+disciplina	zahod/dver-verdikta-incidenta	merged	881cc72796b3f58b2c74692b77a0a50a755a81d0	2026-09-23	
+disciplina	zahod/dver-zony-ochered-kommitov-sliyanie-i-lozhnoe-zelenoe	merged	28e41d65c08136d2a510be7c72fb7a0e3c812e9d	2026-09-04	
+disciplina	zahod/dvizhok-kachestva-skilla	merged	215a6af945b61fa05df751e706ebbd9f80c3376c	2026-09-02	
+disciplina	zahod/dvizhok-opencode	merged	9276f2dfe863789b937baf70ea5c790ad21705ef	2026-08-22	
+disciplina	zahod/english-skilly-tekstovye	merged	5f4ff06884983f8dcfa60b0316e2420268e56e87	2026-08-26	
+disciplina	zahod/etap-20-i-perenos	merged	d4848b1db287eef6741804fcd8110b62651604be	2026-08-06	
+disciplina	zahod/faza-d-skill-arka	merged	bd133e721bf6dacdb73c00f60ba529287e4e451c	2026-08-20	
+disciplina	zahod/faza-uborki-razrezana	merged	6ed2d970f0d89010119592f3b9103a9933e11424	2026-09-23	
+disciplina	zahod/fazy-1-2-dovodka	merged	d3c395105646f1db4587760861c18a36fc47390e	2026-08-08	
+disciplina	zahod/fazy-3-7	merged	818a4c969ef4951fe197186ebe9614eedbca7fc5	2026-08-07	
+disciplina	zahod/fikstury-pachka-1	merged	88e9025c96e684fdacc01d6965b9862b23a6a506	2026-09-02	
+disciplina	zahod/format-kartochki-faza-1	merged	c0875d96819193b748cebaf397671ad018d05c36	2026-08-09	
+disciplina	zahod/gashenie-worktree	merged	090d934e2b711a87d54dd33edb6e2ce6a39cefaa	2026-08-30	
+disciplina	zahod/gejt-bityh-ukazatelej-2	merged	5ce1ebc783607184c81a88827eae1f8e28e6b8c9	2026-08-31	
+disciplina	zahod/gejt-podklyucheniya-lozhnoe-zelenoe	merged	83666cb3846b04b03ddb1eb910539e8447d969c3	2026-09-21	
+disciplina	zahod/gejt-postroeno-ne-podklyucheno	merged	574c1bb9b737200178ecc2afa950f4435d562f3a	2026-09-21	
+disciplina	zahod/gejt-sborki-v-generator	merged	c13dcdc54a80122669617f33fa2e46b6a0ec8918	2026-09-13	
+disciplina	zahod/gejt-urokov-sudit-staged-a-ne-dom	merged	845fbe760788a41474afb8da9fc687d061b2a89f	2026-09-04	
+disciplina	zahod/gejt-zakona-zakrytiya-volny	merged	867e2c4de5085390201d45eb4039de8bf6259990	2026-09-02	
+disciplina	zahod/gejty-priyomki-uznayut-anglijskij	merged	14d235c4f2f32a9391082b6e307a93a6657a23d4	2026-09-01	
+disciplina	zahod/generator-pravila	merged	9a09f10e8712e2206dbf8de13869501983c9784e	2026-09-20	
+disciplina	zahod/generator-rychaga	unmerged	cf5e91692e7a0e606efbb907a7c19b5585f64718	2026-09-20	1
+disciplina	zahod/generator-startovaya-stroka	merged	263ecd3f40cf6f44c80bee458328559a7606709d	2026-09-20	
+disciplina	zahod/gigiena-arki-bez-klapanov	merged	1c8f1d641606f512243988369524c998fb1e0837	2026-09-24	
+disciplina	zahod/gigiena-repozitoriya-worktree-vetki-vyvoz	merged	893d0096f7457ea8a108452311b043b1b25ea094	2026-09-04	
+disciplina	zahod/git-bez-zamkov	merged	690d2d959015c8a3d657b051c8100f2e4239788e	2026-09-23	
+disciplina	zahod/git-kontur	merged	8e148df45fdc2eea5ba9520e9046ee3df62e0908	2026-08-20	
+disciplina	zahod/git-odna-dver	unmerged	250803f76f84f0535c79469cc147041fd3d62abc	2026-08-25	2
+disciplina	zahod/git-zona-dve-pochinki	merged	e2e5a7d2bf4d3dbba872daeceaefd2d3efbf2f76	2026-08-31	
+disciplina	zahod/git-zona-komandy	merged	3c58cfca1f369539afd75fd489d0b97766c6cfd3	2026-08-31	
+disciplina	zahod/git-zona-storozh-vyvoza-i-shum	merged	78a97c07279dd4cb1d7272e8f8e2e04c40141d1c	2026-09-02	
+disciplina	zahod/git-zona-svedenie-2	merged	5b8807bd718cbdfb719e5ccf4c9281d73284e5ba	2026-08-31	
+disciplina	zahod/git-zona-zona-i-vyvoz	merged	83a0702b060c84795b3ba7caa43c62f2b80af609	2026-08-30	
+disciplina	zahod/git-zona-zona-shire-kontrakta	unmerged	1f0a5c42fa256c5eb937db9c7d53d59e3b11a635	2026-09-17	2
+disciplina	zahod/gotovnost-hvost-s-heshem	merged	b71a7cbec847984d5e302f416ff85cd0b5bdf724	2026-08-31	
+disciplina	zahod/gromkij-otkaz-podlozhka	merged	468bc47c5d7fc6a05829c4b7683f13ed83ecdd2d	2026-09-23	
+disciplina	zahod/handoff-vyzhimka-dom-priyomki	merged	2798b8aeedc3334705b39a54974e370a6ba14d77	2026-09-04	
+disciplina	zahod/hook-chitaet-svoj-vhod	merged	8f779d2c9bab217ab288a834f117b3c2fe19fc13	2026-09-04	
+disciplina	zahod/hrapovik-po-zone-volny-i-zashchita-bazy	merged	5043315338020f3d332710eb5b19e35bea7b9700	2026-09-06	
+disciplina	zahod/huk-g3-g4	merged	631710b66bd6e9ec8e13a3cf2df2cae74f4481c9	2026-08-31	
+disciplina	zahod/huk-git-po-kontraktu	merged	37bf15db1713d64a2e06bbedf0000761747951f5	2026-09-24	
+disciplina	zahod/huk-obhod-proverok	merged	143ce5fa2384b1235393abf5ee03f1acc46c9280	2026-09-24	
+disciplina	zahod/huk-obryv-api	merged	8f010b839f5ea889e47f77dfc2fc567a3ad82710	2026-09-24	
+disciplina	zahod/huk-otchyot-pozicii	merged	35813606f017a478ad50f07a933646c6d90fba1e	2026-09-24	
+disciplina	zahod/huk-porog-konteksta	merged	b96bdc9c1d39c3031e1704445d9c961dcf0400f0	2026-09-24	
+disciplina	zahod/huk-preemnik-zhdyot	merged	f7925a83ca0fc0ae59c6fd7a23d4c869f761e664	2026-09-24	
+disciplina	zahod/huk-puti-v-zahodah	merged	a4a0bf916e8fabb0b7179966d18a909fb3e703b5	2026-09-24	
+disciplina	zahod/huk-serdce-avto	merged	c9d8892d5683eef2a06878ff3ef75b0075e92aff	2026-09-23	
+disciplina	zahod/huk-snimok-pered-szhatiem	merged	f915d5ae5ce7b1438f5e5d49d694497d8a86b37d	2026-09-24	
+disciplina	zahod/huk-start-sessii	merged	708bcbfb3bd4a938b9aebce13c8d5711e8a39c9c	2026-09-24	
+disciplina	zahod/huk-stop-golovy	merged	4d6dac10d9ad0c9bc84e377563ce7b90049d1d87	2026-09-23	
+disciplina	zahod/huk-stroka-kruga	merged	14701db80a7edeba37bc5fd7188cae18336cc080	2026-09-24	
+disciplina	zahod/huk-vyvoz-vetki	merged	2b73cd44daf4cf163dbcddb83884b7b61c5c0cd0	2026-09-24	
+disciplina	zahod/huk-zapret-udaleniya	merged	923ce59898209d3e52ec7a49160bf8d1f5e52967	2026-09-23	
+disciplina	zahod/huki-karkas	merged	9bdb76796246191f19d14fabcf3a2689c8045fc2	2026-09-23	
+disciplina	zahod/huki-v-plagine-a-ne-v-mashine	merged	96d8278ac0638aa87820d1764d95914d1d3a3909	2026-09-06	
+disciplina	zahod/hvosty-avtonomnosti	merged	b3a742dfe76c9017286fdf577b88264dae0f7de0	2026-08-23	
+disciplina	zahod/hvosty-d10	merged	6ed2d970f0d89010119592f3b9103a9933e11424	2026-09-23	
+disciplina	zahod/hvosty-vynosa	merged	84e9535fc9b0b9e0633664549092928f82d4b11b	2026-08-25	
+disciplina	zahod/illustracii-i-tokeny	merged	b554826fd0cb87e2245dac6d40ff9df20a7b4ae1	2026-08-23	
+disciplina	zahod/incidenty-klassy-verdikty	merged	5517f5b544fe3753e8817a5e2985317e75b1d680	2026-08-31	
+disciplina	zahod/incidenty-odna-shkala	merged	9717deac14d42b022d91dcf2358b1a0ce19694a9	2026-08-31	
+disciplina	zahod/instrumenty-iz-materials-v-disciplina	merged	043434b5782b5f1028ce83e92d866c468d2b9c9d	2026-09-02	
+disciplina	zahod/ispolnitel-ocheredi	merged	6a3d26c6e1d948f4ce33b579d6b7248c92a57981	2026-09-02	
+disciplina	zahod/izmerit-karantin	merged	ec6e25fdd68b2baa32dda0603e1764543e68a485	2026-09-21	
+disciplina	zahod/kakie-fikstury	merged	f139fb7da818557a44cce58be42c597e01efb109	2026-09-23	
+disciplina	zahod/kanaly-razvedka-sud-pochinka	merged	1419f530bd392fa2a8bb230764495d531964953d	2026-09-20	
+disciplina	zahod/kanon-mandata-v-generatore	merged	4e6a47130c88db003229a91b74749bd1d50befab	2026-09-20	
+disciplina	zahod/karta-gejtov-odnoj-komandoj	merged	f9a6588e685cebb113011f45fb20d00ab8c8f7ee	2026-09-21	
+disciplina	zahod/karta-mashiny-orkestratora	merged	38438d2e72d81d5e0ab41182b7350f9f386228ad	2026-09-23	
+disciplina	zahod/karta-mashiny-v2	merged	9cc53c7bcc51cf0906d3c99a20ea036e882868c5	2026-09-23	
+disciplina	zahod/karta-skillov	merged	14704c1d8a8335f988542e627e0e94ee2d6d25cd	2026-08-31	
+disciplina	zahod/kartochka-uroka-chem-i-predmet	merged	38438d2e72d81d5e0ab41182b7350f9f386228ad	2026-09-23	
+disciplina	zahod/klassifikaciya-tipov-rychagov	merged	bdefa4185635b9481c4a6af6b4ebb28550dce5c5	2026-09-02	
+disciplina	zahod/klassy-incidentov	merged	44139339aed15682f228610d75a832df34824777	2026-08-24	
+disciplina	zahod/klassy-otkaza-v-dom-orkestratora	merged	0bcb7d3699d39bfa9519e7cad9b15c075ca6342a	2026-09-13	
+disciplina	zahod/klyuch-klassa-bez-puti	merged	e64006b83622a542b4c4408135b2873f482795d3	2026-09-02	
+disciplina	zahod/konduit-na-prosmotr	merged	97c4f75614760046203bfe4ccdb70b111b208ba0	2026-09-07	
+disciplina	zahod/konservaciya-slajdov	merged	8447ba63515fc11711bae1e26fd17071d2ab8262	2026-08-23	
+disciplina	zahod/kontekst-vedushchego-v-stroke-kruga	merged	5cc662fb0d3b3ce2be4dbdfe05584358bb62e8ea	2026-09-23	
+disciplina	zahod/kontrakt-roli-prinuzhdaetsya	merged	cce4720b8460677bbb63edfc4104e2e8e046f2ff	2026-09-21	
+disciplina	zahod/kontrakty-instrumentov	merged	1ff6bda9993e96d40d2d6a7a38e2798bfb95c389	2026-08-31	
+disciplina	zahod/kontury-upravleniya	merged	8c131f74b7da0541b6fa45acbb2208c9f97fa5eb	2026-09-23	
+disciplina	zahod/konvejer-incidentov	merged	1c0763ad41cb12b54138b0ac957ca7ee25e4dcf8	2026-08-23	
+disciplina	zahod/konvejer-suda-urokov	merged	1df627f88020a3a75e2790e4f13b12414a526d0b	2026-09-21	
+disciplina	zahod/korni-i-worktree	merged	3501828ddf740497caddb98c5e0053fe59d8501b	2026-08-31	
+disciplina	zahod/korni-infra-konstanty-v-funkcii	merged	3d59a5da8c01d070e2c0bb7dfdd58d48a6f383fe	2026-09-01	
+disciplina	zahod/korni-infra-po-repo	merged	46cbd184f86f1b336f1c65eed59c3ec8b73189c3	2026-09-01	
+disciplina	zahod/korni-po-celi	merged	46973f1a0660415e0cbe224d1b06dc5a047c8353	2026-08-31	
+disciplina	zahod/korni-svip-gejtom-bez-pravki	merged	3bfb6fea691aa4e652a677cbb9aa1b61f8d77759	2026-09-02	
+disciplina	zahod/korpus-1346-zapisej-po-rychagam	merged	5eea8382976e5bcf066b1082ece5cf49cf93dd18	2026-09-02	
+disciplina	zahod/korpus-generatorov-i-tipov	merged	2571a4a4be218ec31cfdfb39ca69894aa7779914	2026-09-20	
+disciplina	zahod/korpus-mehanika	merged	a5a5c1a56c45f7c2f2398284504962813547b46c	2026-09-20	
+disciplina	zahod/korpus-pravil-i-rychagov	merged	119aad4120ad4e657afa6dbb689efe95f2b13e90	2026-09-20	
+disciplina	zahod/korpus-urokov	merged	7c19c3f510782a5f9886dcbbe9ea0299aba59af4	2026-09-20	
+disciplina	zahod/kriterij-proveryaetsya-s-dvuh-storon	merged	64c5d40d9bbb6f162322c42841cebf3c8e9cb43f	2026-09-04	
+disciplina	zahod/krug-rychag-i-utrennij-otchyot	merged	11c8eff54af9f257aba7ff13b1f34cc98dd99862	2026-09-21	
+disciplina	zahod/kuski-sostava-bez-zapora	merged	85eaed85b24b0443ec382379be7597a8fa1dc369	2026-09-23	
+disciplina	zahod/lenta-kontur-dobor	merged	4337f34384ce272bfcd39d8910f1e96b4373fe1c	2026-08-31	
+disciplina	zahod/lenta-zhanry	merged	eea7557889f18ceddb5bb5ec73211224f9cb5c1f	2026-08-23	
+disciplina	zahod/lichnaya-stranica-prepodavatelya	merged	b13b4cce0782aaabe46a4bde1baf2ffa48fccc93	2026-09-07	
+disciplina	zahod/lichnye-paroli	merged	6eba332bafde4d8041d7b36dbfa891763dade450	2026-09-07	
+disciplina	zahod/limit-kak-limit	merged	4c81a87e8d709d135c70638ee61d0e9fec4f262a	2026-09-23	
+disciplina	zahod/linter-z23-z24	merged	f98f7bdc947846419b92303751237fc3ee80cdb7	2026-08-24	
+disciplina	zahod/mandat-atomarnaya-zapis-i-lint	merged	dbedab429cdd50e761d8b1f97cf20eb685c95f12	2026-09-17	
+disciplina	zahod/mandat-po-hodu	merged	52f4fa80500b140f47b353e44f02876bea6f9fe1	2026-08-31	
+disciplina	zahod/mandat-proizvoditsya-konvejerom-a-ne-pamyatyu	merged	e5b75c3253f67284ea907cf548d00ab52431d940	2026-09-04	
+disciplina	zahod/mandat-slovar-statusov	merged	8bb4d62f6b69a20acf946217a17fbd89bcd428e4	2026-09-13	
+disciplina	zahod/mandat-tolko-po-sobrannomu-sostavu	merged	dd4febc090dacbea0483ce8a407c456ce61c03ca	2026-09-23	
+disciplina	zahod/mandat-tretye-sostoyanie-lintera-i-zapolnenie-sekcij	merged	e14b3462510e78c9954a33cec0819d2ab9fa0dfe	2026-09-04	
+disciplina	zahod/mandat-verdikty-oblast-volny	merged	8b63e05a0add08e8800d9470cfbf42a78cd67d24	2026-09-02	
+disciplina	zahod/mandaty-chem-otlichayutsya-ishody	merged	5d2c7e6dd5596d6fbb99d4b2bac2071d9a7cfddf	2026-09-13	
+disciplina	zahod/mashinnye-polya	merged	9663ff1a7218538022bd03c6c5671e685b184c36	2026-09-20	
+disciplina	zahod/mat-blok-osi-i-podklyuchenie	merged	5671a0966cadf3115887a04d24ac2f56a6a433bc	2026-09-01	
+disciplina	zahod/mest-zanyato-v-stroke-kruga	merged	29adcbf6f27e7296bb60c9c53874145f68b089b2	2026-09-23	
+disciplina	zahod/metka-dostavki-ot-kornya	merged	ae0d4d4e6c49ebc64524aa99979880ffd1dadf63	2026-09-23	
+disciplina	zahod/mezhvolnovoj-gejt-zon-i-ispolnimost-prob	merged	04f693464d51db7b45f8ed74ca2fadce3e41b348	2026-09-04	
+disciplina	zahod/mezhvolnovoj-pusk-priznak-predshestvennica-otrabotala	merged	60a1addc170911c9c121cb8fdf9432b8a43a262d	2026-09-04	
+disciplina	zahod/minuty-kruga	merged	5d1278dd51eb5246f5e3aa6473171f267924dabd	2026-09-20	
+disciplina	zahod/monotonnost-zakona	merged	e7801da9ed354342db349762f027433d6510f85e	2026-09-21	
+disciplina	zahod/mutaciya-zakona-zakrytiya	merged	9ca1711c3fba24f4a247a6541d67fac70d539292	2026-09-24	
+disciplina	zahod/nadzor-volny-iz-cowork	merged	52a236f24b378726b300fcae73d3810363d7c11f	2026-09-23	
+disciplina	zahod/normalizaciya-metok	merged	65acfc55192afea0e62bebcf4dbaefea1c0143ca	2026-08-25	
+disciplina	zahod/nositeli-pravil-iz-urokov	merged	92d0d9d7a9e4bfe6272afe925da45819b3a5c2ce	2026-09-02	
+disciplina	zahod/obshchee-prostranstvo-processov-predikat-moj-process	merged	3b8aff443b4ee38ea2121279cbba35dd38da7bce	2026-09-04	
+disciplina	zahod/ocenka-skilla-kesh-i-snimok	merged	79d2d0203c691e0e5b6bfd57ca8d9f490fff2e0c	2026-08-31	
+disciplina	zahod/opis-komponentov	merged	ecdcc070d697eb6f793b7c86147f2b7f0942218e	2026-09-23	
+disciplina	zahod/opis-materials	merged	154e4382c6666ce9f720dd84f3e50cdb5a8cd267	2026-08-31	
+disciplina	zahod/os-b-normalizaciya-na-vhode	merged	2050c8c1bc4c01b8e2381d5e4b468f18984d9018	2026-09-01	
+disciplina	zahod/osnastka-protiv-dolgov	merged	0a4337df7405ca04a460c04db85b5c58266656cc	2026-09-13	
+disciplina	zahod/osnastka-volny-chasovoj-i-budilnik	merged	bdba242c5d578b22d1ba49acc57dc695a64fcea4	2026-09-13	
+disciplina	zahod/ostatok-generatora	merged	0ebd89d8881f2c25423dde240951b2b0dcf5b1d9	2026-08-25	
+disciplina	zahod/otklyuchit-i-slit-lishnie-skilly	merged	7b36f20a5c64ef329b4b555615d6da4b10af01f4	2026-09-02	
+disciplina	zahod/otsechki-vo-vseh-domah-pokrytie-po-korpusu	merged	de9016f62c4570e914d36ee1ac02080decaf5f21	2026-09-06	
+disciplina	zahod/ottok-ocheredi-pozicieyu-sleduyushchej-volny	merged	52baca7657875fdace85fc608649d27459c4beac	2026-09-06	
+disciplina	zahod/pages-redirekt	merged	9594527de7164d0895341dd9be8f84a3017b224e	2026-09-07	
+disciplina	zahod/pechat-imeni-ne-vyzov	merged	38438d2e72d81d5e0ab41182b7350f9f386228ad	2026-09-23	
+disciplina	zahod/peredacha-golovy-odnoj-komandoj	merged	93a4e00186995ffd97a13d0028a7770dae184727	2026-09-23	
+disciplina	zahod/peredacha-ne-stiraet-ruchnoe	merged	0fa7b01d1eb4f74e8096f7d4d2bb0f824c3a87f4	2026-09-23	
+disciplina	zahod/peresud-k-zhivoj-forme	merged	577105c6b62817592506281981fd026012e0ef28	2026-09-21	
+disciplina	zahod/peresud-urokov-subagent-volny	merged	7c62cfd63fc9ee8498c75afbf57ddd7baeda7ba0	2026-09-02	
+disciplina	zahod/peresverka-reestra	merged	0502e5368f28df719358001fb2502cf887ba6ee5	2026-09-02	
+disciplina	zahod/perevod-p1	merged	7a433bd0d3b9ce9cbe97f6408ea9390d227fd875	2026-08-31	
+disciplina	zahod/perevod-p2	merged	024de523c537304dca248e36d12a2e76f181abe8	2026-08-31	
+disciplina	zahod/perevod-workflow-obzor	merged	b7b745c977166ab62502a0d29c6fb2ae7bf7bf6d	2026-08-30	
+disciplina	zahod/perimetr-gejtov-skilly	merged	366448dfe186baf9ceec8a95f7996f79092bcb52	2026-09-23	
+disciplina	zahod/plagin-md-hook-matcher	merged	5318fbc75d6788f837009f3b9edf90d38d13676b	2026-09-23	
+disciplina	zahod/plan-lekcii-k-standartu	merged	8e55a29cc23b887bc2f21ef615296c23af27abd4	2026-08-31	
+disciplina	zahod/pochta-dver	merged	887a6386f26136a70c0a4787786c09e04e500d76	2026-09-23	
+disciplina	zahod/podmetanie-dvazhdy-za-volnu	merged	07f1a6b33f2684edb3c8ff18baa783d0824ab874	2026-09-21	
+disciplina	zahod/podmetanie-raz-na-volnu	merged	1dc871ab740fcad59517617ca47a2d09c1190135	2026-09-21	
+disciplina	zahod/podyom-iz-osnovnogo-dereva	merged	0dd62d310e9a8f51ae3bec0199fd965852622c5e	2026-09-24	
+disciplina	zahod/podyomnye-listy-i-imena-nablyudaemyh-voln	merged	51605ac232b1230ee5176cd6c604803f9eaace67	2026-09-04	
+disciplina	zahod/pokrytie-chtenie-i-klassifikaciya	merged	9500e64d39165374e10c96a4bbd70d2275b2ed53	2026-09-17	
+disciplina	zahod/pokrytie-geyt-i-schyotchik	merged	57c7a09a8d749acc3f409e0fda4cc108e365cd03	2026-09-17	
+disciplina	zahod/pole-zakryt-u-uroka	merged	0b1bb198bae147fd84d601d0aab5e88d7b8ed60a	2026-09-21	
+disciplina	zahod/politika-modelej-sudit-sostav	merged	05c5d1b587c11274d9f4381d6687c80a0d988b8e	2026-09-06	
+disciplina	zahod/potok-1-mashina	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/potok-2-uchyot	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/potok-3-skilly	merged	e96410a973ce7dafcd5984811eabb5001e18e3e8	2026-08-31	
+disciplina	zahod/potok-4-vynos	merged	e6bd5a9f0b7c6c2d49fd560c12e46365f3d0650f	2026-08-31	
+disciplina	zahod/potok-zapuska-i-cena	merged	5dfcea13aa7a73e782bfa2f5a6c6b0a7c253b35f	2026-09-21	
+disciplina	zahod/potolok-iz-mandata	merged	9e86ea512b45d6443d030784f3ccae6739dabed3	2026-09-23	
+disciplina	zahod/pozitsiya-lyogkaya	merged	df12d2b321262e2c23fd504cb35ea31f373de82f	2026-09-23	
+disciplina	zahod/pre-commit-obhod-dveryu	merged	00d32fa237a16558bb59b3e4086d50bdeb6c0688	2026-09-23	
+disciplina	zahod/pre-commit-odin-diff	merged	f785ab38e06d73bb538ba9a1c0dde9b52c127f1b	2026-09-23	
+disciplina	zahod/predlozhenie-yadra-skilla	merged	f10acb3bf2a3ba1c8170e859f45b05b5f341c980	2026-09-23	
+disciplina	zahod/prichina-otkaza-besplatnyh-i-ohvat-gejta	merged	c25d782aa4aafbede01814bffc337dd0ce488abc	2026-09-13	
+disciplina	zahod/privyazka-golovy-k-huku	merged	3d94557acc1597dc9c60356f3435296d41a46515	2026-09-06	
+disciplina	zahod/priyomka-cherez-priyomshchika	merged	20d97e242e0d831ef8ce42a53fc95379263d8c34	2026-09-23	
+disciplina	zahod/priyomka-forma-teksta	merged	46b77727d8890fe61b65050c040e3501a477e6f0	2026-08-30	
+disciplina	zahod/priyomka-g1-abzac-i-krasnye-lovushki	merged	3831574bc08ba03f590944b40082e0d2e385b2a2	2026-09-02	
+disciplina	zahod/priyomka-g3-g12-g14-vetka	merged	edc532b3c06681a09425de6f1abf0f5696608712	2026-09-20	
+disciplina	zahod/priyomka-gejty-lozhnye-krasnye	merged	517ed4143f625b5bd81d48ef33588a751f21e0a9	2026-09-05	
+disciplina	zahod/priyomka-klass-E	merged	7e68f8b0a9d17f832134364da7e601c0f8a983c2	2026-08-31	
+disciplina	zahod/priyomka-otstavanie-alarm	merged	b8a4e7f212d24eb80017830a05a515d3ccbba2a6	2026-08-31	
+disciplina	zahod/priyomka-trebuet-gejt-sborki	merged	4bc3afc16fcdc9cf4382567ab5b72277d2ecd37f	2026-09-13	
+disciplina	zahod/priyomka-volny-10-po-rychagam	merged	14d1aa1ad3927316e3050cc2fdc0e2be86a9fdf3	2026-09-04	
+disciplina	zahod/priyomka-volny-5	merged	5ee6d03fec2da5ef075ad74a4b1e278853dfa4dc	2026-08-26	
+disciplina	zahod/priyomka-zona-i-artefakt	merged	425c6d6cfefb9696d33ad2046d183e045592ef9c	2026-08-30	
+disciplina	zahod/priyomshchik-kak-rol	merged	441c04972f7f989af7771908f49abde7e710a724	2026-09-21	
+disciplina	zahod/proba-a2	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/proba-a3	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/proba-a3-posle	merged	0c8c741c1399413b8dd4479f8abfa595f7574f66	2026-08-31	
+disciplina	zahod/proba-e2	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/proba-e5-b	merged	2cb2881a8d5aeb7cb7289391eb7a1656577b450a	2026-08-31	
+disciplina	zahod/proba-e5-c	merged	2cb2881a8d5aeb7cb7289391eb7a1656577b450a	2026-08-31	
+disciplina	zahod/proba-e5-posle	merged	2cb2881a8d5aeb7cb7289391eb7a1656577b450a	2026-08-31	
+disciplina	zahod/proba-p1-clean	merged	b19f60808cf273c3b893f0a18a848f8195cbdd89	2026-08-31	
+disciplina	zahod/proba-wt	merged	1e7f7edbd1fde66e625112e8901bdff9f80b0646	2026-08-31	
+disciplina	zahod/produkt-a-ne-dvizhenie	merged	e43afbb1f78b99ae2d66fbed194d66eca165b228	2026-09-21	
+disciplina	zahod/progon-avtosohranenie-zhizn-i-samozaciklivanie	merged	f8100a0ef7fe624c8da40e959829e25260880eb7	2026-09-04	
+disciplina	zahod/puls-statusline	merged	328fc7d49c87b5463b83721f129790ea5a2b228a	2026-09-23	
+disciplina	zahod/puskovaya-tablica-komandoj	merged	98739731304735eed01ae0dd457aca16e3f38635	2026-09-21	
+disciplina	zahod/pustoj-pul-sobytie	merged	ffa19b7a96df63a898178d857b557ea6b81fb099	2026-09-21	
+disciplina	zahod/puti-generator-i-linter	merged	fa51c57f8e20042906f537993749eb1c5e224984	2026-09-23	
+disciplina	zahod/puti-otnositelno-worktree	merged	3fef24347002e7e1dab05dda0e8dd0195b4517c0	2026-09-17	
+disciplina	zahod/raspil-monolita	merged	9594527de7164d0895341dd9be8f84a3017b224e	2026-09-07	
+disciplina	zahod/razmetka-urokov-orkestratora	merged	af0bb9ebbd2468b6755755495071d1d09954009c	2026-09-23	
+disciplina	zahod/razrez-plan-lekcii-2	merged	b08d15b2d08319317738dad5d59513bc006dda54	2026-08-27	
+disciplina	zahod/reestr-moskvy	merged	1f70549b55327ff33dc23f456332bcf108379870	2026-09-05	
+disciplina	zahod/reestr-zdorovya-kanalov	merged	0b7dc7254bb4b9bc85f922ad4c50dea9bc7e524f	2026-09-20	
+disciplina	zahod/reestr-zhivosti-chto-meryaet	merged	9555b05c74826bbd96628036fe02bec8f27b9e7e	2026-09-21	
+disciplina	zahod/refleksia-v-reestr-klassov	merged	6bde1fa7b0a295470a33405c507d970c6a2977ae	2026-09-13	
+disciplina	zahod/refused-mandate-index	merged	9b39bd3dd3cd5f81761d2350d9bbb5ff78ca6fb9	2026-08-31	
+disciplina	zahod/register-doc-chuzhoj-koren	merged	5bba6da845d5d40817b8c4b3e10d12699616bf47	2026-09-01	
+disciplina	zahod/register-doc-i-README	merged	aa6c2458f9d6c18f87c9236dc930fd9aacb913cc	2026-08-31	
+disciplina	zahod/register-doc-i-README-dobor	merged	2d3dce4bf0e3501ebfc94e63d00928d133cc33f7	2026-08-31	
+disciplina	zahod/registraciya-pri-puske	merged	196aab2c31af76df3a3f98226fdbd6bea2453da4	2026-09-20	
+disciplina	zahod/reserch-cikl-osi	merged	5b8807bd718cbdfb719e5ccf4c9281d73284e5ba	2026-08-31	
+disciplina	zahod/reserch-cikl-v-arhiv	merged	ee1190f6f6f4ad6caa1baf21e93e4c28158acdf8	2026-08-31	
+disciplina	zahod/reserch-orkestrator	merged	410fe9ec5610389c2f8da7ed0c6583605395c113	2026-08-23	
+disciplina	zahod/reserch-russkie-kruzhki	merged	b4d13452d72a3eaf5855a8576e89455d742c12d7	2026-09-13	
+disciplina	zahod/reserch-skill-i-anglijskij	merged	0f105097a96371c334148514f0f67fa2d8139846	2026-09-06	
+disciplina	zahod/rezolver-fajl-v-skille	merged	5bc176aa887613f2ec3990dfdfbe993813f73bf4	2026-09-23	
+disciplina	zahod/rol-subagenta-kontrakt	merged	1e8116eff5283a847cf3f3b0ad778416f7b8bda8	2026-09-21	
+disciplina	zahod/roli-i-dver-brifa	unmerged	fa08f5f94ae0b2889b10126329a72095ec94c49b	2026-09-17	4
+disciplina	zahod/roli-po-kontraktu-i-kommiter	merged	883b1a0adcb0fa5efa3e544ee47061d7361e69c2	2026-09-21	
+disciplina	zahod/rychagi-illustracii-matematika-2	merged	b3e74100592ef5be90d38b96d5dbcf991c34a7ba	2026-08-27	
+disciplina	zahod/sborka-s4-s7	merged	c58c14241f2ed76089fb604cb1ae82066f437bdd	2026-09-17	
+disciplina	zahod/sborka-volny-orkestratora	merged	eec880bc5f09594cd33737199e69669e5848ee35	2026-09-13	
+disciplina	zahod/sborshchik-chetyre-roli	merged	d4fd935c925fa669ba8482e95263d65be8b93b97	2026-09-23	
+disciplina	zahod/sborshchik-i-vedushchij-porog-ostanovki-razvilki	merged	83f2b6b0c6e4b9df18389e7e7ddfe4db0cf5b0e8	2026-09-04	
+disciplina	zahod/schet-arki-i-razdelitel	merged	ccfae569b628ab11abc698e5a796496de2304fee	2026-09-01	
+disciplina	zahod/schet-nezakrytogo-tri-chisla	merged	d6342364bd2dcea33a2917094030a659f39c4121	2026-08-31	
+disciplina	zahod/schet-rychagov-i-rol-hod	merged	feb487b60505c233fb885653cb6f041b72aba801	2026-09-23	
+disciplina	zahod/schetchik-bez-rychaga	merged	bf00365eeeaf8a343418d3e1dad13d390c2619a6	2026-09-20	
+disciplina	zahod/sdk-pilot	merged	29f619dd509a23ce316d2b73e03c0890c1267c3d	2026-09-23	
+disciplina	zahod/shablon-otcheta-anglijskij	merged	b84c0ea9337c83da72d597f9cb8f0e500ceb5215	2026-08-31	
+disciplina	zahod/sistemnyj-promt-i-artefakt-sessii	merged	6f23e28fe8586d6705db0860b42ab331745ceb4e	2026-09-02	
+disciplina	zahod/skeleton-vne-repo	merged	5b8807bd718cbdfb719e5ccf4c9281d73284e5ba	2026-08-31	
+disciplina	zahod/skill-dajdzhest-dovodka	merged	66a2fea8cc690b97fad3b8b95f421d0655df4ebc	2026-08-26	
+disciplina	zahod/skill-dajdzhesta	merged	b245979d06b816535da1e68a9a254e349fe8674b	2026-08-23	
+disciplina	zahod/skill-intervyu	merged	67561af70595550b7e8a05044a7f0cfece492220	2026-08-31	
+disciplina	zahod/skill-intervyu-sborka	merged	4f513f86409b16e4c2c7e3a367b6dcbb52df1898	2026-09-02	
+disciplina	zahod/skill-lenty	merged	124ada2c12cd871eeb8c6bab070fbee5114da158	2026-08-23	
+disciplina	zahod/skill-reserch-dovodka	merged	11865ea161537fab1eceece54d5f8cd084b3ace8	2026-08-26	
+disciplina	zahod/sklejka-cepochki	merged	7041bb460d74f8268309c176000e1554643104bf	2026-08-23	
+disciplina	zahod/sklejka-sajta-i-vhoda	merged	0b2c4b626110955549e8cc3b00f2eb1c95c8901d	2026-09-07	
+disciplina	zahod/skvoznoj-progon	merged	2af3bb050068f215810a88d84bf9b7e829ff2288	2026-08-25	
+disciplina	zahod/slabye-mesta	merged	48d7d2e594ff465bc98eb80dfbcb66f24157a176	2026-09-23	
+disciplina	zahod/slajdy-chetyre-krupnyh	merged	649d6846b0abf4a19666c8b4b9e9532ed41d9f49	2026-09-02	
+disciplina	zahod/slajdy-k-standartu	merged	307556860c9eb10fb52a650ac0aca4323f4c6bdd	2026-08-31	
+disciplina	zahod/slajdy-zamer	merged	1d6aa3c3c42a4805c2397bd601ed11f9e7e66a74	2026-08-31	
+disciplina	zahod/slim-preambula-zahoda	merged	2f0b7242efbc2e5eb66ba4fd29f6877d4c94ade6	2026-09-13	
+disciplina	zahod/slit-skilly-o-skillah	merged	e9b393ed7dfa95c99c84cb8f87afde9c0285d5be	2026-08-31	
+disciplina	zahod/slovar-statusov-dolg-ostatok	merged	3f3a6a4ce8e3be1ff261eb23c1aee7e5ed317b8f	2026-09-02	
+disciplina	zahod/slovari-v-kod	merged	5a7cc6d87bb9ea81ba34ef5a62718dfcc193b53f	2026-08-23	
+disciplina	zahod/smeta-rekalibrovka	merged	bd07d4deb7ae6b57aa8383b70cdcd4f4a3f589ee	2026-08-31	
+disciplina	zahod/snimok-dolga-nazyvaet-ref	merged	14e1714cc71d56c4f33f84553467301bcd6f59ea	2026-09-13	
+disciplina	zahod/snimok-nazyvaet-avtora	unmerged	4334cbf16de7eb721e6c3860f65003d553c8557f	2026-09-21	1
+disciplina	zahod/snimok-nazyvaet-avtora-2	merged	9d91fb21620a8f3682f88da65a234969decad80f	2026-09-21	
+disciplina	zahod/solver-kalibrovka	merged	e7b10281c064a4d24cb1823d9ebfab759c9a7cbd	2026-08-23	
+disciplina	zahod/sostav-mnozhestva-i-mandat	merged	4f9350e1976101c896ec3b29fe40796daa0d7412	2026-09-23	
+disciplina	zahod/sostav-s-zavisimostyami	merged	3b26e73cf3bc38206841fc462177430f4c08502e	2026-09-13	
+disciplina	zahod/sostav-zhurnal-i-prichiny-po-id	merged	9fea38fdc8cd0987d959e1765d50858b55564e4f	2026-09-17	
+disciplina	zahod/sostav-zona-chuzhoj-volny	merged	afbcb54ee3d0314bd374d048b958e7eec85ec4e2	2026-09-23	
+disciplina	zahod/sostoyanie-i-gigiena-arok	merged	9d602fbd73ebd0b5ebf19117ef80eeef9396b5e8	2026-09-06	
+disciplina	zahod/sovet-pri-sborke-zahoda	merged	e7f2d2beb9de0d92a2d419a7058ce12aef79b358	2026-09-21	
+disciplina	zahod/srok-voskresheniya-parametrom	merged	093bc566a6f814c9cbfe36b1475749939620a78a	2026-09-21	
+disciplina	zahod/standart-artefaktov	merged	2f86d0d89f13603318fd557d87fbe15638ab7a50	2026-09-02	
+disciplina	zahod/startovaya-stroka-ispolnitelya	merged	cc2caa201e61a9219737d46ca60f2ea236e84256	2026-09-05	
+disciplina	zahod/statistika-zahodov-i-klasterizaciya-po-modelyam	merged	7844af78370f48e6dc754b6efc368f6bce755323	2026-09-04	
+disciplina	zahod/stend-website	merged	5b4a87d539dde4aa34624184e3a87350f8d9e290	2026-08-29	
+disciplina	zahod/storozh-dizajna-koridory-so-slajdov	merged	41de9b3bbfd7c801d877ccfd640881c7acf4c8e9	2026-09-07	
+disciplina	zahod/storozh-voln-10-11-12-i-podyomnye-listy	merged	15e5cd13ced0902499b8e28dbfc57a80d1b925d1	2026-09-03	
+disciplina	zahod/storozh-volny-i-orkestr-tela	merged	2a23491950ae92ae6252d5b86cdff7bbe8472a3c	2026-09-02	
+disciplina	zahod/stroka-kruga-polya	merged	c735504d9dd886f6f033c0fa6bb718e4e9bae8a4	2026-09-23	
+disciplina	zahod/sud-nad-218-urokami-partiyami	merged	19c64a3ee121e6b754f6ec23ab9e732031db0b78	2026-09-06	
+disciplina	zahod/sud-nad-nesuzhdennymi-urokami	merged	416332878436d9f64750eed06e24eacc036fa82d	2026-09-02	
+disciplina	zahod/sudit-urok	merged	3814062bd0908bc87a91e1db244aae9d967f9e04	2026-09-20	
+disciplina	zahod/sudya-ne-perepisyvaet-cheloveka	merged	1deabe3291ae1e3280bb6ce8926e2920b0506b28	2026-09-17	
+disciplina	zahod/svedenie-cepochki	merged	260aa68d9a333b7fcdf79af4909205e8edbf1bee	2026-08-23	
+disciplina	zahod/svedenie-dvuh-izdanij-git-zona	merged	42dc57b1de6c8cfcc9ee3a05e98b31ce181471c5	2026-09-02	
+disciplina	zahod/svedenie-uzlov-1	merged	32f91a7cfa013de70156a6643fde3b62abab3488	2026-09-23	
+disciplina	zahod/svedenie-uzlov-2	merged	f8e248702339268eee35b9292a5ec53a6b3e7069	2026-09-23	
+disciplina	zahod/svedenie-uzlov-3	merged	72fdad103a518d75838721ea9ced51ecbf463da4	2026-09-23	
+disciplina	zahod/svedenie-uzlov-4	merged	e1f1d8ad0b63cef6ee897dff93deec96e4add377	2026-09-24	
+disciplina	zahod/sverka-otchyota-s-diskom	merged	f75719f856851ab938f2ea63a8fde25bad3cde6d	2026-09-21	
+disciplina	zahod/svesti-arochnye-skripty-proshlyh-voln-v-dom	merged	64b15c446bfcb1b0809daac09bf61eed9e7f899d	2026-09-04	
+disciplina	zahod/svyaz-cepi	merged	e0f32d2853460ea2f797e446cd25e398cb5a04fd	2026-09-20	
+disciplina	zahod/svyaz-cepi-reestr	merged	91f84954f2ba3aa409979b8e0fbdcf15f893a4cc	2026-09-21	
+disciplina	zahod/tekst-zadachi-u-kazhdoj-temy	merged	68554e78f429f0110606ce7127071cb7591ce98b	2026-09-21	
+disciplina	zahod/test-zahod	merged	f9617769085ae387f1c02a7130a311e9b2e53e60	2026-08-31	
+disciplina	zahod/test-zahod2	merged	a1a76c6e6f152b0e8d416347a98db28ee8a08bfc	2026-08-31	
+disciplina	zahod/test-zahod3	merged	93a57ac5ff5e4b080500e0e7465c3ec95fe9f237	2026-08-31	
+disciplina	zahod/tip-i-dom-mashinoj	merged	bcc529f8544692fc5dc7394e37150e522399bc3c	2026-09-21	
+disciplina	zahod/tipologiya-urokov	merged	c04e5f848bf787b0c55631bf0d6eee74519f98c8	2026-09-20	
+disciplina	zahod/tri-ishoda-gejta-rc2-i-chego-ya-ne-schitayu	merged	0dacca7ca387f263f48b43cf32d3854043078eb8	2026-09-04	
+disciplina	zahod/tyazhelaya-po-odnoj	merged	d4e214bbbfbc8a75713a4008a2506cfa6f6aa88f	2026-09-23	
+disciplina	zahod/ukazatel-aktivnoj-volny-i-storozh	merged	549d6704e4702793be5fc606f73126d658049eaf	2026-09-06	
+disciplina	zahod/ukazateli-i-ohvat-anglijskogo	merged	128288eb2864e3c80efe03cabfbbd9c36a6a32ec	2026-09-06	
+disciplina	zahod/ukazateli-ohvat-anglijskogo	merged	2798b8aeedc3334705b39a54974e370a6ba14d77	2026-09-04	
+disciplina	zahod/uzel-f0-mandat	merged	4fb0fa06ce88fdcccfa65a74867405ba54194482	2026-09-24	
+disciplina	zahod/uzel-f0-sborka	merged	7f1381f13858ae837297ddf22a1748d03cc79ef0	2026-09-23	
+disciplina	zahod/uzel-f0-sostav	merged	ca5fc50f6473c176dd12d98700fef7b5fe70dd00	2026-09-23	
+disciplina	zahod/uzel-f0-sostav-2	merged	c53af0f49fedda3e35b5e13c7b0f798b2262e2f3	2026-09-23	
+disciplina	zahod/uzel-f0-zahod	merged	3ed8719555282b2b8a2d560a9f90ff4caf6f47ac	2026-09-23	
+disciplina	zahod/uzel-f0-zahod-2	merged	f777210669e16b9cb4e325f7337ba830a2d1c491	2026-09-23	
+disciplina	zahod/uzel-f2-worktree	merged	89b8db9a9c5ea9f84ba517b9ed035be7c7fbc263	2026-09-23	
+disciplina	zahod/uzel-f2-zadanie	merged	ca7dc2881526721fe19bf1ca71a8f922eaf36e76	2026-09-23	
+disciplina	zahod/uzel-f3-gigiena	merged	a5beecfc952463ebb74d80b7327ef1e7858af19e	2026-09-23	
+disciplina	zahod/uzel-f3-kruglinia	merged	9fe585e8950f89081a3fc6f6b507e045de892f8a	2026-09-23	
+disciplina	zahod/uzel-f3-processy	merged	289dbd9cd00d4c9fde31f857aaaae9f896793a86	2026-09-23	
+disciplina	zahod/uzel-f4-vyzhimka	merged	339344c37d521dd144779f6b3cb39065c6717a6f	2026-09-24	
+disciplina	zahod/uzel-f5-konvejer	merged	fa8e916feda64da9715a033b2484a4239835b2ea	2026-09-23	
+disciplina	zahod/uzel-f5-nezakrytoe	merged	b26a1925b1c77684280a9ae03ef7330800aa9f4e	2026-09-23	
+disciplina	zahod/uzel-f5-zakon	merged	099a32089a863ab87bffa7eae17eaa7c6df3e62c	2026-09-23	
+disciplina	zahod/uzel-f5-zakon-2	merged	358b36adf10224caa465790bcc9321e66ff24c73	2026-09-23	
+disciplina	zahod/uzel-f6-dostavka	merged	a084ff590157525b01a7ace0c87061049fa79eb7	2026-09-23	
+disciplina	zahod/uzel-f7-hook	merged	7e421fc8b585b058acf395b41818adfa45c2aad1	2026-09-23	
+disciplina	zahod/uzel-f7-podklyuchen	merged	f3d1e777b4704409bed6886f40784e2cce3cebfa	2026-09-23	
+disciplina	zahod/uzel-f7-registraciya	merged	0d001a3eacd13481cbdebb58b42cc2f0d9db4d39	2026-09-23	
+disciplina	zahod/uzel-f7-registraciya-2	merged	8a3a4b929afaef7f5dac1e77477651bc3cd9ea15	2026-09-23	
+disciplina	zahod/uzel-f7-sessiya	merged	c0492cb819b334fcff56234e3166fe7005d1f599	2026-09-23	
+disciplina	zahod/uzel-f7-sessiya-2	merged	a5c3a2b663d039a4859b0dab2db908e632815722	2026-09-24	
+disciplina	zahod/uzel-f7-stend	merged	d447fef93357c3781e71ae9d66a5e5e6b780fc95	2026-09-23	
+disciplina	zahod/uzel-fa-pesochnica	merged	247e3f12a64bfc72a1b233a8b7bc92f6b194ccc4	2026-09-23	
+disciplina	zahod/uzel-fa-razvedka	merged	f5bf868494f2f8145d52d0207f6b0ed1bc29a638	2026-09-23	
+disciplina	zahod/uzel-fa-roli	merged	7cbbc55f25d77d58f48d535763c1f9869fe4672e	2026-09-24	
+disciplina	zahod/verdikt-odno-pole	merged	5e223a03561a914ad1bcc53306b84ac919445c24	2026-08-31	
+disciplina	zahod/verdikt-po-kazhdomu-iz-16-mandatov	merged	1e61273f48fbca1e75948c4ad6707d3684c1dd51	2026-09-06	
+disciplina	zahod/verdikty-protuhshij-shum	merged	14de689a2e822bdaac2ae36a6acfd4dc7b9340d9	2026-08-31	
+disciplina	zahod/verdikty-urokov	merged	8f1a6b36cc63101b48fa27f78a99d15d7e40d313	2026-08-31	
+disciplina	zahod/verifikator-fajlom-a-ne-prozoj	merged	95889b73d5a035e4044976142aacc9b9ca0be52a	2026-09-06	
+disciplina	zahod/verifikatory-stilya	merged	c24d62135d691e0a66e3b6c9658f0e63f6634e8e	2026-08-07	
+disciplina	zahod/verstka-stranicy	merged	34d6e36998dffde5525df85db9d2a5170f2bf7c1	2026-08-29	
+disciplina	zahod/ves-bez-obhoda-istorii	merged	86c479422e82e550255ca3efe15526e32c32aef7	2026-09-23	
+disciplina	zahod/vlit-rezhim-fajla-ne-konflikt	merged	5f498a5b9dc872a82e6f0b0e23f226c1e38e8bb4	2026-09-06	
+disciplina	zahod/volna-8-polya-balansa-i-dva-uslovija	merged	53650414a7d6fad2e2050e890468d88de326728f	2026-09-03	
+disciplina	zahod/vosstanovit-snyatye-imena	merged	55a497a726c55c8294858b3bcd3fa3c4180a9639	2026-09-01	
+disciplina	zahod/vychitanie-mertvoe-i-dubli	merged	e7a5a3578ea6c6a53dd9e10036b6b103925fe215	2026-09-13	
+disciplina	zahod/vyhod-s-ozhidaniem	merged	9ceedcb38a9a27325da93a394553893b3c2368a2	2026-09-23	
+disciplina	zahod/vykatka-bota-i-sajta	merged	b21d3b8f424806d0b8fe1b314a378394721cc1fe	2026-09-06	
+disciplina	zahod/vykatka-raspila-i-dver-vykatki	merged	d748d42fa888a376e4115538fdc1feadaeb4582b	2026-09-07	
+disciplina	zahod/vynos-dvizhkov	merged	37b61dcfbc3e2bd6d2fdb570a93f001c9df9934d	2026-08-23	
+disciplina	zahod/vynos-instrumentov	merged	5687fbdb8ce95161cda94cd7c4cb71534e49927b	2026-08-23	
+disciplina	zahod/vynos-kanonov	merged	c970a75c94391585d4d32492dff2eab0a655ea06	2026-08-23	
+disciplina	zahod/vyvoz-311-kommitov	merged	510d9fa5bc8019e435d53dab68c86d68e7947813	2026-09-21	
+disciplina	zahod/vyvoz-bez-chuzhoj-istorii	merged	ae93ccb64fc38645301193ecd53943aa153e47f8	2026-09-23	
+disciplina	zahod/vyvoz-i-nadgrobiya	merged	aa7527107f8a66f742488b128188116789c3c33b	2026-09-22	
+disciplina	zahod/workflow-lekcia	merged	29b3af2c315b3cdec745262f4e4b8aa882fd3c4b	2026-08-26	
+disciplina	zahod/workflow-obzor-os-14	merged	dbe4d7714bd7ba58d474ec4cfc5062103affbcb7	2026-08-31	
+disciplina	zahod/yashchik-golovy	merged	28b8233f24849d0090efbcae0c456eb3d420d0fd	2026-09-23	
+disciplina	zahod/z24-otkaz-pri-neobyavlennom-korne	merged	5e65cfca76900bc8742dd57051a40fd9594aa8c0	2026-09-06	
+disciplina	zahod/zadanie-subagentu-bez-protivorechij	merged	77260a7d0e83825d13982584bf0c69f8a2828e4c	2026-09-23	
+disciplina	zahod/zahod-32-test	merged	28dcb7b4984033a1f222d14413ebdb9f6acb176c	2026-08-31	
+disciplina	zahod/zahod-bez-suzhdeniya	merged	c4262181b2ae35f0d5b75c11ce724653cf3c3cb1	2026-08-28	
+disciplina	zahod/zakon-fixture-starye-lovushki	merged	76a6f458f8d43eb94570c4952ae9baa211a785dd	2026-09-21	
+disciplina	zahod/zakon-nahodki	merged	433176afdc4724f06997bf328324d69f529dd4bf	2026-09-23	
+disciplina	zahod/zakon-zakrytiya-ohvat-i-uslovie-g	merged	6893d523de63d14461f78b53487a343f2b0c200c	2026-09-17	
+disciplina	zahod/zakon-zakrytiya-perepisan-i-sudit-sebya	merged	4a6d192a92780e067ce7aac3de7afcdde3154474	2026-09-06	
+disciplina	zahod/zakon-zakrytiya-pozicieyu-volny	merged	4941559d32613949aa8468b5a10f98b5a0504e8e	2026-09-06	
+disciplina	zahod/zakon-zakrytiya-stend	merged	c8eadd3105bcfc441e0579d3d0a09ea9d3f8c08d	2026-09-23	
+disciplina	zahod/zakon-zakrytiya-sudit-sostav	merged	8a1c0cb15eed599da95342635e3eebd516c57339	2026-09-13	
+disciplina	zahod/zakon-zakrytiya-uslovie-nakazyvayushchee-za-pravilnoe	merged	ebac71db4cb971179dda8f83222dc46e2728a014	2026-09-04	
+disciplina	zahod/zakon-zakrytiya-volna-14-orkestrator-ne-lomaetsya	merged	727ce66b86bed56876e6c8e856cac17a1b849489	2026-09-06	
+disciplina	zahod/zakon-zakrytiya-volna-7-samopodmetanie	merged	65c87ceb7c41eb8b61f1eacb1a8e4e427c374d38	2026-09-23	
+disciplina	zahod/zakon-zakrytiya-volna-8-zakrytie-zony	merged	95e3dcb0e2988afda4ba083c38dbe1fa8b917ffb	2026-09-24	
+disciplina	zahod/zakon-zakrytiya-volna-veb-p2-p7	merged	72a1d7ebb3c148c2f242a3945faffb266a15fc7f	2026-09-07	
+disciplina	zahod/zakryt-arku	merged	714c177cb156f837f76cdd5a3d32fd9a2f7e6dab	2026-08-10	
+disciplina	zahod/zakryt-utechku	merged	18050b5fe05b31f1e2de8de34be7d317bd9ed56d	2026-09-06	
+disciplina	zahod/zakrytie-volny-orkestratora	merged	ea3dde47accba0a2b8f23eadb4b6a1bd5ccad9d4	2026-09-13	
+disciplina	zahod/zamer-mashiny	merged	eac291f5f440e921c30949dfe6082ee8e3a6f67b	2026-09-23	
+disciplina	zahod/zelenoe-na-poddelke-proba-zhivyh-zavisimostej	merged	50b796bfc4e2514229bfa2d4fb8d47194dad81d4	2026-09-04	
+disciplina	zahod/zhdat-do-karantina	merged	27d34c32d4edf15accedf2ae5ef8f5a39732b553	2026-09-21	
+disciplina	zahod/zhivost-modeli-dovozit-a-ne-otvechaet	merged	2cd066b06bcf3c4e8aec6f9b605acd1167436148	2026-09-06	
+disciplina	zahod/zhivost-pered-kazhdym-zahodom	merged	41785ed9b61b0fd5e043a271056f768edfbaa4f6	2026-09-13	
+disciplina	zahod/zhivost-porog-i-posledovatelno	merged	28815e60992d1eb450c6ca9740097c65e022ad07	2026-09-17	
+disciplina	zahod/zhivost-volny	merged	b3c7614c7424493ca8f9dc64c7b8a02bdb2e46a5	2026-08-31	
+disciplina	zahod/zhivost-volny-2	merged	9656a68c8370d00b64b6d163aa58c3b01d01276d	2026-08-31	
+disciplina	zahod/zhurnal-fabriki	merged	a2f44d090af75c3582b14f63e2339592948c7968	2026-08-23	
+disciplina	zahod/zhurnal-rassejat	merged	97248c31cc9f4d7392cfa01ba2db934ce5de5b20	2026-08-31	
+disciplina	zahod/zhurnal-volny-po-hodu-rychag-a-ne-nadezhda	merged	bbd76a9ec72d91ce8ac47a233e8ef40636ba5858	2026-09-06	
+disciplina	zahod/zona-chuzhoj-fajl	merged	4962789dedc363307ef37a65991c8e880a472b09	2026-08-31	
+disciplina	zahod/zone-spiskom-putej-ne-molchit	merged	a3ab50ec318450f43c580d792f6e251d1dea1235	2026-09-06	
+disciplina	zahod/zuby-incidentam	merged	692d9a5f9640c5843c7cc889debc744a57a1c7e2	2026-08-23	
+spetsmat-179	dizajn-dobivka	merged	16369dbb247da851604aed757110c0cb67be5691	2026-09-07	
+spetsmat-179	dizajn-raspredelenia	merged	f3881ada7a98e12d2bafdf921d695f1828225bb5	2026-09-07	
+spetsmat-179	dve-stranicy-raspredelenia	merged	126a3f073232f03c54bf0e52c30b02d16dd96741	2026-09-07	
+spetsmat-179	listki-kak-baza-zadach	merged	1733242b6fdb9fea11c03b919e293f3759492c9c	2026-09-07	
+spetsmat-179	main	keep-trunk	23f5fb18c7339cd021a2d13bd53ad31f42eceef6	2026-09-25	
+spetsmat-179	park/2026-09-25/spetsmat-bot-main	park	158ecefa2eb8c7b586e8f62d0adffdb4b4fe3559	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-B1-v14-vid	park	a49fad5703a43ef9c2224157acd154c9457d743b	2026-09-25	2
+spetsmat-179	park/2026-09-25/wt-R1-foto	park	f3ba3b0682f021b5198a0c75bde34d1ed1c9c680	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-R2-slovar	park	6642fd8f165752b789797b06987682b72b42499f	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-S1-slot-i-routy	park	c7d46a517572a136e0f39ef6dd814536d4ff2814	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-admin-svoyo	park	173eca38b380494c6a06dcf08902bca02ef3fbd7	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-bystro-i-bezopasno	park	e53a053f55b250a3515897b84c2d5f3f1a7fc448	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-data-i-istoria-kletki	park	14b54e167e5e89f9515583426293dea89ea7f48f	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-glavnaya-i-stranicy-listkov	park	bbeba7ffca2ebf8fa96fab8ba86c4a472d059684	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-kabinet-na-den	park	0fe9d6fb588a7aeee58aa55ad4728a22e444ab48	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-kanal-diagnostika	park	651f09aa29f21b9da4ac051d5210d5aa645aa44c	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-kanon-verstki	park	ee68879babd27e6f455dad307feff38a3deb7cdd	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-konduit-na-prosmotr	park	d8f422200633731212d9e6caa302a63c975f24a0	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-konduit-panel	park	011e077d214f1c4dfab0e7319ee3be8a74bb0769	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-konduit-shirina	park	e1552b92000e1cf924a46d90a33e7a69d4a0616e	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-konduit-vid	park	07a39ba69b495655092cb02451ea7fe3a17225c1	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-lichnoe-v-kartochke	park	54aba134bce671a11070f36bac6021ba40f86b68	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-moi-stroki	park	28c556afd67d305aa684814873a16266de341c57	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-nadzor-zvonit	park	25c0088aef3b1a3caf071b90b6eff4ca45d7100f	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-oblozhka-listok	park	10a455f2571888c7cf934c6e8600702b7bf7efe8	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-raspredelenie-kolonki	park	7c8a98e60c593f5a7892037e7ab5be1253de089c	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-sostav-klassa-i-112-strok	park	bfdc942b1fbd9ee4bbe02c3edfd372c5cac72f23	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-statistiki-i-grobarij	park	d7ebce27c94a1b16907b006da522016e245cc69b	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-storozh-vstal	park	343de837263214b0e86df1b76128c13077193659	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-veb-priyom-zadach	park	5978df5a315c14a045e2faa4dfb52abbd568656e	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-verstka-raspredeleniya	park	1b2dddc794c459638fc5074c6ea56f6f14f091ac	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-vnesenie-zadach	park	73f7e62204224675a20c6101dd41c9e93acd3994	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-vykatka-tunnel-i-storozh	park	c00558226f9476cf09a5eafdf0dd327b6629e3b4	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-zamer-C-v1-baza	park	4c7839eb5120ab2a0aef529effbd337ed13c08cc	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-zamer-baza	park	493069204d87957870880d1d0e6f657fc2f47629	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-zamer-noch2	park	d806c2f6a6459822c3eb529d2bc0cbfc4b300930	2026-09-25	1
+spetsmat-179	park/2026-09-25/wt-zhurnal-setka	park	2190a8df4a210e29eb35b01af7d0ec89a6634bd6	2026-09-25	1
+spetsmat-179	park/2026-09-25/zahod/nadzor-zvonit	merged	d457504d48e1488d8b95f998e77a815100c4542d	2026-09-11	
+spetsmat-179	pravka/admin-svoyo	merged	1aa0813bdd145f2fc0900ba4b0e61d82024afb69	2026-09-07	
+spetsmat-179	pravka/kabinet-na-den	merged	6ef7b56857da613852a05e0950c6eb136cd7af89	2026-09-07	
+spetsmat-179	pravka/konduit-shirina	merged	5320a87d7dc06b471e3e9a040bb302a43410ccaf	2026-09-07	
+spetsmat-179	pravka/konduit-vid	merged	8b3a97d2f504cc47f40905bdbcb75cc49c1dd8f2	2026-09-07	
+spetsmat-179	pravka/lichnoe-v-kartochke	merged	1b9d5181bb2aa22c147b54767f464da9ca5d36e9	2026-09-07	
+spetsmat-179	pravka/moi-stroki	merged	1f5d068b5f14102440ef95aa3db23ccf8d6aec5c	2026-09-07	
+spetsmat-179	pravka/oblozhka-listok	merged	ec641642665c5b82ca52a1cd62d72f2fa398ad86	2026-09-07	
+spetsmat-179	prinimayushchij-po-dnyam	merged	f9e3cb096099a308bb2b9996a540aa1e6533bf73	2026-09-07	
+spetsmat-179	profil-bezopasnosti	merged	4450fcd3ff20de63818f142178bcd5bb8f7cde3c	2026-09-08	
+spetsmat-179	pustaya-stranica-raspredelenia	merged	ae1732293470674274f3d49090eccdb9595a094e	2026-09-07	
+spetsmat-179	sklejka-vhoda-s-serverom	merged	d09c31f624adadf410b4563c1a746ada5fcc9c72	2026-09-03	
+spetsmat-179	sloj-zanyatia-palcem	merged	04ec6a072eb5a2ad0f832287aa9edc777436d74f	2026-09-07	
+spetsmat-179	veb-priyom-zadach	merged	2f42fba0e01af61032ffbcb5ee37b3b24873f95d	2026-09-07	
+spetsmat-179	veb-raspredelenie-mvp	merged	e396675db0fe082065973983f6b3180bc7fae24e	2026-09-03	
+spetsmat-179	veb-vhod-i-obshchee-sostoyanie	merged	d1e2d706e648d3db8ab0b1c9150238138d7e5ded	2026-09-03	
+spetsmat-179	volna-b-server	merged	8b5e134d9fecf946b8d60f769ff33cb6827fbf35	2026-09-23	
+spetsmat-179	volna17-bekapy	merged	0370d53d7d5ac01633cb8b797d070f7ddd0a6cd1	2026-09-21	
+spetsmat-179	volna17-drawio	merged	7d463dfe5cb6f3d375b4f1b1cedb30a55073dc81	2026-09-21	
+spetsmat-179	volna17-listok17alef	merged	619be623554b27c213a78c27d348e5cfc7ab48e0	2026-09-21	
+spetsmat-179	volna17-reestr	merged	619be623554b27c213a78c27d348e5cfc7ab48e0	2026-09-21	
+spetsmat-179	volna17-rovno	merged	48eab59e1341cf2591ee88d31039b1822179de92	2026-09-21	
+spetsmat-179	volna17-sreda	merged	e0d0e409f5578ad45edb3c392ca0480d355ba266	2026-09-21	
+spetsmat-179	vykatka-tunnel-i-storozh	merged	a2792e937625964459dd773f13251d7738346c25	2026-09-03	
+spetsmat-179	zahod/B1-test-organizator	merged	3ef59e8ea7bfacc9ef4051eb43cebf0ca5dc16dd	2026-09-23	
+spetsmat-179	zahod/B1-v14-vid	unmerged	1c4a058b9b1f5cbc0fe28b1072c0bd30e1f12d6a	2026-09-23	1
+spetsmat-179	zahod/B1-v21-konduit	merged	8d956ff68d4132f35af65a8425e9dc09b1063fff	2026-09-23	
+spetsmat-179	zahod/B2-v10-ochered	merged	25a3275b22f640fa1ed22e96ee79b4ba680232a7	2026-09-23	
+spetsmat-179	zahod/B2-v14-raskladka	merged	b7bdc6e6051d670a3d404375b1135823cec147f9	2026-09-23	
+spetsmat-179	zahod/B2-v15-listki	merged	6451c74f8b5590f6ef88c0b4f8a212d0ccdbcdf1	2026-09-23	
+spetsmat-179	zahod/B2-v2-rychag-verstki	merged	446b8dc0ddf9c7fd9204d223eca42616c85e57b6	2026-09-23	
+spetsmat-179	zahod/C-4d-ubrat	merged	f48523fc8518b938a437a144834557ee15d0dd09	2026-09-23	
+spetsmat-179	zahod/C-grobarij	merged	ccd7cf4341748a6d1af6932d67dcd16cec506359	2026-09-24	
+spetsmat-179	zahod/C-kabinet-shkolnika	merged	da3ab5a017cb320bd64f267fea61ee6ae8850d11	2026-09-23	
+spetsmat-179	zahod/C-urok-raspredelenie	merged	d06336845c3863bf5c0bc27dce01a90148775045	2026-09-24	
+spetsmat-179	zahod/C-v1-zapis	merged	e1934eca5de673b258e3550553d3866c455a1d9f	2026-09-23	
+spetsmat-179	zahod/C-v5-odno-okno	merged	747521836f8f7a3ed8878f082bef9a46396b560e	2026-09-23	
+spetsmat-179	zahod/P1-yadro	merged	ef1663b7e843499b2a8aad937d03b0a91e63bec3	2026-09-02	
+spetsmat-179	zahod/P16-eksport	merged	6d94667983bdaf732eff5d8bd18f79f3d7f4590f	2026-09-02	
+spetsmat-179	zahod/P17-konstanty	merged	6c4295d0a0b0e129f7b988a06fad79554c2f7f65	2026-09-02	
+spetsmat-179	zahod/R1-foto	merged	58c42ccdd8c202b4232f18380dcd023161ff22a0	2026-09-03	
+spetsmat-179	zahod/R2-slovar	merged	a589577320808924c3f5a774153cef983c8ee67d	2026-09-02	
+spetsmat-179	zahod/R3-istochniki	merged	63603cc59b45e76e546f9c8cf815a4538a536835	2026-09-02	
+spetsmat-179	zahod/S1-slot-i-routy	merged	112c6e399a339c339ecba9e31532bcd1b1deb051	2026-09-04	
+spetsmat-179	zahod/TEST-uchitel	merged	c2f2c5ec0eaaacea2083a91ed8ca7b22351c2012	2026-09-22	
+spetsmat-179	zahod/V0-sekrety	merged	ed0cb60bd45df4e9d823c6ad0dd68fd9d3d91c0c	2026-09-22	
+spetsmat-179	zahod/V14-raspredelenie	merged	bfd9f17cd6306ebe63c3e831ff89a03db77f00c3	2026-09-22	
+spetsmat-179	zahod/V19V20-rezervy	merged	213a3f2c8733f7c5c38bb270b830610519da7c50	2026-09-22	
+spetsmat-179	zahod/aktualnyj-listok-naverh-i-dedlajn	merged	f3036503c1ad97ec888980215023452924536b48	2026-09-07	
+spetsmat-179	zahod/bekap-avtorizacia	merged	f3195763c5d515a60c44a4a884bc17813211404b	2026-09-08	
+spetsmat-179	zahod/bekap-v-papku	merged	b0ff2632e3668a8f95445cf2de9a8559d1c3278e	2026-09-08	
+spetsmat-179	zahod/bystro-i-bezopasno	merged	53fda6ac72a6ed59cd294ac364e9ab8b0e9a1d85	2026-09-08	
+spetsmat-179	zahod/data-i-istoria-kletki	merged	1ff625fb0886705da24c39c468ad55170435976b	2026-09-10	
+spetsmat-179	zahod/dobit-hvosty	merged	70d2dc9bc327cbf6d6cce6080d276fc9fdc05813	2026-09-14	
+spetsmat-179	zahod/dozabivka-dolgov-sklejki	merged	ed1624f3011ad49e29c405b2455f6c1b38df29ab	2026-09-05	
+spetsmat-179	zahod/dver-sekretov-spisok	merged	276a1ccc17cbb7320accf72b4d5f7fbf61c3ddb4	2026-09-22	
+spetsmat-179	zahod/gejt-pravda	merged	ece6c070ad97bffedc2b85fb9d6f8f857af86d9c	2026-09-10	
+spetsmat-179	zahod/gejt-vse-ekrany	merged	7ff1fda1e5abcb67f44e524892905728307cbcc4	2026-09-11	
+spetsmat-179	zahod/glavnaya-i-stranicy-listkov	merged	9185a3e67180a2e19d81d180dcd30cddb9bed42d	2026-09-04	
+spetsmat-179	zahod/istoria-zanyatij	merged	455761ccf1e68c9735b419d54c3eb01009992d31	2026-09-10	
+spetsmat-179	zahod/kabinet-plitki	merged	a0e9c8aaaa29786451747eec0638176040b16932	2026-09-11	
+spetsmat-179	zahod/kabinet-prepodavatelya	merged	994fedce28efa5e4ecc34f7c1630dc70c4bd7940	2026-09-10	
+spetsmat-179	zahod/kanal-diagnostika	merged	42fb54de86146d780e28d966cc8ae6e782989d2f	2026-09-10	
+spetsmat-179	zahod/kanon-verstki	merged	a65daeece42f5eff00dd311c21cbe7cc95d1a8b0	2026-09-10	
+spetsmat-179	zahod/karkas-menyu-kabinet	merged	893cba8caa82f3b10bd8bb017e114d9d0e3096e8	2026-09-10	
+spetsmat-179	zahod/konduit-galochki-i-podskazki	merged	4773f01377855e015e4869c7d4f6e546c3c1b2dc	2026-09-11	
+spetsmat-179	zahod/konduit-i-raspredelenie	merged	98c1932240bb1b453a805c76148c0623bffba1f6	2026-09-11	
+spetsmat-179	zahod/konduit-na-prosmotr	merged	65eb381c748912814776da848e1294f7df79b44a	2026-09-07	
+spetsmat-179	zahod/konduit-panel	merged	39025f6e313a8cafafbbffe0b85e517881413800	2026-09-10	
+spetsmat-179	zahod/kopii-zhivye	merged	f4e8b77ec8ef7cb9b7c7bad7e5fec5ae96221d0a	2026-09-14	
+spetsmat-179	zahod/lichnaya-stranica-prepodavatelya	merged	326002f2d194a828dbc181c4bb1147d6ee6f1d5c	2026-09-07	
+spetsmat-179	zahod/lichnye-paroli	merged	2770d1690ade9d1e662a6cead5126c456387462a	2026-09-07	
+spetsmat-179	zahod/melochi-i-dovoz	merged	540b39c1c612b0a631192e2ae6799696dfbe0efc	2026-09-11	
+spetsmat-179	zahod/nadzor-zvonit	unmerged	d695230ac9fe31d26110add899abbb64720ad3cf	2026-09-11	2
+spetsmat-179	zahod/offlajn-ochered	merged	4e7961860173c731cfad35453afe2ff5d0dab526	2026-09-11	
+spetsmat-179	zahod/otsutstvie-prepodavatelya	merged	26c06ffb7671d9bd24567951786d6ea4d98fe0fe	2026-09-11	
+spetsmat-179	zahod/pages-i-materialy	merged	37aa1e0e4046e7763498e01de2cb9658e1ecf334	2026-09-08	
+spetsmat-179	zahod/paroli-shkolnikov	merged	6e1190fc6d0ca047726d09ddb7103995362ac5f3	2026-09-10	
+spetsmat-179	zahod/poisk-i-kartochka	merged	cba0a778ba6eb65ede14ed608f475817085c7e00	2026-09-10	
+spetsmat-179	zahod/pravila-raspredeleniya	merged	2a9eb0b45287cf314f1981726e7de9c8f8bd7fa4	2026-09-10	
+spetsmat-179	zahod/proba-podnyat-volnu-samotest	merged	e0d0e409f5578ad45edb3c392ca0480d355ba266	2026-09-21	
+spetsmat-179	zahod/raspil-monolita	merged	4ae8b6fee46cb92f60e904fd4fe10cd1d1d25fdb	2026-09-07	
+spetsmat-179	zahod/raspredelenie-kolonki	merged	bcfab90c7f84577fa93e40b57df9b24f8239fc65	2026-09-10	
+spetsmat-179	zahod/shirina-prep-vdn	merged	663e97c959aa47e658cfd7447151b92eed73cc21	2026-09-11	
+spetsmat-179	zahod/skleit-adminku-s-sajtom	merged	9c29aaa6bf5ee46ddcebeabab34b7ef5b46393fb	2026-09-05	
+spetsmat-179	zahod/statistiki-i-grobarij	merged	7882ebdd3618c8bfa51dfcca8889d08477a036e5	2026-09-10	
+spetsmat-179	zahod/storozh-pomnit	merged	997780e6e4e9ac4f3467af63c46dc1d4635883ee	2026-09-08	
+spetsmat-179	zahod/storozh-vstal	merged	3e99b9a753dbd576ced3bca5743058f5ba9ab6e0	2026-09-08	
+spetsmat-179	zahod/verstka-raspredeleniya	merged	cd6f0b78afe95baca594f86c353a93ebf2d05d7b	2026-09-10	
+spetsmat-179	zahod/vhod-organizatora-dorabotka	merged	6a10a92318439cc1966fcbac3a7b63837388afb8	2026-09-04	
+spetsmat-179	zahod/vidy-zadach	merged	ee3922cd8efbd600ad0d45ba6e1950df292c025b	2026-09-10	
+spetsmat-179	zahod/vnesenie-zadach	merged	54865eea94f252faad1dc23becca7b517f947b1a	2026-09-10	
+spetsmat-179	zahod/vygruzka-v-tablicu	merged	6d21e7cedbd376088bc088e8100966e1135f8ffb	2026-09-08	
+spetsmat-179	zahod/vykatka-raspila-i-dver-vykatki	merged	1325342026598286362f0559e083bcef4429f8b7	2026-09-07	
+spetsmat-179	zahod/zhurnal-setka	merged	ba288e9a0a31312110a6706572b443ae336f23fb	2026-09-11	
+spetsmat-179	zahod/zhurnaly-i-kabinet	merged	f7fbbf0ed017712c2ac9780aa46768bdb02cc0e4	2026-09-11	
+spetsmat-179	zamer/C-v1-baza-759ef40	merged	759ef40bf1f46807f0e526c3fc885b9d6a41db20	2026-09-23	
+spetsmat-179	zamer/baza-457342e	merged	ddb7af75244dff3ebda7a884a59be51cd66ab029	2026-09-11	
+spetsmat-179	zamer/noch2-01391ae	merged	01391ae9c2cecc75fa7c5a6123c194445fa8810c	2026-09-11	
+matproekty-179	main	keep-trunk	eca5b4ea02192b7f9d820640b5ff18b167de78be	2026-09-25	
+matproekty-179	park/2026-09-25/matproekty-179-main	park	4528e9c33b52a0326cbcc32e7be3f2c1e5e9c1bb	2026-09-25	1
+matproekty-179	zahod/istochnik-tem	merged	c71483ef666b36ca86291f6b3f787d2aa5a43f72	2026-09-18	
+matproekty-179	zahod/nepodtverzhdennye	merged	0233d36178ca99dabbc085f5be705016fdd93091	2026-09-20	
+matproekty-179	zahod/privatnost-monorepo	merged	aa66f263fd64c259d66461d6a14e71399c99bd96	2026-09-20	
+matproekty-179	zahod/stranica-shkolniku	merged	66ea9e45a9db578a55d7bae01d1f9662d7621060	2026-09-18	
+matproekty-179	zahod/svodka-po-rukovoditelyam	merged	381468d1a1bf29b1423fb821274671b7aafaa43b	2026-09-20	
+matproekty-179	zahod/uvedomlenie-shkolnika	merged	323d0a39d24fb0b7cef5b478c6e8f6abc03d7f74	2026-09-20	
+matproekty-179	zahod/vygruzka-nabora	merged	69934c71f32c7bc61406a854f8a00e05d77bca5e	2026-09-18	
+matproekty-179-stranica	main	keep-trunk	fc47e65f941e159ea78dac89726ea548a5856aa0	2026-09-18	
+ankety	main	keep-trunk	89460acc78546abb53a70365da3e3cd676d52441	2026-09-25	
+ankety	park/2026-09-25/ankety-main	park	b4f7cd006c4ad8e6c82726c8941317b0e7d7b3ea	2026-09-25	1
+ankety	zahod/uvedomlenie-shkolnika	merged	e799eeeb71d4aa0c39129e9b175db406ff23b85c	2026-09-20	
+moskva	main	keep-trunk	b5ecf86faa3bc4a7fc1c93b31768e82bb27cfa41	2026-09-24	
+moskva	zahod/kartochki-koridora	merged	79bc0fba156b81decd7825e70a4177b8fef4f4b0	2026-09-08	
+matema-fest	main	keep-trunk	25bfd377beba51c26b7912968ac74ec85a5261b1	2026-09-25	
+matema-fest	park/2026-09-25/matema-fest-main	park	3d91a2bdca3fa1edb735ae7bcf61629a81c547c3	2026-09-25	1
+digest	main	keep-trunk	6953d8852b549f918db276d539bb1f2a9f6e7dbb	2026-08-17	
+digest	rabota	keep-named	53e25c7b0a406c0c099e73a408753ee1a859db33	2026-09-17	
+digest	zahod/stil-noch	keep-named	fe4fe2356cb1c5812bc736d95a9a0d08011e02ae	2026-08-20	
+arhiv-london-avgust-2026	main	keep-trunk	7ba88fa97c683ff51f0e81d2de90f76c8678fd91	2026-09-25	
+arhiv-london-avgust-2026	pages	keep-named	74ce3db0e929a70caf84b3aa4c6d91a1278f9e09	2026-08-21	
+arhiv-london-avgust-2026	zahod/deploy	merged	fa551290cc3a33d54d8416c438d51a90bc1cde10	2026-08-22	
+arhiv-london-avgust-2026	zahod/planirovshchik	merged	322175a717dfd807deebe24022531a75fc37ad32	2026-08-21	
+arhiv-london-avgust-2026	zahod/vkladki	merged	939d6401cb1d2b0dd2519b9c8ae91dc6f9ea0e69	2026-08-21	
+sayt-sistemy-konstantinova	design-system	merged	876fd760544c7ca40ee7be6b8b647f73bbb65126	2026-06-17	
+sayt-sistemy-konstantinova	main	keep-trunk	60a0e7d6906507045aa873c9c61f7c17b4f7ad35	2026-09-25	
+sayt-sistemy-konstantinova	predeploy	merged	7145ca3f78b72b821ff94219f5c2e588c2985be7	2026-06-17	
+sayt-sistemy-konstantinova	tagging	merged	35f31bf1f99bb99c89cadbe0815c54740481f51a	2026-09-25	

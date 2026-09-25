@@ -187,6 +187,18 @@
 
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/DNEVNIK-chistka-github.md`** (chistka-github pass: diary, channel with the analyst)
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/REPORT.md`** (chistka-github pass: report — GitHub after the cleanup)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/VOPROSY.md`** (chistka-github pass: open questions and proposals)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/verifier.md`** (chistka-github pass: independent verifier report (zero loss))
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_chistka-github.md`** (чистка веток на GitHub: влитое удалить, парковки и закрываемое — в архивные метки, влить tagging в sayt; последний заход арки А)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_perepis-diska.md`** (перепись Mac только на чтение: все git-репозитории и не-git папки, их состояние и даты — основа воронки подметания и летописи проектов)
