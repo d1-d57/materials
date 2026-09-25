@@ -377,6 +377,70 @@ The brief's combined `check --zone <materials path> <disciplina path>` refuses (
 
 **Commits at СТОП 1:** disciplina `ea3c0aee2` on `zahod/istoriya-sessij`, pushed (`log @{u}.. | wc -l` → 0). materials: this file, commit below.
 Deleted: nothing. Raw history is untouched.
+
+### СТОП 2 — progress report (2026-09-25)
+ПРАВКИ ПРОЧИТАНЫ: 1, 2 (they arrived after the start; read from `origin/claude/dazzling-planck-auuv8v`). ПРАВКА 1 (merging the analyst branch into disciplina `main`) is carried out at the finale, before my own merge.
+
+**Step 3, facets.** `disciplina: analitika/sessii/fasety.csv`, 3444 rows. Method, all in `razmetka.py`:
+- e5-small vectors over 1574 unique templates; 1437 pointer files were resolved and their task text put first.
+- KMeans k=25 (silhouette 0.177; k≥35 collapses to ≤0.07).
+- The 17 homogeneous clusters (automation / briefs) were labelled whole.
+- **Deviation from METODOLOGIYA:** the 8 mixed owner-typed clusters were split into 86 sub-clusters of ~12 templates, and each sub-cluster was labelled from its 5 nearest members. A single label per mixed cluster would have been meaningless. Labels are in `klastery_metki.csv`.
+- Rules override the clusters. FORMA: zapusk + executor/brief regex. STADIYA: first-message regex. OBLAST: a nauchpop keyword rule. The rules were fixed during review, as named defects of the tool: the executor-brief pattern was missing, and «влей/что дальше» fired inside boilerplate.
+- **Hand fixes: 60** (the 60 most uncertain owner-typed sessions, `ruchnye_pravki.csv`); values changed in 33 of them.
+
+Additions from ПРАВКА 2:
+- `organizaciya`: 473 sessions (owner 47, SDK tidy runs 426). Alive.
+- `proekt` field: filled 2592 of 3444, empty 852 (legitimately empty).
+
+**Pre-declared risk triggered:** ZADACHA=disciplina → OBLAST=sistema in 100%, sistema → disciplina in 93.4% (≥90%). By the rule written into METODOLOGIYA, `sistema` was removed and became `net` (no subject domain). `nauchpop` = 9, alive but small; no value has 0–2 sessions.
+
+Distribution over all 3444 sessions (Counter):
+
+| axis | values |
+|---|---|
+| zadacha | issledovanie 69 · kod 383 · material 301 · disciplina 2218 · organizaciya 473 |
+| forma | razgovor 676 · zahod 1011 · avtomat 1757 |
+| stadiya | zamysel 158 · delanie 1973 · priyomka 412 · peredacha 901 |
+| oblast | matematika 608 · nauchpop 9 · lichnoe 453 · net 2374 |
+
+Owner-typed only (1735): disciplina 966 · kod 360 · material 293 · issledovanie 69 · organizaciya 47.
+
+**Step 4, typology.** `disciplina: analitika/sessii/TIPOLOGIYA.md`: 77 lines, 4 axes with definition, example first message and counts, 11 combination rules «value → skills / tools / form», and a history profile. `check_termin.py` is green. The example messages were checked against the data: 4 of my first 9 picks did not match their labels and were replaced.
+
+**Blind check (fresh subagent, 30 Cowork sessions read from transcripts, stratified ≥5 per value).** The answer ended «выдано 30 позиций из 30 найденных».
+
+| axis | agreement |
+|---|---|
+| ZADACHA | **19 of 30** |
+| FORMA | **30 of 30** |
+| STADIYA | **18 of 30** |
+| OBLAST | **22 of 30** |
+| all four at once | 13 of 30 |
+
+Pairs are in `slepaya_proverka.csv`. Main confusions: material↔disciplina 5, organizaciya→issledovanie 3, delanie→priyomka 5, matematika↔net 5. **My verdict: FORMA is reliable. ZADACHA and STADIYA are a draft, not yet the "sharp task classification" the owner asked for.** Examples of real errors: the «софичность» research is labelled `material`; the handoff «Завести дисциплину контроля качества скиллов» is labelled `material`.
+
+**Criteria readiness (commands run from the disciplina worktree):**
+- (a) 3444 = 3444 ✅
+- (b) prints **852**, not 0 ❌ literally. All 852 are `proekt`, which ПРАВКА 2 made legitimately empty; empty values in the four axis columns: 0. The criterion and ПРАВКА 2 conflict; proposed reading: (b) over the axis columns.
+- (v) 77 ≤ 80 ✅
+- (g) printed as «N of 30» per axis ✅
+
+**Decisions the analyst is asked for at СТОП 2:**
+1. Accept v0 as is, or sharpen ZADACHA/STADIYA before deletion. The history is the only input, so sharpening is possible only before step 6. Options:
+   - (i) more hand fixes (60 more ≈ +2–3 per 30);
+   - (ii) a per-session LLM pass on owner-typed sessions: first messages + resolved brief. That is cheap (Haiku-class) and targets exactly ZADACHA/STADIYA; the blind check is then re-run.
+   - (iii) STADIYA as "dominant stage", with a second field `stadii` listing the mix, since long sessions carry several stages.
+2. Accept reading (b) over the axis columns.
+
+**Removed after step 4 (ПРАВКА 2):** the `uv` environment and the model weights, `/private/tmp/claude-501/-Users-ivanyakovlev-Documents-GitHub/8ee78f48-23c4-4f52-b061-d46dbecdeebd/scratchpad/istoriya-sessij/ml/`, **2.2 GB**:
+- `venv/` 910 MB
+- `uv-cache/` 843 MB
+- `hf/` (e5-small weights) 486 MB
+
+No global caches were touched (`~/.cache/huggingface` and `~/.cache/uv` do not exist). The vectors (`vektory.npy`, 17 MB of scratch in total) remain, so re-clustering does not need the model.
+
+**Commits at СТОП 2:** disciplina `d4f9ab215` (step 3) and `8b75ad8f8` (step 4), both pushed. materials: this file, commit below. Raw history: untouched.
 **АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
 **РОД АРТЕФАКТА:** `<исходник | собранный>`
