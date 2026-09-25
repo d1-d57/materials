@@ -1,6 +1,0 @@
-branch	in_trunk	ahead_of_trunk	behind_trunk	last_commit_date	files_changed	top_dirs	merge_dry_run	checked_out_in	proposal
-main	yes	0	0	2026-09-25	0		n/a	/Users/ivanyakovlev/Documents/GitHub/arhiv-london-avgust-2026	already-in-trunk
-pages	no	2	31	2026-08-21	0		error:fatal: refusing to merge unrelated histories	-	stale
-zahod/deploy	yes	0	10	2026-08-22	0		n/a	-	already-in-trunk
-zahod/planirovshchik	yes	0	24	2026-08-21	0		n/a	-	already-in-trunk
-zahod/vkladki	yes	0	17	2026-08-21	0		n/a	-	already-in-trunk
