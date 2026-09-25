@@ -127,3 +127,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** round 14 — disciplina 25 remaining (last).
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 12:24 — step 5 round 14 + step 8: local leftovers
+
+- **done:** round 14: 25 deleted (disciplina) — deletion finished: 849 = 632 delete + 217 tag+delete. 19 `keep` rows added; `actions.tsv` 868 rows, 868 unique = 868 in `before.tsv`. Step 8: `git branch -d` on local branches merged into `origin/<trunk>` (HEAD, worktree-checked-out and keep-named excluded): 40 deleted (disciplina 32, materials 6, spetsmat 2), 0 refused — `local.tsv` with restore commands. Worktree `/private/tmp/baseline-759ef40` (HEAD 759ef40 ⊂ origin/main, 0 dirty lines) removed. `disciplina-wt/`, `matproekty-179-wt/`, `disciplina/--help/` (0 tracked files) → `~/.Trash/` (`mv -n`, rc=0 each).
+- **next:** final verifier run with criteria 2/4/5, then report and merge.
+- **surprise:** `~/.Trash` is not listable from this session (macOS privacy), but `mv` into it works.
+- **question:** none.

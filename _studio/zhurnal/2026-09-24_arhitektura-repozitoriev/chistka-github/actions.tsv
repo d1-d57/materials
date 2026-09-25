@@ -823,3 +823,47 @@ time	repo	branch	class	action	tag	tip	verified	restore	note
 2026-09-25 12:22	disciplina	zahod/zakon-nahodki	merged	delete		433176afdc4724f06997bf328324d69f529dd4bf	yes (trunk)	git push origin 433176afdc4724f06997bf328324d69f529dd4bf:refs/heads/zahod/zakon-nahodki	
 2026-09-25 12:22	disciplina	zahod/zakon-zakrytiya-ohvat-i-uslovie-g	merged	delete		6893d523de63d14461f78b53487a343f2b0c200c	yes (trunk)	git push origin 6893d523de63d14461f78b53487a343f2b0c200c:refs/heads/zahod/zakon-zakrytiya-ohvat-i-uslovie-g	
 2026-09-25 12:22	disciplina	zahod/zakon-zakrytiya-perepisan-i-sudit-sebya	merged	delete		4a6d192a92780e067ce7aac3de7afcdde3154474	yes (trunk)	git push origin 4a6d192a92780e067ce7aac3de7afcdde3154474:refs/heads/zahod/zakon-zakrytiya-perepisan-i-sudit-sebya	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-pozicieyu-volny	merged	delete		4941559d32613949aa8468b5a10f98b5a0504e8e	yes (trunk)	git push origin 4941559d32613949aa8468b5a10f98b5a0504e8e:refs/heads/zahod/zakon-zakrytiya-pozicieyu-volny	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-stend	merged	delete		c8eadd3105bcfc441e0579d3d0a09ea9d3f8c08d	yes (trunk)	git push origin c8eadd3105bcfc441e0579d3d0a09ea9d3f8c08d:refs/heads/zahod/zakon-zakrytiya-stend	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-sudit-sostav	merged	delete		8a1c0cb15eed599da95342635e3eebd516c57339	yes (trunk)	git push origin 8a1c0cb15eed599da95342635e3eebd516c57339:refs/heads/zahod/zakon-zakrytiya-sudit-sostav	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-uslovie-nakazyvayushchee-za-pravilnoe	merged	delete		ebac71db4cb971179dda8f83222dc46e2728a014	yes (trunk)	git push origin ebac71db4cb971179dda8f83222dc46e2728a014:refs/heads/zahod/zakon-zakrytiya-uslovie-nakazyvayushchee-za-pravilnoe	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-volna-14-orkestrator-ne-lomaetsya	merged	delete		727ce66b86bed56876e6c8e856cac17a1b849489	yes (trunk)	git push origin 727ce66b86bed56876e6c8e856cac17a1b849489:refs/heads/zahod/zakon-zakrytiya-volna-14-orkestrator-ne-lomaetsya	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-volna-7-samopodmetanie	merged	delete		65c87ceb7c41eb8b61f1eacb1a8e4e427c374d38	yes (trunk)	git push origin 65c87ceb7c41eb8b61f1eacb1a8e4e427c374d38:refs/heads/zahod/zakon-zakrytiya-volna-7-samopodmetanie	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-volna-8-zakrytie-zony	merged	delete		95e3dcb0e2988afda4ba083c38dbe1fa8b917ffb	yes (trunk)	git push origin 95e3dcb0e2988afda4ba083c38dbe1fa8b917ffb:refs/heads/zahod/zakon-zakrytiya-volna-8-zakrytie-zony	
+2026-09-25 12:23	disciplina	zahod/zakon-zakrytiya-volna-veb-p2-p7	merged	delete		72a1d7ebb3c148c2f242a3945faffb266a15fc7f	yes (trunk)	git push origin 72a1d7ebb3c148c2f242a3945faffb266a15fc7f:refs/heads/zahod/zakon-zakrytiya-volna-veb-p2-p7	
+2026-09-25 12:23	disciplina	zahod/zakryt-arku	merged	delete		714c177cb156f837f76cdd5a3d32fd9a2f7e6dab	yes (trunk)	git push origin 714c177cb156f837f76cdd5a3d32fd9a2f7e6dab:refs/heads/zahod/zakryt-arku	
+2026-09-25 12:23	disciplina	zahod/zakryt-utechku	merged	delete		18050b5fe05b31f1e2de8de34be7d317bd9ed56d	yes (trunk)	git push origin 18050b5fe05b31f1e2de8de34be7d317bd9ed56d:refs/heads/zahod/zakryt-utechku	
+2026-09-25 12:23	disciplina	zahod/zakrytie-volny-orkestratora	merged	delete		ea3dde47accba0a2b8f23eadb4b6a1bd5ccad9d4	yes (trunk)	git push origin ea3dde47accba0a2b8f23eadb4b6a1bd5ccad9d4:refs/heads/zahod/zakrytie-volny-orkestratora	
+2026-09-25 12:23	disciplina	zahod/zamer-mashiny	merged	delete		eac291f5f440e921c30949dfe6082ee8e3a6f67b	yes (trunk)	git push origin eac291f5f440e921c30949dfe6082ee8e3a6f67b:refs/heads/zahod/zamer-mashiny	
+2026-09-25 12:23	disciplina	zahod/zelenoe-na-poddelke-proba-zhivyh-zavisimostej	merged	delete		50b796bfc4e2514229bfa2d4fb8d47194dad81d4	yes (trunk)	git push origin 50b796bfc4e2514229bfa2d4fb8d47194dad81d4:refs/heads/zahod/zelenoe-na-poddelke-proba-zhivyh-zavisimostej	
+2026-09-25 12:23	disciplina	zahod/zhdat-do-karantina	merged	delete		27d34c32d4edf15accedf2ae5ef8f5a39732b553	yes (trunk)	git push origin 27d34c32d4edf15accedf2ae5ef8f5a39732b553:refs/heads/zahod/zhdat-do-karantina	
+2026-09-25 12:23	disciplina	zahod/zhivost-modeli-dovozit-a-ne-otvechaet	merged	delete		2cd066b06bcf3c4e8aec6f9b605acd1167436148	yes (trunk)	git push origin 2cd066b06bcf3c4e8aec6f9b605acd1167436148:refs/heads/zahod/zhivost-modeli-dovozit-a-ne-otvechaet	
+2026-09-25 12:23	disciplina	zahod/zhivost-pered-kazhdym-zahodom	merged	delete		41785ed9b61b0fd5e043a271056f768edfbaa4f6	yes (trunk)	git push origin 41785ed9b61b0fd5e043a271056f768edfbaa4f6:refs/heads/zahod/zhivost-pered-kazhdym-zahodom	
+2026-09-25 12:23	disciplina	zahod/zhivost-porog-i-posledovatelno	merged	delete		28815e60992d1eb450c6ca9740097c65e022ad07	yes (trunk)	git push origin 28815e60992d1eb450c6ca9740097c65e022ad07:refs/heads/zahod/zhivost-porog-i-posledovatelno	
+2026-09-25 12:23	disciplina	zahod/zhivost-volny	merged	delete		b3c7614c7424493ca8f9dc64c7b8a02bdb2e46a5	yes (trunk)	git push origin b3c7614c7424493ca8f9dc64c7b8a02bdb2e46a5:refs/heads/zahod/zhivost-volny	
+2026-09-25 12:23	disciplina	zahod/zhivost-volny-2	merged	delete		9656a68c8370d00b64b6d163aa58c3b01d01276d	yes (trunk)	git push origin 9656a68c8370d00b64b6d163aa58c3b01d01276d:refs/heads/zahod/zhivost-volny-2	
+2026-09-25 12:23	disciplina	zahod/zhurnal-fabriki	merged	delete		a2f44d090af75c3582b14f63e2339592948c7968	yes (trunk)	git push origin a2f44d090af75c3582b14f63e2339592948c7968:refs/heads/zahod/zhurnal-fabriki	
+2026-09-25 12:23	disciplina	zahod/zhurnal-rassejat	merged	delete		97248c31cc9f4d7392cfa01ba2db934ce5de5b20	yes (trunk)	git push origin 97248c31cc9f4d7392cfa01ba2db934ce5de5b20:refs/heads/zahod/zhurnal-rassejat	
+2026-09-25 12:23	disciplina	zahod/zhurnal-volny-po-hodu-rychag-a-ne-nadezhda	merged	delete		bbd76a9ec72d91ce8ac47a233e8ef40636ba5858	yes (trunk)	git push origin bbd76a9ec72d91ce8ac47a233e8ef40636ba5858:refs/heads/zahod/zhurnal-volny-po-hodu-rychag-a-ne-nadezhda	
+2026-09-25 12:23	disciplina	zahod/zona-chuzhoj-fajl	merged	delete		4962789dedc363307ef37a65991c8e880a472b09	yes (trunk)	git push origin 4962789dedc363307ef37a65991c8e880a472b09:refs/heads/zahod/zona-chuzhoj-fajl	
+2026-09-25 12:23	disciplina	zahod/zone-spiskom-putej-ne-molchit	merged	delete		a3ab50ec318450f43c580d792f6e251d1dea1235	yes (trunk)	git push origin a3ab50ec318450f43c580d792f6e251d1dea1235:refs/heads/zahod/zone-spiskom-putej-ne-molchit	
+2026-09-25 12:23	disciplina	zahod/zuby-incidentam	merged	delete		692d9a5f9640c5843c7cc889debc744a57a1c7e2	yes (trunk)	git push origin 692d9a5f9640c5843c7cc889debc744a57a1c7e2:refs/heads/zahod/zuby-incidentam	
+2026-09-25 12:23	materials	arka/mat-kostyak	keep-trunk	keep		1acaf9ac97de1581e58318ede29337e8aee84e94	n/a		default branch (trunk)
+2026-09-25 12:23	materials	claude/bold-faraday-wq09ql	keep-named	keep		4491b7e59ca490dcbe338e7fcd345130f2706d9b	n/a		analyst's working branch
+2026-09-25 12:23	materials	main	keep-named	keep		c9257e842157572bb6db34f662d3636a08c0baba	n/a		published site
+2026-09-25 12:23	materials	zahod/chistka-github	unmerged	keep		aaeae5426390c94ad7cad1b4f97965bf9a5b23df	n/a		this pass's own branch; merged into arka/mat-kostyak at step 9
+2026-09-25 12:23	materials	zahod/vid-blokov-vnedrenie	unmerged	keep		add14e21950c9a3d5d5904717eecd4208846af73	n/a		paused unchecked autosave (2026-08-15), 18 slide files; cannot tell abandoned vs paused — VOPROSY
+2026-09-25 12:23	disciplina	main	keep-trunk	keep		fc4661ba199d7f9852087532dffe2d11fa5fef1f	n/a		default branch (trunk)
+2026-09-25 12:23	disciplina	zahod/generator-rychaga	unmerged	keep		cf5e91692e7a0e606efbb907a7c19b5585f64718	n/a		recent (2026-09-20); tip adds only 3 rescue backups (svedenie q10) — VOPROSY
+2026-09-25 12:23	spetsmat-179	main	keep-trunk	keep		23f5fb18c7339cd021a2d13bd53ad31f42eceef6	n/a		default branch (trunk)
+2026-09-25 12:23	matproekty-179	main	keep-trunk	keep		eca5b4ea02192b7f9d820640b5ff18b167de78be	n/a		default branch (trunk)
+2026-09-25 12:23	matproekty-179-stranica	main	keep-trunk	keep		fc47e65f941e159ea78dac89726ea548a5856aa0	n/a		default branch (trunk)
+2026-09-25 12:23	ankety	main	keep-trunk	keep		89460acc78546abb53a70365da3e3cd676d52441	n/a		default branch (trunk)
+2026-09-25 12:23	moskva	main	keep-trunk	keep		b5ecf86faa3bc4a7fc1c93b31768e82bb27cfa41	n/a		default branch (trunk)
+2026-09-25 12:23	matema-fest	main	keep-trunk	keep		25bfd377beba51c26b7912968ac74ec85a5261b1	n/a		default branch (trunk)
+2026-09-25 12:23	digest	main	keep-trunk	keep		6953d8852b549f918db276d539bb1f2a9f6e7dbb	n/a		default branch (trunk)
+2026-09-25 12:23	digest	rabota	keep-named	keep		53e25c7b0a406c0c099e73a408753ee1a859db33	n/a		owner: separate line (workspace) until split
+2026-09-25 12:23	digest	zahod/stil-noch	keep-named	keep		fe4fe2356cb1c5812bc736d95a9a0d08011e02ae	n/a		owner: separate line until split
+2026-09-25 12:23	arhiv-london-avgust-2026	main	keep-trunk	keep		7ba88fa97c683ff51f0e81d2de90f76c8678fd91	n/a		default branch (trunk)
+2026-09-25 12:23	arhiv-london-avgust-2026	pages	keep-named	keep		74ce3db0e929a70caf84b3aa4c6d91a1278f9e09	n/a		Pages branch
+2026-09-25 12:23	sayt-sistemy-konstantinova	main	keep-trunk	keep		60a0e7d6906507045aa873c9c61f7c17b4f7ad35	n/a		default branch (trunk)
