@@ -191,6 +191,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_svedenie.md`** (сведение на диске: закоммитить законсервированное, влить мелкие невлитые правки, снести оставленные копии, ветка по умолчанию materials)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_uborka-materials.md`** (ночная уборка materials и трёх репозиториев без копии: всё сохранить на GitHub, разложить ветки со статистикой, снять лишние копии, завести карточки)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/DNEVNIK.md`** (running log of the census pass)
