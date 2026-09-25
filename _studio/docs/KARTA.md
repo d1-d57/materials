@@ -157,16 +157,25 @@
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/HANDOFF-2026-09-25.md`** (Хэндофф в сессию 2026-09-25)
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/INVENTAR-2026-09-24.md`** (inventory snapshot 2026-09-24: branches, tree, binaries, code, repos — each number with its command)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/NAVIGATOR.md`** (навигатор арки 2026-09-24_arhitektura-repozitoriev (ориентация, читается первым): Развести опубликованный Hugo-сайт materials/main и рабочий контент курсов по репозиториям, закрыть просроченную arka/mat-kostyak, дать materials/GitHub понятную навигируемую структуру)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md`** (план арки 2026-09-24_arhitektura-repozitoriev)
 
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/RESHENIYA.md`** (decisions of the arc's sessions)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SESSIYA.md`** (дневник арки 2026-09-24_arhitektura-repozitoriev)
 
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SOSTOYANIE.md`** (состояние арки 2026-09-24_arhitektura-repozitoriev — что сделано/осталось, чем измерено, дом разведки)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/SPISOK-DEL.md`** (arc-wide numbered registry of items: owner's pains, findings, open questions)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/TZ.md`** (контракт арки 2026-09-24_arhitektura-repozitoriev)
 
@@ -175,6 +184,33 @@
 
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/VYGRUZKA-2026-09-24.md`** (Выгрузка сессии 2026-09-24 — сырьё для дневника арки 2026-09-24_arhitektura-repozitoriev)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_perepis-diska.md`** (перепись Mac только на чтение: все git-репозитории и не-git папки, их состояние и даты — основа воронки подметания и летописи проектов)
+
+
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_svedenie.md`** (сведение на диске: закоммитить законсервированное, влить мелкие невлитые правки, снести оставленные копии, ветка по умолчанию materials)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_uborka-materials.md`** (ночная уборка materials и трёх репозиториев без копии: всё сохранить на GitHub, разложить ветки со статистикой, снять лишние копии, завести карточки)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/DNEVNIK.md`** (running log of the census pass)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/REPORT.md`** (Disk census report of the owner's Mac (pass kod_perepis-diska): funnel counters, chronology, duplicates, surprises)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/DNEVNIK-uborka-materials.md`** (Night log of pass uborka-materials (repository cleanup))
+
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/REPORT.md`** (Final report of pass uborka-materials, opens with THE WORLD THIS MORNING)
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/VOPROSY-UTRO.md`** (Morning questions to the owner from pass uborka-materials)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/verifier.md`** (Step F verifier results of pass uborka-materials)
 
 **`docs/kak-delat/primery-teksta/`** (образцы кусков текста с разбором — как ужать, что не резать; пополняется по `§3`: новый приём письма → файл `NN-*.md` + строка в README тем же ходом): `kak-delat/primery-teksta/README.md` · `00-ANTIPRIMER-annotacia-syuzheta.md` (аннотация вместо сюжета — как выглядит текст, который «про» предмет, а не сам предмет) · `01-motivacia-kak-spravka.md` · `02-pochemu-ne-delaetsya-golymi-rukami.md` · `03-status-utverzhdeniya.md` · `04-priyom-do-konca-i-povtornoe-primenenie.md` · `05-rez-slovarya.md` · `06-termin-nazvan-no-ne-rabotaet.md` · `07-rukami-i-kontrolnaya-summa.md`.
 **`docs/pochemu-i-videnie/`:** `pochemu-i-videnie/RESHENIYA.md`.
