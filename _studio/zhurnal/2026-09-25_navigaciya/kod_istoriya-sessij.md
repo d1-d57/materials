@@ -349,6 +349,10 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 
 ## ОТЧЁТ — (заполняет исполнитель)
 
+### Ход работы
+ПРАВКИ ПРОЧИТАНЫ: 1, 2, 3, 4.
+- 2026-09-25 · state on reading ПРАВКА 3/4: steps 3–4 v0 done (e5-small, 25 clusters + 86 sub-clusters, 60 hand fixes; blind check ZADACHA 19/30, STADIYA 18/30); uv env + weights deleted (2.2 GB). Next: ПРАВКА 4 sharpening pass — 1735 owner-typed sessions → Haiku in batches of 50 (35 batches, ≤5 subagents at a time), new column `stadii`, then a fresh blind check on 30 new sessions.
+
 ### СТОП 1 — progress report (2026-09-25)
 ПРАВКИ ПРОЧИТАНЫ: none (block «<правок нет>» at start).
 
