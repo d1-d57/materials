@@ -43,3 +43,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** rounds over all repositories, ≤50 per repo per round, verifier after each round.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 11:54 — step 5, round 2: all repositories
+
+- **done:** 166 deleted (73 merged, 93 via verified tag): materials 50, disciplina 50, spetsmat-179 50, matproekty-179 8, moskva 1, matema-fest 1, arhiv-london 3, sayt 3. Verifier: `checked 168 of 168, 0 failures`. Small repos finished.
+- **next:** round 3 onward — remaining disciplina 575, spetsmat-179 85, materials 21.
+- **surprise:** none.
+- **question:** none.
