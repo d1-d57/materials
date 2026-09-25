@@ -35,3 +35,20 @@ moskva 1
 - **next:** disciplina, then the five small repos; then close the open requests (13 open).
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 10:45 — step 1: conservation, all seven
+- **done:**
+```
+$ git -C <repo> status --porcelain | wc -l   (after; before in step 0)
+materials 0
+disciplina 1
+ankety 0
+matema-fest 0
+matproekty-179 0
+spetsmat-bot 0
+vanya 0
+```
+  disciplina: 7 commits (`beea8ce5f..d71fe4afc`, pushed); two by the valve `git_zona.py commit --no-verify` over OLD `check_uroki` debt (ot-maksa 9e4a228a5, _studio/zhurnal d71fe4afc — 177 files, 162 of them in `_INFRA-git`); remainder 1 = `--help/` junk → VOPROSY #1. ankety 89460ac · matema-fest 25bfd37 · matproekty-179 eca5b4e · spetsmat-bot 4 commits → f8aac4e · vanya 2 commits → 348e3ad — all pushed, no rejection. matproekty-179: `main` and `zahod/nepodtverzhdennye` were the same commit (0233d36), so I switched the checkout to `main` (the trunk) and committed there. Open requests in materials: 13 closed + 2 auto-requests from my first valve attempt auto-closed by the tool → `zayavki`: open 0.
+- **next:** step 2, the 22 branches.
+- **surprise:** `zayavka-zakryt` returns rc=1 after moving the file to `sdelano/` (it tries `git add` on the ignored `zayavki/` dir) — the close itself happened (sdelano 76 → 89). A first valve attempt failed because my own earlier `add` had left 176 paths staged; unstaged and retried per group.
+- **question:** none (VOPROSY #1 is for the owner).

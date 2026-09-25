@@ -6,3 +6,35 @@ time	step	repo	object	action	saved_ref	verified	restore	note
 10:42	1	materials	ucheniki	commit	c4da9a25	yes	git revert c4da9a25	22 files
 10:42	1	materials	scratchpad	commit	9fed53d7	yes	git revert 9fed53d7	22 files
 10:42	1	materials	служебное	commit	e4310e14	yes	git revert e4310e14	1 files
+10:43	1	disciplina	_generator	commit	794a2befe	yes	git revert 794a2befe	5 files
+10:43	1	disciplina	skills	commit	f502094ab	yes	git revert f502094ab	10 files
+10:43	1	disciplina	.claude	commit	d74a5d32b	yes	git revert d74a5d32b	1 files
+10:43	1	disciplina	zagotovki	commit	e6696c84b	yes	git revert e6696c84b	1 files
+10:43	1	disciplina	служебное	commit	b3ee9f63f	yes	git revert b3ee9f63f	7 files
+10:44	1	disciplina	ot-maksa	commit	9e4a228a5	yes	git revert 9e4a228a5	VALVE --no-verify: old debt check_uroki (UROKI-FABRIKE without machine fields)
+10:44	1	disciplina	_studio/zhurnal	commit	d71fe4afc	yes	git revert d71fe4afc	VALVE --no-verify: old debt check_uroki (UROKI-FABRIKE without machine fields/ZAKRYT), 177 files
+10:44	1	disciplina	--help/	skip	-	-	-	junk folder from a tool called with --help as a path; not committed, question in VOPROSY
+10:44	1	ankety	arka	commit	89460ac	yes	git revert 89460ac	1 files
+10:44	1	matema-fest	zhurnal	commit	25bfd37	yes	git revert 25bfd37	11 files
+10:44	1	matproekty-179	arka	commit	eca5b4e	yes	git revert eca5b4e	9 files
+10:44	1	spetsmat-bot	корень	commit	b624778	yes	git revert b624778	1 files
+10:44	1	spetsmat-bot	docs	commit	dd2ec5a	yes	git revert dd2ec5a	1 files
+10:44	1	spetsmat-bot	zhurnal	commit	1709dfe	yes	git revert 1709dfe	5 files
+10:44	1	spetsmat-bot	служебное	commit	f8aac4e	yes	git revert f8aac4e	1 files
+10:44	1	vanya	корень	commit	2dc7dec	yes	git revert 2dc7dec	10 files
+10:44	1	vanya	zhurnal	commit	348e3ad	yes	git revert 348e3ad	3 files
+10:45	1	materials	zayavka 2026-09-19T1459-vyvoz-arka-mat-kostyak-6-commits	close	e4310e14	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: arka/mat-kostyak вывезена, origin = локальная = e4310e14 [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-20T1858-arka-mat-kostyak-20-09-origin	close	e4310e14	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: arka/mat-kostyak вывезена, origin = локальная = e4310e14 [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-19T1522-katalog-kursa-kod-katalog-kursa-md	close	e4310e14	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: materials status 0 после консервации (arka/mat-kostyak e4310e14); disciplina: check_arhiv.py и fixtures/arhiv в git, main d71fe4afc вывезен [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-19T2144-19-09-handoff-2026-09-20	close	e4310e14	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: всё названное в git: materials e4310e14, disciplina d71fe4afc, оба вывезены [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-19T2247-19-09-kurs-puti-i-volny	close	9499c612	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: kurs-puti-i-volny закоммичен 9499c612 (PDF в istochniki по-прежнему вне git), disciplina d71fe4afc [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-20T1840-2-20-09-ucheniki-15-11	close	c4da9a25	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: ucheniki закоммичен c4da9a25, _studio bb066eae, вывезено [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-20T1855-2026-09-20t1840-studio-zhurnal-2026	close	bb066eae	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: _studio закоммичен bb066eae, ucheniki c4da9a25, вывезено [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-20T1858-git-incidenty-lock-20-09-18	close	-	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: .git/incidenty.lock на 2026-09-25 отсутствует — гасить нечего [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-22T0251-18-09-22-09-diskmat-57	close	54261792	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: diskmat-57 закоммичен 54261792 (+ .log в служебное e4310e14), вывезено [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-23T0027-diskmat-57-2026-08-18-logika	close	54261792	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: вся арка diskmat-57 закоммичена одним коммитом 54261792 (разделить линии без чтения содержания нельзя); .log закоммичен группой служебное e4310e14 по правилу захода; дубль VYGRUZKA не гасился — правка содержания вне мандата [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-23T1445-diskmat-57-kruzhok-logika-hvost	close	54261792	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: закоммичено в 54261792 вместе с основной заявкой [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-23T1510-2026-09-23t0027-diskmat-57-2026	close	54261792	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: закоммичено в 54261792, вывезено [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-24T1737-otkaz-studio-zhurnal-2026-09-24-arhitektura	close	-	yes	mv sdelano/<id>.md back to zayavki/	заход svedenie 2026-09-25: зона арки в git на ветке claude/bold-faraday-wq09ql; в главной папке status 0 [file in sdelano/; tool rc=1 only on a git add of the ignored zayavki/ dir]
+10:45	1	materials	zayavka 2026-09-25T1043-otkaz-ot-maksa	close	9e4a228a5	yes	mv sdelano/<id>.md back to zayavki/	auto-closed by git_zona itself when the valve commit succeeded (file gone from zayavki/)
+10:45	1	materials	zayavka 2026-09-25T1043-otkaz-studio-zhurnal	close	d71fe4afc	yes	mv sdelano/<id>.md back to zayavki/	auto-closed by git_zona itself when the valve commit succeeded (file gone from zayavki/)
