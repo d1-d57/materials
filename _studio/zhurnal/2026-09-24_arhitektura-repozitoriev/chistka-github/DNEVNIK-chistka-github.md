@@ -29,3 +29,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** step 4 — tags `arhiv/*` for 208 park + 9 closed unmerged branches.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 11:46 — step 4: arhiv tags
+
+- **done:** `/tmp/chistka/step4_tags.py`: 217 lightweight tags `arhiv/<branch>` at the live tip (re-read by `ls-remote --heads` right before tagging), pushed in chunks of ≤50, verified by `git ls-remote --tags origin 'refs/tags/arhiv/*'`: 217 of 217 verified (materials 11, disciplina 169, spetsmat-179 34, matproekty-179 1, ankety 1, matema-fest 1); pre-existing conflicting tags 0; tips changed since classification 0. Table: `tags.tsv`.
+- **next:** step 5 — delete in batches of ≤50 per repository, verifier subagent after each round.
+- **surprise:** none.
+- **question:** none.
