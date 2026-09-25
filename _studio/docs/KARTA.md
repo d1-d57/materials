@@ -271,6 +271,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-09-25_navigaciya/kod_istoriya-sessij.md`** (разово изучить историю сессий Cowork и Claude Code: таблица-анкета, фасетная типология, затем удаление сырья по команде аналитика)
+
 **`_studio/zhurnal/2026-09-25_navigaciya/reserch/kartochki-sostoyaniya-papki.md`** (ресёрч: карточки репозиториев, состояния, системы папок, синонимы, черновик полей — с источниками)
 
 
