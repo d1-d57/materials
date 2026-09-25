@@ -286,6 +286,24 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+**Entry facts (read-only recon, 2026-09-25, before any work).**
+- Cowork base: 630 cards `local_*.json`, 257 `local_<uuid>/` + 236 `<8 chars>/` dirs (493 transcript dirs — matches the owner's numbers).
+- Code tab: 640 cards + 8 `deleted_*` entries. Every card carries `cliSessionId`; 431 of them point to a live `~/.claude/projects/*/<id>.jsonl`.
+- Claude Code: 2606 `~/.claude/projects/*/*.jsonl` (2.7 GB, mtimes 2026-08-26…2026-09-25). By `entrypoint`: `claude-desktop` 1125, `sdk-cli` 1464 (803 of them in project dir `-` = one-turn probes launched by tools), `sdk-py` 13, `cli` 3, none 1.
+- Cowork `cliSessionId`s never appear in `~/.claude/projects` (0 of 630): Cowork keeps its duplicate inside its own base.
+- Python: system 3.9.6 with no numpy/sklearn; `uv` is present; no local embedding model, no ollama.
+
+**Decisions inside my zone (named, not asked).**
+1. **One row = one session, no double counting.** A Code-tab card and the `.jsonl` it names are ONE session → one row, `istochnik=code-tab`, `est_perepiska` from the jsonl. A `.jsonl` not named by any Code-tab card → `istochnik=claude-code`. The Cowork internal `.claude/projects` duplicate is not a source.
+2. **Criterion (a) as written is crooked — I contest it here, before work.** "Rows = sum of sources in SCHET-DO" would count the 431 linked transcripts twice. Proposed amendment: rows = cowork cards + code-tab cards + claude-code jsonl NOT named by a code-tab `cliSessionId`/`priorCliSessionIds`. The verifier computes that overlap itself (grep of ids in card files vs `ls` of jsonl basenames), so the check stays independent and can still fail.
+3. **Programmatic runs are kept, not dropped** (the brief says scheduled runs are a feature, not noise; same logic for SDK runs). Extra columns: `zapusk` (`vladelec` / `raspisanie` / `sdk`), `entrypoint`, `proekt` (cwd / project dir). This becomes a candidate facet "who started the session".
+4. **Brief commands that glue two repos are split** per the table "ДВА РЕПОЗИТОРИЯ" (`GIT_ZONA_REPO` set per repo, one `--zone` per repo). The ref `claude/dazzling-planck-auuv8v` has no local branch — entry checks ran against `origin/claude/dazzling-planck-auuv8v`.
+5. **Vectors.** Nothing installed locally. Methodology will propose a multilingual sentence-embedding model run through an ephemeral `uv` env; that means downloading packages + model weights, so I only do it after the analyst approves at СТОП 1. Fallback named in advance: TF-IDF (char n-grams, Russian-friendly) + SVD, also via `uv` (scikit-learn).
+6. **Raw history never enters git.** `sessii.csv` holds only ≤300-char first messages, tool names, folders; no transcript paths.
+7. Subagents: 2 total (verifier-before at step 0, blind check at step 4), each must end with «выдано N позиций из M найденных».
+
+**Order.** 0 verifier-before (subagent, background) → 1 `indeks.py` → `sessii.csv` (stdlib only) → 2 `METODOLOGIYA.md` + facet frame → commit both zones, push both branches → **СТОП 1**. Then 3 facets, 4 typology + blind check → **СТОП 2**. Then 5 deletion manifest → **СТОП 3**. Step 6 only on «УДАЛИТЬ».
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
@@ -330,6 +348,35 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
+
+### СТОП 1 — progress report (2026-09-25)
+ПРАВКИ ПРОЧИТАНЫ: none (block «<правок нет>» at start).
+
+**Entry git contour (§0.1), verbatim.** The brief's commands name `claude/dazzling-planck-auuv8v`, which has no local branch (`fatal: malformed object name`), so they were re-run against `origin/…`:
+```
+$ git --no-optional-locks branch --no-merged origin/claude/dazzling-planck-auuv8v | grep -c 'zahod/'
+0
+$ git --no-optional-locks branch --no-merged origin/claude/dazzling-planck-auuv8v
+  main
+$ GIT_ZONA_REPO=$PWD git_zona.py check --zone _studio/zhurnal/2026-09-25_navigaciya/kod_istoriya-sessij.md
+✅ зона …: работа доехала в git, вне git ничего нет.   (rc=0)
+status --porcelain | wc -l → 0 · log @{u}.. | wc -l → 0 · zayavki: открыто 0, переадресовано 12
+```
+The brief's combined `check --zone <materials path> <disciplina path>` refuses (rc=2: second path needs its own `--zone`, and `GIT_ZONA_REPO` is required); split per «ДВА РЕПОЗИТОРИЯ».
+
+**Step 0, verifier-before (fresh subagent, find/ls/grep/comm only).** `disciplina: analitika/sessii/SCHET-DO.txt`. Cowork: 630 cards, 493 audit.jsonl (257 in `local_*`, 236 in 8-char dirs), base 7.5G; outputs/ 493 dirs 1.36 GiB 15361 files, uploads/ 279 dirs 1.06 GiB 936 files. Code tab: 640 cards (+8 `deleted_*`). Claude Code: 2606 top-level jsonl, 3.0G (+665 subagent jsonl). Overlap code-tab↔claude-code: 432. Expected rows 630+640+(2606−432) = **3444**. The subagent's answer ended «выдано 8 позиций из 8 найденных».
+
+**Step 1, index.** `indeks.py` → `sessii.csv`. Criterion (a) as amended in ПЛАН, point 2: `python3 -c "import csv;…sessii.csv…"` → **3444** = 3444 in SCHET-DO. Split: cowork 630 · code-tab 640 · claude-code 2174. Extra columns: `zapusk`, `entrypoint`. The owner-message count excludes tool results; the snippet in §2.1 counted them too, which inflates `n_user`.
+
+**Step 2, methodology.** `disciplina: analitika/sessii/METODOLOGIYA.md` (55 lines, `check_termin.py` green). It has 4 axes: ZADACHA, FORMA, STADIYA and OBLAST, with 4/3/4/4 values.
+
+**Decisions the analyst is asked for at СТОП 1:**
+1. Approve the frame, or amend axes/values.
+2. **Download approval:** the preferred vectors (`intfloat/multilingual-e5-small` via `uv` + sentence-transformers/torch, ~470 MB weights + packages from PyPI/Hugging Face). If not approved: TF-IDF char-ngrams + SVD (scikit-learn via `uv`, small download). Say which.
+3. Accept the amended criterion (a), which removes the double count of the 432 linked transcripts.
+
+**Commits at СТОП 1:** disciplina `ea3c0aee2` on `zahod/istoriya-sessij`, pushed (`log @{u}.. | wc -l` → 0). materials: this file, commit below.
+Deleted: nothing. Raw history is untouched.
 **АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
 **РОД АРТЕФАКТА:** `<исходник | собранный>`
