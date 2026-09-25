@@ -1,0 +1,12 @@
+korni: 🔴 таблица по умолчанию, репозиторий `materials` не в реестре КОРНИ_ПО_РЕПО (6 корней: teoriya-kategoriy, teorkat-vvedenie, _studio, obzory, _illustracii, _meta); подстановка НЕ объявлена — корень процесса /Users/ivanyakovlev/Documents/GitHub/materials. Ворота, регистрация и выбор журнала пойдут по чужой таблице. Чини строкой в КОРНИ_ПО_РЕПО, либо объяви подстановку нарочной через KORNI_TABLICA_PO_UMOLCHANIYU=da, либо потребуй отказа через KORNI_STROGO=da
+ИМЯ_РЕПО materials
+КОРНИ_ПО_УМОЛЧАНИЮ True
+roots ['teoriya-kategoriy', 'teorkat-vvedenie', '_studio', 'obzory', '_illustracii', '_meta']
+ПРИЧИНА 'таблица по умолчанию, репозиторий `materials` не в реестре 
+корень_пути _studio/docs/x.md -> Корень(имя='_studio', карта='_studio/docs/KARTA.md', журнал='_studio/zhurnal', ворота=True, регистрация='обязательна', рама=False)
+корень_пути kurs-puti-i-volny/ZAMYSEL.md -> None
+корень_пути obzory/a/b.md -> Корень(имя='obzory', карта='_studio/docs/KARTA.md', журнал=None, ворота=False, регистрация='добровольна', рама=False)
+корень_пути _illustracii/x.md -> Корень(имя='_illustracii', карта='_illustracii/docs/KARTA.md', журнал='_illustracii/zhurnal', ворота=True, регистрация='обязательна', рама=False)
+корень_пути teorkat-vvedenie/a.md -> Корень(имя='teorkat-vvedenie', карта=None, журнал=None, ворота=True, регистрация='нет', рама=True)
+корень_пути diskmat-57/x.md -> None
+корень_пути README.md -> None

@@ -1,0 +1,31 @@
+── ГЕЙТ ОТМЕНЁННОГО (check_arhiv) ──
+  kurs-puti-i-volny/ZAMYSEL.md
+  проверено 4 из 4 записей отменено: (Y counted from the source text before parsing; 1 without a 'where it still lies' block, nothing to check there)
+  addresses named 14 · resolved 11 · marked 0 · unmarked 11 · unresolved 3
+  resolution: next to the source, then at /Users/ivanyakovlev/Documents/GitHub/materials
+
+  ЧЕГО ЭТОТ ГЕЙТ НЕ ПРОВЕРЯЕТ — список закрытый:
+     · truthfulness of the cancellation itself: the gate takes a recorded cancellation as given and never judges whether the owner was right to cancel
+     · addresses written in prose or in any shape other than a backticked `path.md:N` - they are listed by name when seen, but nothing verifies a mark for them
+     · files that stand on a cancelled decision but are not named by the entry: only what the source names is checked
+     · that a mark sits on the RIGHT section: only proximity to the named line and the entry id on the mark; line numbers were true on the date of the entry and drift when a file is edited
+     · addresses that resolve neither next to the source nor at the repository root: reported by name as unresolved, judged only under --strogo
+     · the wording of the reason after the mark, and whether a whole-file banner is deserved
+
+  UNRESOLVED (blind, named): centralnyj-obekt-okruzhnost: src/obzor.md:22; zhanr-burbaki: kod_obzor-funkciya-putey.md:26; chetyre-chetverti: SVEDENIE-kursa.md:75
+
+  NOT IN `path.md:N` FORM (blind, named): centralnyj-obekt-okruzhnost: `reserch/R4`; centralnyj-obekt-okruzhnost: `KOSTYAK.md`
+
+  ✗ КРАСНЫЙ — 1 finding(s):
+     · 11 named address(es) carry no cancellation mark
+     ✗ no mark: centralnyj-obekt-okruzhnost: KOSTYAK.md:29
+     ✗ no mark: centralnyj-obekt-okruzhnost: KOSTYAK.md:195
+     ✗ no mark: centralnyj-obekt-okruzhnost: otchety/RAZBOR-i-perestroyka.md:75
+     ✗ no mark: centralnyj-obekt-okruzhnost: zahody/ZAHOD-formy-yakobi.md:26
+     ✗ no mark: centralnyj-obekt-okruzhnost: zahody/ZAHOD-sverka-koncepcii.md:35
+     ✗ no mark: centralnyj-obekt-okruzhnost: README.md:42
+     ✗ no mark: centralnyj-obekt-okruzhnost: README.md:33
+     ✗ no mark: zhanr-burbaki: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/NAVIGATOR.md:7
+     ✗ no mark: chetyre-chetverti: HREBET-kursa.md:9
+     ✗ no mark: chetyre-chetverti: README.md:14
+     ✗ no mark: chetyre-chetverti: REESTR-reserchey.md:17
