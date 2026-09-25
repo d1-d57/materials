@@ -363,7 +363,7 @@ MODEL: besplatnaya
 Владелец решил: всё про систему живёт в `disciplina`. Документы арки (кроме этого файла-захода) перенесены в `disciplina/_studio/zhurnal/2026-09-25_navigaciya/` на ветку `claude/dazzling-planck-auuv8v` (вывезена в `origin`). Твоя работа от этого НЕ меняется. Одно добавление к финалу в `disciplina`, ПЕРЕД влитием своей ветки `zahod/istoriya-sessij` в `main`:
 ```
 cd ~/Documents/GitHub/disciplina && git --no-optional-locks fetch origin claude/dazzling-planck-auuv8v
-GIT_ZONA_REPO=$PWD python3 _generator/tools/git_zona.py merge origin/claude/dazzling-planck-auuv8v   # или vlit-v-osnovnuyu, если merge откажет — как скажет инструмент
+GIT_ZONA_REPO=$PWD python3 _generator/tools/git_zona.py merge origin/claude/dazzling-planck-auuv8v --zone _studio/zhurnal/2026-09-25_navigaciya --zone _studio/docs/KARTA.md   # в основной папке disciplina, на main; вливает ветку аналитика в текущую
 ```
 Конфликт возможен только в `_studio/docs/KARTA.md` (строки регистрации) — разрешается ОБЪЕДИНЕНИЕМ строк, никогда выбором стороны. Итог — строкой в `## ОТЧЁТ`: хэш влития или причина отказа.
 
