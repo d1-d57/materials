@@ -50,3 +50,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** round 3 onward — remaining disciplina 575, spetsmat-179 85, materials 21.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 12:03 — step 5, round 3
+
+- **done:** 121 deleted (materials 21 — finished, disciplina 50, spetsmat-179 50). Verifier: `checked 289 of 289, 0 failures`.
+- **next:** round 4 — remaining disciplina 525, spetsmat-179 35.
+- **surprise:** the verifier run took 13 min (fetch of disciplina tags); rounds continue.
+- **question:** none.
