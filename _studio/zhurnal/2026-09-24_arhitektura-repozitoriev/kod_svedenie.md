@@ -319,6 +319,15 @@ Premises checked live, and decisions named before work:
 6. The book `mv` target `~/Documents/Книги/_iz-repozitoriev/<repo>/…` is outside every repo; each move is a row in `actions.tsv` with the restore path.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
+
+All 18 questions are in `svedenie/VOPROSY.md` in the form `<object> — <what it is> — PROPOSED: … — because …`. The two that repeat (see ПОВТОРЯЕМОСТЬ) as queue items:
+
+1. `git_zona.py vlit-v-osnovnuyu` in `materials` treats `main` (the published site) as the trunk; only the zone check stopped it (VOPROSY #14).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. `git_zona.py zakryt-vetku` cannot close a fully merged branch when a tombstone of the same name exists — 40 branches stay (VOPROSY #2).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -372,7 +381,46 @@ All 13 open requests of `materials` closed with results after step 1 (commits e4
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/REPORT.md` — any Markdown viewer (opens with WHAT CHANGED TODAY)
+**РОД АРТЕФАКТА:** `собранный`
+**КОММИТ:** `6128d22` — `svedenie: step 5 verifier 250/250, report` · merged into `arka/mat-kostyak` as `b35dc5f2` (pushed, `git ls-remote origin arka/mat-kostyak` → b35dc5f2…) · `git_zona.py check --zone …/svedenie/` → ✅ (from the main folder). The final report commit follows this text and is merged the same way.
+
+ПРАВКИ ПРОЧИТАНЫ: none — the block `## ПРАВКИ ПОСЛЕ ВЫДАЧИ` is empty, and the watcher on `claude/bold-faraday-wq09ql` never fired.
+
+What was done and why — steps 1–6 of §2.2, all done; details with commands in `svedenie/DNEVNIK-svedenie.md`, every action with its restore command in `svedenie/actions.tsv` (317 rows), questions in `svedenie/VOPROSY.md` (18).
+- **Step 1, conservation:** 23 commits (materials 7, disciplina 7, spetsmat-bot 4, vanya 2, ankety 1, matema-fest 1, matproekty-179 1), all pushed; 2 disciplina commits by the lawful valve over OLD `check_uroki` debt (rows in `actions.tsv`, reason in INCIDENTY). No secrets by pattern scan (materials and matema-fest are PUBLIC); no files >5 MB or books. 13 open requests closed.
+- **Step 2, branches:** coverage — checked 22 of 22: 10 merged, 1 was already merged, 11 left with a reason (VOPROSY #3–#13). 93 fully-merged local branches tombstoned; 40 refused by `zakryt-vetku` (same-name tombstone exists) → VOPROSY #2.
+- **Step 3, worktrees:** 114 of 114 have a `drop-worktree` row; removed by `mv` to `~/.Trash/svedenie-2026-09-25-worktrees/` + `git worktree prune`, not `drop --force` (plan item 2). 46 held non-ignored edits: removed only after their tree equalled their `origin/park/…` snapshot → VOPROSY #17.
+- **Step 4:** default branch of d1-d57/materials → `arka/mat-kostyak` (Pages is built by a workflow on push to `main`; env policy main/gh-pages).
+- **Step 5, verifier:** separate subagent, GitHub side: `checked 250 of 250, 0 failures` (`svedenie/verifier.md`), «выдано 250 позиций из 250 найденных».
+- **Step 6:** `svedenie/REPORT.md`.
+
+Criterion: (1) `ls svedenie/ | wc -l` → 5 ✅ · (2) conserved: checked 7 of 7 — 5 at 0; disciplina 1 = `--help/` test artifact (VOPROSY #1, not a big file — deviation named); vanya 2 = live work of another session started after my commit (VOPROSY #18) · (3) 22 of 22 ✅ · (4) K = 0 ✅ · (5) 114 of 114 ✅ · (6) `arka/mat-kostyak` ✅ · (7) ✅ · (8) ✅ b35dc5f2.
+
+What I did NOT touch: `materials/main` (c9257e84, unchanged); no branch or tag deleted on GitHub; no `--force`, no `reset --hard`, no `rebase`; no content edits except merge-conflict resolution (KARTA by trunk side; `sudya` union; `zhivost`, `volna-b-server` by trunk side).
+
+НЕОБРАТИМОЕ (each is reversible; listed because the owner did not see it happen):
+- 114 worktrees moved to `~/.Trash/svedenie-2026-09-25-worktrees/<repo>-wt/<name>` — restore: `mv` back + `git -C <repo> worktree repair` (per row in `actions.tsv`). Becomes irreversible when the Trash is emptied.
+- 93 local branches deleted by `zakryt-vetku` — restore: `git_zona.py voskresit --branch <b>` (local tags `mogila/*`; tips all in the trunks on GitHub).
+- matproekty-179 main checkout switched from `zahod/nepodtverzhdennye` to `main` (same commit 0233d36) — restore: `git switch zahod/nepodtverzhdennye`.
+- GitHub default branch of materials changed — restore: `gh repo edit d1-d57/materials --default-branch main`.
+- `disciplina-wt/` moved to Trash by mistake and moved back within a minute — nothing lost.
+
+Final git hygiene (commands run after the merge, from the main folders):
+```
+out of git (status --porcelain | wc -l): materials 0 · disciplina 1 (--help/) · ankety 0 · matema-fest 0 · matproekty-179 0 · spetsmat-bot 0 · vanya 2 (live work of another session)
+unpushed trunks (log @{u}.. | wc -l): 0 in all seven
+git branch --no-merged arka/mat-kostyak | grep -c zahod/   → 0
+own branch unpushed (log @{u}.. | wc -l)                  → 0
+post-check from ../../materials: git_zona.py check --zone …/svedenie/ → ✅; ls-remote arka/mat-kostyak == b35dc5f2
+```
+Г1 ✅ (above) · Г2 applicable after all — the pass touched 12 repositories; their numbers are the table above · Г3 unmerged `zahod/*` 0 → 0 · Г4 no new `.py` in `_generator/**` (scripts only in `/tmp/svedenie/`) · Г5 `register_doc.py` called for DNEVNIK, VOPROSY, REPORT, verifier; `grep -c` in `_studio/docs/KARTA.md` → 1 each · Г6 `git show --stat` of every zone commit: only `svedenie/`, `kod_svedenie.md`, `_studio/docs/KARTA.md`.
+
+Время прогона + токены: на канале `app` неприменимо.
+
+ПОВТОРЯЕМОСТЬ: (a) `vlit-v-osnovnuyu` in `materials` targets `main` = the site — WILL repeat on every pass that merges in `materials` (VOPROSY #14): this is a pass before the next one, not a queue item; (b) `zakryt-vetku` refuses same-name tombstones — will repeat on every branch sweep (VOPROSY #2); (c) the other findings (dirty worktrees, `--help/`) are one-off.
+
+**АРТЕФАКТ (repeated for the gate):** see the first line of this section.
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
 **РОД АРТЕФАКТА:** `<исходник | собранный>`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
