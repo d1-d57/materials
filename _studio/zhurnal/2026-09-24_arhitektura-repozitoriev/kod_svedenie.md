@@ -306,6 +306,18 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: Claude Code (Opus), app channel, 2026-09-25. Work dir `materials-wt/svedenie`, branch `zahod/svedenie`.
+
+Order: steps 1 → 6 of §2.2, zone committed and pushed after every DNEVNIK entry; mechanics by scripts in `/tmp/svedenie/`.
+
+Premises checked live, and decisions named before work:
+1. `claude/bold-faraday-wq09ql` exists only as `origin/…` here, so the §0.1 self-check is run against `origin/claude/bold-faraday-wq09ql` (the bare name gives `fatal: malformed object name`).
+2. **Worktree removal (step 3): `mv <worktree> ~/.Trash/…` + `git worktree prune`, not `git_zona.py worktree drop --force`.** Reasons: (a) `worktree drop` takes a zahod *name* inside `materials`, not a path in another repo; (b) `--force` deletes the ignored files permanently, and this executor does not do irreversible deletion when a recoverable path exists: `mv` to Trash matches §2.3 "`rm` — use `mv` to `~/.Trash/`". Disk space is freed when the owner empties the Trash. Every row still goes to `actions.tsv` as `drop-worktree`.
+3. **`materials` and `matema-fest` are PUBLIC on GitHub** (`gh repo list`). Before pushing their conservation commits I scan the new paths for secrets (keys, tokens, `.env`, passwords). A secret → not committed, listed in `VOPROSY.md`. Students' personal data is not treated as a finding (§2.3), as ordered.
+4. `matproekty-179` is checked out on `zahod/nepodtverzhdennye`, not `main`. The brief says "each on its current branch, which is its trunk"; I verify which is the trunk before committing there, and if it is not the trunk I commit on the current branch anyway (the brief's literal rule) and note it in `VOPROSY.md`.
+5. The criterion is sound; one refinement: (5) counts rows of `kept-worktrees.tsv` without the header — 114.
+6. The book `mv` target `~/Documents/Книги/_iz-repozitoriev/<repo>/…` is outside every repo; each move is a row in `actions.tsv` with the restore path.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
@@ -339,12 +351,22 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+Filled by the executor: §0.1 says the contour was empty at build time, so no contour subagent was called; the snapshot was taken at 10:41, before any work (worktree `materials-wt/svedenie`, `<основная>` = `origin/claude/bold-faraday-wq09ql`, which exists here only as a remote ref):
+```
+$ git --no-optional-locks branch --no-merged origin/claude/bold-faraday-wq09ql | grep -c 'zahod/'
+0
+$ git --no-optional-locks status --porcelain | wc -l      # fresh worktree
+0
+$ git --no-optional-locks log --oneline @{u}.. | wc -l    # right after worktree add
+0
+$ GIT_ZONA_REPO=…/materials python3 …/git_zona.py zayavki | grep Открытых
+Открытых заявок: 13
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+All 13 open requests of `materials` closed with results after step 1 (commits e4310e14 … 54261792; `zayavki` → «Открытых заявок: 0»), plus 5 auto-requests born from this pass's own stops (2 in the `materials` queue, auto-closed by the tool; `disciplina` bcff13a62, 3c87fd088; `spetsmat-bot` c30758c) and one old `disciplina` request 2026-09-17T1911 about the `sudya` merge (fc4661ba1), all closed. Rows `zayavka …` in `svedenie/actions.tsv`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
