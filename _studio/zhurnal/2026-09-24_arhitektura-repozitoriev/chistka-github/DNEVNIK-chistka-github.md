@@ -106,3 +106,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** round 11 — disciplina 175 remaining.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 12:21 — step 5, round 11
+
+- **done:** 50 deleted (disciplina). Verifier: `checked 724 of 724, 0 failures` (via tag 217 = every tag+delete row).
+- **next:** round 12 — disciplina 125 remaining, all class merged.
+- **surprise:** none.
+- **question:** none.
