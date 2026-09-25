@@ -324,9 +324,11 @@ All 18 questions are in `svedenie/VOPROSY.md` in the form `<object> — <what it
 
 1. `git_zona.py vlit-v-osnovnuyu` in `materials` treats `main` (the published site) as the trunk; only the zone check stopped it (VOPROSY #14).
    ДОМ: владелец
+   ЗАКРЫТО: перенесено в `SPISOK-DEL.md` п.154 (дефект инструмента, арка Д)
    ДОСТАВЛЕНО: нет
 2. `git_zona.py zakryt-vetku` cannot close a fully merged branch when a tombstone of the same name exists — 40 branches stay (VOPROSY #2).
    ДОМ: владелец
+   ЗАКРЫТО: ветки закрыты заходом 4 (`SPISOK-DEL.md` п.161); дефект инструмента — п.169 (арка Д)
    ДОСТАВЛЕНО: нет
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```

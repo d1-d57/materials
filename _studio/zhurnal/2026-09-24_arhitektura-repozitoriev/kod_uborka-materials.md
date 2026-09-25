@@ -403,12 +403,15 @@ grep -n '<как механизм назван в вызывающем коде>
 
 1. A tool in `disciplina` wrote into a folder literally named `--help/` in the main checkout (`--help/KORPUS-RYCHAGOV.jsonl`, `--help/_generator/tools/gejt_proby.py`, `--help/_studio/zhurnal/proba/KORPUS-RYCHAGOV.jsonl`, untracked; found while parking the main checkout): some tool takes its first argument as an output path without rejecting flags. It will repeat every time someone asks that tool for `--help`. I did not look for which tool.
    ДОМ: владелец
+   ЗАКРЫТО: дефект инструмента — `SPISOK-DEL.md` п.169 (арка Д)
    ДОСТАВЛЕНО: нет
 2. `schet_nezakrytogo.py _studio/zhurnal/2026-09-24_arhitektura-repozitoriev` run from this pass's worktree printed "no file fell into the area" and gave no counts, although the folder exists in the worktree — the first-move check of the brief is not executable from a worktree.
    ДОМ: владелец
+   ЗАКРЫТО: дефект инструмента — `SPISOK-DEL.md` п.169 (арка Д); тот же, что `kod_perepis-diska.md` №2
    ДОСТАВЛЕНО: нет
 3. The census (pass 1) counted "52 loose .md files" in `spetsmat-bot-wt/`; live: `find spetsmat-bot-wt -maxdepth 1 -type f | wc -l` → 0 — they are READMEs inside worktrees plus one non-git folder `etalon-raspil/`.
    ДОМ: владелец
+   ЗАКРЫТО: НЕ АКТУАЛЬНО как задача — поправка к переписи; перепись заменена итогами заходов 3–4
    ДОСТАВЛЕНО: нет
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)

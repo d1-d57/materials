@@ -63,3 +63,27 @@
       уехать вместе с ним при выносе
 
 <!-- при закрытии арки — баннер «✅ АРКА ЗАКРЫТА (<дата>)» сверху (ARKA §7 п.4 / §10 C) -->
+
+---
+
+## Пункты очереди заходов, доставленные `dostavit_urok.py`
+
+> Дословные находки из секций `## ВОПРОСЫ` файлов-заходов — голос исполнителя, который об это споткнулся, не редактора. Разбирает их человек: находка описывает, что мешало, но задачей сама не становится.
+> Строка `ДОСТАВЛЕНО: <заход>#<N>` внизу каждой записи — та же метка, что стоит в источнике; по ней Г7 `priyomka.py` проверяет, что доставка не объявлена ложно.
+
+#### perepis-diska#3
+
+3. For pass 2, rules. (a) `R4-dup` is unreachable under "first match wins": every repository is R1/R2 (clean) or R3 (dirty) before R4 is ever tested. Also, no two main checkouts share an origin. It is better as a flag column. (b) Proposed new codes, with counts in `perepis/REPORT.md` §2: `R9-wt-done` (110 worktrees), `R10-wt-residue` (44), `R0-holder` (4), `R0-empty` (2).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+ДОСТАВЛЕНО: perepis-diska#3 · 2026-09-25
+
+#### perepis-diska#4
+
+4. Tracked files that tools rewrite in every worktree make finished worktrees look dirty:
+   - `disciplina`: `_generator/tools/.hook-otkaz-chuzhoj-volny.log`, `doma/zahody/MODELI-ZHIVOST.json`, `.githooks/zamer-skillov.json`;
+   - `spetsmat-bot`: `docs/index.html`;
+   - `materials`: `teorkat-vvedenie/L2/dist/index.html`.
+
+   Under the strict rules they add 44 worktrees to R3-park. Candidates: untrack plus `.gitignore`, or write the files outside the tree. This will repeat on every new worktree, so it is a pass, not a queue entry (see ОТЧЁТ, repeatability).
+   ДОМ: _studio/zhurnal/2026-09-24_arhitektura-repozitoriev/PLAN.md
+ДОСТАВЛЕНО: perepis-diska#4 · 2026-09-25
