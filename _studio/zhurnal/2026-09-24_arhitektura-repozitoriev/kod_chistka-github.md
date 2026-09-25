@@ -320,6 +320,23 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: Claude Code (Opus 5.5), channel `app`, started 2026-09-25.
+
+**Premises checked before work (named aloud):**
+- P1. The §0.1 self-check command `git branch --no-merged claude/bold-faraday-wq09ql` is broken as written in this worktree: there is no local branch of that name, git prints `fatal: malformed object name` and `grep -c` prints a false `0`. Per §2.4 ("base comparisons use `origin/claude/bold-faraday-wq09ql`") I run every base comparison against `origin/claude/bold-faraday-wq09ql`. Both outputs go to `## ОТЧЁТ`.
+- P2. `## ГИГИЕНА ВХОДА` says it is filled by the git-contour subagent, but §0.1 says no subagent is needed (contour empty). I fill the entry snapshot myself with command output; recorded in `chistka-github/VOPROSY.md`.
+- P3. The brief copy already exists in the worktree (it came with `origin/claude/bold-faraday-wq09ql`), so no `adopt` is needed.
+
+**Decisions inside my remit:**
+- D1. Class precedence when a branch fits two classes: `keep-trunk` > `keep-named` > `merged` > `park` > `unmerged` (the order the brief lists them). A `park/*` branch whose tip is already in the trunk is `merged` and is deleted without a tag (it is reachable from the trunk, so nothing is lost); criterion 5 counts park tags only for class `park`.
+- D2. Step 3 (sayt `tagging` → `main`): the main checkout of `sayt-sistemy-konstantinova` has `tagging` checked out. Instead of switching the owner's checkout to `main`, I do the merge in a temporary worktree of `main` under `/tmp/chistka/`, push, and remove that worktree. Same commit, same push; the owner's checkout is not switched under them. If `main` is already checked out somewhere, I fall back to the literal instruction after checking the checkout is clean.
+- D3. Mechanics as scripts in `/tmp/chistka/` (per §2.1 of the task); console output kept to summaries so the context stays under budget. Every tag is verified with `git ls-remote --tags` against the branch tip before that branch is deleted; the delete script refuses any branch whose tip is not reachable from `origin/<trunk>` or from a verified `arhiv/` tag, right before the delete.
+- D4. Batches of at most 50 deletions per repository; after each batch a fresh verifier subagent (Agent tool, different method: independent fetch + `rev-parse`/`merge-base`) checks every `delete`/`tag+delete` row so far, and deletion stops if K > 0.
+- D5. Unmerged branches: the brief's named CLOSE list is applied as given; every other unmerged branch gets a one-line judgement from `git log --oneline trunk..b`, diff stat and age. When in doubt → `keep` + a line in `VOPROSY.md`.
+- D6. `vanya` is not touched by any command (not even fetch).
+
+**Criterion check:** the readiness criterion is measurable as written; one note — criterion 4 compares the final `ls-remote --heads` count with `keep-trunk + keep-named + keep` rows, which also has to include branches that failed a step and were left in place (they will be recorded as `skip` and counted separately in `REPORT.md`).
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
