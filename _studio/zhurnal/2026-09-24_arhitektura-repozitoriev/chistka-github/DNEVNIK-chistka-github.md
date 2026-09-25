@@ -8,3 +8,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** step 1 — fetch/prune every repository with more than one branch and write `before.tsv`.
 - **surprise:** the §0.1 command `git branch --no-merged claude/bold-faraday-wq09ql` fails in the worktree (`malformed object name`, no local branch of that name) and `grep -c` turns the failure into a false `0`. I use `origin/claude/bold-faraday-wq09ql`.
 - **question:** none.
+
+## 2026-09-25 11:42 — step 1: measure
+
+- **done:** `git fetch --prune --tags origin` in 11 main checkouts, all rc=0. `before.tsv`: materials 76, disciplina 627, spetsmat-179 136, matproekty-179 9, matproekty-179-stranica 1, ankety 3, moskva 2, matema-fest 2, digest 3, arhiv-london-avgust-2026 5, sayt-sistemy-konstantinova 4 — total 868 (`awk -F'\t' 'NR>1{s+=$2}END{print s}' before.tsv`). Trunks from `ls-remote --symref origin HEAD`: materials `arka/mat-kostyak`, all others `main`.
+- **next:** step 2 — classify all 868 branches.
+- **surprise:** `matproekty-179-stranica` (remote `d1-d57/projects`) has only 1 branch, so nothing to clean there; kept in the table for coverage.
+- **question:** none.
