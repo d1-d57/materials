@@ -71,3 +71,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** rounds 6+ — disciplina 425 remaining.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 12:16 — step 5, round 6
+
+- **done:** 50 deleted (disciplina). Verifier: `checked 474 of 474, 0 failures`.
+- **next:** round 7 — disciplina 375 remaining.
+- **surprise:** none.
+- **question:** none.
