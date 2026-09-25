@@ -1,0 +1,3 @@
+time	repo	branch	class	action	tag	tip	verified	restore	note
+2026-09-25 11:47	ankety	park/2026-09-25/ankety-main	park	tag+delete	arhiv/park/2026-09-25/ankety-main	b4f7cd006c4ad8e6c82726c8941317b0e7d7b3ea	yes (tag)	git push origin b4f7cd006c4ad8e6c82726c8941317b0e7d7b3ea:refs/heads/park/2026-09-25/ankety-main	
+2026-09-25 11:47	ankety	zahod/uvedomlenie-shkolnika	merged	delete		e799eeeb71d4aa0c39129e9b175db406ff23b85c	yes (trunk)	git push origin e799eeeb71d4aa0c39129e9b175db406ff23b85c:refs/heads/zahod/uvedomlenie-shkolnika	

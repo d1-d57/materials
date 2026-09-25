@@ -36,3 +36,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** step 5 — delete in batches of ≤50 per repository, verifier subagent after each round.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 11:48 — step 5, round 1 (pilot): ankety
+
+- **done:** `/tmp/chistka/step5_delete.py ankety`: 2 deleted (1 merged, 1 park via verified tag); guard re-checked right before the push. Verifier subagent (own script `/tmp/chistka/verifier/verify.py`): `checked 2 of 2, 0 failures`.
+- **next:** rounds over all repositories, ≤50 per repo per round, verifier after each round.
+- **surprise:** none.
+- **question:** none.
