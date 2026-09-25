@@ -186,6 +186,9 @@
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/VYGRUZKA-2026-09-24.md`** (Выгрузка сессии 2026-09-24 — сырьё для дневника арки 2026-09-24_arhitektura-repozitoriev)
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_chistka-github.md`** (чистка веток на GitHub: влитое удалить, парковки и закрываемое — в архивные метки, влить tagging в sayt; последний заход арки А)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/kod_perepis-diska.md`** (перепись Mac только на чтение: все git-репозитории и не-git папки, их состояние и даты — основа воронки подметания и летописи проектов)
 
 
