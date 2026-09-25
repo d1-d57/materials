@@ -64,3 +64,9 @@ vanya 0
 - **next:** step 4, default branch of materials.
 - **surprise:** premise of step 3 only partly true (46 dirty, all saved in park). My own slip: I moved `disciplina-wt/` to the Trash although it held a hidden `.logi-volny-10/`; moved it back within a minute, nothing lost → VOPROSY #15.
 - **question:** none.
+
+## 2026-09-25 10:58 — step 4: default branch of materials
+- **done:** `gh api repos/d1-d57/materials/pages` → `build_type: workflow, source.branch: main`; `.github/workflows/hugo.yml` on `main` and on `arka/mat-kostyak`: `on: push: branches: ["main"]` + `workflow_dispatch`; environment `github-pages` deploy policy = branches `main`, `gh-pages` only. So publishing does not depend on the default branch. Ran `gh repo edit d1-d57/materials --default-branch arka/mat-kostyak` rc=0; `gh repo view … --json defaultBranchRef` → `arka/mat-kostyak`; Pages status after: `built`.
+- **next:** step 5, the verifier subagent.
+- **surprise:** none.
+- **question:** none.

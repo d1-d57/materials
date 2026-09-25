@@ -315,3 +315,4 @@ time	step	repo	object	action	saved_ref	verified	restore	note
 10:57	3	disciplina	/Users/ivanyakovlev/Documents/GitHub/disciplina-wt	skip	-	-	-	container NOT empty (hidden .logi-volny-10); moved to Trash by mistake and moved back at once — VOPROSY #15
 10:57	3	matproekty-179	/Users/ivanyakovlev/Documents/GitHub/matproekty-179-wt	skip	-	-	-	container not empty: scratchpad_probe.py (loose file, not a worktree) — VOPROSY #15
 10:57	3	spetsmat-bot	/Users/ivanyakovlev/Documents/GitHub/spetsmat-bot-wt	skip	-	-	-	container not empty: worktree etalon-raspil (not in kept-worktrees.tsv) — VOPROSY #16
+10:58	4	materials	GitHub default branch	default-branch	main	yes: gh repo view → arka/mat-kostyak	gh repo edit d1-d57/materials --default-branch main	Pages: build_type=workflow, hugo.yml on push to main (same trigger on both branches), github-pages env allows only main/gh-pages; Pages status after switch: built
