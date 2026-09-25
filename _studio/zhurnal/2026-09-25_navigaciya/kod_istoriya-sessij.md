@@ -352,6 +352,8 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 ### Ход работы
 ПРАВКИ ПРОЧИТАНЫ: 1, 2, 3, 4.
 - 2026-09-25 · state on reading ПРАВКА 3/4: steps 3–4 v0 done (e5-small, 25 clusters + 86 sub-clusters, 60 hand fixes; blind check ZADACHA 19/30, STADIYA 18/30); uv env + weights deleted (2.2 GB). Next: ПРАВКА 4 sharpening pass — 1735 owner-typed sessions → Haiku in batches of 50 (35 batches, ≤5 subagents at a time), new column `stadii`, then a fresh blind check on 30 new sessions.
+- 2026-09-25 · batches built: 1735 owner-typed → 35 batches of ≤50 (`razmetka.py llm_pachki`), input = title + PROJECT + ≤3 owner messages + brief extract + tools. `sobrat` made numpy-free (v0 counts reproduced exactly) and learned `stadii` + model labels (hand fixes keep precedence).
+- 2026-09-25 · PROBE FINDING, fixed before the full run: first 2 batches came back 36/50 and 39/50 `kod`. Cause 1: many briefs have an UNFILLED template КОНТЕКСТ («<проект в 1–2 фразы>»), so the model saw no task → extraction now takes `## 2. ЗАДАЧА`. Cause 2: the model read "writes Python" as `kod` for orchestrator/gate briefs → prompt got clarifications derived from the analyst's rules (rules themselves kept verbatim). Probe labels discarded; 2 running batches stopped; batches 00–04 relaunched.
 
 ### СТОП 1 — progress report (2026-09-25)
 ПРАВКИ ПРОЧИТАНЫ: none (block «<правок нет>» at start).
