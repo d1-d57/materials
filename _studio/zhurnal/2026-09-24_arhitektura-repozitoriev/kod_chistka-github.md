@@ -370,22 +370,75 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+Filled by the executor: no git-contour subagent ran, because the contour was empty (§0.1; VOPROSY 1). Taken 2026-09-25 11:40, before any work, in the worktree:
+```
+$ git --no-optional-locks branch --no-merged claude/bold-faraday-wq09ql | grep -c 'zahod/'
+fatal: malformed object name claude/bold-faraday-wq09ql
+0
+$ git --no-optional-locks branch --no-merged origin/claude/bold-faraday-wq09ql      # rc=0
+  main
+$ … | grep -c 'zahod/'
+0
+$ git --no-optional-locks status --porcelain | wc -l
+       0
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       0
+$ python3 …/git_zona.py zayavki | tail -1
+Охват: заявок открыто 0, переадресовано 12, закрыто недавно (sdelano) 89, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Nothing to merge, commit, push or close at entry: every count above is 0. The only unmerged local branch was `main`, the published site, which is a named keep.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+
+**What was done, and why.** GitHub clutter was cleaned in 11 repositories under one law: no work may be lost. Branches went from **868 to 19**: 632 deleted because they were already merged into their trunk, 217 deleted after an `arhiv/<branch>` tag was pushed and verified, and 19 kept. `sayt-sistemy-konstantinova` `tagging` was merged into `main` (014d18a). On the Mac: 40 fully merged local branches were deleted, three leftover folders went to the Trash, and a stray worktree was removed. Details and the per-repo table are in `chistka-github/REPORT.md`.
+
+**How it was checked.** Right before every deletion, the delete script checked that the live tip was unchanged and reachable on GitHub, from the trunk or from a verified tag. After each of the 14 rounds, an independent verifier subagent ran its own script over all deletions so far (`/tmp/chistka/verifier/verify.py`), and K was 0 every time. The final verifier run printed `checked 849 of 849, 0 failures` and ended with «выдано 849 позиций из 849 найденных».
+
+**Readiness criterion:**
+1. `ls chistka-github/ | wc -l` → 9 (DNEVNIK, before.tsv, actions.tsv, VOPROSY, verifier.md, REPORT.md + classes.tsv, tags.tsv, local.tsv).
+2. Coverage: checked 868 of 868. `actions.tsv` has 868 rows, all unique; the sum of `remote_branches` in `before.tsv` is 868.
+3. Zero loss: `verifier.md` ends with `checked 849 of 849, 0 failures`.
+4. For each repo, the live `ls-remote --heads` count equals its keep rows. All 11 repos match; the verifier's table is in `verifier.md` and `REPORT.md`.
+5. For each repo, the live `arhiv/*` tag count equals its tag+delete rows (217 = 208 park + 9 unmerged). All 11 match.
+6. `git merge-base --is-ancestor 35f31bf1f origin/main` in sayt → rc=0.
+7. `origin/arka/mat-kostyak` contains `zahod/chistka-github`: shown after the merge in the WARNING-block entry below.
+
+**§0.1 self-check output:** it is in `## ГИГИЕНА ВХОДА` above. The literal command failed and printed a false `0`; the command against `origin/…` gives 0 unmerged `zahod/*`. `git_zona.py check --zone chistka-github/` at entry returned rc=0, because the zone did not exist yet.
+
+**Not touched:** `vanya` (no command at all), the 5 keep-named branches, and every existing tag (none moved or deleted, no `--force`, no rebase). No content edits were made outside the zone. The only file outside the zone that changed is `_studio/docs/KARTA.md`, through `register_doc.py`.
+
+**НЕОБРАТИМОЕ** (what · where · how it is restored):
+- 632 GitHub branches deleted as merged, in 10 repos. Restore: the per-row `git push origin <tip>:refs/heads/<branch>` in `actions.tsv`; every tip is in the trunk.
+- 217 GitHub branches deleted after tagging, in 6 repos. Restore: the same per-row command; every tip is held by `arhiv/<branch>` on GitHub.
+- sayt `main` got merge commit 014d18a (pushed). Restore: `git push origin 60a0e7d:refs/heads/main` would need a force push, so it is the owner's decision only.
+- 40 local branches deleted with `git branch -d` (in disciplina, materials, spetsmat-bot). Restore: `local.tsv` has one command per row (`git branch <b> <tip>`).
+- `/private/tmp/baseline-759ef40` worktree removed (HEAD 759ef40 is in spetsmat `origin/main`, 0 dirty lines). Restore: `git -C spetsmat-bot worktree add /private/tmp/baseline-759ef40 759ef40`.
+- `~/Documents/GitHub/disciplina-wt/`, `~/Documents/GitHub/matproekty-179-wt/`, `~/Documents/GitHub/disciplina/--help/` moved to `~/.Trash/` (the last one as `disciplina--help`). Restore: move them back from the Trash.
+
+**Questions:** see `chistka-github/VOPROSY.md` 1–4. Nothing was sent to the analyst as `QUESTION-FOR-ANALYST`, because nothing was blocking.
+
+**Verifier result:** `checked 849 of 849, 0 failures`; rows 868 of 868; heads and tags match in 11 of 11 repos.
+
+**Open, to come back to:** VOPROSY 3 (materials `zahod/vid-blokov-vnedrenie`) and VOPROSY 4 (disciplina `zahod/generator-rychaga`); the proposal for both is tag + delete.
+
+**Время прогона + токены:** on the `app` channel НЕПРИМЕНИМО — there is nowhere to read them from.
+
+**ПОВТОРЯЕМОСТЬ находок:** VOPROSY 2, the §0.1 command that turns `malformed object name` into a green `0`, will repeat in every brief built from a worktree whose base exists only as `origin/…`. That makes it a fix to `bootstrap_zahod.py` before the next pass, not a queue item. VOPROSY 1 (who fills `## ГИГИЕНА ВХОДА` when no subagent runs) will also repeat on every brief with an empty contour. VOPROSY 3–4 will not repeat: they are one-off branch decisions.
+
+**ПРАВКИ ПРОЧИТАНЫ:** none; the block is `<правок нет>`, and the watcher on `origin/claude/bold-faraday-wq09ql` did not fire.
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials-wt/chistka-github/_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/REPORT.md` — открывать в любом просмотрщике Markdown
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `собранный`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** work commits up to `4f6359c4` — `chistka-github: step 5 done (849 deleted) + step 8 local leftovers`; the report commit and the merge into `arka/mat-kostyak` are in the last DNEVNIK entry (`FINAL:`) · `git_zona.py check --zone chistka-github/` → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)

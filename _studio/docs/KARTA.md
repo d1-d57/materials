@@ -191,6 +191,9 @@
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/DNEVNIK-chistka-github.md`** (chistka-github pass: diary, channel with the analyst)
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/REPORT.md`** (chistka-github pass: report — GitHub after the cleanup)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/chistka-github/VOPROSY.md`** (chistka-github pass: open questions and proposals)
 
 
