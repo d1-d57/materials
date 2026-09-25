@@ -76,3 +76,10 @@ vanya 0
 - **next:** step 6 report, then merge `zahod/svedenie` into `arka/mat-kostyak`.
 - **surprise:** tombstone tags `mogila/*` are local only (none on GitHub); no data depends on them — all 93 tips are in the trunks.
 - **question:** none.
+
+## 2026-09-25 11:23 — step 6: report and merge
+- **done:** `REPORT.md` written (opens with WHAT CHANGED TODAY); `## ОТЧЁТ` filled in `kod_svedenie.md`; `zahod/svedenie` merged into `arka/mat-kostyak` by `git_zona.py merge` → b35dc5f2, pushed; post-check from the main folder ✅; this entry is merged the same way right after.
+- **surprise:** `vanya` got new work at 11:08–11:16 from another session (VOPROSY #18) — "nothing else runs" was not true.
+- **question:** none.
+
+FINAL: steps 1–6 done; verifier 250 of 250, 0 failures; 18 questions for the owner in VOPROSY.md.
