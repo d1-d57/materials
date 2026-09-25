@@ -57,3 +57,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** round 4 — remaining disciplina 525, spetsmat-179 35.
 - **surprise:** the verifier run took 13 min (fetch of disciplina tags); rounds continue.
 - **question:** none.
+
+## 2026-09-25 12:13 — step 5, round 4
+
+- **done:** 85 deleted (disciplina 50, spetsmat-179 35 — finished). Verifier: `checked 374 of 374, 0 failures`.
+- **next:** rounds 5+ — disciplina only, 475 remaining.
+- **surprise:** verifier runs take 14–24 min (per-row GitHub calls); asked it to read GitHub once per repo.
+- **question:** none.
