@@ -64,3 +64,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** rounds 5+ — disciplina only, 475 remaining.
 - **surprise:** verifier runs take 14–24 min (per-row GitHub calls); asked it to read GitHub once per repo.
 - **question:** none.
+
+## 2026-09-25 12:15 — step 5, round 5
+
+- **done:** 50 deleted (disciplina). Verifier (script now reads GitHub once per repo, same checks): `checked 424 of 424, 0 failures`.
+- **next:** rounds 6+ — disciplina 425 remaining.
+- **surprise:** none.
+- **question:** none.
