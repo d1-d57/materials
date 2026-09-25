@@ -178,7 +178,7 @@ time	step	repo	object	action	saved_ref	verified	restore	note
 10:51	2	spetsmat-bot	zamer/baza-457342e	tombstone	mogila/zamer/baza-457342e=ddb7af7	yes	git_zona.py voskresit --branch zamer/baza-457342e	fully in main (rc=0)
 10:51	2	spetsmat-bot	zamer/noch2-01391ae	tombstone	mogila/zamer/noch2-01391ae=01391ae	yes	git_zona.py voskresit --branch zamer/noch2-01391ae	fully in main (rc=0)
 10:52	2	disciplina	zahod/sudya-ne-perepisyvaet-cheloveka	merge	01f252877	in trunk, pushed; fixture orkestr PROGNAT rc=0 (7 traps)	git revert -m1 01f252877	conflict PROGNAT.sh + test_orkestr_kontur.py resolved by union (trunk trap e, branch trap zh); header still says 6 traps — cosmetic, not edited
-10:52	2	disciplina	zahod/sudya-ne-perepisyvaet-cheloveka	tombstone	mogila/zahod/sudya-ne-perepisyvaet-cheloveka	yes	git_zona.py voskresit --branch zahod/sudya-ne-perepisyvaet-cheloveka	after merge
+10:52	2	disciplina	zahod/sudya-ne-perepisyvaet-cheloveka	skip	mogila/zahod/sudya-ne-perepisyvaet-cheloveka	-	git_zona.py voskresit --branch zahod/sudya-ne-perepisyvaet-cheloveka	NOT closed: a tombstone of the same name already exists on an older tip (8514e9bc5); branch fully in trunk, kept — VOPROSY #2
 10:52	2	disciplina	zayavka 2026-09-17T1911-otkaz-zahod-sudya-ne-perepisyvaet-cheloveka-main	close	-	yes	-	resolved by the merge
 10:52	2	spetsmat-bot	volna-b-server	merge	8efd677	in trunk, pushed; merge diff vs parent empty	git revert -m1 8efd677	content already in main (subagent: 22/24 files byte-identical; ustanovka.sh trunk has the fixed --tolko loop 10a824e); conflict resolved by trunk side
 10:52	2	spetsmat-bot	volna-b-server	tombstone	mogila/volna-b-server	yes	git_zona.py voskresit --branch volna-b-server	after merge

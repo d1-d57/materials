@@ -70,3 +70,9 @@ vanya 0
 - **next:** step 5, the verifier subagent.
 - **surprise:** none.
 - **question:** none.
+
+## 2026-09-25 11:21 — step 5: verifier
+- **done:** separate subagent, method = GitHub side (`fetch`/`ls-remote`): merges 11/11, step-1 commits 23/23, tombstones 93/93, dropped worktrees 114/114 (46/46 park trees equal), trunks pushed 7/7, materials `main` unchanged (c9257e84, 2026-09-14), default branch ok → `checked 250 of 250, 0 failures`; answer ended «выдано 250 позиций из 250 найденных». Correction of my step-2 entry: the `sudya-ne-perepisyvaet-cheloveka` tombstone had been refused too (same-name tombstone), so same-name refusals are 40, not 39; tombstones 93.
+- **next:** step 6 report, then merge `zahod/svedenie` into `arka/mat-kostyak`.
+- **surprise:** tombstone tags `mogila/*` are local only (none on GitHub); no data depends on them — all 93 tips are in the trunks.
+- **question:** none.

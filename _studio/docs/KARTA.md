@@ -205,7 +205,13 @@
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/DNEVNIK-svedenie.md`** (Log of pass svedenie (conservation, merges, worktrees, default branch))
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/REPORT.md`** (Final report of pass svedenie, opens with WHAT CHANGED TODAY)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/VOPROSY.md`** (Open questions to the owner from pass svedenie)
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/verifier.md`** (Independent zero-loss verifier of pass svedenie (checked from GitHub))
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/DNEVNIK-uborka-materials.md`** (Night log of pass uborka-materials (repository cleanup))
 

@@ -351,12 +351,22 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+Filled by the executor: §0.1 says the contour was empty at build time, so no contour subagent was called; the snapshot was taken at 10:41, before any work (worktree `materials-wt/svedenie`, `<основная>` = `origin/claude/bold-faraday-wq09ql`, which exists here only as a remote ref):
+```
+$ git --no-optional-locks branch --no-merged origin/claude/bold-faraday-wq09ql | grep -c 'zahod/'
+0
+$ git --no-optional-locks status --porcelain | wc -l      # fresh worktree
+0
+$ git --no-optional-locks log --oneline @{u}.. | wc -l    # right after worktree add
+0
+$ GIT_ZONA_REPO=…/materials python3 …/git_zona.py zayavki | grep Открытых
+Открытых заявок: 13
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+All 13 open requests of `materials` closed with results after step 1 (commits e4310e14 … 54261792; `zayavki` → «Открытых заявок: 0»), plus 5 auto-requests born from this pass's own stops (2 in the `materials` queue, auto-closed by the tool; `disciplina` bcff13a62, 3c87fd088; `spetsmat-bot` c30758c) and one old `disciplina` request 2026-09-17T1911 about the `sudya` merge (fc4661ba1), all closed. Rows `zayavka …` in `svedenie/actions.tsv`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
