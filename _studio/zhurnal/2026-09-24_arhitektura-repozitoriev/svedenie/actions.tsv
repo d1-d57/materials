@@ -1,1 +1,8 @@
 time	step	repo	object	action	saved_ref	verified	restore	note
+10:42	1	materials	_fond	commit	55e15a74	yes	git revert 55e15a74	18 files
+10:42	1	materials	_studio	commit	bb066eae	yes	git revert bb066eae	14 files
+10:42	1	materials	diskmat-57	commit	54261792	yes	git revert 54261792	91 files
+10:42	1	materials	kurs-puti-i-volny	commit	9499c612	yes	git revert 9499c612	16 files
+10:42	1	materials	ucheniki	commit	c4da9a25	yes	git revert c4da9a25	22 files
+10:42	1	materials	scratchpad	commit	9fed53d7	yes	git revert 9fed53d7	22 files
+10:42	1	materials	служебное	commit	e4310e14	yes	git revert e4310e14	1 files
