@@ -22,3 +22,10 @@ Channel with the analyst for the pass `kod_chistka-github.md`. Entry form: `## <
 - **next:** step 3 — merge sayt `tagging` into `main`.
 - **surprise:** park count is 208, not 209; disciplina `zahod/git-bez-zamkov` (q3) is already class merged.
 - **question:** none (two keep proposals in VOPROSY 3–4).
+
+## 2026-09-25 11:45 — step 3: sayt tagging → main
+
+- **done:** in a temporary worktree of `main` (`/tmp/chistka/sayt-main`, plan D2; the owner's checkout stays on `tagging`): `git merge --no-ff tagging -m "влита ветка tagging (решение владельца 25.09)"` rc=0, no conflict; `git push origin main` 60a0e7d..014d18a rc=0. Criterion 6: `git merge-base --is-ancestor 35f31bf1f origin/main` rc=0. Temp worktree removed. `tagging` reclassified as merged in `classes.tsv`.
+- **next:** step 4 — tags `arhiv/*` for 208 park + 9 closed unmerged branches.
+- **surprise:** none.
+- **question:** none.
