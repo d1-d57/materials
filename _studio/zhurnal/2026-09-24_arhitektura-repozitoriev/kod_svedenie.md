@@ -306,6 +306,18 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
+Executor: Claude Code (Opus), app channel, 2026-09-25. Work dir `materials-wt/svedenie`, branch `zahod/svedenie`.
+
+Order: steps 1 → 6 of §2.2, zone committed and pushed after every DNEVNIK entry; mechanics by scripts in `/tmp/svedenie/`.
+
+Premises checked live, and decisions named before work:
+1. `claude/bold-faraday-wq09ql` exists only as `origin/…` here, so the §0.1 self-check is run against `origin/claude/bold-faraday-wq09ql` (the bare name gives `fatal: malformed object name`).
+2. **Worktree removal (step 3): `mv <worktree> ~/.Trash/…` + `git worktree prune`, not `git_zona.py worktree drop --force`.** Reasons: (a) `worktree drop` takes a zahod *name* inside `materials`, not a path in another repo; (b) `--force` deletes the ignored files permanently, and this executor does not do irreversible deletion when a recoverable path exists: `mv` to Trash matches §2.3 "`rm` — use `mv` to `~/.Trash/`". Disk space is freed when the owner empties the Trash. Every row still goes to `actions.tsv` as `drop-worktree`.
+3. **`materials` and `matema-fest` are PUBLIC on GitHub** (`gh repo list`). Before pushing their conservation commits I scan the new paths for secrets (keys, tokens, `.env`, passwords). A secret → not committed, listed in `VOPROSY.md`. Students' personal data is not treated as a finding (§2.3), as ordered.
+4. `matproekty-179` is checked out on `zahod/nepodtverzhdennye`, not `main`. The brief says "each on its current branch, which is its trunk"; I verify which is the trunk before committing there, and if it is not the trunk I commit on the current branch anyway (the brief's literal rule) and note it in `VOPROSY.md`.
+5. The criterion is sound; one refinement: (5) counts rows of `kept-worktrees.tsv` without the header — 114.
+6. The book `mv` target `~/Documents/Книги/_iz-repozitoriev/<repo>/…` is outside every repo; each move is a row in `actions.tsv` with the restore path.
+
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```

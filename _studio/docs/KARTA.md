@@ -201,6 +201,12 @@
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/perepis/REPORT.md`** (Disk census report of the owner's Mac (pass kod_perepis-diska): funnel counters, chronology, duplicates, surprises)
 
 
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/DNEVNIK-svedenie.md`** (Log of pass svedenie (conservation, merges, worktrees, default branch))
+
+
+**`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/svedenie/VOPROSY.md`** (Open questions to the owner from pass svedenie)
+
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/uborka-materials/DNEVNIK-uborka-materials.md`** (Night log of pass uborka-materials (repository cleanup))
 
 
