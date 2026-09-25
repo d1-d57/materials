@@ -1,0 +1,122 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{Liberation Serif}
+\usepackage[left=1.0cm,right=1.0cm,top=0.5cm,bottom=0.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{array}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+% ДОМАШНЕЕ ЗАДАНИЕ к паре 22.09.  ВЕРСИЯ 5.
+% ФОРМАТ (решения владельца): ОДИН вариант; два экземпляра на лист A4, режется
+% пополам, 13 листов на 25 школьников; поля под запись и строка подписи есть.
+%
+% ПОВОРОТ ПО УРОВНЮ (решение владельца на v4). Сначала требование было «ничего
+% проще базовой задачи листка». После сборки v4 он прочитал подборку целиком и
+% отменил его: «кажется, мы пережестили... слабые дети тоже должны решить».
+% Отмена касается УРОВНЯ, а не дублирования: условия листка по-прежнему нельзя
+% повторять даже в облегчённом виде (на этом умерла v2).
+% Поэтому первые две задачи намеренно простые — уровень продвинутого кружочка
+% листка (его задачи 3 и 5), на обязательных навыках блока, но с другими сюжетами.
+%
+% ЧТО СНЯТО ПО ХОДУ.
+% v2 целиком — четыре задачи из пяти были упрощениями конкретных задач листка.
+% v3 курьер по сетке 4x4 (ответ 70) — это C(8,4). «Таблица накоплений» лишь
+%   маскирует цешку: в клетках вырастает треугольник Паскаля. ПРАВИЛО: маршруты
+%   по прямоугольной сетке в блок не входят, как бы «таблично» ни выглядели.
+% v4 турнир 12 команд — снят: двойной счёт участий (полурёбра) относится к теме
+%   БУДУЩЕГО занятия, а в подборке из четырёх он делал её сплошь трудной.
+%   Задача сохранена как кандидат в тот будущий листок, с уже найденным порядком
+%   пунктов: сначала сумма очков (12*11 = 132, без числа матчей), потом матчи (132/2).
+%
+% СОСТАВ v5 — пять задач, два этажа. Три с узким полем, две блоками в конце
+% (порядок «числа и пентамино вместе» — решение владельца).
+%   1 два множества, базовый вид        футбол и шахматы    8
+%   2 разбор случаев по размеру         квадраты на 3x3     14
+%   3 перебор наборов с условием        палочки 1..9        34
+%   4 перебор по наибольшему слагаемому разбиения числа 8   22
+%   5 перебор конфигураций до симметрии пентамино           12
+% Числа 9 и 8 у задач 3 и 4 разведены по решению владельца: на 1..8 и 8 оба
+% ответа выходили 22, и это лишний повод спутать их на проверке.
+%
+% Все ответы пересчитаны программой (см. SESSIYA.md, записи 22.09).
+% Ни один из пяти мотивов не встречается ни в одном ВЫДАННОМ листке 7И —
+% проверено грепом по listok_15-09_logika, listok_15-09_obratnyj-hod,
+% listok_22-09_podschety (оба варианта).
+% ОСТОРОЖНО при сборке контрольной: задачи 1-4 переносятся заменой чисел
+% (множества — любой тройкой; квадраты 4x4 -> 30; палочки 1..8 -> 22;
+% разбиения 9 -> 30), а пентамино числом НЕ меняется: тетрамино 5 -- вырождение,
+% гексамино 35 -- гроб.
+
+\newlength{\otvsh}\setlength{\otvsh}{2.7cm}
+\newlength{\plsh}\setlength{\plsh}{0.6cm}
+\newlength{\uslsh}\setlength{\uslsh}{14.3cm}
+\newlength{\polesh}\setlength{\polesh}{3.6cm}
+\newlength{\podnyat}\setlength{\podnyat}{1.1ex}
+\newlength{\minpole}\setlength{\minpole}{1.25cm}
+
+\newsavebox{\uslbox}
+\newlength{\uslvys}
+\newlength{\blh}
+\newcounter{zad}
+
+\newcommand{\calcblh}[1]{%
+  \setlength{\blh}{\dimexpr(\uslvys-\arrayrulewidth)/#1-\arrayrulewidth\relax}}
+\newcommand{\mt}[1]{\parbox[t][\blh][t]{\otvsh}{\small\bfseries #1\strut}}
+
+\newcommand{\poleA}{\calcblh{1}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\otvsh}|p{\plsh}|}\hline \mt{} & \\ \hline\end{tabular}}
+
+\newcommand{\poleshirW}[1]{\setlength{\blh}{#1}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\dimexpr\uslsh+\polesh-2\tabcolsep-2\arrayrulewidth\relax}|}
+  \hline \parbox[t][\blh][t]{\dimexpr\uslsh+\polesh-2\tabcolsep-2\arrayrulewidth\relax}{\strut} \\ \hline\end{tabular}}
+
+% задача: поле слева, условие справа
+\newcommand{\zad}[2]{%
+  \stepcounter{zad}%
+  \sbox{\uslbox}{\parbox[t]{\uslsh}{\strut\textbf{\thezad.}\ #2\strut}}%
+  \setlength{\uslvys}{\dimexpr\ht\uslbox+\dp\uslbox\relax}%
+  \ifdim\uslvys<\minpole\setlength{\uslvys}{\minpole}\fi
+  \par\vspace{6pt}\noindent
+  \begin{minipage}[t]{\polesh}\vspace{0pt}\vspace*{-\podnyat}#1\end{minipage}%
+  \hfill
+  \begin{minipage}[t]{\uslsh}\vspace{0pt}\usebox{\uslbox}\end{minipage}\par}
+
+% задача с перечислением: условие во всю ширину, поле под ним
+\newcommand{\zadw}[2]{%
+  \stepcounter{zad}%
+  \par\vspace{6pt}\noindent
+  \parbox{\dimexpr\uslsh+\polesh\relax}{\strut\textbf{\thezad.}\ #2\strut}%
+  \par\vspace{3pt}\noindent\poleshirW{#1}\par}
+
+\newcommand{\blank}{%
+  \setcounter{zad}{0}%
+  \noindent{\large\bfseries Домашнее задание}\hfill{\small Комбинаторика~1 \quad·\quad спецмат 7\,И \quad·\quad к 29 сентября}
+  \vspace{3pt}\hrule\vspace{7pt}
+  \noindent Фамилия, имя:\ \hrulefill\rule[-3mm]{0pt}{7mm}\par
+  \vspace{2pt}
+
+  \zad{\poleA}{В классе 30~человек. Футболом занимаются 18~из них, шахматами~--- 15, а пятеро не занимаются ни тем, ни другим. Сколько человек занимаются и футболом, и шахматами?}
+
+  \zad{\poleA}{Сколько всего квадратов можно найти на клетчатой доске 3\,$\times$\,3 клетки? Считаются квадраты любого размера, составленные из целых клеток.}
+
+  \zad{\poleA}{Есть девять палочек длин 1,~2,~3, \ldots,~9~см. Сколькими способами можно выбрать три палочки так, чтобы из них складывался треугольник?}
+
+  \zadw{1.9cm}{Число~8 можно по-разному разложить в сумму натуральных слагаемых: например, \mbox{$8=3+3+2$} или \mbox{$8=5+1+1+1$}. Порядок слагаемых не важен, слагаемые могут повторяться, само число~8~--- тоже разложение. Выпишите все разложения числа~8. Сколько их?}
+
+  \zadw{2.5cm}{Пентамино~--- фигура из пяти клеток, соединённых по сторонам; совмещающиеся поворотом или отражением считаются одинаковыми. Нарисуйте все пентамино. Сколько их?}
+
+  \vspace{3pt}
+  \noindent{\small В начале следующего занятия будет короткая контрольная на эти же приёмы.}}
+
+\begin{document}
+
+\noindent\parbox[t][14.1cm][t]{\linewidth}{\blank}
+
+\noindent\makebox[\linewidth]{\dotfill\ \raisebox{-2pt}{\small $\times$}\ \dotfill}
+
+\noindent\parbox[t][14.1cm][t]{\linewidth}{\blank}
+
+\end{document}

@@ -1,0 +1,705 @@
+[
+ {
+  "imya": "Александров Авдей",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 10,
+  "lg_max": 12,
+  "k22": null,
+  "k22_syroj": null,
+  "k22_max": null,
+  "k22_zony": null,
+  "k22_dobavleno": null,
+  "k22o": null,
+  "k22o_max": null,
+  "bez_plyusa": null,
+  "perc": [
+   35,
+   50,
+   null
+  ],
+  "perc_sr": 42
+ },
+ {
+  "imya": "Андронова Аглая",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": 9,
+  "lg_max": 12,
+  "k22": null,
+  "k22_syroj": null,
+  "k22_max": null,
+  "k22_zony": null,
+  "k22_dobavleno": null,
+  "k22o": null,
+  "k22o_max": null,
+  "bez_plyusa": null,
+  "perc": [
+   73,
+   33,
+   null
+  ],
+  "perc_sr": 53
+ },
+ {
+  "imya": "Атутов Кирилл",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": 10,
+  "lg_max": 12,
+  "k22": 19,
+  "k22_syroj": 19,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 4,
+   "d": 4,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 15,
+  "k22o_max": 15,
+  "bez_plyusa": 4,
+  "perc": [
+   73,
+   50,
+   86
+  ],
+  "perc_sr": 70
+ },
+ {
+  "imya": "Бердичевский Петр",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 11,
+  "lg_max": 12,
+  "k22": 18,
+  "k22_syroj": 7,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 3,
+   "d": 4,
+   "g": 0
+  },
+  "k22_dobavleno": 11,
+  "k22o": 14,
+  "k22o_max": 15,
+  "bez_plyusa": 1,
+  "perc": [
+   35,
+   67,
+   77
+  ],
+  "perc_sr": 60
+ },
+ {
+  "imya": "Блидман Наталия",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": 9,
+  "lg_max": 12,
+  "k22": null,
+  "k22_syroj": null,
+  "k22_max": null,
+  "k22_zony": null,
+  "k22_dobavleno": null,
+  "k22o": null,
+  "k22o_max": null,
+  "bez_plyusa": null,
+  "perc": [
+   12,
+   33,
+   null
+  ],
+  "perc_sr": 22
+ },
+ {
+  "imya": "Брызгалова Дарья",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 2,
+  "lg_max": 12,
+  "k22": 12,
+  "k22_syroj": 12,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 1,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 12,
+  "k22o_max": 15,
+  "bez_plyusa": 4,
+  "perc": [
+   35,
+   0,
+   36
+  ],
+  "perc_sr": 24
+ },
+ {
+  "imya": "Букия Алексей",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 7,
+  "lg_max": 12,
+  "k22": 12,
+  "k22_syroj": 12,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 8,
+   "t": 4,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 12,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   35,
+   8,
+   36
+  ],
+  "perc_sr": 26
+ },
+ {
+  "imya": "Вигель Владимир",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": 7,
+  "lg_max": 12,
+  "k22": 8,
+  "k22_syroj": 8,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 8,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 8,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   12,
+   8,
+   5
+  ],
+  "perc_sr": 8
+ },
+ {
+  "imya": "Вишницкий Даниил",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 10,
+  "lg_max": 12,
+  "k22": 15,
+  "k22_syroj": 11,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 10,
+   "t": 3,
+   "d": 2,
+   "g": 0
+  },
+  "k22_dobavleno": 4,
+  "k22o": 13,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   35,
+   50,
+   64
+  ],
+  "perc_sr": 50
+ },
+ {
+  "imya": "Голухов Уильям",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": 14,
+  "k22_syroj": 14,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 0,
+   "d": 3,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   35,
+   75,
+   55
+  ],
+  "perc_sr": 55
+ },
+ {
+  "imya": "Гороховатская Екатерина",
+  "oh": 4,
+  "oh_max": 10,
+  "lg": 8,
+  "lg_max": 12,
+  "k22": 11,
+  "k22_syroj": 11,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 2,
+  "perc": [
+   4,
+   21,
+   23
+  ],
+  "perc_sr": 16
+ },
+ {
+  "imya": "Дроздов Александр",
+  "oh": 4,
+  "oh_max": 10,
+  "lg": null,
+  "lg_max": null,
+  "k22": 16,
+  "k22_syroj": 16,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 3,
+   "d": 2,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 14,
+  "k22o_max": 15,
+  "bez_plyusa": 1,
+  "perc": [
+   4,
+   null,
+   73
+  ],
+  "perc_sr": 38
+ },
+ {
+  "imya": "Дубков Егор",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": null,
+  "k22_syroj": null,
+  "k22_max": null,
+  "k22_zony": null,
+  "k22_dobavleno": null,
+  "k22o": null,
+  "k22o_max": null,
+  "bez_plyusa": null,
+  "perc": [
+   35,
+   75,
+   null
+  ],
+  "perc_sr": 55
+ },
+ {
+  "imya": "Егорова Алиса",
+  "oh": null,
+  "oh_max": null,
+  "lg": 10,
+  "lg_max": 12,
+  "k22": 8,
+  "k22_syroj": 8,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 8,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 8,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   null,
+   50,
+   5
+  ],
+  "perc_sr": 28
+ },
+ {
+  "imya": "Иванова Александра",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 9,
+  "lg_max": 12,
+  "k22": 13,
+  "k22_syroj": 13,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 10,
+   "t": 0,
+   "d": 3,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 10,
+  "k22o_max": 15,
+  "bez_plyusa": 3,
+  "perc": [
+   35,
+   33,
+   45
+  ],
+  "perc_sr": 38
+ },
+ {
+  "imya": "Идрисова Ясмин",
+  "oh": 2,
+  "oh_max": 10,
+  "lg": 8,
+  "lg_max": 12,
+  "k22": 10,
+  "k22_syroj": 10,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 10,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 10,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   0,
+   21,
+   18
+  ],
+  "perc_sr": 13
+ },
+ {
+  "imya": "Исаева Вера",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": 8,
+  "lg_max": 12,
+  "k22": 11,
+  "k22_syroj": 11,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 10,
+   "t": 1,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   12,
+   21,
+   23
+  ],
+  "perc_sr": 19
+ },
+ {
+  "imya": "Карцев Федор",
+  "oh": 10,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": 19,
+  "k22_syroj": 19,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 3,
+   "d": 5,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 14,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   100,
+   75,
+   86
+  ],
+  "perc_sr": 87
+ },
+ {
+  "imya": "Кондаурова София",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": 9,
+  "k22_syroj": 9,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 9,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 9,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   73,
+   75,
+   14
+  ],
+  "perc_sr": 54
+ },
+ {
+  "imya": "Левандовский Илья",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": null,
+  "lg_max": null,
+  "k22": 11,
+  "k22_syroj": 11,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 0,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   12,
+   null,
+   23
+  ],
+  "perc_sr": 18
+ },
+ {
+  "imya": "Литвиненко Ярослав",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 11,
+  "lg_max": 12,
+  "k22": 24,
+  "k22_syroj": 13,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 3,
+   "d": 10,
+   "g": 0
+  },
+  "k22_dobavleno": 11,
+  "k22o": 14,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   35,
+   67,
+   100
+  ],
+  "perc_sr": 67
+ },
+ {
+  "imya": "Мосина Анна",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": null,
+  "k22_syroj": null,
+  "k22_max": null,
+  "k22_zony": null,
+  "k22_dobavleno": null,
+  "k22o": null,
+  "k22o_max": null,
+  "bez_plyusa": null,
+  "perc": [
+   73,
+   75,
+   null
+  ],
+  "perc_sr": 74
+ },
+ {
+  "imya": "Неверов Андрей",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": 6,
+  "lg_max": 12,
+  "k22": 20,
+  "k22_syroj": 20,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 0,
+   "d": 9,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 3,
+  "perc": [
+   12,
+   4,
+   95
+  ],
+  "perc_sr": 37
+ },
+ {
+  "imya": "Николаев Ярослав",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": null,
+  "lg_max": null,
+  "k22": 14,
+  "k22_syroj": 14,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 10,
+   "t": 1,
+   "d": 3,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 11,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   73,
+   null,
+   55
+  ],
+  "perc_sr": 64
+ },
+ {
+  "imya": "Сычев Никита",
+  "oh": 5,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": 18,
+  "k22_syroj": 18,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 2,
+   "d": 5,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 13,
+  "k22o_max": 15,
+  "bez_plyusa": 1,
+  "perc": [
+   12,
+   75,
+   77
+  ],
+  "perc_sr": 55
+ },
+ {
+  "imya": "Трибунский Глеб",
+  "oh": 8,
+  "oh_max": 10,
+  "lg": 7,
+  "lg_max": 12,
+  "k22": 6,
+  "k22_syroj": 6,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 4,
+   "t": 2,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 6,
+  "k22o_max": 15,
+  "bez_plyusa": 2,
+  "perc": [
+   96,
+   8,
+   0
+  ],
+  "perc_sr": 35
+ },
+ {
+  "imya": "Юнгельсон Марк",
+  "oh": 7,
+  "oh_max": 10,
+  "lg": 9,
+  "lg_max": 12,
+  "k22": 15,
+  "k22_syroj": 4,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 4,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 11,
+  "k22o": 15,
+  "k22o_max": 15,
+  "bez_plyusa": 0,
+  "perc": [
+   73,
+   33,
+   64
+  ],
+  "perc_sr": 57
+ },
+ {
+  "imya": "Юстус Мария",
+  "oh": 6,
+  "oh_max": 10,
+  "lg": 12,
+  "lg_max": 12,
+  "k22": 13,
+  "k22_syroj": 13,
+  "k22_max": 39,
+  "k22_zony": {
+   "o": 11,
+   "t": 2,
+   "d": 0,
+   "g": 0
+  },
+  "k22_dobavleno": 0,
+  "k22o": 13,
+  "k22o_max": 15,
+  "bez_plyusa": 1,
+  "perc": [
+   35,
+   75,
+   45
+  ],
+  "perc_sr": 52
+ }
+]

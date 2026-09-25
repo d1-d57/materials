@@ -38,6 +38,22 @@ DAYS = [
             {'csv': 'SDACHA-15-09_logika.csv', 'title': 'Правда, ложь и перебор', 'color': '#eb6834'},
         ],
     },
+    {
+        # 4 часа: 15.09 (два урока) + 22.09 (пара, один листок). Единица — пункт (решение владельца 22.09).
+        # SDACHA-22-09_infografika.csv пишет svod_4chasa.py: плюс или верный ответ; кружки засчитаны четверым,
+        # начавшим с треугольников. В доп 10–19 варианты A и Б — разные задачи, столбцы «д1…д21» их смешивают.
+        'date': '2026-09-22',
+        'label': '15 и 22 сентября',
+        'klass': '7И',
+        'out': 'INFOGRAFIKA-4-chasa.html',
+        'sheets': [
+            {'csv': 'SDACHA-15-09_obratnyj-hod.csv', 'title': 'Обратный ход', 'color': '#2a78d6'},
+            {'csv': 'SDACHA-15-09_logika.csv', 'title': 'Правда, ложь и перебор', 'color': '#eb6834'},
+            {'csv': 'SDACHA-22-09_infografika.csv', 'title': 'Комбинаторика 1', 'color': '#2f9e6e',
+             'labels': ['1а', '1б', '1в', '2а', '2б', '2в', '2г', '3', '4а', '4б', '5', '6', '7', '8', '9']
+                       + [f'д{i}' for i in range(1, 22)] + ['20', '21', '22']},
+        ],
+    },
 ]
 
 VARIANTS_OK = ('A', 'B', '—')
@@ -195,7 +211,8 @@ def svg_matrix(sheets, cols, kids, takers, col_order):
         si, t = cols[j]
         cx = x0 + p * cw + (cw - 3) / 2
         out.append(text(cx, 18, takers[j], 12, 'middle', INK2))
-        out.append(text(cx, 40, t + 1, 13, 'middle', INK, 600))
+        lab = sheets[si].get('labels', [])[t] if sheets[si].get('labels') else t + 1
+        out.append(text(cx, 40, lab, 12 if len(str(lab)) > 2 else 13, 'middle', INK, 600))
         out.append(f'<rect x="{x0 + p * cw:.1f}" y="48" width="{cw - 3}" height="5" rx="1.5" '
                    f'fill="{sheets[si]["color"]}"/>')
     # rows
@@ -208,7 +225,8 @@ def svg_matrix(sheets, cols, kids, takers, col_order):
             si, t = cols[j]
             ok = k['ok'][j]
             fill = sheets[si]['color'] if ok else EMPTY
-            tip = f'{k["name"]} · {sheets[si]["title"]}, задача {t + 1} · {MARKS.get(k["marks"][j], k["marks"][j])}'
+            lab = sheets[si]['labels'][t] if sheets[si].get('labels') else t + 1
+            tip = f'{k["name"]} · {sheets[si]["title"]}, {"пункт" if sheets[si].get("labels") else "задача"} {lab} · {MARKS.get(k["marks"][j], k["marks"][j])}'
             out.append(f'<rect class="cell" x="{x0 + p * cw:.1f}" y="{y:.1f}" width="{cw - 3}" '
                        f'height="{rh - 3}" rx="3" fill="{fill}" data-t="{esc(tip)}"/>')
         out.append(text(x0 + nc * cw + 10, y + rh / 2 + 3, k['total'], 14, 'start', INK, 600))
@@ -260,7 +278,7 @@ def svg_slope(sheets, kids, a=0, b=1):
     keep, swap, tie = pair_counts(kids, a, b)
     assert cross == swap, (cross, swap)
     out = [f'<svg viewBox="0 0 {W} {h:.0f}" role="img" aria-label="Переезд детей между двумя уроками">',
-           '<defs><linearGradient id="mv" gradientUnits="userSpaceOnUse" '
+           f'<defs><linearGradient id="mv{a}{b}" gradientUnits="userSpaceOnUse" '
            f'x1="{xl_dot}" y1="0" x2="{xr_dot}" y2="0"><stop offset="0" stop-color="{sheets[a]["color"]}"/>'
            f'<stop offset="1" stop-color="{sheets[b]["color"]}"/></linearGradient></defs>']
     out.append(f'<rect x="30" y="8" width="10" height="10" rx="2" fill="{sheets[a]["color"]}"/>')
@@ -287,7 +305,7 @@ def svg_slope(sheets, kids, a=0, b=1):
         far = abs(ia - ib) >= n // 3
         out.append(f'<g class="kid{" far" if far else ""}" data-k="{k["id"]}">'
                    f'<line class="mvl" x1="{xl_dot}" y1="{y(ia):.1f}" x2="{xr_dot}" y2="{y(ib):.1f}" '
-                   f'stroke="url(#mv)" stroke-width="{2.6 if far else 1.6}" '
+                   f'stroke="url(#mv{a}{b})" stroke-width="{2.6 if far else 1.6}" '
                    f'stroke-opacity="{1 if far else 0.45}" stroke-linecap="round"/>'
                    f'<line x1="{xl_dot}" y1="{y(ia):.1f}" x2="{xr_dot}" y2="{y(ib):.1f}" '
                    f'stroke="transparent" stroke-width="9"/>'
@@ -300,6 +318,41 @@ def svg_slope(sheets, kids, a=0, b=1):
                    + '</g>')
     out.append('</svg>')
     return '\n'.join(out), (keep, swap, tie)
+
+
+def svg_mesto(sheets, kids):
+    """Place in class on every lesson (mid-rank, 0 = last, 1 = first) and the mean over lessons.
+    Rows = kids by mean place. Shaded rows = in the bottom third on EVERY lesson."""
+    ns = len(sheets); n = len(kids)
+    def ranks(si):
+        v = [k['per_sheet'][si] for k in kids]
+        return [(sum(x < y for x in v) + 0.5 * (sum(x == y for x in v) - 1)) / (n - 1) for y in v]
+    R = [ranks(si) for si in range(ns)]
+    rows = sorted(range(n), key=lambda i: -sum(R[s][i] for s in range(ns)))
+    W, pitch, top, x0, x1 = 640, 22, 44, 150, 610
+    h = top + n * pitch + 26
+    X = lambda p: x0 + (x1 - x0) * p
+    out = [f'<svg viewBox="0 0 {W} {h}" role="img" aria-label="Место в классе на каждом листке">']
+    out.append(text(x0, 18, 'последний', 12, 'start', INK2)); out.append(text(x1, 18, 'первый', 12, 'end', INK2))
+    for p in (0, 1 / 3, 2 / 3, 1):
+        out.append(f'<line x1="{X(p):.1f}" y1="28" x2="{X(p):.1f}" y2="{top + n * pitch:.1f}" stroke="{EMPTY}" stroke-width="1.5"/>')
+    for r, i in enumerate(rows):
+        y = top + r * pitch + pitch / 2
+        tail = all(R[s][i] <= 1 / 3 for s in range(ns))
+        k = kids[i]
+        out.append(f'<g class="kid" data-k="{k["id"]}">')
+        if tail:
+            out.append(f'<rect x="0" y="{y - pitch / 2:.1f}" width="{W}" height="{pitch}" fill="#f6e3dc"/>')
+        out.append(text(x0 - 12, y + 4.5, k['name'], 13, 'end', INK))
+        ps = [R[s][i] for s in range(ns)]
+        out.append(f'<line x1="{X(min(ps)):.1f}" y1="{y:.1f}" x2="{X(max(ps)):.1f}" y2="{y:.1f}" stroke="{INK3}" stroke-width="1.5"/>')
+        for s in range(ns):
+            out.append(f'<circle cx="{X(ps[s]):.1f}" cy="{y:.1f}" r="5" fill="{sheets[s]["color"]}"/>')
+        m = sum(ps) / ns
+        out.append(f'<rect x="{X(m) - 1.5:.1f}" y="{y - 8:.1f}" width="3" height="16" fill="{INK}"/>')
+        out.append('</g>')
+    out.append('</svg>')
+    return '\n'.join(out)
 
 
 def svg_distribution(kids, ncols):
@@ -386,9 +439,13 @@ def render(day):
     matrix = svg_matrix(sheets, cols, kids, takers, col_order)
     slope, (keep, swap, tie) = svg_slope(sheets, kids) if len(sheets) >= 2 else ('', (0, 0, 0))
     dist = svg_distribution(kids, len(cols))
+    if len(sheets) >= 3:   # three lessons: second slope instead of the day total (39 of 61 points are one lesson)
+        slope += '</figure><figure>' + svg_slope(sheets, kids, 1, 2)[0]
+        dist = svg_mesto(sheets, kids)
     n = len(kids)
     legend = ''.join(f'<span><i style="background:{s["color"]}"></i>{esc(s["title"])}, {s["n"]} '
-                     f'{plural(s["n"], "задача", "задачи", "задач")}</span>' for s in sheets)
+                     + (f'{plural(s["n"], "пункт", "пункта", "пунктов")}</span>' if s.get('labels') else
+                        f'{plural(s["n"], "задача", "задачи", "задач")}</span>') for s in sheets)
     # Explanations are off the page by the owner's rule "a good infographic needs no comments"
     # (ПРАВКА 1 of 18.09). Kept here as the key to what is drawn:
     #   matrix — row = kid, column = task (number inside its lesson), coloured cell = passed
@@ -432,7 +489,7 @@ def main():
         sys.exit(f'no day {want!r} in DAYS')
     day = days[-1]
     page, stats = render(day)
-    out = HERE / 'INFOGRAFIKA.html'
+    out = HERE / day.get('out', 'INFOGRAFIKA.html')
     out.write_text(page, encoding='utf-8')
     print(f'{out.name}: day {day["date"]} · ' + ' · '.join(f'{k}={v:.1f}' if isinstance(v, float) else f'{k}={v}'
                                                           for k, v in stats.items()))
