@@ -139,6 +139,8 @@ _fond/chuzhoe/*
 !_fond/chuzhoe/README.md
 _fond/biblioteka/*
 !_fond/biblioteka/README.md
+# Вычитки книг (что в книге есть) — наш текст, живут рядом с книгой и в git (решение владельца 26.09).
+!_fond/biblioteka/VYCHITANO/
 
 # Porozhdaemyj zond zapisi (pustoj fajl) ot instrumentov - v kommity ne hodit.
 .probe_write
