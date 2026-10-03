@@ -6,7 +6,7 @@
 
 ## ⭐ СЕЙЧАС — первый конкретный шаг следующего хода
 
-Арка закрыта. Остался один ход — git: владелец запускает в приложении Claude Code заход `kod_git-listok-18.md` (стартовое сообщение — в конце этого файла-захода); затем приёмка по `disciplina-priyomka`. Новой работы в этой папке не начинать: продолжение — снять баннер тем же ходом (`disciplina-arka §7`).
+Арка закрыта, git-заход принят 03.10 (dc4ec6d1, f1975c89, e3062abd, 0c4acb28; disciplina 3d6633c01). Первый ход следующей сессии — вывоз (push) по решению владельца 03.10: заход исполнителю на `git_zona.py vyvezti` в materials (arka/mat-kostyak) и disciplina (main), плюс докоммитить правленные после приёмки файлы этой папки (SESSIYA, PLAN, UROKI, kod_git-listok-18, VYGRUZKA-2026-10-03, HANDOFF). Влитие arka/mat-kostyak в main — не делать. Новой работы по листкам в этой папке не начинать: листок 19 — новая арка.
 
 ## Шаги
 
@@ -26,7 +26,8 @@
 - [x] 18ℵ: картинки TikZ (`alef-istochnik/kartinki.py`)
 - [x] 18ℵ: тех коллегам (`perevod.py`), 4 стр. в обеих вёрстках
 - [x] 18ℵ: выдача в четверг 01.10 — v21
-- [ ] Git: заход `kod_git-listok-18.md` (Ф6 закрытия, собран 03.10) — ждёт запуска владельцем
+- [x] Git: заход `kod_git-listok-18.md` принят 03.10
+- [ ] Вывоз (push) materials arka/mat-kostyak и disciplina main — первым ходом следующей сессии
 - [x] Долг: регистрация файлов арки в картотеке (`register_doc.py` / `disciplina-istochnik-pravdy`) — арка заведена руками, не `bootstrap_arka.py` → перенесён в `listki-kanon/DOLGI-listkov.md` или в git-заход (03.10)
 - [x] Долг: редакторский проход текста α (`math-russian-terminology` → `russian-editor`) — не делался → перенесён в `listki-kanon/DOLGI-listkov.md` или в git-заход (03.10)
 - [x] Долг: попросить у Стрелковой их `macros.tex` (для сайта и точной сборки у себя) → перенесён в `listki-kanon/DOLGI-listkov.md` или в git-заход (03.10)

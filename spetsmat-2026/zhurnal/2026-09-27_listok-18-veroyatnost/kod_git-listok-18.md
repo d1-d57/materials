@@ -266,10 +266,10 @@ Decisions inside the zone: three commits (sheets+levers · canon+debts+format-17
 
 1. Step 4 of this file-заход prescribes `add`/`commit` with `':(exclude)…'` pathspecs; in this session `git add -- <dir> ':(exclude)*.log'` printed nothing and staged 0 files (rc=0), then `commit -- <dir> ':(exclude)…'` failed with «did not match any file(s) known to git». Workaround: plain `add -- <dir>`, `restore --staged` on the junk paths, plain `commit -- <dir>`. Cost: three failed commands, a few minutes. Cause not investigated (git 2.54.0 Apple, zsh).
    ДОМ: владелец
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: git-listok-18#1 → UROKI-FABRIKE.md урок 13 (03.10)
 2. Open for the owner's yes (not done, deliberately): export of `arka/mat-kostyak` (5 unexported commits) and disciplina `main` (50 unexported, 1 mine), and merge of `arka/mat-kostyak` into `main` — public repo, outward-facing.
    ДОМ: владелец
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: git-listok-18#2 → вопрос владельцу в хэндоффе 03.10
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
@@ -381,7 +381,7 @@ MODEL: besplatnaya
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — 03.10 22:1x аналитик перегнал командами: `git log` показывает dc4ec6d1/f1975c89/e3062abd/0c4acb28 на arka/mat-kostyak и 3d6633c01 в disciplina; файлов 56/5/47, `.log` в коммитах 0; `git_zona.py check` по 7 путям зоны — вне git ровно 8 путей мусора из шага 2, других нет.
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
@@ -392,6 +392,6 @@ MODEL: besplatnaya
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: вывоз (5 коммитов arka/mat-kostyak, 50 в disciplina main) и влитие в main — решение владельца, вынесено вопросом в хэндофф; коммитить было нечего сверх сделанного.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*

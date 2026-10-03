@@ -705,3 +705,28 @@
 
 - `kod_git-listok-18.md` собран `bootstrap_zahod.py` (GIT_ZONA_REPO=materials, KANON_KOREN=/Users/…/materials), модель Sonnet, канал app, ветка arka/mat-kostyak; второй коммит — disciplina doma/meta/POKRYTIE.md §19. Зона: listok-veroyatnost, format-179, listki-kanon, папка арки, две строки в catalan и lsh, SVODKI. Мусор (*.log, proba-*, _to_delete) — не коммитить. Секреты по 6 паттернам — 0 (rc=1).
 - check_zahod: З2 починен. check_sborki: 3 × С3 на `disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` — ложный красный песочницы: файл есть (ls 03.10), гейт ищет путь /Users/… от баз песочницы. Регистрация kod_*.md дверью register_doc.py невозможна (дверь не судит документы проектов) — в заходе шаг 6.
+
+## 2026-10-03 22:08 — приёмка git-захода: принято
+
+- Коммиты: materials arka/mat-kostyak — dc4ec6d1 (56 файлов), f1975c89 (5), e3062abd (47), 0c4acb28 (отчёт); хвост Cowork b85c0c36; disciplina main — 3d6633c01 (§19). Перегнано командами: .log в коммитах 0; вне git в зоне — ровно 8 путей мусора.
+- Урок 13 (команда `:(exclude)` в заходе без прогона) — в UROKI-FABRIKE, слит с клаузой 5 disciplina-zahod. Уроков 13, вердиктов 13.
+- Открыто у владельца: вывоз (push) 5 коммитов arka/mat-kostyak и 50 коммитов disciplina main; влитие arka/mat-kostyak в main. Исполнитель сознательно не делал — репо публичный.
+- После приёмки раздел ФАЗА ПРИЁМКИ, SESSIYA, UROKI, PLAN снова правлены — вне git до следующего коммита.
+
+## 2026-10-03 22:11 — хэндофф: интервью «что дальше»
+
+- Следующая сессия у владельца уже начата — про контрольную (сайт); хэндофф он пришлёт туда постфактум.
+- Вывоз (push): **да, первым ходом следующей сессии** — materials arka/mat-kostyak (5 коммитов на 03.10) и disciplina main (50).
+- Влитие arka/mat-kostyak в main — **нет**: «маткостяк и есть основная».
+
+## 2026-10-03 22:11 — разнос сессии 03.10
+
+- VYGRUZKA-2026-10-03.md (zakryt_sessiyu.py по транскрипту из _sessii-cowork): реплик владельца 7; `dnevnik.py proverit` — «покрыто 7 из 7». Пути /sessions/… в выгрузке заменены на ~/Documents/GitHub. Секретов 0.
+- Транскрипт после сжатия контекста — только хвост сессии (с 03.10 21:24); реплики 01.10 разнесены раньше (VYGRUZKA-2026-10-01).
+
+<!-- РАЗНЕСЕНО ДО СЮДА: 2026-10-03 -->
+
+## 2026-10-03 22:12 — хэндофф собран
+
+- HANDOFF-2026-10-04.md (sdelat_handoff.py, полный режим, транскрипт из _sessii-cowork). Гигиена: /sessions-пути заменены, заглушек нет (кроме шаблона команд), секретов 0, среда названа выводом git.
+- Выяснилось при снятии среды: materials arka/mat-kostyak уже вывезена чужим заходом vykladka-dvuh-lekcij (76899b42); невывезено только в disciplina main — 51.
