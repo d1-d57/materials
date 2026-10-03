@@ -1,0 +1,156 @@
+# Источники сессии «Контрольная 05.10» — все ссылки
+
+Выгружено питоном из транскрипта и логов агентов. «открыт» — страница реально загружалась; «в отчёте» — ссылка названа агентом в итоговом отчёте.
+
+## Внутренние источники (на диске и на сайте)
+
+- Листки 16 и 17 (источник истины формата коллег): `spetsmat-bot/docs/listki/179/Listki/16-trees-{I,II,III}.tex`, `17-plane-and-planar-{I,II}.tex`; шаблон — `spetsmat-bot/docs/listki/179/setup/`, `listok.tex`.
+- Сайт: https://math-kluychiki.ru/listki (список листков; из облака PDF не скачиваются — брать с диска).
+- Подборка по деревьям (26 задач, теги Л1–Л3): `materials/spetsmat-2026/podborka-derevya/vse.md`.
+- Кондуит (копия базы 30.09): `spetsmat-bot/data/c/zhivaya-kopiya-0930.db` — таблицы sheets, problems, marks; запрос «сколько учеников сдали задачу» — в SESSIYA.md (раздел «Находки по кондуиту»), SQL — в METOD-kontrolnoj.md.
+- Прошлые контрольные (формат «три лучших», картинки): весенняя «Арифметика и бесконечность» 2025/26 и предновогодняя 25.12.2025 — PDF прислала Н. П. Стрелкова в чат; лежат в `_sessii-cowork/2026-10-04_kontrolnaya-05-10/`.
+
+## Внешние ссылки
+
+- https://arxiv.org/pdf/1310.1376 — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://arxiv.org/pdf/2103.02102 — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://arxiv.org/pdf/2106.02114 — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://dev.mccme.ru/~merzon/v14/pscache/3d-graphs.pdf — агент af9b15 · открыт
+- https://dfgm.math.msu.su/files/0ngit/ivanov/2023/ViG23-plane_graph.pdf — агент af9b15 · открыт
+- https://dfgm.math.msu.su/files/0ngit/tuzhilin/2016/Lecture1.pdf — агент af9b15 · открыт
+- https://en.wikipedia.org/wiki/Associahedron — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://en.wikipedia.org/wiki/Bondy%27s_theorem — основная сессия · открыт
+- https://en.wikipedia.org/wiki/Dividing_a_circle_into_areas — агент a8f458 · в отчёте
+- https://en.wikipedia.org/wiki/Dual_graph — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://en.wikipedia.org/wiki/Gauss_code — агент a4edbe · открыт
+- https://en.wikipedia.org/wiki/Graceful_labeling — агент a4edbe · в отчёте, агент a4edbe · открыт, агент a8f458 · в отчёте
+- https://en.wikipedia.org/wiki/Maze-solving_algorithm — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://en.wikipedia.org/wiki/Point-set_triangulation — агент a8f458 · в отчёте
+- https://en.wikipedia.org/wiki/Sprouts_(game — агент a4edbe · в отчёте, агент a4edbe · открыт, агент a8f458 · в отчёте, агент a8f458 · открыт
+- https://en.wikipedia.org/wiki/Wheel_graph — агент a4edbe · открыт
+- https://gitlab.se.ifmo.ru/mathematics/graph-theory-fall-2020/-/wikis/problems/ser2.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://gitlab.se.ifmo.ru/mathematics/graph-theory-fall-2020/-/wikis/problems/ser9.pdf — агент af9b15 · открыт
+- https://hse.ru/mirror/pubs/share/151015752 — агент af9b15 · открыт
+- https://hse.ru/mirror/pubs/share/185077793 — агент af9b15 · открыт
+- https://infoscience.epfl.ch/record/129313 — агент a8f458 · в отчёте
+- https://kvant.ras.ru/pdf/2001/05/08.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2022-23/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser9.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2023-24/%d0%9b%d0%b5%d0%ba%d1%86%d0%b8%d0%b8/dm_graphs-2s.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2023-24/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser1.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2023-24/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser8.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2023-24/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser9.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2024-25/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ — агент af9b15 · в отчёте
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2024-25/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser10.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2024-25/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser8.pdf — агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~dvk/ITMO/DM/2024-25/%d0%9f%d1%80%d0%b0%d0%ba%d1%82%d0%b8%d0%ba%d0%b0/ser9.pdf — агент a79be1 · открыт, агент af9b15 · открыт
+- https://logic.pdmi.ras.ru/~knop/au/masters/dm/2016/files/practice_14.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://math-kluychiki.ru/listki — основная сессия · открыт
+- https://math.hse.ru/data/2019/05/22/1508325626/discrete-120.pdf — агент af9b15 · открыт
+- https://mccme.ru/ru/lshsm/dubna-2005/program/skopenkov — агент af9b15 · открыт
+- https://mmo.mccme.ru/2021/ — основная сессия · открыт
+- https://mmo.mccme.ru/2021/84mmo.pdf — основная сессия · открыт
+- https://oeis.org/A001906 — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://old.kvantik.com/art/files/pdf/2020-11.18-22.pdf — агент a4edbe · в отчёте, агент a4edbe · открыт
+- https://old.math.tsu.ru/EEResources/pdf/graf/graf_g2.pdf — агент af9b15 · открыт
+- https://old.mccme.ru/circles/mccme/2015/8/mccme-8-30.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://old.mccme.ru/circles/mccme/2020/9/9-14.pdf — агент a79be1 · открыт, агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://old.mccme.ru/circles/mccme/2025/7/2025-05-16euler.pdf — агент a79be1 · открыт, агент af9b15 · открыт
+- https://old.mccme.ru/circles/mccme/2025/8/8-29.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://old.mccme.ru/dubna/2011/notes/askopenkov.pdf — агент af9b15 · открыт
+- https://old.mccme.ru/dubna/2015/notes/musin-slides.pdf — агент a8f458 · в отчёте
+- https://old.mccme.ru/free-books/prasolov/topol.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://old.mccme.ru/ium/postscript/s22/topology1-03.pdf — агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://old.mccme.ru/s43/math/uroki/2007_2008/8mat_0708/spec/s049.pdf — агент af9b15 · открыт
+- https://olympiads.mccme.ru/matboi/usl2020_89.pdf — агент a79be1 · открыт
+- https://olympiads.mccme.ru/mmo/2021/ — основная сессия · открыт
+- https://pi.math.cornell.edu/~mec/2006-2007/Games/sprouts.html — агент a8f458 · в отчёте, агент a8f458 · открыт
+- https://problems.ru/search.php?search=%D0%A8%D0%BF%D0%B5%D1%80%D0%BD%D0%B5%D1%80%D0%B0 — агент a79be1 · открыт
+- https://problems.ru/search.php?search=%D0%B2+%D0%BA%D0%B0%D0%B6%D0%B4%D0%BE%D0%B9+%D0%B2%D0%B5%D1%80%D1%88%D0%B8%D0%BD%D0%B5+%D1%87%D1%91%D1%82%D0%BD%D0%BE%D0%B5+%D1%87%D0%B8%D1%81%D0%BB%D0%BE+%D1%82%D1%80%D0%B5%D1%83%D0%B3%D0%BE%D0%BB%D1%8C%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2+%D0%B4%D0%B8%D0%B0%D0%B3%D0%BE%D0%BD%D0%B0%D0%BB%D1%8F%D0%BC%D0%B8 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=188 — агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=202&start=31&viewing_params%5Bview_docs%5D=1111 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=234 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235 — агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=0 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=10 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=15 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=17&viewing_params%5Bview_docs%5D=1111 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=20 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=25 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=30 — агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=235&start=5 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236 — агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=0 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=10 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=15 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=20 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=25 — агент a79be1 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=236&start=5 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=64 — агент af9b15 · открыт
+- https://problems.ru/view_by_subject_new.php?parent=87 — агент af9b15 · открыт
+- https://problems.ru/view_problem_details_new.php?id= — агент af9b15 · в отчёте
+- https://problems.ru/view_problem_details_new.php?id=105113 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=107776 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=109425 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=109778 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=109895 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=110004 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=110038 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=111685 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=111844 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=115396 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=115399 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=116052 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=116272 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=30440 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=30796 — агент a79be1 · в отчёте
+- https://problems.ru/view_problem_details_new.php?id=30804 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=30823 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=31087 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=34981 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=35025 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=35238 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=58054 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=58189 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=58307 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=64676 — агент af9b15 · открыт
+- https://problems.ru/view_problem_details_new.php?id=64926 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=65206 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=66597 — агент a79be1 · в отчёте, агент a79be1 · открыт, основная сессия · открыт
+- https://problems.ru/view_problem_details_new.php?id=66727 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=67277 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=73654 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=73668 — агент af9b15 · открыт
+- https://problems.ru/view_problem_details_new.php?id=89950 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=98162 — агент a79be1 · открыт
+- https://problems.ru/view_problem_details_new.php?id=98365 — агент a79be1 · в отчёте, агент a79be1 · открыт, основная сессия · открыт
+- https://problems.ru/view_problem_details_new.php?id=98618 — агент a79be1 · в отчёте, агент a79be1 · открыт, основная сессия · открыт
+- https://proseminar.math.ru/files/kolm18-dop.pdf — агент a79be1 · открыт
+- https://quantamagazine.org/mathematicians-prove-ringels-graph-theory-conjecture-20200219 — агент a4edbe · в отчёте
+- https://ru.ruwiki.ru/wiki/Грациозная_разметка — агент a4edbe · в отчёте
+- https://turgor.ru/problems/44/os-44-sol-zakr.pdf — агент a79be1 · открыт
+- https://www.cs.princeton.edu/courses/archive/fall06/cos341/assignments/hw10/hw.pdf — агент a4edbe · открыт
+- https://www.mathnet.ru/links/faa9b3ae1e99573dbb0584edf5bd7c34/mp974.pdf — агент af9b15 · открыт
+- https://www.mmmf.msu.ru/archive/20202021/z8/21A-dop.pdf — агент af9b15 · открыт
+- https://www.mmmf.msu.ru/archive/20202021/z8/21A.pdf — агент a79be1 · открыт, агент af9b15 · в отчёте, агент af9b15 · открыт
+- https://www.mmmf.msu.ru/archive/20202021/z8/21B-dop.pdf — агент af9b15 · открыт
+- https://www.mmmf.msu.ru/archive/20202021/z8/21B.pdf — агент af9b15 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=192 — агент a79be1 · открыт, агент af9b15 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=233 — агент a79be1 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=242&start=45 — агент a79be1 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=246&start=50 — агент a79be1 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=745 — агент af9b15 · открыт
+- https://www.problems.ru/view_by_subject_new.php?parent=745&start=5 — агент af9b15 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=105160 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=105194 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=109536 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=110030 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=110138 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=115393 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=32045 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=35773 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=58166 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=58235 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=66699 — агент a79be1 · в отчёте, агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=86105 — агент a79be1 · открыт
+- https://www.problems.ru/view_problem_details_new.php?id=98006 — агент a79be1 · открыт
+- https://www.sch57.ru/files/mathcamp/2015/S_Graphs_3.pdf — агент af9b15 · открыт
