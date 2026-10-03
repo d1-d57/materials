@@ -1,0 +1,5 @@
+#sim-c16 .c16-seg{stroke:var(--muted);stroke-dasharray:3 4}
+#sim-c16 .c16-path{stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+#sim-c16 .c16-arr{fill:var(--accent)}
+#sim-c16 .c16-x{stroke:var(--warm);stroke-width:2.6}
+#sim-c16 .c16-hit{fill:transparent;cursor:grab}

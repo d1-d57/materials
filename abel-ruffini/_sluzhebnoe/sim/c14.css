@@ -1,0 +1,8 @@
+#sim-c14 .c14-dash{stroke-dasharray:5 4}
+#sim-c14 .c14-drop{stroke-dasharray:2 3}
+#sim-c14 .c14-loc{stroke-width:1.4;opacity:.75}
+#sim-c14 .c14-lev{fill:none;stroke:var(--accent);stroke-width:1.6}
+#sim-c14 .c14-v{fill:var(--panel);stroke:var(--text);stroke-width:1.6}
+#sim-c14 .c14-dot{stroke:var(--panel);stroke-width:1.5}
+#sim-c14 .c14-dbl{fill:none;stroke:var(--accent);stroke-width:1.4}
+#sim-c14 svg{cursor:ns-resize}
