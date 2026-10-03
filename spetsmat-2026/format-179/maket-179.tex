@@ -1,0 +1,48 @@
+%% МАКЕТ стиля школы 179 — НЕ их macros.tex, а наша имитация по образцу
+%% листка 17 (уровень А) от 28.09. Нужен только чтобы проверить, что
+%% переведённое тело компилируется и похоже на их вид. Команды — см. SLOVAR.md.
+%% Сборка:  pdflatex maket-179.tex   (тело берётся из файла \telo ниже)
+\documentclass[11pt,a4paper]{article}% как у них: SFRM1095 = 11pt, cm-super
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T2A]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[russian]{babel}
+\else
+  \usepackage{fontspec}
+  \usepackage{polyglossia}
+  \setmainlanguage{russian}
+  \setmainfont{SourceSerifPro}[Path=../listok-derevya/shrifty/,Extension=.ttf,
+    UprightFont=*_400Regular,ItalicFont=*_400Regular_Italic,BoldFont=*_700Bold,
+    BoldItalicFont=*_700Bold_Italic]
+\fi
+\usepackage[left=14.4mm,right=14.4mm,top=10mm,bottom=6mm]{geometry}% поля сняты с их PDF 17А: текст 513pt в ширину, от 41pt слева
+\usepackage{amsmath,amssymb}
+\setlength{\parindent}{1.5em}
+\pagestyle{empty}
+
+\newcounter{z}\newcounter{lett}
+\newcommand{\okno}{\framebox[14mm]{\rule{0pt}{2ex}}}
+\newcommand{\bukva}{\ifcase\value{lett}\or а\or б\or в\or г\or д\or е\fi}
+\newcommand{\ListokName}[1]{\gdef\imyalistka{#1}}
+\newcommand{\shapkaUstnoA}{%
+  \noindent{\itshape 2026/2027. Школа 179. КЛ 25-29}\hfill{\Large A}\par\medskip
+  \centerline{\rule{0.6\linewidth}{0.4pt}}\par\smallskip
+  \centerline{\large\bfseries\scshape\imyalistka}\par\medskip}
+% задача с окном для плюса (без пунктов)
+\newcommand{\zp}{\par\smallskip\refstepcounter{z}\setcounter{lett}{0}%
+  \noindent\okno\ \fbox{\textbf{\arabic{z}}}~}
+% задача без окна (окна у пунктов)
+\newcommand{\z}{\par\smallskip\refstepcounter{z}\setcounter{lett}{0}%
+  \noindent\fbox{\textbf{\arabic{z}}}~}
+% задача, у которой пункт а) начинается в строке номера
+\newcommand{\zn}{\par\smallskip\refstepcounter{z}\setcounter{lett}{1}%
+  \noindent\fbox{\textbf{\arabic{z}}}\ \okno\ \textbf{а)}~}
+% пункт с новой строки
+\newcommand{\lett}{\par\stepcounter{lett}\noindent\okno\ \textbf{\bukva)}~}
+% пункт в строку
+\newcommand{\leth}{\stepcounter{lett}\ \okno\ \textbf{\bukva)}~}
+
+\begin{document}
+\input{\telo}
+\end{document}
