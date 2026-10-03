@@ -278,6 +278,9 @@ grep -n '<как механизм назван в вызывающем коде>
 - Criterion note: none looks broken; criterion 3 greps `abel-ruffini/|tretya-problema-gilberta/` on the title page, fine.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
+1. Zahod template contradicts itself on exporting disciplina `main`: step 7 and criterion 5 demand `vyvezti` for it, the final WARNING block says do not export `main`; the gate itself refuses it while 15 open git-operaciya requests exist and 51 commits (mostly foreign) are unpushed. Owner must decide whether to push disciplina `main` with `--vsyo-ravno`.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -310,22 +313,49 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+Subagent output, verbatim:
+```
+$ git --no-optional-locks branch --no-merged main
+* arka/mat-kostyak
++ zahod/chistka-github
++ zahod/istoriya-sessij
++ zahod/svedenie
+$ git --no-optional-locks status --porcelain | wc -l
+      89
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       6
+$ git_zona.py zayavki
+Открытых заявок: 2 (…ucheniki 117 ч; …diskmat 115 ч); в очереди на-заход: 12 заявок.
+```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent: commits none (autologs already in b85c0c36; the remaining tail is content work of other projects: _fond/, _studio/, diskmat-57/, spetsmat-2026/, ucheniki/). Merged 0 of 0 named. Nothing extinguished. Side effect: `git_zona.py plan` wrote `_studio/.commit-plan` (untracked, outside my zone, left alone). Last subagent line: «выдано 0 позиций из 2 найденных».
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — two open requests (…ucheniki, …diskmat-57) are other projects' content work, plus a live kruzhok-7i session writing in the same tree; not passable with the subagent's rights.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+ПРАВКИ ПРОЧИТАНЫ: правок нет (секция пуста при старте).
+
+**RESULT: criteria 1–4 GREEN, criterion 5 RED for `disciplina` only.**
+1. curl: `abel-ruffini 200`, `tretya-problema-gilberta 200`. 2. `target="_blank"` on abel = 10; Gilbert title grep = 4 (≠0). 3. title page grep = 2 (≥2). 4. `git_zona.py check` ✅ in materials (5 zones) and ✅ in disciplina (build_doc.py + posty/…). 5. `log @{u}.. | wc -l`: materials `arka/mat-kostyak` = 0 (pushed, 7 commits); disciplina `main` = **51** (not exported).
+- Step 5 outcome verbatim: «✅ Витрина `main` вывезена (68d8f7bd63a3)… ✅ Прогон зелёный — сайт опубликован.» https://github.com/d1-d57/materials/actions/runs/37146799333 (preview listed only the 3 expected files, no deletions).
+- materials commit `89774d32` (hook passed, no `--no-verify`). disciplina commit `f652c879e` (hook passed; build_doc.py diff was only the `_NBSP_RE` fix + comments; check_ssylki warning rc=0).
+- Why 5 is red: `git_zona.py vyvezti` in disciplina refused — 15 open git-operaciya requests on `main`; the push would also publish ~50 other zahods' commits (statya-dvizhok, e-besplatnye-modeli, P0-chasovoj-d2…). I did NOT use `--vsyo-ravno`: foreign work outside my zone, and the file's own final block says "main НЕ вывози — поставь заявку". Request placed: `2026-10-03T2209-vyvoz-main-disciplina-51-unpushed-commits`. **Owner decision needed: allow `vyvezti --yes --vsyo-ravno` in disciplina.** Does not affect the live URLs.
+- Merge of own branch into main: not applicable (main in materials = Hugo showcase; published by `opublikovat`). Unmerged branches: 3 foreign `zahod/*` (same as on entry, valve opened by analyst).
+- Entry-subagent lines: merged 0 of 0; tail Cowork: nothing taken (autologs already in b85c0c36), 274 paths of other projects left; nothing extinguished; irreversible: none.
+- Г2: disciplina touched → `git status --porcelain` there is NOT empty because of other sessions' files and my new request file `_studio/zhurnal/_INFRA-git/zayavki/2026-10-03T2209-…md` (untracked); my own paths are clean (check ✅).
+- НЕОБРАТИМОЕ: `opublikovat --yes` pushed the showcase `main` of materials (68d8f7bd63a3) · origin d1-d57/materials · restore: revert that commit on main. Branch push `arka/mat-kostyak` · origin. Otherwise необратимого нет.
+- ПОВТОРЯЕМОСТЬ: the `vyvezti` main-gate (open requests block pushing disciplina `main`) will repeat on every pass that commits to disciplina `main` — the zahod template tells the executor to export it (step 7, criterion 5) while its own final block says not to; that contradiction repeats → a zahod before the next run, not a queue item. Recorded as item 1 in ВОПРОСЫ.
+- Time/tokens: not applicable on channel `app`.
+
+**АРТЕФАКТ:** `https://d1-d57.github.io/materials/abel-ruffini/` и `https://d1-d57.github.io/materials/tretya-problema-gilberta/` (файлы: `/Users/ivanyakovlev/Documents/GitHub/materials/sayt/static/abel-ruffini/index.html`, `/Users/ivanyakovlev/Documents/GitHub/materials/sayt/static/tretya-problema-gilberta/index.html`) — браузером
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `собранный`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `89774d32` — `abel-ruffini, tretya-problema-gilberta: articles + site pages` (materials, arka/mat-kostyak) · `f652c879e` — `build_doc: nbsp regex must not touch tag names (<a href); post 2026-10-03 + cover` (disciplina, main, NOT pushed) · `git_zona.py check --zone …` → ✅ в обоих
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
