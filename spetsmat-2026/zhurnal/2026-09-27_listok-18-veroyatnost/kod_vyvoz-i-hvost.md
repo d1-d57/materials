@@ -323,23 +323,65 @@ git --no-optional-locks status --porcelain | wc -l        # не закомми�
 git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезено
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
-<сюда — вывод, дословно>
+СНИМОК ВХОДА (subagent, verbatim):
+```
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+  main
++ zahod/istoriya-sessij
+$ git --no-optional-locks status --porcelain | wc -l
+     103
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       1
+$ git_zona.py zayavki
+Охват: заявок открыто 2, переадресовано 12, закрыто недавно (sdelano) 89, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
+```
+Open requests: `2026-09-28T2155-3-27-09-29-09-ucheniki`, `2026-09-28T2351-29-09-7-materials-1-diskmat` (not in this pass).
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent (verbatim): merged 0 branches (none named `--vlit`). Committed: `747cd6fd` INCIDENTY.md (Cowork tail); `3a5714e0` `.gitignore` `*.log`; `3e48204e` arc-18 tail (PLAN, SESSIYA, UROKI-FABRIKE, kod_git-listok-18, HANDOFF-2026-10-04, VYGRUZKA-2026-10-03); `a7253a62` kontrolnaya-2026-10-05 without _sborka (21 paths). Nothing extinguished, no worktree. Not exported by the subagent (not its item) — I exported in step 4.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — left (subagent list): content work of other zones (diskmat-57, ucheniki, kurs-puti-i-volny, _fond, _studio arka misha) — forbidden by item 2, taken by the two open requests above; UROKI-FABRIKE.md of arcs misha/diskmat — content, not autolog; live lock `.git/incidenty.lock` untouched.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+ПРАВКИ ПРОЧИТАНЫ: 1
+**АРТЕФАКТ:** артефакта нет: the task is git state (deletion, .gitignore, commits, export); the proof is the command output below.
+**РОД АРТЕФАКТА:** `исходник`
+**КОММИТ:** `462a2b47` — spetsmat-2026: ignore test-2026-10-05 _sborka copy, add vyvoz-i-hvost task file · `git_zona.py check --zone spetsmat-2026/zhurnal/2026-09-27_listok-18-veroyatnost` → ✅ (the final report commit hash is named in the chat reply: it cannot cite itself)
+
+**Git-contour subagent, five lines (verbatim):**
+1. merged 0 of 0 named branches; none named `--vlit`. Main branch `main`.
+2. Cowork tail: taken `_studio/zhurnal/_INFRA-git/INCIDENTY.md` (`747cd6fd`); outside git left 91 paths (other zones' content).
+3. Nothing extinguished; `poteri`/`zakryt-vetku` not run.
+4. Irreversible: none; four commits revertible to `287cec8b`.
+5. выдано 4 позиций из 4 найденных
+
+**What I did**
+- Step 1: `GZ delete` dry run showed exactly the 8 named files (all untracked), then `--yes`: «Снято: 8». `_to_delete/` held only those two files (nothing extra to report); the empty directory itself stays on disk (git does not track empty dirs).
+- Step 2: the subagent had already added `*.log` (`3a5714e0`, own comment); I did NOT duplicate it (criterion 6 needs exactly 1) and appended only the comment + `spetsmat-2026/kontrolnaya-2026-10-05/_sborka/`.
+- Step 3: the arc tail and kontrolnaya (21 files) were already committed by the subagent (`3e48204e`, `a7253a62`); my `GZ commit` took the rest: `.gitignore` and this task file → `462a2b47`.
+- Step 4: `GZ vyvezti --yes` → «arka/mat-kostyak: push прошёл» (6 commits). It carried the foreign commit `287cec8b` (abel-ruffini), as ПРАВКА 1 predicted.
+- Step 5: `GZD vyvezti` on `main` → «Вывозить нечего — все перечисленные ветки уже на origin» (legal outcome).
+
+**Criteria (verbatim outputs)**
+1. grep «только на этой машине» over both doctors → `0`; materials doctor commits: 462a2b47, a7253a62, 3e48204e, 3a5714e0, 747cd6fd; disciplina main = origin/main.
+2. `check --zone …listok-18-veroyatnost` → «✅ … работа доехала в git, вне git ничего нет.»
+3. `check --zone …kontrolnaya-2026-10-05` → «✅ … работа доехала в git, вне git ничего нет.»
+4. `ls … | wc -l` → `0`
+5. `ls-files | wc -l` → `21`; `find … -not -path '*/_sborka/*' | wc -l` → `21`; `grep -c _sborka` → `0`
+6. `grep -cx '\*\.log' .gitignore` → `1`
+Coverage: 6 of 6 criteria run.
+
+**Hygiene.** Г1: checked 6 of 11 zone paths directly (_to_delete/, .gitignore, kod file, listok-18 and kontrolnaya via criteria 2–3, plus 3 deleted-file paths) → ✅ or «работы здесь пока не существует» (deleted paths, expected). Г2: not applicable, all paths in `materials`. Г3: unmerged before/after — the same three foreign `zahod/chistka-github`, `zahod/istoriya-sessij`, `zahod/svedenie` (not grown; allowed by the analyst's valve) plus my own `arka/mat-kostyak`. Г4: no new `.py`. Г5: no new `.md` apart from the pre-registered task file. Г6: `show --stat 462a2b47` → only `.gitignore` and the task file.
+**Final sequence:** step 1 «outside git 0» on my zone; `arka/mat-kostyak` unpushed → `0`; **merge of `arka/mat-kostyak` into `main` NOT performed**: the task's stop line («НЕ влитие arka/mat-kostyak в main, решение владельца: маткостяк и есть основная») and the subagent's `--zakryt` override the generic final block; post-check and extinguishing therefore not applicable. Whole repo `status --porcelain` = 88 paths: all other zones' work (below).
+
+**Outside the zone, not touched:** `spetsmat-2026/listki-8kl/03_Пары и тройки.pdf` and `listki-8kl-txt/03_Пары и тройки.txt` (not re-verified by a command in this pass — named from the task); branches `zahod/chistka-github`, `zahod/istoriya-sessij`, `zahod/svedenie`; `_sessii-cowork`; other zones' dirty paths (diskmat-57, ucheniki, kurs-puti-i-volny, _fond, _studio); two open requests 2155-ucheniki, 2351-diskmat.
+
+**Irreversible:** deleted 8 untracked files (3 `.log` in listok-veroyatnost; proba-179.log, proba-179.pdf, proba-pdftex.log, `_to_delete/_proba-maket-tikz.tex`, `_to_delete/proba-alef.log` in format-179) · they were untracked, so NOT restorable from git; they were build junk by owner's decision (question 2) and the `.log`/`.pdf` are regenerable by pdflatex. Everything else restorable by revert/reset to `287cec8b`; push of `arka/mat-kostyak` is on origin.
+**Open / return:** none. **Time/tokens:** inapplicable on channel `app`.
+**ПОВТОРЯЕМОСТЬ:** one finding repeats on the next arc: two actors (the git subagent and the executor) both own `.gitignore`/arc-tail items, so step 2–3 text of the task was half-done before I started; the executor must read `git log` first. It is an analyst-side wording issue, not a queue item.
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=11 · simvolov=38472 · rc=0
