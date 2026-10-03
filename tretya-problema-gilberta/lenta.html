@@ -1,0 +1,153 @@
+<title>Третья проблема Гильберта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600&family=Golos+Text:wght@500;600&display=swap">
+<style>
+/* одна колонка для чтения с телефона; пунктир = линия разреза */
+:root{
+  --bg:#f5f6f3; --fg:#1d232b; --muted:#5d6670; --line:#c9cec8;
+  --cut:#c2412d; --ink:#2f5d8a; --fill:#dfe6ee;
+  --serif:"Literata",Georgia,"Times New Roman",serif;
+  --sans:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15191e; --fg:#e4e6e3; --muted:#9aa3ac; --line:#3a424b;
+  --cut:#ef7a62; --ink:#8fb6dd; --fill:#25303c; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15191e; --fg:#e4e6e3; --muted:#9aa3ac; --line:#3a424b;
+  --cut:#ef7a62; --ink:#8fb6dd; --fill:#25303c; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:17px/1.6 var(--serif);padding-inline:18px;padding-block:28px 64px}
+main{max-width:36rem;margin:0 auto;display:flex;flex-direction:column;gap:.9rem}
+h1{font:600 1.9rem/1.15 var(--serif);margin:0;text-wrap:balance}
+h2{font:600 1.05rem/1.3 var(--sans);letter-spacing:.01em;margin:1.6rem 0 0;padding-top:1rem;border-top:1px dashed var(--line);text-wrap:balance}
+h2 span{color:var(--muted);font-weight:500;margin-right:.5em}
+p,ul{margin:0}
+ul{padding-left:1.1rem;display:flex;flex-direction:column;gap:.35rem}
+.def{border-left:3px solid var(--ink);padding:.15rem 0 .15rem .8rem}
+.def b{font-family:var(--sans);font-weight:600;font-size:.9em;color:var(--ink)}
+.q{color:var(--muted);font-style:italic}
+.key{font-weight:600}
+.pause{text-align:center;font:500 .85rem var(--sans);color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:1.2rem}
+svg{display:block;width:100%;height:auto;max-width:100%}
+svg .s{fill:none;stroke:var(--fg);stroke-width:1.6;stroke-linejoin:round}
+svg .c{fill:none;stroke:var(--cut);stroke-width:1.6;stroke-dasharray:5 4}
+svg .g{fill:none;stroke:var(--line);stroke-width:1.2;stroke-dasharray:3 3}
+svg .f{fill:var(--fill);stroke:var(--fg);stroke-width:1.4;stroke-linejoin:round}
+svg .p{fill:var(--cut);fill-opacity:.18;stroke:var(--cut);stroke-width:1.4;stroke-linejoin:round}
+svg .ink{fill:none;stroke:var(--ink);stroke-width:2}
+svg text{fill:var(--fg);font:500 14px var(--sans)}
+svg text.cut{fill:var(--cut)} svg text.mut{fill:var(--muted)}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+</style>
+
+<main>
+<h1>Третья проблема Гильберта</h1>
+
+<h2><span>0</span>Вопрос</h2>
+<p class="def"><b>Определение.</b> $P$ и $Q$ <b style="color:inherit">равносоставлены</b>, $P\sim Q$, если $P$ можно разрезать на конечное число многоугольников (многогранников) и, двигая куски, сложить из них $Q$.</p>
+<p>Равная площадь ⇒ равносоставлены? На плоскости да. В пространстве нет: тетраэдр не сложить в куб.</p>
+<p class="q">Как доказать, что нельзя? Нужно число, которое разрезание не меняет.</p>
+
+<h2><span>1</span>Плоскость: можно</h2>
+<p class="def"><b>Теорема Бойяи — Гервина.</b> Многоугольники равной площади равносоставлены.</p>
+<ul>
+<li>$\sim$ транзитивно: наложить два разрезания средней фигуры.</li>
+<li>Многоугольник режем на треугольники.</li>
+<li>Треугольник → прямоугольник: средняя линия, два куска поворотом на $180^\circ$.</li>
+</ul>
+<svg viewBox="0 0 480 150" role="img" aria-label="Треугольник режется по средней линии и высоте, два куска поворачиваются в прямоугольник">
+  <polygon class="s" points="20,140 220,140 90,20"/>
+  <line class="c" x1="55" y1="80" x2="155" y2="80"/>
+  <line class="c" x1="90" y1="80" x2="90" y2="20"/>
+  <text x="232" y="92" class="mut">→</text>
+  <polygon class="f" points="270,140 305,80 405,80 470,140"/>
+  <polygon class="p" points="305,80 270,80 270,140"/>
+  <polygon class="p" points="405,80 470,80 470,140"/>
+</svg>
+<ul>
+<li class="key">Главный трюк: параллелограммы с общим основанием в одной полосе равносоставлены. Сдвиги одного замощают полосу и режут второй.</li>
+</ul>
+<svg viewBox="0 0 400 120" role="img" aria-label="Полоса, замощённая сдвигами параллелограмма; второй параллелограмм нарезан этим замощением">
+  <line class="g" x1="0" y1="20" x2="400" y2="20"/><line class="g" x1="0" y1="100" x2="400" y2="100"/>
+  <polygon class="g" points="120,100 200,100 230,20 150,20"/>
+  <polygon class="g" points="200,100 280,100 310,20 230,20"/>
+  <polygon class="f" points="40,100 120,100 150,20 70,20"/>
+  <polygon class="ink" points="40,100 120,100 310,20 230,20"/>
+  <line class="c" x1="120" y1="100" x2="150" y2="20"/>
+  <line class="c" x1="200" y1="100" x2="230" y2="20"/>
+</svg>
+<ul>
+<li>Прямоугольник $a\times b$ → $c\times\frac{ab}{c}$: на основании $a$ строим параллелограмм с боковой стороной $c$ и смотрим на него с основания $c$. Если $c&lt;b$, сначала режем пополам и кладём в ряд.</li>
+<li>Ставим прямоугольники столбиком ширины $\sqrt S$.</li>
+</ul>
+
+<h2><span>2</span>Без поворотов: первое «нельзя»</h2>
+<p class="q">Где мы поворачивали? На $180^\circ$ в треугольнике и при укладке столбика. Запретим повороты: только параллельные переносы.</p>
+<p class="def"><b>Инвариант Хадвигера.</b> Для направления $u$: $J_u(P)=\sum \pm\ell$ по сторонам, параллельным $u$; плюс, если фигура слева от стороны при движении по $u$, минус, если справа.</p>
+<svg viewBox="0 0 420 130" role="img" aria-label="Знаки сторон у квадрата, треугольника и у внутреннего разреза">
+  <line class="ink" x1="10" y1="12" x2="60" y2="12"/><polyline class="ink" points="52,7 60,12 52,17"/>
+  <text x="66" y="17" class="mut">u</text>
+  <rect class="s" x="20" y="35" width="80" height="80"/>
+  <text x="48" y="30">−a</text><text x="48" y="129">+a</text>
+  <polygon class="s" points="150,115 250,115 185,35"/>
+  <text x="188" y="129">+a</text>
+  <rect class="s" x="300" y="35" width="100" height="80"/>
+  <line class="c" x1="300" y1="75" x2="400" y2="75"/>
+  <text x="335" y="69" class="cut">+ℓ</text><text x="335" y="92" class="cut">−ℓ</text>
+</svg>
+<p>Внутренний разрез — сторона двух кусков: у одного фигура слева, у другого справа. $\pm\ell$ сокращаются. Перенос ничего не меняет. Значит, $J_u$ одинаков у равносоставленных переносами.</p>
+<p>У квадрата $J_u\equiv0$, у треугольника $J_u=\pm\text{сторона}\ne0$. <span class="key">Треугольник не сложить в квадрат одними переносами.</span></p>
+<p>Хадвигер — Глур: площадь и все $J_u$ — полный ответ. Поворот на $180^\circ$ меняет знак $J_u$, и с ним Бойяи — Гервин снова верна.</p>
+<p class="key">Разрез считается дважды и сокращается. Это весь секрет.</p>
+
+<p class="pause">перерыв</p>
+
+<h2><span>3</span>Пространство</h2>
+<p>Призма — можно: основание в квадрат, брус в куб тем же трюком дважды. Трудность — в пирамидах.</p>
+<p>Гаусс жаловался Герлингу, что объём пирамиды доказывают пределами. Гильберт, 1900, третья проблема: есть ли тетраэдры равного объёма, которые не равносоставлены? Ден ответил в том же году.</p>
+
+<h2><span>4</span>Изобретаем инвариант</h2>
+<p class="q">Что у многогранника есть, кроме объёма? Рёбра: длина $\ell$ и двугранный угол $\theta$. Пробуем $\sum\ell\,\theta$.</p>
+<p>Новое ребро при разрезании, в сечении поперёк него:</p>
+<svg viewBox="0 0 420 120" role="img" aria-label="Сечения у нового ребра: внутри многогранника 2π, на грани π, на старом ребре θ">
+  <circle class="s" cx="70" cy="60" r="42"/>
+  <line class="c" x1="70" y1="60" x2="112" y2="60"/><line class="c" x1="70" y1="60" x2="49" y2="24"/><line class="c" x1="70" y1="60" x2="40" y2="90"/>
+  <text x="58" y="117">2π</text>
+  <path class="s" d="M168 82 A42 42 0 0 1 252 82 Z"/>
+  <line class="c" x1="210" y1="82" x2="190" y2="45"/><line class="c" x1="210" y1="82" x2="240" y2="52"/>
+  <text x="203" y="117">π</text>
+  <path class="s" d="M320 90 L400 90 A80 80 0 0 0 377 33 Z"/>
+  <line class="c" x1="320" y1="90" x2="395" y2="62"/>
+  <text x="352" y="117">θ</text>
+</svg>
+<p>Мешают только кратные $\pi$. «По модулю $\pi$»? Нельзя: при $\ell=\sqrt2$ уже $\ell(\theta+\pi)\not\equiv\ell\theta$.</p>
+<p class="def"><b>Фокус.</b> Возьмём $f$ с $f(x+y)=f(x)+f(y)$ и $f(\pi)=0$ ($\mathbb Q$-линейную). <b>Инвариант Дена:</b> $$D_f(P)=\sum_{e}\ell(e)\,f(\theta(e)).$$</p>
+<p class="def"><b>Теорема Дена.</b> $P\sim Q\ \Rightarrow\ D_f(P)=D_f(Q)$.</p>
+<p>Дробим рёбра на отрезки. На каждом сумма углов кусков — $2\pi$, $\pi$ или $\theta$, а $f$ видит $0$, $0$, $f(\theta)$. Это пункт 2: вместо знака — $f(\pi)=0$.</p>
+<p class="q">Почему не на плоскости? У вершины нет длины: $\sum f(\text{углов})=f(k\pi)=0$.</p>
+
+<h2><span>5</span>Тетраэдр не куб</h2>
+<p>Куб: $D_f=12a\,f(\tfrac\pi2)=6a\,f(\pi)=0$.</p>
+<p>Правильный тетраэдр: $\cos\alpha=\frac13$ (теорема косинусов в сечении через ребро и середину противоположного), $D_f=6a\,f(\alpha)$.</p>
+<svg viewBox="0 0 400 150" role="img" aria-label="Сечение тетраэдра через ребро и середину противоположного ребра, угол α">
+  <polygon class="s" points="200,133 120,20 280,20"/>
+  <path class="ink" d="M187.3 115.1 A22 22 0 0 1 212.7 115.1"/>
+  <text x="195" y="104">α</text>
+  <text x="118" y="84" class="mut">√3/2</text><text x="248" y="84" class="mut">√3/2</text><text x="195" y="14" class="mut">1</text>
+</svg>
+<p class="def"><b>Лемма.</b> $\alpha/\pi$ иррационально.</p>
+<p class="q">Задача залу: $\cos n\alpha=\frac{k_n}{3^n}$, $k_{n+1}=2k_n-9k_{n-1}$, $k_0=k_1=1$. Значит, $3\nmid k_n$. А если $\alpha=\frac pq\pi$, то $\cos q\alpha=\pm1$ и $k_q=\pm3^q$.</p>
+<p>Нужна $f$ с $f(\pi)=0$, $f(\alpha)=1$: $\pi$ и $\alpha$ независимы над $\mathbb Q$ — дополняем до базиса конечного набора углов разрезания. Аксиома выбора не нужна.</p>
+<p class="key">Итог: $6a=0$. Тетраэдр не равносоставлен кубу.</p>
+
+<h2><span>6</span>Дальше</h2>
+<ul>
+<li>Сидлер, 1965: объём и $D_f$ — полный ответ в $\mathbb R^3$. В $\mathbb R^4$ — Йессен, дальше открыто.</li>
+<li>Аксиома выбора живёт у Банаха — Тарского: с неизмеримыми кусками шар удваивается.</li>
+<li>Площадь, $J_u$, $D_f$, угловой дефект, эйлерова характеристика — один жанр: аддитивные инварианты. Это и есть проект.</li>
+</ul>
+</main>
+
+<script>
+window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
