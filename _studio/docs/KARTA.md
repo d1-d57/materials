@@ -122,6 +122,12 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/mandate_noch-puti-i-volny.md`** (MANDATE — two halves, two authors; status OPEN/CLOSED/REFUSED/CLOSED-S-DOLGOM lives in the file)
 
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/GDD-misha-v1-2026-10-04.md`** (гейм-дизайн движка Миши v1 (04.10) — история, заменён v2)
+
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/GDD-misha-v2-2026-10-04.md`** (гейм-дизайн движка Миши v2 (04.10) — утверждён в целом; §10 — поправки сверки, читать вместе)
+
 **`_studio/zhurnal/2026-09-13_uchenik-misha/HANDOFF-2026-09-14.md`** (Хэндофф в сессию 2026-09-14 (арка 2026-09-13_uchenik-misha): вход владельцем не назначен, дефолт — набор Мише на занятие 20.09)
 
 
@@ -138,6 +144,12 @@
 
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/RESERCH-interaktiv.md`** (Ресёрч: движок интерактивных занятий для Миши)
+
+
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/RESERCH-misha-igra-2026-10-04-otchety.md`** (7 отчётов ресёрч-агентов 04.10 дословно, с брифами — первоисточник сводки)
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/RESERCH-misha-igra-2026-10-04.md`** (сводка ресёрча движка v2 (04.10): механики, каталог 48, палитры, техника, художники; баннер устаревшего)
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/SESSIYA.md`** (дневник арки 2026-09-13_uchenik-misha)
 
@@ -163,6 +175,12 @@
 
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/VYGRUZKA-2026-09-27.md`** (Выгрузка облачной сессии 27–29.09 (занятие №3, движок, ДЗ))
+
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/VYGRUZKA-2026-10-04.md`** (выгрузка сессии 04.10 из чата claude.ai: реплики и надиктовки владельца дословно)
+
+
+**`_studio/zhurnal/2026-09-13_uchenik-misha/kod_kommit-misha-27-09-04-10.md`** (коммит-заход: вся работа арки Миши 27.09–04.10 (движок, занятия, рецепт, GDD, ресёрч, выгрузки) в git и на GitHub; закрывает заявку 28.09)
 
 **`_studio/zhurnal/2026-09-24_arhitektura-repozitoriev/HANDOFF-2026-09-25.md`** (Хэндофф в сессию 2026-09-25)
 
