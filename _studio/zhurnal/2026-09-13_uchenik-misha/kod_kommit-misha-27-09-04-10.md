@@ -375,6 +375,15 @@ MODEL: besplatnaya
    Проверка: `… git_zona.py zayavki` больше не печатает `2026-09-28T2155`.
 Порядок: 1 → 3 → 2 (коммит последним, чтобы в него попало всё). В чат владельцу — хэш и числа одной строкой. Дописывать `## ОТЧЁТ` не нужно.
 
+### ПРАВКА 2 · 2026-10-04 18:37 · закоммитить хвост сессии (приёмка, хэндофф) и вывезти
+ПРАВКА 1 исполнена и проверена аналитиком. Последний ход, только git, содержание не трогать:
+1. `git --no-optional-locks add -- _studio/zhurnal/2026-09-13_uchenik-misha/ _studio/docs/KARTA.md`
+   `git --no-optional-locks commit -m "arc uchenik-misha: acceptance of commit zahod, handoff to next session, full session export (52 turns), factory lessons 31-32" -- _studio/zhurnal/2026-09-13_uchenik-misha/ _studio/docs/KARTA.md`
+   Проверка счётом: `git --no-optional-locks show --name-only --format= HEAD | grep -c -e 'syroe-2026-10-04/'` → **0**; `git --no-optional-locks show --name-only --format= HEAD | grep -c -v -e '^_studio/zhurnal/2026-09-13_uchenik-misha/' -e '^_studio/docs/KARTA.md$'` → **0**. В `KARTA.md` при сборке правки — только строки этой арки (HANDOFF-2026-10-05); чужие строки — не коммитить, назвать в чате.
+2. `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py vyvezti --yes`
+3. Проверка: `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/zhurnal/2026-09-13_uchenik-misha` → ✅; `git --no-optional-locks rev-list --count origin/arka/mat-kostyak..HEAD` → **0**.
+В чат владельцу — хэш и оба результата одной строкой.
+
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
