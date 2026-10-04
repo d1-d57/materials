@@ -1,0 +1,212 @@
+:root{--bg:#e9edf3;--paper:#fbfcfe;--ink:#18202e;--muted:#5d6678;--line:#cfd6e2;--acc:#2f5fd0;--acc2:#e6edfb;
+--ok:#1d8049;--oks:#dff3e7;--no:#c03636;--nos:#fbe3e3;--amb:#b7791f;--ambs:#fbf0dc;--star:#e8a317;--cell:#ffffff;--fix:#e3e8f1}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);overflow:hidden}
+body{font-family:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+#stage{position:absolute;left:0;top:0;width:1440px;height:810px;transform-origin:0 0;background:var(--paper);display:grid;grid-template-rows:72px 1fr 104px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}
+.top{display:grid;grid-template-columns:400px 1fr auto auto auto;align-items:center;gap:28px;padding:0 28px;border-bottom:2px solid var(--line)}
+.sec{font:700 26px/1.1 Rubik,"Golos Text",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sec small{display:block;font:500 20px/1.2 "Golos Text",sans-serif;color:var(--muted);margin-top:3px}
+.prog{height:16px;border-radius:999px;background:var(--acc2);overflow:hidden;display:flex;gap:3px}
+.prog i{display:block;height:100%;background:var(--line)}
+.prog i.ok{background:var(--ok)}.prog i.fixed{background:var(--amb)}.prog i.wrong{background:var(--no)}.prog i.cur{box-shadow:inset 0 0 0 3px var(--acc)}
+.stars{font:700 30px/1 Rubik,sans-serif;color:var(--star);font-variant-numeric:tabular-nums;cursor:default;user-select:none}
+.stars small{font:500 20px "Golos Text",sans-serif;color:var(--muted);margin-left:8px}
+.skip{width:48px;height:48px;border-radius:12px;border:2px solid var(--line);background:transparent;color:var(--muted);font-size:22px;cursor:pointer}
+main{position:relative;overflow:hidden}
+.item{position:absolute;inset:0;display:flex;flex-direction:column;padding:26px 56px 18px}
+.q{font:500 36px/1.3 "Golos Text",sans-serif;margin:0 0 10px;text-wrap:balance}
+.q .sub{display:block;font-size:28px;color:var(--muted);font-weight:500;margin-top:6px}
+.q:empty{display:none}
+.work{flex:1;position:relative;min-height:0}
+.fit{position:absolute;left:50%;top:50%;width:max-content;transform-origin:center center}
+.lines{display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+.ln{font:500 44px/1.2 "Golos Text",sans-serif;font-variant-numeric:tabular-nums;display:flex;align-items:center;flex-wrap:nowrap;gap:.25em;white-space:nowrap}
+.slot{font:inherit;font-size:40px;height:62px;min-width:2.4ch;padding:0 .2em;border:3px solid var(--line);border-radius:12px;background:var(--cell);color:var(--acc);text-align:center;font-weight:700}
+.slot:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 4px var(--acc2)}
+.slot.free{color:var(--ink);border-style:dashed;font-weight:500}
+.slot.bad,.seg.bad{border-color:var(--no);background:var(--nos)}
+.slot.good{border-color:var(--ok);background:var(--oks)}
+.seg{display:inline-flex;border:3px solid var(--line);border-radius:12px;overflow:hidden;background:var(--cell)}
+.seg button{font:700 38px/1 "Golos Text",sans-serif;min-width:64px;height:58px;border:0;border-right:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acc);color:#fff}
+.seg.good{border-color:var(--ok)}
+.draft{display:flex;flex-direction:column;gap:10px;margin-top:20px;width:900px}
+.draft input{font:500 30px "Golos Text",sans-serif;height:52px;border:0;border-bottom:2px dashed var(--line);background:transparent;color:var(--ink);padding:0 8px}
+.draft input:focus{outline:none;border-bottom-color:var(--acc)}
+.draft .lbl{font-size:20px;color:var(--muted)}
+.opts{display:grid;gap:18px}
+.opt{font:600 36px/1.2 "Golos Text",sans-serif;padding:18px 26px;border:3px solid var(--line);border-radius:16px;background:var(--cell);color:var(--ink);cursor:pointer;text-align:center;min-width:220px}
+.opt.on{border-color:var(--acc);background:var(--acc2)}
+.opt.good{border-color:var(--ok);background:var(--oks)}.opt.bad{border-color:var(--no);background:var(--nos)}
+.opt svg{display:block;width:380px;height:auto}
+.steps{display:flex;flex-direction:column;gap:12px;margin-bottom:26px}
+.step{font:500 42px/1.2 "Golos Text",sans-serif;text-align:left;padding:10px 26px;border:3px solid var(--line);border-radius:14px;background:var(--cell);color:var(--ink);cursor:pointer;white-space:nowrap}
+.step .who{color:var(--muted);font-size:20px;margin-right:12px}
+.step.on{border-color:var(--no);background:var(--nos)}
+.step.good{border-color:var(--ok);background:var(--oks)}
+.fixlbl{font:500 26px "Golos Text",sans-serif;color:var(--muted);margin-bottom:10px}
+.row2{display:flex;gap:56px;align-items:center}
+.euler svg{display:block;width:620px;height:auto}
+/* головоломки */
+.pz{display:flex;gap:44px;align-items:center}
+.pgrid{display:grid;gap:0;background:var(--ink);border:4px solid var(--ink);border-radius:6px}
+.pgrid.fut{background:transparent;border:0;gap:0;align-items:center;justify-items:center}
+.pc{width:96px;height:96px;border:1px solid var(--line);background:var(--cell);font:700 54px/1 Rubik,"Golos Text",sans-serif;color:var(--acc);cursor:pointer;padding:0;display:grid;place-items:center}
+.fut .pc{border:3px solid var(--ink);border-radius:8px}
+.pc.fix{color:var(--ink);background:var(--fix);cursor:default}
+.pc.sel{box-shadow:inset 0 0 0 5px var(--acc)}
+.pc.bad{background:var(--nos)}
+.pc.bR{border-right:4px solid var(--ink)}.pc.bB{border-bottom:4px solid var(--ink)}
+.sg{width:44px;height:44px;display:grid;place-items:center;font:700 36px/1 Rubik,sans-serif;color:var(--ink)}
+.dot{width:66%;height:66%;border-radius:50%;border:4px solid var(--ink)}.dot.b{background:var(--ink)}.dot.w{background:var(--paper)}
+.pal{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:300px}
+.pal button{height:92px;border-radius:16px;border:3px solid var(--line);background:var(--cell);font:700 46px/1 Rubik,sans-serif;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.pal button.on{border-color:var(--acc);background:var(--acc2)}
+.pal button.wide{grid-column:span 2;font-size:26px;height:64px}
+.pal .dot{width:48px;height:48px}
+.rules{font:400 20px/1.35 "Golos Text",sans-serif;color:var(--muted);margin-top:16px;width:300px}
+/* низ */
+.bot{display:grid;grid-template-columns:120px 1fr 220px 300px 120px;align-items:center;gap:22px;padding:0 28px;border-top:2px solid var(--line)}
+.bot button{height:72px;border-radius:16px;border:3px solid var(--line);background:var(--cell);font:700 30px/1 "Golos Text",sans-serif;color:var(--ink);cursor:pointer}
+.bot button:disabled{opacity:.3;cursor:not-allowed}
+.bot .chk{background:var(--acc);border-color:var(--acc);color:#fff;font-size:32px}
+.bot .chk.ok{background:var(--ok);border-color:var(--ok)}.bot .chk.no{background:var(--no);border-color:var(--no)}
+.dots{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.dots b{width:22px;height:22px;border-radius:50%;background:var(--line);display:block}
+.dots b.ok{background:var(--ok)}.dots b.fixed{background:var(--amb)}.dots b.wrong{background:var(--no)}.dots b.cur{outline:4px solid var(--acc);outline-offset:3px}
+button:focus-visible{outline:4px solid var(--acc);outline-offset:3px}
+/* экраны-обложки */
+.cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;padding:40px}
+.cover h1{font:700 96px/1.1 Rubik,sans-serif;margin:0}
+.cover p{font:400 38px/1.4 "Golos Text",sans-serif;color:var(--muted);margin:0;max-width:1000px}
+.cover .big{font:700 34px "Golos Text",sans-serif;height:88px;padding:0 60px;border-radius:20px;border:0;background:var(--acc);color:#fff;cursor:pointer}
+.cover .sum{font:700 120px/1 Rubik,sans-serif;color:var(--star)}
+/* панели */
+.ov{position:absolute;inset:0;background:rgba(20,26,38,.55);display:flex;align-items:center;justify-content:center;z-index:10}
+.ov[hidden]{display:none}
+.panel{background:var(--paper);border-radius:20px;padding:28px 34px;width:1240px;max-height:740px;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.panel h2{font:700 30px Rubik,sans-serif;margin:0 0 16px;display:flex;justify-content:space-between;align-items:center}
+.panel table{border-collapse:collapse;width:100%;font:500 20px "Golos Text",sans-serif;font-variant-numeric:tabular-nums}
+.panel td,.panel th{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left}
+.panel .acts{display:flex;gap:12px;margin:16px 0 0;flex-wrap:wrap}
+.panel button{font:600 20px "Golos Text",sans-serif;padding:10px 18px;border-radius:12px;border:2px solid var(--line);background:var(--cell);cursor:pointer}
+.jump{display:flex;flex-direction:column;gap:14px}
+.jump .jr{display:flex;align-items:center;gap:14px;font:600 22px "Golos Text",sans-serif}
+.jump .jr span{width:340px}
+.jump .jr button{width:44px;height:44px;border-radius:10px;padding:0}
+.jump .jr button.ok{background:var(--oks);border-color:var(--ok)}.jump .jr button.fixed{background:var(--ambs);border-color:var(--amb)}.jump .jr button.wrong{background:var(--nos);border-color:var(--no)}
+.toast{position:absolute;left:50%;top:8px;z-index:5;transform:translateX(-50%);font:700 40px Rubik,sans-serif;padding:14px 34px;border-radius:18px;background:var(--oks);color:var(--ok);pointer-events:none;opacity:0;transition:opacity .25s}
+.toast.show{opacity:1}.toast.no{background:var(--nos);color:var(--no)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.badge{font:700 24px/1 Rubik,"Golos Text",sans-serif;color:var(--acc);background:var(--acc2);padding:10px 16px;border-radius:12px;white-space:nowrap}.badge:empty{display:none}
+
+.bot .prev,.bot .next{font-size:44px}
+.sec{font-size:28px}
+.drow{display:flex;gap:60px;align-items:center}
+.draft{margin-top:0;width:620px;padding:18px 26px;border:3px solid var(--line);border-radius:18px;background:var(--cell)}
+.draft input{border-bottom:2px solid var(--line)}
+.draft .lbl{font-size:20px}.draft .lbl:empty{display:none}
+
+.step.fx{cursor:default;display:flex;align-items:center;gap:0;white-space:pre}
+.num{font:inherit;width:2ch;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--ink);text-align:center;padding:0;border-radius:6px;cursor:text}
+.num:hover{background:var(--acc2)}
+.num:focus{outline:none;background:var(--acc2);border-bottom-style:solid}
+.num.ed{color:var(--acc);font-weight:700}
+.cmp{display:inline-block;min-width:1ch;text-align:center}
+.cmp.flash{animation:fl 1s ease-out}
+@keyframes fl{0%{background:#ffe9a8;color:var(--acc)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.cmp.flash{animation:none}}
+
+/* ---- тёмная тема по системе (4.10) ---- */
+@media (prefers-color-scheme: dark){:root{--bg:#0d1118;--paper:#151a24;--ink:#e6eaf2;--muted:#98a2b5;--line:#2e3646;--acc:#7ea3ff;--acc2:#233150;
+--ok:#4cc583;--oks:#173424;--no:#ff7070;--nos:#3d1d22;--amb:#f0b54a;--ambs:#3a2d14;--star:#ffc53d;--cell:#1c2230;--fix:#2a3242}
+.panel{box-shadow:0 20px 60px rgba(0,0,0,.6)}}
+/* рисунки с тёмными линиями — на светлой карточке в обеих темах */
+.euler svg,.opt svg,.bd svg{background:#fbfcfe;border-radius:14px}
+/* ---- лавка и замок ---- */
+.cover .lock{font-size:110px;line-height:1}
+.cover .buy{font:700 34px "Golos Text",sans-serif;height:88px;padding:0 50px;border-radius:20px;border:0;background:var(--star);color:#1b1404;cursor:pointer}
+.cover .buy:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.cover .need{font:500 20px "Golos Text",sans-serif;color:var(--muted)}
+.cover .wal{font:700 44px/1 Rubik,sans-serif;color:var(--star)}
+.shop{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;max-width:1200px}
+.shop button{font:600 28px "Golos Text",sans-serif;padding:18px 26px;border-radius:18px;border:3px solid var(--star);background:var(--cell);color:var(--ink);cursor:pointer}
+.shop button b{color:var(--star);margin-left:10px}
+.shop button:disabled{border-color:var(--line);opacity:.45;cursor:not-allowed}
+.shop button.own{border-color:var(--ok)}
+.cover .jbtn{position:absolute;right:24px;bottom:16px;font:500 20px "Golos Text",sans-serif;padding:8px 14px;border-radius:10px;border:2px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+/* ---- картина с прятками ---- */
+.picrow{display:flex;gap:48px;align-items:center}
+.picrow img{display:block;height:600px;width:auto;border-radius:12px;cursor:zoom-in}
+.zoom{position:absolute;inset:0;z-index:20;background:#000;display:flex;align-items:center;justify-content:center;cursor:zoom-out}
+.zoom img{max-width:100%;max-height:100%;display:block}
+.zoom[hidden]{display:none}
+.euler svg.bd{width:420px}.opt svg.bd{width:300px}
+.euler svg.bd{width:420px}.opt svg.bd{width:300px}
+/* ---- осень: тёплые обложки с листьями (4.10) ---- */
+:root{--leaf:#e07a2e}
+.cover{background:
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cg fill='%23e07a2e' fill-opacity='.16'%3E%3Cpath d='M40 30c22 4 34 22 26 44-22-4-34-22-26-44z'/%3E%3Cpath d='M160 120c-6 20 2 38 24 46 6-20-2-38-24-46z' fill='%23d9a21b'/%3E%3Cpath d='M70 160c16-12 36-10 46 8-16 12-36 10-46-8z' fill='%23c4442b'/%3E%3C/g%3E%3C/svg%3E"),
+ radial-gradient(900px 500px at 50% 45%,rgba(224,122,46,.10),transparent 70%)}
+.cover h1{color:var(--ink)}
+.cover .big{background:var(--leaf)}
+.cover a.ext{display:inline-block;font:700 36px "Golos Text",sans-serif;color:#fff;background:var(--acc);padding:22px 44px;border-radius:20px;text-decoration:none}
+/* ---- картина / лабиринт ---- */
+.picw{position:absolute;inset:0;display:flex;gap:28px;align-items:center;justify-content:center}
+.picf{position:relative;height:100%;display:flex;align-items:center;cursor:crosshair}
+.picf img{display:block;max-height:100%;max-width:1080px;border-radius:10px;user-select:none}
+.marks{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.marks .ring{fill:none;stroke:#ff3d7f;stroke-width:5;vector-effect:non-scaling-stroke}
+.marks .pt{fill:#ff3d7f;stroke:#fff;stroke-width:2;vector-effect:non-scaling-stroke}
+.marks .path{fill:none;stroke:#ff3d7f;stroke-width:6;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke;opacity:.85}
+.picside{display:flex;flex-direction:column;gap:16px;align-items:stretch;width:200px}
+.picside .cnt{font:700 40px/1 Rubik,sans-serif;text-align:center;color:var(--ink)}.picside .cnt b{color:#ff3d7f;font-size:64px}
+.pbtn{font:600 22px "Golos Text",sans-serif;padding:14px 10px;border-radius:14px;border:3px solid var(--line);background:var(--cell);color:var(--ink);cursor:pointer}
+.pbtn.vanya{border-color:var(--ok);color:var(--ok);position:relative;overflow:hidden}
+.pbtn.vanya.hold{background:var(--oks)}
+/* ---- серия, сундук, код ---- */
+.fire{font:700 28px/1 Rubik,sans-serif;color:#ff7a1a;white-space:nowrap}
+.top{grid-template-columns:400px 1fr auto auto auto auto}
+.chest{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:15;background:var(--paper);border:4px solid var(--star);border-radius:28px;padding:30px 60px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.chest div{font-size:120px;line-height:1}.chest b{font:700 40px Rubik,sans-serif;color:var(--star)}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){.chest{animation:none}}
+.code{display:flex;gap:16px;align-items:center}
+.code .tiles{display:flex;gap:8px}
+.code .tiles span{width:56px;height:64px;display:grid;place-items:center;border-radius:12px;border:3px dashed var(--line);font:700 34px Rubik,sans-serif;color:var(--muted)}
+.code .tiles span.on{border:3px solid var(--leaf);color:var(--ink);background:var(--cell)}
+.code .cin{font:700 30px "Golos Text",sans-serif;width:200px;height:64px;border-radius:12px;border:3px solid var(--line);background:var(--cell);color:var(--ink);text-align:center;text-transform:uppercase}
+.code .cin.bad{border-color:var(--no);background:var(--nos)}
+.code .cbtn{font:700 26px "Golos Text",sans-serif;height:64px;padding:0 24px;border-radius:12px;border:0;background:var(--leaf);color:#fff;cursor:pointer}
+.code .cok{font:700 34px Rubik,sans-serif;color:var(--ok)}
+.cover{gap:22px}.cover .sum{font-size:96px}
+
+/* обложка с картинкой */
+.cover.hasbg{background:linear-gradient(rgba(10,14,22,.55),rgba(10,14,22,.70)),var(--bgimg) center/cover no-repeat}
+.cover.hasbg h1,.cover.hasbg p{color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.6)}
+.cover.hasbg .wal{text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.cover .lock{cursor:default;user-select:none}
+.shop{gap:10px;max-width:1300px}.shop button{font-size:21px;padding:9px 14px;border-width:2px}
+
+/* ---- лавка-витрина ---- */
+.shopbtn{width:48px;height:48px;border-radius:12px;border:2px solid var(--star);background:transparent;font-size:24px;cursor:pointer}
+.top{grid-template-columns:400px 1fr auto auto auto auto auto}
+.shoppanel{width:1360px;max-height:770px;padding:22px 28px}
+.shoppanel h2 .wl{color:var(--star);margin-left:18px}
+.vitr{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.card{display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:16px;border:3px solid var(--star);background:var(--cell);color:var(--ink);cursor:pointer;text-align:center}
+.card .th{height:150px;border-radius:10px;background:#fff center/cover no-repeat;overflow:hidden}
+.card .th.blur{filter:blur(2.5px) saturate(1.2);transform:scale(1.0)}
+.card .th.emo{display:grid;place-items:center;font-size:84px;background:var(--acc2)}
+.card .nm{font:600 18px/1.2 "Golos Text",sans-serif;min-height:44px;display:grid;place-items:center}
+.card .pr{font:700 22px Rubik,sans-serif;color:var(--star)}
+.card.own{border-color:var(--ok)}.card.own .pr{color:var(--ok)}
+.card.poor{border-color:var(--line);opacity:.55}
+.card.ask{box-shadow:0 0 0 5px var(--star);transform:scale(1.04)}
+.card.shake{animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.cover .shopbig{background:var(--star);color:#1b1404}
+.card .th{height:118px}.vitr{gap:12px}

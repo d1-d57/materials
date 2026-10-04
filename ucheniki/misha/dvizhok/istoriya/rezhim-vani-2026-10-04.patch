@@ -1,0 +1,66 @@
+--- диск/engine.js (m9, на занятии)
++++ контейнер/engine.js (+режим Вани, НЕ внедрён)
+@@ -3,7 +3,10 @@
+    Состояние и журнал — localStorage, ключ "misha:<id>". Звёзды за всё время — "misha:stars". */
+ (function(){
+ "use strict";
+-const L=window.LESSON, KEY="misha:"+L.id, SKEY="misha:stars";
++/* режим Вани: всё пишется под отдельным префиксом, настоящие звёзды и прогресс Миши не трогаются */
++let TEST=false;try{TEST=localStorage.getItem("misha-mode")==="test"}catch(e){}
++const PF=TEST?"mishatest:":"misha:";
++const L=window.LESSON, KEY=PF+L.id, SKEY=PF+"stars";
+ const $=(s,r=document)=>r.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+ const norm=s=>String(s==null?"":s).trim().toLowerCase().replace(/ё/g,"е").replace(/\s+/g," ").replace(",",".");
+ const setNorm=s=>{const t=String(s).match(/\d+/g)||[];return [...new Set(t.map(Number))].sort((a,b)=>a-b).join(";");};
+@@ -18,10 +21,10 @@
+ S.it=S.it||{};S.ev=S.ev||[];S.stars=S.stars||0;S.streak=S.streak||0;S.chest=S.chest||{};S.letters=S.letters||{};
+ let total=0;try{total=parseInt(localStorage.getItem(SKEY)||"0",10)||0}catch(e){}
+ /* лавка: копилка = всего заработано − потрачено; покупки общие для всех занятий */
+-let spent=0,bought=[];try{spent=parseInt(localStorage.getItem("misha:spent")||"0",10)||0;bought=JSON.parse(localStorage.getItem("misha:bought")||"[]")||[]}catch(e){}
++let spent=0,bought=[];try{spent=parseInt(localStorage.getItem(PF+"spent")||"0",10)||0;bought=JSON.parse(localStorage.getItem(PF+"bought")||"[]")||[]}catch(e){}
+ const wallet=()=>Math.max(0,total-spent), has=id=>bought.includes(id);
+ function award(n,why){if(!n)return;S.stars+=n;total+=n;try{localStorage.setItem(SKEY,String(total))}catch(e){}log("bonus",{n,why});save();}
+-function buy(lk){if(has(lk.id)||wallet()<lk.price)return false;spent+=lk.price;bought.push(lk.id);try{localStorage.setItem("misha:spent",String(spent));localStorage.setItem("misha:bought",JSON.stringify(bought))}catch(e){}log("buy",{id:lk.id,price:lk.price,left:wallet()});return true;}
++function buy(lk){if(has(lk.id)||wallet()<lk.price)return false;spent+=lk.price;bought.push(lk.id);try{localStorage.setItem(PF+"spent",String(spent));localStorage.setItem(PF+"bought",JSON.stringify(bought))}catch(e){}log("buy",{id:lk.id,price:lk.price,left:wallet()});return true;}
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+ const log=(e,extra)=>{S.ev.push(Object.assign({t:now(),e,k:curKey()},extra||{}));save();};
+ const flat=[];L.sections.forEach((s,si)=>s.items.forEach((it,ii)=>flat.push({si,ii,it,k:si+"."+ii})));
+@@ -207,7 +210,7 @@
+ function statusOf(k){const r=S.it[k];return r?r.st:"";}
+ let locked=false;
+ function lockScreen(f,sec){const lk=sec.lock;const c=el("div","cover");c.innerHTML=`<div class="lock">🔒</div><h1>${sec.title}</h1>`;
+-  const lkI=c.querySelector(".lock");let lp2;lkI.onpointerdown=()=>{lp2=setTimeout(()=>{if(!has(lk.id)){bought.push(lk.id);try{localStorage.setItem("misha:bought",JSON.stringify(bought))}catch(e){}log("free",{id:lk.id});show();}},1500);};lkI.onpointerup=lkI.onpointerleave=()=>clearTimeout(lp2);
++  const lkI=c.querySelector(".lock");let lp2;lkI.onpointerdown=()=>{lp2=setTimeout(()=>{if(!has(lk.id)){bought.push(lk.id);try{localStorage.setItem(PF+"bought",JSON.stringify(bought))}catch(e){}log("free",{id:lk.id});show();}},1500);};lkI.onpointerup=lkI.onpointerleave=()=>clearTimeout(lp2);
+   const b=el("button","buy",`Открыть · ${lk.price} ★`);b.disabled=wallet()<lk.price;b.onclick=()=>{if(buy(lk))show();};c.appendChild(b);
+   if(wallet()<lk.price)c.appendChild(el("div","need",`в копилке ${wallet()} ★`));main.appendChild(c);}
+ function codeScreen(c){if(!L.code)return;const W=L.code.toUpperCase();const got=Object.values(S.letters);
+@@ -311,7 +314,7 @@
+   const stt={ok:"✓ с первой",fixed:"✓ со второй+",wrong:"✗",'':"—"};
+   let h=`<h2>Журнал: ${L.title} <button>✕</button></h2><table><tr><th>задача</th><th>открыл</th><th>решил</th><th>время</th><th>попыток</th><th>итог</th><th>до 1-й проверки</th><th>после ✓ ушёл через</th><th>простой &gt;1,5 мин</th></tr>`;
+   rows.forEach(x=>{const s=L.sections[x.f.si];h+=`<tr><td>${s.title} · ${x.f.ii+1}</td><td>${hm(x.start)}</td><td>${hm(x.end)}</td><td>${mm(x.active)}</td><td>${x.att}</td><td>${stt[x.st||""]}</td><td>${mm(x.think)}</td><td>${x.rush!=null?Math.round(x.rush/1000)+" с":"—"}</td><td>${mm(x.idle)}</td></tr>`;});
+-  h+=`</table><div class="acts"><button data-a="all">скопировать всё (для разбора)</button><button data-a="copy">скопировать таблицу</button><button data-a="json">скачать журнал (JSON)</button><button data-a="clr">стереть прогресс этого занятия</button><button data-a="all0">сбросить ВСЁ: звёзды, лавку, занятия</button></div>`;
++  h+=`</table><div class="acts"><button data-a="all">скопировать всё (для разбора)</button><button data-a="copy">скопировать таблицу</button><button data-a="json">скачать журнал (JSON)</button><button data-a="clr">стереть прогресс этого занятия</button><button data-a="mode">${TEST?"выйти из режима Вани (вернуть Мишин прогресс)":"режим Вани: решаю сам, ничего не сохраняется Мише"}</button><button data-a="all0">сбросить ВСЁ: звёзды, лавку, занятия</button></div>`;
+   p.innerHTML=h;ov.innerHTML="";ov.appendChild(p);ov.hidden=false;$("h2 button",p).onclick=()=>ov.hidden=true;
+   p.querySelector(".acts").onclick=e=>{const a=e.target.dataset.a;if(!a)return;
+     if(a==="all"){const txt=JSON.stringify({lesson:L.id,wallet:wallet(),total,spent,bought,today:S.stars,items:S.it,events:S.ev.map(x=>Object.assign({},x,{t:new Date(x.t).toLocaleTimeString("ru-RU")}))});
+@@ -320,10 +323,12 @@
+       (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>e.target.textContent="скопировано",()=>e.target.textContent="не вышло");}
+     if(a==="json"){const blob=new Blob([JSON.stringify({lesson:L.id,title:L.title,items:S.it,events:S.ev},null,1)],{type:"application/json"});
+       const u=URL.createObjectURL(blob);const x=document.createElement("a");x.href=u;x.download=`zhurnal-${L.id}.json`;document.body.appendChild(x);x.click();x.remove();}
+-    if(a==="all0"){if(e.target.dataset.sure){try{Object.keys(localStorage).filter(k=>k.startsWith("misha:")).forEach(k=>localStorage.removeItem(k))}catch(_){}location.reload();}else{e.target.dataset.sure=1;e.target.textContent="точно всё обнулить? нажми ещё раз";}}
++    if(a==="mode"){try{if(TEST){Object.keys(localStorage).filter(k=>k.startsWith("mishatest:")).forEach(k=>localStorage.removeItem(k));localStorage.removeItem("misha-mode");}else{Object.keys(localStorage).filter(k=>k.startsWith("mishatest:")).forEach(k=>localStorage.removeItem(k));localStorage.setItem("misha-mode","test");}}catch(_){}location.reload();}
++    if(a==="all0"){if(e.target.dataset.sure){try{Object.keys(localStorage).filter(k=>k.startsWith(PF)).forEach(k=>localStorage.removeItem(k))}catch(_){}location.reload();}else{e.target.dataset.sure=1;e.target.textContent="точно всё обнулить? нажми ещё раз";}}
+     if(a==="clr"){if(e.target.dataset.sure){localStorage.removeItem(KEY);location.reload();}else{e.target.dataset.sure=1;e.target.textContent="точно стереть? нажми ещё раз";}}};}
+ let lp;const stEl=$(".stars",stage);stEl.onpointerdown=()=>{lp=setTimeout(journal,1200);};stEl.onpointerup=stEl.onpointerleave=()=>clearTimeout(lp);
+ addEventListener("visibilitychange",()=>log(document.hidden?"hide":"show"));
+ 
++if(TEST){const tb=el("div","testbadge","РЕЖИМ ВАНИ · не сохраняется");stage.appendChild(tb);}
+ scale();show();
+ })();
+--- диск/engine.css
++++ контейнер/engine.css
+@@ -210,3 +210,4 @@
+ @keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+ .cover .shopbig{background:var(--star);color:#1b1404}
+ .card .th{height:118px}.vitr{gap:12px}
++.testbadge{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);z-index:4;background:#c03636;color:#fff;font:700 20px "Golos Text",sans-serif;padding:6px 16px;border-radius:10px;pointer-events:none}

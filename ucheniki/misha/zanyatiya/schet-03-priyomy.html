@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Счёт — лист 3</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;700&family=Rubik:wght@600;700&display=swap">
+<style>
+:root{--bg:#f4f6fa;--paper:#fff;--ink:#1b2130;--muted:#5a6376;--line:#d3d9e4;--accent:#2f5fd0;--good:#1d8049;--good-soft:#e2f4ea;--bad:#c03636;--bad-soft:#fbe6e6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Golos Text",system-ui,sans-serif;font-size:18px;line-height:1.5;padding-inline:16px;padding-block:20px 60px}
+.wrap{max-width:780px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px}
+h1,h2{font-family:Rubik,"Golos Text",sans-serif;margin:0;line-height:1.2}
+h1{font-size:28px} .sub{color:var(--muted);margin:4px 0 14px}
+h2{font-size:19px;margin-top:22px;padding-top:12px;border-top:2px solid var(--ink)}
+.hint{font-style:italic;color:var(--muted);font-size:15.5px;margin:4px 0 8px}
+ol{list-style:none;padding:0;margin:0}
+li{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line);font-size:20px;font-variant-numeric:tabular-nums}
+li .n{font-size:14px;font-weight:700;color:var(--accent)}
+li .t{font-size:17px}
+input{font:inherit;font-size:19px;width:74px;border:0;border-bottom:2px solid var(--muted);background:transparent;color:var(--ink);text-align:center;padding:0 2px}
+input.w{width:110px}
+input:focus{outline:none;border-color:var(--accent)}
+input.ok{border-color:var(--good);background:var(--good-soft)} input.no{border-color:var(--bad);background:var(--bad-soft)}
+.write{grid-column:2;height:44px;border-bottom:1px dashed var(--line)}
+.key{margin-top:28px;font-size:15px;color:var(--muted)}
+.key h2{font-size:16px}
+.key p{margin:4px 0}
+@media (max-width:480px){.wrap{padding:16px} li{font-size:18px}}
+@media print{
+  @page{size:A4;margin:12mm 14mm}
+  body{background:#fff;padding:0;font-size:12pt}
+  .wrap{border:0;padding:0;max-width:none}
+  h1{font-size:17pt} h2{font-size:12.5pt;margin-top:6pt;padding-top:4pt}
+  li{font-size:14pt;padding:3.5pt 0} li .t{font-size:12.5pt}
+  .write{height:26pt} .hint{margin:2pt 0 3pt;font-size:10.5pt} .sub{margin:2pt 0 6pt}
+  input{border-bottom:1px solid #000;background:none!important;color:transparent}
+  .key{break-before:page;color:#000}
+  .noprint{display:none}
+}
+</style></head><body>
+<div class="wrap">
+<h1>Приёмы счёта — лист 3</h1>
+<p class="sub">Миша · 27 сентября · <span class="noprint">клетка станет зелёной, если ответ верный</span></p>
+
+<h2>Без одного и без двух</h2>
+<p class="hint">28 — это 30 без двух. Умножаем 30, а потом убираем лишнее: двойку столько раз, сколько множитель.</p>
+<ol>
+<li><span class="n">1</span><span>29 · 3 = 30 · 3 − 3 = <input data-a="87"></span></li>
+<li><span class="n">2</span><span>28 · 3 = 30 · 3 − <input data-a="6"> = <input data-a="84"></span></li>
+<li><span class="n">3</span><span>48 · 5 = <input data-a="50"> · 5 − <input data-a="10"> = <input data-a="240"></span></li>
+<li><span class="n">4</span><span>98 · 4 = <input class="w" data-a="392"></span></li>
+<li><span class="n">5</span><span>199 · 5 = <input class="w" data-a="995"></span></li>
+</ol>
+
+<h2>С лишком</h2>
+<p class="hint">102 — это 100 и ещё два. Лишнее теперь не убираем, а добавляем.</p>
+<ol start="6">
+<li><span class="n">6</span><span>102 · 6 = 100 · 6 + <input data-a="12"> = <input data-a="612"></span></li>
+<li><span class="n">7</span><span>51 · 8 = <input class="w" data-a="408"></span></li>
+</ol>
+
+<h2>Способ выбери сам</h2>
+<p class="hint">Запиши, как разложил. Можно по-разному.</p>
+<ol>
+<li><span class="n">8</span><span>25 · 16 = <input class="w" data-a="400"></span><span class="write"></span></li>
+<li><span class="n">9</span><span>38 · 5 = <input class="w" data-a="190"></span><span class="write"></span></li>
+<li><span class="n">10</span><span>125 · 24 = <input class="w" data-a="3000"></span><span class="write"></span></li>
+</ol>
+
+<h2>Большое, но быстрое</h2>
+<ol>
+<li><span class="n">11</span><span>999 · 7 = <input class="w" data-a="6993"></span></li>
+</ol>
+
+<h2>Не считая до конца</h2>
+<ol>
+<li><span class="n">12</span><span class="t">Что больше: 29 · 31 или 900? Почему?</span><span class="write"></span></li>
+<li><span class="n">13</span><span class="t">Найди ошибку. Коля: 48 · 5 = 50 · 5 − 2 = 248.</span><span class="write"></span></li>
+<li><span class="n">★</span><span class="t">Придумай свой пример «без двух», который считается быстро.</span><span class="write"></span></li>
+</ol>
+
+<div class="key">
+<h2>Ответы (для Вани)</h2>
+<p>1) 87 · 2) 6; 84 · 3) 50; 10; 240 · 4) 400 − 8 = 392 · 5) 1000 − 5 = 995 · 6) 12; 612 · 7) 400 + 8 = 408</p>
+<p>8) 25 · 4 · 4 = 400 · 9) 380 : 2 = 190 или 40 · 5 − 10 · 10) 125 · 8 · 3 = 3000 · 11) 7000 − 7 = 6993</p>
+<p>12) 29 · 31 = 30 · 31 − 31 = 930 − 31 = 899, меньше 900 · 13) убрать надо не 2, а 2 · 5 = 10: будет 240</p>
+<p>Темп 1,25 мин на позицию: 13 позиций ≈ 16 мин. Не успевает — пропускать 7 и 10.</p>
+</div>
+</div>
+<script>
+document.querySelectorAll("input[data-a]").forEach(i=>{i.setAttribute("inputmode","numeric");i.setAttribute("aria-label","ответ");
+ i.addEventListener("input",()=>{const v=i.value.trim(); i.classList.remove("ok","no"); if(!v)return; if(v===i.dataset.a)i.classList.add("ok"); else if(v.length>=i.dataset.a.length)i.classList.add("no");});});
+</script>
+</body></html>

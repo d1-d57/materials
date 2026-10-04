@@ -1,0 +1,491 @@
+<style>
+.screen{display:none}
+.screen.on{display:block}
+.nav{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-block:14px}
+.dots{display:flex;gap:6px;flex-wrap:wrap}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--line);border:0;padding:0}
+.dot.on{background:var(--accent)} .dot.gap{margin-left:10px}
+.qs{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.qq{padding:12px 0;border-top:1px solid var(--line)}
+.qq .q{font-size:18px}
+.res{font-weight:700;font-size:22px;line-height:1}
+.res.ok{color:var(--good)} .res.no{color:var(--bad)}
+.btn.conf{background:var(--accent);border-color:var(--accent);color:#fff;min-width:48px;font-weight:700}
+.btn.conf:disabled{opacity:.35;cursor:default}
+.qq.locked .btn.pick:not(.sel){opacity:.4}
+.found{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:15px}
+.found span{padding:3px 10px;border-radius:999px;background:var(--good-soft);color:var(--good);font-weight:500}
+.more{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.tak{display:grid;gap:4px;width:max-content;max-width:100%;padding:8px;background:var(--cell-l);border-radius:10px}
+.tc{width:48px;height:48px;border-radius:50%;border:2px dashed var(--line);background:transparent;padding:0}
+.tc.b{background:var(--ink);border:2px solid var(--ink)} .tc.w{background:var(--paper);border:2px solid var(--ink)}
+.tc.fix{cursor:default} .tc.fix.b{box-shadow:0 0 0 3px var(--cell-l),0 0 0 5px var(--muted)} .tc.fix.w{box-shadow:0 0 0 3px var(--cell-l),0 0 0 5px var(--muted)}
+.markwrap{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.modes{display:flex;flex-direction:column;gap:8px}
+.btn.mode{min-width:92px;font-weight:700}
+.btn.mode.w.on{background:var(--good);border-color:var(--good);color:#fff}
+.btn.mode.p.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.btn.mode.e.on{background:var(--muted);border-color:var(--muted);color:#fff}
+.rk .cell.mw{background:var(--good)!important} .rk .cell.mp{background:var(--bad)!important}
+#g1 .cell,#g2 .cell{width:40px;height:40px;font-size:26px}
+@media (max-width:480px){#g1 .cell,#g2 .cell{width:31px;height:31px;font-size:20px}}
+.ans{row-gap:10px}
+.pers .tg{flex-wrap:wrap}
+.nav .btn{white-space:nowrap}
+@media (max-width:480px){.dots{display:none}}
+.cell.pt{background:var(--cell-d)!important}
+.qq.sc{padding:6px 0}.qq.sc .ans{font-size:20px;font-variant-numeric:tabular-nums}.qq.sc .ex{min-width:120px}
+.island{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.numg{display:grid;width:max-content;align-items:center;justify-items:center;padding:8px;background:var(--cell-l);border-radius:10px}
+.nc{width:48px;height:48px;border:2px solid var(--ink);background:var(--paper);color:var(--accent);font:700 24px/1 Rubik,"Golos Text",sans-serif;padding:0}
+.nc.fix{color:var(--ink);background:var(--cell-l)}
+.box .nc.br{margin-right:6px}.box .nc.bb{margin-bottom:6px}
+.sg{min-width:16px;min-height:16px;font-weight:700;color:var(--ink);text-align:center;font-size:18px}
+.box .sg{display:none}
+.box{grid-template-columns:repeat(4,auto)!important;gap:2px}
+@media print{.nc{width:22pt;height:22pt;font-size:13pt;color:#000}}
+.nav .btn:disabled,.dot:disabled{opacity:.35;cursor:not-allowed}
+.rules{font-size:16px;margin:6px 0 10px;padding-left:20px}
+@media (max-width:480px){.tc{width:40px;height:40px}}
+@media print{
+  .screen{display:block!important;break-before:page}
+  .screen:first-of-type{break-before:auto}
+  .nav,.more,.found,.res,.btn.conf{display:none!important}
+  .tc{width:24pt;height:24pt;border:1px solid #000}
+  .tc.b{background:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tak{background:#fff}
+}
+</style>
+
+<div class="wrap">
+  <div class="bar noprint">
+    <span class="who" id="scrName"></span>
+    <span class="stars" aria-live="polite"><span class="today">★ <span id="sToday">0</span></span><span class="all">всего <span id="sAll">0</span></span></span>
+  </div>
+
+  <section class="screen task" data-name="Счёт">
+    <header><h2>Приёмы счёта</h2></header>
+    <p class="cond">28 — это 30 без двух. Умножаем 30 и убираем лишнее.</p>
+    <div class="qs"><div class="qq sc" data-ok="87"><div class="ans"><span class="ex">29 · 3 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="84"><div class="ans"><span class="ex">28 · 3 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="240"><div class="ans"><span class="ex">48 · 5 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="392"><div class="ans"><span class="ex">98 · 4 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="995"><div class="ans"><span class="ex">199 · 5 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="612"><div class="ans"><span class="ex">102 · 6 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="408"><div class="ans"><span class="ex">51 · 8 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="400"><div class="ans"><span class="ex">25 · 16 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="190"><div class="ans"><span class="ex">38 · 5 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="3000"><div class="ans"><span class="ex">125 · 24 =</span><input inputmode="numeric" aria-label="ответ"></div></div><div class="qq sc" data-ok="6993"><div class="ans"><span class="ex">999 · 7 =</span><input inputmode="numeric" aria-label="ответ"></div></div>
+      <div class="qq" data-ok="900"><p class="q">Что больше: 29 · 31 или 900?</p><div class="ans"><button class="btn pick">29 · 31</button><button class="btn pick">900</button></div></div>
+    </div>
+  </section>
+
+  <!-- ОСТРОВ 1 -->
+  <section class="screen task" data-name="Остров · 1">
+    <header><h2>Остров рыцарей и лжецов</h2></header>
+    <p class="cond">Рыцари всегда говорят правду, лжецы всегда лгут. Аня: «Боря — лжец». Боря: «Мы оба рыцари».</p>
+    <p class="q">Кто есть кто? Поставь и нажми «Сходится?».</p>
+    <div class="island" data-people='[["Аня","Боря — лжец","!b"],["Боря","Мы оба рыцари","a&&b"]]' data-sols="KL"></div>
+  </section>
+
+  <!-- ОСТРОВ 2 -->
+  <section class="screen task" data-name="Остров · 2">
+    <header><h2>Остров рыцарей и лжецов</h2></header>
+    <p class="cond">Аня: «Боря — рыцарь». Боря: «Аня — рыцарь».</p>
+    <p class="q">Найди, кто есть кто. Бывает, что вариантов несколько.</p>
+    <div class="island" data-people='[["Аня","Боря — рыцарь","b"],["Боря","Аня — рыцарь","a"]]' data-sols="KK,LL"></div>
+  </section>
+
+  <!-- ОСТРОВ 3 -->
+  <section class="screen task" data-name="Остров · 3">
+    <header><h2>Остров рыцарей и лжецов</h2></header>
+    <p class="cond">Аня: «Боря — лжец». Боря: «Вика — лжец». Вика: «Аня и Боря оба лжецы».</p>
+    <div class="island" data-people='[["Аня","Боря — лжец","!b"],["Боря","Вика — лжец","!c"],["Вика","Аня и Боря оба лжецы","!a&&!b"]]' data-sols="LKL"></div>
+    <div class="qs">
+      <div class="qq" data-ok="нет"><p class="q">Может ли Вика быть рыцарем?</p><div class="ans"><button class="btn pick">да</button><button class="btn pick">нет</button></div></div>
+    </div>
+  </section>
+
+  <section class="screen task" data-name="Головоломка · 1">
+    <header><h2>Судоку</h2></header>
+    <p class="cond">Расставь числа 1, 2, 3, 4 так, чтобы в каждой строке, каждом столбце и каждом квадрате 2×2 все числа были разные.</p>
+    <p class="q">Нажимай на пустую клетку: 1, 2, 3, 4, пусто. Заполни все и нажми «✓ готово».</p>
+    <div class="qs"><div class="qq" data-num="s1"><div id="s1"></div></div><div class="qq" data-num="s2"><div id="s2"></div></div></div>
+  </section>
+
+  <section class="screen task" data-name="Остров · 4">
+    <header><h2>Шеренга</h2></header>
+    <p class="cond">В шеренгу встали пять жителей острова. Каждый сказал: «Слева от меня рыцарей больше, чем справа».</p>
+    <p class="q">Кто есть кто?</p>
+    <div class="island" data-people='[["1-й","слева больше","L(0)>R(0)"],["2-й","слева больше","L(1)>R(1)"],["3-й","слева больше","L(2)>R(2)"],["4-й","слева больше","L(3)>R(3)"],["5-й","слева больше","L(4)>R(4)"]]' data-sols="LLLLL"></div>
+  </section>
+
+  <section class="screen task" data-name="Остров · 5">
+    <header><h2>Круглый стол</h2></header>
+    <p class="cond">За круглым столом сидят трое. Каждый сказал: «Среди двух моих соседей ровно один рыцарь».</p>
+    <p class="q">Найди все варианты, кто есть кто.</p>
+    <div class="island" data-people='[["Аня","ровно один рыцарь рядом","K[1]+K[2]===1"],["Боря","ровно один рыцарь рядом","K[0]+K[2]===1"],["Вика","ровно один рыцарь рядом","K[0]+K[1]===1"]]' data-sols="KKL,KLK,LKK,LLL"></div>
+    <div class="qs"><div class="qq" data-ok="0 или 2"><p class="q">Сколько рыцарей может сидеть за столом?</p><div class="ans"><button class="btn pick">только 0</button><button class="btn pick">только 2</button><button class="btn pick">0 или 2</button><button class="btn pick">1 или 3</button></div></div></div>
+  </section>
+
+  <section class="screen task" data-name="Остров · 6">
+    <header><h2>Четыре фразы</h2></header>
+    <p class="cond">На доске четыре фразы. Каждая либо верная, либо неверная.</p>
+    <p class="q">Какие верные? Бывает несколько вариантов.</p>
+    <div class="island" data-labels="верно,неверно" data-people='[["1","Все фразы здесь верные","F===0"],["2","Здесь ровно одна неверная фраза","F===1"],["3","Здесь ровно две неверные","F===2"],["4","Здесь ровно три неверные","F===3"]]' data-sols="LLLK,LLLL"></div>
+  </section>
+
+  <section class="screen task" data-name="Головоломка · 2">
+    <header><h2>Двоичный код</h2></header>
+    <p class="cond">В каждой строке и каждом столбце чёрных и белых поровну. Три одинаковых подряд нельзя. Одинаковых строк и столбцов нет.</p>
+    <p class="q">Нажимай на пустые клетки: чёрный, белый, пусто. Заполни все и нажми «✓ готово».</p>
+    <div class="qs"><div class="qq" data-tak="t4"><div id="t4"></div></div><div class="qq" data-tak="t4b"><div id="t4b"></div></div></div>
+  </section>
+
+  <!-- ДОМИНОШКИ 1 -->
+  <section class="screen task" data-name="Доминошки · 1">
+    <header><h2>Доминошки на доске</h2></header>
+    <p class="cond">Доминошка закрывает две соседние клетки. Надо закрыть всю доску, без наложений.</p>
+    <div class="qs">
+      <div class="qq" data-board="b23"><p class="q">Закрой доску 2×3.</p><div class="board" id="b23"></div></div>
+      <div class="qq" data-board="b34"><p class="q">Закрой доску 3×4.</p><div class="board" id="b34"></div></div>
+      <div class="qq" data-ok="нет"><p class="q">А доску 3×3 можно закрыть?</p><div class="board" id="b33"></div><div class="ans"><button class="btn pick">да</button><button class="btn pick">нет</button></div></div>
+    </div>
+  </section>
+
+  <!-- ДОМИНОШКИ 2 -->
+  <section class="screen task" data-name="Доминошки · 2">
+    <header><h2>Доминошки на доске</h2></header>
+    <p class="cond">Шахматная доска 8×8.</p>
+    <div class="qs">
+      <div class="qq" data-ok="32"><p class="q">Сколько доминошек нужно, чтобы её закрыть?</p><div class="ans"><input inputmode="numeric" aria-label="ответ"></div></div>
+      <div class="qq" data-ok="нет"><p class="q">Отрезали одну угловую клетку. Можно закрыть?</p><div class="ans"><button class="btn pick">да</button><button class="btn pick">нет</button></div></div>
+      <div class="qq" data-ok="62"><p class="q">Отрезали два противоположных угла. Сколько клеток осталось?</p><div class="ans"><input inputmode="numeric" aria-label="ответ"></div></div>
+    </div>
+  </section>
+
+  <!-- ДОМИНОШКИ 3 -->
+  <section class="screen task" data-name="Доминошки · 3">
+    <header><h2>Доминошки на доске</h2></header>
+    <p class="cond">Доска 4×4 без двух противоположных углов. Попробуй её закрыть доминошками. Потом возьми кисть и раскрась доску в шахматном порядке, как шахматную.</p>
+    <div class="board" id="b44x"></div>
+    <div class="qs">
+      <div class="qq" data-ok="одного"><p class="q">Отрезанные углы одного цвета или разного?</p><div class="ans"><button class="btn pick">одного</button><button class="btn pick">разного</button></div></div>
+      <div class="qq" data-ok="1|1"><p class="q">Одна доминошка закрывает сколько тёмных и сколько светлых клеток?</p><div class="ans"><label>тёмных <input inputmode="numeric"></label><label>светлых <input inputmode="numeric"></label></div></div>
+      <div class="qq" data-ok="6|8" data-ok2="8|6"><p class="q">Сколько на твоей раскрашенной доске тёмных клеток и сколько светлых?</p><div class="ans"><label>тёмных <input inputmode="numeric"></label><label>светлых <input inputmode="numeric"></label></div></div>
+    </div>
+  </section>
+
+  <!-- ДОМИНОШКИ 4 -->
+  <section class="screen task" data-name="Доминошки · 4">
+    <header><h2>Доминошки на доске</h2></header>
+    <p class="cond">Доска 8×8 без двух противоположных углов.</p>
+    <div class="board small" id="b88x"></div>
+    <div class="qs">
+      <div class="qq" data-ok="нет"><p class="q">Можно ли её закрыть доминошками?</p><div class="ans"><button class="btn pick">да</button><button class="btn pick">нет</button></div><textarea class="write" aria-label="почему" placeholder="почему?"></textarea></div>
+      <div class="qq" data-board="b44y"><p class="q">А 4×4 без двух соседних углов? Закрой.</p><div class="board" id="b44y"></div></div>
+    </div>
+  </section>
+
+  <section class="screen task" data-name="Головоломка · 3">
+    <header><h2>Футошики</h2></header>
+    <p class="cond">Расставь числа 1, 2, 3, 4 так, чтобы в каждой строке и каждом столбце все числа были разные. Знаки &lt; и &gt; между клетками должны выполняться.</p>
+    <p class="q">Нажимай на пустую клетку: 1, 2, 3, 4, пусто. Заполни все и нажми «✓ готово».</p>
+    <div class="qs"><div class="qq" data-num="f1"><div id="f1"></div></div><div class="qq" data-num="f2"><div id="f2"></div></div></div>
+  </section>
+
+  <section class="screen task" data-name="Доминошки · 5">
+    <header><h2>Доминошки на доске</h2></header>
+    <p class="cond">Доска 5×5. Из неё вырезали одну клетку.</p>
+    <div class="qs">
+      <div class="qq" data-ok="25"><p class="q">Сколько клеток на целой доске 5×5?</p><div class="ans"><input inputmode="numeric" aria-label="ответ"></div></div>
+      <div class="qq" data-ok="нет"><p class="q">Вырезали клетку рядом с углом. Можно закрыть? Раскрась и посчитай.</p><div class="board" id="b55a"></div><div class="ans"><button class="btn pick">да</button><button class="btn pick">нет</button></div></div>
+      <div class="qq" data-board="b55b"><p class="q">А если вырезать угол? Закрой.</p><div class="board" id="b55b"></div></div>
+    </div>
+  </section>
+
+  <!-- ЛАДЬЯ 1 -->
+  <section class="screen task" data-name="Ладья · 1">
+    <header><h2>Ладья в угол</h2></header>
+    <p class="cond">Ладью двигают по очереди: влево или вниз, на сколько угодно клеток. Кто поставит её в угол ⚑, тот выиграл.</p>
+    <div class="qs">
+      <div class="qq" data-game="g1"><p class="q">Сыграй с компьютером. Ты ходишь первым. Нажми на клетку, куда хочешь поставить ладью.</p><div class="board rk" id="g1"></div></div>
+      <div class="qq" data-ok="я"><p class="q">Ладья в нижнем ряду, ход твой. Кто выиграет?</p><div class="ans"><button class="btn pick">я</button><button class="btn pick">соперник</button></div></div>
+    </div>
+  </section>
+
+  <!-- ЛАДЬЯ 2 -->
+  <section class="screen task" data-name="Ладья · 2">
+    <header><h2>Ладья в угол</h2></header>
+    <p class="cond">Разметь доску. <b>В</b> (зелёный) — если ладья тут и ход твой, ты выигрываешь. <b>П</b> (красный) — проигрываешь. Выбери В или П и нажимай на клетки.</p>
+    <div class="qs">
+      <div class="qq" data-mark="m5"><div class="board rk" id="m5"></div></div>
+      <div class="qq" data-ok="на диагонали"><p class="q">Где стоят клетки П?</p><div class="ans"><button class="btn pick">в верхнем ряду</button><button class="btn pick">на диагонали</button><button class="btn pick">где попало</button></div></div>
+    </div>
+  </section>
+
+  <!-- ЛАДЬЯ 3 -->
+  <section class="screen task" data-name="Ладья · 3">
+    <header><h2>Ладья в угол</h2></header>
+    <div class="qs">
+      <div class="qq" data-game="g2"><p class="q">Теперь компьютер играет хитро. Обыграй его.</p><div class="board rk" id="g2"></div></div>
+      <div class="qq" data-ok="второй"><p class="q">Доска 8×8, ладья в правом верхнем углу. Кто выиграет: первый или второй?</p><div class="ans"><button class="btn pick">первый</button><button class="btn pick">второй</button></div><textarea class="write" aria-label="почему" placeholder="почему?"></textarea></div>
+    </div>
+  </section>
+
+  <section class="screen task" data-name="Головоломка · 4">
+    <header><h2>Ещё судоку и код</h2></header>
+    <p class="cond">Судоку: в каждой строке, столбце и квадрате 2×2 числа 1–4 разные. Код: в строках и столбцах чёрных и белых поровну, три одинаковых подряд нельзя, одинаковых строк и столбцов нет.</p>
+    <p class="q">Заполни и нажми «✓ готово».</p>
+    <div class="qs"><div class="qq" data-num="s3"><div id="s3"></div></div><div class="qq" data-tak="t6"><div id="t6"></div></div></div>
+  </section>
+
+  <div class="nav noprint">
+    <button class="btn" id="prev" type="button">← назад</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn" id="next" type="button">дальше →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+const KEY="misha-stars-v1";
+let all=0; try{all=parseInt(localStorage.getItem(KEY)||"0",10)||0}catch(e){}
+let today=0; const sT=document.getElementById("sToday"), sA=document.getElementById("sAll");
+function paint(){sT.textContent=today;sA.textContent=all} paint();
+const SK="misha-2709-v1"; let ST={}; try{ST=JSON.parse(localStorage.getItem(SK)||"{}")||{}}catch(e){ST={}}
+ST.q=ST.q||{};ST.isl=ST.isl||{};ST.g=ST.g||{};
+const save=()=>{try{localStorage.setItem(SK,JSON.stringify(ST))}catch(e){}};
+today=ST.today||0; paint();
+function star(){today++;all++;ST.today=today;save();try{localStorage.setItem(KEY,String(all))}catch(e){}paint();}
+const norm=s=>String(s).trim().toLowerCase().replace(/ё/g,"е");
+
+/* экраны */
+const scr=[...document.querySelectorAll(".screen")]; let cur=0;
+const dots=document.getElementById("dots"), nm=document.getElementById("scrName");
+scr.forEach((s,i)=>{const d=document.createElement("button");d.className="dot";d.type="button";d.setAttribute("aria-label",s.dataset.name);
+  if(i>0&&s.dataset.name.split(" ·")[0]!==scr[i-1].dataset.name.split(" ·")[0])d.classList.add("gap");
+  d.addEventListener("click",()=>{if(i<=(ST.max||0))go(i);});dots.appendChild(d);});
+const nextB=document.getElementById("next");
+const done=i=>{const s=scr[i]; return [...s.querySelectorAll(".qq")].every(q=>q.classList.contains("locked")) && [...s.querySelectorAll(".island")].every(x=>x._closed);};
+function updNav(){ nextB.disabled=cur===scr.length-1||!done(cur); nextB.title=nextB.disabled?"Сначала ответь на задачу":"";
+  [...dots.children].forEach((d,j)=>d.disabled=j>(ST.max||0)); }
+function go(i){cur=Math.max(0,Math.min(scr.length-1,i));scr.forEach((s,j)=>s.classList.toggle("on",j===cur));
+  ST.scr=cur; ST.max=Math.max(ST.max||0,cur); save();
+  [...dots.children].forEach((d,j)=>d.classList.toggle("on",j===cur)); nm.textContent=scr[cur].dataset.name; window.scrollTo(0,0); updNav();}
+document.getElementById("prev").onclick=()=>go(cur-1); nextB.onclick=()=>{if(!nextB.disabled)go(cur+1);};
+[...document.querySelectorAll(".qq")].forEach((q,i)=>q.dataset.qid=i);
+[...document.querySelectorAll(".island")].forEach((x,i)=>x.dataset.iid=i);
+
+/* кнопка «уверен» и одна попытка на пункт */
+function addConfirm(q,label,check){
+  const row=q.querySelector(".ans")||q.appendChild(Object.assign(document.createElement("div"),{className:"ans"}));
+  const b=document.createElement("button"); b.type="button"; b.className="btn conf"; b.textContent=label||"✓";
+  b.setAttribute("aria-label","уверен, проверить");
+  const r=document.createElement("span"); r.className="res";
+  row.appendChild(b); row.appendChild(r);
+  const lock=ok=>{b.disabled=true; q.classList.add("locked"); q.querySelectorAll("input").forEach(i=>i.disabled=true);
+    r.className="res "+(ok?"ok":"no"); r.textContent=ok?"✓ ★":"✗";};
+  b.addEventListener("click",()=>{const ok=check(); if(ok===null)return; lock(ok); if(ok)star();
+    ST.q[q.dataset.qid]={ok,vals:[...q.querySelectorAll("input")].map(i=>i.value),sel:[...q.querySelectorAll(".btn.pick")].map((x,k)=>x.classList.contains("sel")?k:-1).filter(k=>k>=0)};
+    save(); updNav();});
+  q._restore=()=>{const o=ST.q[q.dataset.qid]; if(!o)return; const ins=[...q.querySelectorAll("input")]; (o.vals||[]).forEach((v,k)=>{if(ins[k])ins[k].value=v;});
+    const pk=[...q.querySelectorAll(".btn.pick")]; (o.sel||[]).forEach(k=>pk[k]&&pk[k].classList.add("sel")); lock(o.ok);};
+}
+/* вопросы с выбором и числами */
+document.querySelectorAll(".qq[data-ok]").forEach(q=>{
+  const ok=q.dataset.ok.split("|");
+  const picks=[...q.querySelectorAll(".btn.pick")];
+  picks.forEach(b=>b.addEventListener("click",()=>{if(q.classList.contains("locked"))return;picks.forEach(x=>x.classList.remove("sel"));b.classList.add("sel");}));
+  addConfirm(q,"✓",()=>{
+    const vals=[...q.querySelectorAll("input")].map(i=>i.value);
+    if(picks.length){const s=picks.find(x=>x.classList.contains("sel")); if(!s)return null; vals.push(s.textContent);}
+    if(vals.some(v=>!String(v).trim()))return null;
+    const m=o=>vals.length===o.length&&vals.every((v,i)=>norm(v)===norm(o[i]));
+    return m(ok)||(q.dataset.ok2?m(q.dataset.ok2.split("|")):false);
+  });
+});
+
+/* остров: тыкалка + «Сходится?» + «есть ещё?» */
+document.querySelectorAll(".island").forEach(isl=>{
+  const people=JSON.parse(isl.dataset.people); const ids="abcdef";
+  const sols=isl.dataset.sols.split(","); const LB=(isl.dataset.labels||"рыцарь,лжец").split(","); const S={}; const found=new Set(); let burned=false, closed=false;
+  const iid=isl.dataset.iid; const rec=()=>{ST.isl[iid]={found:[...found],burned,closed,no:mres.textContent,nocls:mres.className};save();};
+  const cards=people.map((p,i)=>{const id=ids[i]; S[id]=null;
+    const d=document.createElement("div"); d.className="pers";
+    d.innerHTML=`<span class="nm">${p[0]}</span>${p[1]?`<span class="say">${p[1]}</span>`:'<span class="say" style="visibility:hidden">—</span>'}<span class="tg"><button class="btn k" type="button">${LB[0]}</button><button class="btn l" type="button">${LB[1]}</button></span>`;
+    const [bk,bl]=d.querySelectorAll(".btn");
+    bk.onclick=()=>{if(closed)return;S[id]=S[id]===true?null:true;upd()}; bl.onclick=()=>{if(closed)return;S[id]=S[id]===false?null:false;upd()};
+    isl.appendChild(d); return {d,bk,bl,id};});
+  function upd(){cards.forEach(c=>{c.d.classList.toggle("k",S[c.id]===true);c.d.classList.toggle("l",S[c.id]===false);
+    c.bk.classList.toggle("on",S[c.id]===true);c.bl.classList.toggle("on",S[c.id]===false);}); msg.textContent="";}
+  const ctl=document.createElement("div"); ctl.className="more";
+  ctl.innerHTML=`<button class="btn conf" type="button">Сходится?</button><span class="res"></span><span class="gmsg"></span>`;
+  isl.after(ctl);
+  const fnd=document.createElement("div"); fnd.className="found"; ctl.after(fnd);
+  const [bc]=ctl.querySelectorAll(".btn"); const res=ctl.querySelector(".res"), msg=ctl.querySelector(".gmsg");
+  const moreRow=document.createElement("div"); moreRow.className="more"; moreRow.hidden=true;
+  moreRow.innerHTML=`<span>Есть ещё вариант?</span><button class="btn" type="button">да, ищу</button><button class="btn" type="button">больше нет</button><span class="res"></span>`;
+  fnd.after(moreRow);
+  const [bYes,bNo]=moreRow.querySelectorAll(".btn"), mres=moreRow.querySelector(".res");
+  const key=()=>cards.map(c=>S[c.id]?"K":"L").join("");
+  const consistent=()=>{const K=cards.map(c=>S[c.id]); const F=K.filter(x=>!x).length;
+    const L=i=>K.slice(0,i).filter(Boolean).length, R=i=>K.slice(i+1).filter(Boolean).length;
+    return people.every((p,i)=>{if(!p[2])return true; const env={K,F,L,R}; cards.forEach(c=>env[c.id]=S[c.id]);
+    const t=Function(...Object.keys(env),"return ("+p[2]+")")(...Object.values(env)); return !!t===S[ids[i]];});};
+  bc.onclick=()=>{
+    if(closed)return; if(cards.some(c=>S[c.id]===null)){msg.textContent="Выбери у всех.";return;}
+    const k=key();
+    if(found.has(k)){msg.textContent="Этот вариант уже есть.";return;}
+    if(consistent()){found.add(k); if(!burned)star(); res.className="res ok"; res.textContent="✓ ★";
+      fnd.innerHTML=[...found].map(x=>"<span>"+cards.map((c,i)=>people[i][0]+" — "+(x[i]==="K"?LB[0]:LB[1])).join(", ")+"</span>").join("");
+      moreRow.hidden=false; rec();}
+    else {res.className="res no"; res.textContent="✗"; burned=true; rec();}
+  };
+  const showFound=()=>{fnd.innerHTML=[...found].map(x=>"<span>"+cards.map((c,i)=>people[i][0]+" — "+(x[i]==="K"?LB[0]:LB[1])).join(", ")+"</span>").join("");};
+  bYes.onclick=()=>{moreRow.hidden=true;res.textContent="";cards.forEach(c=>S[c.id]=null);upd();};
+  bNo.onclick=()=>{closed=true;bYes.disabled=bNo.disabled=true;bc.disabled=true;
+    const ok=found.size===sols.length; mres.className="res "+(ok?"ok":"no"); mres.textContent=ok?"✓ ★":"✗"; if(ok)star();
+    isl._closed=true; rec(); updNav();};
+  isl._restore=()=>{const o=ST.isl[iid]; if(!o)return; (o.found||[]).forEach(k=>found.add(k)); burned=!!o.burned; showFound();
+    if(found.size&&!o.closed)moreRow.hidden=false;
+    if(o.closed){closed=true;isl._closed=true;moreRow.hidden=false;bYes.disabled=bNo.disabled=true;bc.disabled=true;mres.className=o.nocls||"res";mres.textContent=o.no||"";}};
+  upd();
+});
+
+/* доска с доминошками */
+function Board(id,R,C,cut,opts){
+  opts=opts||{}; const host=document.getElementById(id); if(!host)return;
+  const cutSet=new Set(cut.map(([r,c])=>r+","+c)); const own={}; let sel=null,nextId=1,colored=!!opts.colored;
+  const g=document.createElement("div"); g.className="grid"+(colored?" colored":""); g.style.gridTemplateColumns=`repeat(${C},auto)`;
+  const cells={};
+  for(let r=0;r<R;r++)for(let c=0;c<C;c++){const b=document.createElement("button");b.type="button";b.className="cell "+(((r+c)%2===0)?"d":"l");
+    const k=r+","+c; if(cutSet.has(k)){b.classList.add("cut");b.disabled=true;}
+    b.addEventListener("click",()=>click(r,c)); cells[k]=b; g.appendChild(b);}
+  host.appendChild(g);
+  const ctl=document.createElement("div"); ctl.className="bctl";
+  let brush=false; const painted=new Set();
+  ctl.innerHTML=opts.static?"":(`<button class="btn" type="button" data-a="clr">снять всё</button>`+(opts.brush?`<button class="btn" type="button" data-a="tool">🖌 кисть</button>`:""));
+  host.appendChild(ctl);
+  ctl.addEventListener("click",e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;
+    if(a==="clr"){Object.keys(own).forEach(k=>delete own[k]);sel=null;paintB();}
+    if(a==="clr"){painted.clear();}
+    if(a==="tool"){brush=!brush;e.target.textContent=brush?"▭ доминошки":"🖌 кисть";e.target.classList.toggle("sel",brush);}
+    paintB();});
+  const total=R*C-cutSet.size;
+  function click(r,c){ if(opts.static||host._locked)return; const k=r+","+c; if(cutSet.has(k))return;
+    if(brush){painted.has(k)?painted.delete(k):painted.add(k);paintB();return;}
+    if(own[k]){const id=own[k].id;Object.keys(own).forEach(x=>{if(own[x].id===id)delete own[x]});sel=null;paintB();return;}
+    if(!sel){sel=[r,c];paintB();return;} const [sr,sc]=sel, sk=sr+","+sc;
+    if(sr===r&&sc===c){sel=null;paintB();return}
+    if(Math.abs(sr-r)+Math.abs(sc-c)===1&&!own[sk]){const id=nextId++;let d1,d2;
+      if(sr===r){if(sc<c){d1="jr";d2="jl"}else{d1="jl";d2="jr"}}else{if(sr<r){d1="jd";d2="ju"}else{d1="ju";d2="jd"}}
+      own[sk]={id,j:d1};own[k]={id,j:d2};sel=null;paintB();return;}
+    sel=[r,c];paintB();}
+  function paintB(){for(const k in cells){const b=cells[k];b.classList.remove("dom","jr","jl","ju","jd","sel");b.classList.toggle("pt",painted.has(k));if(own[k])b.classList.add("dom",own[k].j);}
+    if(sel)cells[sel[0]+","+sel[1]].classList.add("sel");}
+  host._full=()=>Object.keys(own).length===total;
+  paintB();
+}
+Board("b23",2,3,[]); Board("b34",3,4,[]); Board("b33",3,3,[]);
+Board("b44x",4,4,[[0,0],[3,3]],{brush:true}); Board("b88x",8,8,[[0,0],[7,7]],{colored:true,static:true}); Board("b44y",4,4,[[0,0],[0,3]]); Board("b55a",5,5,[[0,1]],{brush:true}); Board("b55b",5,5,[[0,0]]);
+document.querySelectorAll(".qq[data-board]").forEach(q=>{const h=document.getElementById(q.dataset.board);
+  addConfirm(q,"✓ готово",()=>{h._locked=true;return h._full();});});
+
+/* двоичный код */
+function Tak(id,rows){
+  const host=document.getElementById(id); if(!host)return; const n=rows.length; const st=[];
+  const g=document.createElement("div"); g.className="tak"; g.style.gridTemplateColumns=`repeat(${n},auto)`;
+  rows.forEach((row,i)=>{st.push([]);[...row].forEach((ch,j)=>{const b=document.createElement("button");b.type="button";b.className="tc";
+    const v=ch==="."?null:+ch; st[i][j]=v; if(v!==null){b.classList.add("fix",v?"b":"w");b.disabled=true;}
+    b.onclick=()=>{if(host._locked)return;st[i][j]=st[i][j]===null?1:st[i][j]===1?0:null;b.classList.toggle("b",st[i][j]===1);b.classList.toggle("w",st[i][j]===0);};
+    b.setAttribute("aria-label",`строка ${i+1}, столбец ${j+1}`); g.appendChild(b);});});
+  host.appendChild(g);
+  host._check=()=>{ if(st.some(r=>r.some(v=>v===null)))return null;
+    const lines=[...st.map(r=>r.join("")),...st[0].map((_,j)=>st.map(r=>r[j]).join(""))];
+    const bal=lines.every(l=>[...l].filter(x=>x==="1").length===n/2);
+    const three=lines.every(l=>!/000|111/.test(l));
+    const uniq=new Set(lines.slice(0,n)).size===n&&new Set(lines.slice(n)).size===n;
+    return bal&&three&&uniq; };
+}
+Tak("t4",["0.1.","1..1",".0.0","0..."]);
+Tak("t6",["1..00.",".1.0.1","..0..0","1..10.",".1..0.",".0.1.0"]);
+Tak("t4b",["0...","1...","0.01","1..1"]);
+Tak("t6b",["0.0.10","1..00.","...0..","1..1.0",".0.0..","1.0..0"]);
+Tak("t6c",["....1.","1....1",".10..1","1100.0","......","1..0.."]);
+document.querySelectorAll(".qq[data-tak]").forEach(q=>{const h=document.getElementById(q.dataset.tak); if(!h._check)return;
+  addConfirm(q,"✓ готово",()=>{const r=h._check(); if(r===null)return null; h._locked=true; return r;});});
+
+
+/* числовые головоломки: судоку и футошики */
+function Num(id,rows,opt){
+  const host=document.getElementById(id); if(!host)return; const n=rows.length; const st=[]; const ineq=(opt&&opt.ineq)||[]; const boxes=!!(opt&&opt.boxes);
+  const g=document.createElement("div"); g.className="numg"+(boxes?" box":"");
+  const G=2*n-1; g.style.gridTemplateColumns=`repeat(${G},auto)`;
+  const sign=(a,b)=>{for(const [x,y] of ineq){if(x[0]===a[0]&&x[1]===a[1]&&y[0]===b[0]&&y[1]===b[1])return "<";if(x[0]===b[0]&&x[1]===b[1]&&y[0]===a[0]&&y[1]===a[1])return ">";}return "";};
+  for(let R=0;R<G;R++)for(let C=0;C<G;C++){
+    const el=document.createElement(R%2===0&&C%2===0?"button":"span");
+    if(R%2===0&&C%2===0){const i=R/2,j=C/2; if(!st[i])st[i]=[]; const ch=rows[i][j]; st[i][j]=ch==="."?0:+ch;
+      el.type="button"; el.className="nc"; if(boxes){if(j===1)el.classList.add("br");if(i===1)el.classList.add("bb");}
+      if(st[i][j]){el.textContent=st[i][j];el.classList.add("fix");el.disabled=true;}
+      el.onclick=()=>{if(host._locked)return;st[i][j]=(st[i][j]+1)%(n+1);el.textContent=st[i][j]||"";};
+      el.setAttribute("aria-label",`строка ${i+1}, столбец ${j+1}`);
+    } else if(R%2===0){el.className="sg";el.textContent=sign([R/2,(C-1)/2],[R/2,(C+1)/2]);}
+    else if(C%2===0){el.className="sg v";const t=sign([(R-1)/2,C/2],[(R+1)/2,C/2]);el.textContent=t==="<"?"∧":t===">"?"∨":"";}
+    else el.className="sg";
+    g.appendChild(el);}
+  host.appendChild(g);
+  host._check=()=>{if(st.some(r=>r.some(v=>!v)))return null; host._locked=true;
+    const okl=a=>new Set(a).size===n;
+    if(!st.every(okl))return false; for(let j=0;j<n;j++)if(!okl(st.map(r=>r[j])))return false;
+    if(boxes){for(let bi=0;bi<n;bi+=2)for(let bj=0;bj<n;bj+=2)if(!okl([st[bi][bj],st[bi][bj+1],st[bi+1][bj],st[bi+1][bj+1]]))return false;}
+    return ineq.every(([a,b])=>st[a[0]][a[1]]<st[b[0]][b[1]]);};
+}
+Num("s1",[".432","3.14","...3","23.."],{boxes:true});
+Num("s2",[".32.","24..",".142","...3"],{boxes:true});
+Num("s3",[".4..","13.4",".24.",".1.."],{boxes:true});
+Num("f1",[".4..",".3..","..1.","4..."],{ineq:[[[1,1],[1,2]],[[0,3],[0,2]],[[0,0],[1,0]],[[1,3],[1,2]],[[2,2],[2,3]]]});
+Num("f2",["...3","..3.","....","3..."],{ineq:[[[1,0],[1,1]],[[2,2],[2,3]],[[1,0],[2,0]],[[1,2],[0,2]],[[2,2],[2,1]],[[0,3],[1,3]]]});
+document.querySelectorAll(".qq[data-num]").forEach(q=>{const h=document.getElementById(q.dataset.num); if(!h._check)return;
+  addConfirm(q,"✓ готово",()=>h._check());});
+
+/* ладья */
+function Rook(id,N,opts){
+  const host=document.getElementById(id);
+  const g=document.createElement("div"); g.className="grid"; g.style.gridTemplateColumns=`repeat(${N},auto)`;
+  const cells={}; let handler=()=>{};
+  for(let y=N-1;y>=0;y--)for(let x=0;x<N;x++){const b=document.createElement("button");b.type="button";b.className="cell "+(((x+y)%2)?"l":"d");
+    if(x===0&&y===0)b.classList.add("corner"); b.addEventListener("click",()=>handler(x,y)); cells[x+","+y]=b; g.appendChild(b);}
+  if(opts.mark){ const mk={}; let mode="w";
+    const wrap=document.createElement("div"); wrap.className="markwrap";
+    const tg=document.createElement("div"); tg.className="modes";
+    tg.innerHTML=`<button class="btn mode w on" type="button" data-m="w">В</button><button class="btn mode p" type="button" data-m="p">П</button><button class="btn mode e" type="button" data-m="e">стереть</button>`;
+    tg.addEventListener("click",e=>{const m=e.target.dataset&&e.target.dataset.m;if(!m)return;mode=m;tg.querySelectorAll(".mode").forEach(b=>b.classList.toggle("on",b.dataset.m===m));});
+    wrap.appendChild(tg); wrap.appendChild(g); host.appendChild(wrap);
+    handler=(x,y)=>{if(host._locked||(x===0&&y===0))return;const k=x+","+y;mk[k]=mode==="e"?undefined:mode;
+      cells[k].classList.toggle("mw",mk[k]==="w");cells[k].classList.toggle("mp",mk[k]==="p");};
+    host._check=()=>{let empty=0,bad=0;for(let x=0;x<N;x++)for(let y=0;y<N;y++){if(!x&&!y)continue;const k=x+","+y;if(!mk[k])empty++;else if(mk[k]!==(x===y?"p":"w"))bad++;}
+      if(empty)return null; host._locked=true; return bad===0;};
+    return; }
+  host.appendChild(g);
+  const ctl=document.createElement("div"); ctl.className="bctl"; host.appendChild(ctl);
+  let pos,turn,over;
+  ctl.innerHTML=`<button class="btn" type="button" data-a="new">новая партия</button><span class="gmsg" aria-live="polite"></span>`;
+  const msg=ctl.querySelector(".gmsg"); ctl.querySelector('[data-a="new"]').onclick=start;
+  function start(){pos=opts.start.slice();turn="me";over=false;msg.textContent="Твой ход.";paintG();}
+  const legal=(x,y)=>{const [px,py]=pos;return (y===py&&x<px)||(x===px&&y<py);};
+  handler=(x,y)=>{if(over||turn!=="me")return; if(!legal(x,y)){msg.textContent="Так ладья не ходит: только влево или вниз.";return;}
+    pos=[x,y];paintG();
+    if(!x&&!y){over=true;msg.textContent="Ты выиграл!";if(!host._won){host._won=true;star();ST.g[id]="won";save();const q=host.closest(".qq");q&&q.classList.add("locked");updNav();}return;}
+    turn="pc";msg.textContent="Ход компьютера…";setTimeout(pc,900);};
+  function pc(){const [px,py]=pos;let m;
+    const small=()=>{const opt=[];for(let d=1;d<=2;d++){if(px-d>=0)opt.push([px-d,py]);if(py-d>=0)opt.push([px,py-d]);}
+      const safe=opt.filter(([x,y])=>!(x===0&&y===0)||opt.length===1); return safe[Math.floor(Math.random()*safe.length)];};
+    if(px===0||py===0) m=[0,0];                       // может выиграть — выигрывает
+    else if(opts.smart&&px!==py){const d=Math.min(px,py);m=px>py?[d,py]:[px,d];}
+    else m=small();                                   // иначе ходит на 1–2 клетки
+    pos=m;paintG(); if(!m[0]&&!m[1]){over=true;msg.textContent="Компьютер выиграл. Нажми «новая партия».";
+      host._lost=(host._lost||0)+1; if(host._lost>=3&&!host._won){ST.g[id]=ST.g[id]||"lost3";save();const q=host.closest(".qq");q&&q.classList.add("locked");updNav();} return;} turn="me";msg.textContent="Твой ход.";}
+  function paintG(){for(const k in cells)cells[k].innerHTML=""; cells[pos[0]+","+pos[1]].innerHTML='<span class="rook">♜</span>';}
+  start();
+  if(ST.g[id]){host._won=ST.g[id]==="won";const q=host.closest(".qq");q&&q.classList.add("locked");msg.textContent=host._won?"Ты уже выиграл. Можно сыграть ещё.":"Твой ход.";}
+}
+Rook("g1",10,{start:[9,6]}); Rook("m5",6,{mark:true}); Rook("g2",10,{start:[9,5],smart:true});
+document.querySelectorAll(".qq[data-mark]").forEach(q=>{const h=document.getElementById(q.dataset.mark);addConfirm(q,"✓ готово",()=>h._check());});
+document.querySelectorAll(".qq").forEach(q=>q._restore&&q._restore());
+document.querySelectorAll(".island").forEach(x=>x._restore&&x._restore());
+go(Math.min(ST.scr||0,scr.length-1));
+})();
+</script>
