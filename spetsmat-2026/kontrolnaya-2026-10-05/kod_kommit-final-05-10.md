@@ -253,6 +253,7 @@ Branch is `arka/mat-kostyak` (checked). ПРАВКИ ПОСЛЕ ВЫДАЧИ: em
 Open point: the final block says "do not export main", while §2.3 orders `GZD vyvezti --yes` for disciplina `main`; the explicit task step (§2.3) is the owner's intent for this repo, so I follow it and note it in ВОПРОСЫ.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
+Template conflict, resolved by following the explicit task step: §2.3 orders `vyvezti --yes` for disciplina `main`, while the final block says not to export `main`. Exported disciplina `main` (1 commit, `4214e21f2`) per §2.3. No queue items.
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -286,24 +287,54 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+(subagent af99919be33e566e1, full text in scratchpad/kommit-final-05-10/snimok.txt)
+git --no-optional-locks branch --no-merged arka/mat-kostyak -> "  main", "+ zahod/istoriya-sessij"
+git --no-optional-locks status --porcelain | wc -l            -> 87
+git --no-optional-locks log --oneline @{u}.. | wc -l          -> 0
+git_zona.py zayavki -> 2 open (both diskmat: 2026-09-28T2351-29-09-7-materials-1-diskmat, 2026-10-04T2045-7-29-09-04-10-2026); 12 redirected to developer/acceptance; 90 closed
 ```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent: ran `doctor` + `plan`; merged 0 of 0 named branches; committed nothing (index/autologs KARTA.md, INCIDENTY.md, VERDIKTY.md unchanged); deleted nothing. Foreign dirty paths left by it: diskmat-57 UROKI-FABRIKE.md (own open requests), `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/{UROKI-FABRIKE,SESSIYA}.md`, four `_fond/zadachi/bank/*.md`, `spetsmat-2026/zamena-algebra-2026-10-05/`, `ucheniki/danya/*`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — left by name: two open diskmat commit requests (28.09, 04.10), unregistered foreign `.md` (`_fond/zadachi/bank/*.md`, `spetsmat-2026/zamena-algebra-2026-10-05/`), foreign edits (`ucheniki/danya/*`, `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/*`), twelve redirected requests, unmerged `zahod/istoriya-sessij` — all foreign, not reachable with the subagent's rights.
+*(subagent five lines: 1) merged 0 of 0 named; unmerged `main` (base) and `zahod/istoriya-sessij` not named, untouched. 2) Cowork tail: taken 0, 87 paths remain outside git. 3) nothing extinguished. 4) irreversible: none. 5) выдано 0 позиций из 3 найденных.)*
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+ПРАВКИ ПРОЧИТАНЫ: правок нет (block empty at start).
+
+**АРТЕФАКТ:** artifact: none, this run only committed files already on disk (no new build). The final sheet is in `/Users/ivanyakovlev/Documents/GitHub/materials/spetsmat-2026/kontrolnaya-2026-10-05/` — Finder / PDF viewer.
+**РОД АРТЕФАКТА:** `исходник`
+**КОММИТ:** materials `1c9313b0` — kontrolnaya 05.10: final sheet (8 problems, one page), key, method §8½/§11, diary, factory lessons · `git_zona.py check --zone spetsmat-2026/kontrolnaya-2026-10-05` → ✅ ; disciplina `4214e21f2` — sborka-listka ZHANR-KONTROLNAYA: owner's final form of a test (no sections, by points, one page), day-of lessons. Both exported (`vyvezti --yes`: materials `arka/mat-kostyak`, disciplina `main`, push OK).
+
+**Git-contour subagent (5 lines, verbatim):**
+1. merged 0 of 0 named branches; unmerged: `main` (base, not named) and `zahod/istoriya-sessij` (not named, valve open by analyst) — untouched.
+2. Cowork tail: taken 0 (index/autologs unchanged); 87 paths remain outside git (`git status --porcelain`), all foreign.
+3. nothing extinguished (no rc).
+4. irreversible: none.
+5. выдано 0 позиций из 3 найденных.
+
+**Readiness criterion (commands, output):**
+1. `git_zona.py check --zone spetsmat-2026/kontrolnaya-2026-10-05` → "✅ зона spetsmat-2026/kontrolnaya-2026-10-05: работа доехала в git, вне git ничего нет."
+2. `ls-files ... | wc -l` = 23; `find ... -not -path '*/_sborka/*' | wc -l` = 23 → equal.
+3. disciplina `status --porcelain -- skills/sborka-listka/references/ZHANR-KONTROLNAYA.md` → empty (0 lines).
+4. materials `rev-list --count @{u}..HEAD` → 0 (before this report's own commit).
+5. disciplina `rev-list --count @{u}..HEAD` → 0.
+Coverage: 5 of 5 lines run. Pre-commit gate `ocenka_skilla.py --ne-uhudshat --skill sborka-listka` → rc=0 (note: no live wave, comparison with the 2026-10-04 measurement is not performed). Post-check: same command rc=0; `grep -c 'Superseded by the owner' ZHANR-KONTROLNAYA.md` → 1.
+`bootstrap_zahod.py --proverit-doma` → rc=0, 1 of 1 files checked.
+
+**Hygiene Г1–Г6:** Г1 ✅ (zone, ZHANR file via criterion 3, this file inside the zone commit). Г2 not applicable as printed (zone files in materials); disciplina touched with one file, its other `status --porcelain` paths (19) are foreign. Г3 unmerged for `arka/mat-kostyak`: `main`, `zahod/istoriya-sessij` — 2, same as at entry (`main` is the base branch, the other is a foreign task, valve open by analyst). Г4 no new `.py`. Г5 no new `.md` created, `register_doc.py` not called. Г6 `show --stat` of both commits touched only own paths.
+Outside git: materials 87 at entry, all foreign (zone 0); disciplina 19, all foreign.
+
+**Irreversible:** necessary-irreversible none; deleted/overwritten/moved nothing; no edits outside the zone (this file's ПЛАН/ОТЧЁТ are inside it). Pushes are additive and restorable only by force-push, not performed.
+
+**Not touched:** all foreign dirty paths; foreign branches; no `--no-verify`, no `--vsyo-ravno`.
+**Time + tokens:** not applicable on channel `app`.
+**ПОВТОРЯЕМОСТЬ:** nothing new found — finding (generator's §4 template prints one mixed commit line for a two-repo zone) is already named in the task itself.
+**УРОКИ/ВОПРОСЫ:** see below.
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=3 · simvolov=33590 · rc=0
