@@ -103,6 +103,9 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_katalog-kursa.md`** (каталог 48 файлов курса «Пути и волны» со статусом каждого, рычаг check_arhiv.py против отменённого документа без баннера, строка materials в реестре корней)
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-sayt.md`** (Коммит курса «Пути и волны» и статьи о биномах, публикация статьи на сайт «Материалы», коммит правки движка в disciplina)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md`** (S3 of wave noch-puti-i-volny: consolidation — route duplicate pairs, give every KARTA-rashozhdeniy row a status, move verified report findings into the card index)
 
 
