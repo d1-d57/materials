@@ -1,0 +1,11 @@
+#sim-c4 .c4-ar{fill:none;stroke:var(--accent);stroke-width:1.3}
+#sim-c4 .c4-hd{fill:var(--accent)}
+#sim-c4 .c4-seg{fill:none;stroke:var(--text);stroke-width:1.7}
+#sim-c4 .c4-v{fill:var(--bg);stroke:var(--text);stroke-width:2}
+#sim-c4 .c4-hit{fill:transparent;cursor:pointer}
+#sim-c4 .c4-ar.dim,#sim-c4 .c4-hd.dim{opacity:.16}
+#sim-c4 .c4-seg.dim{opacity:.22}
+#sim-c4 .c4-ar.hl{stroke:var(--warm);stroke-width:2.2}
+#sim-c4 .c4-hd.hl{fill:var(--warm)}
+#sim-c4 .c4-seg.hl{stroke:var(--warm);stroke-width:2.6}
+#sim-c4 .c4-v.hl{fill:var(--warm);stroke:var(--warm)}

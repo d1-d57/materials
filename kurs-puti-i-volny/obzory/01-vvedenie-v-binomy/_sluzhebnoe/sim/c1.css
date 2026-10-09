@@ -1,0 +1,4 @@
+#sim-c1 .c1-arc{fill:none;stroke:var(--muted);stroke-width:1.2;opacity:.7}
+#sim-c1 .c1-arc.hl{stroke:var(--warm);stroke-width:2.2;opacity:1}
+#sim-c1 .c1-flyg{pointer-events:none}
+#sim-c1 .w-word.hl,#sim-c1 .w-link.hl{opacity:1}

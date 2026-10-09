@@ -1,0 +1,11 @@
+#sim-c3 .c3-card{fill:none;stroke:var(--faint);stroke-width:1}
+#sim-c3 .c3-m{fill:var(--accent)}
+#sim-c3 .c3-o{fill:none;stroke:var(--quiet);stroke-width:1.1}
+#sim-c3 .c3-cap{fill:var(--warm);stroke:var(--warm);stroke-width:1;stroke-linejoin:round}
+#sim-c3 .sim-out{line-height:1.45;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.1em .15em}
+#sim-c3 .c3-w{display:inline-flex;flex-direction:column;align-items:center;padding:.15em .45em .2em;border-radius:8px;border:1px solid transparent;transition:background-color .2s,border-color .2s,color .2s}
+#sim-c3 .c3-w.on{color:var(--accent);background:var(--accent-soft);border-color:var(--accent)}
+#sim-c3 .c3-v{color:var(--muted);font-variant-numeric:tabular-nums}
+#sim-c3 .c3-w.on .c3-v{color:var(--accent);font-weight:600}
+#sim-c3 .c3-eq{color:var(--muted);padding:0 .1em}
+#sim-c3 .c3-tot{font-weight:600;font-variant-numeric:tabular-nums}

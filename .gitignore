@@ -180,3 +180,7 @@ ucheniki/misha/zanyatiya/*-avtonom.html
 #     без её согласия не наше решение; на диске лежат, движок ссылается.
 ucheniki/misha/chuzhoe/
 ucheniki/misha/zanyatiya/kletki-i-strelki.html
+
+# Курс «Пути и волны», обзоры: промежуточные выкладки статьи в артефакт (publish*.html — порождаются publish_lenta.py, итог лежит в sayt/static/) и папка-перевалка правок v5 (дубли файлов _sluzhebnoe/) — решение 09.10
+kurs-puti-i-volny/obzory/*/LENTA/publish*.html
+kurs-puti-i-volny/obzory/*/_sluzhebnoe/pravki/v5-vhod/

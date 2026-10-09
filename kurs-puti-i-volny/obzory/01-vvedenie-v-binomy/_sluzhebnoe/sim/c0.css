@@ -1,0 +1,11 @@
+#sim-c0 .c0-cnt{font-family:var(--sans);font-size:16px;color:var(--muted);text-align:center;margin:0 0 .25em}
+#sim-c0 .c0-cnt b{font-size:19px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums}
+#sim-c0 .c0-set{font-family:var(--sans);font-size:16px;fill:var(--text);font-variant-numeric:tabular-nums}
+#sim-c0 .c0-row.hl .c0-set{fill:var(--warm);font-weight:600}
+#sim-c0 .c0-pos{font-family:var(--sans);font-size:13px;fill:var(--quiet);font-variant-numeric:tabular-nums}
+#sim-c0 .c0-pos.hl{fill:var(--warm);font-weight:600}
+#sim-c0 .c0-zebra{fill:none}
+#sim-c0 .c0-zebra.odd{fill:var(--shade);fill-opacity:.5}
+#sim-c0 .sim-out{min-height:1.9em;line-height:1.5;padding:.2em 0}
+@media (max-width:520px){#sim-c0 .sim-out{min-height:3.2em}}
+#sim-c0 .c0-pair{white-space:nowrap;font-variant-numeric:tabular-nums}

@@ -1,0 +1,12 @@
+#sim-c5 .c5-g{fill:none;stroke:var(--quiet);stroke-width:1}
+#sim-c5 .c5-diag{fill:var(--shade);stroke-dasharray:3 3}
+#sim-c5 .c5-up{fill:var(--accent);cursor:pointer}
+#sim-c5 .c5-dn{fill:var(--accent);fill-opacity:.4;stroke:var(--accent);stroke-width:1.4;cursor:pointer}
+#sim-c5 .c5-up.hl{fill:var(--warm)}
+#sim-c5 .c5-dn.hl{fill:var(--warm);stroke:var(--warm)}
+#sim-c5 .c5-l{font-family:var(--sans);font-size:15px;fill:var(--muted);font-variant-numeric:tabular-nums}
+#sim-c5 .c5-l.hl{fill:var(--warm);font-weight:600}
+#sim-c5 .c5-dim{fill:none;stroke:var(--muted);stroke-width:1.2}
+#sim-c5 .c5-dl{font-family:var(--sans);font-size:16px;font-weight:600;fill:var(--text);font-variant-numeric:tabular-nums}
+#sim-c5 .sim-out{min-height:3.8em}
+#sim-c5 .c5-nw{white-space:nowrap}
