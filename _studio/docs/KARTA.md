@@ -125,6 +125,9 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md`** (Коммит и публикация обзора 01 «Биномиальные коэффициенты» v7 и работы 10.10 (занятие 4, голосовые владельца, приёмка Ф6))
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-dorabotka-lenta.md`** (Коммит доработки аналитика после приёмки lenta-yazyk-obzora: дверь pravilo.py, 15 правил RESHENIYA, перенос эталона, правки текстов навыка; журнал арки)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-zakrytie-arki.md`** (Коммит закрытия арки obzor-funkciya-putey: журнал арки, сырьё владельца, консолидация по домам курса, состояние, движок)
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md`** (S3 of wave noch-puti-i-volny: consolidation — route duplicate pairs, give every KARTA-rashozhdeniy row a status, move verified report findings into the card index)
