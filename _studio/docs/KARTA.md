@@ -67,6 +67,12 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/HANDOFF-2026-09-20.md`** (Хэндофф в сессию 2026-09-20: приёмка ночной волны noch-puti-i-volny)
 
+
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/KONSOLIDACIYA-2026-10-10.md`** (Консолидация арки при закрытии 10.10: 189 позиций дневника, вердикт и дом у каждой)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/PLAN-SPASENIYA-2026-10-10.md`** (План спасения сессии 04.10–10.10 перед закрытием: что пропадёт, шесть фаз, вопросы владельцу)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-09-02-2.md`** (Выгрузка сессии 2026-09-02 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
 
 
@@ -95,6 +101,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-10-10.md`** (Выгрузка сессии 2026-10-10 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_arhitektura-punkta.md`** (S4a of wave noch-puti-i-volny: the ITEM as the one home of the course list (punkty.md) and tools/plany.py generating the year/half/part/quarter/lecture views with gates; form only, no content)
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_graf-korpusa.md`** (S2 of wave noch-puti-i-volny: tools/graf.py — graph statistics over the course corpus (degrees, cascade, depth, reachability, orphan plan anchors, edge export))
@@ -105,6 +114,9 @@
 
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-sayt.md`** (Коммит курса «Пути и волны» и статьи о биномах, публикация статьи на сайт «Материалы», коммит правки движка в disciplina)
+
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-zakrytie-arki.md`** (Коммит закрытия арки obzor-funkciya-putey: журнал арки, сырьё владельца, консолидация по домам курса, состояние, движок)
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_konsolidaciya-korpusa.md`** (S3 of wave noch-puti-i-volny: consolidation — route duplicate pairs, give every KARTA-rashozhdeniy row a status, move verified report findings into the card index)
 
@@ -125,6 +137,15 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/mandate_noch-puti-i-volny.md`** (MANDATE — two halves, two authors; status OPEN/CLOSED/REFUSED/CLOSED-S-DOLGOM lives in the file)
 
+
+
+
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/syroe-2026-10-04/06-golosovaya-zagolovok-razdel-1-2026-10-04-12-02.md`** (Расшифровка голосовой владельца 04.10 12:02: заголовок и раздел 1 статьи о биномах)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/syroe-2026-10-04/OTCHETY-SUBAGENTOV.md`** (Задания и итоговые ответы 13 субагентов сессии «лекции 1-3»)
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/syroe-2026-10-04/README.md`** (Сырьё владельца сессии 04.10 (7 текстов и расшифровок дословно) — указатель и сверка картинок)
 
 **`_studio/zhurnal/2026-09-13_uchenik-misha/GDD-misha-v1-2026-10-04.md`** (гейм-дизайн движка Миши v1 (04.10) — история, заменён v2)
 
