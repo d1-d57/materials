@@ -172,6 +172,8 @@ spetsmat-2026/kontrolnaya-2026-10-05/_sborka/
 #     персональные данные несовершеннолетнего (то же основание, что foto/ выше); в git идёт дистиллят
 #     (SESSIYA, ZHURNAL, VYGRUZKA с репликами ВЛАДЕЛЬЦА). Опись сырья — README внутри папки.
 _studio/zhurnal/*/syroe-*/
+# Исключение: дословные тексты ВЛАДЕЛЬЦА (не ученика) арки obzor-funkciya-putey — в git по его решению 10.10 «все в гит».
+!_studio/zhurnal/2026-08-24_obzor-funkciya-putey/syroe-2026-10-04/
 # (2) Картины «найди предметы» и лабиринты чужих художников (+ кропы обложек bg-*.jpg из них) и
 #     автономный файл занятия, где они зашиты base64 — чужие права. Список картин — dvizhok/pryatki.py (в git).
 ucheniki/misha/zanyatiya/pryatki/
