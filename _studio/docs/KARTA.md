@@ -69,6 +69,9 @@
 
 
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/HANDOFF-2026-10-11.md`** (Хэндофф в сессию 2026-10-11: разговор «что интересного в комбинаторике» и план занятия 5)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/KONSOLIDACIYA-2026-10-10.md`** (Консолидация арки при закрытии 10.10: 189 позиций дневника, вердикт и дом у каждой)
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/PLAN-SPASENIYA-2026-10-10.md`** (План спасения сессии 04.10–10.10 перед закрытием: что пропадёт, шесть фаз, вопросы владельцу)
@@ -105,6 +108,9 @@
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-10-10-2.md`** (Выгрузка сессии 2026-10-10 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
 
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-10-10-3.md`** (Выгрузка сессии 2026-10-10 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
+
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/VYGRUZKA-2026-10-10.md`** (Выгрузка сессии 2026-10-10 — сырьё для дневника арки 2026-08-24_obzor-funkciya-putey)
 
 
@@ -127,6 +133,9 @@
 
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-dorabotka-lenta.md`** (Коммит доработки аналитика после приёмки lenta-yazyk-obzora: дверь pravilo.py, 15 правил RESHENIYA, перенос эталона, правки текстов навыка; журнал арки)
+
+
+**`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-handoff-10-11.md`** (Коммит закрытия сессии 10–11.10: хэндофф, выгрузка ч.4, дневник, приёмки, баннеры «снимок v6» обзора 01, OTKRYTYE)
 
 **`_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-zakrytie-arki.md`** (Коммит закрытия арки obzor-funkciya-putey: журнал арки, сырьё владельца, консолидация по домам курса, состояние, движок)
 
