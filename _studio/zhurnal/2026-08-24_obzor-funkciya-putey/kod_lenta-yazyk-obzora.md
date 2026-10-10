@@ -1,21 +1,21 @@
-# Канал исполнителя — kommit-binomy-v7 (один заход до конца)
+# Канал исполнителя — lenta-yazyk-obzora (один заход до конца)
 > Твой единственный файл-заход. Читай ТОЛЬКО его и названные якоря; проект не изучай.
 <!-- собран bootstrap_zahod.py -->
 <!-- гейт сборки заполненного: ЗЕЛЁНЫЙ 2026-10-10 -->
 > План/вопросы/отчёт — в секции внизу. Метрика — КАЧЕСТВО. Часы — норма.
-> **Модель: Sonnet 5** — механика расписана до путей: три коммита поименными pathspec с исключениями, вывоз, публикация сайта одной командой, проверка числами.
+> **Модель: Opus 5** — рычаги в чужом гейте check_lenta.py с фикстурами и исключениями выложенных статей и пятнадцать вызовов двери pravilo.py — суждение о коде, не механика.
 
 ## СТАРТОВОЕ СООБЩЕНИЕ ВЛАДЕЛЬЦУ
 
 > Это блок для владельца — то, чем тебя запустили. Исполнителю здесь делать нечего, твоё задание ниже.
 
 ```
-Модель: Sonnet 5 — механика расписана до путей: три коммита поименными pathspec с исключениями, вывоз, публикация сайта одной командой, проверка числами.
+Модель: Opus 5 — три рычага в чужом гейте check_lenta.py с фикстурами и исключениями выложенных статей, пятнадцать вызовов двери pravilo.py, коммиты в двух репозиториях.
 
 Ты исполнитель в репозитории /Users/ivanyakovlev/Documents/GitHub/materials.
 
 Твой единственный вход — файл-заход:
-/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md
+/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md
 
 Прочитай его ЦЕЛИКОМ и работай строго по нему. Он самоценный: в нём назван
 контракт зоны, ветка, что читать, задача, критерий готовности и форма отчёта.
@@ -43,8 +43,8 @@
 Приоритет владельца: разобрать инциденты важнее, потом закрыть долги — неразобранный инцидент это повторяющаяся ошибка, долг может подождать.
   1. инцидентов без вердикта             : 0
   2. долгов СТАТУС: ЖИВ                  : н/д — ни одного skills/*/DOLG.md нет на диске (другой git-репозиторий)
-  3. уроков фабрике без ВЕРДИКТ          : 55
-  4. пунктов очереди «ДОСТАВЛЕНО: нет»   : 64
+  3. уроков фабрике без ВЕРДИКТ          : 59
+  4. пунктов очереди «ДОСТАВЛЕНО: нет»   : 67
      из них разбором очереди (парсер `dostavit_urok`, записи с парой ДОМ:/ДОСТАВЛЕНО:): 26
        живых (чинится доставкой — «дом есть»)  : 14
        к владельцу (решение за человеком)      : 6
@@ -54,27 +54,29 @@
        доставлено                               : 2
        🔴 не проверяется машиной: содержательная отработанность записей БЕЗ следа закрытия (метки в доме, строки ✅/ЗАКРЫТО) — нужна ревизия человеком; сырой греп сверх разбора — шаблонные строки формы.
 
-🔴 ДВЕРЬ НЕЗАКОММИЧЕННЫХ `kod_*.md` ОТКРЫТА КЛАПАНОМ: в арке `_studio/zhurnal/2026-08-24_obzor-funkciya-putey` есть 1 незакоммиченных файлов-заходов `kod_kommit-zakrytie-arki.md` — второй заход в такую арку обычно не собирается (долг 4 `disciplina-git`), но АНАЛИТИК открыл клапан, причина дословно: «цель захода — закоммитить именно эту грязь: kod_kommit-zakrytie-arki.md с вердиктом приёмки входит в зону коммита». Отключение видно здесь, в артефакте, а не осталось решением в голове аналитика.
+🔴 ДВЕРЬ НЕЗАКОММИЧЕННЫХ `kod_*.md` ОТКРЫТА КЛАПАНОМ: в арке `_studio/zhurnal/2026-08-24_obzor-funkciya-putey` есть 1 незакоммиченных файлов-заходов `kod_kommit-binomy-v7.md` — второй заход в такую арку обычно не собирается (долг 4 `disciplina-git`), но АНАЛИТИК открыл клапан, причина дословно: «цель захода включает коммит журнала арки, в том числе kod_kommit-binomy-v7.md (дописаны отчёт исполнителя и приёмка)». Отключение видно здесь, в артефакте, а не осталось решением в голове аналитика.
 
-🔴 ДВЕРЬ ГЕЙТА СБОРКИ ЗАПОЛНЕННОГО ФАЙЛА ОТКРЫТА КЛАПАНОМ: в арке `_studio/zhurnal/2026-08-24_obzor-funkciya-putey` лежат файлы-заходы со штампом «ЖДЁТ», красные на `check_sborki.py` — `kod_arhitektura-punkta.md`, `kod_graf-korpusa.md`, `kod_katalog-kursa.md`, `kod_konsolidaciya-korpusa.md`, `kod_napolnenie-chetverti.md`, `kod_otrisovka-vidov.md`, `kod_pasporta-korpusa.md`, `kod_rasskaz-god.md`, `kod_zakon-zakrytiya-noch-puti-i-volny.md` — следующий заход в такую арку обычно не собирается, но АНАЛИТИК открыл клапан, причина дословно: «арка закрыта 10.10: девять августовских каркасов со штампом ЖДЁТ — мёртвые, заход их не трогает». Отключение видно здесь, в артефакте, а не осталось решением в голове аналитика.
+🔴 ДВЕРЬ ГЕЙТА СБОРКИ ЗАПОЛНЕННОГО ФАЙЛА ОТКРЫТА КЛАПАНОМ: в арке `_studio/zhurnal/2026-08-24_obzor-funkciya-putey` лежат файлы-заходы со штампом «ЖДЁТ», красные на `check_sborki.py` — `kod_arhitektura-punkta.md`, `kod_graf-korpusa.md`, `kod_katalog-kursa.md`, `kod_konsolidaciya-korpusa.md`, `kod_napolnenie-chetverti.md`, `kod_otrisovka-vidov.md`, `kod_pasporta-korpusa.md`, `kod_rasskaz-god.md`, `kod_zakon-zakrytiya-noch-puti-i-volny.md` — следующий заход в такую арку обычно не собирается, но АНАЛИТИК открыл клапан, причина дословно: «арка закрыта 10.10 (баннер в PLAN.md): девять августовских заходов со штампом ЖДЁТ — мёртвые каркасы ночной волны, исполняться не будут; этот заход их не трогает». Отключение видно здесь, в артефакте, а не осталось решением в голове аналитика.
 
-КОНТЕКСТ. Курс владельца «Пути и волны»: статья-обзор 01 «Биномиальные коэффициенты» опубликована на сайте «Материалы» (`sayt/static/puti-i-volny-binomy/`, v6). Прошлый этап: аналитик Cowork (коммитить не может по построению) собрал v7 по замечаниям владельца 10.10 — источник `kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/lenta-istochnik.md`, собранный вид, скрипты правок, проверки — и положил готовую страницу v7 в `sayt/static/puti-i-volny-binomy/index.html`; рядом лента занятия 4 (`kurs-puti-i-volny/zanyatiya/04-tozhdestva/`) с дословными текстами владельца и закрытая приёмка прошлого захода. ЦЕЛЬ: забрать это в git тремя коммитами, вывезти и опубликовать сайт. Содержание файлов НЕ правится.
-Приёмка — по ОТЧЁТУ, без построчной сверки. Стоп до цели: `UROKI-FABRIKE.md` и копии-перевалки (`pravki/v7?-vhod/`, `stage4/`, `publish*.html` занятия 4) остаются вне git — так задумано.
+КОНТЕКСТ. Курс владельца «Пути и волны»; статья-обзор 01 «Биномиальные коэффициенты» (v7d, в git `15087edd`, на сайте) принята владельцем, и её язык, данный как образец к другим темам, даёт хорошие короткие лекции, а навык `lenta` без неё — хуже (урок У64). Прошлый этап: аналитик Cowork (коммитить не может по построению) разобрал язык обзора — 15 правил С18–С32 с источниками в описи владельца, тексты вставок готовы и вычитаны (`z2/VSTAVKI-navyk-lenta.md`), владелец 11.10 00:02 решил: вносить все 15, обзор 01 — эталон языка, «Третья проблема Гильберта» — эталон сюжета, проверочного прогона не делать. ЦЕЛЬ: внести правила и эталон в навык `disciplina/skills/lenta/`, поставить под три из них рычаги в `check_lenta.py` с фикстурами, провести пятнадцать правил через дверь `pravilo.py`, закоммитить и вывезти disciplina, затем закоммитить и вывезти журнал арки в materials.
+Приёмка — по ОТЧЁТУ, без построчной сверки. Стоп до цели законен: вставки и эталон в git без рычагов лучше, чем ничего — тогда рычаги и RESHENIYA в `## ВОПРОСЫ`, коммит журнала (п. 8) всё равно делается.
 
 ## ЧТО ФИНАЛИЗИРОВАНО НА ИНТЕРВЬЮ
 
 ИНТЕРВЬЮ ПРОВЕДЕНО: да (2026-10-10) — флаг `--intervyu da` при сборке. ⚠ Он доказывает, что аналитик не ЗАБЫЛ про интервью, и НЕ доказывает, что разговор был.
 
-1. Обзор 01 v7 (размещения, 8!, правило Паскаля и формула, перестановка суммы строки) — обновить и задеплоить на сайт: владелец 10.10 21:22 «можно это обновлять и деплоить»
-2. Адрес страницы прежний — …/materials/puti-i-volny-binomy/ (решение 09.10); строка на главной не меняется
-3. UROKI-FABRIKE.md не коммитить: его забирает отдельный заход уроков (решение 10.10)
+1. Вносить все 15 правил С18–С32 (владелец 11.10 00:02, ответ на вопрос «вносить все 15?»)
+2. Эталоны: обзор 01 — эталон языка любой статьи, «Третья проблема Гильберта» — сюжета-исследования и вида (владелец 11.10 00:02)
+3. Проверочного прогона навыка на новой теме НЕ делать — «скоро протестируем на чём-то настоящем» (владелец 11.10 00:02)
+4. UROKI-FABRIKE.md в этот заход не входит — его забирает отдельный заход уроков (решение 10.10)
 
 ## КОНТРАКТ ЗОНЫ (обязателен — не удалять; вписан Cowork)
 - **МЕСТО РАБОТЫ:** ветка `arka/mat-kostyak` в основной папке. 🔴 Она должна УЖЕ стоять. НЕ на ней — СТОП, НЕ делай `git checkout`: в общей папке он МОЛЧА откатывает дерево к состоянию ветки (цена 27→28.07: файл сильно откатился ночью, поймал владелец вручную; след в git НЕ остаётся). Тогда заход пересобрать с `--worktree`. Ветку не переключай, в другие НЕ коммить.
-- **ЗОНА (можно менять):** `sayt/static/puti-i-volny-binomy/` `kurs-puti-i-volny/` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md`. Всё вне — **READ-ONLY**: не править, не двигать, не удалять, не рефакторить «заодно».
+- **ВТОРОЙ РЕПОЗИТОРИЙ:** `/Users/ivanyakovlev/Documents/GitHub/disciplina` (ветка `main`) — зона (пути от корня disciplina): «skills/lenta/» (ZHANR-statya, gigiena-teksta, SKILL.md, DOLG.md, RESHENIYA.md только дверью pravilo.py, RYCHAGI-lenty.md, новая папка «skills/lenta/references/etalon-obzor-01/»), «_generator/tools/check_lenta.py», «_generator/tools/fixtures/check_lenta/». Остальная грязь disciplina — чужая: не трогать, не коммитить, не прятать.
+- **ЗОНА (можно менять):** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` `_studio/docs/KARTA.md` `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md`. Всё вне — **READ-ONLY**: не править, не двигать, не удалять, не рефакторить «заодно».
 - 🔴 **ЗАВЁЛ НОВЫЙ `.md` — РЕГИСТРИРУЕШЬ ЕГО САМ, ТЕМ ЖЕ ХОДОМ, ОДНОЙ КОМАНДОЙ:** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/register_doc.py <путь> "<описание>"` (из корня репо). `_studio/docs/` тебе по-прежнему READ-ONLY **для правки руками** — дверь ровно одна, и это она. Дверь идемпотентна (повторный вызов дубля не заведёт) и отказывает на пути вне `_studio/`, на несуществующем файле и на пустом описании. Свой файл-заход регистрировать не нужно: он рождается зарегистрированным из `bootstrap_zahod.py`. **Красный хук на ТВОЁМ новом `.md` — это не повод для `--no-verify`, а повод позвать дверь.** *(история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц1) Обходить больше нечего.*
 - **КОММИТ:** два хода — `add` по своим путям, затем `commit` **с теми же путями после `--`** (полная форма и цена каждого хода — §4); коммить ПО ХОДУ работы, не одним последним ходом (§4). НИКОГДА `-A` / `.` / `commit -am`, и никогда `commit` без путей. Субагенты не коммитят. **`--no-optional-locks` обязателен:** обычный git переписывает индекс, берёт `.git/index.lock` и роняет параллельный ручной коммит владельца.
-- **SCRATCHPAD — ТОЛЬКО ЛИЧНЫЙ.** Черновики, выкладки, промежуточные версии — в личную папку СВОЕГО захода `scratchpad/kommit-binomy-v7/`. Общие пути (`scratchpad/otchet.md`, любой `scratchpad/*` без имени твоей темы) ЗАПРЕЩЕНЫ: чужой отчёт уедет в твой файл или твой — в чужой, а приёмка читает отчёт без построчной сверки и подмену НЕ ЛОВИТ по построению. (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц2)
+- **SCRATCHPAD — ТОЛЬКО ЛИЧНЫЙ.** Черновики, выкладки, промежуточные версии — в личную папку СВОЕГО захода `scratchpad/lenta-yazyk-obzora/`. Общие пути (`scratchpad/otchet.md`, любой `scratchpad/*` без имени твоей темы) ЗАПРЕЩЕНЫ: чужой отчёт уедет в твой файл или твой — в чужой, а приёмка читает отчёт без построчной сверки и подмену НЕ ЛОВИТ по построению. (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц2)
 - 🔴 **Звал `register_doc.py` — допиши `_studio/docs/KARTA.md` к своим путям В ОБОИХ ходах.** Строка регистрации лежит физически в нём. Ворота 5 читают `§6` **с диска**, а не из индекса: коммит без этого файла пройдёт ЗЕЛЁНЫМ, документ уедет сиротой, а строка умрёт при первом `checkout` (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц3).
 - **ЗАПРЕТ:** ничего за пределами зоны, даже если «мешает» или «чинится в одну строку». Нашёл проблему вне зоны → в отчёт, не трогай.
 
@@ -89,21 +91,21 @@
 
 **1. ВЕСЬ КОНТУР — В СУБАГЕНТА, ОДНИМ ХОДОМ, ДО СВОЕЙ ПАПКИ.** Влитие названных веток в ОСНОВНУЮ, что забрать в git по ходу и что погасить после — на содержание твоей задачи не влияют. Запусти ОДНОГО субагента, дождись его и вставь его пять строк в `## ОТЧЁТ` дословно; сам эти пункты не исполняй. 🔴 ПОРЯДОК ПРИ ПАДЕНИИ ЭТОГО ВЫЗОВА — исполняй, не изобретай (движок роняет `network_error` на вызове субагента и уносит с собой ВЕСЬ заход, замер волны 3A — 4 захода из 13). Пауза 45 секунд, до трёх попыток; время меряй `date`, не суммой своих `sleep`. После третьей — работай БЕЗ субагента: контур остаётся неразобранным, и это ОТДЕЛЬНАЯ строка в `## ОТЧЁТ`, а не молчание. У него ОТДЕЛЬНЫЕ ПРАВА, объявленные в его же промпте: главная папка, основная ветка, вывоз — и ничего сверх; зону захода он не коммитит, её коммитишь ты сам, по ходу работы (§4). 🔴 ОТВЕТ ЛЮБОГО субагента, которого ты запускаешь (не только этого), обязан КОНЧАТЬСЯ строкой «выдано N позиций из M найденных»: канал мог оборвать его молча, и без этой строки усечение неотличимо от честного «мало нашлось». Нет строки — ответ усечён, в `## ОТЧЁТ` не вставляй, перезапроси. Полный текст задания печатает команда:
 ```
-python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/bootstrap_zahod.py --zadanie-subagentu --zone sayt/static/puti-i-volny-binomy/ --zone kurs-puti-i-volny/ --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ --kommitit 'kurs-puti-i-volny/ — обзор 01 v7 и занятие 4, с исключениями из задания' --kommitit 'sayt/static/puti-i-volny-binomy/index.html — страница v7' --kommitit 'журнал арки _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ — kod_kommit-zakrytie-arki.md, kod_kommit-binomy-v7.md, SESSIYA.md, PLAN-SPASENIYA; БЕЗ UROKI-FABRIKE.md' --zakryt 'веток не гасить: arka/mat-kostyak живая; worktree не заводится'
+python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/bootstrap_zahod.py --zadanie-subagentu --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ --zone _studio/docs/KARTA.md --zone _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md --kommitit 'disciplina: skills/lenta/ (ZHANR-statya, gigiena-teksta, SKILL.md, DOLG.md, RESHENIYA.md, RYCHAGI-lenty.md, references/etalon-obzor-01/) + _generator/tools/check_lenta.py + _generator/tools/fixtures/check_lenta/statya/ — коммитами по ходу' --kommitit 'materials: журнал арки _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ кроме UROKI-FABRIKE.md (SESSIYA, PLAN-SPASENIYA, VYGRUZKA-2026-10-10-2.md, Z2-YAZYK-OBZORA-01.md, z2/, kod_*.md этого вечера) + _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md' --zakryt 'веток и рабочих папок этот заход не заводит и не гасит; arka/mat-kostyak в materials и main в disciplina остаются'
 ```
 
 🔴 ГРАНИЦА ПРАВ, ТРИ ОТВЕТА (та же, что в самом задании субагенту — одно место в тексте, а не пересказ): **кто вливает ЧУЖИЕ названные (`--vlit`) ветки** — субагент, в ОСНОВНУЮ ветку, до заведения твоей папки; **кто вливает СВОЮ ветку этого захода** — ты сам, последним ходом, после коммита зоны (`git_zona.py vlit-v-osnovnuyu`; (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц6)); **кто коммитит пути ВНЕ зоны захода** — субагент (хвост Cowork и что назовёт пункт 3 его задания). Очередь заявок эту границу больше не касается — её закрывает роль коммитера на границе волны, не субагент этой позиции. Ты коммитишь ТОЛЬКО зону этого захода, по ходу работы (§4). 🔴 Конфликт на `README.md` при ЛЮБОМ слиянии разрешается ОБЪЕДИНЕНИЕМ записей реестра, НИКОГДА выбором стороны: параллельные заходы волны дописали в реестр по строке — обе записи правы, выбор одной молча уничтожает регистрацию соседа.
 
 **2. ТЕПЕРЬ ЗАВОДИ СВОЮ РАБОЧУЮ ПАПКУ** (команда — в блоке «МЕСТО РАБОТЫ» выше) и работай в ней как обычно. Её ветка отпочкована от свежей основной, поэтому инструмент, которым ты работаешь, уже на диске — отдельного «влить перед работой» больше нет.
 
-Невлитых `zahod/*`-веток, НЕ покрытых `--vlit`, — 1: `zahod/istoriya-sessij` — 🔴 снимок при сборке 2026-10-10, ПРОВЕРЬ ПЕРВЫМ ХОДОМ: `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'`. 🔴 КЛАПАН ОТКРЫТ АНАЛИТИКОМ, причина дословно: «zahod/istoriya-sessij — чужая работа другой арки, к этому коммиту отношения не имеет». Заход собран ВОПРЕКИ невлитому этой веткой — отключение видно здесь, в артефакте, а не осталось решением в голове аналитика (§79 канона: невлитая ветка законна, рядом может идти чужой заход).
+Невлитых `zahod/*`-веток, НЕ покрытых `--vlit`, — 1: `zahod/istoriya-sessij` — 🔴 снимок при сборке 2026-10-10, ПРОВЕРЬ ПЕРВЫМ ХОДОМ: `git --no-optional-locks branch --no-merged arka/mat-kostyak | grep -c 'zahod/'`. 🔴 КЛАПАН ОТКРЫТ АНАЛИТИКОМ, причина дословно: «невлитая zahod/istoriya-sessij — чужая зона, этот заход её не касается (как в Ф6)». Заход собран ВОПРЕКИ невлитому этой веткой — отключение видно здесь, в артефакте, а не осталось решением в голове аналитика (§79 канона: невлитая ветка законна, рядом может идти чужой заход).
 
 
-- задеплоить: сайт «Материалы»: git_zona.py opublikovat --yes — страница static/puti-i-volny-binomy/index.html
+- задеплоить: вывезти оба репозитория: git_zona.py vyvezti (materials, гард 7И — см. ЗАДАЧУ) и push main в disciplina
 
 - Проверь ветку: `git branch --show-current` — обязано быть `arka/mat-kostyak`. Не она — СТОП, `git checkout` НЕ делай (§4 GIT-disciplina), нужен `--worktree`.
-- Точка отката: `git add sayt/static/puti-i-volny-binomy/ kurs-puti-i-volny/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md` → commit (или zip), если зона не чиста в HEAD (не фабрикуй, если чиста).
-- Прочитать ТОЛЬКО: этот файл. Проект не изучай.
+- Точка отката: `git add _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/docs/KARTA.md _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md` → commit (или zip), если зона не чиста в HEAD (не фабрикуй, если чиста).
+- Прочитать ТОЛЬКО: файлы, названные в §2 «Что читать». Проект не изучай.
 - ПЛАН — в `## ПЛАН` перед действиями.
 
 ## 1. ДИСЦИПЛИНА (Карпатов)
@@ -117,41 +119,62 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/bootstr
 ## 2. ЗАДАЧА
 
 🔴 **WRITE YOUR `## ОТЧЁТ`, `## ПЛАН` AND `## ВОПРОСЫ` IN ENGLISH, AND EVERY FILE AND EVERY COMMIT MESSAGE YOU PRODUCE TOO.** Owner's decision 30.08. It is a каркас-level rule, not a preference (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц9). Fixed Russian addresses stay Cyrillic: `ЦЕНА:` · `ВЕРДИКТ:` · `ДОМ:` · `ДОСТАВЛЕНО:` · `ПОДЪЁМ:` · `[ДОЛГ: …]` · every `## ` heading of this file · every path and command.
-🔴 **Поправки к шаблону выше — для ЭТОГО захода:** (а) worktree НЕТ — §0.1 п.2 к тебе не относится: работаешь в `/Users/ivanyakovlev/Documents/GitHub/materials` на уже текущей `arka/mat-kostyak`; генератор предупреждает о живых рабочих папках — это чужие параллельные заходы, поэтому только поимённые pathspec, никогда `-A`/`.`; (б) вливать нечего; (в) список «что забрать в git» из §0.1 — ТВОИ коммиты ниже, субагент гит-контура эти пути НЕ коммитит; (г) строки шаблона §4 — образец формы, исполняй ТОЧНЫЕ команды ниже (шаблонный `add -- kurs-puti-i-volny/` забрал бы копии-перевалки); (д) этот файл-заход коммитишь ты в коммите 3, отчёт докоммитит приёмка.
+🔴 **Поправки к шаблону выше — для ЭТОГО захода:** (а) worktree НЕТ — §0.1 п.2 к тебе не относится: работаешь в основных папках обоих репозиториев на уже текущих ветках (`arka/mat-kostyak` в materials, `main` в disciplina); генератор предупреждает о живых рабочих папках — это чужие параллельные заходы, поэтому только поимённые pathspec, никогда `-A`/`.`; (б) вливать нечего; (в) список «что забрать в git» из §0.1 — ТВОИ коммиты ниже, субагент гит-контура эти пути НЕ коммитит (урок У63); (г) строки шаблона §4 — образец формы, исполняй ТОЧНЫЕ пути ниже; (д) этот файл-заход коммитишь ты последним коммитом materials, отчёт докоммитит приёмка; (е) шаблонный критерий про `bootstrap_zahod/PROGNAT.sh` к этому заходу НЕ относится — критерий ниже.
 
-**Шаги (по порядку, код возврата — первым):**
-0. `cd /Users/ivanyakovlev/Documents/GitHub/materials`; `git branch --show-current` → `arka/mat-kostyak` (иначе СТОП). `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py clean`.
-1. **Коммит 1 — курс:**
-   `git --no-optional-locks add -- kurs-puti-i-volny/ ':(exclude)kurs-puti-i-volny/zanyatiya/*/LENTA/publish*.html' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7b-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7c-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7d-vhod' ':(exclude)kurs-puti-i-volny/zanyatiya/04-tozhdestva/stage4'`
-   `git --no-optional-locks commit -m "kurs-puti-i-volny: review 01 'Binomial coefficients' v7 (arrangements section, 8! argument, Pascal rule vs factorial formula, row sum reordered; owner notes V35-V42) and lesson 4 'Identities' (lenta, checks, owner raw texts 10.10)" -- kurs-puti-i-volny/ ':(exclude)kurs-puti-i-volny/zanyatiya/*/LENTA/publish*.html' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7b-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7c-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7d-vhod' ':(exclude)kurs-puti-i-volny/zanyatiya/04-tozhdestva/stage4'`
-   Проверка: `git --no-optional-locks show --name-only --format= HEAD | grep -c -v '^kurs-puti-i-volny/'` → **0**; `git --no-optional-locks show --name-only --format= HEAD | grep -c -e 'vhod/' -e 'stage4/' -e 'zanyatiya/.*/publish'` → **0**; `git --no-optional-locks show --name-only --format= HEAD | wc -l` → **22** (при сборке: 16 новых + 6 правленых).
-2. **Коммит 2 — сайт:**
-   `git --no-optional-locks add -- sayt/static/puti-i-volny-binomy/index.html`
-   `git --no-optional-locks commit -m "sayt: update 'Binomial coefficients' page to v7" -- sayt/static/puti-i-volny-binomy/index.html`
-   Проверка: в коммите ровно 1 путь.
-3. **Коммит 3 — журнал:**
-   `git --no-optional-locks add -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey/SESSIYA.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-zakrytie-arki.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md`
-   `git --no-optional-locks commit -m "arc obzor-funkciya-putey: acceptance of the closing commit (Ph6), diary, brief for review 01 v7" -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey/SESSIYA.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-zakrytie-arki.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md`
-   Хук на любом коммите красный: на чужом долге — клапан §4 с причиной; на своём содержании — СТОП, `## ВОПРОСЫ`, содержание не правь. `UROKI-FABRIKE.md` НЕ добавлять (на нём законно красный `check_uroki`).
-4. **Вывоз:** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py vyvezti` (предпросмотр), затем `vyvezti --yes`. Если отказ из-за открытых заявок спецмата 7И (данные детей, Р278): проверь `git --no-optional-locks diff --name-only origin/arka/mat-kostyak HEAD | grep -c -i -e diskmat -e ucheniki -e misha` → 0 и только тогда `vyvezti --yes --vsyo-ravno "владелец 10.10 разрешил вывоз работы курса; детских путей 0"` — так было решено владельцем для таких же коммитов 10.10 15:5x. Не 0 — СТОП.
-5. **Публикация сайта:** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py opublikovat` — предпросмотр обязан назвать `static/puti-i-volny-binomy/index.html`; затем `opublikovat --yes`, дождись исхода и вставь его в отчёт. Отказ из-за грязного `sayt/` вне зоны — СТОП, чужое не коммить.
+**Тексты правил НЕ пишешь и НЕ правишь.** Все вставки в навык написаны и вычитаны аналитиком: `/Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/z2/VSTAVKI-navyk-lenta.md`, восемь блоков В1–В8, у каждого строка «КУДА:» с якорем. Вставляешь ДОСЛОВНО, кроме строк «КУДА:» и самих заголовков `## В1 · …` этого файла. Якорь встречается не ровно один раз (0 или ≥2) — СТОП по этой вставке, в `## ВОПРОСЫ`, остальные делай. Русский текст в навыке остаётся русским (правило English — для твоего отчёта, коммитов и кода).
 
-**КРИТЕРИЙ ГОТОВНОСТИ (может ПРОВАЛИТЬСЯ) — команды из корня materials; значения ПРИ СБОРКЕ 10.10 21:3x рядом:**
-- `git --no-optional-locks ls-files --others --exclude-standard -- kurs-puti-i-volny ':(exclude)kurs-puti-i-volny/zanyatiya/*/LENTA/publish*.html' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7b-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7c-vhod' ':(exclude)kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7d-vhod' ':(exclude)kurs-puti-i-volny/zanyatiya/04-tozhdestva/stage4' | wc -l` → **0**; при сборке **16**.
-- `git --no-optional-locks diff --name-only -- kurs-puti-i-volny sayt/static/puti-i-volny-binomy _studio/zhurnal/2026-08-24_obzor-funkciya-putey | wc -l` → не больше **2**: `UROKI-FABRIKE.md` и этот файл-заход с твоим отчётом; при сборке **10**.
-- `git --no-optional-locks rev-list --count origin/arka/mat-kostyak..HEAD` → **0**.
-- `git --no-optional-locks show origin/main:static/puti-i-volny-binomy/index.html | grep -c 'Первая лампочка'` → **1** (страница v7 в опубликованной ветке); при сборке **0**.
+**Что читать (и только это):** `z2/VSTAVKI-navyk-lenta.md` (целиком); `Z2-YAZYK-OBZORA-01.md` (раздел «Решения владельца» и таблица — зачем всё это); в disciplina: `skills/lenta/references/ZHANR-statya.md`, `skills/lenta/references/RYCHAGI-lenty.md` §7, `_generator/tools/check_lenta.py` (профиль статьи: `PUNKTY_STATYA`, `ISKLYUCHENIE_VLADELCA`, `profil_statyi`), `_generator/tools/fixtures/check_lenta/PROGNAT.sh`, `_generator/tools/pravilo.py --help`; прототип рычагов аналитика `z2/proto_rychagi.py` (40 строк — образец логики, не код для копирования).
+
+**Шаги (код возврата — первым):**
+
+0. `cd /Users/ivanyakovlev/Documents/GitHub/materials`; `git branch --show-current` → `arka/mat-kostyak`; `git -C /Users/ivanyakovlev/Documents/GitHub/disciplina branch --show-current` → `main` (иначе СТОП). `git -C /Users/ivanyakovlev/Documents/GitHub/disciplina --no-optional-locks diff --name-only -- skills/lenta _generator/tools/check_lenta.py _generator/tools/fixtures/check_lenta | wc -l` → **0** при сборке; не 0 — чужая работа в твоей зоне, СТОП.
+
+1. **Эталон.** В disciplina создай `skills/lenta/references/etalon-obzor-01/` и скопируй туда `materials/kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/lenta-istochnik.md` под тем же именем. md5 копии обязан быть `cf6eea05ff321d6efd6ae1de4d954cea` (= версия в коммите materials `15087edd`). Рядом — `README.md` из блока В8, `<md5>` и `<дата>` подставь фактические.
+
+2. **Вставки В1–В7** в `ZHANR-statya.md`, `gigiena-teksta.md`, `SKILL.md`, `DOLG.md`. После вставок: `grep -c '^## С[0-9]' skills/lenta/references/ZHANR-statya.md` → **32** (при сборке **17**; прибавка обязана быть ровно 15 — назови оба числа в отчёте).
+
+3. **Три рычага в `check_lenta.py`, профиль статьи** (`zhanr: statya`), рядом с С11 и МБ11, тем же стилем (строка сводки печатается всегда, причина красного — с первым примером):
+   - **С18** — абзац, который начинается словом «Например», идёт первым прозаическим блоком после блока-врезки Утверждение/Теорема/Лемма/Предложение. Пропускаются: блоки `$$…$$`, блоки `> поле:…` и тело врезки, если метка стоит отдельным блоком. Красный.
+   - **С22** — тело врезки Утверждение/Теорема/Лемма/Предложение (текст после жирной метки в том же блоке, а если он пуст — следующий блок) начинается с `$$`. Красный.
+   - **С29** — подпись длиннее 20 слов. Подпись — текст `<figcaption>` и ВТОРОЕ поле `{{R:имя|подпись|причина}}` (третье поле — причина статичности, его НЕ считать). Слова — после снятия тегов, `$…$` считается одним словом. Красный.
+   - **Исключение.** Прогон аналитика на всех выложенных статьях: С18 и С22 — 0 нарушений везде; С29 — у `spetsmat-2026/zamena-algebra-2026-10-05/statya-asimptota/LENTA/lenta.md` подписи 24–38 слов, у `abel-ruffini/LENTA/lenta.md` — одна около 22 (перемерь своим кодом). Статьи, выложенные до 11.10, по С18/С22/С29 получают ПРЕДУПРЕЖДЕНИЕ, не красный, и печатают строку исключения — по аналогии с решением владельца 04.10 «уже выложенное не полируем» (`ISKLYUCHENIE_VLADELCA`). Заведи отдельный словарь для языковых рычагов: `abel-ruffini`, `tretya-problema-gilberta`, `statya-asimptota`, `statya-urok-1` (узнаются тем же `isklyuchenie_dlya`-способом: `<имя>/LENTA/<файл>.md`). Строка исключения дословно: «исключение языка — статья выложена до 11.10 (по аналогии с решением владельца 04.10)». Эта аналогия — решение аналитика, не владельца: назови её в `## ВОПРОСЫ` одной строкой.
+   - `PUNKTY_STATYA` пополняется тремя пунктами; `NE_PROVERYAEM` — строкой «порядок "способ → формула" в целом (С18 ловит только "Например" сразу после утверждения), перенос посреди равенства (С22), подписи виджетов `{{S:…}}` — живут в файлах виджетов (С29)».
+
+4. **Фикстуры** в `_generator/tools/fixtures/check_lenta/statya/`: от `zelenaya.md` — по одной мутации на рычаг (`s18-naprimer.md`, `s22-golaya-formula.md`, `s29-dlinnaya-podpis.md`), каждая красная ровно по своему пункту; `zelenaya.md` остаётся зелёной (если её подписи или врезки задевают новые рычаги — правь фикстуру, не порог, и скажи в отчёте). Строки в `PROGNAT.sh` — тем же `prognat_statyi`. Плюс живой прогон (п. 6). Мутация кода: для каждого рычага временно выключи проверку — его фикстура обязана позеленеть; верни. Запиши в отчёт три пары «до/после мутации».
+
+5. **Реестр и решения.** `RYCHAGI-lenty.md` §7: три строки таблицы `С18`, `С22`, `С29` тем же форматом (правило · где краснеет · фикстура и мутация · уроки = «У64 арки 2026-08-24_obzor-funkciya-putey»), заголовок §7 и строку оглавления дополни «С18, С22, С29». `RESHENIYA.md` — ТОЛЬКО дверью, пятнадцать вызовов, по одному на правило С18–С32, из корня disciplina:
+   `python3 _generator/tools/pravilo.py --skill lenta --tekst "<С-номер>. <одна фраза правила — первая фраза его текста из В2>" --zakryvaet ../materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md#64 (у С18 ещё ,../materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md#61) --rychag "_generator/tools/check_lenta.py профиль статьи С<N>"` для С18, С22, С29; для остальных двенадцати `--nadezhda "no countable signal; held by reading — genre profile skills/lenta/references/ZHANR-statya.md and etalon skills/lenta/references/etalon-obzor-01/"`. Дверь отказала — код возврата и её текст в отчёт, руками в RESHENIYA НЕ писать. ⚠ `UROKI-FABRIKE.md` в git не попадает (п. 8) — ссылка на урок живая на диске; это известно и законно до захода уроков Ф7.
+
+6. **Гейты, все с кодом возврата:**
+   - `bash _generator/tools/fixtures/check_lenta/PROGNAT.sh` → rc=0;
+   - `python3 _generator/tools/check_lenta.py skills/lenta/references/etalon-obzor-01/lenta-istochnik.md` → зелёный по С18/С22/С29 (L9 и прочие пункты могут краснеть на снимке по своим причинам — назови, если так; судишь три новых);
+   - `python3 _generator/tools/check_lenta.py ../materials/kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/lenta-istochnik-v4.md` → красный по С18, нарушений **2** (утв. «симметрия» и «правило Паскаля»);
+   - все семь выложенных статей (`abel-ruffini/LENTA/lenta.md`, `tretya-problema-gilberta/LENTA/lenta.md`, `spetsmat-2026/zamena-algebra-2026-10-05/statya-asimptota/LENTA/lenta.md`, `diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/statya-urok-1/LENTA/lenta.md`, `obzory/volnovoe-uravnenie-struny/src/obzor.md`, `kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/LENTA/lenta.md`, `kurs-puti-i-volny/zanyatiya/04-tozhdestva/LENTA/lenta.md` — пути от корня materials): rc каждой ДО твоей правки и ПОСЛЕ — таблицей; ни одна не обязана покраснеть из-за новых рычагов;
+   - `python3 tools/ocenka_skilla.py --skill lenta` и `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/disciplina python3 _generator/tools/check_avtonomnost.py --skill skills/lenta` — rc до и после; хуже, чем до, быть не должно.
+
+7. **Коммиты disciplina** (по ходу, поимённо, `git --no-optional-locks`): (1) эталон + вставки В1–В8 — `skills/lenta/references/etalon-obzor-01/ skills/lenta/references/ZHANR-statya.md skills/lenta/references/gigiena-teksta.md skills/lenta/SKILL.md skills/lenta/DOLG.md`; (2) рычаги — `_generator/tools/check_lenta.py _generator/tools/fixtures/check_lenta/ skills/lenta/references/RYCHAGI-lenty.md skills/lenta/RESHENIYA.md`. Чужие незакоммиченные правки disciplina — не трогать. Вывоз: `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/disciplina python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py vyvezti`, затем то же с `--yes`.
+
+8. **Коммит materials — журнал арки:** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` КРОМЕ `UROKI-FABRIKE.md` (через `':(exclude)_studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md'` в add И commit) + `_studio/docs/KARTA.md` + `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md`. Перед коммитом: `git --no-optional-locks diff -- _studio/docs/KARTA.md` — только строки регистрации файлов этой арки (при сборке: этот файл-заход, `Z2-YAZYK-OBZORA-01.md`, `z2/VSTAVKI-navyk-lenta.md`, `z2/yazyk-obzora-01.md`, `z2/zadacha-lenta-yazyk.md`); чужие строки — в `## ВОПРОСЫ`, не коммитить. Проверка: `git --no-optional-locks show --name-only --format= HEAD | grep -c UROKI` → **0**. Вывоз: `git_zona.py vyvezti`, затем `--yes`. Отказ из-за открытых заявок спецмата 7И (данные детей, Р278): `git --no-optional-locks diff --name-only origin/arka/mat-kostyak HEAD | grep -c -i -e diskmat -e ucheniki -e misha` → 0 и только тогда `vyvezti --yes --vsyo-ravno "владелец 10.10 разрешил вывоз работы курса; детских путей 0"`. Не 0 — СТОП.
+
+**КРИТЕРИЙ ГОТОВНОСТИ (может ПРОВАЛИТЬСЯ) — значения ПРИ СБОРКЕ 11.10 00:2x рядом:**
+- `bash /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/fixtures/check_lenta/PROGNAT.sh; echo $?` → **0**, и в выводе есть три новые строки ✓ (С18, С22, С29).
+- `grep -c '^## С[0-9]' /Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/references/ZHANR-statya.md` → **32** (при сборке **17**).
+- `md5 -q /Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/references/etalon-obzor-01/lenta-istochnik.md` → **cf6eea05ff321d6efd6ae1de4d954cea**.
+- `grep -c '^### lenta-Р' /Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/RESHENIYA.md` → **38** (при сборке **23**).
+- v4 обзора — красный по С18 ровно **2**; семь выложенных статей — rc после = rc до (таблица).
+- `git -C /Users/ivanyakovlev/Documents/GitHub/disciplina --no-optional-locks rev-list --count origin/main..HEAD` → **0**; `git --no-optional-locks rev-list --count origin/arka/mat-kostyak..HEAD` (materials) → **0**.
+- `git --no-optional-locks diff --name-only -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md _studio/docs/KARTA.md` и `git --no-optional-locks ls-files --others --exclude-standard -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey` → вместе не больше **2** строк: `UROKI-FABRIKE.md` и этот файл-заход с твоим отчётом; при сборке **15**.
 **Отрицательный вердикт несёт ОХВАТ В СЕБЕ:** не «дыр не найдено», а «дыр не найдено, проверено X из Y». Без охвата вердикт не принимается — «проверено 2 из 9» и «проверено 9 из 9» выглядят одинаково.
 
 ## 3. ВЕРИФИКАТОР (если двигаем/теряем/жмём)
 
-Верификатор не нужен: операция не лоссовая: только add/commit/push поименных путей и публикация уже собранной страницы.
+Верификатор не нужен: каждый рычаг доказывается мутацией в фикстуре (зелёный эталон, красная v4 и мутант) — проверка встроена в критерий; тексты правил написаны и вычитаны аналитиком, вставляются дословно.
 
 ## 4. 🔴 КОММИТ СВОЕЙ ЗОНЫ — ПО ХОДУ РАБОТЫ, НЕ ОДНИМ ПОСЛЕДНИМ ХОДОМ
 Ты работаешь host-side и в `.git` ПИШЕШЬ — значит коммитишь САМ, никому не передавая. Каждую завершённую часть работы коммить СРАЗУ, теми же двумя ходами — не копи всё к финальному ходу:
 ```
-git --no-optional-locks add -- sayt/static/puti-i-volny-binomy/ kurs-puti-i-volny/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md                     # вводит НОВЫЕ пути в индекс
-git --no-optional-locks commit -m "<зона>: <что сделано>" -- sayt/static/puti-i-volny-binomy/ kurs-puti-i-volny/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md   # отсекает всё чужое
+git --no-optional-locks add -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/docs/KARTA.md _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md                     # вводит НОВЫЕ пути в индекс
+git --no-optional-locks commit -m "<зона>: <что сделано>" -- _studio/zhurnal/2026-08-24_obzor-funkciya-putey/ _studio/docs/KARTA.md _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md   # отсекает всё чужое
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone <зона>   # из корня репо; должен быть ✅
 git --no-optional-locks show --stat                        # обязаны быть ТОЛЬКО твои пути
 ```
@@ -180,9 +203,9 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 > `## ВОПРОСЫ`) — ЧУЖАЯ семья с той же буквой: их гоняет приёмка, не ты.
 > (история цены — `/sessions/rcw-018aaowdc3vczyubvpqz3dee/mnt/GitHub/disciplina/_studio/docs/kak-delat/ISTORII-CEN-zahoda.md` Ц13)
 
-**ЗОНА ГИГИЕНЫ:** `sayt/static/puti-i-volny-binomy/` `kurs-puti-i-volny/` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md`
+**ЗОНА ГИГИЕНЫ:** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` `_studio/docs/KARTA.md` `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md` `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md`
 
-- **Г1. Зона доехала в git.** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone sayt/static/puti-i-volny-binomy/` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone kurs-puti-i-volny/` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_kommit-binomy-v7.md` → ✅. Красное на любой из команд — отчёт не принимается: приёмка гоняет их все первым ходом.
+- **Г1. Зона доехала в git.** `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/docs/KARTA.md` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md` → ✅; `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py check --zone _studio/zhurnal/2026-08-24_obzor-funkciya-putey/kod_lenta-yazyk-obzora.md` → ✅. Красное на любой из команд — отчёт не принимается: приёмка гоняет их все первым ходом.
 - **Г2. Второй репозиторий.** **неприменимо, и это проверено при сборке, а не предположено:** все пути зоны лежат внутри репозитория `materials` (тот же критерий, что у С2 `check_sborki.py`). Зона расширилась за его пределы по ходу — пункт снова применим; команда та же, что в применимом случае: `cd ../<репозиторий> && git --no-optional-locks status --porcelain` → пусто. *Команда названа и здесь нарочно (находка верификатора): пункт, который объявлен неприменимым и не говорит, ЧТО делать, когда станет применим, исполнить в этот момент нечем.*
 - **Г3. Невлитых веток не прибавилось.** `git --no-optional-locks branch --no-merged arka/mat-kostyak` — число сравни с тем, что было на входе. Выросло — назови, чьи ветки и почему они законны.
 - **Г4. Новый инструмент имеет живую точку вызова.** Завёл `.py` в `_generator/**` — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_tool_contract.py <свои новые файлы>` → rc=0. Ни одного нового `.py` — так и напиши. *Инструмент без точки вызова зелен ровно потому, что его никто не звал.*
@@ -267,14 +290,17 @@ grep -n '<как механизм назван в вызывающем коде>
 > **Не сочиняй.** Пустая секция — законный отчёт. Выдуманный урок хуже отсутствующего: он попадёт в канон, который читают ВСЕ будущие проекты.
 
 ## ПЛАН — (заполняет исполнитель)
-Branch check: `arka/mat-kostyak` (OK). ПРАВКИ ПОСЛЕ ВЫДАЧИ: none (`<правок нет>`).
-1. Run the git-contour subagent (§0.1) once, paste its five lines into `## ОТЧЁТ`; if the call fails, retry up to 3 times with 45 s pauses, otherwise record it as a separate report line.
-2. Step 0: `git_zona.py clean`; take the entry snapshot.
-3. Commit 1 (course, with excludes), commit 2 (site page), commit 3 (journal, no UROKI-FABRIKE.md); check the stated counts after each (0 / 0 / 22 / 1 path).
-4. Export: `vyvezti` preview, then `vyvezti --yes` (children's-data check if refused).
-5. Publish: `opublikovat` preview must name `static/puti-i-volny-binomy/index.html`, then `opublikovat --yes`.
-6. Readiness criteria + hygiene Г1–Г6, final git hygiene, fill `## ОТЧЁТ`.
-Decisions inside the zone: none needed; content of files is not edited.
+
+Entry facts (2026-10-11): materials branch `arka/mat-kostyak` ✓; disciplina branch `main` ✓; foreign diff in disciplina lenta zone = 0 ✓; unmerged `zahod/*` = 1 (`zahod/istoriya-sessij`, valve opened by analyst) ✓. ПРАВКИ ПОСЛЕ ВЫДАЧИ: none. Counter: run from materials needs `GIT_ZONA_REPO=materials` (plain run gave rc=1 "no files in area"); with it rc=0, item 4 = 70 (66 at build — this evening's files added).
+
+1. Git contour §0.1 — one subagent with the printed task (no merges: `--vlit` absent; no worktree per поправка (а)); paste its five lines into `## ОТЧЁТ`.
+2. Read only: VSTAVKI (B1–B8), Z2-YAZYK-OBZORA-01 (decisions + table), ZHANR-statya, RYCHAGI §7, check_lenta.py (statya profile), PROGNAT.sh, pravilo.py --help, proto_rychagi.py.
+3. Baselines BEFORE edits: rc of seven published articles, etalon, v4; ocenka_skilla + check_avtonomnost rc; `^## С[0-9]` count; `^### lenta-Р` count.
+4. Etalon copy + md5 check + README (B8) → B1–B7 anchored inserts (abort per insert if anchor count ≠ 1) → count 32 → disciplina commit (1).
+5. Three levers С18/С22/С29 in statya profile + separate exception dict for published articles (warning, not red) + PUNKTY/NE_PROVERYAEM; three fixtures + PROGNAT lines; mutation pairs; RYCHAGI §7 rows; 15 pravilo.py calls → disciplina commit (2) → vyvezti.
+6. Gates (all rc first) → materials journal commit excluding UROKI-FABRIKE.md → vyvezti (7И guard) → final hygiene → report; this file committed last.
+
+Decisions inside the zone: if `zelenaya.md` trips a new lever, fix the fixture (as instructed). Criterion check: the "≤2 lines" criterion counts this file — but this file is committed last, so after that commit it should be 1 (UROKI) unless the report is written after; I will write the report before the last commit so the line count is ≤2 either way.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
@@ -310,43 +336,27 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-(subagent a34c23dc11a535791, relayed; it reported the outputs in summary form)
-unmerged branches: main, zahod/istoriya-sessij · dirty paths: 119 · ahead of origin: 0 · open requests: 12
+<сюда — вывод, дословно>
 ```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-Subagent: ran doctor/plan (plan draft not used); committed only the index tail `_studio/docs/KARTA.md` as `e2cd114b`; merged 0 of 0 named branches; closed nothing; irreversible: none. Its last line: «выдано 1 позиций из 119 найденных».
+<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да` (per the subagent; foreign dirty paths — diskmat-57/, ucheniki/, _fond/, obzory/ — are other people's substantive work, left alone)
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/sayt/static/puti-i-volny-binomy/index.html` — browser; published page …/materials/puti-i-volny-binomy/ (publish run https://github.com/d1-d57/materials/actions/runs/38076558938, green)
-**РОД АРТЕФАКТА:** `исходник`
-**КОММИТ:** `15087edd` (course, 22 paths) · `1386dd32` (site, 1 path) · `34a0303a` (journal, 3 paths) · `git_zona.py check --zone` → ✅ on `sayt/static/puti-i-volny-binomy/` and on `kod_kommit-binomy-v7.md`. Red on `kurs-puti-i-volny/` (7 paths) and on the arc folder (`UROKI-FABRIKE.md`) is exactly the set the brief excludes on purpose: `vhod/` copies, `stage4/`, `publish*.html`; UROKI-FABRIKE.md goes to a separate lessons pass.
-
-ПРАВКИ ПРОЧИТАНЫ: none (block was `<правок нет>`).
-
-**What was done and why:** took the v7 review 01 and lesson 4 into git in three pathspec commits, exported, published the site (showcase `main` at `f5550e24`).
-**Counts:**
-- Commit 1: non-course paths 0 · excluded-copy paths 0 · files 22 (as specified).
-- Commit 2: exactly 1 path. Commit 3: 3 paths.
-- Criteria: untracked course files 0 (build time 16) · tracked-modified in zone = 1 (`UROKI-FABRIKE.md` only; the brief allows ≤2) · `rev-list origin/arka/mat-kostyak..HEAD` = 0 · `'Первая лампочка'` on `origin/main` = 1.
-- Export: `vyvezti` refused on 2 open git-operaciya requests (logika-goda-7); child-paths check `grep -c -i -e diskmat -e ucheniki -e misha` = 0, so I used `--vsyo-ravno` with the brief's wording; 4 commits pushed (incl. subagent's `e2cd114b`).
-- Publish preview named only `static/puti-i-volny-binomy/index.html`; `opublikovat --yes` → green.
-- Г3: unmerged branches `main` (showcase, not merged by rule) and `zahod/istoriya-sessij` (foreign, valve open) — same two as at entry, none added.
-- Г2, Г4, Г5: not applicable (single repo; no new `.py`; no new `.md` registered by me — the KARTA card for this brief was added by the subagent).
-- Own-branch merge into main (`vlit-v-osnovnuyu`) NOT done: brief point (б) says nothing to merge, and main is the publish showcase; branch `arka/mat-kostyak` stays alive.
-- Still outside git: `UROKI-FABRIKE.md` of this arc + the 7 deliberately excluded copies; subagent counted 118 foreign dirty paths.
-**Not touched:** file contents; foreign work; UROKI-FABRIKE.md.
-**НЕОБРАТИМОЕ:** необратимого нет (commits `15087edd`, `1386dd32`, `34a0303a`, `e2cd114b` are revertible; push and publish are forward-only additions).
-**Open problems:** (1) `git_zona.py` refuses without `GIT_ZONA_REPO` exported when run from materials — the brief's commands omit it. (2) the subagent's report ended «выдано 1 позиций из 119» where 119 counts foreign dirty paths, not report items. (3) Time/tokens: n/a on the app channel.
-**ПОВТОРЯЕМОСТЬ:** (1) will recur on every pass that runs `git_zona.py` from materials — brief template should carry the variable; no other findings.
+**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
+**РОД АРТЕФАКТА:** `<исходник | собранный>`
+*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
+**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
-rod=instrumenty · putey_zony=4 · simvolov=35585 · rc=0
+rod=instrumenty · putey_zony=4 · simvolov=36167 · rc=0
 ```
 MODEL: besplatnaya
    принято 4 of 7 in the cluster «rod=instrumenty, zone paths 4+» = 57%
@@ -358,7 +368,7 @@ MODEL: besplatnaya
    the cheapest class is also the best-scoring one here.
    caveat: rod is the tool's own inference, not a declared value, for 8 of the 16 passes in this cluster (rule: zone has a .py/.sh path or lives in _generator/tools -> instrumenty; otherwise a skills/ path -> suzhdenie; otherwise -> mehanika)
    🔴 THE MODEL IS NOT THE BINDING CONSTRAINT HERE. This cluster accepts at 50% against a corpus base rate of 80%, and no model class inside it does better than the others. On this corpus the feature that moves the outcome is the SIZE OF THE ZONE, so the lever is to split the pass, not to buy a more expensive model.
-   (--simvolov 35585 sits below 140 of 143 measured task sizes; it does NOT narrow the cluster - task length did not separate the outcome on this corpus, see --analiz)
+   (--simvolov 36167 sits below 137 of 143 measured task sizes; it does NOT narrow the cluster - task length did not separate the outcome on this corpus, see --analiz)
 ```
 
 ## ПРАВКИ ПОСЛЕ ВЫДАЧИ — (заполняет АНАЛИТИК; исполнитель ЧИТАЕТ)
