@@ -291,7 +291,7 @@ grep -n '<как механизм назван в вызывающем коде>
 
 ## ПЛАН — (заполняет исполнитель)
 
-Entry facts (2026-10-11): materials branch `arka/mat-kostyak` ✓; disciplina branch `main` ✓; foreign diff in disciplina lenta zone = 0 ✓; unmerged `zahod/*` = 1 (`zahod/istoriya-sessij`, valve opened by analyst) ✓. ПРАВКИ ПОСЛЕ ВЫДАЧИ: none. Counter: run from materials needs `GIT_ZONA_REPO=materials` (plain run gave rc=1 "no files in area"); with it rc=0, item 4 = 70 (66 at build — this evening's files added).
+Entry facts (2026-10-11): materials branch `arka/mat-kostyak` ✓; disciplina branch `main` ✓; foreign diff in disciplina lenta zone = 0 ✓; unmerged `zahod/*` = 1 (`zahod/istoriya-sessij`, valve opened by analyst) ✓. ПРАВКИ ПОСЛЕ ВЫДАЧИ: none. Counter: run from materials needs `GIT_ZONA_REPO=materials` (plain run gave rc=1 "no files in area"); with it rc=0, item 4 = 70 (67 at build — this evening's files added).
 
 1. Git contour §0.1 — one subagent with the printed task (no merges: `--vlit` absent; no worktree per поправка (а)); paste its five lines into `## ОТЧЁТ`.
 2. Read only: VSTAVKI (B1–B8), Z2-YAZYK-OBZORA-01 (decisions + table), ZHANR-statya, RYCHAGI §7, check_lenta.py (statya profile), PROGNAT.sh, pravilo.py --help, proto_rychagi.py.
@@ -317,6 +317,25 @@ Decisions inside the zone: if `zelenaya.md` trips a new lever, fix the fixture (
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. The door `pravilo.py` refused all 15 calls, rc=1 each, same text: «❌ ссылка на несуществующий урок: ../materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md#64 … правило НЕ записано — файл дома не тронут.» Cause, checked by command: `LESSON_NUM_RE = re.compile(r"^(\d+)\.")` (disciplina `_generator/tools/pravilo.py:84`) expects lesson titles `64. …`, while this arc titles them `У64. …` — `check_uroki.lessons_in` returns 59 lessons here and none matches. RESHENIYA.md is untouched (23 records, md5 2ed48f5982f7ec59642172af5992c604); nothing was written by hand. Repair (one line, out of this zone): accept the prefix, e.g. `r"^У?(\d+)\."`, then rerun `python3 -I /Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/2026-08-24_obzor-funkciya-putey/z2/pravila_dver.py --run` → expect 15 × rc=0 and `grep -c '^### lenta-Р' /Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/RESHENIYA.md` → 38. Sibling of У62 (`urok.py` cannot write into materials arcs): the lesson doors and the lesson format of materials arcs disagree. ЦЕНА: С18–С32 have no RESHENIYA records; readiness criterion «RESHENIYA 38» fails at 23. Repeats on every rule that closes a lesson of this arc → a short pass before the next rules pass.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+2. The brief contradicts itself on the etalon path. It names `skills/lenta/references/etalon-obzor-01/` three times (zone, step 1, criterion md5), and the verbatim texts B1/B5/B6/B8 cite it; but `ocenka_skilla.py --skill lenta` axis 9 forbids files deeper than one level under `references/`, so the check went rc 0 → 1 («ось 9: файлов глубже одного уровня 2»), against «хуже, чем до, быть не должно». I kept the mandated path. Options: (a) move to skill level `skills/lenta/etalon-obzor-01/` — the precedent is `check_lenta.py` L13, which lifts `-png` folders out of `references/` for this very axis — and fix the four text references plus the criterion path; (b) a named exception for etalon folders in axis 9. Repeats: every `ocenka_skilla --skill lenta` run stays red until decided.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. `check_avtonomnost.py --skill skills/lenta`: rc=1 before and after, but ❌ lines 19 → 25. All six new ones come from the verbatim insert texts: `materials/…` paths (B1 header, B2 intro, B3 example, B8 README) and tool names not present in disciplina (`golos.py` in B2, `sobrat.py` in B8). Inserted verbatim as required; rewording is the analyst's call.
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/z2/VSTAVKI-navyk-lenta.md
+   ДОСТАВЛЕНО: нет
+4. The language exception (`ISKLYUCHENIE_YAZYKA` in `check_lenta.py`: abel-ruffini, tretya-problema-gilberta, statya-asimptota, statya-urok-1 get a warning, not red, on С18/С22/С29) is the analyst's analogy with the owner's 04.10 decision «уже выложенное не полируем», not an owner decision — confirm or revoke.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+5. Pre-existing broken anchor, reported by the disciplina commit hook (`check_ssylki.py`, printed warning): `skills/lenta/references/gigiena-teksta.md` links «1.4 Правило 7 — минимальная длина блока» to `#14-правило-7-минимальная-длина-блока`, and no heading has that slug. It was there before my edit (2 occurrences in HEAD~1); not touched.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+6. The brief's first-move counter `python3 …/schet_nezakrytogo.py _studio/zhurnal/2026-08-24_obzor-funkciya-putey`, run from the materials root as written, returns rc=1 «под область не попало ни одного файла»; with `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials` it gives rc=0 and the numbers (item 4 = 70, was 67 at build). ЦЕНА: a false refusal on the first move; an executor that does not retry reports «counter not taken».
+   ДОМ: _studio/zhurnal/2026-08-24_obzor-funkciya-putey/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -336,24 +355,167 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+СНИМОК ВХОДА:
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+  main
++ zahod/istoriya-sessij
+$ git --no-optional-locks status --porcelain | wc -l
+     118
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       0
+$ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki
+📂 Реестр заявок: /Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/_INFRA-git/zayavki
+⚠ `GIT_ZONA_REPO` не выставлена — прочитан, возможно, НЕ ТОТ реестр.
+   прочитан реестр:    /Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/_INFRA-git/zayavki
+   репозиторий cwd:    /Users/ivanyakovlev/Documents/GitHub/materials
+Открытых заявок: 12
+   · 2026-09-28T2351-29-09-7-materials-1-diskmat  (285 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-10-04T2045-7-29-09-04-10-2026  (144 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-10-05T1522-05-10-logika-goda-7-cowork  (125 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-05T1843-7-29-09-05-10-diskmat  (122 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-10-05T2018-7-6-10-05-10-2026  (121 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-10-05T2054-2026-10-05t2018-6-10-diskmat  (120 ч, obychnaya, род: git-operaciya, операция: kommit)
+   · 2026-10-06T1736-05-10-06-10-logika-goda  (102 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-06T1935-2026-10-06t1736-05-10-06  (100 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-07T0106-razbor-pary-6-10-logika-goda  (95 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-08T1221-2026-10-06t1736-2026-10-06t1935  (57 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-08T1233-2026-10-08t1221-08-10-diskmat  (56 ч, blokiruet, род: git-operaciya, операция: kommit)
+   · 2026-10-08T1244-2026-10-08t1221-2026-10-08t1233  (56 ч, blokiruet, род: git-operaciya, операция: kommit)
+── ждут захода-разработчика (na-zahod): 12 (forwarded, "Гит-контуру их брать НЕ НАДО")
+── недавно закрытых (sdelano), всего 90
+── POSTOYANNYE.md: 1 permanent exception (_studio/zhurnal/_INFRA-git/zayavki/ lives outside git)
+Охват: заявок открыто 12, переадресовано 12, закрыто недавно (sdelano) 90, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
+rc=0
 ```
+The `zayavki` output above is shortened: each request's body text and the 12 forwarded request lines are left out. All 12 open requests ask to commit content under `diskmat-57/`, and none of them is an index or an autolog.
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+*(the git-contour subagent's blocks, verbatim)*
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+ЧТО СДЕЛАНО:
+1. **`doctor`, rc=0.** Branch `arka/mat-kostyak` at HEAD 34a0303a, in sync with `origin/arka/mat-kostyak` (0 ahead, 0 behind). No locks in `.git`. 671 paths outside git: `diskmat-57` 613, `obzory` 21, `_studio` 15, `_fond` 8, `kurs-puti-i-volny` 7, `ucheniki` 6, `.gitignore` 1.
+2. **`plan`, rc=0.** It drafted 7 groups covering 671 paths. I committed none of them.
+3. **`check`, rc=1.** It lists 670 paths outside git: 653 never added and 17 modified.
+4. **Autologs.** `_studio/zhurnal/_INFRA-git/INCIDENTY.md` and `VERDIKTY.md` are clean, so there was nothing to take.
+5. **Index.** The only changed index is `_studio/docs/KARTA.md`. It is the executor's zone under override (c), so I left it.
+6. **`.gitignore`.** The change adds rules for `_fond/problems-ru/` (`syroe/`, `baza.sqlite`). That belongs to the problems.ru content work, not to an autolog, so I left it.
+7. **Push.** Nothing was committed, so `vyvezti` was not run.
+8. **Commits.** None; HEAD is still 34a0303a.
+
+Foreign `.md` files that are not registered (named only; I did not register them):
+1. `_fond/problems-ru/DNEVNIK.md` and `_fond/problems-ru/README.md`
+2. `_fond/zadachi/bank/{chyotnye-kvadraty-tablica-mxn,klyushka-dvojnoj-podschet,korol-turnira-induktsiya,kruglyj-stol-turnir}.md`
+3. `kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7{b,c,d}-vhod/lenta-v7{b,c,d}.md` and `kurs-puti-i-volny/zanyatiya/04-tozhdestva/stage4/lenta-v3.md`
+4. `obzory/volnovoe-uravnenie-struny/` — 13 `.md` files (`BLOKI`, `BRIF`, `README`, `RESERCH`, `TERMINY`, `src/obzor` and 7 under `_sluzhebnoe/`)
+5. `ucheniki/danya/dz/dz-posle-11.md` and `ucheniki/danya/zanyatiya/zanyatie-11-shpargalka.md`
+
+Point 2 lists, reported by command and not committed (override (b)):
+1. **disciplina `skills/lenta/`.** `git status --porcelain -- skills/lenta` shows 0 paths. Either nothing is pending there yet or it is already committed.
+2. **materials, arc journal** `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/`:
+   - modified: `PLAN-SPASENIYA-2026-10-10.md`, `SESSIYA.md`, `kod_kommit-binomy-v7.md`, and `UROKI-FABRIKE.md` (stays out of git)
+   - new: `VYGRUZKA-2026-10-10-2.md`, `Z2-YAZYK-OBZORA-01.md`, `kod_lenta-yazyk-obzora.md`, and in `z2/`: `VSTAVKI-navyk-lenta.md`, `golos.py`, `poryadok.py`, `proto_rychagi.py`, `yazyk-obzora-01.md`, `zadacha-lenta-yazyk.md`
+3. **materials state file** `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md` is modified, plus `_studio/docs/KARTA.md`.
+
+*(executor's note: override (b)/(c) in the subagent prompt applied поправка (в) of this brief — the point-2 paths are the executor's commits; they went in later as disciplina `8b5c6001c`, `e8fab9df1` and materials `718c75e7`.)*
+
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет`
+These stay open and my rights cannot close them:
+1. **12 open commit requests** (seven of them marked blokiruet), all for `diskmat-57/` content: 613 paths, 9 of them modified, including `docs/RESHENIYA.md`, `docs/OTKRYTYE-VOPROSY.md` and `START-HERE.md`. Several requests also forbid pushing because the files contain children's surnames (decision Р278). My mandate covers only the index and autologs, so these are the content owners' commits.
+2. **`main` and `zahod/istoriya-sessij` are not merged.** They are not named for merging, and `zahod/istoriya-sessij` is checked out in `materials-wt/istoriya-sessij`. Judging other branches is forbidden to me.
+3. **Foreign content outside git:** `_fond/` (8 paths), `kurs-puti-i-volny/` (7), `obzory/volnovoe-uravnenie-struny/` (21), `ucheniki/danya/` (6) and the `.gitignore` change. This is content work, outside my mandate.
+4. **Executor-zone paths** (point 2, item 2 and item 3) are the executor's commits.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/references/ZHANR-statya.md` — any text editor (rules С18–С32; the etalon is `/Users/ivanyakovlev/Documents/GitHub/disciplina/skills/lenta/references/etalon-obzor-01/lenta-istochnik.md`, the levers are in `/Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/check_lenta.py`)
+**РОД АРТЕФАКТА:** `исходник`
+**КОММИТ:** disciplina `8b5c6001c` — «lenta: language of an article by etalon obzor 01 — rules С18–С32, etalon snapshot, B1–B8 inserts»; disciplina `e8fab9df1` — «check_lenta: language levers С18, С22, С29 in the article profile + fixtures, RYCHAGI §7 rows»; materials `718c75e7` — «obzor-funkciya-putey: arc journal of 10.10 evening …». All three pushed. `git_zona.py check --zone` → ✅ for `_studio/docs/KARTA.md`, `_studio/docs/sostoyanie/OTKRYTYE-ZADACHI.md`, `kod_lenta-yazyk-obzora.md`; ❌ for `_studio/zhurnal/2026-08-24_obzor-funkciya-putey/` on exactly one path, `UROKI-FABRIKE.md`, which this pass must not commit (поправка/шаг 8, decision 10.10). This file with the report and `z2/pravila_dver.py` go into one more materials commit after the report is written, so its hash is not in the report by construction.
+
+ПРАВКИ ПРОЧИТАНЫ: none — the block reads «правок нет» (checked at start and before the report).
+
+**Result: stopped short of the goal, legally (§2 «Стоп до цели законен»).** Rules, etalon and the three levers are in git and pushed; RESHENIYA is not, because the door refused all 15 calls (`## ВОПРОСЫ` 1). Two «not worse than before» checks are worse because of the brief's own mandated path and texts (`## ВОПРОСЫ` 2, 3).
+
+**What and why**
+1. **Etalon.** `skills/lenta/references/etalon-obzor-01/lenta-istochnik.md` copied from `materials/kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/lenta-istochnik.md`; md5 `cf6eea05ff321d6efd6ae1de4d954cea` = live file = `git show 15087edd:…`. `README.md` = B8 with md5 and date 11.10.2026.
+2. **Inserts B1–B7** applied by a script, verbatim, each anchor checked for exactly one occurrence; 0 stops. `grep -c '^## С[0-9]' ZHANR-statya.md`: 17 before → 32 after (+15).
+3. **Levers** in `check_lenta.py`, function `yazyk_statyi`, called next to `profil_statyi` for `zhanr: statya`. Summary lines print always (`С18 утверждений N · …`, `С22 …`, `С29 подписей N · длиннее 20 слов: K`); a red item names the first example. `{{R:…}}` fields are parsed by hand (brace depth, `|` outside `$…$`), so formulas with `{}` or `|x|` in a caption do not break the split. A separate dict `ISKLYUCHENIE_YAZYKA` (4 articles) is recognised by the same `isklyuchenie_dlya` (now with a dict argument) and prints «исключение языка — статья выложена до 11.10 (по аналогии с решением владельца 04.10)». `PUNKTY_STATYA` +3, `NE_PROVERYAEM` +1 line as dictated; the «ЭТО НЕ ЛЕНТА …/ЗЕЛЁНЫЙ …» lines now list the profile items from `PUNKTY_STATYA`.
+4. **Fixtures**: `s18-naprimer.md`, `s22-golaya-formula.md`, `s29-dlinnaya-podpis.md`, one mutation each from `zelenaya.md`; each is red by exactly one remark of its own item (checked in PROGNAT by «КРАСНЫЙ — замечаний 1:»). `zelenaya.md` stays green untouched. PROGNAT also copies the С29 mutant to `…/statya-asimptota/LENTA/lenta.md` → rc 0 with the exception line.
+5. **RYCHAGI §7**: heading and TOC line «…, С18, С22, С29», three rows, lessons «У64 арки 2026-08-24_obzor-funkciya-putey».
+6. **RESHENIYA**: 15 door calls (first sentence of each rule from B2, extracted by script and checked by eye), all refused — see `## ВОПРОСЫ` 1. The script is kept as `z2/pravila_dver.py` for a one-command rerun after the door is fixed.
+
+**Code mutation — three pairs (fixture rc on intact code → with the check switched off):**
+- С18 (`if False and … startswith("Например")`): `s18-naprimer.md` 1 → 0; `zelenaya.md` 0.
+- С22 (`if False and telo.startswith("$$")`): `s22-golaya-formula.md` 1 → 0; `zelenaya.md` 0.
+- С29 (`if False and slov_v_podpisi(p) > S29_POROG_SLOV`): `s29-dlinnaya-podpis.md` 1 → 0; `zelenaya.md` 0.
+- Exception (entry `statya-asimptota` removed): live asimptota 0 → 1.
+After each: file restored, md5 equal to before (printed «restored md5 equal: True»).
+
+**Gates (rc first)**
+- `bash _generator/tools/fixtures/check_lenta/PROGNAT.sh` → rc=0; new lines ✓ for С18, С22, С29 (×2 each) and ✓ for the language exception.
+- Etalon `check_lenta.py skills/lenta/references/etalon-obzor-01/lenta-istochnik.md` → rc=0: С18 0 of 13 statements, С22 0 of 13, С29 1 caption, 0 over 20 (10 words). L9 green too.
+- v4 `…/_sluzhebnoe/pravki/lenta-istochnik-v4.md` → rc=1, С18 = **2** («Утверждение 5 (симметрия)», «Утверждение 7 (правило Паскаля)»); С22 0, С29 0. Before my edit: rc=0.
+- Seven published articles (paths from the materials root):
+
+| article | rc before | rc after | new levers |
+|---|---|---|---|
+| `abel-ruffini/LENTA/lenta.md` | 0 | 0 | С29 warning: 1 caption, 22 words (exception) |
+| `tretya-problema-gilberta/LENTA/lenta.md` | 0 | 0 | clean (max caption 19) |
+| `spetsmat-2026/…/statya-asimptota/LENTA/lenta.md` | 0 | 0 | С29 warning: 8 of 12 captions over 20 — 21, 23, 23, 24, 27, 30, 31, 38 (exception) |
+| `diskmat-57/…/statya-urok-1/LENTA/lenta.md` | 0 | 0 | clean |
+| `obzory/volnovoe-uravnenie-struny/src/obzor.md` | 0 | 0 | clean |
+| `kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/LENTA/lenta.md` | 0 | 0 | clean |
+| `kurs-puti-i-volny/zanyatiya/04-tozhdestva/LENTA/lenta.md` | 0 | 0 | clean |
+
+  Remeasured С29: abel 22 and tretya 19 match the analyst; asimptota has 8 over the threshold (21–38), not «24–38»: my count treats `$…$` as one word and counts every token with a letter or digit. С18 and С22: 0 everywhere, as the analyst found.
+- `python3 tools/ocenka_skilla.py --skill lenta`: rc 0 → **1** (axis 9, the etalon folder) — `## ВОПРОСЫ` 2.
+- `check_avtonomnost.py --skill skills/lenta`: rc 1 → 1; ❌ lines 19 → 25, all from verbatim texts — `## ВОПРОСЫ` 3.
+
+**Readiness criterion — 5 of 7 met:**
+1. PROGNAT rc=0 with three new ✓ (С18, С22, С29) — ✅
+2. `^## С[0-9]` = 32 (17 at build) — ✅
+3. md5 = `cf6eea05ff321d6efd6ae1de4d954cea` — ✅
+4. `^### lenta-Р` = **23**, expected 38 — ❌ (door refused, `## ВОПРОСЫ` 1)
+5. v4 red by С18 exactly 2; seven articles rc after = rc before — ✅
+6. `rev-list --count origin/main..HEAD` (disciplina) = 0; `origin/arka/mat-kostyak..HEAD` (materials) = 0 — ✅ at the time of writing
+7. Zone diff + untracked ≤ 2 lines — before the report commit: `UROKI-FABRIKE.md` and `z2/pravila_dver.py` (2); after it, only `UROKI-FABRIKE.md` — ✅ (15 at build)
+
+**What I did NOT touch:** `RESHENIYA.md` (door only, and it refused); `pravilo.py`, `ocenka_skilla.py`, `skills/KARTA-dokumentov.md` (out of zone); `UROKI-FABRIKE.md`; the broken anchor in `gigiena-teksta.md` (`## ВОПРОСЫ` 5); all foreign dirt in both repos (materials 111 porcelain lines, disciplina 22 — none mine).
+
+**Verifier:** none required (§3); each lever is proven by its mutation pair above.
+
+**Г1–Г6**
+- Г1: see the КОММИТ line — three ✅, the arc zone ❌ on `UROKI-FABRIKE.md` only (intended).
+- Г2: now applicable (the zone reached disciplina): `git -C disciplina status --porcelain -- skills/lenta _generator/tools/check_lenta.py _generator/tools/fixtures/check_lenta | wc -l` → 0.
+- Г3: `git --no-optional-locks branch --no-merged arka/mat-kostyak` → `main`, `+ zahod/istoriya-sessij` — the same two as at entry; did not grow.
+- Г4: no new `.py` under `_generator/**`. One new `.py` in the arc journal (`z2/pravila_dver.py`), outside `_generator`, so the check does not apply.
+- Г5: in materials I created no `.md`. In disciplina, five new `.md` (etalon `README.md`, `lenta-istochnik.md`, three fixtures). `korni.карта_для` gives `skills/KARTA-dokumentov.md` for the etalon pair and `None` for fixtures; that map holds 0 entries for `skills/lenta/` (no lenta file is registered there), it is outside my zone, and `register_doc.py` serves `_studio/` paths. Not registered; the commit hook did not flag them.
+- Г6: `git show --stat` of `8b5c6001c` (6 paths), `e8fab9df1` (6 paths), `718c75e7` (14 paths) — only zone paths.
+
+**Final git hygiene (by command, 2026-10-11 00:31 MSK, before the report commit)**
+- outside git in my zones: materials 2 (`UROKI-FABRIKE.md` by design, `z2/pravila_dver.py` → report commit); disciplina 0.
+- merging my own branch: not applicable — no worktree, work went straight onto `arka/mat-kostyak` and `main` (поправка (а)). Post-check from the main folder = the gate runs above, green except the named items.
+- unmerged branches: materials `main`, `zahod/istoriya-sessij` (same as entry, foreign).
+- unpushed: materials `arka/mat-kostyak` 0, disciplina `main` 0.
+- Push of materials used `--vsyo-ravno "владелец 10.10 разрешил вывоз работы курса; детских путей 0"` after the guard `git diff --name-only origin/arka/mat-kostyak HEAD | grep -c -i -e diskmat -e ucheniki -e misha` → 0 (14 paths). The refusal named two open requests: `2026-10-05T1522-05-10-logika-goda-7-cowork`, `2026-10-06T1736-05-10-06-10-logika-goda`.
+
+**Git-contour subagent — its five lines, verbatim:**
+  1. влито в основную 0 веток из 0 названных; основная ветка — `arka/mat-kostyak` (from `doctor`: «Ветка: arka/mat-kostyak»)
+  2. хвост Cowork: nothing taken into git (INCIDENTY.md and VERDIKTY.md are clean; KARTA.md is excluded by override). Still outside git: the 670 paths from `check`, rc=1 — `diskmat-57/` 613, `obzory/` 21, `_studio/` 15 (executor zone), `_fond/` 8, `kurs-puti-i-volny/` 7, `ucheniki/` 6, plus `.gitignore`
+  3. nothing extinguished and nothing scheduled to be; `arka/mat-kostyak` (materials) and `main` (disciplina) remain; no extinguishing commands were run, so there is no rc
+  4. необратимое: none (no commit, push, merge or deletion; HEAD is 34a0303a, 0 ahead of upstream)
+  5. выдано 12 позиций из 12 найденных
+
+**НЕОБРАТИМОЕ**
+- push · disciplina `main` → origin (`8b5c6001c`, `e8fab9df1`) · undone by `git revert` of those hashes.
+- push · materials `arka/mat-kostyak` → origin (`718c75e7`, plus the report commit) with `--vsyo-ravno` over two open requests, as step 8 prescribes · `git revert`.
+- temporary edits of `check_lenta.py` for the mutation runs · restored in place; md5 checked equal.
+- outside the scratchpad: one temp file `/tmp/x.txt` (fixture run output) — harmless, not in any repo.
+
+**Повторяемость:** `## ВОПРОСЫ` 1 repeats on every rule that closes a lesson of a materials arc with `У`-titles (the door refuses all of them) → a pass before the next rules pass, not a queue item. `## ВОПРОСЫ` 2 repeats on every `ocenka_skilla --skill lenta` run until decided → decide before the next lenta pass. `## ВОПРОСЫ` 3–6 do not repeat on the next unit of work → queue items.
+
+**Время прогона + токены:** неприменимо на канале `app`.
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=4 · simvolov=36167 · rc=0
