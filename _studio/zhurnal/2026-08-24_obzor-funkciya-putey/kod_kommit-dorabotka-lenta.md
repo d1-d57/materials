@@ -267,6 +267,8 @@ grep -n '<как механизм назван в вызывающем коде>
 🔴 **Отчёт без этих чисел не принимается.** «Я закоммитил» — не то же самое, что `status --porcelain`
 пустой: за одну сессию работа не доезжала трижды, каждый раз с честным «сделано» в отчёте.
 ## УРОКИ ФАБРИКЕ — (заполняет исполнитель; пусто — нормальный исход)
+### Subagent task text contradicts the brief when `--kommitit` names paths the executor commits itself
+ЦЕНА: the printed task orders the subagent to commit those paths, the brief's correction (в) forbids it; with the two rules unreconciled, the subagent could have committed the same files first and broken the executor's `add`/`commit -- <paths>` steps (KARTA.md diff check would have been empty). Cost here: one override in the prompt plus a ПЛАН entry. Check: `bootstrap_zahod.py --zadanie-subagentu` with `--kommitit` and a brief of kind «исполнитель коммитит сам».
 > Находка не про эту сессию, а закономерность про саму фабрику, годная другим заходам, — оформи как пункт очереди в `## ВОПРОСЫ` (формат там же) с `ДОМ: <эта арка>/UROKI-FABRIKE.md`, а не пиши прямо сюда неструктурированной строкой.
 > **Не про задачу — про САМУ ФАБРИКУ.** Ты работаешь с пустым контекстом и потому видишь то, чего не видит аналитик: он писал этот заход и ему приятно, что заход хорош. Сломался ВХОД (издание не то, id врёт, зона не содержит файла с ответом)? Критерий готовности кривой? Инструкция канона противоречит живому файлу? — сюда, строкой.
 > Формат жёсткий (по нему гейт): `### <что произошло>` / `ЦЕНА: <что сломалось и сколько стоило>`.
@@ -313,23 +315,45 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+branch --no-merged arka/mat-kostyak  -> main, zahod/istoriya-sessij   (rc=0)
+status --porcelain | wc -l           -> 114
+log --oneline @{u}.. | wc -l         -> 0
+git_zona.py zayavki                  -> open requests: 12 (all kommit/git-operaciya, diskmat/logika-goda, 7I children's data), na-zahod: 12, recently done: 90
+doctor rc=0: outside git 662 paths (diskmat-57 613, obzory 21, _fond 8, kurs-puti-i-volny 7, _studio 6, ucheniki 6, .gitignore 1); branch deletions lose nothing, checked 4 of 4
 ```
+(The subagent ran in read-only mode by my override: the brief's correction (в) forbids it to commit the `--kommitit` paths, and nothing was named in `--vlit`. Full porcelain lists: materials 114 paths, disciplina 31 paths.)
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent: nothing merged, committed, exported or deleted (read-only by design). The executor's commits are in `## ОТЧЁТ`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` — open request queue (12, children's data of diskmat/logika-goda, 7I, Р278) and 114/31 foreign dirty paths are foreign work, not touched by this brief; nothing was named in `--vlit`.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+ПРАВКИ ПРОЧИТАНЫ: правок нет (секция `<правок нет>` на старте и на конец).
+
+Done: three commits in two repositories, both exported, content untouched.
+- disciplina `91f14df42` — pravilo: door accepts the 'У' prefix (2 files). 
+- disciplina `a02512fff` — lenta: rules С18–С32, etalon moved to skill level (4 M + 2 renames R052/R100). md5 of `lenta-istochnik.md` = `cf6eea05ff321d6efd6ae1de4d954cea` ✓.
+- materials `2faf8c58` — journal of the arka (SESSIYA.md, kod_lenta-yazyk-obzora.md, this brief, KARTA.md = exactly one registration line of this brief). `UROKI-FABRIKE.md` not added.
+Step 1 checks (before any commit): check_lenta rc=0 · pravilo «ловушек 19, ✓ 19, ✗ 0» · ocenka_skilla rc=0 · `### lenta-Р` = 38.
+Export: disciplina `main` pushed (2 commits); materials `arka/mat-kostyak` pushed (1 commit) with `--vsyo-ravno "владелец 10.10 разрешил вывоз работы курса; детских путей 0"` after the check `grep -c -i -e diskmat -e ucheniki -e misha` → 0 (diff origin..HEAD had 4 paths, all mine). The refusal was caused by 2 open git-operaciya requests (`2026-10-05T1522-…-cowork`, `2026-10-06T1736-…`).
+Criteria: disciplina diff of lenta/pravilo paths → 0 · untracked in skills/lenta → 0 · `rev-list origin/main..HEAD` → 0, materials `origin/arka/mat-kostyak..HEAD` → 0 · zhurnal diff → 1 (`UROKI-FABRIKE.md`; this brief's report is committed by the follow-up commit below).
+Hygiene: Г1 `check --zone` on the brief → ✅ · Г2 not applicable for the zone (disciplina touched, its dirty tree is foreign; own paths clean: `git status` shows none of mine) · Г3 unmerged branches `main`, `zahod/istoriya-sessij` (count `zahod/` = 1, same as at entry) · Г4 no new .py · Г5 `grep -c kod_kommit-dorabotka-lenta.md _studio/docs/KARTA.md` → 1 · Г6 `show --stat` — only my paths · `--proverit-doma` rc=0 (1 of 1).
+Final step «влитие своей ветки»: not applicable — the base branch of materials is `arka/mat-kostyak` itself (the brief's work is done in the main folder, no worktree), there is nothing to merge; post-check = the step-1 commands above, run from the main folders, all green.
+Git-contour subagent: ran once, read-only by my override (contradiction in the brief explained in `## ПЛАН`); its last line «выдано 145 позиций из 145 найденных».
+Outside git, foreign (not touched): materials 114 paths (diskmat-57, ucheniki, obzory, …, `UROKI-FABRIKE.md` of this arka by decision 3 of the interview), disciplina 31 paths (KARTA.md, other arcs, `_generator/tools/.hook-golova-bez-ukazatelya-*` ×6 stray files).
+НЕОБРАТИМОЕ: необратимого нет (git rename of the etalon folder is in commit `a02512fff`, restorable from it).
+ПОВТОРЯЕМОСТЬ: the contradiction «subagent text says commit `--kommitit` paths» vs correction (в) will repeat in every brief with `--kommitit` that has «исполнитель коммитит сам» — see UROKI below.
+Время/токены: неприменимо на канале `app`.
+
+**АРТЕФАКТ:** артефакта нет: заход только git — результат в коммитах `91f14df42`, `a02512fff` (disciplina) и `2faf8c58` (materials)
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** исходник
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `2faf8c58` — obzor-funkciya-putey: acceptance of lenta-yazyk-obzora, analyst's follow-up, commit brief · `git_zona.py check --zone …/kod_kommit-dorabotka-lenta.md` → ✅ (the report itself: follow-up commit, hash in the final chat message)
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
