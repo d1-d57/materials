@@ -1,0 +1,22 @@
+#sim-c8 svg:focus{outline:none}
+#sim-c8 svg:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:10px}
+#sim-c8 .c8-box{fill:var(--panel);stroke:var(--rule);stroke-width:1.2;transition:stroke .15s,opacity .15s}
+#sim-c8 .c8-num{font-family:var(--sans);fill:var(--text);text-anchor:middle;font-variant-numeric:tabular-nums;pointer-events:none;transition:opacity .15s}
+#sim-c8 .c8-sum{font-family:var(--sans);fill:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none;transition:opacity .15s}
+#sim-c8 .c8-lead{stroke:var(--rule);stroke-width:1.2;stroke-dasharray:1.5 4;stroke-linecap:round;pointer-events:none}
+#sim-c8 .c8-hit{fill:transparent;cursor:pointer}
+#sim-c8 .c8-row:hover .c8-box{stroke:var(--accent)}
+#sim-c8 .c8-row.dim .c8-box,#sim-c8 .c8-row.dim .c8-num{opacity:.55}
+#sim-c8 .c8-row.on .c8-box{stroke:var(--text);stroke-width:1.6}
+#sim-c8 .c8-row.on .c8-num{font-weight:600}
+#sim-c8 .c8-row.on .c8-sum{fill:var(--text);font-weight:600}
+#sim-c8 .c8-arr{pointer-events:none}
+#sim-c8 .c8-ln{fill:none;stroke-width:1.7;stroke-linecap:round}
+#sim-c8 .c8-L .c8-ln{stroke:var(--accent)}#sim-c8 .c8-L .c8-hd{fill:var(--accent)}
+#sim-c8 .c8-R .c8-ln{stroke:var(--warm)}#sim-c8 .c8-R .c8-hd{fill:var(--warm)}
+#sim-c8 .sim-out{line-height:1.5}
+#sim-c8 .c8-line{margin:.15em 0;font-variant-numeric:tabular-nums}
+#sim-c8 .c8-line>span{display:inline-block;max-width:100%;text-wrap:balance}
+#sim-c8 .c8-pr{color:var(--muted)}
+#sim-c8 .c8-f{color:var(--text);display:inline-block;max-width:100%}
+@media (max-width:480px){#sim-c8 .sim-out{font-size:15px}}

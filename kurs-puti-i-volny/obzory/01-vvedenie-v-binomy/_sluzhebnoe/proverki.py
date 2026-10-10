@@ -128,6 +128,14 @@ check("v5: задача 12: 25·C(24,10)=15·C(25,10)=11·C(25,11)=11·4457400=4
 check("v5: утв. 13 при k>=n — все три числа 0", all(n*C(n-1,k)==(n-k)*C(n,k)==(k+1)*C(n,k+1)==0 for n in range(1,7) for k in range(n,n+3)))
 check("v5: задача 17: X·3·2=8·7·6=336, X=56=C(8,3); n(n-1)=2·C(n,2)", 56*3*2==8*7*6==336 and C(8,3)==56 and all(n*(n-1)==2*C(n,2) for n in range(N)))
 check("v5: утв. 13 диагональ: k·C(n,k)=n·C(n-1,k-1), 1<=k<=n", all(k*C(n,k)==n*C(n-1,k-1) for n in range(1,N) for k in range(1,n+1)))
+# v6 (10.10): суммы первых строк и удвоение по правилу Паскаля, задача 15 без X, Паскаль 15:20
+check("v6: суммы строк 0..7 = 1,2,4,…,128", [sum(C(n,k) for k in range(n+1)) for n in range(8)]==[2**n for n in range(8)])
+check("v6: 2·16 = 32 = 1+5+10+10+5+1", 2*16==32==1+5+10+10+5+1)
+check("v6: удвоение по правилу Паскаля: каждое C(n,k) входит в C(n+1,k) и C(n+1,k+1)",
+      all(sum(C(n+1,j) for j in range(n+2))==sum(2*C(n,k) for k in range(n+1)) for n in range(N)))
+check("v6: задача 15: C(8,3)·3·2 = 8·7·6 = 336, 6·C(8,3) = 336", C(8,3)*3*2==8*7*6==336==6*C(8,3))
+check("v6: Паскаль, 12-е следствие на строке 6: 15:20 = 3:4", F(15,20)==F(3,4) and C(6,2)==15 and C(6,3)==20)
+
 import re, os
 _t = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lenta-istochnik.md")).read()
 _t = _t[:_t.index("## Ответ")]   # история Паскаля («делит на») — цитата, не наше рассуждение
