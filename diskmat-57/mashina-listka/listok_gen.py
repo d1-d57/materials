@@ -280,6 +280,7 @@ PODZHAT = """() => {
   });
 }"""
 def to_pdf(html_paths):
+    """HTML → PDF; рядом с каждым PDF (кроме SHPARGALKA-*) остаются исходный HTML и <имя>.md — чистый текст (tekst_ryadom)."""
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
         b = p.chromium.launch(); pg = b.new_page(viewport={'width': 718, 'height': 1060})   # ширина = печатная колонка A4
@@ -287,6 +288,93 @@ def to_pdf(html_paths):
             pg.goto('file://' + h); pg.wait_for_timeout(200); pg.emulate_media(media='print'); pg.evaluate(PODZHAT)
             pg.pdf(path=h[:-5] + '.pdf', format='A4', print_background=True, prefer_css_page_size=True)
         b.close()
+    for h in html_paths: tekst_ryadom(h)
+# ---------------- текст рядом с PDF: <имя>.md ----------------
+from html.parser import HTMLParser
+class _Tekst(HTMLParser):
+    """Читает РАЗМЕТКУ ЭТОЙ ЖЕ МАШИНЫ (.page/.hd/.sec/.z/.n/.tx/.t, подписи полей .l), а не произвольный HTML: поэтому
+    годится и для свежего HTML, и для лежащего с прошлых итераций. Картинки (svg) не читает — только их aria-label."""
+    def __init__(s):
+        super().__init__(convert_charrefs=True); s.st = []; s.skip = 0; s.pages = []; s.pg = None; s.z = None; s.note = None
+    def cls(s, c): return any(c in k for _, k in s.st)
+    def handle_starttag(s, tag, attrs):
+        a = dict(attrs); k = set((a.get('class') or '').split())
+        if tag == 'svg':
+            if not s.skip and a.get('aria-label') and s.pg is not None and s.note is None:   # картинка в «Стоп» — украшение
+                lab = f'[рисунок: {a["aria-label"]}]'
+                if s.z is not None: s.z['pics'].append(lab)
+                else: s.pg['items'].append([lab])
+            s.skip += 1; return
+        if s.skip: return
+        if tag == 'br':
+            s.put('\n'); return
+        s.st.append((tag, k))
+        if tag == 'div' and 'page' in k: s.pg = dict(hd=['', ''], sec='', items=[]); s.pages.append(s.pg)
+        elif tag == 'div' and 'z' in k and s.pg is not None: s.z = dict(mark='', text='', pics=[], labels=[]); s.pg['items'].append(s.z)
+        elif tag == 'div' and k & {'rules', 'stop', 'foot'} and s.pg is not None: s.note = ['']; s.pg['items'].append(s.note)
+        elif tag == 'div' and s.z and s.cls('tx') | s.cls('t') and not ({'tx', 't'} & k): s.put('\n')
+        elif tag == 'li': s.put('\n- ')
+        elif tag == 'p' and s.note: s.put('\n')
+    def handle_endtag(s, tag):
+        if tag == 'svg':
+            s.skip = max(0, s.skip - 1); return
+        if s.skip or tag == 'br': return
+        while s.st:
+            t, k = s.st.pop()
+            if t == tag: break
+        if tag == 'div':
+            if s.z is not None and 'z' in k: s.z = None
+            if s.note is not None and k & {'rules', 'stop', 'foot'}: s.note = None
+    def put(s, t):
+        if s.pg is None or s.skip: return
+        if s.z is not None:
+            if s.cls('n'): s.z['mark'] += t
+            elif s.cls('tx') or s.cls('t'): s.z['text'] += t
+            elif s.cls('l') and (s.cls('ab') or s.cls('c')): s.z['labels'].append(t.strip())
+        elif s.note is not None: s.note[0] += t
+        elif s.cls('hd'): s.pg['hd'][0 if s.st[-1][0] == 'b' else 1] += t
+        elif s.cls('sec'): s.pg['sec'] += t
+    def handle_data(s, d): s.put(d)
+def html_v_md(h):
+    """Формат .md — ОДИН НА ВСЮ МАШИНУ. Заголовок «# <название>», под ним строка «<дата> · <класс> · вариант <В>» (как в шапке
+    листа); при смене варианта/названия (две половины пол-листа) — новый «# …». «## <раздел>» — если он есть. Задача — абзац
+    «**<значок><номер>.** <условие>»: пункты (а), (б)… остаются в условии как есть; если в условии их нет, а полей ответа
+    несколько — строка «Пункты: а, б». Картинки — «[рисунок: …]». Подвал и правила — абзацами в конце страницы. Вёрстки нет."""
+    P = _Tekst(); P.feed(h); out = []; prev = None; last = None
+    norm = lambda t: re.sub(r'[ \t]+', ' ', re.sub(r'[\xa0\u2009\u202f]', ' ', t)).strip()
+    lines = lambda t: '\n'.join(l for l in (norm(x) for x in t.split('\n')) if l)
+    for pg in P.pages:
+        hd = (norm(pg['hd'][0]), norm(pg['hd'][1])); ch = []
+        if norm(pg['sec']): ch.append(f'## {norm(pg["sec"])}')
+        for z in pg['items']:                          # задачи и абзацы (правила, «Стоп», подвал) — в порядке страницы
+            if isinstance(z, list):
+                if lines(z[0]): ch.append(lines(z[0]))
+                continue
+            body = lines(z['text']); mark = norm(z['mark'])
+            lab = [l for l in z['labels'] if l]
+            if len(lab) > 1 and '(а)' not in body: body += '\nПункты: ' + ', '.join(lab)
+            ch.append(f'**{mark}** {body}' + ''.join('\n' + x for x in z['pics']))
+        if (hd, ch) == last: continue                  # ДЗ печатается двумя одинаковыми половинами — текст один раз
+        last = (hd, ch)
+        if hd != prev: out.append(f'# {hd[0]}\n{hd[1]}'); prev = hd
+        out += ch
+    return '\n\n'.join(out) + '\n'
+def tekst_ryadom(html_path):
+    """Кладёт рядом с PDF <имя>.md (SHPARGALKA-* — нет: это таблица ответов, а не условия). Вызывается из to_pdf."""
+    import os
+    if os.path.basename(html_path).startswith('SHPARGALKA'): return None
+    md = html_path[:-5] + '.md'
+    open(md, 'w', encoding='utf-8').write(html_v_md(open(html_path, encoding='utf-8').read())); return md
+def dopisat_teksty(out_dir):
+    """Дописывает .md рядом с PDF по лежащему там HTML — ТОЛЬКО добавляет, PDF и HTML не трогает. Для итераций, собранных до 10.10."""
+    import glob, os
+    for pdf in sorted(glob.glob(os.path.join(out_dir, '*.pdf'))):
+        n = os.path.basename(pdf)
+        if n.startswith(('SHPARGALKA-', 'SKAN')): continue
+        h = pdf[:-4] + '.html'
+        if os.path.exists(pdf[:-4] + '.md'): print('уже есть', n[:-4] + '.md')
+        elif os.path.exists(h): print('записан', os.path.basename(tekst_ryadom(h)))
+        else: print('❗ нет HTML, текст не восстановить:', n)
 def fit_report(html_path):
     """Сколько миллиметров колонка каждой страницы переливает за лист (>0 — обрезано). Печатный размер."""
     from playwright.sync_api import sync_playwright
@@ -299,3 +387,7 @@ def fit_report(html_path):
             const f=p.querySelector('.foot'); const lim=f?(f.getBoundingClientRect().top-top-4):p.getBoundingClientRect().height;
             return Math.round((mx-lim)/px*10)/10})}''')
         b.close(); return r
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) == 3 and sys.argv[1] == '--teksty': dopisat_teksty(sys.argv[2])
+    else: print('python3 listok_gen.py --teksty <папка out/>  — дописать .md рядом с PDF по лежащему HTML')

@@ -9,6 +9,8 @@
       (по умолчанию KONTROLNAYA-*.html, DZ-*.html) в HTML должна быть раскладка polulist (две половины на A4);
   Г6  шпаргалка — не «номер, вариант, ответ» (А14, железно): больше трёх колонок или слова пояснений
       («ошибк», «наводящ», «→», «принима», «карта», «помощь»).
+  Г7  рядом с каждым out/*.pdf (кроме SHPARGALKA-*, SKAN*) нет <имя>.md — чистого текста условий: нельзя взять текст
+      из выданного листка. Печатает охват «PDF с текстом рядом X из Y». Отдельно: python3 proverka.py --teksty <папка out/>
 Г3 печатает пары, а не решает сам: повтор внешней формы при другом содержании — норма (сквозные правила процедуры).
 """
 import json, sys, re, glob, difflib, subprocess
@@ -24,6 +26,12 @@ def teksty_vydannyh(arka, krome):
             n = norm(kus)
             if len(n) > 60: T.append((Path(f).name, n[:400]))
     return T
+def gate_teksty(out):
+    """Г7: у каждого out/*.pdf (кроме SHPARGALKA-*, SKAN*) есть соседний .md. Возвращает число красных (0 или 1)."""
+    pdfs = [f for f in sorted(glob.glob(str(Path(out) / '*.pdf'))) if not Path(f).name.startswith(('SHPARGALKA-', 'SKAN'))]
+    net = [Path(f).name for f in pdfs if not Path(f[:-4] + '.md').exists()]
+    print(f'Г7 {"❗" if net else "✓"} PDF с текстом рядом {len(pdfs) - len(net)} из {len(pdfs)}' + (f'; нет .md: {", ".join(net)}' if net else ''))
+    return 1 if net else 0
 def main(it):
     it = Path(it).resolve(); J = json.load(open(it / 'ITERACIYA.json', encoding='utf-8'))
     K = json.load(open(it / 'out' / 'kanon.json', encoding='utf-8')); red = 0
@@ -53,6 +61,7 @@ def main(it):
         shir = max((len(re.findall(r'<th', tr)) for tr in re.findall(r'<tr>.*?</tr>', t)), default=0)
         if lish or shir > 3:
             print(f'Г6 ❗ {Path(h).name}: шпаргалка — только номер, вариант, ответ; лишнее: {lish or f"{shir} колонок"}'); red += 1
+    red += gate_teksty(it / 'out')
     arka = it.parent.parent; stary = teksty_vydannyh(arka, it.name)
     novye = []
     for h in glob.glob(str(it / 'out' / 'LISTOK-*-A.html')) + glob.glob(str(it / 'out' / 'DZ-*.html')):
@@ -65,4 +74,5 @@ def main(it):
             if r >= 0.82: print(f'Г3 ? похоже ({r:.2f}) на {f}: «{n[:90]}…»')
     print('гейты: ' + ('ЗЕЛЁНЫЕ' if not red else f'КРАСНЫХ {red}')); sys.exit(1 if red else 0)
 if __name__ == '__main__':
+    if len(sys.argv) == 3 and sys.argv[1] == '--teksty': sys.exit(gate_teksty(sys.argv[2]))
     main(sys.argv[1])
