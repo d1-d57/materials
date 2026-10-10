@@ -303,23 +303,35 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+branch --no-merged arka/mat-kostyak: main ; + zahod/istoriya-sessij
+status --porcelain | wc -l: 121
+log --oneline @{u}.. | wc -l: 0
+git_zona.py zayavki: open requests: 12 (diskmat/7I children's data - no push; 2 of them name arka/mat-kostyak: 2026-10-05T1522-05-10-logika-goda-7-cowork, 2026-10-06T1736-05-10-06-10-logika-goda)
 ```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent (git contour): merged 0 of 0 named branches (`--vlit` empty; main = showcase, zahod/istoriya-sessij = foreign, valve open - neither touched). Committed one autolog, `_studio/zhurnal/_INFRA-git/INCIDENTY.md` - 6df4ff82. Nothing pushed, nothing deleted, no branches/worktrees created or removed. Its own count of "~670 paths outside git" is a collapsed-directory count; the repo-wide `status --porcelain` line count at my entry was 121 - treat 121 as the measured figure. Left outside git by design: foreign diskmat-57 / ucheniki / _fond / other kurs-puti-i-volny work and `.gitignore`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет` - remaining: (1) foreign dirty work of other projects (diskmat-57, ucheniki, _fond, .gitignore) - not this zone, not an autolog; (2) two open git-operaciya requests on arka/mat-kostyak (2026-10-05T1522, 2026-10-06T1736) - children's data, owner forbids push (R278); (3) non-merged zahod/istoriya-sessij - foreign, valve open; main - showcase branch, not merged by rule.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+ПРАВКИ ПРОЧИТАНЫ: правок нет (block empty at start and re-checked before the report)
+**Git contour (subagent, five lines verbatim in substance):** 1. merged 0 of 0 named; base branch `arka/mat-kostyak`. 2. Cowork tail: taken into git - `INCIDENTY.md` (6df4ff82); left outside git - foreign projects + `.gitignore`. 3. Nothing extinguished, nothing created; no rc to report. 4. Irreversible: none (6df4ff82 undoable by revert). 5. "выдано 1 позиций из 1 найденных".
+**What I did:** step 1 KARTA diff = exactly the three expected registration rows (HANDOFF-2026-10-11, VYGRUZKA-2026-10-10-3, kod_kommit-handoff-10-11) - green. Step 2: one commit of exactly the ten named paths, 09ef0662; `show --name-only HEAD | grep -c UROKI` -> 0; file count -> 10. First attempt failed in zsh (unquoted variable not word-split; add rc=128, commit rc=1) - nothing changed, redone with an array.
+**🔴 EXPORT NOT DONE - stop before the goal:** `git_zona.py vyvezti` refused (rc=1) on two open requests naming arka/mat-kostyak (7I children's data). The guard from the brief passes: `git diff --name-only origin/arka/mat-kostyak HEAD | grep -c -i -e diskmat -e ucheniki -e misha` -> 0. I did NOT run `--vsyo-ravno` because of an unexpected foreign commit: **7a359c6d** ("index and autologs of the 10-11.10 tail ...", author "Claude Cowork", reflog 01:14:11, two seconds AFTER my commit at 01:14:09; not my subagent - it had finished earlier) landed on top of mine and **commits `UROKI-FABRIKE.md` (+58 lines)**, which contradicts finalized decision 3 ("UROKI-FABRIKE.md не коммитится - Ф7 отдельной сессией"). Exporting now would publish it. I did not rewrite foreign history. Needed from the owner: either (a) accept 7a359c6d and say "вывози" - I run `vyvezti --yes --vsyo-ravno "владелец 10.10 разрешил вывоз работы курса; детских путей 0"`; or (b) say "откати 7a359c6d" - I run `git reset --mixed 09ef0662` (file content stays on disk, becomes uncommitted again), then export. Until then the commits are LOCAL ONLY: 6df4ff82, 09ef0662, 7a359c6d (+ the report commit).
+**Hygiene:** Г1 - `git_zona.py check --zone` on all six zones -> ✅ (6 of 6). Г2 - inapplicable, all paths inside `materials`. Г3 - no-merged: `main`, `zahod/istoriya-sessij` (both were there at entry; nothing added). Г4 - inapplicable: no new `.py`. Г5 - inapplicable: I created no new `.md`; the three new arka files were registered by the analyst before me (KARTA rows verified in step 1). Г6 - `show --stat` of 09ef0662 = only the ten named paths; 7a359c6d = only UROKI-FABRIKE.md (foreign).
+**Criterion (measured after commits):** (1) diff of zone paths = 0 (<=2 required; UROKI is no longer a diff because 7a359c6d took it) - ok; (2) untracked in arka = 0 (was 2-3) - ok; (3) `rev-list --count origin/arka/mat-kostyak..HEAD` = 3 (required 0) - **FAILED, by the export stop above**. Coverage: 3 of 3 criteria measured.
+**Not touched / left outside git (named):** untracked `kurs-puti-i-volny/obzory/01-vvedenie-v-binomy/_sluzhebnoe/pravki/v7b-vhod/`, `v7c-vhod/`, `v7d-vhod/` (in the owner's tree, not in the named commit list - content not edited, not committed); everything of diskmat-57, ucheniki, _fond, `.gitignore`. Content of the ten files not edited.
+**Irreversible:** none. The only history-touching facts: my commit 09ef0662 and the delegate's 6df4ff82 (both revert-able); the foreign 7a359c6d left as is.
+**Recurrence:** (a) a second Cowork writer commits the same zone seconds after the executor - will recur on every closing session, a pass-before-the-next-run item (the commit-brief should stop the analyst's parallel `commit` while an executor holds the zone); (b) zsh does not word-split unquoted variables - recurring for any executor pasting bash-style recipes; use arrays or literal paths. Time/tokens: inapplicable on channel `app`.
+**АРТЕФАКТ:** артефакта нет: заход — коммит и вывоз, собранного файла нет. Подтверждение — коммит 09ef0662 в ветке arka/mat-kostyak (локально).
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** исходник
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `09ef0662` — obzor-funkciya-putey: session close 10-11.10 (ten named paths) · `git_zona.py check --zone` → ✅ on 6 of 6 zones; NOT exported (see EXPORT NOT DONE above)
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
