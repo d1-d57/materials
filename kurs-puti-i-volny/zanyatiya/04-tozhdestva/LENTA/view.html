@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<!-- ⚠ СГЕНЕРИРОВАНО ИЗ *.md ГЕНЕРАТОРОМ _generator/build_doc.py — РУКАМИ НЕ ПРАВИТЬ. Правь markdown-источник, пересобирай (0 токенов). -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тождества для биномиальных коэффициентов</title>
+<!-- ⚠ KaTeX через CDN — АВТОРСКИЙ РАНТАЙМ-ВИД (Р7), единственная внешняя зависимость.
+     Только для вычитки; финальный дек несёт статический кэш формул, не рантайм. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+<script>
+  // оба katex-скрипта — defer, поэтому выполнены ДО DOMContentLoaded; guard — на офлайн.
+  window.addEventListener("DOMContentLoaded", function () {
+    if (window.renderMathInElement) renderMathInElement(document.body, {
+      delimiters: [{left: "$$", right: "$$", display: true},
+                   {left: "$", right: "$", display: false}],
+      // после набора формул высоты меняются — просим пересчитать раскладку полей
+      postProcess: function () { if (window.__docLayoutSidenotes) window.__docLayoutSidenotes(); },
+      throwOnError: false
+    });
+  });
+</script>
+<style>
+:root{
+  /* §5 STANDART-oformlenia: каталанская база (решение владельца 2026-07-16), дословно */
+  --bg:#fbfaf6; --panel:#fffdf8; --text:#211f1b; --muted:#726c60;
+  --rule:#e7e2d6; --accent:#2f6e8e; --accent-soft:#e8f0f4; --warm:#c9743a; --warm-soft:#f6ece2;
+  --shade:#dfeaf0; --insight-bg:#e8f0f4; --thread:#284862;
+  --defn:#3a6b4f; --flag-open:#a11414; --flag-open-bg:#fbe9e9; --flag-closed:#2c7a2c;
+  --flag-closed-bg:#e9f5e9; --link:#2f6e8e; --faint:#b7ae9c; --quiet:#8a8375; --box:#f4f1ea; --box-soft:#faf8f3; --task-soft:#e9f2ec; --rem-soft:#e9eef3;
+  --code-bg:#efe9dd; --cue-bg:#eef3f0; --chip:#e7e0d2;
+  /* §5 шрифты: Source Serif 4 / Source Sans 3 БЕЗ подключения из сети (самодостаточность,
+     DVIZHKI §1) — только font-family с фолбэками; нет шрифта в системе → Georgia/system-ui */
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Source Sans 3",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+/* ── тёмная тема (Р-владелец 2026-08-04: «невозможно смотреть на такой экран вечером»).
+   Умолчание — системная настройка; тумблер внизу слева перебивает её и запоминается.
+   Палитра нейтрально-тёплая, не чёрная: фон #1b1e22, текст #dcd8d0 (контраст ~11:1). ── */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}}
+:root[data-theme="dark"]{
+  --bg:#1b1e22; --panel:#23272c; --text:#dcd8d0; --muted:#9a948a;
+  --rule:#343a41; --accent:#7fb6d2; --accent-soft:#22333d; --warm:#e0946a; --warm-soft:#3a2c22;
+  --shade:#26333a; --insight-bg:#22333d; --thread:#8fb8d6;
+  --defn:#7fbb96; --flag-open:#e08585; --flag-open-bg:#3a2424; --flag-closed:#7fbb7f;
+  --flag-closed-bg:#233523; --link:#7fb6d2; --faint:#6b6f75; --quiet:#9a948a; --box:#24282d; --box-soft:#202429; --task-soft:#1f2b24; --rem-soft:#202a33;
+  --code-bg:#2b3036; --cue-bg:#1f2b26; --chip:#333a41;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);
+  line-height:1.7;font-size:23px;font-optical-sizing:auto}
+a{color:var(--link)}
+.wrap{max-width:1680px;margin:0 auto;padding:1.6rem 30px 130px 64px}
+.doc-head{max-width:1240px;font-family:var(--sans)}
+.doc-head h1{font-family:var(--serif);font-size:1.7rem;margin:.2em 0 .5em}
+
+/* ── §4 макет трёх зон: [оглавление 400][текст ≤790][жёлоб .mn 370] (Р-владелец 2026-07-24:
+   оглавление и поля были вдвое мельче нужного, а справа простаивала пустая полоса) ── */
+/* Р-владелец 2026-08-04: левая колонка съедала место зря. Оглавление ушло в шторку,
+   которая выезжает поверх текста при наведении на язычок и сама уезжает обратно;
+   поток занял всю ширину, кегль поднят с 21 до 23 px. */
+.layout{display:grid;grid-template-columns:minmax(0,1fr)}
+.layout.solo{grid-template-columns:minmax(0,1fr)}
+main{min-width:0}
+
+/* ── §4 боковое оглавление (sticky, авто-нумерация, подсветка активного пункта при скролле) ── */
+.toc{position:fixed;left:0;top:0;height:100vh;width:400px;z-index:50;overflow:auto;
+  font-family:var(--sans);font-size:18px;line-height:1.35;background:var(--panel);
+  border-right:1px solid var(--rule);padding:1.1rem 20px 2rem 24px;
+  transform:translateX(-100%);transition:transform .18s ease,box-shadow .18s ease}
+.toc:hover,.toc:focus-within{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+/* Открывается кнопкой «содержание» внизу слева, закрывается сама, когда мышь ушла.
+   Псевдоэлемент-язычок не годился: его срезал overflow:auto у самой шторки. */
+.toc.open{transform:none;box-shadow:0 0 26px rgba(0,0,0,.30)}
+.doc-btns{position:fixed;left:14px;bottom:14px;z-index:60;display:flex;gap:6px}
+.doc-btns button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:.3em .7em;cursor:pointer;opacity:.8}
+.doc-btns button:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
+.toc>summary{list-style:none;cursor:default;font-weight:600;font-size:14px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 .8em;padding-bottom:.5em;border-bottom:1px solid var(--rule)}
+.toc>summary::-webkit-details-marker{display:none}
+.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+.toc li{margin:.16em 0}
+.toc>ol>li{counter-increment:toc;margin:.5em 0}
+.toc a{display:block;color:var(--muted);text-decoration:none;border:0;padding:.18em .3em .18em 1.7em;
+  border-radius:3px;position:relative}
+.toc a.toc-h2{font-weight:600;color:var(--text);padding-left:1.5em}
+.toc>ol>li a.toc-h2::before{content:counter(toc);position:absolute;left:.2em;color:var(--faint);
+  font-variant-numeric:tabular-nums}
+/* второй уровень: подразделы под своим пунктом, без номеров, мельче и приглушённее */
+.toc .toc-sub{list-style:none;margin:.15em 0 .35em;padding:0 0 0 1.5em;
+  border-left:1px solid var(--rule)}
+.toc .toc-sub a{font-size:16px;padding:.1em .3em .1em .55em}
+/* группа оглавления сворачивается: треугольник слева от пункта, клик по стрелке — свернуть,
+   клик по названию — переход (скрипт заодно раскрывает нужную секцию в тексте) */
+.toc-grp>summary{list-style:none;cursor:pointer;position:relative}
+.toc-grp>summary::-webkit-details-marker{display:none}
+.toc-grp>summary::after{content:"▾";position:absolute;right:0;top:.25em;color:var(--faint);font-size:.7em}
+.toc-grp:not([open])>summary::after{content:"▸"}
+.toc-ctl{display:flex;gap:.4em;margin:0 0 .7em}
+.toc-ctl button{font-family:var(--sans);font-size:13px;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:11px;padding:.15em .7em;cursor:pointer;white-space:nowrap}
+.toc-ctl button:hover{color:var(--accent);border-color:var(--accent)}
+.toc a:hover{color:var(--accent);background:var(--accent-soft)}
+.toc a.active{color:var(--accent);background:var(--accent-soft);font-weight:600}
+.toc a.active::before{color:var(--accent)}
+
+/* ── вкладки: CSS-only, скрытые radio + label (без сети/JS) ── */
+.tabs>input.tab-radio{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.tabbar{display:flex;flex-wrap:wrap;gap:.25rem;border-bottom:2px solid var(--rule);margin:0 0 1.6rem}
+.tabbar label{cursor:pointer;user-select:none;font-family:var(--sans);font-weight:600;
+  font-size:.95rem;color:var(--muted);padding:.5rem 1.1rem;border:2px solid transparent;
+  border-bottom:none;border-radius:9px 9px 0 0;margin-bottom:-2px;transition:color .12s}
+.tabbar label:hover{color:var(--text)}
+.panel{display:none}
+#tab-0:checked ~ #panel-0{display:block}
+#tab-0:checked ~ .tabbar label[for="tab-0"]{color:var(--accent);background:var(--panel);border-color:var(--rule) var(--rule) var(--panel)}
+
+/* ── §4 поток текста: article ≤820, номера разделов авто-counter акцентом (§5, руками не писать) ── */
+.stream{max-width:1090px;counter-reset:sec}
+.stream h1{font-size:1.9rem;line-height:1.15;font-weight:600;letter-spacing:-.01em;margin:.1em 0 .45em}
+.stream h2{font-family:var(--sans);font-size:1.6rem;font-weight:600;letter-spacing:-.01em;line-height:1.2;
+  margin:2.3em 0 .55em;counter-increment:sec;scroll-margin-top:16px}
+.stream h2::before{content:counter(sec)". ";color:var(--accent);font-weight:600}
+.stream h3{font-family:var(--sans);font-size:1.42rem;font-weight:600;margin:1.6em 0 .5rem}
+.stream p{margin:0 0 1.05em;text-wrap:pretty}
+.stream ul{margin:.7em 0;padding-left:1.3em}
+.stream li{margin:.3em 0}
+.stream a{border-bottom:1px solid #bcd2dd}
+.stream a:hover{border-bottom-color:var(--accent)}
+/* двусторонняя метка «текст ↔ поле»: в тексте звёздочка-надстрочник, в заметке — обратная */
+/* Р-владелец 2026-08-04: метка вставляется ПЕРЕД закрывающим тегом врезки, то есть после
+   блочного ката с доказательством — и потому вставала отдельной строкой на пустом месте.
+   Нулевой ширины мало: дело не в переносе. Уводим метку из потока на полоску между
+   колонкой текста и колонкой полей — там она ничего не разрывает. */
+.stream p:not(.mn):not(.foot):not(.level-line),.stream .stmt,.stream .example,
+.stream div.note,.stream .tech,.stream ul,.stream table{position:relative}
+.stream a.mn-ref{position:absolute;left:100%;margin-left:11px;top:.18em;border:0;
+  color:var(--accent);font-size:.8em;text-decoration:none;font-weight:700;line-height:1}
+.stream a.mn-ref:hover{color:var(--warm)}
+.mn a.mn-back{border:0;color:var(--accent);text-decoration:none;margin-right:.25em}
+.mn:target,.stream a.mn-ref:target{background:var(--accent-soft);border-radius:4px}
+/* перекрёстная ссылка на прежнее утверждение: заметна при поиске глазом, не кричит в потоке */
+.stream a.xref{border-bottom:1px dotted #bcd2dd;color:inherit;white-space:nowrap}
+.stream a.xref:hover{color:var(--accent);border-bottom-color:var(--accent)}
+.stmt:target,.example:target{box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* ── §3 блоки-утверждения: цвет кодирует СТАТУС (синий=опред., тёплый=утвержд., приглуш.=док-во) ── */
+.stmt{margin:1.5em 0;padding:.55em 0 .55em 1.15em;border-left:3px solid var(--rule);scroll-margin-top:16px}
+/* метка — ОТДЕЛЬНОЙ строкой над телом (Р-владелец 2026-07-24: инлайновая метка съедала первую
+   строку утверждения и гнала хвост на вторую); тело идёт абзацами, $$…$$ центрируется */
+.stmt .lbl,.example .lbl,div.note .lbl{display:block;margin-bottom:.15em}
+.stmt .lbl{font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.01em}
+.stmt p,.example p,div.note p{margin:0 0 .5em}
+.stmt p:last-of-type,.example p:last-of-type,div.note p:last-of-type{margin-bottom:0}
+.stmt p.eq,.proof p.eq{text-align:center;margin:.55em 0}
+/* кат вывода приращён к врезке — без зазора между утверждением и кнопкой */
+.stmt details.d-proof,.example details.d-proof{margin:.45em 0 0}
+.defn{border-left-color:var(--accent);background:linear-gradient(90deg,var(--accent-soft),transparent 78%)}
+.defn .lbl{color:var(--accent)}
+.thm{border-left-color:var(--warm);background:linear-gradient(90deg,var(--warm-soft),transparent 78%)}
+.thm .lbl{color:var(--warm)}
+/* задача/пример и замечание — та же геометрия, другой цвет метки (единый вид врезок) */
+.task{border-left-color:var(--defn);background:linear-gradient(90deg,var(--task-soft),transparent 78%)}
+.task .lbl{color:var(--defn)}
+.rem{border-left-color:var(--thread);background:linear-gradient(90deg,var(--rem-soft),transparent 78%)}
+.rem .lbl{color:var(--thread)}
+.proof{color:var(--muted);font-size:19px;border-left:2px dotted var(--rule);padding-left:1.05em;margin:1em 0}
+.proof .lbl{font-style:italic;font-weight:600;color:var(--quiet)}
+.example{background:var(--box);border-radius:5px;padding:.8em 1.1em;margin:1.5em 0;font-size:21px}
+.example .lbl{font-family:var(--sans);font-weight:600;font-size:.9rem;letter-spacing:.02em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* Замечание — div.note, чтобы НЕ конфликтовать с движковым aside.note (дженерик > поле:) */
+div.note{background:var(--box);border-left:3px solid var(--rule);border-radius:0 5px 5px 0;
+  padding:.7em 1.05em;margin:1.5em 0;font-size:20px}
+div.note .lbl{font-family:var(--sans);font-weight:600;font-size:.82rem;letter-spacing:.03em;color:var(--muted);
+  display:block;margin-bottom:.25em;text-transform:uppercase}
+/* чёрный ящик — рамка-пунктир («за это не платили»); техфакт — нейтральная плашка; рассказ — не математика */
+.blackbox{border:1.5px dashed var(--muted);border-radius:5px;padding:.7em 1.05em;margin:1.5em 0;
+  font-size:.97rem;color:var(--muted);background:var(--box-soft)}
+.blackbox .lbl{font-family:var(--sans);font-weight:600;font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text);display:block;margin-bottom:.3em}
+.tech{background:var(--box);border-left:3px solid var(--muted);border-radius:0 4px 4px 0;
+  padding:.65em 1.05em;margin:1.4em 0;font-size:.97rem}
+.tech .lbl{font-family:var(--sans);font-weight:600;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:.25em}
+.rasskaz{font-style:italic;color:var(--muted);margin:1.5em 0;padding-left:1em;border-left:2px solid var(--warm-soft)}
+.rasskaz .lbl{font-family:var(--sans);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.02em;
+  color:var(--warm);display:block;margin-bottom:.2em}
+
+/* KaTeX (порт catalan/kurs) */
+.katex-display{margin:1.15em 0;overflow-x:auto;overflow-y:hidden;padding:.2em 0}
+.katex{font-size:1.05em}
+blockquote{margin:1em 0;padding:.3em 0 .3em 1em;border-left:3px solid var(--rule);color:var(--muted)}
+code{font-family:"SF Mono",Consolas,monospace;font-size:.9em;background:var(--code-bg);padding:0 .25em;border-radius:3px}
+
+/* ── таблица (напр. трёхколоночное соответствие): бордюр по --rule, шапка --shade ── */
+table{border-collapse:collapse;margin:1.6em 0;width:100%;max-width:820px;font-size:.98rem}
+table th,table td{border:1px solid var(--rule);padding:.45em .8em;text-align:left;vertical-align:top}
+table thead th{font-family:var(--sans);background:var(--shade);font-weight:600;color:var(--text)}
+table tbody tr:nth-child(even){background:var(--panel)}
+table tbody td:first-child{color:var(--muted)}
+
+/* ── поле .mn: float в правый жёлоб (CSS дословно из distillat-tehnika §2) ── */
+/* ── поле .mn: НЕ float, а абсолют в жёлобе. Причина (Р-владелец 2026-07-24): float заставлял
+   основной текст обтекать заметку, то есть резал колонку — заметка выглядела вставкой в текст,
+   а не полем. При `top:auto` абсолют встаёт на СВОЮ статическую высоту: заметка оказывается
+   ровно на уровне того абзаца, после которого написана, и ширину колонки не трогает. ── */
+.stream{position:relative}
+.mn,figure.mn{position:absolute;left:calc(100% + 36px);width:370px;margin:0}
+/* без вертикальной линейки-байки: поле отделено пробелом и кеглем, разделитель лишний */
+.mn{font-family:var(--sans);font-size:19px;line-height:1.5;color:var(--muted)}
+.mn b,.mn strong{color:var(--text)}
+/* ── §10 адаптив (порт catalan/kurs): ≤900 одна колонка, оглавление наверх; ≤520 кегль 19 ── */
+@media(max-width:900px){
+  .toc{position:static;height:auto;width:auto;transform:none;box-shadow:none;
+    padding:0 0 .6rem;border-right:0}
+  .toc::after{display:none}
+  .wrap{padding-left:16px}
+  .layout{grid-template-columns:1fr;gap:0}
+  .stream{max-width:none}
+  .toc{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--rule);
+    padding:0 0 1em;margin-bottom:1.5em}
+  .toc>summary{cursor:pointer}
+  .toc ol{columns:2;column-gap:22px}
+  .stream a.mn-ref{position:static !important;margin-left:.25em;font-size:.7em;vertical-align:.5em}
+  .mn,figure.mn{position:static !important;left:auto;top:auto !important;width:auto;
+    margin:1.2em 0;border-left:3px solid var(--rule);padding:.4em 0 .4em .9em;font-size:.95rem}
+  .toc .toc-sub{padding-left:1em}
+}
+@media(max-width:520px){
+  body{font-size:19px}
+  .toc ol{columns:1}
+  .katex{font-size:1em}
+}
+
+/* ── поле-aside (generic > поле:) ── */
+aside.note{font-family:var(--sans);font-size:.9rem;background:var(--panel);
+  border:1px solid var(--rule);border-left:3px solid var(--muted);
+  padding:.6rem .9rem;margin:1rem 0;border-radius:0 4px 4px 0;color:var(--muted)}
+aside.note.thread{border-left-color:var(--thread)}
+
+/* ── .insight: крупное прозрение/разворот ── */
+/* прозрение живёт на поле (класс .mn даёт позицию), голубое — отличается от обычной заметки */
+.insight{background:var(--insight-bg);border-radius:6px;padding:.7em .85em;color:var(--text)}
+.insight .tag{display:block;font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin:0 0 .25em}
+
+/* ── .foot: статус черновика ── */
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--rule);
+  font-family:var(--sans);font-size:.85rem;color:var(--muted)}
+
+/* ── cue-визуал ── */
+.cue{font-family:var(--sans);font-size:.85rem;background:var(--cue-bg);
+  border:1px dashed var(--defn);padding:.5rem .85rem;margin:1rem 0;color:var(--defn)}
+
+/* ── уровень-пилюля ── */
+.level-line{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.4rem 0}
+.level{display:inline-block;font-weight:600;font-size:.72rem;padding:.12rem .55rem;
+  border-radius:11px;background:var(--chip);color:var(--text)}
+
+/* ── мат-долг: бейджи ── */
+.flag{font-family:var(--sans);font-size:.85rem;font-weight:600;padding:.55rem .85rem;
+  margin:1rem 0;border-radius:4px}
+.flag.open{background:var(--flag-open-bg);border-left:4px solid var(--flag-open);color:var(--flag-open)}
+.flag.open::before{content:"⚑ мат-долг открыт — ";font-weight:700}
+.flag.closed{background:var(--flag-closed-bg);border-left:4px solid var(--flag-closed);color:var(--flag-closed)}
+
+/* ── иллюстрация-плейсхолдер ── */
+.ill-ph{border:2px dashed var(--rule);background:repeating-linear-gradient(45deg,
+  transparent,transparent 9px,rgba(0,0,0,.02) 9px,rgba(0,0,0,.02) 18px);
+  padding:1.3rem;margin:1.5rem 0;text-align:center;border-radius:8px}
+.ill-ph .ill-badge{font-family:var(--sans);font-weight:700;letter-spacing:.04em;color:var(--muted)}
+.ill-ph figcaption{font-family:var(--sans);font-size:.88rem;color:var(--muted);margin-top:.5rem}
+
+/* ── иллюстрация (готовый SVG автора) ── */
+figure{margin:2.1em 0;text-align:center}
+figure svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure figcaption{font-family:var(--sans);font-size:17px;color:var(--muted);margin-top:.5rem}
+
+/* ── SVG-палитра (портировано дословно из catalan/kurs/kurs-lekcii.html) ── */
+.s-line{fill:none;stroke:var(--text);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.s-thin{fill:none;stroke:var(--muted);stroke-width:1.2}
+.s-dash{fill:none;stroke:var(--accent);stroke-width:1.3;stroke-dasharray:4 4}
+.s-accent{fill:none;stroke:var(--accent);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.s-fillw{fill:var(--warm)}
+.s-fillsh{fill:var(--shade)}
+.s-node{fill:var(--panel);stroke:var(--text);stroke-width:1.8}
+.s-node-r{fill:var(--text)}
+/* .s-node-a — акцентный узел. Словарь примитивов (_illustracii/DISCIPLINA.md, строка «узел») обещал его
+   с самого начала, а движок не реализовывал: <circle> без fill падает в чёрный ТИХО, без
+   ошибки — та же ловушка, что undefined var(--x). Заведён 2026-07-16 (арка krivaya-drakona:
+   нужна была пара «акцентная засечка на полоске ↔ акцентная вершина ломаной»). */
+.s-node-a{fill:var(--accent);stroke:var(--accent)}
+.s-thin-a{fill:none;stroke:var(--accent);stroke-width:1.4}
+/* .s-thin-a / .s-txt-a — тонкая акцентная линия и акцентная метка. Заведены 2026-07-31 (записки Л1):
+   цветовое кодирование роли стрелки (акцент = переименование/перестановка, нейтральный = сама
+   конструкция) требовало ТОНКОЙ акцентной линии, а .s-accent 2.4px для 9 стрелок в ряд слишком
+   жирна. ЦЕНА пропуска: аналитик выдумал классы на месте, в движке их не было, и в разделе
+   «Почему это красиво» не нарисовалась НИ ОДНА из 9 стрелок σ и обе горизонтали квадрата —
+   `<line>` без своего stroke по SVG не рисуется вовсе. Все три гейта остались зелёными. */
+.s-txt{font-family:var(--sans);font-size:13px;fill:var(--text)}
+.s-txt-w{font-family:var(--sans);font-size:13px;fill:#fff;font-weight:600}
+.s-txt-m{font-family:var(--sans);font-size:12px;fill:var(--muted)}
+.s-txt-a{font-family:var(--sans);font-size:12px;fill:var(--accent)}
+.s-ar-a{fill:var(--accent)} .s-ar-m{fill:var(--muted)}
+
+/* ── мета-строка потока ── */
+/* ── кат вывода в ОБЫЧНОМ потоке: свёрнут по умолчанию (Р-владелец 2026-07-24 — «сворачивать
+   на уровне генератора, раз и навсегда»). Раньше эти правила жили только в DRILL_CSS. ── */
+details.d-proof{margin:.7em 0}
+details.d-proof>summary{cursor:pointer;font-family:var(--sans);font-size:15px;list-style:none;
+  display:inline-flex;align-items:center;gap:.25em;color:var(--accent);background:var(--accent-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:.14em .9em;letter-spacing:.01em}
+details.d-proof>summary::-webkit-details-marker{display:none}
+details.d-proof>summary::before{content:"▸ "}
+details.d-proof[open]>summary::before{content:"▾ "}
+details.d-proof>summary:hover{border-color:var(--accent);background:var(--shade)}
+
+/* ── КАЖДЫЙ раздел и подраздел — сворачиваемый; `{свёрнуто}` рождается закрытым ── */
+details.sec>summary{list-style:none;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary h2,details.sec>summary h3,details.sec>summary h4{position:relative}
+details.sec>summary h2::after,details.sec>summary h3::after{
+  content:"▾";position:absolute;right:100%;margin-right:.32em;color:var(--faint);font-weight:400;
+  font-size:.7em;transform:translateY(.1em)}
+details.sec:not([open])>summary h2::after,details.sec:not([open])>summary h3::after{content:"▸"}
+details.sec>summary:hover h2,details.sec>summary:hover h3,
+details.sec>summary:hover h4{color:var(--accent)}
+details.sec:not([open])>summary h2,details.sec:not([open])>summary h3{
+  margin-bottom:.3em;color:var(--muted)}
+.sec3{margin:1.5em 0}
+.sec3>.sec-body{padding-left:.1em}
+.sec4{margin:.35em 0;border-left:2px solid var(--rule);padding-left:.85em}
+.stream .sec4 h4{font-family:var(--sans);font-size:1.05rem;font-weight:600;margin:.15em 0}
+.sec4>.sec-body{padding:.2em 0 .5em}
+.sec4>summary h4::after{content:"▾";position:absolute;right:100%;margin-right:.32em;
+  color:var(--faint);font-weight:400;font-size:.7em}
+.sec4:not([open])>summary h4::after{content:"▸"}
+
+/* ── иллюстрация на поле (<figure class="mn">). Годятся ТОЛЬКО высокие/квадратные рисунки:
+   широкая полоса в жёлобе сжимается до нечитаемости, ей место во всю строку потока. ── */
+figure.mn{padding:0}
+figure.mn svg{width:100%;height:auto}
+figure.mn figcaption{font-size:16px;margin-top:.35rem;text-align:left}
+
+/* ── вид жанра statya (С6): без шапки-дубля, поля в потоке, колонка масштабируется с кеглем ── */
+:where(body[data-zhanr=statya]) .doc-head{display:none!important}
+:where(body[data-zhanr=statya]) .wrap{max-width:none;padding-left:64px;padding-right:64px}
+:where(body[data-zhanr=statya]) figure svg{max-width:min(100%,680px)}
+/* ширина строки и кегль связаны: колонка движка (1090px при кегле 25.76px, ~88 знаков) масштабируется
+   целиком через zoom, чтобы на широком экране заполнять ширину, не удлиняя строку в знаках */
+@media(min-width:1300px){:where(body[data-zhanr=statya]) .wrap{zoom:1.1}}
+@media(min-width:1500px){:where(body[data-zhanr=statya]) .wrap{zoom:1.25}}
+@media(min-width:1700px){:where(body[data-zhanr=statya]) .wrap{zoom:1.4}}
+@media(min-width:1900px){:where(body[data-zhanr=statya]) .wrap{zoom:1.55}}
+@media(min-width:2200px){:where(body[data-zhanr=statya]) .wrap{zoom:1.75}}
+@media(min-width:2500px){:where(body[data-zhanr=statya]) .wrap{zoom:2}}
+:where(body[data-zhanr=statya]) .mn,:where(body[data-zhanr=statya]) figure.mn{position:static!important;left:auto;width:auto;margin:1.2em 0}
+:where(body[data-zhanr=statya]) .stream>p:first-of-type{font-size:1.12em;line-height:1.6}
+@media(max-width:520px){:where(body[data-zhanr=statya]) .wrap{padding-left:16px;padding-right:16px}:where(body[data-zhanr=statya]) .stmt{padding-left:.55em}:where(body[data-zhanr=statya]) .katex-display>.katex{font-size:.93em}}:where(body[data-zhanr=statya]) .katex-html{white-space:nowrap}
+/* 04.10 владелец (обзор «Биномиальные коэффициенты», В28): утверждения на всю ширину, равенство не переносится и не уезжает в прокрутку — на телефоне рамка утверждения уже, выключные формулы на 7% мельче; строчная формула не рвётся на знаке равенства; 10.10: кнопки «содержание/тема» на узком экране — вверху страницы и уезжают с прокруткой, а не висят поверх текста */
+@media(max-width:900px){:where(body[data-zhanr=statya]) .doc-btns{position:absolute;top:10px;right:16px;left:auto;bottom:auto}:where(body[data-zhanr=statya]) .wrap{padding-top:3.2rem}:where(body[data-zhanr=statya]) details.toc:not(.open){display:none}
+:where(body[data-zhanr=statya]) details.toc.open{display:block;position:fixed;top:0;left:0;right:0;max-height:80vh;overflow:auto;background:var(--bg);z-index:70;padding:1rem 16px;box-shadow:0 0 26px rgba(0,0,0,.3)}}
+:where(body[data-zhanr=statya]) .tabbar{display:none!important}
+</style>
+</head>
+<body data-zhanr="statya">
+<div class="doc-btns"><button class="toc-btn" type="button">содержание</button><button class="theme-tgl" type="button">тема</button></div>
+<div class="wrap">
+<div class="doc-head">
+  <h1>Тождества для биномиальных коэффициентов</h1>
+</div>
+<!-- Служебные надписи (про doc-движок, про KaTeX-рантайм, status/регистр/долги потока) из вида
+     УБРАНЫ: Р-владелец 2026-07-24 — это сведения для автора, их место в markdown, не на экране. -->
+<div class="tabs">
+<input class="tab-radio" type="radio" name="doc-tab" id="tab-0" checked>
+<nav class="tabbar">
+<label class="tab-label" for="tab-0">Тождества</label>
+</nav>
+<section class="panel" id="panel-0"><div class="layout"><details class="toc" open><summary>Содержание</summary><div class="toc-ctl"><button type="button" data-toc="open">развернуть всё</button><button type="button" data-toc="close">свернуть всё</button></div><ol><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-1">Формула: повторение</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-2">Сумма строки</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-3">Чётное и нечётное число единиц</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-4">Сколько всего единиц</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-5">Возвращения в ноль</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-6">Сумма вдоль столбца</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-7">Слова без двух нулей подряд</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-8">Бином Ньютона</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-9">Задачи</a></summary></details></li><li><details class="toc-grp"><summary><a class="toc-h2" href="#s0-h-10">Ответ</a></summary></details></li></ol></details><main><article class="stream"><h1>Тождества для биномиальных коэффициентов</h1>
+<p>Выпишем все слова длины 3 из нулей и единиц: 000, 001, 010, 011, 100, 101, 110, 111. Их восемь. Сколько единиц во всех восьми словах вместе? Пересчитать нетрудно, получится 12. А сколько единиц во всех словах длины 10? Таких слов 1024, и выписывать их не хочется.</p>
+<p>Обозначения те же, что в обзоре «Биномиальные коэффициенты»: $\binom nk$ — число способов выбрать $k$ предметов из $n$; это же число слов длины $n$ из нулей и единиц, в которых ровно $k$ единиц. В прошлый раз формула для $\binom nk$ получилась так: одно и то же количество мы посчитали двумя способами и приравняли ответы. Сегодня тот же приём даст целую серию равенств между биномиальными коэффициентами. Такие равенства, верные при всех допустимых значениях букв, называют тождествами. Одно из них ответит и на вопрос про единицы.</p>
+<p>Напомним и треугольник Паскаля. Его строки нумеруем с нуля, места в строке — тоже с нуля: в строке $n$ на месте $k$ стоит $\binom nk$. Каждое число, кроме крайних единиц, равно сумме двух чисел над ним — это правило Паскаля: $$\binom nk=\binom{n-1}{k-1}+\binom{n-1}k.$$</p>
+<details class="sec sec2" open><summary><h2 id="s0-h-1">Формула: повторение</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-1"><span class="lbl">Задача 1 (тройки из восьми).</span><p>Сколькими способами можно выбрать троих из восьми человек?</p></div>
+<p>Ответ — число $\binom83$. Чтобы его найти, выберем из восьми человек капитана, заместителя и третьего игрока. С одной стороны, капитана можно выбрать 8 способами, заместителя — 7, третьего — 6, всего $8\cdot7\cdot6$. С другой стороны, можно сначала выбрать тройку, $\binom83$ способами, потом в ней капитана, 3 способами, потом заместителя из двух оставшихся, 2 способами. Это одно и то же количество, поэтому $$\binom83\cdot3\cdot2=8\cdot7\cdot6,$$ то есть $6\binom83=336$ и $\binom83=56$.</p>
+<div class="stmt thm" id="s0-t-2"><span class="lbl">Утверждение 2 (формула).</span><p>Для любых целых $0\le k\le n$ выполняется равенство</p><p class="eq">$$\binom nk\cdot k!=n(n-1)\cdots(n-k+1).$$</p><p>Здесь $k!=1\cdot2\cdots k$ и $0!=1$; при $k=0$ справа пустое произведение, оно тоже равно 1.</p><details class="d-proof"><summary>доказательство — тот же двойной подсчёт</summary><div class="proof"><p>Выберем $k$ человек из $n$ и выстроим их в очередь. С одной стороны, это можно сделать $n(n-1)\cdots(n-k+1)$ способами. С другой стороны, можно сначала выбрать множество из $k$ человек, $\binom nk$ способами, а потом расставить их по порядку, $k!$ способами. Правая часть равна $\dfrac{n!}{(n-k)!}$; переносим $k!$ в другую часть и получаем $\binom nk=\dfrac{n!}{k!\,(n-k)!}$.</p></div></details></div>
+<p>В прошлый раз мы получили эту формулу и другими способами — через команду с капитаном и шагом вдоль строки треугольника.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-2">Сумма строки</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-3"><span class="lbl">Задача 3 (суммы строк).</span><p>Чему равны суммы чисел в первых строках треугольника Паскаля?</p></div>
+<table><thead><tr><th>строка</th><th>числа</th><th>сумма</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1, 1</td><td>2</td></tr><tr><td>2</td><td>1, 2, 1</td><td>4</td></tr><tr><td>3</td><td>1, 3, 3, 1</td><td>8</td></tr><tr><td>4</td><td>1, 4, 6, 4, 1</td><td>16</td></tr><tr><td>5</td><td>1, 5, 10, 10, 5, 1</td><td>32</td></tr></tbody></table>
+<p>Каждая сумма вдвое больше предыдущей. Почему, видно из правила Паскаля: каждое число строки входит слагаемым ровно в два числа следующей строки — в то, что под ним слева, и в то, что под ним справа. Например, строка 4 складывается из чисел строки 3, взятых по два раза: $1+4+6+4+1=2\cdot(1+3+3+1)$.</p>
+<div class="stmt thm" id="s0-t-4"><span class="lbl">Утверждение 4 (сумма строки).</span><p>Для любого целого $n\ge0$ выполняется равенство</p><p class="eq">$$\binom n0+\binom n1+\dots+\binom nn=2^n.$$</p><details class="d-proof"><summary>доказательство — посчитать все слова</summary><div class="proof"><p>Слагаемое $\binom nk$ — число слов длины $n$ с $k$ единицами, поэтому сумма — число всех слов длины $n$. На каждом из $n$ мест стоит 0 или 1, и по правилу произведения слов $2\cdot2\cdot\ldots\cdot2=2^n$.</p></div></details></div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-3">Чётное и нечётное число единиц</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-5"><span class="lbl">Задача 5 (чётные и нечётные).</span><p>Каких слов длины 3 больше: с чётным числом единиц или с нечётным?</p></div>
+<p>Поровну. С чётным числом единиц — 000, 011, 101, 110, с нечётным — 001, 010, 100, 111: по четыре.</p>
+<div class="stmt thm" id="s0-t-6"><span class="lbl">Утверждение 6 (знакопеременная сумма).</span><p>Для любого целого $n\ge1$ выполняется равенство</p><p class="eq">$$\binom n0-\binom n1+\binom n2-\dots+(-1)^n\binom nn=0.$$</p><details class="d-proof"><summary>доказательство — поменять первую цифру</summary><div class="proof"><p>Заменим в слове первую цифру на противоположную: 0110 станет 1110, а 1110 — снова 0110. Число единиц меняется на одну, поэтому чётность меняется. Повторная замена возвращает исходное слово, значит, замена разбивает все слова на пары «чётное — нечётное». Слов с чётным числом единиц столько же, сколько с нечётным, а это и есть равенство: слева со знаком плюс стоят числа слов с чётным числом единиц, со знаком минус — с нечётным.</p></div></details></div>
+<p>Для строки 4: $1-4+6-4+1=0$. Самих чисел строки доказательство не использует: хватило одной замены цифры.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-4">Сколько всего единиц</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-7"><span class="lbl">Задача 7 (вопрос из начала).</span><p>Сколько единиц во всех словах длины 3 вместе? А во всех словах длины $n$?</p></div>
+<p>Посчитаем двумя способами. По словам: одно слово без единиц, три слова с одной единицей, три с двумя и одно с тремя, всего $0\cdot1+1\cdot3+2\cdot3+3\cdot1=12$. По местам: на первом месте единица стоит в половине слов, то есть в четырёх; так же на втором и на третьем. Всего $3\cdot4=12$.</p>
+<div class="stmt thm" id="s0-t-8"><span class="lbl">Утверждение 8 (сколько всего единиц).</span><p>Для любого целого $n\ge1$ выполняется равенство</p><p class="eq">$$1\cdot\binom n1+2\binom n2+\dots+n\binom nn=n\cdot2^{n-1}.$$</p><details class="d-proof"><summary>доказательство — по словам и по местам</summary><div class="proof"><p>Слов с $k$ единицами $\binom nk$, и в каждом $k$ единиц; складывая по всем $k$ от 0 до $n$, получаем левую часть. На каждом из $n$ мест единица стоит ровно в половине слов, то есть в $2^{n-1}$ словах; получаем правую часть.</p></div></details></div>
+<p>Это та же мысль, что в задаче о команде с капитаном из прошлого раза: команда — места единиц в слове, капитан — одна отмеченная единица, только команда теперь любого размера: сначала выбираем капитана, $n$ способами, потом любое множество остальных, $2^{n-1}$ способами. Во всех словах длины 10 единиц $10\cdot2^9=5120$.</p>
+<p>Если разделить обе части на число слов $2^n$, получится, что в среднем в слове $n/2$ единиц. К этому числу мы вернёмся, когда займёмся вероятностями: оно получится ещё раз, с другой стороны.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-5">Возвращения в ноль</h2></summary><div class="sec-body">
+<p>Точка стоит в нуле на числовой прямой и делает шаги: каждый шаг — на единицу вправо или на единицу влево. Путь из $m$ шагов записывается словом длины $m$: единица — шаг вправо, ноль — шаг влево.</p>
+<div class="stmt task" id="s0-e-9"><span class="lbl">Задача 9 (возвращение).</span><p>Сколькими способами точка может сделать 4 шага и вернуться в ноль? А 10 шагов?</p></div>
+<p>Чтобы вернуться, нужно сделать вправо столько же шагов, сколько влево. Для четырёх шагов это два шага вправо из четырёх, $\binom42=6$ путей: 1100, 1010, 1001, 0110, 0101, 0011. Для десяти шагов $\binom{10}5=252$.</p>
+<p>Посчитаем те же шесть путей иначе: разрежем путь пополам. Если за первые два шага точка дважды шагнула влево, то за вторые два она обязана дважды шагнуть вправо — один путь. Если за первые два шага был один шаг вправо (01 или 10), то и за вторые два нужен ровно один (01 или 10) — четыре пути. Если первые два шага оба вправо, вторые оба влево — один путь. Всего $1+4+1=6$.</p>
+<div class="stmt thm" id="s0-t-10"><span class="lbl">Утверждение 10 (сумма квадратов).</span><p>Для любого целого $n\ge0$ выполняется равенство</p><p class="eq">$$\binom n0^2+\binom n1^2+\dots+\binom nn^2=\binom{2n}n.$$</p><details class="d-proof"><summary>доказательство — разрезать путь пополам</summary><div class="proof"><p>Правая часть — число путей из $2n$ шагов, которые возвращаются в ноль. Пусть за первые $n$ шагов точка шагнула вправо $k$ раз. Чтобы вернуться, за вторые $n$ шагов она должна шагнуть вправо $n-k$ раз. Первую половину можно выбрать $\binom nk$ способами, вторую — $\binom n{n-k}$ способами, а это то же, что $\binom nk$: выбрать места $n-k$ единиц — то же, что выбрать места $k$ нулей. Складываем по всем $k$ от 0 до $n$.</p></div></details></div>
+<p>Для десяти шагов: $1+25+100+100+25+1=252$.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-6">Сумма вдоль столбца</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-11"><span class="lbl">Задача 11 (клюшка).</span><p>Сложите числа $\binom22$, $\binom32$, $\binom42$. Где сумма стоит в треугольнике?</p></div>
+<p>$1+3+6=10=\binom53$: в строке на одну ниже последнего слагаемого и на месте на одно больше. Слагаемые и сумма вместе образуют на треугольнике фигуру, похожую на хоккейную клюшку.</p>
+<div class="stmt thm" id="s0-t-12"><span class="lbl">Утверждение 12 (клюшка).</span><p>Для любых целых $0\le k\le n$ выполняется равенство</p><p class="eq">$$\binom kk+\binom{k+1}k+\dots+\binom nk=\binom{n+1}{k+1}.$$</p><details class="d-proof"><summary>доказательство — по наибольшему числу</summary><div class="proof"><p>Будем выбирать $k+1$ число из чисел $1,2,\dots,n+1$ и разложим выборы по наибольшему выбранному числу. Если оно равно $m$, остальные $k$ чисел выбираются из $m-1$ меньших, $\binom{m-1}k$ способами. Наибольшее число бывает от $k+1$ до $n+1$; складываем.</p></div></details></div>
+<p>В <a class="xref" href="#s0-e-11">задаче 11</a> выбираем три числа из пяти: с наибольшим 3 — один выбор, с наибольшим 4 — три, с наибольшим 5 — шесть.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-7">Слова без двух нулей подряд</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-13"><span class="lbl">Задача 13 (без двух нулей).</span><p>Сколько слов длины 4 из нулей и единиц, в которых нет двух нулей подряд?</p></div>
+<p>Восемь: 1111, 0111, 1011, 1101, 1110, 0101, 0110, 1010. Посчитаем их двумя способами.</p>
+<p><em>По числу нулей.</em> Если нулей $k$, запишем сначала $4-k$ единиц; нули можно поставить в промежутки между единицами и по краям, не больше одного нуля в промежуток. Промежутков $5-k$, поэтому способов $\binom{5-k}k$: при $k=0$ один, при $k=1$ четыре, при $k=2$ три. Всего $1+4+3=8$.</p>
+<p><em>По последней цифре.</em> Назовём слово без двух нулей подряд хорошим и обозначим через $a_n$ число хороших слов длины $n$. Слово, которое кончается на 1, — это хорошее слово длины $n-1$ с приписанной единицей. Слово, которое кончается на 0, кончается на 10, и перед этим стоит хорошее слово длины $n-2$. Поэтому $a_n=a_{n-1}+a_{n-2}$. Начиная с $a_1=2$ и $a_2=3$, получаем 2, 3, 5, 8, 13, 21, …: каждое число равно сумме двух предыдущих. Такие числа называют числами Фибоначчи.</p>
+<div class="stmt thm" id="s0-t-14"><span class="lbl">Утверждение 14 (числа Фибоначчи в треугольнике).</span><p>Для любого целого $n\ge1$ число слов длины $n$ без двух нулей подряд равно</p><p class="eq">$$a_n=\binom{n+1}0+\binom n1+\binom{n-1}2+\dots,$$</p><p>где слагаемые идут, пока нижнее число не больше верхнего; при этом $a_n=a_{n-1}+a_{n-2}$ для $n\ge3$.</p><details class="d-proof"><summary>доказательство</summary><div class="proof"><p>— два подсчёта из <a class="xref" href="#s0-e-13">задачи 13</a> при любом $n$: $k$ нулей ставятся в $n-k+1$ промежутков между $n-k$ единицами и по краям, $\binom{n-k+1}k$ способами.</p></div></details></div>
+<p>На треугольнике слагаемые стоят на пологой диагонали: каждое следующее в строке на одну выше и на месте на одно больше.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-8">Бином Ньютона</h2></summary><div class="sec-body">
+<p>У части этих тождеств есть алгебраический смысл. Раскроем скобки в $(a+b)^3=(a+b)(a+b)(a+b)$, ничего пока не упрощая. Из каждой скобки берём одну букву, и получается восемь слагаемых: $$aaa+aab+aba+abb+baa+bab+bba+bbb.$$ Это все слова длины 3 из букв $a$ и $b$. Слов с двумя буквами $a$ три, поэтому после упрощения $$(a+b)^3=a^3+3a^2b+3ab^2+b^3,$$ и коэффициенты — числа строки 3.</p>
+<div class="stmt thm" id="s0-t-15"><span class="lbl">Теорема 15 (бином Ньютона).</span><p>Для любых чисел $a,b$ и любого целого $n\ge0$ выполняется равенство</p><p class="eq">$$(a+b)^n=\binom nna^n+\binom n{n-1}a^{n-1}b+\dots+\binom n0b^n.$$</p><details class="d-proof"><summary>доказательство — слова из букв</summary><div class="proof"><p>После раскрытия скобок в произведении $n$ скобок $(a+b)$ каждое слагаемое — слово длины $n$ из букв $a$ и $b$. Слово с $k$ буквами $a$ после упрощения даёт $a^kb^{n-k}$, а таких слов $\binom nk$.</p></div></details></div>
+<p><strong>Следствие 16. Статус: проверено счётом.</strong> При $a=b=1$ <a class="xref" href="#s0-t-15">теорема 15</a> даёт <a class="xref" href="#s0-t-4">утверждение 4</a>, а при $a=-1$, $b=1$ — <a class="xref" href="#s0-t-6">утверждение 6</a>.</p>
+<p>Алгебра даёт эти равенства почти даром, а подсчёт объясняет, почему они верны.</p>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-9">Задачи</h2></summary><div class="sec-body">
+<div class="stmt task" id="s0-e-17"><span class="lbl">Задача 17 (комиссия и подкомиссия).</span><p>Докажите двойным подсчётом, без деления, что для любых целых $0\le k\le m\le n$ выполняется равенство</p><p class="eq">$$\binom nm\binom mk=\binom nk\binom{n-k}{m-k}.$$</p></div>
+<div class="stmt task" id="s0-e-18"><span class="lbl">Задача 18 (мальчики и девочки).</span><p>В классе $p$ мальчиков и $q$ девочек. Посчитав двумя способами, сколькими способами можно выбрать $r$ человек, докажите равенство</p><p class="eq">$$\binom p0\binom qr+\binom p1\binom q{r-1}+\dots+\binom pr\binom q0=\binom{p+q}r.$$</p></div>
+<div class="stmt task" id="s0-e-19"><span class="lbl">Задача 19 (задом наперёд).</span><p>Докажите <a class="xref" href="#s0-t-8">утверждение 8</a> ещё раз: запишите его левую сумму задом наперёд и сложите с исходной. Почему $k\binom nk$ и $(n-k)\binom n{n-k}$ стоят друг под другом и что даёт их сумма?</p></div>
+</div></details>
+<details class="sec sec2" open><summary><h2 id="s0-h-10">Ответ</h2></summary><div class="sec-body">
+<p>Во всех словах длины 10 вместе 5120 единиц: это <a class="xref" href="#s0-t-8">утверждение 8</a> при $n=10$. Все тождества сегодня получены одним приёмом — одно количество посчитано двумя способами, а ответы приравнены.</p>
+<p>Два из них мы ещё встретим. Среднее число единиц $n/2$ станет первым математическим ожиданием, а число путей $\binom{2n}n$, возвращающихся в ноль, поможет найти вероятность того, что точка, шагающая наугад, вернётся в начало.</p>
+</div></details></article></main></div></section>
+</div>
+</div>
+<script>
+/* §4б: подсветка активного пункта оглавления при скролле. Один IntersectionObserver на все h2[id]
+   с toc-ссылкой; скрытые вкладки (display:none) не пересекаются → скоуп сам сходится к активной. */
+window.addEventListener("DOMContentLoaded", function () {
+  if (!("IntersectionObserver" in window)) return;
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll('.toc a[href^="#"]'), function (a) {
+    links[a.getAttribute("href").slice(1)] = a;
+  });
+  var current = null, visible = {};
+  function setActive(a) {
+    if (current) current.classList.remove("active");
+    if (a) {
+      a.classList.add("active"); current = a;
+      // меню следует за чтением: группа активного раздела раскрывается сама
+      if (window.__docOpenGroupOf) window.__docOpenGroupOf(a, true);
+    }
+  }
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) visible[e.target.id] = 1; else delete visible[e.target.id];
+    });
+    var best = null, bestTop = Infinity;
+    Object.keys(visible).forEach(function (id) {
+      var el = document.getElementById(id); if (!el) return;
+      var top = el.getBoundingClientRect().top;
+      if (top < bestTop) { bestTop = top; best = id; }
+    });
+    if (best && links[best]) setActive(links[best]);
+  }, { rootMargin: "-15% 0px -75% 0px", threshold: 0 });
+  Object.keys(links).forEach(function (id) {
+    var el = document.getElementById(id); if (el) obs.observe(el);
+  });
+});
+
+/* §4в НАВИГАЦИЯ (Р-владелец 2026-07-24): длинный текст надо уметь пролистать глазами.
+   1) клик по пункту оглавления РАСКРЫВАЕТ нужную секцию (иначе переход в свёрнутое — в пустоту);
+   2) «развернуть/свернуть всё» — по разделам активной вкладки;
+   3) клик по стрелке группы в оглавлении сворачивает её, не уводя со страницы. */
+window.addEventListener("DOMContentLoaded", function () {
+  function panelOf(el) { return el.closest(".panel") || document; }
+
+  document.addEventListener("click", function (ev) {
+    var btn = ev.target.closest(".toc-ctl button");
+    if (btn) {
+      var open = btn.getAttribute("data-toc") === "open";
+      var scope = panelOf(btn);
+      Array.prototype.forEach.call(scope.querySelectorAll("details.sec"), function (d) { d.open = open; });
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (d) { d.open = open; });
+      ev.preventDefault();
+      return;
+    }
+    var a = ev.target.closest('.toc a[href^="#"]');
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute("href").slice(1));
+    if (!el) return;
+    // раскрыть цепочку катов в тексте, иначе переход ведёт в свёрнутое, то есть в пустоту
+    for (var p = el.parentElement; p; p = p.parentElement) {
+      if (p.tagName === "DETAILS") p.open = true;
+    }
+    openGroupOf(a, true);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ev.preventDefault();
+  });
+
+  /* аккордеон меню: клик по разделу раскрывает ЕГО подразделы и закрывает соседние —
+     меню остаётся коротким и показывает, где мы находимся */
+  function openGroupOf(a, accordion) {
+    var grp = a.closest("details.toc-grp");
+    if (!grp) return;
+    if (accordion) {
+      var scope = grp.closest(".toc");
+      Array.prototype.forEach.call(scope.querySelectorAll("details.toc-grp"), function (g) {
+        if (g !== grp) g.open = false;
+      });
+    }
+    grp.open = true;
+  }
+  window.__docOpenGroupOf = openGroupOf;
+
+  /* §4г РАСКЛАДКА ПОЛЕЙ. Заметки и узкие рисунки стоят абсолютом на своей статической высоте —
+     значит две подряд идущие могут наложиться друг на друга. Проходим по ним сверху вниз и
+     сдвигаем вниз те, что не поместились. Пересчитываем после набора формул (KaTeX меняет
+     высоты), при сворачивании секций и при изменении ширины окна. */
+  function layoutSidenotes() {
+    Array.prototype.forEach.call(document.querySelectorAll(".stream"), function (stream) {
+      var notes = Array.prototype.slice.call(stream.querySelectorAll(".mn"));
+      notes.forEach(function (n) { n.style.top = ""; });
+      var prevBottom = -1e9;
+      var GAP = 22;
+      notes.forEach(function (n) {
+        if (!n.offsetParent) return;                 // внутри свёрнутой секции — не в счёт
+        var h = n.offsetHeight;
+        var top = Math.max(n.offsetTop, prevBottom + GAP);
+        /* Заметка читается ВМЕСТЕ со своим разделом, а не уползает в следующий — если не
+           помещается снизу, поднимаем так, чтобы она кончалась на границе раздела.
+           НО непересечение важнее прижатия: подъём никогда не заходит на предыдущую
+           заметку (Р-владелец 2026-07-24: именно этим они и наложились друг на друга). */
+        var sec = n.closest("details.sec");
+        if (sec) {
+          var lim = sec.offsetTop + sec.offsetHeight - 8;
+          if (top + h > lim) {
+            top = Math.max(sec.offsetTop, Math.min(top, lim - h));
+            top = Math.max(top, prevBottom + GAP);
+          }
+        }
+        n.style.top = top + "px";
+        prevBottom = top + h;
+      });
+    });
+  }
+  window.__docLayoutSidenotes = layoutSidenotes;
+  layoutSidenotes();
+  window.addEventListener("load", layoutSidenotes);
+  window.addEventListener("resize", layoutSidenotes);
+  document.addEventListener("toggle", function () { setTimeout(layoutSidenotes, 0); }, true);
+  setTimeout(layoutSidenotes, 400);                  // после того, как KaTeX пересчитал высоты
+});
+</script>
+<script>
+/* тумблер темы: умолчание — системное, клик перебивает и запоминается (localStorage
+   на file:// работает не во всех браузерах, поэтому через try). */
+(function(){
+  var K="doc-theme";
+  try{ var v=localStorage.getItem(K); if(v) document.documentElement.setAttribute("data-theme",v); }catch(e){}
+  window.addEventListener("DOMContentLoaded",function(){
+    var b=document.querySelector(".theme-tgl"); if(!b) return;
+    var t=document.querySelector(".toc-btn");
+    if(t) t.addEventListener("click",function(){
+      var d=document.querySelector(".panel:not([hidden]) .toc, .toc");
+      if(!d) return;
+      d.classList.add("open");
+      d.addEventListener("mouseleave",function(){d.classList.remove("open");},{once:true});
+      d.addEventListener("click",function(e){ if(e.target.closest("a")) d.classList.remove("open"); });
+    });
+    b.addEventListener("click",function(){
+      var cur=document.documentElement.getAttribute("data-theme");
+      if(!cur) cur = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      var next = cur==="dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme",next);
+      try{ localStorage.setItem(K,next); }catch(e){}
+    });
+  });
+})();
+</script>
+</body>
+</html>
