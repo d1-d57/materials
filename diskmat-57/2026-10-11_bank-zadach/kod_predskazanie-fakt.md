@@ -294,6 +294,16 @@ Commit order (§4, by parts): (a) sverka.py + shkala + reshaemost.csv · (b) pre
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. ПРАВКА 1 (push of `arka/mat-kostyak` to GitHub and closing three open requests) is NOT executed, awaiting a yes in the chat. Reasons: `d1-d57/materials` is a PUBLIC repository (`gh repo view`: PUBLIC); the push carries 14 commits, 4 of them mine (aggregates per avatar only, no children) and 10 of other tasks (bot-7i answers/verdicts/avatars — I did not audit them for children's data, that is outside my zone); the guard that refuses the push is held by the very requests the correction tells me to close, and I do not override a guard on a statement that sits in a file only. The standard command is ready: `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/materials python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py vyvezti --yes`. Unpushed count: 10 at entry, 14 now (+4 mine).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. КР2 (two alternative parts ○/△) is counted by "handed in AND marked something in the item's part" — a refinement of the literal spec ("handed in"). It changes 58 of 84 КР2 cells (writers 6 instead of 7 for ○ items of Ни, etc.) and is the reason the КР2 numbers differ from the analyst's preliminary table (Ни: analyst's preliminary 29 %, strict recount over the `avatary` table 31 %, refined 38 %; the strict number is a one-line switch in `sverka.fakt`: drop the `chast` branch). Keep the refinement or return to the literal rule?
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. The avatar of a child is taken from the table `avatary` as of 06.10 and applied to ALL works since 22.09 (a child who changed the level is counted at the current one); СН has 2–3 writers per work, so 26 of 500 scale cells are «нет данных». Is "current level for all history" acceptable, or should the scale be cut by the level at the date of each work (needs the bot to keep avatar history)?
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -313,24 +323,113 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+  main
++ zahod/istoriya-sessij
+
+$ git --no-optional-locks status --porcelain | wc -l
+      39
+
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+      10
+
+$ python3 .../disciplina/_generator/tools/git_zona.py zayavki
+📂 Реестр заявок: /Users/ivanyakovlev/Documents/GitHub/materials/_studio/zhurnal/_INFRA-git/zayavki
+Открытых заявок: 14
+   · 2026-09-28T2351-29-09-7-materials-1-diskmat (307 ч, obychnaya, kommit)
+   · 2026-10-04T2045-7-29-09-04-10-2026 (166 ч, obychnaya, kommit)
+   · 2026-10-05T1522-05-10-logika-goda-7-cowork (148 ч, blokiruet, kommit)
+   · 2026-10-05T1843-7-29-09-05-10-diskmat (145 ч, obychnaya, kommit)
+   · 2026-10-05T2018-7-6-10-05-10-2026 (143 ч, obychnaya, kommit)
+   · 2026-10-05T2054-2026-10-05t2018-6-10-diskmat (142 ч, obychnaya, kommit)
+   · 2026-10-06T1736-05-10-06-10-logika-goda (125 ч, blokiruet, kommit)
+   · 2026-10-06T1935-2026-10-06t1736-05-10-06 (123 ч, blokiruet, kommit)
+   · 2026-10-07T0106-razbor-pary-6-10-logika-goda (117 ч, blokiruet, kommit)
+   · 2026-10-08T1221-2026-10-06t1736-2026-10-06t1935 (79 ч, blokiruet, kommit)
+   · 2026-10-08T1233-2026-10-08t1221-08-10-diskmat (79 ч, blokiruet, kommit)
+   · 2026-10-08T1244-2026-10-08t1221-2026-10-08t1233 (79 ч, blokiruet, kommit)
+   · 2026-10-11T1713-arka-mat-kostyak-2-otvety-v (5 ч, obychnaya, vyvoz)
+   · 2026-10-11T2203-vyvoz-arka-mat-kostyak-9-kommitov (0 ч, obychnaya, vyvoz)
+── ждут захода-разработчика (na-zahod): 12 заявок, гит-контуру их брать НЕ НАДО ──
+Охват: заявок открыто 14, переадресовано 12, закрыто недавно (sdelano) 90, постоянных исключений 1, сторож краснеет на 0, держателей 0, двойной захват на 0
 ```
+(the subagent printed the request list shortened to the lines above; the full output was `GIT_ZONA_REPO` unset warning + this list)
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+- Item 0, Cowork tail: nothing to take — no index or autolog (`KARTA.md`, `INCIDENTY.md`, `VERDIKTY.md`, `UROKI-FABRIKE.md`, arc dumps) was outside git; `UROKI-FABRIKE.md` in `diskmat-57/2026-10-11_bot-7i/` was a live task document, not an autolog, so it was left. Commits: none.
+- Item 1: nothing to merge, no `--vlit` branch was named. Not merged and not touched: `main` (showcase), `zahod/istoriya-sessij` (another task, valve opened by the analyst).
+- Item 2: only "the zone of the task itself" was named — it is done by the task, not by the contour. Handed over a list of paths outside git: `.gitignore`, `_fond/problems-ru/`, four tasks in `_fond/zadachi/bank/`, `diskmat-57/` (notebooks `GOLOSOVOE-*`, `iteracii/2026-10-13_arifmetika/`, `2026-10-11_bank-zadach/`, `2026-10-11_bot-7i/`), `kurs-puti-i-volny/.../04-tozhdestva/`, `obzory/volnovoe-uravnenie-struny/`, `ucheniki/danya/`.
+- Item 3: nothing put out, by the task. Side effect: `git_zona.py plan` wrote `_studio/.commit-plan` (ignored by git).
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет`
+- 10 commits existed only on this machine at entry: `vyvezti --yes` refused — the guard is held by two old open requests about the main branch (`2026-10-05T1522-05-10-logika-goda-7-cowork`, `2026-10-06T1736-05-10-06-10-logika-goda`); closing requests or `--vsyo-ravno` was not among the contour's rights — an owner's decision (see ПРАВКА 1 and my ВОПРОСЫ item 1).
+- 12 open requests for commits of other zones (`logika-goda-7`, `kruzhok-7i`, …): substantive work of others, not a contour mandate.
+- 39 paths outside git: content of other tasks (list above).
+- Not merged: `main` (showcase) and `zahod/istoriya-sessij` (not named).
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/bank-7i/reshaemost.csv` — any CSV viewer (500 rows: the solvability scale 7 works × 4 avatars); the tools are in `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/mashina-listka/` (`sverka.py`, `predskazanie.py`, `tablo.py`, `novaya.py`, `MASHINA.md` section «Занятие: предсказание → факт»)
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `dbdb09e3` — `mashina-listka: sverka.py rounds the error in p.p. before the >20 comparison (found by the verifier)` (code commits of the zone: `66aa5c78`, `c8a33b7f`, `bbb5d1c3`, `dbdb09e3`; the commit of this report follows them: `git log -1 -- diskmat-57/2026-10-11_bank-zadach/kod_predskazanie-fakt.md`) · `git_zona.py check --zone <each of the 7 zone paths>` → ✅ (the report file itself is checked after its own commit, see the last line)
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+
+ПРАВКИ ПРОЧИТАНЫ: 1 (it appeared in the file at 22:55, I found it at the end of the work, before the last move; it concerns only the last move — the push — and is answered in ВОПРОСЫ item 1; nothing done by the old edition has to be rolled back).
+
+**What was done and why.** The procedure «prediction BEFORE the lesson → automatic fact check AFTER» can no longer be skipped silently, and the scale of solvability exists from the first month.
+1. `sverka.py --shkala` → `bank-7i/reshaemost.csv`: all 125 items of 7 works since 22.09 × 4 avatars. 
+2. `predskazanie.py zagotovka|proverit` → `PREDSKAZANIE.csv/.md`; the proof "before the pair" is git (last commit of the file earlier than `nachalo`, file clean against HEAD).
+3. `sverka.py <folder>` → `SVERKA.csv/.md` (per avatar: mean absolute error, shift, share in 50–80 %, misses > 20 p.p.; «нет данных» for < 2 writers) and the fact is appended to the scale by the same counting function.
+4. `tablo.py` gate for Ф9/Ф14, `novaya.py` sets `nachalo`; `MASHINA.md` has the procedure by steps and the scale rules (the "header" of the csv: strict mode, alternative parts, avatar as of `na_datu`).
+
+**How it was checked (criterion 1–4, all by commands).**
+- (1) Live run `python3 diskmat-57/mashina-listka/sverka.py --shkala` on the live export: `было 0, записано 500, стало 500`; the second run: `было 500, записано 500, стало 500`; `md5` of the file identical (`ee59c5e8d7a342dacbafe24d623871e5`), run a third time after the last code change — identical again. 500 = 43+5+37+7+6+21+6 = 125 items × 4. Empty `dolya` (fewer than 2 writers): 26 of 500. Key set, every `reshili/pisali/dolya` of all 500 rows and the item levels recomputed by the verifier: 500 of 500, 0 differences.
+- (2) Test in my scratchpad `scratchpad/predskazanie-fakt/T/s/2026-10-06_kr2-test/`: copy of the 6.10 `ITERACIYA.json` + synthetic `PREDSKAZANIE.csv` (every `istochnik_ocenki` and `kommentarij` marked ТЕСТ; fixed shares by track, not derived from facts) for КР2 (21 items), committed in a tiny own git repo with commit date 2026-10-05T20:00+03:00, `nachalo` 2026-10-06T15:30. `python3 sverka.py <folder> --reshaemost <copy>` → `SVERKA.md`: СН mean error 21.9 p.p. (shift −1.2), Ни 30.6 (+10.9), Ц 27.4 (+17.1), В 20.6 (+13.3); in 50–80 % by fact 8/13, 1/21, 8/21, 9/21; misses > 20 p.p.: 5, 17, 14, 6 = 42; «нет данных» 8 of 84 cells. Recounted by the fresh verifier with its own code from the raw export: 84 of 84 cells and 4 of 4 summary rows, 0 differences (boundaries: the 50–80 % band is inclusive; an error of exactly 20.0 is not a miss — the verifier noticed that this relied on float luck, fixed by rounding in `dbdb09e3`; outputs after the fix are byte-identical).
+- (3) `tablo.py` on copies of the 6.10 iteration, real export: **A** no prediction, pair started → `rc=1`, Ф9 ❗ «пара началась…, а предсказания нет» (+ Ф14 ❗ marks exist, no SVERKA.md); **B** prediction committed before `nachalo` + SVERKA.md → `rc=0`, no ❗; **B2** B without SVERKA.md → rc=1, Ф14 ❗; **C** clock before `nachalo`, no prediction → Ф9 not red; **D** statuses «не нужно» on Ф9/Ф14 → rc=1, both ❗; **E** committed 16:00, after `nachalo` → rc=1, «задним числом»; **F** committed, then a share edited → rc=1 «изменён после последнего коммита» (and a hand-broken line → a clean ❗ message, not a crash — the crash was found and fixed by me during F).
+- (4) Regression: old `tablo.py` (copy of the committed version, write disabled) vs new with `--bez-zapisi` on the REAL folders 29.09 and 6.10: `diff` shows exactly the Ф9 and Ф14 lines (artefact `PREDSKAZANIE.csv`/`SVERKA.md`, red reasons) and the added line `❗ красных: 2` (rc 0 → 1); every other line is identical. The red is expected and is the past gaps named: 29.09 Ф9 «нет nachalo»/no prediction; 6.10 Ф9 same; Ф14 of both: the export has marks of DZ/LS/KR 29.09 and DZ/KR/ML 6.10 but no `SVERKA.md`. `TABLO.md` of both real folders were NOT rewritten (git status clean on them). `novaya.py` tested in the scratchpad: new folder gets `nachalo=2026-10-20T15:30` and the new artefacts, the table exits 0.
+
+**Scale at a glance (mean share over items with data, strict; (items in 50–80 % / items with data)):**
+
+| work | СН | Ни | Ц | В |
+|---|---|---|---|---|
+| LS-2026-09-22 | 22 % (5/43) | 25 % (4/43) | 33 % (1/43) | 43 % (3/43) |
+| DZ-2026-09-29 | 93 % (1/5) | 76 % (2/5) | 80 % (4/5) | 76 % (3/5) |
+| LS-2026-09-29 | 24 % (1/37) | 27 % (2/37) | 35 % (0/37) | 28 % (4/37) |
+| KR-2026-09-29 | 29 % (0/7) | 29 % (2/7) | 51 % (2/7) | 63 % (2/7) |
+| DZ-2026-10-06 | 67 % (0/6) | 89 % (0/6) | 72 % (2/6) | 88 % (2/6) |
+| KR-2026-10-06 | 46 % (8/13) | 38 % (1/21) | 48 % (8/21) | 66 % (9/21) |
+| ML-2026-10-06 | no data | no data | no data | 93 % (1/6) |
+
+Sheets (LS, ML) count ALL items including «доп» and an empty cell as «not solved», so they are a lower bound until attempts are recorded (canon §5.6); `popytki_sred` is empty.
+
+**Not touched.** `iteracii/2026-10-13_arifmetika/`, the bot, the real iteration folders and their `TABLO.md`, everything outside the zone. The export was opened read-only.
+
+**НЕОБРАТИМОЕ:** необратимого нет. (`reshaemost.csv` was created, not overwritten; no deletes; no force; the zone rolls back with `git revert` of `66aa5c78`..`dbdb09e3`.)
+
+**Verifier (after-type, fresh subagent, other method — own code over the raw export, did not read my code):** scale 500 of 500 rows, 0 differences; sverka 84 of 84 cells + 4 of 4 rows, 0 differences; ends with «выдано 0 позиций из 0 найденных» (0 discrepancies found). Observation passed to me and fixed: the float boundary at exactly 20.0 p.p.
+
+**Entry contour (subagent, five lines, verbatim):**
+1. Merged 0 branches of 0 named (`--vlit` not given). Main branch: `main` (by `branch --no-merged`).
+2. Cowork tail: taken into git 0 paths, no index or autolog was outside git. 73 paths remain outside git by `doctor` (39 lines in `status --porcelain`), the full list is `git_zona.py check`; this is the zone of other tasks, not autologs.
+3. Put out nothing (by the task). Not put out: `arka/mat-kostyak`, `zahod/chistka-github`, `zahod/istoriya-sessij`, `zahod/svedenie`. `poteri` not run, no rc.
+4. Irreversible: none.
+5. выдано 5 позиций из 5 найденных
+
+**Last move, facts (commands):**
+- Step 1, outside git: zone paths 0 (`git status --porcelain` on my seven paths is empty after the commit of this report); the repository as a whole has 39 lines of other tasks' content (not mine, left).
+- Step 2, merge: `git_zona.py vlit-v-osnovnuyu arka/mat-kostyak …` → «`arka/mat-kostyak` — это и есть основная ветка. Сливать нечего.» (rc=1 by design: I worked directly on the main branch, nothing to merge; "ветки не было" in ФАЗА ПРИЁМКИ is the right line).
+- Step 3, post-check from the main folder: `sverka.py --shkala` → 500/500 and the same md5; `tablo.py` on 6.10 real folder → the expected ❗ on Ф9 and Ф14 only; `grep` of the live callers: `tablo.py` imports `sverka`/`predskazanie`, `novaya.py` writes `nachalo` and uses `tablo.FAZY`. Green, nothing rolled back.
+- Step 4, not merged: `main` (showcase, not to be merged), `zahod/istoriya-sessij` (another task, valve opened by the analyst); count of `zahod/*` not merged into `arka/mat-kostyak`: 1, as at entry (Г3: no growth).
+- Step 5, export: **NOT done** — see ВОПРОСЫ 1. Unpushed own-branch commits: 10 at entry, 14 after my 4 code commits, plus the commit of this report. 
+- Hygiene Г4: no new `.py` in `_generator/**` (the new files are in `diskmat-57/mashina-listka/`) — not applicable. Г5: no new `.md` was created (MASHINA.md existed; the zahod file is born registered) — not applicable. Г6: each of my four commits touches only my paths (`git show --stat` read after each).
+
+**ПОВТОРЯЕМОСТЬ.** Will repeat on the next unit: (a) every new lesson needs `nachalo` — handled, `novaya.py` sets it with a default 15:30 which the owner must correct if the pair starts otherwise; (b) a work with two alternative parts again meets the dilution — handled by `fakt()`; (c) new works not yet in the export need `PUNKTY.csv` for `zagotovka` — format in MASHINA.md. Will not repeat: the red Ф9/Ф14 of 29.09 and 6.10 (past gaps).
+
+**Time / tokens:** on the `app` channel not applicable (no log to take them from).
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=7 · simvolov=34919 · rc=0
@@ -354,7 +453,8 @@ MODEL: besplatnaya
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-10-11 22:55 · вывоз arka/mat-kostyak разрешён владельцем
+Владелец 22:33 и 22:51: изменения заливать на GitHub; репозиторий остаётся публичным, данные детей в нём — принятое до большой уборки состояние. Последним ходом: `git_zona.py vyvezti --yes` для `arka/mat-kostyak`; если отказывает из-за заявок `2026-10-05T1522-05-10-logika-goda-7-cowork`, `2026-10-06T1736-05-10-06-10-logika-goda`, `2026-10-11T2203-vyvoz-arka-mat-kostyak-9-kommitov` — закрыть их штатной командой закрытия заявок с причиной «владелец 11.10 22:33/22:51: вывозить, репозиторий публичный по решению владельца» и вывезти. Число невывезенных коммитов до и после — в ОТЧЁТ. Репозиторий непубличным НЕ делать, историю НЕ переписывать.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
