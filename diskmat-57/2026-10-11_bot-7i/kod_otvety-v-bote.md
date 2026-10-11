@@ -321,6 +321,19 @@ cd /Users/ivanyakovlev/Documents/GitHub/bot-7i && python3 -c "import sqlite3;c=s
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. r18 ДЗ2 (ДЗ к 6.10): the analyst's own verdict for this photo (`dz01`) in `raspoznavanie/svod_dz_6-10.py` is `V['dz01'] = '++++++'` («досъёмка 22:20, ход верный везде»), but `nablyudeniya.csv` holds six «−» for r18 on `DZ-2026-10-06` — the transfer lost that verdict. The re-shot photo is not on disk, so by the rules the recount gives №3 «+», №5 «+» and «?» on №1, №2, №4, №6 (all four are in `bot-7i/data/SPISOK-NA-PROSMOTR.md`). Decide: credit the four by the analyst's re-shoot verdict (a `popravki` entry per item), or look at the paper.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. 12 items keep a «+» although the child's computed answer differs from the key (decision 4 of ## ПЛАН: a shown human «+» is never taken away). They are counted, not listed (the brief: past wrong pluses are not discussed). If you want to see them, it is one query over `otvety_detej.sverka = 'plyus'` with `chislo` ≠ the key.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. Factory: the brief's Г1 line `git_zona.py check --zone /Users/ivanyakovlev/Documents/GitHub/bot-7i/` cannot pass by construction — `bot-7i` is its own repository and the door answers rc=2 «НЕ СМОГ ПРОВЕРИТЬ»; Г2 was printed «неприменимо, проверено при сборке: все пути зоны лежат внутри репозитория materials», which is false for this zone. Worked around with `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/bot-7i git_zona.py check --zone <path>` per path. ЦЕНА: a brief whose zone spans two repositories gets a red Г1 at acceptance for work that did reach git; the С2 check of `check_sborki.py` should see a zone path outside `materials/` as a second repository.
+   ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+4. Factory: the brief's first-move command `schet_nezakrytogo.py diskmat-57/2026-10-11_bot-7i` (run from the `materials/` root) answered rc=1 «под область не попало ни одного файла — счёт НЕ снимался», although the arc folder exists with `kod_*.md` in it. ЦЕНА: the «СЧЁТ НЕЗАКРЫТОГО» snapshot of this pass is not taken; the command printed in every brief cannot be run as printed.
+   ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -388,11 +401,81 @@ rc=0
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**АРТЕФАКТ:** `https://math-kluychiki.ru/7i/` (live journal, open from the bot @conduit_57i_bot) — Telegram; the owner's list `/Users/ivanyakovlev/Documents/GitHub/bot-7i/data/SPISOK-NA-PROSMOTR.md` — any text viewer; screenshots `/Users/ivanyakovlev/Documents/GitHub/bot-7i/tmp-skriny/otvety/r18-ML-2026-10-06-tel-rabota.png`, `/Users/ivanyakovlev/Documents/GitHub/bot-7i/tmp-skriny/otvety/r18-KR-2026-10-06-tel-rabota.png` (+ `-komp-rabota.png` of both), `/Users/ivanyakovlev/Documents/GitHub/bot-7i/tmp-skriny/otvety/prepod-KR-2026-10-06-komp-rabota.png` (+ `-tel-rabota.png`) — Preview; the answers table `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/bank-7i/otvety.csv`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** materials `513ac7ea` — «diskmat-57/bank-7i: answers table of the 7И works 22.09-06.10 (otvety.csv, 223 items) and its builder from the keys» (+ `ed0c7e41` the plan, + the report commit of this file) · `git_zona.py check --zone diskmat-57/bank-7i/` → ✅, `--zone diskmat-57/2026-10-11_bot-7i/kod_otvety-v-bote.md` → ✅ · bot-7i (own repo, `main`, pushed to origin) `d90f4b1` — «Answers in the journal (Р328): every item shows the pupil's answer and the right one; marks recounted by the answers», `877b8cf` — «A «+» given by a correction (the recount, the owner's word) is shown as «+», not as a retake «−→+»» · `GIT_ZONA_REPO=…/bot-7i git_zona.py check --zone bot7i/ | README.md | katalog.yaml | proverka.py | vygruzka.py | veb/ | tests/` → ✅ each
+
+ПРАВКИ ПРОЧИТАНЫ: none (the block «ПРАВКИ ПОСЛЕ ВЫДАЧИ» was empty at start and at the end).
+
+**What was done and why**
+1. **Answers table** `diskmat-57/bank-7i/otvety.csv` — 223 rows (Л3 78, ДЗ1 5, Л4 66, КР1 14, ДЗ2 6, КР2 42, Л5 12), numeric 173, non-numeric 50 (named in ## ПЛАН with the reason). Built by `diskmat-57/bank-7i/sobrat_otvety.py` from the keys only (no hand typing): 143 numbers confirmed by a second source, **disagreements 0**. Two `otvety.py` (22.09) entries are an older draft of the problem (other numbers) and were not used as a second source (printed by the script). For a numeric item the shown answer is the number, not the expression (owner 16:35). The sources stayed untouched (`git status` of `2026-08-18_logika-goda-7/` empty before and after; `kr_kluch.py`, which writes a file at import, is run with writes kept in memory).
+2. **The rule** — one module `bot-7i/bot7i/istochniki/otvety.py`, referenced from the README: a later pass of the marks (source `пересчёт Р328 11.10`) before the owner's `popravki`; `nablyudeniya.csv` not edited, `otmetki_ishodnye` keeps every row. Live result: child answers 1356; «−»→«+» 5, «пусто»→«+» 13, «?» 48, «пусто»→«−» 0; a shown «+» kept although the computed answer differs: 12 (decision 4); non-numeric 95; variant unknown 0.
+3. **r18** (owner 16:22) — `katalog.yaml` `popravki` with `istochnik: владелец 11.10 16:22, Р328`: Л5 №4 (`esli_otvet: "100"`, given to 1 child) and КР2 2б (`esli_otvet: "42-14"`, given to 1 child). ДЗ2 by the rules:
+
+| пункт | ответ (как распознан) | было | стало |
+|---|---|---|---|
+| 1 | 15,9 мин | − | ? (shown empty, in the owner's list) |
+| 2 | (16+16)·50 / 1000 | − | ? |
+| 3 | 17+33 | − | + |
+| 4 | 2+3+5+7+8+6 ... +2 | − | ? |
+| 5 | 100+60-20 | − | + |
+| 6 | 28+20 | − | ? |
+
+   See ## ВОПРОСЫ 1: the analyst's re-shoot verdict for this very photo was six «+».
+4. **Screen** — under each item's text one quiet line «Твой ответ <x>  Ответ <y>» (a teacher: «Ответ» only, the API gives a teacher no child's answer); VERSTKA.md §2 got the line. Plus one consequence fix: a «+» given by a correction was drawn «−→+» «пересдано»; now a plain «+» (it touched only 6 marks, all corrections of this pass — counted under the old rule: 5 recount + 1 r18).
+5. **Export / API** — tables `otvety`, `otvety_detej`; `usloviya[].otvet` for everyone, `moj_otvet` for the pupil; test accounts copy `otvety_detej`; README documents all of it. 22 new tests (synthetic), pytest 80 passed.
+6. **The owner's list** `bot-7i/data/SPISOK-NA-PROSMOTR.md` (outside git: names): 48 lines «ученик · работа · пункт · ответ ребёнка · ключ · почему спорно», count on top (КР2 27, Л4 6, ДЗ2 6, КР1 5, ДЗ1 3, Л5 1).
+7. **Rollout** — `bash deploy/vykatka.sh --proba`, then `bash deploy/vykatka.sh` twice (after the retake fix): proverka green, `/zdorove` 200, smoke ok in Chromium and WebKit, pupil and teacher, 390 and 1400 px. The data went with it (vykatka ships `data/vygruzka.db`; a separate `obnovit_dannye.sh` was not needed). Server = laptop: `otmetki` 1729 rows, 1535 «+» on both. The fake tg_ids of `skriny.py` were deleted on the server (`delete from svyazki where tg_id >= 900000000000` → 2 rows, 0 left).
+
+**Criterion**
+- (а) `cd /Users/ivanyakovlev/Documents/GitHub/bot-7i && python3 vygruzka.py && python3 proverka.py; echo $?` → `0`; the four lines verbatim:
+```
+✅ ответов в таблице 223 из 223 пунктов
+✅ пунктов с ответом ребёнка 1356 из 1356
+✅ пересчёт: «−»→«+» 5, «пусто»→«+» 13, «?» 48
+✅ r18: Л5 №4 +, КР2 2б +
+```
+  Y = 223 = the number counted before the work (## ПЛАН).
+- (б) `otvety.csv`: every one of the 223 items has a row, every row a non-empty `istochnik`; numeric items with an empty `chislo` — 0 (the 50 empty ones are the non-numeric items named in ## ПЛАН).
+- (в) the query and its output:
+```
+$ sqlite3 data/vygruzka.db "select meropriyatie, nomer, rebyonok, otmetka, istochnik, prohod from otmetki where rebyonok = 'r18' and ((meropriyatie = 'ML-2026-10-06' and nomer = '4') or (meropriyatie = 'KR-2026-10-06' and nomer = '2б'))"
+ML-2026-10-06|4|r18|+|владелец 11.10 16:22, Р328|4
+KR-2026-10-06|2б|r18|+|владелец 11.10 16:22, Р328|3
+```
+- (г) live screenshots (paths above): Л5 and КР2 as r18 show «Твой ответ» and «Ответ» and «+» on Л5 №4 and КР2 2б; the teacher's КР2 shows «Ответ» only, both variants side by side.
+- (д) verifier — below.
+
+**Verifier (§3, after-type, fresh subagent, own code, no `bot7i` import)** — verbatim summary: «расхождений 0, проверено 1408 из 1408» (Y = child × item pairs of the seven works with an answer — 1356 — or a shown row — 52 more; test accounts excluded). Coverage per work: Л3 359, ДЗ1 99, Л4 301, КР1 170, ДЗ2 118 (whole work), КР2 327 (whole work, all 21 items), Л5 34. Its recount: «+» 1112, «−» 192, «?» 48, empty 56. Checks: (a) key 223 = `zadachi` 223, no empty `istochnik`; (b) `otvety_detej` 1356 = its count; (c) r18 Л5 4 «+», КР2 2б «+»; (d) «?» 48 = 48 lines of the list, item by item. One finding, resolved as its parser's artifact: КР1 2б r17 has `n["2б"] = ""` (an empty string, the note says the field is empty) — read as «no answer» the export is right; read as an answer it would be «−». Last line: «выдано 1 позиций из 1 найденных». Script: `/private/tmp/claude-501/-Users-ivanyakovlev-Documents-GitHub/4e159ae1-c985-48ad-9327-af3a7ad80e11/scratchpad/otvety-v-bote/verifikator/proverka.py`.
+
+**Git contour (§0.1 subagent), five lines verbatim**
+1. Влито в основную ноль веток из нуля названных. Имя основной ветки команде снимать не понадобилось, влитие не запускалось.
+2. Хвост Cowork: пунктом 0 ничего не забрано, индекс и автологи чисты. Вне git, по `git_zona.py check` (rc=1), 45 путей: правлены (`M`): `.gitignore`, `diskmat-57/2026-10-11_bank-zadach/SESSIYA.md`, `ucheniki/danya/PROFIL.md`, `ucheniki/danya/ZHURNAL.md`; новые (`??`): `_fond/problems-ru/…`, `_fond/zadachi/bank/…` (4), `diskmat-57/2026-10-11_bank-zadach/GOLOSOVOE-vladelca-2026-10-11-bank-3.txt`, `diskmat-57/2026-10-11_bot-7i/kod_otvety-v-bote.md(.otmenen)`, `kurs-puti-i-volny/zanyatiya/04-tozhdestva/…`, `obzory/volnovoe-uravnenie-struny/` (21 файл), `ucheniki/danya/…`; зона захода: в git нет ни `diskmat-57/bank-7i/`; зону bot-7i не проверял.
+3. Погашено ничего, гасить нечего. Ни одна ветка не названа, `zakryt-vetku` не запускался, rc нет.
+4. Необратимого не было. Из записей появился только черновик `_studio/.commit-plan` от `plan`, он под `.gitignore:30`.
+5. выдано 4 позиций из 4 найденных
+*(the first launch of this subagent went out with an empty task by my mistake; stopped before it ran any command — nothing written; relaunched with the full task.)*
+
+**Not touched:** solutions under problems, the «не согласен» button, bank cards, кружок, 15.09; `secrets/` (read only by the export as before); every source file (RAZMETKA, keys, `nablyudeniya.csv`, `punkty.csv`).
+
+**Found outside the zone (not touched):** a parallel session works in `bot-7i` (commits `a83c4b8`, `06c7dbe` — the cat; untracked `dizajn/penrose.py`). My rollouts shipped `main`, so its committed `06c7dbe` went live with mine; its untracked file did not travel. `schet_nezakrytogo.py` with the brief's area answered rc=1 (## ВОПРОСЫ 4).
+
+**НЕОБРАТИМОЕ**
+1. Server `/opt/bot-7i` code + `data/vygruzka.db` overwritten twice by `vykatka.sh` · restored by `bash deploy/vykatka.sh --otkat` (snapshots `/opt/bot-7i-bak-<UTC>`, the last one named in `/opt/bot-7i-bak-POSLEDNYAYA`).
+2. Server `data/svyazki.db`: rows `tg_id >= 900000000000` (the fake ids of `skriny.py`/`dym.py`) deleted — by `vykatka.sh` itself and once by hand (2 rows) · nothing to restore: test-only bindings, README prescribes the deletion.
+3. `git push origin main` of bot-7i (`06c7dbe..d90f4b1`, then `877b8cf`) · a later commit reverts, nothing is lost.
+4. Overwritten generated files: `bot-7i/data/vygruzka.db`, `data/csv/`, `data/SPISOK-NA-PROSMOTR.md` (rebuilt by every export), `bot-7i/tmp-skriny/app-*.png` (rewritten by `skriny.py`) · regenerated by `python3 vygruzka.py` / `python3 skriny.py`.
+
+**Time and tokens:** channel `app` — not applicable.
+
+**ПОВТОРЯЕМОСТЬ**
+1. Will repeat on the next work: each new work needs its answers in `otvety.csv`, and `sobrat_otvety.py` reads every key format by hand-written code (seven formats now). Without a row the item shows no «Ответ», and its marks are not recounted — `proverka.py` turns red («ответов в таблице X из Y») only for works that have `otvety_foto`. That is the bank-card scheme of the next pass; until then a new work = one function in `sobrat_otvety.py` + `otvety_foto` in the catalog.
+2. Will repeat: the recognizer's unsure items without the checker's mark → «?» → the owner's list (48 now). Every new photo batch adds lines; the owner's look is the closing step.
+3. Will not repeat (record, not a pass): the 22.09 markup holding names as read (resolved through the SDACHA pages), the `otvety.py` draft, the analyst's ДЗ2 verdict lost in transfer (## ВОПРОСЫ 1).
+
+**Final git hygiene** — see the block right below (commands and output).
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
@@ -416,7 +499,8 @@ MODEL: besplatnaya
 > **Аналитик:** внёс правку — обязан ОТДЕЛЬНО послать владельцу короткое сообщение для пересылки исполнителю. Правка, лежащая только в файле, до работающего исполнителя не доезжает: он файл не перечитывает сам.
 > **Исполнитель:** прочитал правку — назови её номер в `## ОТЧЁТ` строкой `ПРАВКИ ПРОЧИТАНЫ: 1, 2`. Нет строки при непустом блоке = отчёт не принимается: неизвестно, по какой редакции работали.
 
-<правок нет>
+### ПРАВКА 1 · 2026-10-11 17:10 · ключ КР2: в kr_kluch.py два слоя, ранний устарел; добавлены шпаргалки как сверочный источник
+Найдено аналитиком после выдачи: в `diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py` словарь `K` (верх файла) держит для КР2 ○3а **устаревший** ответ — 14 (А) / 15 (Б), «28−5−9»; финальный текст задачи (`diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/KR-06-10-A.md`, «хотя бы в один из кружков») даёт **23 (А) / 26 (Б)** — так и в шпаргалке принимающих `diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html` и в итоговой печати самого `kr_kluch.py`. Поэтому: (1) ключ КР2 и Л5 сверяй со шпаргалками принимающих (`out/SHPARGALKA-KR-06-10.html`, `out/SHPARGALKA-MINILISTOK-06-10.pdf`) и с текстом задачи `out/KR-06-10-*.md` — они добавлены в «Прочитать ТОЛЬКО»; (2) при расхождении источников действует п. 1 задачи: строка не пишется, пункт — в отчёт; не выбирай «победителя» сам. Чего НЕ делать: не править `kr_kluch.py` — он вне зоны.
 
 ## ФАЗА ПРИЁМКИ — (заполняет АНАЛИТИК, не исполнитель)
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
