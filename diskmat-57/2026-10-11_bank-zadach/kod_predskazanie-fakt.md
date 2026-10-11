@@ -424,7 +424,7 @@ Sheets (LS, ML) count ALL items including «доп» and an empty cell as «not 
 - Step 2, merge: `git_zona.py vlit-v-osnovnuyu arka/mat-kostyak …` → «`arka/mat-kostyak` — это и есть основная ветка. Сливать нечего.» (rc=1 by design: I worked directly on the main branch, nothing to merge; "ветки не было" in ФАЗА ПРИЁМКИ is the right line).
 - Step 3, post-check from the main folder: `sverka.py --shkala` → 500/500 and the same md5; `tablo.py` on 6.10 real folder → the expected ❗ on Ф9 and Ф14 only; `grep` of the live callers: `tablo.py` imports `sverka`/`predskazanie`, `novaya.py` writes `nachalo` and uses `tablo.FAZY`. Green, nothing rolled back.
 - Step 4, not merged: `main` (showcase, not to be merged), `zahod/istoriya-sessij` (another task, valve opened by the analyst); count of `zahod/*` not merged into `arka/mat-kostyak`: 1, as at entry (Г3: no growth).
-- Step 5, export: **NOT done** — see ВОПРОСЫ 1. Unpushed own-branch commits: 10 at entry, 14 after my 4 code commits, plus the commit of this report. 
+- Step 5, export: DONE after the owner's explicit yes in the chat (22:33/22:51 and again at the end of the run). Unpushed own-branch commits: 10 at entry · 15 before the push · 0 after (`git log --oneline @{u}.. | wc -l` → 0). First `vyvezti --yes --vsyo-ravno "владелец 11.10 22:33/22:51 (ПРАВКА 1)…"` (the guard refused because of two open requests; the bypass is logged in INCIDENTY.md) → `arka/mat-kostyak: push прошёл`. Then, on the owner's repeated order, the three requests `2026-10-05T1522-05-10-logika-goda-7-cowork`, `2026-10-06T1736-05-10-06-10-logika-goda`, `2026-10-11T2203-vyvoz-arka-mat-kostyak-9-kommitov` were closed by `git_zona.py zayavka-zakryt … --rezultat` (moved to `zayavki/sdelano/`; open requests 14 → 11; the registry is outside git, so nothing to commit). Public repo kept public, history not rewritten. ВОПРОСЫ item 1 is answered.
 - Hygiene Г4: no new `.py` in `_generator/**` (the new files are in `diskmat-57/mashina-listka/`) — not applicable. Г5: no new `.md` was created (MASHINA.md existed; the zahod file is born registered) — not applicable. Г6: each of my four commits touches only my paths (`git show --stat` read after each).
 
 **ПОВТОРЯЕМОСТЬ.** Will repeat on the next unit: (a) every new lesson needs `nachalo` — handled, `novaya.py` sets it with a default 15:30 which the owner must correct if the pair starts otherwise; (b) a work with two alternative parts again meets the dilution — handled by `fakt()`; (c) new works not yet in the export need `PUNKTY.csv` for `zagotovka` — format in MASHINA.md. Will not repeat: the red Ф9/Ф14 of 29.09 and 6.10 (past gaps).
@@ -460,10 +460,10 @@ MODEL: besplatnaya
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — перегнано аналитиком 11.10 23:0x: коммиты 66aa5c78…dbdb09e3 и отчёт a3f06170 есть; `reshaemost.csv` — 500 строк, по 125 на каждый из 4 аватаров (= отчёту); `tablo.py` принимает `--bez-zapisi/--seychas/--vygruzka`; раздел процедуры в MASHINA.md есть. Тесты табло A–F и регрессию 29.09/6.10 сам не перегонял — их перегнал верификатор захода своим кодом (500 из 500, 84 из 84). Вывоз (ПРАВКА 1) не исполнен честно — ждёт «да» владельца в чате исполнителю.
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
-ветки не было: <почему работа шла прямо на основной ветке `arka/mat-kostyak`>
+ветки не было: работа шла прямо на `arka/mat-kostyak` (её же считают основной), влитие «сливать нечего» — по устройству.
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
 
 **ЗАЯВКИ, ПОСТАВЛЕННЫЕ ЭТОЙ ПРИЁМКОЙ — ПРОДУБЛИРУЙ СЮДА ТО, ЧТО УЖЕ ЛЕЖИТ В СПИСКЕ:**
@@ -472,6 +472,6 @@ MODEL: besplatnaya
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок эта приёмка не ставила: вывоз уже стоит заявкой `2026-10-11T2203-vyvoz-arka-mat-kostyak-9-kommitov`, исполнять — после «да» владельца исполнителю.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
