@@ -1,0 +1,9 @@
+id,data,poryadok,tip,rezhim,tema,istochnik
+LS-2026-09-22,2026-09-22,1,LS,pomosch,komb,csv-priema
+LS-2026-09-22i,2026-09-22,2,LS,pomosch,komb,csv-priema
+DZ-2026-09-29,2026-09-29,0,DZ,dom,komb,foto-razmetka
+LS-2026-09-29,2026-09-29,1,LS,pomosch,komb,csv-priema
+KR-2026-09-29,2026-09-29,2,KR,sam,komb,foto-razmetka
+DZ-2026-10-06,2026-10-06,0,DZ,dom,komb,foto-razmetka
+KR-2026-10-06,2026-10-06,1,KR,sam,komb,foto-razmetka
+ML-2026-10-06,2026-10-06,2,ML,pomosch,komb,foto-razmetka

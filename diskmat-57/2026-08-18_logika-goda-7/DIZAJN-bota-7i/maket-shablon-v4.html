@@ -1,0 +1,222 @@
+<title>Спецмат 7И — макет</title>
+<style>
+/* Макет v4. Журнал по занятиям; главное в каждой работе — БАЗА: все ○ или все △ (обещанная «4»).
+   Цвета — тема Telegram, как у «Почты»; условия — с засечками; цвет только у того, что значит «сделано» или «неверно». */
+:root{
+  --stranica:#efeff4; --sekciya:#fff; --tekst:#111114; --tusklo:#8e8e93; --podpis:#5f5f66;
+  --liniya:rgba(60,60,67,.15); --akcent:#2481cc; --ramka:#d3d3da; --vne:#dcdce3; --metka:#f2f2f6;
+  --da-fon:#e0f3e7; --da:#17773d; --net-fon:#f8e8e5; --net:#b04a3c;
+  --serif:"PT Serif", Georgia, "Times New Roman", serif;
+  --sys:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --stranica:#000; --sekciya:#1c1c1e; --tekst:#f2f2f5; --tusklo:#8d8e93; --podpis:#a7a7ad;
+  --liniya:rgba(84,84,88,.55); --akcent:#62aef2; --ramka:#3a3a3c; --vne:#111113; --metka:#2a2a2d;
+  --da-fon:#183a26; --da:#6fd598; --net-fon:#3a2321; --net:#ec9a8f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --stranica:#000; --sekciya:#1c1c1e; --tekst:#f2f2f5; --tusklo:#8d8e93; --podpis:#a7a7ad;
+  --liniya:rgba(84,84,88,.55); --akcent:#62aef2; --ramka:#3a3a3c; --vne:#111113; --metka:#2a2a2d;
+  --da-fon:#183a26; --da:#6fd598; --net-fon:#3a2321; --net:#ec9a8f; color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:var(--vne);color:var(--tekst);font:16px/1.4 var(--sys);padding-inline:16px;padding-block:14px 32px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+button:focus-visible{outline:2px solid var(--akcent);outline-offset:2px;border-radius:6px}
+.obzor{max-width:1180px;margin:0 auto 12px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:14px;color:var(--podpis)}
+.obzor .gr{display:flex;align-items:center;gap:8px}
+.pk{display:flex;background:var(--sekciya);border-radius:9px;padding:2px}
+.pk button{padding:5px 12px;border-radius:7px;font-size:14px;color:var(--podpis)}
+.pk button[aria-pressed="true"]{background:var(--stranica);color:var(--tekst);font-weight:600}
+.obzor .prim{flex-basis:100%;font-size:13px}
+.ustr{margin:0 auto;background:var(--stranica);border:1px solid var(--ramka);overflow:hidden;max-width:100%}
+.ustr.tel{width:390px;height:820px;border-radius:24px}
+.ustr.komp{width:1180px;height:800px;border-radius:12px}
+.tg{height:46px;display:flex;align-items:center;padding:0 12px;border-bottom:.5px solid var(--liniya);position:relative}
+.tg .nazad{color:var(--akcent);font-size:16px;visibility:hidden;z-index:1}
+.tg .nazad.vid{visibility:visible}
+.tg .tgimya{position:absolute;left:0;right:0;text-align:center;font-weight:600;font-size:16px;pointer-events:none}
+.okno{height:calc(100% - 46px);overflow-y:auto;overscroll-behavior:contain}
+.komp .okno{display:grid;grid-template-columns:240px minmax(0,1fr);overflow:hidden}
+.komp .bok{border-right:.5px solid var(--liniya);padding:20px 12px;overflow-y:auto}
+.komp .glav{overflow-y:auto;padding-bottom:40px}
+
+/* шапка телефона: имя и разделы — одна полоса */
+.imya{font-size:22px;font-weight:700;padding:16px 16px 10px}
+.razdely{display:flex;gap:2px;margin:0 12px 6px;background:var(--sekciya);border-radius:10px;padding:3px}
+.razdely button{flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:14px;color:var(--podpis)}
+.razdely button.akt{background:var(--stranica);color:var(--tekst);font-weight:600}
+.bok .imya{padding:0 10px 14px;font-size:20px}
+.bok-p{display:block;width:100%;padding:9px 12px;border-radius:9px;font-size:16px}
+.bok-p.akt{background:var(--sekciya);font-weight:600}
+
+/* журнал */
+.tema{font-size:13px;color:var(--tusklo);margin:18px 16px 6px}
+.zan{background:var(--sekciya);border-radius:12px;margin:0 12px 8px;padding:10px 12px 12px}
+.zan b{display:block;font-size:16px;margin:0 2px 8px}
+.yach{display:flex;flex-wrap:wrap;gap:6px}
+.ya{flex:1 1 92px;min-width:0;background:var(--metka);border-radius:10px;padding:7px 10px;display:flex;flex-direction:column;gap:1px}
+.ya .k{font-size:13px;color:var(--podpis);font-weight:600}
+.ya .s{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ya.baza{background:var(--da-fon)} .ya.baza .s{color:var(--da)}
+.ya .sv{font-weight:500;color:var(--podpis);font-size:13px}
+.ya .ns{font-weight:400;color:var(--tusklo)}
+.komp .tema,.komp .zan{margin-left:28px;margin-right:28px}
+.komp .zan{max-width:720px}
+.komp .ya{flex:0 1 150px}
+
+/* списки разделов */
+.spis{background:var(--sekciya);border-radius:12px;margin:10px 12px;overflow:hidden}
+.komp .spis{margin:24px 28px;max-width:720px}
+.st{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;min-height:56px;position:relative}
+.st+.st::before{content:"";position:absolute;top:0;left:14px;right:0;border-top:.5px solid var(--liniya)}
+.st .kod{flex:none;width:46px;font-weight:700;color:var(--podpis);font-variant-numeric:tabular-nums}
+.st .t{flex:1;min-width:0}.st .t div:first-child{font-size:16px}.st .t div+div{font-size:13px;color:var(--tusklo)}
+.st .s{flex:none;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.st .s.baza{color:var(--da)}
+.novoe{display:block;margin:10px 12px 0 auto;padding:8px 14px;border-radius:9px;background:var(--akcent);color:#fff;font-size:14px;font-weight:600}
+.komp .novoe{margin:24px 28px -10px auto}
+
+/* работа */
+.list{background:var(--sekciya);margin:10px 12px 30px;border-radius:14px;padding:16px 16px 22px}
+.komp .list{max-width:780px;margin:24px 28px 48px;padding:28px 40px 34px}
+.l-kod{font-size:13px;font-weight:700;color:var(--podpis)}
+.l-zag{font-family:var(--serif);font-size:24px;line-height:1.2;margin:2px 0 2px;text-wrap:balance}
+.komp .l-zag{font-size:30px}
+.l-meta{font-size:14px;color:var(--tusklo)}
+.sost{margin-top:14px;border-radius:12px;background:var(--metka);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.sost .glavn{font-size:17px;font-weight:700}
+.sost .glavn.baza{color:var(--da)}
+.trek{display:flex;align-items:center;gap:8px;font-size:15px;font-variant-numeric:tabular-nums}
+.trek .ime{width:22px;display:inline-flex;justify-content:center}
+.trek .pol{flex:1;height:6px;border-radius:3px;background:var(--sekciya);overflow:hidden}
+.trek .pol i{display:block;height:100%;background:var(--da);border-radius:3px}
+.trek .ch{min-width:56px;text-align:right}
+.trek.sl{opacity:.55}
+.sost .sverh{font-size:14px;color:var(--podpis)}
+.leg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--tusklo);margin-top:10px}
+.leg span{display:inline-flex;align-items:center;gap:4px}
+.gruppa{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--tusklo);margin:22px 0 0;padding-bottom:4px;border-bottom:.5px solid var(--liniya)}
+.z{padding:12px 0;border-bottom:.5px solid var(--liniya);scroll-margin-top:10px}
+.z:last-child{border-bottom:0}
+.zv{display:flex;gap:10px;align-items:flex-start}
+.nom{flex:none;display:inline-flex;align-items:center;gap:4px;min-width:38px;font-weight:700;font-variant-numeric:tabular-nums;padding-top:2px}
+.znak{width:12px;height:12px;flex:none;display:inline-block}.znak.krug{border:1.5px solid currentColor;border-radius:50%}
+.tx{flex:1;min-width:0;font-family:var(--serif);font-size:17px;line-height:1.5;white-space:pre-line}
+.komp .tx{font-size:19px}
+.pp{display:flex;gap:8px;align-items:flex-start;margin:5px 0 0 48px}
+.pp .b{flex:none;width:24px;font-family:var(--serif);color:var(--podpis);font-size:17px}
+.ot{flex:none;min-width:32px;height:26px;padding:0 6px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;gap:3px}
+.ot.da{background:var(--da-fon);color:var(--da)}
+.ot.ne{background:var(--net-fon);color:var(--net)}
+.ot.pu{border:1px dashed var(--liniya);color:var(--tusklo);font-weight:400;font-size:12px}
+.ot .str{font-size:11px;font-weight:400;opacity:.75}
+.otvet{margin:4px 0 0 48px;font-size:14px;color:var(--podpis)}
+.zametka{max-width:1180px;margin:14px auto 0;font-size:13px;color:var(--podpis)}
+@media (max-width:440px){.ustr.tel{width:100%;height:760px}}
+</style>
+
+<div class="obzor" role="toolbar" aria-label="Режим макета">
+  <div class="gr">Чей экран <div class="pk" id="rol"><button aria-pressed="true" data-v="reb">Ученица</button><button aria-pressed="false" data-v="pre">Преподаватель</button></div></div>
+  <div class="gr">Устройство <div class="pk" id="vid"><button aria-pressed="true" data-v="tel">Телефон</button><button aria-pressed="false" data-v="komp">Компьютер</button></div></div>
+  <div class="prim">Макет v4. Условия — настоящие, все задачи девяти работ. Ученица и её отметки выдуманы. Нумерация Л/К/р/ДЗ и темы — предложение.</div>
+</div>
+<div class="ustr tel" id="ustr">
+  <div class="tg"><button class="nazad" id="nazad">‹ Назад</button><div class="tgimya">Спецмат 7И</div></div>
+  <div class="okno" id="okno"></div>
+</div>
+<p class="zametka">Верхнюю полосу с «‹ Назад» и названием рисует Telegram. В каждой работе главное — база: все ○ или все △; это обещанная «4». Зелёная плитка — база сдана, «+2» — задачи сверх базы.</p>
+
+<script>
+const D = /*DANNYE*/[];
+const KOD={"LS-2026-09-15-logika":["Л1","Л"],"LS-2026-09-15-obratnyj-hod":["Л2","Л"],"LS-2026-09-22":["Л3","Л"],"LS-2026-09-29":["Л4","Л"],"ML-2026-10-06":["Л5","Л"],
+ "KR-2026-09-29":["К/р 1","К"],"KR-2026-10-06":["К/р 2","К"],"DZ-2026-09-29":["ДЗ 1","Д"],"DZ-2026-10-06":["ДЗ 2","Д"]};
+const ZADANO={"DZ-2026-09-29":"2026-09-22","DZ-2026-10-06":"2026-09-29"};
+const TEMY=[["Логика и обратный ход",["2026-09-15"]],["Комбинаторика",["2026-09-22","2026-09-29","2026-10-06"]]];
+const KRUZHOK=[["К1","Один ответ, несколько, ни одного","2026-09-23"],["К2","Построй или докажи, что нельзя","2026-09-29"],["К3","Раскраски и разрезания","2026-10-06"]];
+const MES=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const dt=s=>{const [y,m,d]=s.split("-");return `${+d} ${MES[m-1]}`;};
+const PORYADOK={Л:0,К:1,Д:2};
+/* уровни: '' и ○ — круги (база); △ — треугольники (база-альтернатива); * и доп — сверх базы */
+const tr=u=>u==="△"?"t":(u===""||u==="○")?"o":"x";
+/* выдуманные отметки: в каждой работе ученица выбирает трек */
+let seed=11; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const NE_SDANO=new Set(["DZ-2026-09-29"]);
+const VYBOR={"KR-2026-10-06":"t","LS-2026-09-22":"o","LS-2026-09-29":"o","ML-2026-10-06":"t"};
+const POLNO=new Set(["LS-2026-09-29","KR-2026-10-06","LS-2026-09-15-obratnyj-hod"]); // где база сдана целиком
+for(const m of D){ const kr=m.vid==="КР"||m.vid==="ДЗ";
+  for(const p of m.probs) for(const q of p.parts){ const t=tr(p.ur), vyb=VYBOR[m.id]||"o", r=rnd();
+    let o=""; if(!NE_SDANO.has(m.id)){
+      if(t===vyb) o = POLNO.has(m.id) ? "+" : (r<.7?"+":kr?"−":"");
+      else if(t==="x") o = r<.3?"+":(kr&&r<.4?"−":"");
+      else o = r<.2?"+":"";
+    } q.o=o; }}
+const KR1=D.find(m=>m.id==="KR-2026-09-29"); if(KR1){const p=KR1.probs.find(p=>p.n==="2"); if(p){p.parts[1].o="+"; p.parts[1].bylo="−";}}
+const RAB=D.map(m=>({...m,kod:KOD[m.id][0],tip:KOD[m.id][1],zan:ZADANO[m.id]||m.data}));
+let rol="reb",vid="tel",razdel="zh",otkr=null;
+const $=s=>document.querySelector(s), e=s=>String(s??"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const KRUG='<span class="znak krug" aria-label="круг"></span>';
+const TRI='<svg class="znak" viewBox="0 0 14 14" aria-label="треугольник"><path d="M7 1.6 L12.8 12.2 H1.2 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+/* состояние работы: треки базы, база сдана?, сверх базы */
+function sost(m){
+  const t={o:[0,0],t:[0,0]}; let sv=0;
+  for(const p of m.probs) for(const q of p.parts){const k=tr(p.ur); if(k==="x"){ if(q.o==="+") sv++; continue;} t[k][1]++; if(q.o==="+") t[k][0]++;}
+  const treki=["o","t"].filter(k=>t[k][1]>0);
+  const baza=treki.some(k=>t[k][0]===t[k][1]);
+  const luch=treki.slice().sort((a,b)=>t[b][0]/t[b][1]-t[a][0]/t[a][1])[0];
+  // сверх базы: всё, что решено вне лучшего трека
+  const sverh = sv + treki.filter(k=>k!==luch).reduce((s,k)=>s+t[k][0],0);
+  return {t,treki,baza,luch,sverh,ne:NE_SDANO.has(m.id)};
+}
+function plitkaS(m){ if(rol!=="reb") return `<span class="s ns">${e(m.nazv.replace("Домашнее задание · ",""))}</span>`;
+  const s=sost(m); if(s.ne) return `<span class="s ns">не сдано</span>`;
+  if(s.baza) return `<span class="s">✓ база${s.sverh?` <span class="sv">+${s.sverh}</span>`:""}</span>`;
+  const [v,n]=s.t[s.luch]; return `<span class="s">${s.luch==="t"?TRI:KRUG} ${v} из ${n}</span>`; }
+function plitka(m){ const b=rol==="reb"&&!sost(m).ne&&sost(m).baza; return `<button class="ya${b?" baza":""}" data-id="${m.id}"><span class="k">${e(m.kod)}</span>${plitkaS(m)}</button>`; }
+function zhurnal(){ let h="";
+  for(const [tema,dni] of [...TEMY].reverse()){ h+=`<div class="tema">${e(tema)}</div>`;
+    for(const d of [...dni].reverse()){
+      const r=RAB.filter(x=>x.zan===d).sort((a,b)=>PORYADOK[a.tip]-PORYADOK[b.tip]||a.kod.localeCompare(b.kod,"ru",{numeric:true}));
+      h+=`<section class="zan"><b>${dt(d)}</b><div class="yach">${r.map(plitka).join("")}</div></section>`; } }
+  return h; }
+function spisok(t){ const r=RAB.filter(x=>x.tip===t).sort((a,b)=>b.kod.localeCompare(a.kod,"ru",{numeric:true}));
+  const nov=t==="Д"&&rol==="pre"?`<button class="novoe">+ Новое ДЗ</button>`:"";
+  return nov+`<div class="spis">${r.map(m=>{ const s=sost(m); let st="";
+    if(rol==="reb") st = s.ne?`<span class="s ns">не сдано</span>`: s.baza?`<span class="s baza">✓ база${s.sverh?" +"+s.sverh:""}</span>`:`<span class="s">${s.t[s.luch][0]} из ${s.t[s.luch][1]}</span>`;
+    const pod = t==="Д" ? `задано ${dt(m.zan)} · к ${dt(m.data)}` : dt(m.data);
+    return `<button class="st" data-id="${m.id}"><span class="kod">${e(m.kod)}</span><span class="t"><div>${e(t==="К"?"Контрольная":m.nazv.replace("Домашнее задание · ",""))}</div><div>${pod}</div></span>${st}</button>`}).join("")}</div>`; }
+function kruzhok(){ return `<div class="spis">${[...KRUZHOK].reverse().map(([k,n,d])=>`<div class="st"><span class="kod">${k}</span><span class="t"><div>${e(n)}</div><div>${dt(d)}</div></span></div>`).join("")}</div>`; }
+function ot(q){ if(rol!=="reb") return "";
+  if(q.o==="+"&&q.bylo) return `<span class="ot da" title="пересдано"><span class="str">${q.bylo}→</span>+</span>`;
+  return q.o==="+"?`<span class="ot da">+</span>`:q.o==="−"?`<span class="ot ne">−</span>`:`<span class="ot pu">нет</span>`; }
+function sostBlok(m){ const s=sost(m);
+  if(s.ne) return `<div class="sost"><span class="glavn">Работа не сдана</span></div>`;
+  const glav = s.baza ? `<span class="glavn baza">✓ База сдана</span>` : `<span class="glavn">База — все ${s.treki.length>1?"○ или все △":(s.treki[0]==="t"?"△":"○")}</span>`;
+  const treki = s.treki.map(k=>{const [v,n]=s.t[k]; return `<div class="trek${s.treki.length>1&&k!==s.luch?" sl":""}"><span class="ime">${k==="t"?TRI:KRUG}</span><span class="pol"><i style="width:${n?100*v/n:0}%"></i></span><span class="ch">${v} из ${n}</span></div>`}).join("");
+  return `<div class="sost">${glav}${treki}${s.sverh?`<span class="sverh">Сверх базы: +${s.sverh}</span>`:""}</div>
+  <div class="leg"><span><i class="ot da">+</i> зачтено</span><span><i class="ot ne">−</i> неверно</span><span><i class="ot pu">нет</i> не сдано</span></div>`; }
+function rabota(id){ const m=RAB.find(x=>x.id===id);
+  const meta=[m.tip==="Д"?`задано ${dt(m.zan)} · сдать к ${dt(m.data)}`:dt(m.data), m.var?(rol==="reb"?`вариант ${m.var}`:"варианты А и Б"):""].filter(Boolean).join(" · ");
+  const zag = m.tip==="К"?"Контрольная":m.tip==="Д"?m.nazv.replace("Домашнее задание · ",""):m.nazv;
+  let h=`<article class="list"><div class="l-kod">${e(m.kod)}</div><h1 class="l-zag">${e(zag)}</h1><div class="l-meta">${meta}</div>${rol==="reb"?sostBlok(m):""}`;
+  const gr={o:[],t:[],x:[]}; m.probs.forEach(p=>gr[tr(p.ur)].push(p));
+  const zad=p=>{const z=p.ur==="○"?KRUG:p.ur==="△"?TRI:""; const odna=p.parts.length===1&&!p.parts[0].l;
+    let s=`<div class="z"><div class="zv"><span class="nom">${z}${e(p.n)}${p.ur==="*"?"*":""}.</span><div class="tx">${e(p.stem)}</div>${odna?ot(p.parts[0]):""}</div>`;
+    if(!odna) s+=p.parts.map(q=>`<div class="pp"><span class="b">(${e(q.l)})</span><div class="tx">${e(q.t)}</div>${ot(q)}</div>`).join("");
+    if(rol==="pre") s+=`<div class="otvet">Ответ — из ключа</div>`; return s+"</div>"; };
+  const ima={o:m.probs.some(p=>p.ur==="○")?`${KRUG} Кружки`:"Задачи",t:`${TRI} Треугольники`,x:"Сверх базы"};
+  const est=["o","t","x"].filter(k=>gr[k].length);
+  for(const k of est){ if(est.length>1) h+=`<div class="gruppa">${ima[k]}</div>`; h+=gr[k].map(zad).join(""); }
+  return h+"</article>"; }
+const RAZ=[["zh","Журнал"],["Л","Листки"],["К","К/р"],["Д","ДЗ"],["kr","Кружок"]];
+const imya=()=>`<div class="imya">${rol==="reb"?"Маша Иванова":"Преподаватель"}</div>`;
+function glavnoe(){ if(otkr) return rabota(otkr); return razdel==="zh"?zhurnal():razdel==="kr"?kruzhok():spisok(razdel); }
+function risuj(){ $("#ustr").className="ustr "+vid; const ok=$("#okno");
+  if(vid==="komp") ok.innerHTML=`<nav class="bok">${imya()}${RAZ.map(([k,t])=>`<button class="bok-p${razdel===k&&!otkr?" akt":razdel===k?" akt":""}" data-r="${k}">${t}</button>`).join("")}</nav><main class="glav">${glavnoe()}</main>`;
+  else ok.innerHTML = otkr ? rabota(otkr) : imya()+`<nav class="razdely">${RAZ.map(([k,t])=>`<button class="${razdel===k?"akt":""}" data-r="${k}">${t}</button>`).join("")}</nav>`+glavnoe();
+  $("#nazad").classList.toggle("vid",!!otkr&&vid==="tel"); ok.scrollTop=0; const g=ok.querySelector(".glav"); if(g) g.scrollTop=0; }
+$("#okno").addEventListener("click",ev=>{const r=ev.target.closest("[data-r]"); if(r){razdel=r.dataset.r; otkr=null; risuj(); return;}
+  const b=ev.target.closest("[data-id]"); if(b){otkr=b.dataset.id; risuj();}});
+$("#nazad").addEventListener("click",()=>{otkr=null; risuj();});
+function pk(gr,cb){gr.addEventListener("click",ev=>{const b=ev.target.closest("button"); if(!b) return;
+  gr.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false")); cb(b.dataset.v); risuj();});}
+pk($("#rol"),v=>rol=v); pk($("#vid"),v=>vid=v); risuj();
+</script>
