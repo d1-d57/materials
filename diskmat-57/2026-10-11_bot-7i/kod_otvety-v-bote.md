@@ -329,10 +329,10 @@ cd /Users/ivanyakovlev/Documents/GitHub/bot-7i && python3 -c "import sqlite3;c=s
    ДОСТАВЛЕНО: нет
 3. Factory: the brief's Г1 line `git_zona.py check --zone /Users/ivanyakovlev/Documents/GitHub/bot-7i/` cannot pass by construction — `bot-7i` is its own repository and the door answers rc=2 «НЕ СМОГ ПРОВЕРИТЬ»; Г2 was printed «неприменимо, проверено при сборке: все пути зоны лежат внутри репозитория materials», which is false for this zone. Worked around with `GIT_ZONA_REPO=/Users/ivanyakovlev/Documents/GitHub/bot-7i git_zona.py check --zone <path>` per path. ЦЕНА: a brief whose zone spans two repositories gets a red Г1 at acceptance for work that did reach git; the С2 check of `check_sborki.py` should see a zone path outside `materials/` as a second repository.
    ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_otvety-v-bote#3
 4. Factory: the brief's first-move command `schet_nezakrytogo.py diskmat-57/2026-10-11_bot-7i` (run from the `materials/` root) answered rc=1 «под область не попало ни одного файла — счёт НЕ снимался», although the arc folder exists with `kod_*.md` in it. ЦЕНА: the «СЧЁТ НЕЗАКРЫТОГО» snapshot of this pass is not taken; the command printed in every brief cannot be run as printed.
    ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_otvety-v-bote#4
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
@@ -512,10 +512,10 @@ MODEL: besplatnaya
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — 2026-10-11 17:22: зона materials доехала (git_zona check ✅), коммиты bot-7i d90f4b1/877b8cf на origin; прогоном аналитика на живых данных: otvety.csv 223 строки, КР2 ○3а = 23/26 (ловушка устаревшего kr_kluch обойдена), proverka.py печатает четыре строки критерия дословно (красные только getMe/pytest — окружение песочницы аналитика: нет токена и pytest), r18 ДЗ2 №3,№5 «+»; верификатор исполнителя — 0 расхождений, 1408 из 1408. Найдено приёмкой (не дефект исполнителя — дефект захода: svod_*.py назван «как сверяли ключ», а это ручные вердикты аналитика по фото): вердикты svod_dz_6-10.py расходятся с выгрузкой ДЗ2 в 8 пунктах из 114 (r18 №1,2,4,6; r24 №3 «+»→«−»; r05 №2, №6; r13 №2), все 14 «?» КР2 ○ имеют вердикт «−» в svod_kr_6-10.py — вопрос владельцу, следующий заход.
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
-ветки не было: <почему работа шла прямо на основной ветке `arka/mat-kostyak`>
+ветки не было: заход собран без --worktree, работа по контракту шла прямо на основной ветке `arka/mat-kostyak` (materials) и на `main` своего репозитория bot-7i.
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
 
 **ЗАЯВКИ, ПОСТАВЛЕННЫЕ ЭТОЙ ПРИЁМКОЙ — ПРОДУБЛИРУЙ СЮДА ТО, ЧТО УЖЕ ЛЕЖИТ В СПИСКЕ:**
@@ -524,6 +524,6 @@ MODEL: besplatnaya
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок нет: приёмка не ставила ни одной — вывоз `arka/mat-kostyak` уже заявлен исполнителем (`2026-10-11T1713-arka-mat-kostyak-2-otvety-v`), влития нет (ветки не было), деплой сделан исполнителем, гасить нечего.
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*

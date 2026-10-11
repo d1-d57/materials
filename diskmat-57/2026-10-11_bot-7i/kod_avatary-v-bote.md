@@ -319,16 +319,16 @@ Read at start: branch `arka/mat-kostyak` ✔; ПРАВКИ ПОСЛЕ ВЫДАЧ
    ДОСТАВЛЕНО: нет
 3. **Ticks are wired only into the cells of `nablyudeniya.csv` and the SDACHA tables** (`razobrat_kod`, README «Attempts»); no source carries a tick today (`popytki` empty everywhere, «пунктов листков с попытками: 0»). The analyst's verdict strings (`svod_*.py` read by `verdikty.py`) and the photo markups are NOT wired: a tick there stops the export with «unknown mark code» (loud, not silent). The next step is a decision where the receivers first write the ticks.
    ДОМ: diskmat-57/2026-10-11_bot-7i/SESSIYA.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_avatary-v-bote#3
 4. **Lesson (factory): the criterion asked for a live request of the TEST account, but the test account is phone-only** (`secrets/test-7i.csv`: no username), so a signed initData cannot identify it — the live probe returned 403 on every endpoint. ЦЕНА: one wasted live round (four requests plus a cleanup over ssh); the check had to be redone as the test account's DONOR child (a child with a username), who sees the same data. A criterion that names a concrete account must be checked against how that account is identified.
    ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_avatary-v-bote#4
 5. **Lesson (factory): the regression reference `sistema.py` REWRITES its own inputs (`dannye/*.csv`) and its report (`SISTEMA-chernovik.md`) on every run and fails on Python 3.9 (`klaster.py` uses 3.12 f-strings); the zahod said neither.** ЦЕНА: run in place it would have overwritten the banner in `SISTEMA-chernovik.md` and the `dannye` outside my zone; I caught it only because I read the writer before running it, plus one failed run on the system python (about a minute). A line «the reference writes to disk and needs 3.12» in the zahod would have been free.
    ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_avatary-v-bote#5
 6. **Lesson (factory): the «Прочитать ТОЛЬКО» list missed three files the task needs** — `bot7i/istochniki/testovye.py` (the test child gets its donor's row of `avatary`), `config.py` (paths) and `deploy/vykatka.sh` (the rollout and its fake-id cleanup). ЦЕНА: three reads outside the list, a few minutes; harmless here, but the instruction «open nothing else» had to be broken to do the named task.
    ДОМ: diskmat-57/2026-10-11_bot-7i/UROKI-FABRIKE.md
-   ДОСТАВЛЕНО: нет
+   ДОСТАВЛЕНО: kod_avatary-v-bote#6
 
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
@@ -451,10 +451,10 @@ MODEL: besplatnaya
 > 🔴 **Без этого раздела заход НЕ ЗАКРЫТ.** Гейт — `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/priyomka.py <этот файл>` (Г13): пока раздел пуст или несёт плейсхолдеры, приёмка красная, и это единственное место, где вердикт остаётся ЗАПИСАННЫМ, а не сказанным в чат.
 > Заполняется ПОСЛЕ отчёта исполнителя. Исполнителю сюда писать нечего — его половина выше.
 
-**ВЕРДИКТ:** `<принято | доработка | отклонено>` — `<почему именно так, одной фразой: что проверено и чем>`
+**ВЕРДИКТ:** `принято` — перегнано аналитиком 11.10 22:1x: коммиты bot-7i ab0ab44/00f2d6a есть, bot-7i чист; в живой выгрузке `avatary` по реальным детям СН 3 · Ни 7 · Ц 7 · В 9 · Н 2 (= отчёту); точка вызова `vygruzka.py:138` `av.stroki_avatarov`; баннер «ЗАМЕНЕНО» в sistema.py/dvizhok.py/SISTEMA-chernovik.md; упоминаний аватара в api.py, dannye.py, veb/app.js — 0. Регрессию 84 из 84 сам не перегонял (её перегнал верификатор захода своим кодом) — охват приёмки: таблица и точка вызова, не регрессия.
 
 **ВЕТКА РАБОТЫ:** `arka/mat-kostyak`
-ветки не было: <почему работа шла прямо на основной ветке `arka/mat-kostyak`>
+ветки не было: код в bot-7i `main`; в materials — баннеры и файл-заход прямо на `arka/mat-kostyak`.
 *(проверяется фактом, не словом: ветка обязана существовать и быть либо ВЛИТА в основную, либо названа в открытой заявке на влитие. Ни того, ни другого — Г14 краснеет. Снять состояние: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py poteri --branch <ветка>`)*
 
 **ЗАЯВКИ, ПОСТАВЛЕННЫЕ ЭТОЙ ПРИЁМКОЙ — ПРОДУБЛИРУЙ СЮДА ТО, ЧТО УЖЕ ЛЕЖИТ В СПИСКЕ:**
@@ -463,6 +463,6 @@ MODEL: besplatnaya
 > Ставится командой: `python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavka --rod <git-operaciya|pravka-koda> "<текст>"`
 > 🔴 Вопрос здесь НЕ «что ты хочешь сделать», а «что ты УЖЕ положил в очередь». Дубль сверяется с очередью по id машинно; намерение сверить не с чем.
 
-- `<id заявки>` — `<род>` — `<суть одной строкой: влитие / коммит / вывоз / деплой / гашение>`
+заявок эта приёмка не ставила: заявку на вывоз `2026-10-11T2203-vyvoz-arka-mat-kostyak-9-kommitov` поставил заход; вывоз — решение владельца (Р278).
 
 *(Заявок эта приёмка не ставила — так и напиши строкой «заявок нет: <почему ни одна из пяти операций не понадобилась>». Пустая строка и прочерк не принимаются: молчание неотличимо от «забыл».)*
