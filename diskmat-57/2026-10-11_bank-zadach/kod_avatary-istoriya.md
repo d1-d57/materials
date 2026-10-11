@@ -302,7 +302,7 @@ Criterion check: none looks crooked. One note: "points × 28 children" — the t
 1. `arka/mat-kostyak` is NOT merged into `main`: `main` is the showcase branch (its last commits are «публикация сайта»), `arka/mat-kostyak` is 1811 commits ahead and 29 behind; merging is a publication and the owner's decision (the заход's own rule: do not merge the showcase). The branch itself is exported to origin (0 unexported).
    ДОМ: владелец
    ДОСТАВЛЕНО: нет
-2. Hand values of the owner (`ruchnye.csv`, `chto = klaster`) override the level at EVERY checkpoint, the old system's rule carried over unchanged. With a level history this means: adding such a row later rewrites past levels, and the next `sverka.py --shkala` shifts past scale cells. Nothing breaks today (no such row changes a past point in a way that matters to the regression), but if the owner wants a hand value to hold only from its date on, that is a rule change, not mine.
+2. Hand values of the owner (`ruchnye.csv`, `chto = klaster`) override the level at EVERY checkpoint, the old system's rule carried over unchanged. With a level history this means: adding such a row later rewrites past levels, and the next `sverka.py --shkala` shifts past scale cells. I did not check whether such a row exists today; if the owner wants a hand value to hold only from its date on, that is a rule change, not mine.
    ДОМ: владелец
    ДОСТАВЛЕНО: нет
 
@@ -335,7 +335,7 @@ $ git --no-optional-locks log --oneline @{u}.. | wc -l
 $ git_zona.py zayavki          (GIT_ZONA_REPO=materials)
 Открытых заявок: 11   (9 × kommit по работам 7И за 29.09–08.10, из них 5 «blokiruet»; 1 × vyvoz 2026-10-11T1713; все — чужие зоны)
 ```
-(full per-request text omitted by the subagent; my own run of the same four commands at entry gave 40 / 0 / the same 11 requests — the one extra dirty path in the subagent's run is this file.)
+(the subagent condensed the per-request text; my own run of the same commands at entry gave 40 dirty / 0 unexported / 11 open requests.)
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
 Subagent (af03c756ceaa69e2e), five lines pasted verbatim:
@@ -375,7 +375,7 @@ Left, and not passable with the subagent's rights: (1) nine open `kommit` reques
 **Hygiene Г1–Г6.** Г1 ✅ all seven zone paths + `bot-7i status --porcelain` empty · Г2 bot-7i: status 0, unpushed 0 · Г3 2 not-merged (same as at entry) · Г4 no new `.py` in `_generator/**`, not applicable · Г5 no new `.md` (the заход file was born registered); `bootstrap_zahod.py --proverit-doma` → rc=0, 0 unreachable homes · Г6 `git show --stat` of `dfe08c75`: only my six paths.
 Outside git: 0 of my zone; the 40 other dirty entries of the materials repo are other projects, not touched.
 
-**ПОВТОРЯЕМОСТЬ.** Will repeat on the next lesson: every new lesson date adds a checkpoint only after the export is re-run — the sverka of a lesson uses the checkpoint before the lesson, so the order «export → `sverka.py`» matters and is now in the file header; nothing new to fix. The 14:00 default repeats at each `novaya.py` call and is fixed. Nothing else repeats.
+**ПОВТОРЯЕМОСТЬ.** Will repeat on the next lesson: every new lesson date adds a checkpoint only after the export is re-run — the sverka of a lesson uses the checkpoint before the lesson, so the order «refresh the export → `sverka.py`» matters; noted here only, not written into any file. The 14:00 default repeats at each `novaya.py` call and is fixed. Nothing else repeats.
 **НЕОБРАТИМОЕ:** the real deploy of bot-7i to the server 159.194.254.52 (code + the export; restored by `bash deploy/vykatka.sh --otkat`, snapshot path in `/opt/bot-7i-bak-POSLEDNYAYA` on the server); push of bot-7i `main` to origin (`f1c3cc1`; undo = a revert commit); push of `arka/mat-kostyak` to origin (`vyvezti --yes`). `reshaemost.csv` overwritten by the new rule (before: `ee59c5e8d7a342dacbafe24d623871e5`, restorable from the previous commit). Nothing deleted.
 **Время прогона и токены:** неприменимо (канал `app`).
 
