@@ -1,0 +1,9 @@
+#sim-c2 .c2-cards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:120px}
+#sim-c2 .c2-k{font-family:var(--sans);font-variant-numeric:tabular-nums;font-size:16px;padding:6px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--panel);color:var(--text);transition:border-color .3s,background .3s}
+#sim-c2 .c2-k.dup{border:2px solid var(--warm);background:var(--warm-soft)}
+#sim-c2 .c2-k.hole{border:2px dashed var(--warm);color:var(--warm);background:transparent}
+#sim-c2 .c2-k.found{border:2px solid var(--accent);background:var(--accent-soft)}
+#sim-c2 table{border-collapse:separate;border-spacing:0 6px;margin:0 auto}
+#sim-c2 th{font-family:var(--sans);font-weight:400;color:var(--muted);text-align:right;padding-right:12px;font-size:15px;white-space:nowrap}
+#sim-c2 td{display:flex;flex-wrap:wrap;gap:6px}
+#sim-c2 .c2-n{font-size:11px;color:var(--muted);margin-right:4px}

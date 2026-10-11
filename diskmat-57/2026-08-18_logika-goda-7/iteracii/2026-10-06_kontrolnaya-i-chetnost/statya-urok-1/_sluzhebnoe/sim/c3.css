@@ -1,0 +1,5 @@
+#sim-c3 .c3-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;max-width:560px;margin:0 auto;font-family:var(--sans);font-variant-numeric:tabular-nums}
+#sim-c3 .c3-c{text-align:center;font-size:15px;padding:5px 0;border:1px solid var(--rule);border-radius:4px;background:var(--panel);color:var(--text);transition:background .3s,border-color .3s}
+#sim-c3 .c3-c.on{background:var(--accent-soft);border-color:var(--accent);font-weight:600}
+#sim-c3 .c3-bar button{min-width:2.6em}
+@media (max-width:480px){#sim-c3 .c3-c{font-size:12px;padding:3px 0}}

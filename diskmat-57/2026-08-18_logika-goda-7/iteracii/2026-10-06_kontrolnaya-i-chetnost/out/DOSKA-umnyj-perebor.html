@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Доска «Умный перебор»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600;800&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@700&display=swap">
+<style>
+/* Доска класса: мел и бумага. Тёплый светлый фон для проектора, крупные знаки, два смысловых цвета (красный, синий) всегда с формой. */
+:root{
+  --bg:#f3f6fa; --grid:#e1e8f1; --ink:#16233a; --muted:#5d6b80; --line:#c5d0de; --panel:#ffffff;
+  --pen:#2448b8; --red:#c8322b; --hi:#e8a317; --ok:#1d8049;
+  --pensoft:#e6edfb; --redsoft:#fbe7e5; --hisoft:rgba(232,163,23,.28);
+  --redsoft2:rgba(200,50,43,.16); --bluesoft:rgba(36,72,184,.16);
+  --flagW:#ffffff; --flagR:#c8322c; --flagB:#2a55b5;
+  --ui:"Golos Text","Segoe UI",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace; --disp:"Unbounded","Golos Text",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121722; --grid:#1c2433; --ink:#e9eef7; --muted:#9aa7bb; --line:#2f3a4d; --panel:#1a2130;
+  --pen:#7b9cf2; --red:#f06a5f; --hi:#f2c94c; --ok:#5cc28a;
+  --pensoft:#22305a; --redsoft:#4a2424; --hisoft:rgba(242,201,76,.25); --redsoft2:rgba(240,106,95,.24); --bluesoft:rgba(123,156,242,.24); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121722; --grid:#1c2433; --ink:#e9eef7; --muted:#9aa7bb; --line:#2f3a4d; --panel:#1a2130;
+  --pen:#7b9cf2; --red:#f06a5f; --hi:#f2c94c; --ok:#5cc28a;
+  --pensoft:#22305a; --redsoft:#4a2424; --hisoft:rgba(242,201,76,.25); --redsoft2:rgba(240,106,95,.24); --bluesoft:rgba(123,156,242,.24); color-scheme:dark}
+html,body{height:100%}
+body{background-color:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font-family:var(--ui);margin:0;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+#app{height:100%;display:grid;grid-template-rows:auto 1fr auto;padding-inline:16px;box-sizing:border-box}
+header{display:flex;gap:.6vh;align-items:center;padding-block:1vh;flex-wrap:wrap}
+header h1{font-family:var(--disp);font-size:max(16px,2.8vh);margin:0 2vh 0 0;font-weight:700;letter-spacing:.01em}
+.scrname{font-family:var(--mono);font-size:max(13px,1.9vh);color:var(--muted);letter-spacing:.1em;text-transform:lowercase}
+.dots{display:flex;gap:1vh;align-items:center;margin-left:auto}
+.dots button{width:max(14px,1.8vh);height:max(14px,1.8vh);min-height:0;padding:0;border-radius:50%;border:2px solid var(--pen);background:transparent}
+.dots button.on{background:var(--pen)}
+.tabs{display:flex;gap:.6vh;flex-wrap:wrap}
+button{font:inherit;color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:999px;padding:.7vh 1.8vh;font-size:max(14px,2.1vh);cursor:pointer;min-height:44px;transition:background .2s,border-color .2s,color .2s}
+button:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+button.on{border-color:var(--pen);background:var(--pensoft);color:var(--pen);font-weight:600}
+.tabs button{font-weight:600}
+main{min-height:0;position:relative;overflow:hidden}
+section.scr{position:absolute;inset:0;display:flex;flex-direction:column;gap:1.4vh;padding-block:1vh}
+section.scr[hidden]{display:none!important}
+.ctrl{display:flex;gap:.8vh;flex-wrap:wrap;align-items:center}
+.big{font-family:var(--mono);font-size:max(40px,13vh);font-weight:700;line-height:1;color:var(--pen);font-variant-numeric:tabular-nums}
+.big.r{color:var(--red)}
+.say b{color:var(--red)}
+.say{font-size:max(16px,3vh);min-height:4vh}
+footer{display:flex;justify-content:space-between;align-items:center;padding-block:.8vh;color:var(--muted);font-size:max(12px,1.6vh);gap:1vh;flex-wrap:wrap}
+.stage{flex:1;min-height:0;display:flex;gap:2vh;align-items:flex-start;flex-wrap:wrap;overflow:auto}
+/* сетка двузначных */
+.grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:.5vh;width:min(100%,110vh)}
+.cell{position:relative;transition:background .3s,border-color .3s;font-family:var(--mono);font-weight:500;font-size:max(14px,3.4vh);text-align:center;padding:.9vh 0;border:2px solid var(--line);border-radius:.8vh;background:var(--panel);font-variant-numeric:tabular-nums}
+.cell.r{background:var(--redsoft2);border-color:var(--red)}
+.cell.c{background:var(--bluesoft);border-color:var(--pen)}
+.cell.rc{background:linear-gradient(135deg,var(--redsoft2) 50%,var(--bluesoft) 50%);border:3px solid var(--red);font-weight:700}
+.cell.s7{background:var(--hisoft);border-color:var(--ink)}
+.cell .x2{position:absolute;top:-1vh;right:-.6vh;background:var(--ink);color:var(--bg);font-family:var(--ui);font-size:max(11px,1.7vh);border-radius:1vh;padding:0 .7vh;font-weight:800}
+.counter{display:flex;flex-direction:column;gap:1vh;min-width:24vh;flex:1 1 24vh}
+.counter .lab{font-size:max(13px,2vh);color:var(--muted)}
+/* разложения */
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.2vh;width:min(100%,92vh)}
+.card{font-family:var(--mono);font-size:max(14px,3.2vh);overflow-wrap:anywhere;padding:1.6vh .8vh;text-align:center;border:3px solid var(--line);border-radius:1.2vh;background:var(--panel);transition:transform .35s,border-color .25s,background .25s;cursor:pointer;min-height:4.5vh}
+.card.empty{border-style:dashed;background:transparent;cursor:default}
+.card.sel{border-color:var(--pen);background:var(--bluesoft)}
+.card.dup{border-color:var(--red);background:var(--redsoft2)}
+.card.dup::after{content:" повтор";font-family:var(--ui);font-size:max(11px,1.7vh);color:var(--red);display:block}
+.card.lure{border-color:var(--muted)}
+.card.dim{opacity:.35}
+.card.found{border-color:var(--ok);box-shadow:0 0 0 .5vh var(--hisoft)}
+.card.pop{animation:pop .45s}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-1vh)}75%{transform:translateX(1vh)}}
+.shake{animation:shake .3s 2}
+.side{display:flex;flex-direction:column;gap:1vh;min-width:0;flex:1}
+.chain{display:flex;flex-direction:column;gap:.6vh}
+.chip{font-family:var(--mono);font-size:max(14px,3vh);padding:.5vh 1.2vh;border:2px solid var(--line);border-radius:.8vh;background:var(--panel);display:inline-block}
+.chip.found{border-color:var(--ok);background:var(--hisoft)}
+.chip.t3{border-color:var(--red);background:var(--redsoft2)}
+.chip.t2{border-color:var(--pen);background:var(--bluesoft)}
+table.rows{border-collapse:separate;border-spacing:0 .8vh;font-size:max(14px,3vh)}
+table.rows th{font-family:var(--mono);white-space:nowrap;text-align:right;padding-right:2vh;color:var(--muted);font-weight:400;vertical-align:middle}
+table.rows td{padding:0}
+.slots{display:flex;gap:1vh;flex-wrap:wrap}
+.slot{font-family:var(--mono);font-size:max(13px,2.8vh);overflow-wrap:anywhere;padding:.6vh 1.2vh;border:2px solid var(--ink);border-radius:.8vh;background:var(--panel);min-width:10vh;text-align:center;position:relative}
+.slot .n{position:absolute;top:-1.1vh;left:.6vh;font-size:max(10px,1.5vh);background:var(--bg);color:var(--muted);padding:0 .4vh;font-family:var(--ui)}
+.slot.hole{border-style:dashed;border-color:var(--red);color:var(--red);animation:blink 1s 3}
+@keyframes blink{50%{background:var(--redsoft2)}}
+.total{font-family:var(--mono);font-size:max(18px,4vh)}
+/* мяч */
+.ball{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vh;text-align:center}
+.ball .q{font-size:max(16px,3.4vh);color:var(--muted)}
+.ball .x{font-family:var(--mono);font-weight:700;font-size:max(30px,11vh);line-height:1}
+.ball .a{font-family:var(--mono);font-weight:700;font-size:max(24px,7vh);color:var(--pen);min-height:8vh}
+.ball .a.hid{visibility:hidden}
+/* флаги */
+.flag{display:inline-flex;flex-direction:column;border:.35vh solid var(--ink);border-radius:.4vh;overflow:hidden;vertical-align:middle}
+.flag i{display:block;width:100%;flex:1}
+.fb{background:var(--flagW)}.fk{background:var(--flagR)}.fs{background:var(--flagB)}.f0{background:repeating-linear-gradient(45deg,transparent 0 .6vh,var(--line) .6vh 1.2vh)}
+.builder{display:flex;flex-direction:column;width:34vh;max-width:100%;height:24vh;border:.6vh solid var(--ink);border-radius:.8vh;overflow:hidden}
+.builder button{flex:1;border:0;border-radius:0;font-family:var(--mono);font-size:max(16px,4vh);font-weight:800;min-height:0}
+.builder .bad{outline:.6vh solid var(--red);outline-offset:-.6vh}
+.mini{width:7vh;height:4.6vh}
+.frow{display:flex;gap:1.2vh;align-items:center;flex-wrap:wrap;min-height:7vh}
+.frow .lab{width:12vh;color:var(--muted);font-size:max(13px,2.2vh)}
+.ftile{display:flex;flex-direction:column;align-items:center;gap:.3vh;font-family:var(--mono);font-size:max(12px,2.1vh)}
+/* фокус */
+.tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1vh;width:100%}
+.tile{border:2px solid var(--line);border-radius:1vh;background:var(--panel);padding:1vh;min-height:7vh;display:flex;flex-direction:column;justify-content:center;align-items:center;cursor:pointer}
+.tile .n{font-family:var(--mono);font-size:max(14px,3vh);color:var(--muted)}
+.tile .p{font-family:var(--mono);font-size:max(12px,2.4vh)}
+.tile.open{border-color:var(--ink);background:var(--hisoft)}
+.tile.open .n{color:var(--ink)}
+/* разрезы */
+table.cuts{border-collapse:collapse;width:100%;font-size:max(14px,2.8vh)}
+table.cuts td,table.cuts th{border-bottom:2px solid var(--line);padding:1vh 1.4vh;text-align:left;vertical-align:middle}
+table.cuts th{color:var(--muted);font-weight:600;font-size:max(12px,2vh)}
+table.cuts .cov{background:var(--ink);color:var(--bg);border-radius:.6vh;padding:.4vh 1vh;cursor:pointer;font-size:max(12px,2vh)}
+table.cuts .m{font-family:var(--mono)}
+#black{position:fixed;inset:0;background:#000;z-index:9}
+#hint{position:fixed;right:16px;bottom:9vh;max-width:min(420px,calc(100vw - 32px));background:var(--panel);border:2px solid var(--pen);border-radius:1.2vh;padding:1.4vh 1.8vh;font-size:max(13px,1.9vh);line-height:1.4;z-index:8;box-shadow:0 .6vh 2vh rgba(0,0,0,.12)}
+#hint b{color:var(--pen)}
+@media (max-width:640px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}.grid .cell{font-size:13px}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div id="app">
+  <header>
+    <h1>Умный перебор</h1>
+    <span class="scrname" id="scrname" aria-live="polite"></span>
+    <nav class="dots" id="tabs" aria-label="экраны"></nav>
+  </header>
+  <main id="main">
+
+    <section class="scr" id="s-sem">
+      <div class="ctrl">
+        <button data-m="row">кратные 9</button>
+        <button data-m="col">кратные 15</button>
+        <button data-m="both">оба списка</button>
+        <button data-m="none">сброс</button>
+      </div>
+      <div class="stage">
+        <div class="grid" id="grid"></div>
+        <div class="counter">
+          <span class="lab" id="semLab">горит клеток</span>
+          <span class="big" id="semCount">0</span>
+          <span class="say" id="semSay" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scr" id="s-razl" hidden>
+      <div class="ctrl">
+        <button id="rDeal">выложить (пробел)</button>
+        <button id="rNorm">одна запись</button>
+        <button data-v="chaos" class="rv on">хаос</button>
+        <button data-v="otsh" class="rv">отщипывание</button>
+        <button data-v="table" class="rv">таблица</button>
+      </div>
+      <div class="say" id="rSay">Записи появляются по пробелу. Повтор ищем касанием двух карточек.</div>
+      <div class="stage">
+        <div class="cards" id="cards"></div>
+        <div class="side" id="rSide"></div>
+      </div>
+    </section>
+
+    <section class="scr" id="s-ball" hidden>
+      <div class="ctrl">
+        <button data-set="p6" class="bs on">разложения 6</button>
+        <button data-set="fl" class="bs">флаги</button>
+        <button id="bNext">новый вопрос (пробел)</button>
+        <button id="bShow">показать (Enter)</button>
+      </div>
+      <div class="ball">
+        <div class="q" id="bQ">Пробел — новый вопрос</div>
+        <div class="x" id="bX">—</div>
+        <div class="a hid" id="bA">—</div>
+      </div>
+    </section>
+
+    <section class="scr" id="s-flag" hidden>
+      <div class="ctrl">
+        <button data-fv="build" class="fv on">собрать</button>
+        <button id="fPut">в таблицу</button>
+        <button id="fReset">сброс</button>
+      </div>
+      <div class="say" id="fSay">Касание полосы меняет её цвет: Б → К → С.</div>
+      <div class="stage">
+        <div class="builder" id="builder"></div>
+        <div class="side" id="fSide"></div>
+      </div>
+    </section>
+
+    <section class="scr" id="s-sum" hidden>
+      <div class="ctrl" id="sumBar"></div>
+      <div class="stage">
+        <div class="grid" id="grid2"></div>
+        <div class="counter">
+          <span class="lab">чисел в выбранных строках</span>
+          <span class="big" id="sumCount">0</span>
+          <span class="say" id="sumSay" aria-live="polite"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scr" id="s-fok" hidden>
+      <div class="ctrl">
+        <button data-n="9" class="fk9 on">девятка (30)</button>
+        <button data-n="6" class="fk9">шестёрка (11)</button>
+        <button id="kAll">открыть все</button>
+        <button id="kHide">закрыть все</button>
+      </div>
+      <div class="say">Номер = сколько объектов в строках выше + место в своей строке. Касание номера проверяет ответ.</div>
+      <div class="stage"><div class="tiles" id="tiles"></div></div>
+    </section>
+
+    <section class="scr" id="s-cuts" hidden>
+      <div class="ctrl"><button id="cNext">открыть следующее (↓)</button><button id="cHide">закрыть все</button></div>
+      <div class="stage"><table class="cuts" id="cuts"></table></div>
+    </section>
+
+  </main>
+  <footer>
+    <span>← → экраны · пробел шаг · Enter показать · R сброс · F полный экран · B чёрный экран · T тема · H подсказка учителю</span>
+    <span><button id="prev" aria-label="предыдущий экран">←</button> <button id="next" aria-label="следующий экран">→</button></span>
+  </footer>
+</div>
+<div id="black" hidden></div>
+<div id="hint" hidden role="note"></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const SCR=[['s-sem','Делимость'],['s-razl','Разложения'],['s-ball','Мяч'],['s-flag','Флаги'],['s-sum','Сумма цифр'],['s-fok','Номер в списке'],['s-cuts','Разрезы']];
+let cur=0;
+const tabs=$('#tabs');
+SCR.forEach(([id,name],i)=>{const b=document.createElement('button');b.setAttribute('aria-label',(i+1)+' · '+name);b.title=name;b.onclick=()=>go(i);tabs.appendChild(b)});
+const HINT={'s-sem':'Задача 5 из ДЗ в маленькой модели: числа от 1 до 90. «Кратные 9» — 10, «кратные 15» — 6, «оба списка» — 45 и 90 в обоих: <b>10 + 6 − 2 = 14</b>. Потом то же для трёхзначных: 100 + 60 − 20.','s-razl':'Пробелом выкладываем список учителя. «Записей 11, ответ 11 — список верен?». Повтор ищут дети: касание двух карточек. Пропуск глазами не найти. «Отщипывание» находит пропуск и теряет пять. «Таблица» — после того как правило выбрано.','s-ball':'Мячом строим таблицу: учитель называет 6, поймавший — следующее по правилу, учитель вписывает в строку. Ошибка — не «неверно», а «пропуск или повтор?». В конце — «что перед?».','s-sum':'Задача 4 из ДЗ. Сначала сумма 7: по первой цифре семь чисел, 70 не теряется. Потом простые суммы по одной: строка суммы s — косая линия, в ней s или 19 − s чисел; «все простые» — 33.','s-flag':'«Собрать»: дети называют флаги, учитель собирает касанием и ставит в строку своего верха; повтор и «КББ» отскакивают. Строка «верх белый» выписывается полностью: 2 + 2 = 4; остальные строки тем же порядком — 4 + 4 + 4. Без умножения. Потом мяч на флагах (экран «Мяч», набор «флаги»).','s-fok':'Сначала фокус: дети называют разложение девятки, учитель называет номер; касание номера проверяет. Потом открываем секрет: на доске длины строк 1, 1, 2, 3, 5, 6, 7, 4, 1, и номера считает класс.','s-cuts':'Класс сначала называет разрез, потом открываем плитку.'};
+function go(i){cur=(i+SCR.length)%SCR.length;SCR.forEach(([id],k)=>{$('#'+id).hidden=k!==cur;tabs.children[k].classList.toggle('on',k===cur)});$('#scrname').textContent=String(cur+1).padStart(2,'0')+' · '+SCR[cur][1].toLowerCase();const h=$('#hint');h.innerHTML=HINT[SCR[cur][0]]}
+$('#prev').onclick=()=>go(cur-1);$('#next').onclick=()=>go(cur+1);
+
+/* ---------- разложения ---------- */
+function parts(n,m){m=m||n;if(n===0)return[[]];const out=[];for(let k=Math.min(n,m);k>=1;k--)for(const r of parts(n-k,k))out.push([k,...r]);return out}
+const P={6:parts(6),9:parts(9)};const S=a=>a.join('+');
+
+/* ---------- 1. делимость: модель 1…90 ---------- */
+const grid=$('#grid');const cells={};
+for(let n=1;n<=90;n++){const c=document.createElement('div');c.className='cell';c.textContent=n;grid.appendChild(c);cells[n]=c}
+function sem(m){
+  for(const n in cells)cells[n].className='cell';
+  $$('#s-sem [data-m]').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  let lit=0,say='';
+  for(let n=1;n<=90;n++){const a=n%9===0,b=n%15===0;
+    if(m==='row'&&a)cells[n].classList.add('r');
+    if(m==='col'&&b)cells[n].classList.add('c');
+    if(m==='both'&&(a||b))cells[n].classList.add(a&&b?'rc':(a?'r':'c'))}
+  if(m==='row'){lit=10;say='9, 18, …, 90'}
+  if(m==='col'){lit=6;say='15, 30, …, 90'}
+  if(m==='both'){lit=14;say='10 + 6 = 16? 45 и 90 — в обоих списках, это <b>повтор</b>. 10 + 6 − 2 = 14'}
+  $('#semCount').textContent=lit;$('#semCount').classList.toggle('r',m==='both');$('#semSay').innerHTML=say;
+}
+$$('#s-sem [data-m]').forEach(b=>b.onclick=()=>sem(b.dataset.m));sem('none');
+
+/* ---------- 4. сумма цифр ---------- */
+const grid2=$('#grid2'),cells2={},PR=[2,3,5,7,11,13,17],ssel={};
+for(let d=1;d<=9;d++)for(let u=0;u<=9;u++){const n=10*d+u,c=document.createElement('div');c.className='cell';c.textContent=n;grid2.appendChild(c);cells2[n]=c}
+const dsum=n=>Math.floor(n/10)+n%10, scnt=s=>{let k=0;for(let n=10;n<=99;n++)if(dsum(n)===s)k++;return k};
+[7,...PR,'все','сброс'].forEach((v,i)=>{const b=document.createElement('button');b.textContent=v==='все'?'все простые':(v===7&&i===0?'сумма 7':v);b.dataset.s=(v===7&&i===0)?'s7':v;$('#sumBar').appendChild(b);
+  b.onclick=()=>{const k=b.dataset.s;if(k==='сброс'){for(const x in ssel)delete ssel[x]}else if(k==='все'){const all=PR.every(p=>ssel[p]);for(const x in ssel)delete ssel[x];if(!all)PR.forEach(p=>ssel[p]=1)}else if(k==='s7'){const on=ssel[7]&&Object.keys(ssel).length===1;for(const x in ssel)delete ssel[x];if(!on)ssel[7]=1}else{ssel[k]=ssel[k]?0:1;if(!ssel[k])delete ssel[k]}drawSum()}});
+function drawSum(){let parts=[],tot=0;for(let n=10;n<=99;n++){cells2[n].className='cell'+(ssel[dsum(n)]?' c':'')}
+  Object.keys(ssel).map(Number).sort((a,b)=>a-b).forEach(s=>{const k=scnt(s);parts.push(k);tot+=k});
+  $$('#sumBar button').forEach(b=>{const k=b.dataset.s;b.classList.toggle('on',k==='все'?PR.every(p=>ssel[p]):(k==='s7'?false:!!ssel[k]))});
+  $('#sumCount').textContent=tot;$('#sumSay').innerHTML=parts.length>1?parts.join(' + ')+' = '+tot:(parts.length?'одна косая строка':'выберите сумму')}
+drawSum();
+
+/* ---------- 2. разложения шестёрки ---------- */
+const CHAOS=['2+4','1+1+1+1+1+1','1+2+1+2','3+3','1+5','1+1+2+1+1','2+3+1','6','1+1+3+1','2+1+1+2','2+2+2'];
+const norm=s=>s.split('+').map(Number).sort((a,b)=>b-a).join('+');
+let dealt=0,normed=new Set(),sel=null,dups=new Set(),view='chaos';
+const cardsEl=$('#cards'),side=$('#rSide');
+function drawCards(){
+  cardsEl.innerHTML='';
+  for(let i=0;i<12;i++){const c=document.createElement('div');
+    if(i>=CHAOS.length||i>=dealt){c.className='card empty';cardsEl.appendChild(c);continue}
+    c.className='card';c.textContent=normed.has(i)?norm(CHAOS[i]):CHAOS[i];
+    if(i===dealt-1&&!normed.size)c.classList.add('pop');
+    if(sel===i)c.classList.add('sel');if(dups.has(i))c.classList.add('dup');
+    if(view==='otsh'&&!OTSH.includes(norm(CHAOS[i])))c.classList.add('dim');
+    c.onclick=()=>tapCard(i,c);cardsEl.appendChild(c)}
+}
+function tapCard(i,el){
+  if(!normed.has(i)){normed.add(i);sel=null;drawCards();return}
+  if(sel===null){sel=i;drawCards();return}
+  if(sel===i){sel=null;drawCards();return}
+  if(norm(CHAOS[sel])===norm(CHAOS[i])){dups.add(sel);dups.add(i);sel=null;$('#rSay').textContent='Повтор: одно разложение записано дважды. Тогда разложений 10, а ответ 11. Где пропуск?';drawCards()}
+  else{sel=null;drawCards();const e=cardsEl.children[i];e.classList.add('shake')}
+}
+const OTSH=['6','5+1','4+1+1','3+1+1+1','2+1+1+1+1','1+1+1+1+1+1'];
+function drawSide(){
+  side.innerHTML='';
+  if(view==='chaos'){return}
+  if(view==='otsh'){
+    const have=new Set(CHAOS.slice(0,dealt).map(norm));
+    const h=document.createElement('div');h.className='chain';
+    OTSH.forEach((s,k)=>{const c=document.createElement('span');c.className='chip';c.textContent=s;if(!have.has(s)&&k>0&&s==='4+1+1')c.classList.add('found');h.appendChild(c)});
+    side.appendChild(h);
+    const t=document.createElement('div');t.className='say';t.innerHTML='Цепочка нашла пропуск <b>4+1+1</b> — и сама теряет пять: 4+2, 3+3, 3+2+1, 2+2+2, 2+2+1+1. Всего в ней 6.';side.appendChild(t);return}
+  if(view==='table'){
+    const have=new Set(CHAOS.slice(0,dealt).map(norm));
+    const tb=document.createElement('table');tb.className='rows';let num=0;
+    for(let f=6;f>=1;f--){const tr=document.createElement('tr');const th=document.createElement('th');th.textContent=f;tr.appendChild(th);
+      const td=document.createElement('td');const sl=document.createElement('div');sl.className='slots';
+      P[6].filter(p=>p[0]===f).forEach(p=>{num++;const s=S(p),d=document.createElement('div');d.className='slot';
+        const ok=have.has(s);if(!ok)d.classList.add('hole');
+        d.innerHTML='<span class="n">'+num+'</span>'+(ok||showHole?s:'?');
+        sl.appendChild(d)});
+      td.appendChild(sl);tr.appendChild(td);tb.appendChild(tr)}
+    side.appendChild(tb);
+    const b=document.createElement('button');b.textContent=showHole?'1 + 1 + 2 + 3 + 3 + 1 = 11':'открыть пропуск';b.onclick=()=>{showHole=true;drawSide()};side.appendChild(b);return}
+  if(view==='vasya'){
+    const tb=document.createElement('table');tb.className='rows';let tot=0;
+    for(let k=1;k<=6;k++){const tr=document.createElement('tr');const th=document.createElement('th');th.textContent='есть '+k;tr.appendChild(th);
+      const td=document.createElement('td');const sl=document.createElement('div');sl.className='slots';
+      const L=P[6].filter(p=>p.includes(k));tot+=L.length;
+      L.forEach(p=>{const d=document.createElement('span');d.className='chip';const dist=new Set(p).size;if(dist===3)d.classList.add('t3');else if(dist===2)d.classList.add('t2');d.textContent=S(p);sl.appendChild(d)});
+      const cnt=document.createElement('span');cnt.className='chip';cnt.style.borderColor='transparent';cnt.textContent='— '+L.length;sl.appendChild(cnt);
+      td.appendChild(sl);tr.appendChild(td);tb.appendChild(tr)}
+    side.appendChild(tb);
+    const t=document.createElement('div');t.className='total';t.textContent='7 + 5 + 3 + 2 + 1 + 1 = 19';side.appendChild(t);
+    const s=document.createElement('div');s.className='say';s.innerHTML='Красная — в трёх кусках, синие — в двух. Двойники.';side.appendChild(s)}
+}
+let showHole=false;
+function setView(v){view=v;$$('.rv').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  const say={chaos:'Записи появляются по пробелу. Повтор ищем касанием двух карточек.',otsh:'Отщипываем единичку от самого большого слагаемого.',table:'Строки — по первому слагаемому. Номер у каждого места.',vasya:'Вася режет по признаку «есть 1», «есть 2», …'};
+  $('#rSay').textContent=say[v];drawCards();drawSide()}
+$$('.rv').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+$('#rDeal').onclick=()=>deal();$('#rNorm').onclick=()=>{for(let i=0;i<dealt;i++)normed.add(i);drawCards();drawSide()};
+function deal(){if(dealt<CHAOS.length){dealt++;drawCards()}}
+function resetR(){dealt=0;normed=new Set();sel=null;dups=new Set();showHole=false;setView('chaos')}
+resetR();
+
+/* ---------- 3. мяч ---------- */
+const FL=[];['Б','К','С'].forEach(a=>['Б','К','С'].forEach(b=>['Б','К','С'].forEach(c=>{if(a!==b&&b!==c)FL.push(a+b+c)})));
+const SETS={p6:P[6].map(S),fl:FL};
+const JUNC={p6:['4+1+1','3+1+1+1','2+2+2','3+3','1+1+1+1+1+1','6','2+1+1+1+1','4+2'],fl:['БСК','КБК','КСК','СБК','БКБ','СКС']};
+let bset='p6',bAns='',bShown=false;
+function ballQ(){const L=SETS[bset];let x;
+  if(Math.random()<.5){const J=JUNC[bset];x=J[Math.floor(Math.random()*J.length)]}else x=L[Math.floor(Math.random()*L.length)];
+  const i=L.indexOf(x);let dir=Math.random()<.5?'после':'перед';
+  if(i===0)dir='после';if(i===L.length-1)dir=Math.random()<.5?'после':'перед';
+  let a;if(dir==='после')a=i===L.length-1?'всё':L[i+1];else a=L[i-1];
+  $('#bQ').textContent='Что идёт '+(dir==='после'?'сразу после':'прямо перед')+':';$('#bX').textContent=x;bAns=a;$('#bA').textContent=a;$('#bA').classList.add('hid');bShown=false}
+function ballShow(){$('#bA').classList.remove('hid');bShown=true}
+$('#bNext').onclick=ballQ;$('#bShow').onclick=ballShow;
+$$('.bs').forEach(b=>b.onclick=()=>{bset=b.dataset.set;$$('.bs').forEach(x=>x.classList.toggle('on',x===b));ballQ()});
+
+/* ---------- 4. флаги ---------- */
+const COLS=['Б','К','С'],CL={'Б':'fb','К':'fk','С':'fs'};
+let fv='build',fcur=[null,null,null],placed=[],chain=[],best=0;
+const builder=$('#builder'),fSide=$('#fSide');
+function flagEl(f,cls){const d=document.createElement('span');d.className='flag '+(cls||'mini');for(const ch of f){const i=document.createElement('i');i.className=CL[ch];d.appendChild(i)}return d}
+function drawBuilder(){builder.innerHTML='';
+  fcur.forEach((c,k)=>{const b=document.createElement('button');b.className=c?CL[c]:'f0';b.textContent=c||'';b.style.color=c==='Б'?'#1d1f24':'#fff';b.setAttribute('aria-label','полоса '+(k+1));
+    const bad=(k>0&&c&&fcur[k-1]===c)||(k<2&&c&&fcur[k+1]===c);if(bad)b.classList.add('bad');b.onclick=()=>tapStripe(k);builder.appendChild(b)})}
+function valid(f){return f.every(Boolean)&&f[0]!==f[1]&&f[1]!==f[2]}
+function tapStripe(k){
+  if(fv==='build'){const c=fcur[k];fcur[k]=COLS[(COLS.indexOf(c)+1)%3]||'Б';if(c===null)fcur[k]='Б';drawBuilder();return}
+  const seen=new Set(chain);let tried=0,f=[...fcur];
+  for(let t=1;t<=2;t++){const g=[...fcur];g[k]=COLS[(COLS.indexOf(fcur[k])+t)%3];if(valid(g)&&!seen.has(g.join(''))){f=g;break}tried++}
+  if(f.join('')===fcur.join('')){builder.classList.add('shake');setTimeout(()=>builder.classList.remove('shake'),700);return}
+  fcur=f;chain.push(f.join(''));best=Math.max(best,chain.length);drawBuilder();drawFSide()}
+function stuck(){const seen=new Set(chain);for(let k=0;k<3;k++)for(let t=1;t<=2;t++){const g=[...fcur];g[k]=COLS[(COLS.indexOf(fcur[k])+t)%3];if(valid(g)&&!seen.has(g.join('')))return false}return true}
+function drawFSide(){fSide.innerHTML='';
+  if(fv==='build'){
+    COLS.forEach(top=>{const r=document.createElement('div');r.className='frow';const l=document.createElement('span');l.className='lab';l.textContent='верх '+({'Б':'белый','К':'красный','С':'синий'})[top];r.appendChild(l);
+      placed.filter(f=>f[0]===top).sort((a,b)=>FL.indexOf(a)-FL.indexOf(b)).forEach(f=>{const t=document.createElement('span');t.className='ftile';t.appendChild(flagEl(f));const s=document.createElement('span');s.textContent=f;t.appendChild(s);r.appendChild(t)});
+      fSide.appendChild(r)});
+    const c=document.createElement('div');c.className='total';c.textContent='в таблице: '+placed.length+(placed.length===12?' — все':'');fSide.appendChild(c);return}
+  const r=document.createElement('div');r.className='frow';chain.forEach(f=>{const t=document.createElement('span');t.className='ftile';t.appendChild(flagEl(f));const s=document.createElement('span');s.textContent=f;t.appendChild(s);r.appendChild(t)});fSide.appendChild(r);
+  const c=document.createElement('div');c.className='total';c.textContent='флагов в цепочке: '+chain.length+' / 12 · рекорд '+best+(stuck()?' · ходов нет':'');fSide.appendChild(c)}
+$('#fPut').onclick=()=>{if(fv!=='build')return;const f=fcur.join('');
+  if(!valid(fcur)){builder.classList.add('shake');setTimeout(()=>builder.classList.remove('shake'),700);$('#fSay').textContent='Соседние полосы одного цвета — это не флаг.';return}
+  if(placed.includes(f)){builder.classList.add('shake');setTimeout(()=>builder.classList.remove('shake'),700);$('#fSay').textContent='Такой флаг уже есть — повтор.';return}
+  placed.push(f);$('#fSay').textContent='Касание полосы меняет её цвет: Б → К → С.';drawFSide()};
+function setFV(v){fv=v;$$('.fv').forEach(b=>b.classList.toggle('on',b.dataset.fv===v));
+  if(v==='chain'){fcur=['Б','К','С'];chain=['БКС'];$('#fSay').textContent='Касание полосы меняет только её. Флаг не должен повторяться.'}
+  else{fcur=[null,null,null];$('#fSay').textContent='Касание полосы меняет её цвет: Б → К → С.'}
+  $('#fPut').hidden=v!=='build';drawBuilder();drawFSide()}
+$$('.fv').forEach(b=>b.onclick=()=>setFV(b.dataset.fv));
+$('#fReset').onclick=()=>{placed=[];setFV(fv)};
+setFV('build');
+
+/* ---------- 5. фокус ---------- */
+let kn=9;const tiles=$('#tiles');
+function drawTiles(){tiles.innerHTML='';P[kn].forEach((p,i)=>{const t=document.createElement('div');t.className='tile';t.innerHTML='<span class="n">'+(i+1)+'</span><span class="p"></span>';
+  t.onclick=()=>{t.classList.toggle('open');t.querySelector('.p').textContent=t.classList.contains('open')?S(p):''};tiles.appendChild(t)})}
+$$('.fk9').forEach(b=>b.onclick=()=>{kn=+b.dataset.n;$$('.fk9').forEach(x=>x.classList.toggle('on',x===b));drawTiles()});
+$('#kAll').onclick=()=>$$('#tiles .tile').forEach((t,i)=>{t.classList.add('open');t.querySelector('.p').textContent=S(P[kn][i])});
+$('#kHide').onclick=drawTiles;drawTiles();
+
+/* ---------- 6. разрезы ---------- */
+const CUTS=[['далматинцы','пятнам на ушах','101 − 22 − 29 = 50'],['лестница','пролётам; первый, из подвала, вычеркнут','10 − 1 = 9 пролётов'],['9 или 15','делимости; повторы — кратные 45','100 + 60 − 20 = 140'],['разложения 6','первому слагаемому','1+1+2+3+3+1 = 11'],['флаги','цвету верхней полосы','4 + 4 + 4 = 12'],['простая сумма цифр','самой сумме цифр','2+3+5+7+8+6+2 = 33'],['разложения 9','первому слагаемому','1+1+2+3+5+6+7+4+1 = 30']];
+const cutsEl=$('#cuts');let cutOpen=0;
+function drawCuts(){cutsEl.innerHTML='<tr><th>задача</th><th>режем по</th><th>ответ</th></tr>';
+  CUTS.forEach(([a,b,c],i)=>{const tr=document.createElement('tr');tr.innerHTML='<td>'+a+'</td><td></td><td class="m"></td>';
+    [b,c].forEach((v,j)=>{const td=tr.children[j+1];if(i*2+j<cutOpen)td.textContent=v;else{const s=document.createElement('span');s.className='cov';s.textContent='открыть';s.onclick=()=>{td.textContent=v};td.appendChild(s)}});cutsEl.appendChild(tr)})}
+$('#cNext').onclick=()=>{cutOpen=Math.min(cutOpen+1,CUTS.length*2);drawCuts()};$('#cHide').onclick=()=>{cutOpen=0;drawCuts()};drawCuts();
+
+/* ---------- клавиши ---------- */
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'){go(cur+1);e.preventDefault()}
+  else if(e.key==='ArrowLeft'){go(cur-1);e.preventDefault()}
+  else if(/^[1-6]$/.test(e.key))go(+e.key-1);
+  else if(e.key===' '){e.preventDefault();const id=SCR[cur][0];if(id==='s-razl')deal();else if(id==='s-ball')ballQ();else if(id==='s-cuts')$('#cNext').click()}
+  else if(e.key==='Enter'){const id=SCR[cur][0];if(id==='s-ball'){ballShow();e.preventDefault()}}
+  else if(e.key==='ArrowDown'&&SCR[cur][0]==='s-cuts'){$('#cNext').click();e.preventDefault()}
+  else if(e.key==='r'||e.key==='R'||e.key==='к'||e.key==='К'){const id=SCR[cur][0];if(id==='s-sem')sem('none');if(id==='s-razl')resetR();if(id==='s-flag'){placed=[];setFV(fv)}if(id==='s-fok')drawTiles();if(id==='s-sum'){for(const x in ssel)delete ssel[x];drawSum()}if(id==='s-cuts'){cutOpen=0;drawCuts()}}
+  else if(e.key==='f'||e.key==='F'||e.key==='а'||e.key==='А'){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}catch(_){}}
+  else if(e.key==='b'||e.key==='B'||e.key==='и'||e.key==='И'){$('#black').hidden=!$('#black').hidden}
+  else if(e.key==='h'||e.key==='H'||e.key==='р'||e.key==='Р'){$('#hint').hidden=!$('#hint').hidden}
+  else if(e.key==='t'||e.key==='T'||e.key==='е'||e.key==='Е'){const r=document.documentElement;const d=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);r.setAttribute('data-theme',d?'light':'dark')}
+});
+$('#black').onclick=()=>{$('#black').hidden=true};
+go(0);
+})();
+</script>
+
+</body></html>

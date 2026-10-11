@@ -1,0 +1,6 @@
+#sim-c1 .c1-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;max-width:560px;margin:0 auto;font-family:var(--sans);font-variant-numeric:tabular-nums}
+#sim-c1 .c1-c{position:relative;text-align:center;font-size:15px;padding:5px 0;border:1px solid var(--rule);border-radius:4px;background:var(--panel);color:var(--text);transition:background .3s,border-color .3s}
+#sim-c1 .c1-c.a{background:var(--warm-soft);border-color:var(--warm)}
+#sim-c1 .c1-c.b{background:var(--accent-soft);border-color:var(--accent)}
+#sim-c1 .c1-c.ab{background:linear-gradient(135deg,var(--warm-soft) 50%,var(--accent-soft) 50%);border:2px solid var(--text);font-weight:600}
+@media (max-width:480px){#sim-c1 .c1-c{font-size:12px;padding:3px 0}}

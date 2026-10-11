@@ -1,0 +1,12 @@
+logika-goda-7 05.10–06.10: пара 6.10 — КР, мини-листок, лента «Умный перебор», доска; закрытие сессии
+
+- КР 6.10 (А/Б) через listok_gen: kontrolnaya_06-10_dannye.py, ключ перебором kr_kluch.py, PDF и шпаргалка в out/
+- мини-листок для сильных: minilistok_06-10_dannye.py, PDF и шпаргалка
+- лента «Умный перебор» v10 (statya-urok-1/: источник, ris.py, sim/, proverki.py, сборки publish-v*), страница доски out/DOSKA-umnyj-perebor.html
+- исследования issled-v7/, кандидаты kandidaty/, отвергнутые версии out/_otvergnuto/
+- вывоз облака сессии: _sessiya-2026-10-06/sessiya-2026-10-05_06-oblako.tar.xz (рабочая папка, транскрипты сессии и субагентов), vlozheniya/ (РМ5-01/02/03, наговоры владельца), OPIS-vyvoza.md, sverka/ (md5 облака)
+- извлечение «всё навсегда» по паре 6.10 (сессии 04.10–06.10): iteracii/…/izvlechenie/ (указатель, требования к форматам, банк задач, идеи, факты о классе, контекст, карта 2968 единиц, проверка), LYUDI-7I.md (закрыто), Р279–Р286 и дополнения в docs/RESHENIYA.md, В31–В49 в docs/OTKRYTYE-VOPROSY.md, UROKI-FABRIKE, FORMAT-listka-po-otvetu, NAVIGATOR
+- решения Р268–Р278 (docs/RESHENIYA.md), дневник, PLAN «СЕЙЧАС», выгрузка VYGRUZKA-2026-10-06, реплики владельца _sessiya-2026-10-06/, HANDOFF-2026-10-07
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_019zoauNBTMeXKy38T9vi7rS

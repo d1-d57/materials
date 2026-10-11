@@ -1,0 +1,70 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Домашнее задание</title><style>
+@page{size:A4;margin:8mm 10mm 7mm}
+:root{--ink:#1d1d1b;--mute:#6b6a64;--line:#8a877d;--sh:#d9d6cc;--grid:#cfccc2;--topo:#cdcabf}
+*{box-sizing:border-box}
+body{margin:0;font:10.3pt/1.25 "Liberation Serif","DejaVu Serif",serif;color:var(--ink);background:#fff}
+.page{page-break-after:always;break-after:page;height:282mm;overflow:hidden;position:relative}
+.page:last-child{page-break-after:auto;break-after:auto}
+.hd{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1.6px solid var(--ink);padding-bottom:2px}
+.hd b{font-size:15.5pt}.hd span{font-size:9.5pt;color:var(--mute)}
+.fio{margin:4px 0 2px;font-size:10.5pt;display:flex;gap:6px}.fio span{flex:1;border-bottom:1px solid var(--ink)}
+.sec{font-weight:700;font-size:12pt;margin:2mm 0 1.6mm}
+.two{display:grid;grid-template-columns:1fr 63mm;gap:0 5mm}
+/* ПОТОК, а не сетка (Р204): поле ответа — float слева, картинка — float справа; текст этой и СЛЕДУЮЩИХ задач обтекает
+   картинку, как wrapfigure в TeX; пустой полосы рядом с картинкой нет. Строки-поля — отдельный контекст (grid), они
+   сужаются рядом с картинкой, а не залезают под неё. */
+.z{clear:left;margin:0 0 2.2mm;position:relative}
+.ab{float:left;width:var(--abw,46mm);margin:0 3.5mm .8mm 0;border:1px solid var(--ink)}
+.z .tx{margin-left:calc(var(--abw,46mm) + 3.5mm)}
+.z.w .tx{margin-left:0}
+.ab .r{display:grid;grid-template-columns:4mm 1fr 8.5mm;height:var(--rowh,7mm)}
+.ab .r+.r{border-top:1px solid var(--ink)}
+.ab .l{font-size:8.5pt;padding:1px 0 0 1.2mm}.ab .s{border-left:1px solid var(--ink)}
+.ab.one .r{grid-template-columns:1fr 9mm;height:8.5mm}
+.n{font-weight:700;white-space:nowrap}
+.full{clear:left;margin-top:1.4mm;display:grid;grid-template-columns:1fr 9mm;border:1px solid var(--ink);position:relative}
+.full .s{border-left:1px solid var(--ink)}
+.full .tp{display:flex;align-items:flex-end;justify-content:space-around;padding:0 4mm 1.6mm 6mm;font-size:13pt}
+.full .tp .sl{flex:0 1 22mm;border-bottom:1.3px solid var(--ink);height:6mm}
+.full .tp .op{padding:0 1.5mm}
+.full .lb{font-size:8.5pt;padding:1px 0 0 1.2mm;position:absolute;left:0;top:0}
+.pics{display:flex;gap:5mm;align-items:flex-end;margin-top:1.5mm}
+.pics.wide{clear:left;justify-content:space-between;padding-left:2mm}
+.pics.float{float:right;clear:right;margin:0 0 1mm 3mm;display:block}
+/* задача с угловой раскладкой (○2 29.09): высокая картинка слева, текст в «закутке» над низкими, полоса полей под всеми */
+.ugol{display:grid;grid-template-columns:auto 1fr 1fr;column-gap:4mm;align-items:end}
+.ugol .t{grid-column:2/4;align-self:start}
+.ugol .p1{grid-row:1/3}
+.ugol figure{margin:0;text-align:center;font-size:8.5pt}
+.strip{clear:left;display:grid;gap:2.5mm;margin-top:1.4mm}
+/* правая рамка у края листа срезалась наполовину (субпиксель при печати) — отступ .4 мм (Р208) */
+.full,.strip{margin-right:.4mm}
+.strip.kor{width:var(--abw,46mm);margin-top:1mm}
+.strip .c{display:grid;grid-template-columns:4mm 1fr 8.5mm;height:8mm;border:1px solid var(--ink)}
+.strip .c .l{font-size:8.5pt;padding:1px 0 0 1.2mm}.strip .c .s{border-left:1px solid var(--ink)}
+.kom{margin-top:.8mm}.ctr{text-align:center;margin:.6mm 0 0;word-spacing:.15em}
+.rules ul{margin:0;padding-left:3.5mm}.rules li{margin:0 0 1mm}
+.foot{position:absolute;left:0;right:0;bottom:0;font-weight:700;font-size:10.5pt;border-top:1px solid var(--ink);padding-top:1.2mm}
+.pics figure{margin:0;text-align:center;font-size:8.5pt}
+svg{display:block}
+.s-grid{stroke:var(--grid);stroke-width:.18}.s-out{fill:none;stroke:var(--ink);stroke-width:.45;stroke-linecap:round}
+.rules{font-size:9.2pt;line-height:1.23;margin-top:1.5mm;border-top:1px solid var(--ink);padding-top:1.2mm}
+.rules p{margin:0 0 1.1mm}.rules b{font-size:9pt}.gl{font-family:"DejaVu Sans",sans-serif;font-size:8.5pt}
+.m-topo{fill:none;stroke:var(--topo);stroke-width:.22}
+.m-road{fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round}
+.m-edge{fill:none;stroke:var(--ink);stroke-width:.55;stroke-linecap:round}
+.m-cell{fill:#fff;stroke:var(--ink);stroke-width:.45}
+.m-lab{font:bold 2.75px "Liberation Sans","DejaVu Sans",sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.m-lab2{font:2.5px "Liberation Sans","DejaVu Sans",sans-serif;fill:var(--mute);text-anchor:middle;dominant-baseline:central}
+.m-cp{fill:var(--ink)}.m-cpt{font:bold 3.2px "Liberation Sans",sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.m-sym{font:4.2px "DejaVu Sans",sans-serif;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.m-coin{fill:#5c5a55;stroke:var(--ink);stroke-width:.3}
+.m-tent{fill:var(--sh);stroke:var(--ink);stroke-width:.45;stroke-linejoin:round}
+
+.list{height:282mm;overflow:hidden;page-break-after:always;break-after:page}
+.list:last-child{page-break-after:auto;break-after:auto}
+.page.pol{height:136mm;page-break-after:auto;break-after:auto}
+.rez{height:9.5mm;position:relative}
+.rez:before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line)}
+.rez span{position:absolute;left:50%;top:50%;transform:translate(-50%,-55%);background:#fff;padding:0 2mm;color:var(--line);font-family:"DejaVu Sans",sans-serif}.hd span{font-size:10pt}.page{--abw:50mm}body{font-size:11.4pt;line-height:1.3}.z{margin-bottom:3.4mm}.ab.one .r{height:12mm}.ab{margin-bottom:2.4mm}
+.foot{font-weight:400;font-size:9.4pt;color:#6b6a64;border-top:1px solid #8a877d}</style></head><body><div class="list"><div class="page pol"><div class="hd"><b>Домашнее задание</b><span>Комбинаторика 2 · к 6 октября · 7И</span></div><div class="fio">Фамилия, имя: <span></span></div><div style="height:2mm"></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">1.</span> Человек поднимается с первого этажа на пятый за минуту. Сколько ему понадобится времени, чтобы с той же скоростью подняться с первого на десятый этаж?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">2.</span> В деревне Простоквашино 16&nbsp;мальчиков&nbsp;и&nbsp;14&nbsp;девочек. На 1&nbsp;сентября каждый мальчик подарил по цветку каждой девочке и ещё один цветок Марье Ивановне, а потом девочки тоже подарили все полученные цветы Марье Ивановне. Сколько килограммов цветов принесла своей козе Марья Ивановна, если каждый цветок весил 50&nbsp;г?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">3.</span> Из 101&nbsp;далматинца у 29&nbsp;пятно только на левом ухе, у 17&nbsp;— только на правом ухе, а у 22&nbsp;далматинцев нет пятен на ушах. Сколько далматинцев имеют пятно на правом ухе?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">4.</span> У скольких двузначных чисел сумма цифр&nbsp;— простое число?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">5.</span> Сколько существует трёхзначных чисел, делящихся хотя бы на одно из чисел 9&nbsp;и&nbsp;15?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">6.</span> Сколько всего трёхзначных чисел, у которых первая и вторая цифры разной чётности, а сумма цифр делится на 10?</div></div><div class="foot">В начале следующего занятия — короткая контрольная на эти же приёмы. Ответ записывайте выражением — так, как вы считали.</div></div><div class="rez"><span>✂</span></div><div class="page pol"><div class="hd"><b>Домашнее задание</b><span>Комбинаторика 2 · к 6 октября · 7И</span></div><div class="fio">Фамилия, имя: <span></span></div><div style="height:2mm"></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">1.</span> Человек поднимается с первого этажа на пятый за минуту. Сколько ему понадобится времени, чтобы с той же скоростью подняться с первого на десятый этаж?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">2.</span> В деревне Простоквашино 16&nbsp;мальчиков&nbsp;и&nbsp;14&nbsp;девочек. На 1&nbsp;сентября каждый мальчик подарил по цветку каждой девочке и ещё один цветок Марье Ивановне, а потом девочки тоже подарили все полученные цветы Марье Ивановне. Сколько килограммов цветов принесла своей козе Марья Ивановна, если каждый цветок весил 50&nbsp;г?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">3.</span> Из 101&nbsp;далматинца у 29&nbsp;пятно только на левом ухе, у 17&nbsp;— только на правом ухе, а у 22&nbsp;далматинцев нет пятен на ушах. Сколько далматинцев имеют пятно на правом ухе?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">4.</span> У скольких двузначных чисел сумма цифр&nbsp;— простое число?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">5.</span> Сколько существует трёхзначных чисел, делящихся хотя бы на одно из чисел 9&nbsp;и&nbsp;15?</div></div><div class="z"><div class="ab one"><div class="r"><div></div><div class="s"></div></div></div><div class="tx"><span class="n">6.</span> Сколько всего трёхзначных чисел, у которых первая и вторая цифры разной чётности, а сумма цифр делится на 10?</div></div><div class="foot">В начале следующего занятия — короткая контрольная на эти же приёмы. Ответ записывайте выражением — так, как вы считали.</div></div></div></body></html>

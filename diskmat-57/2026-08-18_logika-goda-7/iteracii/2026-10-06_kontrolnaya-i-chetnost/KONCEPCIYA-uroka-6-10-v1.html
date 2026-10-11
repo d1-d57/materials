@@ -1,0 +1,167 @@
+<title>Концепция пары 6.10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Раскладка: одна колонка-тетрадь ~66 знаков; синяя ручка — ход урока, красная — где ломается счёт */
+:root{
+  --paper:#f6f8fb; --sheet:#ffffff; --ink:#17202b; --muted:#5a6575; --rule:#d8dfe8;
+  --blue:#2346c4; --red:#c4302a; --grid:rgba(35,70,196,.07); --tint:rgba(35,70,196,.06);
+  --f-head:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Literata",Georgia,"Times New Roman",serif;
+  --f-num:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#10151b; --sheet:#161c23; --ink:#e5eaf0; --muted:#9ba7b6; --rule:#2b343f;
+  --blue:#93abff; --red:#ff8b82; --grid:rgba(147,171,255,.06); --tint:rgba(147,171,255,.08); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#10151b; --sheet:#161c23; --ink:#e5eaf0; --muted:#9ba7b6; --rule:#2b343f;
+  --blue:#93abff; --red:#ff8b82; --grid:rgba(147,171,255,.06); --tint:rgba(147,171,255,.08); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;padding-inline:16px;padding-block:28px 64px}
+main{max-width:44rem;margin:0 auto;display:flex;flex-direction:column;gap:2.2rem}
+header{background-color:var(--sheet);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;border:1px solid var(--rule);border-radius:6px;padding:1.4rem 1.3rem 1.3rem;display:flex;flex-direction:column;gap:.7rem}
+.eyebrow{font-family:var(--f-head);font-size:.74rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-head);font-weight:700;font-size:clamp(1.6rem,4.6vw,2.15rem);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-family:var(--f-head);font-weight:600;font-size:1.22rem;line-height:1.25;margin:0;text-wrap:balance}
+section{display:flex;flex-direction:column;gap:.75rem}
+p{margin:0}
+.lead{font-size:1.08rem}
+.num,td.m{font-family:var(--f-num);font-variant-numeric:tabular-nums;font-size:.92em}
+.blue{color:var(--blue)} .red{color:var(--red)}
+s.red{text-decoration-thickness:2px}
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;min-width:34rem;font-size:.9rem;line-height:1.4}
+th,td{text-align:left;vertical-align:top;padding:.55rem .7rem;border-bottom:1px solid var(--rule)}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--f-head);font-weight:600;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+td.t{font-family:var(--f-head);font-weight:600;white-space:nowrap}
+.note{border-left:3px solid var(--blue);background:var(--tint);padding:.7rem .9rem;border-radius:0 6px 6px 0;display:flex;flex-direction:column;gap:.35rem}
+.note.r{border-left-color:var(--red)}
+.note b{font-family:var(--f-head);font-weight:600;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase}
+ol,ul{margin:0;padding-left:1.3rem;display:flex;flex-direction:column;gap:.45rem}
+.fig{background:var(--sheet);border:1px solid var(--rule);border-radius:6px;padding:.8rem .6rem .5rem;overflow-x:auto}
+.fig svg{display:block;width:100%;min-width:30rem;height:auto}
+.fig .cap{font-family:var(--f-head);font-size:.8rem;color:var(--muted);padding:.3rem .4rem 0}
+svg .box{fill:none;stroke:var(--blue);stroke-width:1.6}
+svg .n{fill:var(--ink);font-family:var(--f-num);font-size:18px;text-anchor:middle}
+svg .k{fill:var(--muted);font-family:var(--f-head);font-size:12px;text-anchor:middle}
+svg .arc{fill:none;stroke:var(--red);stroke-width:1.6}
+svg .al{fill:var(--red);font-family:var(--f-head);font-size:12px;text-anchor:middle}
+.q{counter-reset:q;list-style:none;padding:0}
+.q li{counter-increment:q;display:grid;grid-template-columns:2rem 1fr;gap:.2rem}
+.q li::before{content:counter(q);font-family:var(--f-num);font-weight:600;color:var(--blue)}
+.q li>span{min-width:0}
+footer{font-family:var(--f-head);font-size:.8rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:.8rem}
+code{font-family:var(--f-num);font-size:.85em}
+</style>
+
+<main>
+<header>
+  <div class="eyebrow">7И · пара 6.10 · урок 1 и контрольная · версия 1 для обсуждения, 05.10</div>
+  <h1>Одна процедура вместо трёх приёмов</h1>
+  <p class="lead">Сразу мы умеем считать только ряд <span class="num">1, 2, 3, …, n</span>: в нём <span class="num">n</span> предметов, потому что номер последнего и есть количество. Любой подсчёт сводится к тому, чтобы выстроить предметы в такой ряд. Три темы урока — три места, где это ломается</p>
+</header>
+
+<section>
+  <h2>Где ломается ряд</h2>
+  <div class="tw"><table>
+    <tr><th>Что случилось с рядом</th><th>Тема</th><th>Как это выглядело 29.09</th><th>Вопрос у доски</th></tr>
+    <tr><td>Ряд стоит, но номера начинаются не с единицы</td><td class="t">Правило разности</td><td>Листы книги: из 14 неверных ответов в 7 забыто «+1», в 4 посчитаны страницы вместо листов</td><td>Какой номер у первого и у последнего?</td></tr>
+    <tr><td>Ряда нет, его надо построить</td><td class="t">Умный перебор</td><td>Все тройки палочек выписали 9 из 27, в центре 4 из 14: повторы, лишние, пропуски</td><td>У каждого предмета одна запись? Что идёт следующим, и оно одно?</td></tr>
+    <tr><td>Куски пересеклись, у части предметов по два номера</td><td class="t">Включения-исключения</td><td>«Ни на 7, ни на 11» решили 6 из 27, хотя похожую задачу дома решили 19 из 20</td><td>Нет ли предмета в двух кусках?</td></tr>
+  </table></div>
+  <p>Детям нужно одно действие, «выстрой в ряд и раздай номера», и три вопроса к любой задаче у доски: что стоит в ряду? какой номер у первого и у последнего? нет ли предмета без номера или с двумя номерами?</p>
+</section>
+
+<section>
+  <h2>Правило разности: проверяем на маленьком</h2>
+  <p>Начинаем с вопроса «сколько чисел от 17 до 23?» и голосуем: шесть или семь. Выписываем 17, 18, 19, 20, 21, 22, 23, их семь. Откуда шесть? Проверим на самом маленьком случае: от 17 до 17 одно число, а <span class="num red">17 − 17 = 0</span></p>
+  <div class="fig" role="group" aria-label="Семь чисел от 17 до 23 и шесть шагов между ними">
+    <svg viewBox="0 0 560 128" role="img" aria-label="Числа от 17 до 23 в клетках, под ними номера от 1 до 7, над ними шесть дуг-шагов">
+      <g>
+        <path class="arc" d="M48 44 Q86 14 124 44"/><path class="arc" d="M124 44 Q162 14 200 44"/><path class="arc" d="M200 44 Q238 14 276 44"/>
+        <path class="arc" d="M276 44 Q314 14 352 44"/><path class="arc" d="M352 44 Q390 14 428 44"/><path class="arc" d="M428 44 Q466 14 504 44"/>
+        <text class="al" x="86" y="16">шаг</text><text class="al" x="466" y="16">6-й шаг</text>
+      </g>
+      <g>
+        <rect class="box" x="22" y="48" width="52" height="40" rx="3"/><rect class="box" x="98" y="48" width="52" height="40" rx="3"/>
+        <rect class="box" x="174" y="48" width="52" height="40" rx="3"/><rect class="box" x="250" y="48" width="52" height="40" rx="3"/>
+        <rect class="box" x="326" y="48" width="52" height="40" rx="3"/><rect class="box" x="402" y="48" width="52" height="40" rx="3"/>
+        <rect class="box" x="478" y="48" width="52" height="40" rx="3"/>
+        <text class="n" x="48" y="74">17</text><text class="n" x="124" y="74">18</text><text class="n" x="200" y="74">19</text><text class="n" x="276" y="74">20</text>
+        <text class="n" x="352" y="74">21</text><text class="n" x="428" y="74">22</text><text class="n" x="504" y="74">23</text>
+        <text class="k" x="48" y="110">№ 1</text><text class="k" x="124" y="110">№ 2</text><text class="k" x="200" y="110">№ 3</text><text class="k" x="276" y="110">№ 4</text>
+        <text class="k" x="352" y="110">№ 5</text><text class="k" x="428" y="110">№ 6</text><text class="k" x="504" y="110">№ 7</text>
+      </g>
+    </svg>
+    <div class="cap">23 − 17 = 6 считает шаги, 23 − 16 = 7 считает числа</div>
+  </div>
+  <p>Разность 23 − 17 считает шаги от первого числа до последнего. Это номер числа 23, если числу 17 дать номер ноль. Нам нужно, чтобы первое число получило номер 1, поэтому вычитаем число, которое стоит перед первым: <span class="num blue">23 − 16 = 7</span>. То же другими словами: чисел до 23 всего 23, из них до 16 — шестнадцать, остальные наши</p>
+  <p>Ту же закономерность видно на заборе: два столба дают один пролёт, три — два, каждый новый столб добавляет один пролёт. Слово «индукция» не нужно</p>
+  <p>Этажи из ДЗ 1 решаются тем же действием. Пролёт нумеруем этажом, на который пришли. С первого на пятый идут пролёты 2, 3, 4, 5, их четыре, по 15 секунд. С первого на десятый идут пролёты со 2-го по 10-й, их девять: 2 минуты 15 секунд</p>
+  <p>Дальше мяч по коротким рядам. От 30 до 45 — шестнадцать чисел. Чётные от 20 до 80 делим на 2 и получаем числа от 10 до 40, их 31. Трёхзначные, кратные 9, — это 9·12, …, 9·111, номера от 12 до 111, их 100</p>
+  <div class="note"><b>Ваша гипотеза «правило разности работает всегда»</b><p>Верна при одном условии: сначала надо понять, что стоит в ряду и какой номер у первого. Ошибки 29.09 ровно здесь: семеро раздали номера промежуткам, четверо выстроили не те предметы. Поэтому вопрос «что стоит в ряду?» на доске важнее формулы</p></div>
+  <div class="note r"><b>Самопроверка для контрольной</b><p>Подставь случай, когда первый равен последнему: должна получиться одна штука</p></div>
+</section>
+
+<section>
+  <h2>Умный перебор: ряд строим сами</h2>
+  <p>Каркас из принятого остаётся: монолог, хаос с ассистентом на разложениях 6, «повтор поймали, а пропуск?», правило класса, флаги и мяч (Р239, Р240). Меняется связка. Правило класса каждый раз — разрез по главному признаку: по ресёрчу, именно так дети сами приходят к порядку. Внутри куска предметы уже стоят в ряд с номерами, и кусок считается правилом разности. Так первая тема возвращается внутри второй</p>
+  <ol>
+    <li><b>Двузначные с суммой цифр 7.</b> Режем по первой цифре: она от 1 до 7, чисел семь. Ловушка — потерять 70: кто идёт «по возрастанию», ищет следующее число вслепую</li>
+    <li><b>Сумма цифр 13.</b> Вася рассуждает: первая цифра от 4 до 9, значит, чисел <s class="red">9 − 4 = 5</s>. Найдите ошибку: 49, 58, 67, 76, 85, 94, их шесть. Это ошибка из первой части, только внутри перебора</li>
+    <li><b>ДЗ 4, простая сумма цифр.</b> Режем по сумме, каждый кусок считаем правилом разности: <span class="num">2 + 3 + 5 + 7 + 8 + 6 + 2 = 33</span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Куски пересеклись: включения-исключения внутри перебора</h2>
+  <p>Сколько двузначных чисел, в записи которых есть семёрка? Режем по месту семёрки. Первая цифра 7: числа от 70 до 79, их 10. Последняя цифра 7: 17, 27, …, 97, по первой цифре от 1 до 9, их 9. Итого 19? Выписываем, получается 18: число 77 попало в оба куска</p>
+  <p>Рядом ставим похожий вопрос: сколько раз нажмём клавишу 7, если напечатаем все двузначные числа? Здесь ответ 19, и он верен, потому что в 77 две семёрки. Вопросы различаются только тем, что стоит в ряду: числа или нажатия. Отдельный кусок про включения-исключения в конце урока не нужен, это третий вопрос той же процедуры</p>
+  <p>ДЗ 5 устроено так же, только ряды длиннее. Кратные 9 имеют номера от 12 до 111, их 100. Кратные 15 — номера от 7 до 66, их 60. В оба ряда попали кратные 45, их 20. Ответ 140. Частая ошибка — вычесть кратные 135, их 7</p>
+</section>
+
+<section>
+  <h2>Хронометраж, 45 минут</h2>
+  <div class="tw"><table>
+    <tr><th>мин</th><th>Что происходит</th><th>Тема</th></tr>
+    <tr><td class="m">0–2</td><td>Монолог; «сколько чисел от 17 до 23?»</td><td>разность</td></tr>
+    <tr><td class="m">2–10</td><td>Маленькие случаи, «вычти стоящее перед первым», этажи из ДЗ 1, мяч по коротким рядам</td><td>разность</td></tr>
+    <tr><td class="m">10–13</td><td>Хаос с ассистентом: разложения 6</td><td>перебор</td></tr>
+    <tr><td class="m">13–17</td><td>Правило класса: разрез по главному признаку, два вопроса к любому правилу</td><td>перебор</td></tr>
+    <tr><td class="m">17–25</td><td>Флаги; мяч подряд и «что после X»</td><td>перебор</td></tr>
+    <tr><td class="m">25–32</td><td>Суммы цифр 7 и 13, Вася, ДЗ 4</td><td>перебор и разность</td></tr>
+    <tr><td class="m">32–40</td><td>Семёрка в записи: 18 и 19; ДЗ 5</td><td>пересечение и разность</td></tr>
+    <tr><td class="m">40–45</td><td>Итог: три вопроса; «после перемены контрольная на это же»</td><td>всё</td></tr>
+  </table></div>
+  <p>Перебор занимает около 22 минут, разность — 10 и возвращается ещё дважды, пересечения — 8</p>
+</section>
+
+<section>
+  <h2>Что из этого следует для контрольной</h2>
+  <ul>
+    <li>Один лист на 45 минут: базовая часть около 13 пунктов и «вверх» из пяти задач, варианты А и Б (Р246, Р250)</li>
+    <li>Каждый пункт базовой части берёт идею задачи из ДЗ и ставит её на новом сюжете. Ту же задачу с другими числами не даём (Р245)</li>
+    <li>У каждого пункта метка, что ломается в ряду: сдвиг номеров, предметы или промежутки, ряд строим сами, куски пересеклись, чужое правило. По ключу и своду видно, что не держится у конкретного ребёнка (Р251)</li>
+    <li>Около пяти коротких пунктов на 2 минуты разбросаны по листу как пункты «а». Очевидных пунктов нет</li>
+    <li>Внизу листа строка самопроверки: ответ «от … до …» проверь на случае, когда первый равен последнему; в переборе проверь, нет ли числа в двух кусках</li>
+    <li>«Вверх» — лесенка из пяти задач. Задачи на ±1 берём из квеста 5 класса (Р249) и добавляем задачу «на каком месте стоит…»; последняя — для самого сильного</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Вопросы, да или нет</h2>
+  <ol class="q">
+    <li><span>Большая идея — одна процедура, три места поломки; детям — «выстрой в ряд и раздай номера» и три вопроса у доски?</span></li>
+    <li><span>Правило разности вводим как «вычти число, стоящее перед первым» и проверку на случае «первый равен последнему»?</span></li>
+    <li><span>Включения-исключения — не кусок в конце, а «куски пересеклись» внутри перебора: семёрка в записи, 18 и 19, затем ДЗ 5?</span></li>
+    <li><span>«Найди ошибку» на уроке — Вася с суммой цифр 13 и «9 − 4 = 5»?</span></li>
+    <li><span>На контрольной метки у пунктов и строка самопроверки внизу листа?</span></li>
+    <li><span>Таблицу (ДЗ 2 и ДЗ 6) на уроке не разбираем, на контрольной даём один пункт?</span></li>
+    <li><span>R3 на 12 ₽ (у Васи 10, верно 13) остаётся единственным «найди ошибку» на контрольной?</span></li>
+  </ol>
+</section>
+
+<footer>Все числа на странице пересчитаны скриптом с проверками (<code>check_concept.py</code>); цифры 29.09 — из пакета ITOGI-2026-10-05. Решения вечера 05.10 — <code>docs/RESHENIYA.md</code>, Р243–Р251</footer>
+</main>
