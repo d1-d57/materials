@@ -250,6 +250,9 @@ Steps:
 Criterion note: ahead count "grew by my commits" — ok as stated. No objection to the criterion.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
+1. `bootstrap_zahod.py --zadanie-subagentu` gives the git-contour subagent `vyvezti` rights plus a `--kommitit` zone, with no way to say "no push" even when the zone holds private data (Р278). I had to override the brief by hand.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -294,13 +297,25 @@ python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zon
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
+**СНИМОК ВХОДА:** (subagent) unmerged: `main`, `zahod/istoriya-sessij`; `status --porcelain` whole repo = 204; ahead of origin = 2; open requests = 12.
+**ЧТО СДЕЛАНО:** tail Cowork: `4ba4eabc` (INCIDENTY.md only). Nothing merged, nothing deleted, no push from `materials`.
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** да — nothing was named for merge/closing; `zahod/istoriya-sessij` is another task's branch (valve opened by analyst).
+
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+**АРТЕФАКТ:** артефакта нет: the task is a git commit of existing files, nothing was built.
+**РОД АРТЕФАКТА:** исходник
+**КОММИТ:** `e314fe41`, `e6ee0416`, `fccbaa45` (materials, no push, R278) + `12ee266fc` (disciplina `check_sborki.py`, pushed) · `git_zona.py check --zone diskmat-57/` → ✅
+ПРАВКИ ПРОЧИТАНЫ: правок нет.
+
+Subagent git-contour (5 lines): 1) merged 0 of 0 named; main branch `arka/mat-kostyak`. 2) Cowork tail: only `_studio/zhurnal/_INFRA-git/INCIDENTY.md` taken, `4ba4eabc`; other dirty paths outside diskmat-57 left (see below). 3) nothing closed/extinguished. 4) irreversible: none. 5) выдано 1 позиций из 1 найденных. I overrode its brief on purpose (no commit of diskmat-57, no push in `materials`, per Р278).
+
+Counts: before = 186 paths (9 ` M`, 177 `??`; 24 under `out/`); `_trash` removed (1 dir); `git status --porcelain -- diskmat-57 | wc -l` after = 0. Committed paths: 186 minus the `_trash` dir = 185 (printed by the porcelain count after removal). Commits: `e314fe41` iteracii (324 files), `e6ee0416` arc root files, `fccbaa45` kruzhok-7i/mashina-listka/docs/START-HERE/bot-7i incl. this file. Each commit had only `diskmat-57/` paths. `_snapshots/` untouched (gitignored). No file >20 MB.
+Ahead of origin in `materials`: 6 (2 pre-existing + `4ba4eabc` + my 3) — deliberately not pushed. `disciplina`: `12ee266fc` pushed, ahead 0.
+Unmerged branches: `main`, `zahod/istoriya-sessij` (unchanged vs. entry). Own-branch merge step: `arka/mat-kostyak` is the arc's base branch itself, nothing to merge.
+Outside the zone (not mine, left): 17 dirty paths in `materials` (`.gitignore`, `_fond/`, `kurs-puti-i-volny/...`, `obzory/...`, `ucheniki/danya/...`) and other disciplina changes.
+
+**НЕОБРАТИМОЕ:** deleted `diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/_trash/` (never in git, owner 01:35 "мусор удалять"; no backup). Files (bytes): _kvest_add.md 2773; KONTROLNAYA-29-09-A.html 9817; shpargalka_29-09_s_podskazkami.py 10142; _metod_add.md 1723; transkript-2026-09-29_10-04.jsonl 11992191; VHOD-2026-10-05.md 7058; _format_add.md 6099; KONTROLNAYA-29-09-B.pdf 30295; KONTROLNAYA-29-09-B.html 10013; KONTROLNAYA-29-09-A.pdf 30211; format_29_final.md 7344; transkript-2026-09-29_10-05.jsonl 12481776; staroe-dlya-assistentov/1 73864.
+**ПОВТОРЯЕМОСТЬ:** repeats — the generated subagent brief says "commit `diskmat-57/` with push" whenever `--kommitit` names a zone; for a no-push repo that is a trap (see ВОПРОСЫ 1).
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=3 · simvolov=32894 · rc=0
