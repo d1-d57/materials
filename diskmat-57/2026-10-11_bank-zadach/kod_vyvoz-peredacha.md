@@ -281,6 +281,20 @@ Premises named aloud:
 4. Criterion is sound; one risk: criterion 4 "dym.py green" depends on the live site, outside my control; if red I report it with output, not a green claim.
 
 ## ВОПРОСЫ — (заполняет исполнитель)
+> (format note kept from the template above)
+
+1. Server-side secrets backups are never pruned: every live run of `deploy/rezerv.sh` (so every `vykatka.sh`) adds a stamp dir to `/var/backups/bot-7i-secrets/` (~12 KB each). Deleting is the owner's call; keep-N is a two-line change.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. One empty directory `/var/backups/bot-7i-secrets/20261011T213249Z/` is left on the server by my first failed attempt (rsync `--chmod` syntax on macOS); other two stamps (`…213255Z`, `…213307Z`) are complete with identical md5. Not deleted (no deletion by me).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+3. Children's-names scan of the 24 committed files: 0 hits for surnames/full names/usernames of the 28 real rows of `deti.csv`; the only matches are the word «тест» from the test row `t1` (14 hits in 3 files) and one 6-letter word that merely starts with a pupil's 5-letter first name (not that name; context «вопрос 4 (про … и понедельник)») in the bank `SESSIYA.md`. I committed all files; if the owner wants that last token checked by eye, it is in `diskmat-57/2026-10-11_bank-zadach/SESSIYA.md`, the line starting «Мой вопрос 4».
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+4. Two unrelated unmerged branches stay alive: `main` (showcase branch, not merged by rule) and `zahod/istoriya-sessij` (clapan opened by the analyst; another pass may use it).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
 > Нашёл вещь, которая принадлежит чужому дому (термин/источник/урок/следующий заход) — не только вопрос владельцу? Оформи ПУНКТОМ ОЧЕРЕДИ, тремя строками:
 > ```
 > N. <текст находки>
@@ -314,23 +328,57 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+  main
++ zahod/istoriya-sessij
+$ git --no-optional-locks status --porcelain | wc -l
+      50
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+         0
+$ git_zona.py zayavki
+Открытых заявок: 11; ждут захода-разработчика: 12; закрыто недавно: 93; постоянных исключений: 1; сторож краснеет на 0
 ```
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+- Влито 0 из 0 названных (`--vlit` пуст); основная ветка — `arka/mat-kostyak`.
+- Закоммичен хвост Cowork: `_studio/zhurnal/_INFRA-git/INCIDENTY.md` — `e8715ffc` (одна строка автолога); снят один мёртвый лок `incidenty.lock`.
+- Ничего не погашено, заявки не закрыты (по заданию).
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `да`
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
+**ПРАВКИ ПРОЧИТАНЫ:** блок был пуст («<правок нет>») при старте — читать было нечего.
+
+**ГИТ-КОНТУР (субагент, дословно):** влито 0 из 0 (`--vlit` пуст), основная `arka/mat-kostyak` · хвост Cowork: забран `INCIDENTY.md` `e8715ffc`, остальное вне git — арки (мои) и чужие зоны · погашено ничего, заявки не закрыты · необратимого нет (мёртвый лок `incidenty.lock` снят инструментом) · «выдано 1 позиций из 1 найденных». Невлитых веток на входе: 2 (`main`, `zahod/istoriya-sessij`), на выходе то же.
+
+**Что сделал + ЗАЧЕМ:**
+1. Знание двух арок — в git и на origin: коммит `23f21338` (24 файла, 2472 вставок) + вывоз `arka/mat-kostyak` (2 коммита, push ✅). ЗАЧЕМ: до этого продукты сессии жили только на ноутбуке.
+2. Проверка имён детей до коммита: 24 файла против `deti.csv` — 0 совпадений с фамилиями/ФИО/username настоящих 28 детей; слово «тест» (строка `t1`) 14 раз в 3 файлах; одно префиксное совпадение по имени — см. ВОПРОСЫ п.3. Печатались только числа.
+3. `bot-7i/deploy/rezerv.sh` (новый): `--proba`; (а) сервер→ноутбук консистентная копия `spory.db`/`svyazki.db` через sqlite3 `backup()`, 20 последних меток + остальное переносом в `_staroe/`; (б) `secrets/`→`/var/backups/bot-7i-secrets/<метка>/` (700, 600, root, без шифрования, `bot.env` пропущен). `vykatka.sh` зовёт его ПЕРВЫМ боевым шагом, провал = выход 7. Строка в `dostavka_sekretov.sh`; раздел «Резерв» в README с двумя командами восстановления. Коммит `bot-7i` `cd520c5`, push ✅.
+4. Живой прогон: `rezerv.sh --proba` → `rezerv.sh` → `vykatka.sh --proba` → `vykatka.sh` (код 0, резерв первым, 200 за 5 с, `dym.py` 8 из 8 ok, «deployed»).
+
+**Числа (критерий 2–3):** spor = 1 строка, svyazki = 24 строки (ноутбук = сервер). md5 копий: `spory.db` 0c4ce9d3…, `svyazki.db` 04b19915… — совпали с серверной консистентной копией. Секреты: на сервере 4 файла 600 root в каталоге 700 root, на ноутбуке 4 (без `bot.env`), md5 совпали 4 из 4.
+
+**Как проверил:** сам — выводом скрипта (OK/MISMATCH по каждому файлу); независимо — свежий верификатор 4 проверки из 4, все зелёные («выдано 4 позиций из 4 найденных»). Расхождение дампов `iterdump()` у `spory` объяснено версиями Python (3.12.3 сервер / 3.9.6 ноутбук), файлы побайтно равны.
+
+**Что НЕ трогал:** код бота `bot7i/`, выгрузку, оценки, споры по существу; чужие зоны (`logika-goda-7`, `ucheniki`, `obzory`, `_fond`, `scratchpad/`, `.gitignore`); `materials` остался публичным, историю не переписывал; `data/`, `secrets/` не в git (`data/rezerv-servera/` под `data/` — проверено `git check-ignore`).
+
+**Сбои по ходу (исправлены, видны в выводе):** (1) мой zsh не разбил переменную с путями на слова — add/commit с `$Z` отказал, повтор с явными путями; (2) `sudo wc < файл` открывал файл от пользователя, не от root — заменено на `sudo stat`; (3) локальный подсчёт строк в режиме `mode=ro` не открывает WAL-копию — заменён на `immutable=1`; (4) macOS-rsync не понимает `--chmod=D700,F600` — взята форма `Du=rwx,Dgo=,Fu=rw,Fgo=` как в `dostavka_sekretov.sh`. Попытки 1–3 боевого `rezerv.sh` оставили на ноутбуке полные копии баз под метками `…213229Z`, `…213249Z` (обе в пределах хранения 20) и пустой каталог на сервере (ВОПРОСЫ п.2).
+
+**НЕОБРАТИМОЕ:** необратимого нет. Что менялось на живом: перезапуск `bot-7i.service` боевой выкаткой (откат — `bash deploy/vykatka.sh --otkat`, снимок `/opt/bot-7i-bak-POSLEDNYAYA`); новые каталоги в `/var/backups/bot-7i-secrets/`; временные каталоги на сервере сняты `rm -f`+`rmdir` внутри скрипта и верификатора.
+
+**ПОВТОРЯЕМОСТЬ находок:** (а) macOS `rsync` без `--chmod` в стиле `D700` и `sudo cmd < файл` — повторятся в любом следующем скрипте выкатки `bot-7i`; чинить не нужно, обе формы теперь в `rezerv.sh` как образец. Для фабрики урока нет: сбои — мои, не от захода. (б) Накопление меток резерва на сервере — повторяется на каждой выкатке (ВОПРОСЫ п.1).
+
+**ВРЕМЯ ПРОГОНА + ТОКЕНЫ:** неприменимо — канал `app`, снимать неоткуда.
+
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/bot-7i/deploy/rezerv.sh` — `bash deploy/rezerv.sh --proba` (скрипт); копии баз — `/Users/ivanyakovlev/Documents/GitHub/bot-7i/data/rezerv-servera/20261011T213307Z/`
 *(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
+**РОД АРТЕФАКТА:** `исходник`
 *(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
+**КОММИТ:** `cd520c5` (bot-7i main: rezerv.sh + vykatka + README, push ✅) · `23f21338` (materials arka/mat-kostyak: обе арки, вывезен) · `e8715ffc` (хвост Cowork, субагент); сам файл-заход с отчётом — следующим коммитом `report` в materials (хэш в `git log -1 -- <файл>`) · `git_zona.py check --zone` обеих арок → ✅
 *(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
