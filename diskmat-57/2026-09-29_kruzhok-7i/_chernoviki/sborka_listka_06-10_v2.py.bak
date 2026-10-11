@@ -1,0 +1,68 @@
+"""Листок кружка 7И, 6.10 «Раскраски и разрезания» — на ОДНУ страницу (решение владельца 05.10 23:23).
+Формат: слева крошечные клетки для плюсов (по одной на пункт), справа условие; рисунок — только там, где
+есть что резать или что рассматривать, и стоит справа от текста (текст его обтекает). Пустых квадратов нет:
+квадрат ребёнок рисует сам, ответ рисует у себя и показывает.
+Макрос: \\zad{знак}{плюсы}{условие}{рисунок}. Фигуры — из issled/dannye_6-10*.json (проверены issled/proverka_6-10.py).
+Запуск: python3 sborka_listka_06-10.py → listok_06-10_raskraski.tex"""
+import json
+from pathlib import Path
+from tikz_kletki import grid, polys
+HERE = Path(__file__).parent
+D = json.load(open(HERE / "issled/dannye_6-10.json")); D2 = json.load(open(HERE / "issled/dannye_6-10_v2.json"))
+T4 = [(0,0),(0,1),(0,2),(1,1)]; UG3 = [(0,0),(1,0),(1,1)]
+P = lambda *b: "".join(f"\\pl{{{x}}}" for x in b)
+
+Z = [
+ ("", P("а","б"), r"Из шахматной доски $8\times8$ вырезали две угловые клетки. Можно ли разрезать оставшуюся часть на доминошки $1\times2$, если вырезали \textbf{(а)}~два угла одной стороны; \textbf{(б)}~два противоположных угла?", ""),
+ ("", P(""), r"Раскрасьте клетки квадрата $4\times4$ в чёрный и белый цвета так, чтобы у каждой чёрной клетки было ровно три белых соседа, а у каждой белой~--- ровно один чёрный сосед (соседи~--- клетки с общей стороной).", ""),
+ ("", P(""), r"Придумайте фигуру из клеток, которую можно вырезать из клетчатой бумаги одним куском и в которой при шахматной раскраске чёрных и белых клеток поровну, но которую нельзя разрезать на доминошки $1\times2$.", ""),
+ ("", P("а","б","в"), r"Фишка ходит по доске $5\times5$ на соседнюю по стороне клетку. Можно ли обойти фишкой все клетки, побывав на каждой ровно один раз, если начать \textbf{(а)}~с угловой клетки; \textbf{(б)}~с клетки, соседней с угловой? \textbf{(в)}~С каких клеток можно начать такой обход?", ""),
+ ("", P("а","б"), r"Разрежьте по линиям сетки \textbf{(а)}~левую фигуру на три равные части; \textbf{(б)}~правую фигуру на четыре равные части.",
+   grid(5,5, region=D2["fig3"]["F"], s=0.45) + "\\hspace{14pt}" + grid(5,6, region=D2["fig4"]["F"], s=0.45)),
+ ("", P("а","б","в"), r"Квадрат $4\times4$ разрезают по линиям сетки на две равные части. Способы, которые получаются друг из друга поворотом или отражением, считаются одинаковыми. \textbf{(а)}~Найдите три разных способа. \textbf{(б)}~Докажите, что линия разреза всегда проходит через центр квадрата. \textbf{(в)}~Найдите все способы.", ""),
+ ("", P(""), r"Разрежьте квадрат $6\times6$ на уголки из трёх клеток (рисунок) так, чтобы никакие два уголка не складывались в прямоугольник $2\times3$.",
+   grid(2,2, region=UG3, s=0.4)),
+ ("", P("а","б","в"), r"\textbf{(а)}~Докажите, что квадрат $3\times3$ нельзя разрезать на уголки из трёх клеток. \textbf{(б)}~Разрежьте на такие уголки квадрат $9\times9$. \textbf{(в)}~При каких $n$ квадрат $n\times n$ можно разрезать на уголки из трёх клеток?", ""),
+ ("", P("а","б","в"), r"Фигурка «Т» состоит из четырёх клеток (рисунок). \textbf{(а)}~Разрежьте квадрат $4\times4$ на такие фигурки. \textbf{(б)}~Докажите, что квадрат $6\times6$ разрезать на такие фигурки нельзя. \textbf{(в)}~При каких $n$ квадрат $n\times n$ можно разрезать на такие фигурки?",
+   grid(2,3, region=T4, s=0.4)),
+ (r"\star", P(""), r"Из шахматной доски $8\times8$ вырезали две клетки разного цвета~--- любые. Докажите, что остаток всегда можно разрезать на доминошки.", ""),
+ (r"\star", P("а","б"), r"Квадрат $8\times8$ разрезали на четыре части, как на рисунке, и сложили из них прямоугольник $5\times13$. \textbf{(а)}~Найдите площадь квадрата и площадь прямоугольника. \textbf{(б)}~Откуда взялась лишняя клетка?",
+   polys(D["z13"]["sq"], 8, 8, u=0.27) + "\\hspace{10pt}" + polys(D["z13"]["rc"], 13, 5, u=0.27)),
+]
+PRE = r"""% ЛИСТОК КРУЖКА 7И, 6.10 — «Раскраски и разрезания». СОБРАН sborka_listka_06-10.py — руками не править.
+% Состав финализирован владельцем 05.10 23:08, формат — 05.10 23:23 (SESSIYA.md); проверка: issled/proverka_6-10.py.
+\documentclass[12pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{Liberation Serif}
+\usepackage[left=1.0cm,right=1.0cm,top=0.9cm,bottom=0.8cm]{geometry}
+\usepackage{amsmath,amssymb,tikz}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\newcounter{zad}
+\newlength{\plsh}\setlength{\plsh}{1.75cm}
+\newsavebox{\risbox}
+\newlength{\tekst}
+% клетка для плюса: 4,5 мм, буква пункта мелко в углу
+\newcommand{\pl}[1]{\tikz[baseline=(b.base)]{\draw[line width=0.4pt] (0,0) rectangle (0.45,0.45);
+  \node[font=\scriptsize,anchor=north west,inner sep=0.6pt] (b) at (0,0.45) {\strut #1};}\hspace{1pt}}
+\newcommand{\zad}[4]{%
+  \stepcounter{zad}%
+  \sbox{\risbox}{#4}%
+  \setlength{\tekst}{\dimexpr\linewidth-\plsh\relax}%
+  \ifdim\wd\risbox>0pt\addtolength{\tekst}{-\dimexpr\wd\risbox+12pt\relax}\fi
+  \par\vspace{11pt}\noindent
+  \begin{minipage}[t]{\plsh}\vspace{0pt}#2\end{minipage}%
+  \begin{minipage}[t]{\tekst}\vspace{0pt}\textbf{\thezad\ifx&#1&\else$^{*}$\fi.}\ #3\end{minipage}%
+  \ifdim\wd\risbox>0pt\hfill\begin{minipage}[t]{\wd\risbox}\vspace{0pt}\usebox{\risbox}\end{minipage}\fi
+  \par}
+\newcommand{\shapka}{%
+  \noindent{\LARGE\bfseries Раскраски и разрезания}\hfill{\small Кружок, 7\,И\quad·\quad6 октября}%
+  \vspace{4pt}\hrule\vspace{6pt}
+  \noindent Фамилия, имя:\ \hrulefill\rule[-3mm]{0pt}{8mm}\par
+  \setcounter{zad}{0}}
+"""
+body = "\n\n".join(f"\\zad{{{zv}}}{{{pl}}}{{{txt}}}{{{pic}}}" for zv, pl, txt, pic in Z)
+(HERE / "listok_06-10_raskraski.tex").write_text(PRE + "\n\\begin{document}\n\\shapka\n\n" + body + "\n\n\\end{document}\n", encoding="utf-8")
+print("листок: задач", len(Z))

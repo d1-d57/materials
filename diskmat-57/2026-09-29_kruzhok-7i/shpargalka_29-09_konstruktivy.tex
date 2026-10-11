@@ -1,0 +1,37 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{Liberation Serif}
+\setmonofont{Liberation Mono}
+\usepackage[left=1.6cm,right=1.6cm,top=1.3cm,bottom=1.3cm]{geometry}
+\usepackage{amsmath,amssymb,xcolor,tabularx,array}
+\setlength{\parindent}{0pt}\setlength{\parskip}{2pt}
+\setlength{\emergencystretch}{3em}
+\pagestyle{plain}
+
+
+\begin{document}
+\noindent{\large\bfseries Шпаргалка принимающему}\hfill{\small Кружок 7\,И · 29 сентября · «Построй или докажи, что нельзя»}
+\vspace{3pt}\hrule\vspace{4pt}
+\small \textbf{Сдача:} пример \emph{с проверкой}; «нельзя»~--- доказательство, не «не получилось».
+\textbf{В конце у доски, без ответа:} доска $8\times8$ без двух противоположных угловых клеток~--- на доминошки?
+\vspace{4pt}
+
+\normalsize\renewcommand{\arraystretch}{1.6}
+\noindent\begin{tabularx}{\linewidth}{|>{\bfseries}l|>{\raggedright\arraybackslash}p{2.7cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{3.8cm}|}
+\hline
+№ & Ответ & Ключ & Спросить\\\hline
+
+1 & Всё можно & 6, 8: сетка $3\times3$, $4\times4$, угол склеить. 7: средние линии $+$ ещё раз & Застрял на 6: «начни с 9 клеток»\\\hline
+2 & Да: 9, 11, 79 единиц & Любые множители 99 $+$ единицы & Сумму пересчитал?\\\hline
+3 & (а) нет; (б) да & (а) пять пар соседей. (б) пять $-9$ через четыре 10: всего $-5$ & Почему (а) не работает в (б)\\\hline
+4 & (а) нет; (б) чётные $n\ge4$ & Концов $3n$~--- чётно. Пример: круг $+$ противоположный & (б): нечётные, $n=2$, пример\\\hline
+5 & (а), (б) да; (в) нет & (б) кусок на 4: $+3$. (в) у вершин разные куски; при трёх все по $\tfrac12$, дыра & Почему хватит 6, 7, 8\\\hline
+6 & (а) 4 или 5; (б) 3 & Между рыцарями 1--2 лжеца: $2k\le n\le3k$, $k$~--- рыцарей & Оба примера (а); почему не 3, 6\\\hline
+7 & (а) составные; (б) $1,2,3$ & (а) $a$, $b$ и $N{-}a{-}b$ единиц. (б) $c$~--- наибольшее, $P$~--- произведение остальных: $P<k$, $P\ge(k{-}1)!$ $\Rightarrow k\le3$ & (а) простые, $N=1$; (б) «почему не четыре?»\\\hline
+8$^*$ & (а) да; (б) нет & (б) три отметки~--- круг, всего $\le18$. (а) АБВ, БВА, ВАБ по 3 & Почему не три отметки\\\hline
+9$^*$ & Доказательство & У углов 4 разных куска; $E$ у $\le1$ стороны. Не у края: перекрытие или нет места; у края: $e=0$ & Оба случая\\\hline
+10$^*$ & (г) $n\ge7$ & (а) в $L$ (обыгравшие $A$) каждый кому-то проиграл $\Rightarrow\ge3$. (б) $3n\le\tfrac{n(n-1)}2$. (в) $k$ бьёт $k{+}1,k{+}2,k{+}4$ (mod 7). (г) копия $X^{\prime}$: как $X$, проиграла $X$ & (а) застрял: «кто обыграл $A$?»; (г) пары с копией\\\hline
+\end{tabularx}
+\end{document}

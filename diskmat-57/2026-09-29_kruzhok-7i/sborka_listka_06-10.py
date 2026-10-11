@@ -1,0 +1,92 @@
+"""Листок кружка 7И, 6.10 «Раскраски и разрезания» — одна страница (решения владельца 05.10 23:23 и 23:27).
+Вёрстка: поле для плюсов вынесено на левое поле (одна клетка на задачу без пунктов, столбик строк — на задачу
+с пунктами); рисунки — wrapfigure справа, их обтекают и следующие задачи; маленькие фигурки (уголок, «Т») —
+значком прямо в строке. Пустых квадратов и полей ответа нет: ответ ребёнок рисует у себя и показывает.
+Макрос: \\zad{знак}{плюсы}{условие}{рисунок}. Фигуры — из issled/dannye_6-10*.json (проверены issled/proverka_6-10.py).
+Запуск: python3 sborka_listka_06-10.py → listok_06-10_raskraski.tex"""
+import json
+from pathlib import Path
+from tikz_kletki import grid, polys
+HERE = Path(__file__).parent
+D = json.load(open(HERE / "issled/dannye_6-10.json")); D2 = json.load(open(HERE / "issled/dannye_6-10_v2.json"))
+T4 = [(0,0),(0,1),(0,2),(1,1)]; UG3 = [(0,0),(1,0),(1,1)]
+P = lambda *b: "\\plusy{" + ",".join(b) + "}"
+stolbik = lambda *pics, gap="10pt": "\\begin{tabular}{@{}r@{}}" + ("\\\\[" + gap + "]").join(pics) + "\\end{tabular}"
+znachok = lambda t: t.replace("current bounding box.north", "current bounding box.south")
+
+Z = [
+ ("", P("а","б"), r"Из шахматной доски $8\times8$ вырезали две угловые клетки. Можно ли разрезать оставшуюся часть на доминошки $1\times2$, если вырезали \textbf{(а)}~два угла одной стороны; \textbf{(б)}~два противоположных угла?", ""),
+ ("", P("·"), r"Раскрасьте клетки квадрата $4\times4$ в чёрный и белый цвета так, чтобы у каждой чёрной клетки было ровно три белых соседа, а у каждой белой~--- ровно один чёрный сосед (соседи~--- клетки с общей стороной).", ""),
+ ("", P("·"), r"Придумайте фигуру из клеток, которую можно вырезать из клетчатой бумаги одним куском и в которой при шахматной раскраске чёрных и белых клеток поровну, но которую нельзя разрезать на доминошки $1\times2$.", ""),
+ ("", P("а","б","в"), r"Фишка ходит по доске $5\times5$ на соседнюю по стороне клетку. Можно ли обойти фишкой все клетки, побывав на каждой ровно один раз, если начать \textbf{(а)}~с угловой клетки; \textbf{(б)}~с клетки, соседней с угловой? \textbf{(в)}~С каких клеток можно начать такой обход?", ""),
+ ("", P("а","б"), r"Разрежьте по линиям сетки \textbf{(а)}~верхнюю фигуру на три равные части; \textbf{(б)}~нижнюю фигуру на четыре равные части.",
+   stolbik(grid(5,5, region=D2["fig3"]["F"], s=0.42), grid(5,6, region=D2["fig4"]["F"], s=0.42))),
+ ("", P("а","б","в"), r"Квадрат $4\times4$ разрезают по линиям сетки на две равные части. Способы, которые получаются друг из друга поворотом или отражением, считаются одинаковыми. \textbf{(а)}~Найдите три разных способа. \textbf{(б)}~Докажите, что линия разреза всегда проходит через центр квадрата. \textbf{(в)}~Найдите все способы.", ""),
+ ("", P("·"), r"Разрежьте квадрат $6\times6$ на уголки из трёх клеток\,\ugolok{} так, чтобы никакие два уголка не складывались в прямоугольник $2\times3$.", ""),
+ ("", P("а","б","в"), r"\textbf{(а)}~Докажите, что квадрат $3\times3$ нельзя разрезать на уголки из трёх клеток. \textbf{(б)}~Разрежьте на такие уголки квадрат $9\times9$. \textbf{(в)}~При каких $n$ квадрат $n\times n$ можно разрезать на уголки из трёх клеток?", ""),
+ ("", P("·"), r"Разрежьте квадрат по линиям сетки на четыре одинаковые части так, чтобы в каждой было по три закрашенные клетки.",
+   # рисунки 9 и 10 — одна колонка: квадрат приподнят к задаче 9, фигура ниже, у задачи 10 (решение владельца 23:44); два wrapfigure подряд wrapfig не умеет
+   "\\gdef\\wrlines{4}\\gdef\\wrvverh{20pt}" + stolbik(grid(6,6, black=[(0,3),(0,5),(1,3),(1,5),(2,2),(2,4),(3,2),(3,5),(4,1),(4,2),(5,0),(5,1)], s=0.3),
+           grid(3,6, region=[(0,0),(0,1),(0,2),(1,2),(1,3),(1,4),(1,5),(2,2),(2,3),(2,4)], s=0.3), gap="7pt")),
+ ("", P("·"), r"Разрежьте фигуру на две равные части. Резать можно не только по сторонам клеток, но и по их диагоналям.",
+   ""),
+ (r"\star", P("·"), r"Из шахматной доски $8\times8$ вырезали две клетки разного цвета~--- любые. Докажите, что остаток всегда можно разрезать на доминошки.", ""),
+ (r"\star", P("а","б"), r"Квадрат $8\times8$ разрезали на четыре части, как на рисунке, и сложили из них прямоугольник $5\times13$. \textbf{(а)}~Найдите площадь квадрата и площадь прямоугольника. \textbf{(б)}~Откуда взялась лишняя клетка?",
+   polys(D["z13"]["sq"], 8, 8, u=0.22) + "\\hspace{8pt}" + polys(D["z13"]["rc"], 13, 5, u=0.22)),
+]
+UGOLOK = znachok(grid(2,2, region=UG3, s=0.2, lw=0.9))
+TFIG = znachok(grid(2,3, region=T4, s=0.2, lw=0.9))
+PRE = r"""% ЛИСТОК КРУЖКА 7И, 6.10 — «Раскраски и разрезания». СОБРАН sborka_listka_06-10.py — руками не править.
+% Состав финализирован владельцем 05.10 23:08 (Т убрана, две задачи ассистента добавлены 23:35), формат — 05.10 23:23 и 23:27 (SESSIYA.md); проверка: issled/proverka_6-10.py.
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setmainfont{C059}
+\usepackage{unicode-math}
+\setmathfont{TeX Gyre Schola Math}
+\usepackage[left=2.45cm,right=1.3cm,top=1.2cm,bottom=1.0cm]{geometry}
+\usepackage{tikz,wrapfig}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{13pt plus 3pt}
+\linespread{1.07}
+\pagestyle{empty}
+\newcounter{zad}
+\newsavebox{\risbox}
+\gdef\wrvverh{0pt}% подъём рисунка над первой строкой задачи (\gdef\wrvverh{…} внутри рисунка)
+\gdef\wrlines{}% число строк обтекания вручную (\gdef\wrlines{N} внутри рисунка): wrapfig не считает \parskip и тянет обтекание дальше
+% поле для плюсов: ширина 1,25 см; без пунктов — клетка 0,95 см, с пунктами — столбик строк по 0,5 см с буквой
+\newcommand{\plusy}[1]{\begin{tikzpicture}[baseline={([yshift=-0.78em]current bounding box.north)}]
+  \def\w{1.25}\def\h{0.47}
+  \foreach \x [count=\k] in {#1} {\xdef\nk{\k}}
+  \ifnum\nk=1
+    \draw[line width=0.5pt,rounded corners=1.2pt] (0,0) rectangle (\w,-0.95);
+  \else
+    \draw[line width=0.5pt,rounded corners=1.2pt] (0,0) rectangle (\w,-\nk*\h);
+    \foreach \x [count=\k] in {#1} {
+      \node[font=\footnotesize\itshape,anchor=west,inner sep=0pt,text=black!55] at (0.1,{-(\k-0.5)*\h}) {\x};
+      \ifnum\k<\nk \draw[line width=0.3pt,black!45] (0,{-\k*\h}) -- (\w,{-\k*\h}); \fi }
+  \fi
+\end{tikzpicture}}
+\newcommand{\ugolok}{""" + UGOLOK + r"""}
+\newcommand{\tfig}{""" + TFIG + r"""}
+\newcommand{\zad}[4]{\par\stepcounter{zad}%
+  \gdef\wrlines{}\gdef\wrvverh{0pt}\sbox{\risbox}{#4}%
+  \ifdim\wd\risbox>0pt
+    \ifx\wrlines\empty
+      \begin{wrapfigure}{r}{\dimexpr\wd\risbox+14pt\relax}\vspace{\dimexpr-14pt-\wrvverh\relax}\hfill\usebox{\risbox}\vspace{-6pt}\end{wrapfigure}%
+    \else
+      \begin{wrapfigure}[\wrlines]{r}{\dimexpr\wd\risbox+14pt\relax}\vspace{\dimexpr-14pt-\wrvverh\relax}\hfill\usebox{\risbox}\vspace{-6pt}\end{wrapfigure}%
+    \fi
+  \fi
+  \noindent\llap{\smash{#2}\hspace{0.45cm}}\textbf{\thezad\ifx&#1&\else$^{*}$\fi.}\enspace#3\par}
+\newcommand{\shapka}{%
+  \noindent{\fontsize{22}{24}\selectfont\bfseries Раскраски и разрезания}\hfill
+  {\small Кружок\enspace·\enspace7\,И\enspace·\enspace6 октября}\par
+  \vspace{2pt}{\color{black!70}\hrule height 0.6pt}\vspace{10pt}
+  \noindent Фамилия, имя\enspace\hrulefill\par\vspace{4pt}
+  \setcounter{zad}{0}}
+"""
+body = "\n\n".join(f"\\zad{{{zv}}}{{{pl}}}{{{txt}}}{{{pic}}}" for zv, pl, txt, pic in Z)
+(HERE / "listok_06-10_raskraski.tex").write_text(PRE + "\n\\begin{document}\n\\shapka\n\n" + body + "\n\n\\end{document}\n", encoding="utf-8")
+print("листок: задач", len(Z))

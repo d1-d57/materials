@@ -1,0 +1,79 @@
+<title>Раскраски и разрезания 6.10</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Тетрадный лист преподавателя: узкая колонка, условие — «листок» на бумаге, ответы — красным карандашом. */
+:root{
+  --bg:#f3f5f8; --fg:#1b232d; --muted:#5a6573; --line:#d6dce4; --sheet:#ffffff;
+  --accent:#c2352b; --cell:#ffffff; --grid:#aab5c2; --blk:#2c3643; --ink:#1b232d;
+  --p0:#d7e6f5; --p1:#f4e0c2; --p2:#d6ecd9; --p3:#ecd9ec;
+  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161c; --fg:#e3e8ee; --muted:#98a3b1; --line:#2a323d; --sheet:#1a2029;
+  --accent:#ff6f61; --cell:#2a333f; --grid:#46515f; --blk:#0b0e12; --ink:#e3e8ee;
+  --p0:#23394f; --p1:#4a3a22; --p2:#24402b; --p3:#43294a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161c; --fg:#e3e8ee; --muted:#98a3b1; --line:#2a323d; --sheet:#1a2029;
+  --accent:#ff6f61; --cell:#2a333f; --grid:#46515f; --blk:#0b0e12; --ink:#e3e8ee;
+  --p0:#23394f; --p1:#4a3a22; --p2:#24402b; --p3:#43294a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f-body);padding-inline:16px;padding-block:28px 64px}
+main{max-width:46rem;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-size:1.9rem;line-height:1.15;margin:0;font-weight:700;text-wrap:balance}
+.sub{color:var(--muted);margin:6px 0 0}
+h2{font-size:1.15rem;margin:0 0 8px}
+p{margin:0}
+.lead{display:flex;flex-direction:column;gap:10px}
+.mono,.prov{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.chip{display:inline-block;font-size:.68rem;letter-spacing:.04em;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin:0 4px 2px 0;white-space:nowrap}
+.chip-k{border-color:var(--grid)} .chip-s{color:var(--accent);border-color:var(--accent)}
+.zad{display:flex;flex-direction:column;gap:12px;padding-top:22px;border-top:2px solid var(--line)}
+.zad header{display:flex;align-items:center;gap:10px}
+.zad .n{font-size:1.5rem;font-weight:700;min-width:2.2rem}
+.usl{background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.item{display:grid;grid-template-columns:9.5rem 1fr;gap:12px}
+.item>div{min-width:0}
+.item h4{margin:0;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-top:3px}
+.otv>div{color:var(--accent);font-weight:500}
+.item ol{margin:0;padding-left:1.2em}
+.figs{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+figure{margin:0;display:flex;flex-direction:column;gap:4px;max-width:100%}
+figcaption{font-size:.78rem;color:var(--muted);max-width:15rem}
+svg.fig{max-width:100%;height:auto;display:block}
+.c-cell{fill:var(--cell);stroke:var(--grid);stroke-width:.8}
+.c-blk{fill:var(--blk);stroke:var(--grid);stroke-width:.8}
+.c-p0{fill:var(--p0);stroke:var(--grid);stroke-width:.6}
+.c-p1{fill:var(--p1);stroke:var(--grid);stroke-width:.6}
+.c-p2{fill:var(--p2);stroke:var(--grid);stroke-width:.6}
+.c-p3{fill:var(--p3);stroke:var(--grid);stroke-width:.6}
+.c-hole{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:2 2}
+.g-cut{fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:square}
+.g-path{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.g-start{fill:var(--accent)}
+.g-mark{fill:var(--accent)}
+.g-grid{fill:none;stroke:var(--grid);stroke-width:.6}
+.g-piece{stroke:var(--ink);stroke-width:1.8;stroke-linejoin:round;fill-opacity:.9}
+.g-gap{fill:var(--accent);stroke:var(--accent);stroke-width:.8}
+@media (max-width:560px){.item{grid-template-columns:1fr;gap:2px}h1{font-size:1.55rem}}
+</style>
+<main>
+<div>
+<h1>Раскраски и разрезания</h1>
+<p class="sub">Кружок 7И, 6 октября · обзор листка для преподавателя: условия, картинки, решения, подсказки</p>
+</div>
+<div class="lead">
+<p><b>Деление двух недель — по инструменту.</b> 6.10 — раскраска дана, она шахматная: строим разрезания и замощения, а «нельзя» доказываем шахматкой (сюда же обходы и жуки). 13.10 — раскраску выбираешь сам: полосы, большая шахматная 2×2, диагонали и задачи «раскрась так, чтобы…». Простые головоломки есть в обоих листках</p>
+<p><b>Вторая версия, после отзыва.</b> Убраны очевидные задачи (уголок из трёх квадратов, доминошки на 5×5, «7×7 по три») и жуки: это чистая чётность, она будет на основном спецмате. Вместо них две изогнутые фигуры, которые режутся на равные части единственным способом, и задача про уголки на квадрате n×n с исключением n = 3. Квадрат 4×4 пополам переехал в середину и получил пункт «докажите, что разрез проходит через центр»</p><p><b>Порядок.</b> Картинки и разговорные пункты чередуются. Доска без углов стоит первой: её многие знают, и в ней появляется инструмент всего листка</p>
+<p><b>Сложность</b> в таблице — оценка аналитика по шкале 1–5, а не замер. Всё остальное (числа способов, «нельзя», единственность) проверено перебором: <span class="mono">cd issled; python3 proverka_6-10.py</span> — команда падает на первом расхождении. Дата данных: 5 октября 2026</p>
+</div>
+<div><h2>Сводка</h2><div class="tbl"><table>
+<thead><tr><th>№</th><th>Суть</th><th>Сдаётся</th><th>Ответ</th><th>Сложн.</th></tr></thead>
+<tbody>{{ROWS}}</tbody></table></div></div>
+{{SECS}}
+</main>

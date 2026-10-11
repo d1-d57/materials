@@ -1,0 +1,129 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+\setmainfont{Liberation Serif}
+\usepackage[left=1.0cm,right=1.0cm,top=0.8cm,bottom=0.7cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{multirow}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+\newcounter{zad}
+
+
+\newlength{\otvsh}\setlength{\otvsh}{3.5cm}
+\newlength{\plsh}\setlength{\plsh}{0.7cm}
+\newlength{\polesh}\setlength{\polesh}{4.6cm}
+\newlength{\uslsh}\setlength{\uslsh}{13.6cm}
+\newlength{\podnyat}\setlength{\podnyat}{1.1ex}
+\newlength{\minpole}\setlength{\minpole}{1.3cm}
+
+\newsavebox{\uslbox}
+\newlength{\uslvys}
+\newlength{\blh}
+
+\newcommand{\calcblh}[1]{%
+  \setlength{\blh}{\dimexpr(\uslvys-\arrayrulewidth)/#1-\arrayrulewidth\relax}}
+\newcommand{\mt}[1]{\parbox[t][\blh][t]{\otvsh}{\small\bfseries #1\strut}}
+
+\newcommand{\poleA}{\calcblh{1}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\otvsh}|p{\plsh}|}\hline \mt{} & \\ \hline\end{tabular}}
+\newcommand{\poleB}[2]{\calcblh{2}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\otvsh}|p{\plsh}|}\hline
+  \mt{#1} & \multirow{2}{*}{} \\ \cline{1-1} \mt{#2} & \\ \hline\end{tabular}}
+\newcommand{\poleC}[3]{\calcblh{3}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\otvsh}|p{\plsh}|}\hline
+  \mt{#1} & \multirow{3}{*}{} \\ \cline{1-1} \mt{#2} & \\ \cline{1-1}
+  \mt{#3} & \\ \hline\end{tabular}}
+\newcommand{\poleD}[4]{\calcblh{4}\setlength{\tabcolsep}{3pt}%
+  \begin{tabular}{|p{\otvsh}|p{\plsh}|}\hline
+  \mt{#1} & \multirow{4}{*}{} \\ \cline{1-1} \mt{#2} & \\ \cline{1-1}
+  \mt{#3} & \\ \cline{1-1} \mt{#4} & \\ \hline\end{tabular}}
+
+\newlength{\mezhzad}\setlength{\mezhzad}{14pt}
+\newcommand{\znak}[1]{\ifx&#1&\else$#1$\ \fi}
+
+\newcommand{\zad}[3]{%
+  \stepcounter{zad}%
+  \sbox{\uslbox}{\parbox[t]{\uslsh}{\strut\textbf{\thezad\ifx&#1&\else$^{*}$\fi.}\ #3\strut}}%
+  \setlength{\uslvys}{\dimexpr\ht\uslbox+\dp\uslbox\relax}%
+  \ifdim\uslvys<\minpole\setlength{\uslvys}{\minpole}\fi
+  \par\vspace{\mezhzad}\noindent
+  \begin{minipage}[t]{\polesh}\vspace{0pt}\vspace*{-\podnyat}#2\end{minipage}%
+  \hfill
+  \begin{minipage}[t]{\uslsh}\vspace{0pt}\usebox{\uslbox}\end{minipage}\par}
+
+
+% ЛИСТОК КРУЖКА 7И, 29.09 — «Построй или докажи, что нельзя» (конструктивы). v3.
+% Макросы — из listok_23-09_logika.tex; звёздочка — верхним индексом у номера (как в listok_15-09_logika.tex, \zadz).
+% Скелет по решениям владельца 29.09 (00:40, 02:04, 02:36): три мягких входа (1–3), четыре главных (4–7),
+% две звёздочки (8, 9), десятая — для сильного школьника, одна звёздочка, пункты-ступени.
+% v2: 6 → правильный треугольник; 7 → «все наборы различных»; в 2 «хотя бы двух» (KRITIKA-29-09.md).
+% v3 (POISK-cpm-mmm.md, POISK-vershina.md): 3 → ряд из 10/9 чисел (Малый мехмат 2024);
+%     8* → «девять задач, по шесть отметок» (ЦПМ, Хамовники, «Мнимые противоречия», 2024) + пункт «по 7»;
+%     10* → «запутанный турнир» (проблема Шютте, k=2): вершина, в которой сходятся все линии.
+% ЛИНИИ:
+%   строим:                       1 → 5 (шаг +3) → 9* → 10(в,г) (шаг +1)
+%   запрет одной величиной:       3(а) пары соседей → 4(а) концы проводов → 8*(б) отметки за задачу → 10(б) поражения
+%   мнимое противоречие:          2 → 3(б) → 8*(а)
+%   при каких n / найдите все:    4(б), 5, 6, 7 → 10(г)
+% Проверка перебором: proverka_29-09_konstruktivy.py; верификатор: VERIFIKACIYA-29-09.md
+\newcommand{\shapka}{%
+  \noindent{\LARGE\bfseries Построй или докажи, что нельзя}%
+  \hfill{\small Кружок, 7\,И\quad·\quad29 сентября}%
+  \vspace{4pt}\hrule\vspace{8pt}
+  \noindent Фамилия, имя:\ \hrulefill\rule[-3mm]{0pt}{8mm}\par
+  \vspace{2pt}
+  \setcounter{zad}{0}}
+
+\setlength{\mezhzad}{10pt}
+
+\begin{document}
+\shapka
+
+\zad{}{\poleC{а}{б}{в}}{Разрежьте квадрат на \textbf{(а)}~7 квадратов; \textbf{(б)}~6 квадратов;
+\textbf{(в)}~8 квадратов. Квадраты не обязаны быть одинаковыми.}
+
+\zad{}{\poleA}{Могут ли и сумма, и произведение нескольких (хотя бы двух) натуральных чисел
+равняться 99?}
+
+\zad{}{\poleB{а}{б}}{В ряд записаны \textbf{(а)}~10 чисел; \textbf{(б)}~9 чисел. Сумма любых двух соседних
+чисел положительна. Может ли сумма всех чисел быть отрицательной?}
+
+\zad{}{\poleB{а}{б}}{Телефоны соединяют проводами, каждый провод соединяет два телефона,
+и никакие два телефона не соединены дважды.\newline
+\textbf{(а)}~Можно ли соединить 15 телефонов так, чтобы каждый был соединён ровно с тремя другими?\newline
+\textbf{(б)}~При каких $n$ так можно соединить $n$ телефонов?}
+
+\zad{}{\poleC{а}{б}{в}}{\textbf{(а)}~Разрежьте правильный треугольник на 6, на 7 и на 8 правильных треугольников
+(не обязательно одинаковых).\newline
+\textbf{(б)}~Докажите, что его можно разрезать на $n$ правильных треугольников при любом $n\ge6$.\newline
+\textbf{(в)}~Докажите, что на 2 и на 3 правильных треугольника его разрезать нельзя.}
+
+\zad{}{\poleB{а}{б}}{На острове живут рыцари, которые всегда говорят правду, и лжецы,
+которые всегда лгут. За круглым столом сидят островитяне, и каждый сказал:
+\textit{«оба моих соседа~--- лжецы»}. Сколько рыцарей может сидеть за столом,
+если всего островитян \textbf{(а)}~10; \textbf{(б)}~7? Найдите все варианты.}
+
+\zad{}{\poleB{а}{б}}{\textbf{(а)}~При каких $N$ и сумма, и произведение нескольких (хотя бы двух)
+натуральных чисел могут равняться $N$?\newline
+\textbf{(б)}~Найдите все наборы из нескольких (хотя бы двух) \textit{различных} натуральных чисел,
+у которых сумма равна произведению.}
+
+\zad{\star}{\poleB{а}{б}}{На кружке было 9 задач, и каждую из них рассказали преподавателю Аня, Боря и Вера,
+каждый в свой момент. Аня отмечает у себя задачу, если рассказала её раньше Бори; Боря~--- если рассказал раньше Веры;
+Вера~--- если рассказала раньше Ани. Может ли у каждого из троих оказаться отмечено \textbf{(а)}~по 6 задач; \textbf{(б)}~по 7 задач?}
+
+\zad{\star}{\poleA}{Докажите, что квадрат нельзя разрезать на 5 квадратов.}
+
+\zad{\star}{\poleD{а}{б}{в}{г}}{В турнире не меньше двух участников, каждый сыграл с каждым по одному разу, ничьих не было. Назовём турнир
+\textit{запутанным}, если для любых двух участников найдётся третий, который выиграл у обоих.\newline
+\textbf{(а)}~Докажите, что в запутанном турнире каждый участник проиграл хотя бы трём.\newline
+\textbf{(б)}~Докажите, что в запутанном турнире не меньше 7 участников.\newline
+\textbf{(в)}~Придумайте запутанный турнир с 7 участниками.\newline
+\textbf{(г)}~При каких $n$ существует запутанный турнир с $n$ участниками?}
+
+\end{document}
