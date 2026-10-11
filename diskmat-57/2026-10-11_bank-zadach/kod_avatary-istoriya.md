@@ -299,6 +299,13 @@ Criterion check: none looks crooked. One note: "points × 28 children" — the t
 > `ДОМ: владелец` — законный адрес и НЕ недостижимый дом: он значит «дома-файла нет вовсе, решение за человеком». Не знаешь пути — пиши его, а не выдуманный путь. Для урока фабрике дом почти всегда `<эта арка>/UROKI-FABRIKE.md`. Аналитик при переносе меняет `ДОСТАВЛЕНО: нет` на `ДОСТАВЛЕНО: <имя-захода>#<N>` И дописывает ЭТУ ЖЕ строку-метку в файл по адресу ДОМ — `priyomka.py` (Г7) красным ловит и «доставлено» без метки на месте, и недостижимый дом сверх базы; достижимое-недоставленное печатает.
 > 🔴 **Метку ставь ТОЛЬКО одним ходом вместе с самим переносом содержания, никогда раньше.** Гейт проверяет факт «строка-метка на месте», а не смысл «содержание перенесено верно» — метка без содержания рядом даст ложно-зелёный Г7.
 
+1. `arka/mat-kostyak` is NOT merged into `main`: `main` is the showcase branch (its last commits are «публикация сайта»), `arka/mat-kostyak` is 1811 commits ahead and 29 behind; merging is a publication and the owner's decision (the заход's own rule: do not merge the showcase). The branch itself is exported to origin (0 unexported).
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+2. Hand values of the owner (`ruchnye.csv`, `chto = klaster`) override the level at EVERY checkpoint, the old system's rule carried over unchanged. With a level history this means: adding such a row later rewrites past levels, and the next `sverka.py --shkala` shifts past scale cells. Nothing breaks today (no such row changes a past point in a way that matters to the regression), but if the owner wants a hand value to hold only from its date on, that is a rule change, not mine.
+   ДОМ: владелец
+   ДОСТАВЛЕНО: нет
+
 ## ГИГИЕНА ВХОДА — (заполняет СУБАГЕНТ гит-контура, не исполнитель)
 > 🔴 **Каждый заход — ДВЕ независимые работы.** Первая — навести полную гигиену со всем, что
 > накопилось к этому моменту. Вторая — собственно заход. Друг от друга они не зависят, но
@@ -318,24 +325,59 @@ git --no-optional-locks log --oneline @{u}.. | wc -l      # не вывезен�
 python3 /Users/ivanyakovlev/Documents/GitHub/disciplina/_generator/tools/git_zona.py zayavki              # открытые заявки
 ```
 ```
-<сюда — вывод, дословно>
+$ git --no-optional-locks branch --no-merged arka/mat-kostyak
+  main
++ zahod/istoriya-sessij
+$ git --no-optional-locks status --porcelain | wc -l
+      41
+$ git --no-optional-locks log --oneline @{u}.. | wc -l
+       0
+$ git_zona.py zayavki          (GIT_ZONA_REPO=materials)
+Открытых заявок: 11   (9 × kommit по работам 7И за 29.09–08.10, из них 5 «blokiruet»; 1 × vyvoz 2026-10-11T1713; все — чужие зоны)
 ```
+(full per-request text omitted by the subagent; my own run of the same four commands at entry gave 40 / 0 / the same 11 requests — the one extra dirty path in the subagent's run is this file.)
 
 **ЧТО СДЕЛАНО** *(с хэшами)*
-<влито / закоммичено / вывезено / погашено / заявки закрыты — поимённо>
+Subagent (af03c756ceaa69e2e), five lines pasted verbatim:
+1. Merged into the main branch 0 of 0 named (the main branch is `main`); nothing was named for merging.
+2. Cowork tail: taken into git 0 paths — no index file or autolog was dirty; the 41 dirty entries left outside git are other projects (`.gitignore`, `_fond`, `diskmat-57`, `kurs-puti-i-volny`, `obzory`, `scratchpad`, `ucheniki`). Unregistered foreign `.md` named, not registered by it (list in its reply: `_fond/problems-ru/*`, `_fond/zadachi/bank/*`, `diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-13_arifmetika/RESERCH-*.md`, `obzory/volnovoe-uravnenie-struny/*`, `ucheniki/danya/*`, …).
+3. Extinguished: nothing (`poteri` not run, no rc); the three requests and the branches were left to the executor by my instruction.
+4. Irreversible: none.
+5. выдано 5 позиций из 5 найденных
+Commits of the executor: materials `dfe08c75` (Parts 2–3 + this file), bot-7i `f1c3cc1` (Part 1, pushed to origin main); export of `arka/mat-kostyak` by `vyvezti --yes`.
 
-**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `<да | нет>`
+**ВСЕ ДОЛГИ ВХОДА ЗАКРЫТЫ:** `нет`
+Left, and not passable with the subagent's rights: (1) nine open `kommit` requests of foreign 7И zones (content work of other sessions; five say «БЕЗ push») — not mine; (2) request `2026-10-11T1713` (vyvoz) looks executed (branch equals origin) — I did not close it, it is not one of the three named in Part 4; (3) branches `main` (the showcase, see ВОПРОСЫ 1) and `zahod/istoriya-sessij` (a foreign заход, valve open by the analyst) stay unmerged.
 *(`нет` законно — но ТОЛЬКО со списком поимённо: что осталось и почему это непроходимо ТВОИМИ
 правами (чужая живая рабочая папка, нужно решение владельца, конфликт, обеих сторон которого
 не понимаешь). «Сложно» и «не моя тема» причинами не являются. `нет` без списка = красный.)*
 
 ## ОТЧЁТ — (заполняет исполнитель)
-**АРТЕФАКТ:** `<АБСОЛЮТНЫЙ путь к собранному файлу, который владелец должен открыть>` — `<чем открывать>`
-*(собрал HTML, документ, PDF, картинки — путь сюда. Собранного файла нет — напиши «артефакта нет: <почему>». Пустая строка = отчёт не принимается: гейт `check_uroki.py` краснеет на коммите.)*
-**РОД АРТЕФАКТА:** `<исходник | собранный>`
-*(`собранный` — колода, PDF, картинка, любой файл, ПОРОЖДЁННЫЙ этим заходом: он обязан быть моложе файла-захода, и Г3 приёмки сверяет ВРЕМЯ. `исходник` — заход, чей продукт есть КОД: он коммитится РАНЬШЕ отчёта, потому что отчёт цитирует хэш коммита, и сверка по времени дала бы вечное ложное красное — тогда Г3 сверяет не время, а «доехал ли артефакт в названный §4 коммит». Не заполнено — Г3 работает по времени, как раньше.)*
-**КОММИТ:** `<хэш>` — `<сообщение>` · `git_zona.py check --zone <зона>` → ✅
-*(нет хэша — назови причину прямо здесь; пустая строка = отчёт не принимается)*
+**АРТЕФАКТ:** `/Users/ivanyakovlev/Documents/GitHub/materials/diskmat-57/bank-7i/reshaemost.csv` — any text editor / spreadsheet (the scale rebuilt by the new rule, 500 rows, md5 `acc2b14c335e5de3759c0a75ac9669de`)
+**РОД АРТЕФАКТА:** `исходник`
+**КОММИТ:** materials `dfe08c75` — «avatary-istoriya: scale and sverka take the avatar level of the last checkpoint strictly before the work; pair starts at 14:00» · bot-7i `f1c3cc1` — «avatary: history by checkpoint …» (pushed to origin main) · `git_zona.py check --zone` → ✅ for all seven zone paths
+ПРАВКИ ПРОЧИТАНЫ: правок нет (блок был «<правок нет>» на старте; перечитан перед отчётом).
+
+**What was done and why.** The owner decided (11.10 23:05) that the avatar level is dynamic and built before every lesson, so the scale must use the level the lesson was planned for, not the last one.
+1. **History in the bot (bot-7i).** `avatary` now holds a row per child AND per checkpoint (key `(rebyonok, na_datu)`); `Itog.det` keeps the details of every checkpoint, `avatary.tekushchie` gives the current level (the last checkpoint). Thresholds and rules untouched. `proverka.py` prints the number of points, children per point and the transitions between neighbours. Live: `python3 vygruzka.py` → 3 checkpoints (22.09, 29.09, 6.10) × 28 real children = **84 rows** (+3 for the test child); `regressiya_avatary.py` → **28 of 28 children on each of 3 points (84 of 84)**; `proverka.py` rc=0, no red line; transitions 22.09→29.09: 7 of 28 children changed level, 29.09→6.10: 8 of 28; `pytest` 166 passed. Deploy: `vykatka.sh --proba` then the real run → rc=0, answers 200 after 6 s, the live journal drew in 8 of 8 browser checks (chromium + webkit, pupil + teacher, 390 and 1400 px); the server's export holds 87 `avatary` rows over 3 dates.
+2. **Scale and sverka by the level «for this work».** `sverka.py`: the level of a child for a work of date D is the row of the last checkpoint STRICTLY earlier than D; one function `fakt()` serves both `--shkala` and `sverka.py <folder>` (checked: a scratch folder run wrote the same 500-row file, `cmp` equal). A work of the first day of the theme has no earlier checkpoint → every child `Н`, its cells «нет данных». `istochnik` = `vygruzka:<strogo|chast>:tochka-ranshe` (or `:net-tochki-ranshe`). The КР alternative-parts rule is kept. `SVERKA.md` now says which checkpoint the levels are from.
+   - Cells «нет данных» because of the first date of the theme: **172** (the work LS-2026-09-22, 43 items × 4 avatars); further **24** cells with fewer than two writers; 500 cells in all.
+   - Second run → the same md5 (`acc2b14c…`).
+   - Hand check of cells by my own script against the table `avatary` (r-codes only, no names): 6 random cells (two seeds) → writers and solvers equal the CSV in 6 of 6.
+3. **Pair start 14:00.** `novaya.py` default `<date>T14:00`, docstrings of `novaya.py`/`predskazanie.py` and `MASHINA.md` say 14:00; a scratch run in `scratchpad/avatary-istoriya/` wrote `"nachalo": "2026-10-13T14:00"`. No `ITERACIYA.json` touched (nor `iteracii/2026-10-13_arifmetika/`).
+4. **Export.** `vyvezti --yes` on `arka/mat-kostyak`: unexported commits **before my work: 0, after my commit: 1, after the export: 0** (the final report commit is exported the same way, see КОММИТ below). The three named requests (`2026-10-05T1522…`, `2026-10-06T1736…`, `2026-10-11T2203…`) were ALREADY closed at 11.10 23:02 with exactly the reason the заход prescribes («владелец 11.10 22:33/22:51: вывозить; репозиторий публичный по решению владельца; arka/mat-kostyak вывезена (15 коммитов)») — by someone before me; I did not close them again. Repository not made private, history not rewritten.
+5. **Verifier** (fresh subagent aa5871b035a382a5d, its own script `scratchpad/avatary-istoriya/verifikator/proverka.py`): table `avatary` 84 of 84 real rows (28 × 3, no key duplicates, levels only СН/Ни/Ц/В/Н), regression 28 of 28 on every point; scale **500 of 500** rows equal (reshili, pisali, dolya, na_datu), «нет данных» 172 + 24. Охват: проверено 584 из 584 (84 + 500). Reply ended with «выдано 584 позиций из 584 найденных».
+
+**Not touched.** Thresholds and rules of the avatar, grades, disputes, decisions, the screens (nothing shows a level), any `ITERACIYA.json`, the old `reshaemost.csv` data of children (only aggregates are in the file; no child in any new file).
+
+**Not merged.** `arka/mat-kostyak` is NOT merged into `main` (the showcase, 1811 commits ahead): steps 2–3 of the final hygiene block (merge, post-check from the main folder) not performed, for the reason and the question in ВОПРОСЫ 1. Not-merged branches at the end: `main` (the showcase), `zahod/istoriya-sessij` (a foreign заход, valve open) — same two as at entry, none added (Г3).
+
+**Hygiene Г1–Г6.** Г1 ✅ all seven zone paths + `bot-7i status --porcelain` empty · Г2 bot-7i: status 0, unpushed 0 · Г3 2 not-merged (same as at entry) · Г4 no new `.py` in `_generator/**`, not applicable · Г5 no new `.md` (the заход file was born registered); `bootstrap_zahod.py --proverit-doma` → rc=0, 0 unreachable homes · Г6 `git show --stat` of `dfe08c75`: only my six paths.
+Outside git: 0 of my zone; the 40 other dirty entries of the materials repo are other projects, not touched.
+
+**ПОВТОРЯЕМОСТЬ.** Will repeat on the next lesson: every new lesson date adds a checkpoint only after the export is re-run — the sverka of a lesson uses the checkpoint before the lesson, so the order «export → `sverka.py`» matters and is now in the file header; nothing new to fix. The 14:00 default repeats at each `novaya.py` call and is fixed. Nothing else repeats.
+**НЕОБРАТИМОЕ:** the real deploy of bot-7i to the server 159.194.254.52 (code + the export; restored by `bash deploy/vykatka.sh --otkat`, snapshot path in `/opt/bot-7i-bak-POSLEDNYAYA` on the server); push of bot-7i `main` to origin (`f1c3cc1`; undo = a revert commit); push of `arka/mat-kostyak` to origin (`vyvezti --yes`). `reshaemost.csv` overwritten by the new rule (before: `ee59c5e8d7a342dacbafe24d623871e5`, restorable from the previous commit). Nothing deleted.
+**Время прогона и токены:** неприменимо (канал `app`).
 
 ## СОВЕТ ПРИ СБОРКЕ (`statistika_zahodov.py --sovet`, М-2)
 rod=instrumenty · putey_zony=8 · simvolov=36454 · rc=0
