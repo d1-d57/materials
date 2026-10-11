@@ -1,0 +1,224 @@
+rabota_id,variant,punkt,otvet,chislo,istochnik
+LS-2026-09-22,А,1а,107,107,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['1а']"
+LS-2026-09-22,А,1б,141,141,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['1б']"
+LS-2026-09-22,А,1в,нельзя,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант А"
+LS-2026-09-22,Б,1а,109,109,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['1а']"
+LS-2026-09-22,Б,1б,155,155,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['1б']"
+LS-2026-09-22,Б,1в,нельзя,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №1, вариант Б"
+LS-2026-09-22,А,2а,33,33,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант А"
+LS-2026-09-22,А,2б,67,67,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['2']"
+LS-2026-09-22,А,2в,53,53,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант А"
+LS-2026-09-22,А,2г,53 %,53/100,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант А"
+LS-2026-09-22,Б,2а,37,37,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант Б"
+LS-2026-09-22,Б,2б,113,113,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['2']"
+LS-2026-09-22,Б,2в,75,75,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант Б"
+LS-2026-09-22,Б,2г,50 %,1/2,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №2, вариант Б"
+LS-2026-09-22,А,3,18,18,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №3, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['3']"
+LS-2026-09-22,Б,3,22,22,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №3, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['3']"
+LS-2026-09-22,А,4а,36,36,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №4, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['4а']"
+LS-2026-09-22,А,4б,45,45,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №4, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['4б']"
+LS-2026-09-22,Б,4а,45,45,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №4, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['4а']"
+LS-2026-09-22,Б,4б,15,15,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №4, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['4б']"
+LS-2026-09-22,А,5,1 2 7; 1 3 6; 1 4 5; 2 3 5,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №5, вариант А"
+LS-2026-09-22,Б,5,1 2 9; 1 3 8; 1 4 7; 1 5 6; 2 3 7; 2 4 6; 3 4 5,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №5, вариант Б"
+LS-2026-09-22,А,6,n-m+1,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №6, вариант А"
+LS-2026-09-22,Б,6,b-a+1,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №6, вариант Б"
+LS-2026-09-22,А,7,1991,1991,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №7, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['7']"
+LS-2026-09-22,Б,7,2971,2971,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №7, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['7']"
+LS-2026-09-22,А,8,118,118,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №8, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['8']"
+LS-2026-09-22,Б,8,104,104,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №8, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['8']"
+LS-2026-09-22,А,9,1 2 3 9; 1 2 4 8; 1 2 5 7; 1 3 4 7; 1 3 5 6; 2 3 4 6,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №9, вариант А"
+LS-2026-09-22,Б,9,1 2 3 10; 1 2 4 9; 1 2 5 8; 1 2 6 7; 1 3 4 8; 1 3 5 7; 1 4 5 6; 2 3 4 7; 2 3 5 6,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №9, вариант Б"
+LS-2026-09-22,А,10а,11,11,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №10, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['10а']"
+LS-2026-09-22,А,10б,40,40,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №10, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['10б']"
+LS-2026-09-22,Б,10а,36,36,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №10, вариант Б"
+LS-2026-09-22,Б,10б,110,110,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №10, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['14']"
+LS-2026-09-22,А,11а,"4, 7, 9",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №11, вариант А"
+LS-2026-09-22,А,11б,10,10,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №11, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['11б']"
+LS-2026-09-22,Б,11а,420,420,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №11, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['17']"
+LS-2026-09-22,Б,11б,400,400,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №11, вариант Б"
+LS-2026-09-22,А,12а,40,40,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант А"
+LS-2026-09-22,А,12б,600,600,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант А"
+LS-2026-09-22,А,12в,542,542,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант А"
+LS-2026-09-22,Б,12а,4,4,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,Б,12б,12,12,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,Б,12в,8,8,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №12, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,А,13а,3,3,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №13, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,А,13б,10,10,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №13, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,А,13в,7,7,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №13, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['13']"
+LS-2026-09-22,Б,13а,15,15,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №13, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['19а']"
+LS-2026-09-22,Б,13б,35,35,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №13, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['19б']"
+LS-2026-09-22,А,14а,22,22,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №14, вариант А"
+LS-2026-09-22,А,14б,84,84,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №14, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['14']"
+LS-2026-09-22,Б,14а,22,22,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №14, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['10а']"
+LS-2026-09-22,Б,14б,64,64,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №14, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['10б']"
+LS-2026-09-22,А,15а,нет,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №15, вариант А"
+LS-2026-09-22,А,15б,не меньше 5,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №15, вариант А"
+LS-2026-09-22,Б,15а,27,27,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №15, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['18а']"
+LS-2026-09-22,Б,15б,93,93,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №15, вариант Б = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['18б']"
+LS-2026-09-22,А,16,"0, 2 или 4",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №16, вариант А"
+LS-2026-09-22,Б,16а,60,60,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №16, вариант Б"
+LS-2026-09-22,Б,16б,900,900,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №16, вариант Б"
+LS-2026-09-22,Б,16в,813,813,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №16, вариант Б"
+LS-2026-09-22,А,17а,240,240,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №17, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['17']"
+LS-2026-09-22,А,17б,225,225,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №17, вариант А"
+LS-2026-09-22,Б,17а,"4, 7, 10",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №17, вариант Б"
+LS-2026-09-22,Б,17б,7,7,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №17, вариант Б"
+LS-2026-09-22,А,18а,26,26,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №18, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['18а']"
+LS-2026-09-22,А,18б,74,74,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №18, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['18б']"
+LS-2026-09-22,Б,18а,нет,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №18, вариант Б"
+LS-2026-09-22,Б,18б,не меньше 5,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №18, вариант Б"
+LS-2026-09-22,А,19а,10,10,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №19, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['19а']"
+LS-2026-09-22,А,19б,15,15,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №19, вариант А = diskmat-57/2026-08-18_logika-goda-7/otvety.py R['19б']"
+LS-2026-09-22,Б,19,"1, 3, 5 или 7",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №19, вариант Б"
+LS-2026-09-22,А,20,"5, 6, 7, 8, 9, 10, 12, 13, 14, 15 — единственное",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №20, вариант А"
+LS-2026-09-22,Б,20,"5, 6, 7, 8, 9, 10, 12, 13, 14, 15 — единственное",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №20, вариант Б"
+LS-2026-09-22,А,21,6210001000 — единственное,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №21, вариант А"
+LS-2026-09-22,Б,21,6210001000 — единственное,,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №21, вариант Б"
+LS-2026-09-22,А,22,"доказательство, принимаем устно",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №22, вариант А"
+LS-2026-09-22,Б,22,"доказательство, принимаем устно",,"diskmat-57/2026-08-18_logika-goda-7/shpargalka_22-09_podschety.tex №22, вариант Б"
+DZ-2026-09-29,,1,8,8,"diskmat-57/2026-08-18_logika-goda-7/dz_22-09_podschety.tex, «СОСТАВ v5» №1 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_dz.py K['1']"
+DZ-2026-09-29,,2,14,14,"diskmat-57/2026-08-18_logika-goda-7/dz_22-09_podschety.tex, «СОСТАВ v5» №2 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_dz.py K['2']"
+DZ-2026-09-29,,3,34,34,"diskmat-57/2026-08-18_logika-goda-7/dz_22-09_podschety.tex, «СОСТАВ v5» №3 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_dz.py K['3']"
+DZ-2026-09-29,,4,22,,"diskmat-57/2026-08-18_logika-goda-7/dz_22-09_podschety.tex, «СОСТАВ v5» №4"
+DZ-2026-09-29,,5,12,,"diskmat-57/2026-08-18_logika-goda-7/dz_22-09_podschety.tex, «СОСТАВ v5» №5"
+LS-2026-09-29,А,1,"29, 38, 47, 56, 65, 74, 83, 92 — 8",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 1"
+LS-2026-09-29,А,2а,64,64,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 2а = the expression before «=» evaluated"
+LS-2026-09-29,А,2б,28,28,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 2б = the expression before «=» evaluated"
+LS-2026-09-29,А,2в,28,28,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 2в = the expression before «=» evaluated"
+LS-2026-09-29,А,3а,72,72,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 3а = the expression before «=» evaluated"
+LS-2026-09-29,А,3б,18,18,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 3б = the expression before «=» evaluated"
+LS-2026-09-29,А,3в,34,34,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 3в = the expression before «=» evaluated"
+LS-2026-09-29,А,4а,144,144,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 4а = the expression before «=» evaluated"
+LS-2026-09-29,А,4б,38,38,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 4б = the expression before «=» evaluated"
+LS-2026-09-29,А,5,"10: 5+5, 5+2+2+1, 5+2+1+1+1, 5+1+1+1+1+1, 2+2+2+2+2, 2+2+2+2+1+1, 2+2+2+1+1+1+1, 2+2+1+1+1+1+1+1, 2+1+1+1+1+1+1+1+1, 1+1+1+1+1+1+1+1+1+1",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 5"
+LS-2026-09-29,А,6,342,342,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 6 = the expression before «=» evaluated"
+LS-2026-09-29,А,7,13,13,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 7 = the expression before «=» evaluated"
+LS-2026-09-29,А,8,50,50,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 8 = the expression before «=» evaluated"
+LS-2026-09-29,А,9,166,166,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 9 = the expression before «=» evaluated"
+LS-2026-09-29,А,10а,208,208,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 10а = the expression before «=» evaluated"
+LS-2026-09-29,А,10б,1200,1200,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 10б = the expression before «=» evaluated"
+LS-2026-09-29,А,11а,32,32,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 11а = the expression before «=» evaluated"
+LS-2026-09-29,А,11б,3612,3612,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 11б = the expression before «=» evaluated"
+LS-2026-09-29,А,12а,4,4,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 12а = the expression before «=» evaluated"
+LS-2026-09-29,А,12б,16,16,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 12б = the expression before «=» evaluated"
+LS-2026-09-29,А,12в,432,432,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 12в = the expression before «=» evaluated"
+LS-2026-09-29,А,13а,2,2,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 13а"
+LS-2026-09-29,А,13б,16,16,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 13б = the expression before «=» evaluated"
+LS-2026-09-29,А,14а,26,26,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 14а"
+LS-2026-09-29,А,14б,26/100,13/50,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 14б"
+LS-2026-09-29,А,15а,26,26,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 15а"
+LS-2026-09-29,А,15б,74,74,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 15б = the expression before «=» evaluated"
+LS-2026-09-29,А,16а,22,22,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 16а"
+LS-2026-09-29,А,16б,84,84,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 16б"
+LS-2026-09-29,А,17,"5, 6, 7, 8, 9, 10, 12, 13, 14, 15 — единственное",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 17"
+LS-2026-09-29,А,18,6210001000 — единственное,,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 18"
+LS-2026-09-29,А,19,32768,32768,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 19 = the expression before «=» evaluated"
+LS-2026-09-29,А,20,512,512,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, А 20 = the expression before «=» evaluated"
+LS-2026-09-29,Б,1,"49, 58, 67, 76, 85, 94 — 6",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 1"
+LS-2026-09-29,Б,2а,72,72,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 2а = the expression before «=» evaluated"
+LS-2026-09-29,Б,2б,39,39,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 2б = the expression before «=» evaluated"
+LS-2026-09-29,Б,2в,30,30,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 2в = the expression before «=» evaluated"
+LS-2026-09-29,Б,3а,72,72,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 3а = the expression before «=» evaluated"
+LS-2026-09-29,Б,3б,18,18,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 3б = the expression before «=» evaluated"
+LS-2026-09-29,Б,3в,34,34,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 3в = the expression before «=» evaluated"
+LS-2026-09-29,Б,4а,112,112,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 4а = the expression before «=» evaluated"
+LS-2026-09-29,Б,4б,49,49,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 4б = the expression before «=» evaluated"
+LS-2026-09-29,Б,5,"11: 5+5+1, 5+2+2+2, 5+2+2+1+1, 5+2+1+1+1+1, 5+1+1+1+1+1+1, 2+2+2+2+2+1, 2+2+2+2+1+1+1, 2+2+2+1+1+1+1+1, 2+2+1+1+1+1+1+1+1, 2+1+1+1+1+1+1+1+1+1, 1+1+1+1+1+1+1+1+1+1+1",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 5"
+LS-2026-09-29,Б,6,552,552,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 6 = the expression before «=» evaluated"
+LS-2026-09-29,Б,7,14,14,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 7 = the expression before «=» evaluated"
+LS-2026-09-29,Б,8,26,26,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 8 = the expression before «=» evaluated"
+LS-2026-09-29,Б,9а,208,208,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 9а = the expression before «=» evaluated"
+LS-2026-09-29,Б,9б,1200,1200,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 9б = the expression before «=» evaluated"
+LS-2026-09-29,Б,10,166,166,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 10 = the expression before «=» evaluated"
+LS-2026-09-29,Б,11а,4,4,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 11а = the expression before «=» evaluated"
+LS-2026-09-29,Б,11б,16,16,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 11б = the expression before «=» evaluated"
+LS-2026-09-29,Б,11в,432,432,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 11в = the expression before «=» evaluated"
+LS-2026-09-29,Б,12а,156,156,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 12а = the expression before «=» evaluated"
+LS-2026-09-29,Б,12б,2040,2040,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 12б = the expression before «=» evaluated"
+LS-2026-09-29,Б,13а,26,26,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 13а"
+LS-2026-09-29,Б,13б,26/100,13/50,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 13б"
+LS-2026-09-29,Б,14а,2,2,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 14а"
+LS-2026-09-29,Б,14б,16,16,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 14б = the expression before «=» evaluated"
+LS-2026-09-29,Б,15а,22,22,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 15а"
+LS-2026-09-29,Б,15б,84,84,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 15б"
+LS-2026-09-29,Б,16а,26,26,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 16а"
+LS-2026-09-29,Б,16б,74,74,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 16б = the expression before «=» evaluated"
+LS-2026-09-29,Б,17,6210001000 — единственное,,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 17"
+LS-2026-09-29,Б,18,"5, 6, 7, 8, 9, 10, 12, 13, 14, 15 — единственное",,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 18"
+LS-2026-09-29,Б,19,512,512,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 19 = the expression before «=» evaluated"
+LS-2026-09-29,Б,20,32768,32768,"diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/out/kanon.json, Б 20 = the expression before «=» evaluated"
+KR-2026-09-29,А,1,64,64,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 1 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['А']['1']
+KR-2026-09-29,А,2а,71 и 45,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 2а
+KR-2026-09-29,А,2б,390,390,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 2б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['А']['2б']
+KR-2026-09-29,А,3а,"32 (1×1: 18, 2×2: 10, 3×3: 4)",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 3а
+KR-2026-09-29,А,3б,"горизонтальных 15, вертикальных 12; всего 27",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 3б
+KR-2026-09-29,А,4а,"6: 2–6–7, 3–5–7, 3–6–7, 4–5–7, 4–6–7, 5–6–7",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 4а
+KR-2026-09-29,А,4б,13,13,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['А'] 4б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['А']['4б']
+KR-2026-09-29,Б,1,69,69,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 1 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['Б']['1']
+KR-2026-09-29,Б,2а,85 и 46,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 2а
+KR-2026-09-29,Б,2б,475,475,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 2б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['Б']['2б']
+KR-2026-09-29,Б,3а,"40 (1×1: 20, 2×2: 12, 3×3: 6, 4×4: 2)",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 3а
+KR-2026-09-29,Б,3б,"горизонтальных 16, вертикальных 15; всего 31",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 3б
+KR-2026-09-29,Б,4а,"7: 2–7–8, 4–5–8, 4–6–8, 4–7–8, 5–6–8, 5–7–8, 6–7–8",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 4а
+KR-2026-09-29,Б,4б,14,14,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/kontr3.py K['Б'] 4б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/svod_kr.py K['Б']['4б']
+DZ-2026-10-06,,1,2 мин 15 с,135,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №1
+DZ-2026-10-06,,2,12 кг,12,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №2 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/dz_29-09_dannye.py (asserts)
+DZ-2026-10-06,,3,50,50,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №3 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/dz_29-09_dannye.py (asserts)
+DZ-2026-10-06,,4,33,33,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №4 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/dz_29-09_dannye.py (asserts)
+DZ-2026-10-06,,5,140,140,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №5 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/dz_29-09_dannye.py (asserts)
+DZ-2026-10-06,,6,45,45,diskmat-57/2026-08-18_logika-goda-7/DZ-29-09-otvety.txt №6 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-09-29_kombinatorika-2/dz_29-09_dannye.py (asserts)
+KR-2026-10-06,А,1а,18,18,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 1а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 1а
+KR-2026-10-06,Б,1а,20,20,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 1а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 1а
+KR-2026-10-06,А,1б,16,16,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 1б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 1б
+KR-2026-10-06,Б,1б,17,17,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 1б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 1б
+KR-2026-10-06,А,2а,18,18,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 2а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 2а
+KR-2026-10-06,Б,2а,21,21,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 2а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 2а
+KR-2026-10-06,А,2б,12,12,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 2б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 2б
+KR-2026-10-06,Б,2б,14,14,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 2б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 2б
+KR-2026-10-06,А,3а,23,23,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 3а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 3а
+KR-2026-10-06,Б,3а,26,26,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 3а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 3а
+KR-2026-10-06,А,3б,8,8,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 3б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 3б
+KR-2026-10-06,Б,3б,8,8,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 3б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 3б
+KR-2026-10-06,А,4,таблица; троек 2:1 · 1:3 · 0:4 (8),,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 4
+KR-2026-10-06,Б,4,таблица; троек 2:2 · 1:3 · 0:5 (10),,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 4
+KR-2026-10-06,А,5а,БСБК,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5а
+KR-2026-10-06,Б,5а,БСКБ,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5а
+KR-2026-10-06,А,5б,БСКС,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5б
+KR-2026-10-06,Б,5б,КСКС,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5б
+KR-2026-10-06,А,5в,"8: БКБК, БКБС, БКСБ, БКСК, БСБК, БСБС, БСКБ, БСКС",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5в
+KR-2026-10-06,Б,5в,"8: КБКБ, КБКС, КБСБ, КБСК, КСБК, КСБС, КСКБ, КСКС",,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 5в
+KR-2026-10-06,А,6а,10,10,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 6а
+KR-2026-10-06,Б,6а,11,11,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 6а
+KR-2026-10-06,А,6б,от 0 до q — это q+1,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6б
+KR-2026-10-06,Б,6б,от 0 до q — это q+1,,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6б
+KR-2026-10-06,А,6в,13,13,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6в = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 6в
+KR-2026-10-06,Б,6в,14,14,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 6в = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 6в
+KR-2026-10-06,А,7,11,11,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 7 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 7
+KR-2026-10-06,Б,7,13,13,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 7 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 7
+KR-2026-10-06,А,8,27,27,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 8 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 8
+KR-2026-10-06,Б,8,28,28,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 8 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 8
+KR-2026-10-06,А,9,734,734,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 9 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 9
+KR-2026-10-06,Б,9,762,762,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 9 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 9
+KR-2026-10-06,А,10,18,18,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 10 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 10
+KR-2026-10-06,Б,10,30,30,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 10 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 10
+KR-2026-10-06,А,11а,157,157,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11а
+KR-2026-10-06,А,11б,234,234,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11б
+KR-2026-10-06,А,11в,289,289,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11в = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11в
+KR-2026-10-06,Б,11а,235,235,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11а = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11а
+KR-2026-10-06,Б,11б,345,345,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11б = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11б
+KR-2026-10-06,Б,11в,389,389,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 11в = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html △11в
+KR-2026-10-06,А,12,20,20,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 12 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 12
+KR-2026-10-06,Б,12,30,30,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/kr_kluch.py ROWS 12 = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/out/SHPARGALKA-KR-06-10.html 12
+ML-2026-10-06,А,1,8,8,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[0] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][0]
+ML-2026-10-06,А,2,136,136,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[1] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][1]
+ML-2026-10-06,А,3,12,12,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[2] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][2]
+ML-2026-10-06,А,4,133,133,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[3] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][3]
+ML-2026-10-06,А,5,168,168,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[4] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][4]
+ML-2026-10-06,А,6,1611,1611,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('А')[5] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['А'][5]
+ML-2026-10-06,Б,1,10,10,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[0] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][0]
+ML-2026-10-06,Б,2,126,126,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[1] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][1]
+ML-2026-10-06,Б,3,12,12,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[2] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][2]
+ML-2026-10-06,Б,4,200,200,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[3] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][3]
+ML-2026-10-06,Б,5,105,105,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[4] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][4]
+ML-2026-10-06,Б,6,806,806,diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/minilistok_06-10_dannye.py kluch('Б')[5] = diskmat-57/2026-08-18_logika-goda-7/iteracii/2026-10-06_kontrolnaya-i-chetnost/raspoznavanie/svod_minilistok_6-10.py K['Б'][5]
