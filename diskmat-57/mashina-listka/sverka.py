@@ -203,7 +203,7 @@ def sverka(papka, db, reshaemost):
                 bez.append((r['rabota_id'], r['punkt']))
             rs, ps = (v[0], v[1]) if v else (0, 0)
             fk = dolya(rs, ps) if v else None
-            err = None if (fk is None or pr is None) else (pr - fk) * 100
+            err = None if (fk is None or pr is None) else round((pr - fk) * 100, 6)   # rounded: exactly 20.0 must not become 20.000000000000004
             cells.append(dict(rabota_id=r['rabota_id'], punkt=r['punkt'], uroven=r['uroven'], avatar=a, prognoz=pr,
                               fakt=fk, pisali=ps, reshili=rs, oshibka_pp=err))
     with open(papka / 'SVERKA.csv', 'w', encoding='utf-8', newline='') as f:
