@@ -57,7 +57,7 @@
 6. *Machine · after the lesson* — `python3 sverka.py <it>`: writes `SVERKA.csv` (item × avatar: forecast, fact, writers, error) and `SVERKA.md` (per avatar: mean absolute error, shift = forecast above/below the fact, share of items in 50–80 % by fact, misses over 20 p.p.), and appends the fact to `reshaemost.csv`. Cells with fewer than two writers are «нет данных», never 0 or 100 %.
 7. *Table* — `python3 tablo.py <it>` is green (rc = 0) when Ф9 and Ф14 are in order.
 
-**New iteration.** `python3 novaya.py <arc> <date> <slug> "<theme>" [<nachalo>]` sets `nachalo` (default `<date>T15:30`, Moscow time — correct it if the pair starts otherwise) and the Ф9/Ф14 artefacts. An old iteration without `nachalo` shows Ф9 red: that is the past gap, not a bug.
+**New iteration.** `python3 novaya.py <arc> <date> <slug> "<theme>" [<nachalo>]` sets `nachalo` (default `<date>T14:00`, Moscow time — correct it if the pair starts otherwise) and the Ф9/Ф14 artefacts. An old iteration without `nachalo` shows Ф9 red: that is the past gap, not a bug.
 
 **The gate in one place** (`tablo.py`). Ф9 is red when: status «не нужно»; no `nachalo`; status «готово» but `proverit --git` is red; the pair has started and `PREDSKAZANIE.csv` is missing, not accepted or not proved by git. Ф14 is red when: status «не нужно»; the export has marks of this iteration's works (works whose date is the date in the folder name) and `SVERKA.md` is missing. No export on the machine ⇒ a visible «не проверено» line, not red. `--bez-zapisi` prints without rewriting `TABLO.md`; `--seychas ГГГГ-ММ-ДДTЧЧ:ММ` sets the clock for tests.
 
@@ -70,7 +70,7 @@
 - `pisali` — children of the avatar who wrote the work: test / homework — status «сдал»; sheet / mini-sheet — at least one «+» on the sheet. `dolya = reshili / pisali`, empty if `pisali` < 2 («нет данных»).
 - **Strict mode: an empty cell of a sheet is «не решил».** «Не брался» and «пробовал, не сдал» are not told apart yet (canon §5.6), so sheets are underestimated and the number is a lower bound.
 - A work with two alternative parts (КР2: ○ and △) counts an item only for those who handed in AND marked something in the item's part (`istochnik` = `vygruzka:chast`; otherwise `vygruzka:strogo`) — else the ○ items would be diluted by children who chose only △.
-- The avatar of a child is the one in the table `avatary` of the export at its checkpoint (`na_datu`), applied to all works — a child who changed the level is counted at the current one. `Н` and the test child are out. `popytki_sred` is empty until attempts are recorded.
+- The avatar of a child is the one he had FOR THIS WORK (owner 11.10 23:05: the level is dynamic, built before every lesson): the row of the table `avatary` (one row per child and checkpoint) with the last `na_datu` **strictly earlier** than the work's date — the level the lesson was planned for; `na_datu` of the row is that checkpoint. A work of the first day of the theme has no earlier checkpoint: everyone is `Н`, its cells are «нет данных» (the run prints how many). `istochnik` = `vygruzka:<strogo|chast>:tochka-ranshe` (`…:net-tochki-ranshe` for such a work). `Н` and the test child are out. `popytki_sred` is empty until attempts are recorded.
 - `sverka.py <it>` upserts by the same key with the same function, so the scale and the sverka cannot disagree.
 
 ## Капсула — что в ней лежит

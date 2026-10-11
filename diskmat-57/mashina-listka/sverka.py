@@ -11,7 +11,9 @@ The fact of a cell (item x avatar) = reshili / pisali, counted by the ONE functi
             A work of two alternative parts (КР ○/△): an item is counted for those who handed in AND marked anything
             in its part (otherwise the ○ items are diluted by children who chose only △).
   reshili - of them, "+" on the item. An empty cell of a sheet = "not solved" (strict mode).
-  The avatar comes from the table `avatary` of the export (СН, Ни, Ц, В); "Н" (too little data) and the test child do not count.
+  The avatar of a child is the one he had FOR THIS WORK: the row of the table `avatary` (one row per child and checkpoint) with the
+  last `na_datu` STRICTLY EARLIER than the work's date - the level the lesson was planned for. A work of the first day of the theme
+  has no such checkpoint: everyone is "Н", all its cells are "нет данных". "Н" (too little data) and the test child do not count.
   Fewer than two writers in an avatar = "нет данных" (an empty share), neither 0 nor 100 %.
 No child appears in the output files, only aggregates per avatar.
 """
@@ -37,10 +39,20 @@ def otkryt(path):
     return sqlite3.connect(f'file:{p}?mode=ro', uri=True)
 
 
-def avatary(db):
-    """{child: avatar} for СН, Ни, Ц, В only, without the test child."""
+def tochka_do(db, data):
+    """ISO date of the last checkpoint of the avatars STRICTLY EARLIER than `data`, '' if there is none."""
+    return db.execute("select coalesce(max(na_datu), '') from avatary where na_datu < ?", (data,)).fetchone()[0]
+
+
+def avatary(db, data):
+    """({child: avatar}, na_datu): the levels at the last checkpoint strictly earlier than `data` (the lesson's date),
+    for СН, Ни, Ц, В only, without the test child. No such checkpoint -> ({}, '')."""
+    na = tochka_do(db, data)
+    if not na:
+        return {}, ''
     test = {r for r, in db.execute("select id from deti where sopostavlenie = 'test'")}
-    return {c: u for c, u in db.execute("select rebyonok, uroven from avatary") if u in AVATARY and c not in test}
+    return {c: u for c, u in db.execute("select rebyonok, uroven from avatary where na_datu = ?", (na,))
+            if u in AVATARY and c not in test}, na
 
 
 def raboty(db, s_daty=None):
@@ -76,11 +88,7 @@ def fakt(db, rid):
     w = rabota(db, rid)
     if w is None:
         sys.exit(f'❗ работы {rid} нет в выгрузке бота')
-    av = avatary(db)
-    na = {}
-    for c, d in db.execute("select rebyonok, na_datu from avatary"):
-        if c in av and d:
-            na[av[c]] = max(na.get(av[c], ''), d)
+    av, na = avatary(db, w['data'])
     pun = punkty_raboty(db, rid)
     plus, vse = {}, {}
     for n, c, o in db.execute("select nomer, rebyonok, otmetka from otmetki where meropriyatie = ?", (rid,)):
@@ -105,7 +113,7 @@ def fakt(db, rid):
             kid = {c for c in pisal if av[c] == a}
             if u in chast:
                 kid = {c for c in kid if vse.get(c, set()) & chast[u]}
-            yach[(n, a)] = (len(kid & plus.get(n, set())), len(kid), na.get(a, ''))
+            yach[(n, a)] = (len(kid & plus.get(n, set())), len(kid), na)
     return pun, yach, ('chast' if chast else 'strogo')
 
 
@@ -115,13 +123,14 @@ def dolya(reshili, pisali):
 
 def stroki_fakta(db, rid):
     pun, yach, rezhim = fakt(db, rid)
+    pravilo = rezhim + (':tochka-ranshe' if tochka_do(db, rabota(db, rid)['data']) else ':net-tochki-ranshe')
     out = []
     for n, u in pun:
         for a in AVATARY:
             r, p, d = yach[(n, a)]
             x = dolya(r, p)
             out.append(dict(rabota_id=rid, punkt=n, uroven_punkta=u, avatar=a, reshili=r, pisali=p,
-                            dolya='' if x is None else f'{x:.4f}', popytki_sred='', na_datu=d, istochnik=f'vygruzka:{rezhim}'))
+                            dolya='' if x is None else f'{x:.4f}', popytki_sred='', na_datu=d, istochnik=f'vygruzka:{pravilo}'))
     return out
 
 
@@ -168,6 +177,10 @@ def shkala(db, reshaemost):
         novye += stroki_fakta(db, w['id'])
     bylo, stalo = zapisat_reshaemost(reshaemost, novye, db)
     print(f'шкала: работ {len(ws)} ({", ".join(w["id"] for w in ws)})')
+    bez = [r for r in novye if not r['na_datu']]
+    malo = [r for r in novye if r['na_datu'] and r['dolya'] == '']
+    print(f'клеток «нет данных»: {len(bez)} из-за первой даты темы (нет точки раньше работы; работы: '
+          f'{", ".join(sorted({r["rabota_id"] for r in bez})) or "—"}), ещё {len(malo)} — писавших меньше {MIN_PISALI}; всего клеток {len(novye)}')
     print(f'строк в {reshaemost}: было {bylo}, записано {len(novye)}, стало {stalo}')
     return novye
 
@@ -217,6 +230,9 @@ def sverka(papka, db, reshaemost):
     md = [f'# Сверка «предсказание → факт» · {papka.name}', '',
           f'Работы: {", ".join(rids)}. Факт — доля «+» среди писавших аватара (пустая клетка = не решил); '
           f'меньше {MIN_PISALI} писавших — «нет данных». Ошибка = прогноз − факт, п. п.: плюс — прогноз выше факта.']
+    tochki = {rid: next((v[2] for (r_, n_, a_), v in fz.items() if r_ == rid), '') for rid in rids}
+    md += ['', 'Уровень аватара — на последней точке строго до даты работы (по нему занятие и планировалось): '
+           + ', '.join(f'{rid} → {t or "точки раньше нет, все «Н»"}' for rid, t in tochki.items()) + '.']
     dok = P.dokazatelstvo_git(papka)
     md += ['', ('✓ ' if dok[0] else '⚠ ') + 'Предсказание ДО урока: ' + dok[1]]
     if bez:

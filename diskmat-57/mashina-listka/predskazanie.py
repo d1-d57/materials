@@ -13,7 +13,7 @@ proverit: every item has all four shares as numbers in [0, 1]; nachalo is set in
   solvability of the ○ and △ track per avatar and warns outside 50-80 %; writes PREDSKAZANIE.md next to the csv.
   --git additionally demands the proof "committed earlier than nachalo" (the table gate uses it).
 The prediction is proved by git: the last commit of PREDSKAZANIE.csv must be earlier than `nachalo` of the pair
-(ITERACIYA.json, "2026-10-13T15:30", Moscow time) and the file must be clean against HEAD.
+(ITERACIYA.json, "2026-10-13T14:00", Moscow time) and the file must be clean against HEAD.
 """
 import csv, json, subprocess, sys
 from datetime import datetime, timedelta, timezone
