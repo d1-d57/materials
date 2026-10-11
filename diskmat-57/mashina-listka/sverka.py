@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
-"""СВЕРКА «предсказание → факт» и ШКАЛА РЕШАЕМОСТИ из истории — общее ядро факта.
+"""SVERKA "prediction -> fact" and the SOLVABILITY SCALE from history; the one shared counter of the fact.
 
-Запуск:
-  python3 sverka.py --shkala                  → bank-7i/reshaemost.csv по всем работам с 22.09 (идемпотентно)
-  python3 sverka.py <папка итерации>          → <папка>/SVERKA.csv, SVERKA.md, факт — в reshaemost.csv
-Ключи:  --vygruzka <db>  (по умолчанию bot-7i/data/vygruzka.db рядом с materials)
-        --reshaemost <csv>  (по умолчанию diskmat-57/bank-7i/reshaemost.csv)
+  python3 sverka.py --shkala                  -> bank-7i/reshaemost.csv for every work since 22.09 (idempotent)
+  python3 sverka.py <iteration folder>        -> <folder>/SVERKA.csv, SVERKA.md; the fact also goes to reshaemost.csv
+  --vygruzka <db>      default: bot-7i/data/vygruzka.db next to materials
+  --reshaemost <csv>   default: diskmat-57/bank-7i/reshaemost.csv
 
-Факт одной клетки (пункт × аватар) = reshili / pisali, считает ОДНА функция fakt() — для шкалы и для сверки.
-  pisali  — дети аватара, писавшие работу: КР/ДЗ — статус «сдал»; листок — хотя бы один «+» на листке.
-            Работа из двух альтернативных частей (КР ○/△): пункт считают те, кто сдал И отметил хоть что-то в его части.
-  reshili — из них «+» на пункте. Пустая клетка листка = «не решил» (строгий режим).
-  Аватар — из таблицы avatary выгрузки (СН · Ни · Ц · В); «Н» (мало данных) и тестовый ребёнок в счёт не идут.
-  Меньше двух писавших в аватаре — «нет данных» (пустая доля), не 0 и не 100 %.
-Детей в выходных файлах нет — только агрегаты по аватару.
+The fact of a cell (item x avatar) = reshili / pisali, counted by the ONE function fakt() for the scale and for the sverka:
+  pisali  - children of the avatar who wrote the work: a test / homework - status "sdal"; a sheet - at least one "+" on it.
+            A work of two alternative parts (КР ○/△): an item is counted for those who handed in AND marked anything
+            in its part (otherwise the ○ items are diluted by children who chose only △).
+  reshili - of them, "+" on the item. An empty cell of a sheet = "not solved" (strict mode).
+  The avatar comes from the table `avatary` of the export (СН, Ни, Ц, В); "Н" (too little data) and the test child do not count.
+  Fewer than two writers in an avatar = "нет данных" (an empty share), neither 0 nor 100 %.
+No child appears in the output files, only aggregates per avatar.
 """
 import argparse, csv, sqlite3, sys
 from pathlib import Path
@@ -23,7 +23,7 @@ MATERIALS = M.parents[1]
 VYGRUZKA = MATERIALS.parent / 'bot-7i' / 'data' / 'vygruzka.db'
 RESHAEMOST = MATERIALS / 'diskmat-57' / 'bank-7i' / 'reshaemost.csv'
 AVATARY = ('СН', 'Ни', 'Ц', 'В')
-S_DATY = '2026-09-22'            # шкала — с первой работы после листка 15.09 (решение владельца 11.10)
+S_DATY = '2026-09-22'            # the scale starts at the first work after the 15.09 sheets (owner, 11.10)
 MIN_PISALI = 2
 POLE = ['rabota_id', 'punkt', 'uroven_punkta', 'avatar', 'reshili', 'pisali', 'dolya', 'popytki_sred', 'na_datu', 'istochnik']
 ZONA = (0.5, 0.8)
@@ -38,13 +38,13 @@ def otkryt(path):
 
 
 def avatary(db):
-    """{ребёнок: аватар} только для СН · Ни · Ц · В, без тестового."""
+    """{child: avatar} for СН, Ни, Ц, В only, without the test child."""
     test = {r for r, in db.execute("select id from deti where sopostavlenie = 'test'")}
     return {c: u for c, u in db.execute("select rebyonok, uroven from avatary") if u in AVATARY and c not in test}
 
 
 def raboty(db, s_daty=None):
-    """Работы выгрузки в порядке занятий: список dict; s_daty — только с этой даты и только с пунктами."""
+    """Works of the export in lesson order, as dicts; only those with items (and, with s_daty, from that date on)."""
     q = ("select m.id, m.data, m.poryadok, m.vid, m.nomer, m.est_sdacha, m.alternativy "
          "from meropriyatiya m where exists (select 1 from punkty p where p.meropriyatie = m.id) ")
     if s_daty:
@@ -62,7 +62,7 @@ def rabota(db, rid):
 
 
 def punkty_raboty(db, rid):
-    """[(пункт, уровень)] в порядке листка."""
+    """[(item, level)] in sheet order."""
     return list(db.execute("select nomer, uroven from punkty where meropriyatie = ? order by poryadok", (rid,)))
 
 
@@ -71,8 +71,8 @@ def otmetki_est(db, rid):
 
 
 def fakt(db, rid):
-    """Единственный счёт факта. Возвращает (пункты, ячейки, режим):
-    пункты — [(пункт, уровень)]; ячейки — {(пункт, аватар): (reshili, pisali, na_datu)}; режим — 'strogo' | 'chast'."""
+    """The only counter of the fact. Returns (items, cells, mode): items - [(item, level)];
+    cells - {(item, avatar): (reshili, pisali, na_datu)}; mode - 'strogo' | 'chast' (alternative parts)."""
     w = rabota(db, rid)
     if w is None:
         sys.exit(f'❗ работы {rid} нет в выгрузке бота')
@@ -94,7 +94,7 @@ def fakt(db, rid):
     else:
         pisal = {c for s in plus.values() for c in s}
     alt = {x for x in (w['alternativy'] or '').split(',') if x}
-    chast = {}                                    # уровень части -> пункты этой части
+    chast = {}                                    # level of a part -> items of that part
     if alt:
         for n, u in pun:
             if u in alt:
@@ -125,6 +125,14 @@ def stroki_fakta(db, rid):
     return out
 
 
+def chislo_dolya(r):
+    """The share of a reshaemost row as a float, None for "нет данных"."""
+    try:
+        return float(r['dolya'])
+    except (ValueError, KeyError, TypeError):
+        return None
+
+
 def chitat_reshaemost(path):
     path = Path(path)
     if not path.exists():
@@ -134,7 +142,7 @@ def chitat_reshaemost(path):
 
 
 def zapisat_reshaemost(path, novye, db):
-    """Вливает novye по ключу (rabota_id, punkt, avatar); порядок — по занятиям выгрузки, дальше прежний. Возвращает (было, стало)."""
+    """Merges `novye` by key (rabota_id, punkt, avatar); order: lessons of the export, then the old order. Returns (was, now)."""
     stare = chitat_reshaemost(path)
     sl = {(r['rabota_id'], r['punkt'], r['avatar']): r for r in stare}
     for r in novye:
