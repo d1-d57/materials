@@ -45,7 +45,9 @@ def chitat(papka):
     if not f.exists():
         return []
     with open(f, encoding='utf-8', newline='') as fh:
-        return list(csv.DictReader(fh))
+        # a short or long hand-edited line must not crash the gate: missing cells become '', extra cells are dropped
+        return [{k: (v or '') if isinstance(v, str) or v is None else '' for k, v in r.items() if k is not None}
+                for r in csv.DictReader(fh)]
 
 
 def nachalo(papka):
@@ -151,8 +153,8 @@ def zagotovka(papka, rids, db, reshaemost):
     print(f'заготовка: {papka / IMYA} — строк {len(itog)} (новых {novye}), доли аватаров пустые: заполнить и прогнать `proverit`')
 
 
-def proverit(papka, db=None, git=False):
-    """Returns (ok, errors, warnings, info). Writes PREDSKAZANIE.md when the sheet is readable."""
+def proverit(papka, db=None, git=False, pisat_md=True):
+    """Returns (ok, errors, warnings, info). Writes PREDSKAZANIE.md when the sheet is readable (unless pisat_md is False)."""
     papka = Path(papka); err, warn, info = [], [], []
     rows = chitat(papka)
     if not (papka / IMYA).exists():
@@ -221,7 +223,8 @@ def proverit(papka, db=None, git=False):
     md += ['', '## Ожидаемая решаемость трека', '', '| аватар | ○ | △ |', '|---|---|---|']
     for a in AV:
         md.append(f'| {a} | ' + ' | '.join('—' if (a, t) not in treki else f'{round(treki[(a, t)] * 100)} %' for t in ('○', '△')) + ' |')
-    (papka / 'PREDSKAZANIE.md').write_text('\n'.join(md) + '\n', encoding='utf-8')
+    if pisat_md:
+        (papka / 'PREDSKAZANIE.md').write_text('\n'.join(md) + '\n', encoding='utf-8')
     return not err, err, warn, info
 
 
