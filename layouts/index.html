@@ -1,0 +1,15 @@
+{{ define "main" }}
+  <header>
+    <h1>{{ .Title }}</h1>
+    <div class="sub">{{ .Params.podvodka }}</div>
+  </header>
+
+  <nav class="list">
+    {{ range hugo.Data.spisok }}
+    <a class="item" href="{{ .ssylka | relURL }}">
+      <span class="ttl">{{ .nazvanie }}</span>
+      <span class="desc">{{ .opisanie }}</span>
+    </a>
+    {{ end }}
+  </nav>
+{{ end }}

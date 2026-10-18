@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Листок по комбинаторике: лемма Холла, теорема Кёнига, согласованные пары и интерактивная модель.">
+<title>Паросочетания и покрытия</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#faf8f3;--fg:#1a1a1a;--accent:#8b2500;--muted:#666;--border:#d4cfc6;--thm-bg:#eae6da;--spoiler-bg:#f3f0e8;--green:#2a5a2a}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.68;color:var(--fg);background:var(--bg);padding:2rem 1.5rem 4rem;max-width:720px;margin:0 auto;text-wrap:pretty}
+  h1{font-size:1.4rem;font-weight:600;text-align:center;margin-bottom:.4rem}
+  .subtitle{font-size:1.05rem;color:var(--muted);margin-bottom:1.4rem}
+  p{margin-bottom:.7rem;orphans:2;widows:2}
+  .def{background:var(--thm-bg);border-left:3px solid var(--accent);padding:.55rem .9rem;margin:.8rem 0;font-size:.93rem}
+  .label{font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.1rem;color:var(--accent)}
+  .problem{margin:.9rem 0 .25rem;font-size:.95rem} .num{font-weight:600;color:var(--accent)}
+  a.ref{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(139,37,0,.25)}
+  a.ref:hover{border-bottom-color:var(--accent)}
+  details{margin:.2rem 0 .8rem;background:var(--spoiler-bg);border:1px solid var(--border);border-radius:3px;font-size:.9rem}
+  details summary{cursor:pointer;padding:.35rem .7rem;color:var(--muted);font-size:.82rem;user-select:none}
+  details summary:hover{color:var(--accent)}
+  details[open] summary{border-bottom:1px solid var(--border)}
+  details .content{padding:.5rem .7rem;line-height:1.6}
+  .sep{border:none;border-top:1px solid var(--border);margin:1.4rem 0}
+  em{font-style:italic} strong{font-weight:600} .small{font-size:.85rem;color:var(--muted)}
+  .def ul{margin:.3rem 0 .1rem 1.1rem;list-style:disc}
+  .def li{margin-bottom:.4rem}
+  .centered{text-align:center;margin:.4rem 0}
+  .fig{text-align:center;margin:1rem 0} .fig svg{max-width:100%;height:auto}
+</style>
+</head>
+<body>
+
+<h1>Паросочетания и покрытия</h1>
+
+<p class="centered subtitle">Ваня Яковлев · <a class="ref" href="https://t.me/turings_crossword">Кроссворд Тьюринга</a></p>
+
+<p class="centered small"><a class="ref" href="matchings.pdf" download>↓ Версия для печати (PDF)</a></p>
+
+<p>Рассмотрим семейство подмножеств S₁, …, Sₙ конечного множества X. Когда из Sᵢ можно выбрать по элементу так, чтобы выбранные элементы были различны? Естественно, должно выполняться следующее:</p>
+
+<div class="def">
+<span class="label">Условие Холла:</span>
+объединение любых k множеств семейства содержит не менее k элементов.
+</div>
+
+<p>В <a class="ref" href="#hall">задаче 8</a> мы докажем Лемму Холла: условие Холла не только необходимо, но и достаточно.</p>
+
+<p>Построим двудольный граф G = (A ∪ B, E): вершины A отвечают множествам Sᵢ, вершины B элементам X, ребро проводится если элемент принадлежит множеству.</p>
+
+<div class="def">
+<span class="label">Определение.</span>
+Рассмотрим двудольный граф G.
+<ul>
+<li><strong>Паросочетание</strong> в G — множество рёбер без общих концов.</li>
+<li><strong>Вершинное покрытие</strong> — множество вершин C ⊆ A ∪ B, содержащее хотя бы один конец каждого ребра.</li>
+</ul>
+</div>
+
+<p>Теперь можно забыть про подмножества и сформулировать задачу для произвольного двудольного графа.</p>
+
+<div class="problem"><span class="num">1.</span> а) Переформулируйте задачу о выборе различных представителей в терминах паросочетаний.
+<br>б) Переформулируйте условие Холла в терминах покрытий и докажите, что оно необходимо.</div>
+
+<details><summary>Решение (а)</summary><div class="content">
+Набор различных представителей — паросочетание, покрывающее A.
+</div></details>
+
+<details><summary>Решение (б)</summary><div class="content">
+Условие Холла на языке графа: |N(S)| ≥ |S| для всякого S ⊆ A. Эквивалентность с покрытиями: если τ &lt; |A|, покрытие C с |C| &lt; |A| оставляет S = A \ C с |N(S)| ≤ |C ∩ B| = |C| − |C ∩ A| ≤ |C| − (|A| − |S|), откуда |N(S)| &lt; |S|. Необходимость: если M покрывает A, то рёбра M из S ведут в |S| различных вершин N(S), значит |N(S)| ≥ |S|.
+</div></details>
+
+<p>Обозначим за ν(G) размер максимального паросочетания, за τ(G) — минимального вершинного покрытия.</p>
+
+<div class="problem"><span class="num">2.</span> а) Докажите, что ν(G) ≤ τ(G) для любого графа.
+<br>б) Приведите пример графа, в котором ν(G) &lt; τ(G).</div>
+
+<details><summary>Решение (а)</summary><div class="content">
+Каждое ребро M покрыто отдельной вершиной C, значит |C| ≥ |M| и τ ≥ ν.
+</div></details>
+
+<details><summary>Решение (б)</summary><div class="content">
+Треугольник C₃: ν = 1, τ = 2.
+</div></details>
+
+<p>В <a class="ref" href="#concordant">задачах 3</a>–<a class="ref" href="#konig">7</a> мы докажем, что в двудольном графе ν(G) = τ(G), и выведем из этого Лемму Холла.</p>
+
+<hr class="sep">
+
+<div class="def">
+<span class="label">Определение.</span>
+Паросочетание M и вершинное покрытие C <strong>согласованны</strong>, если из каждого ребра M ровно один конец лежит в C. <strong>Дефектом</strong> пары (M, C) называется число f = |C| − |M|.
+</div>
+
+<div class="problem" id="concordant"><span class="num">3.</span> Покажите, что дефект равен числу свободных вершин в C.</div>
+
+<details><summary>Решение</summary><div class="content">
+Каждое ребро M вносит в C ровно одну вершину (по согласованности): вклад |M|. Остальные вершины C — свободные. Значит f = |C| − |M| = число свободных вершин в C.
+</div></details>
+
+<div class="problem"><span class="num">4.</span> В интерактивной модели ниже можно менять паросочетание (клик по ребру) и покрытие (клик по вершине). Уменьшите дефект пары, изменив только паросочетание или только покрытие. Постарайтесь изменить как можно меньше рёбер или вершин.</div>
+
+<style>
+  .w-widget{display:flex;gap:1.5rem;align-items:flex-start;margin:.8rem 0 1rem;padding:.7rem;background:#f7f5f0;border:1px solid var(--border);border-radius:5px}
+  .w-graph svg{cursor:default;display:block}
+  .w-edge-hit{stroke:transparent;stroke-width:14;fill:none;cursor:pointer}
+  .w-edge-vis{fill:none;stroke:#b8b8b8;stroke-width:1;pointer-events:none;transition:stroke .15s,stroke-width .15s}
+  .w-edge-vis.w-in-m{stroke:#222;stroke-width:2.2}
+  .w-edge-vis.w-hl{stroke:#c04040;stroke-width:2.4}
+  .w-edge-ghost{fill:none;stroke:#222;stroke-width:2.2;stroke-dasharray:4,3;pointer-events:none;opacity:.35}
+  .w-edge-added{fill:none;stroke:#2a7a2a;stroke-width:2.2;pointer-events:none}
+  .w-edge-group:hover .w-edge-vis:not(.w-in-m):not(.w-edge-added){stroke:#888;stroke-width:1.4}
+  .w-cover-ring{fill:none;stroke:var(--accent);stroke-width:1.7;opacity:0;transition:opacity .15s}
+  .w-cover-ring.w-act{opacity:1}
+  .w-cover-ghost{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3,2.5;opacity:.4;pointer-events:none}
+  .w-cover-new{fill:none;stroke:#2a7a2a;stroke-width:1.7;opacity:0;transition:opacity .15s}
+  .w-cover-new.w-act{opacity:1}
+  .w-vtx{fill:#fff;stroke:#aaa;stroke-width:.8;cursor:pointer;transition:stroke .15s}
+  .w-vtx:hover{stroke:#666}
+  .w-vhl{fill:rgba(180,50,40,.16);stroke:none;opacity:0;pointer-events:none}
+  .w-vhl.w-act{opacity:1}
+  .w-vlbl{font-family:'Source Serif 4',Georgia,serif;font-size:11px;fill:#444;pointer-events:none;user-select:none}
+  .w-badge{font-family:'Source Serif 4',Georgia,serif;font-size:9.5px;fill:#b04030;font-weight:600;pointer-events:none;user-select:none}
+  .w-status{min-width:190px;padding-top:.2rem}
+  .w-row{display:flex;align-items:center;gap:.45rem;padding:.3rem .45rem;margin-bottom:.1rem;border-radius:4px;cursor:pointer;user-select:none;transition:background .12s;font-size:.88rem;line-height:1.4}
+  .w-row:hover{background:rgba(0,0,0,.035)}
+  .w-row.w-ahl{background:rgba(165,58,42,.1)}
+  .w-ico{flex-shrink:0;width:1em;text-align:center;font-size:.9rem}
+  .w-ico.w-ok{color:#3a7a3a}.w-ico.w-fail{color:#b04030}
+  .w-def{margin-top:.5rem;padding:.3rem .45rem;font-size:.88rem}
+  .w-defv{font-weight:600}
+  .w-btn{margin-top:.8rem;padding:.35rem .8rem;font-family:'Source Serif 4',Georgia,serif;font-size:.84rem;color:var(--fg);background:transparent;border:1px solid var(--border);border-radius:4px;cursor:pointer;transition:border-color .15s,background .15s}
+  .w-btn:hover{border-color:#aaa;background:rgba(0,0,0,.03)}
+</style>
+
+<div class="w-widget">
+  <div class="w-graph"><svg id="wg" width="280" height="295" viewBox="0 0 280 295"></svg></div>
+  <div class="w-status">
+    <div class="w-row" data-wc="matching" id="wr-m"><span class="w-ico" id="wi-m"></span><span><i>M</i> — паросочетание</span></div>
+    <div class="w-row" data-wc="cover" id="wr-c"><span class="w-ico" id="wi-c"></span><span><i>C</i> — покрытие</span></div>
+    <div class="w-row" data-wc="concordant" id="wr-x"><span class="w-ico" id="wi-x"></span><span>(<i>M</i>,&thinsp;<i>C</i>) согласована</span></div>
+    <div class="w-def">Дефект: <i>f</i>&thinsp;=&thinsp;<span class="w-defv" id="wd"></span></div>
+    <button class="w-btn" id="wb">Новый пример</button>
+  </div>
+</div>
+
+<script>
+(function(){
+const N=4,SUB=['₁','₂','₃','₄'],SVG_NS='http://www.w3.org/2000/svg';
+let edges=[],cover=[],initM=[],initCover=[],hlMode=null;
+const svg=document.getElementById('wg');
+const pos=[];
+for(let i=0;i<4;i++)pos.push({x:50,y:38+i*66});
+for(let i=0;i<4;i++)pos.push({x:230,y:38+i*66});
+
+function wc(a,w){const r=Math.random();let c=0;for(let i=0;i<a.length;i++){c+=w[i];if(r<c)return a[i]}return a[a.length-1]}
+function sh(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function gen(){for(let t=0;t<30;t++){const r=tryGen();if(r)return r}return tryGen(true)}
+function tryGen(rlx){
+  const k=wc([1,2,3],[.15,.45,.4]),f=(k===3)?1:wc([1,2],[.6,.4]),pr=wc([.1,.25,.4,.6],[.25,.25,.25,.25]);
+  const aV=sh([0,1,2,3]).slice(0,k),bV=sh([0,1,2,3]).slice(0,k),mE=[];
+  for(let i=0;i<k;i++)mE.push({a:aV[i],b:bV[i]});
+  const cv=Array(8).fill(false),cM=new Set();
+  for(const e of mE){cM.add(e.a);cM.add(e.b+4);if(Math.random()<.5)cv[e.a]=true;else cv[e.b+4]=true}
+  const fv=[];for(let i=0;i<8;i++)if(!cM.has(i))fv.push(i);sh(fv);
+  const af=Math.min(f,fv.length);if(af<1)return null;
+  for(let i=0;i<af;i++)cv[fv[i]]=true;
+  const eL=[],eS=new Set();
+  for(const e of mE){eL.push({a:e.a,b:e.b,inM:true});eS.add(e.a*4+e.b)}
+  for(let a=0;a<4;a++)for(let b=0;b<4;b++){if(eS.has(a*4+b))continue;if(!cv[a]&&!cv[b+4])continue;if(Math.random()<pr){eL.push({a,b,inM:false});eS.add(a*4+b)}}
+  const mn=Math.max(4,k+3);
+  if(eL.length<mn){const cd=[];for(let a=0;a<4;a++)for(let b=0;b<4;b++)if(!eS.has(a*4+b)&&(cv[a]||cv[b+4]))cd.push({a,b});sh(cd);for(const c of cd){if(eL.length>=mn)break;eL.push({a:c.a,b:c.b,inM:false});eS.add(c.a*4+c.b)}}
+  if(!rlx){if(eL.length<4||eL.length>14)return null;if(eL.filter(e=>!e.inM).length<1)return null}
+  return{edges:eL,cover:cv}
+}
+
+function snapshot(){initM=edges.map(e=>e.inM);initCover=[...cover]}
+
+function chkM(){const m=edges.filter(e=>e.inM),vc={};for(const e of m){const ka='a'+e.a,kb='b'+e.b;vc[ka]=(vc[ka]||0)+1;vc[kb]=(vc[kb]||0)+1}const bk=new Set();for(const[k,v]of Object.entries(vc))if(v>1)bk.add(k);return{ok:!bk.size,be:bk.size?m.filter(e=>bk.has('a'+e.a)||bk.has('b'+e.b)):[],bv:bk}}
+function chkC(){const u=edges.filter(e=>!cover[e.a]&&!cover[e.b+4]);return{ok:!u.length,be:u}}
+function chkX(){const m=edges.filter(e=>e.inM),b=[];for(const e of m){const c=(cover[e.a]?1:0)+(cover[e.b+4]?1:0);if(c!==1)b.push({edge:e,count:c})}return{ok:!b.length,bi:b}}
+function defect(){return cover.filter(Boolean).length-edges.filter(e=>e.inM).length}
+
+function render(){
+  svg.innerHTML='';const mR=chkM(),cR=chkC(),xR=chkX();
+  // Ghost layer: removed M-edges shown dashed
+  for(let i=0;i<edges.length;i++){
+    if(initM[i]&&!edges[i].inM){
+      const e=edges[i],pa=pos[e.a],pb=pos[e.b+4];
+      const gh=document.createElementNS(SVG_NS,'line');
+      gh.setAttribute('x1',pa.x);gh.setAttribute('y1',pa.y);gh.setAttribute('x2',pb.x);gh.setAttribute('y2',pb.y);
+      gh.classList.add('w-edge-ghost');svg.appendChild(gh);
+    }
+  }
+  // Edges
+  for(let i=0;i<edges.length;i++){const e=edges[i],pa=pos[e.a],pb=pos[e.b+4],g=document.createElementNS(SVG_NS,'g');g.classList.add('w-edge-group');
+    const v=document.createElementNS(SVG_NS,'line');v.setAttribute('x1',pa.x);v.setAttribute('y1',pa.y);v.setAttribute('x2',pb.x);v.setAttribute('y2',pb.y);v.classList.add('w-edge-vis');
+    if(e.inM){if(!initM[i])v.classList.add('w-edge-added');else v.classList.add('w-in-m')}
+    let hl=false;if(hlMode==='matching'&&mR.be.includes(e))hl=true;if(hlMode==='cover'&&cR.be.includes(e))hl=true;if(hlMode==='concordant'&&xR.bi.some(b=>b.edge===e))hl=true;if(hl)v.classList.add('w-hl');g.appendChild(v);
+    const h=document.createElementNS(SVG_NS,'line');h.setAttribute('x1',pa.x);h.setAttribute('y1',pa.y);h.setAttribute('x2',pb.x);h.setAttribute('y2',pb.y);h.classList.add('w-edge-hit');h.addEventListener('click',()=>{edges[i].inM=!edges[i].inM;render()});g.appendChild(h);
+    if(hlMode==='concordant'){const info=xR.bi.find(b=>b.edge===e);if(info){const mx=(pa.x+pb.x)/2,my=(pa.y+pb.y)/2,dx=pb.x-pa.x,dy=pb.y-pa.y,ln=Math.sqrt(dx*dx+dy*dy)||1,nx=-dy/ln*9,ny=dx/ln*9;const t=document.createElementNS(SVG_NS,'text');t.setAttribute('x',mx+nx);t.setAttribute('y',my+ny+3);t.setAttribute('text-anchor','middle');t.classList.add('w-badge');t.textContent=info.count.toString();g.appendChild(t)}}
+    svg.appendChild(g)}
+  // Vertices
+  for(let i=0;i<8;i++){const p=pos[i],g=document.createElementNS(SVG_NS,'g');
+    const hl=document.createElementNS(SVG_NS,'circle');hl.setAttribute('cx',p.x);hl.setAttribute('cy',p.y);hl.setAttribute('r',13);hl.classList.add('w-vhl');if(hlMode==='matching'){const key=(i<4?'a':'b')+(i<4?i:i-4);if(mR.bv.has(key))hl.classList.add('w-act')}g.appendChild(hl);
+    // Ghost ring: was in cover, now removed
+    if(initCover[i]&&!cover[i]){const gh=document.createElementNS(SVG_NS,'circle');gh.setAttribute('cx',p.x);gh.setAttribute('cy',p.y);gh.setAttribute('r',12);gh.classList.add('w-cover-ghost');g.appendChild(gh)}
+    // Current cover ring (original = accent, new = green)
+    if(cover[i]&&!initCover[i]){const rn=document.createElementNS(SVG_NS,'circle');rn.setAttribute('cx',p.x);rn.setAttribute('cy',p.y);rn.setAttribute('r',12);rn.classList.add('w-cover-new','w-act');g.appendChild(rn)}
+    else{const rn=document.createElementNS(SVG_NS,'circle');rn.setAttribute('cx',p.x);rn.setAttribute('cy',p.y);rn.setAttribute('r',12);rn.classList.add('w-cover-ring');if(cover[i])rn.classList.add('w-act');g.appendChild(rn)}
+    const cr=document.createElementNS(SVG_NS,'circle');cr.setAttribute('cx',p.x);cr.setAttribute('cy',p.y);cr.setAttribute('r',6);cr.classList.add('w-vtx');cr.addEventListener('click',()=>{cover[i]=!cover[i];render()});g.appendChild(cr);
+    const lb=document.createElementNS(SVG_NS,'text');lb.classList.add('w-vlbl');lb.setAttribute('y',p.y+4);if(i<4){lb.setAttribute('x',p.x-16);lb.setAttribute('text-anchor','end');lb.textContent='a'+SUB[i]}else{lb.setAttribute('x',p.x+16);lb.setAttribute('text-anchor','start');lb.textContent='b'+SUB[i-4]}g.appendChild(lb);svg.appendChild(g)}
+  si('m',mR.ok);si('c',cR.ok);si('x',xR.ok);document.getElementById('wd').textContent=defect();
+  document.querySelectorAll('.w-row').forEach(r=>r.classList.toggle('w-ahl',r.dataset.wc===hlMode))
+}
+function si(n,ok){const e=document.getElementById('wi-'+n);e.textContent=ok?'✓':'✗';e.className='w-ico '+(ok?'w-ok':'w-fail')}
+document.querySelectorAll('.w-row').forEach(r=>r.addEventListener('click',()=>{const m=r.dataset.wc;hlMode=(hlMode===m)?null:m;render()}));
+document.getElementById('wb').addEventListener('click',()=>{hlMode=null;const ex=gen();edges=ex.edges;cover=[...ex.cover];snapshot();render()});
+(function(){const ex=gen();edges=ex.edges;cover=[...ex.cover];snapshot();render()})();
+})();
+</script>
+
+<p>Добавление ребра или удаление вершины запускает цепную реакцию перестроек. Если она останавливается, получается новая согласованная пара с меньшим дефектом. Формализуем эти операции.</p>
+
+<div class="def">
+<span class="label">Определение.</span>
+Рассмотрим согласованную пару (M, C).
+<ul>
+<li>Рассмотрим путь в G нечётной длины, рёбра которого поочерёдно принадлежат M̄ и M, вершины чередуются между C и V \ C, а оба конца свободны. Положим M<sub>P</sub> = M △ E(P).</li>
+<li>Рассмотрим независимое подмножество S ⊆ C такое, что каждое M̄-ребро из S в V \ C продолжается M-ребром обратно в S. Положим C<sub>S</sub> = (C \ S) ∪ {M-партнёры вершин S}.</li>
+</ul>
+</div>
+
+<div class="fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 600" font-family="'Source Serif 4',Georgia,serif">
+<defs>
+  <marker id="arr" viewBox="0 0 8 6" refX="7" refY="3" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#b5651a" stroke="none"/></marker>
+</defs>
+<style>
+  .e-bg{stroke:#d6d6d6;stroke-width:.6;fill:none}.e-m{stroke:#2e2e2e;stroke-width:1.4;fill:none}.e-mf{stroke:#ddd;stroke-width:.5;fill:none}.v{fill:#fff;stroke:#aaa;stroke-width:.65}.rc{fill:none;stroke:#b04030;stroke-width:1.4}.rs{fill:none;stroke:#2e6aab;stroke-width:1.4}.la{font-size:9px;fill:#444;text-anchor:end}.lb{font-size:9px;fill:#444;text-anchor:start}.tt{font-size:10px;fill:#555;text-anchor:middle}.e-s{stroke:#2e6aab;stroke-width:1.2;fill:none}.br{fill:none;stroke:#2e6aab;stroke-width:.7}.bl{font-size:9.5px;fill:#2e6aab;font-style:italic;text-anchor:middle}
+</style>
+
+<line x1="30" y1="305" x2="610" y2="305" stroke="#e8e8e8" stroke-width=".4"/>
+
+<!-- Augmentation: before -->
+<g transform="translate(15,12)">
+  <line x1="45" y1="28" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="155" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="215" class="e-m"/>
+  <line x1="45" y1="155" x2="215" y2="155" class="e-m"/>
+  <line x1="45" y1="90" x2="215" y2="95" class="e-m"/>
+  <!-- path arrows -->
+  <line x1="45" y1="215" x2="215" y2="155" stroke="#b5651a" stroke-width="1.6" fill="none" marker-end="url(#arr)" opacity=".7"/>
+  <line x1="215" y1="155" x2="50" y2="155" stroke="#b5651a" stroke-width="1.6" fill="none" marker-end="url(#arr)" opacity=".7"/>
+  <line x1="45" y1="155" x2="215" y2="95" stroke="#b5651a" stroke-width="1.6" fill="none" marker-end="url(#arr)" opacity=".7"/>
+  <line x1="215" y1="95" x2="50" y2="90" stroke="#b5651a" stroke-width="1.6" fill="none" marker-end="url(#arr)" opacity=".7"/>
+  <line x1="45" y1="90" x2="215" y2="38" stroke="#b5651a" stroke-width="1.6" fill="none" marker-end="url(#arr)" opacity=".7"/>
+  <text x="58" y="227" font-size="9" fill="#b5651a" font-style="italic" font-weight="600">P</text>
+  <circle cx="215" cy="38" r="3.5" class="v"/><circle cx="215" cy="95" r="3.5" class="v"/><circle cx="215" cy="155" r="3.5" class="v"/><circle cx="215" cy="215" r="3.5" class="v"/>
+  <text x="226" y="42" class="lb">b₁</text><text x="226" y="99" class="lb">b₂</text><text x="226" y="159" class="lb">b₃</text><text x="226" y="219" class="lb">b₄</text>
+  <circle cx="45" cy="28" r="6.5" class="rc"/><circle cx="45" cy="28" r="3.5" class="v"/><text x="33" y="32" class="la">a₁</text>
+  <circle cx="45" cy="90" r="6.5" class="rc"/><circle cx="45" cy="90" r="3.5" class="v"/><text x="33" y="94" class="la">a₂</text>
+  <circle cx="45" cy="155" r="6.5" class="rc"/><circle cx="45" cy="155" r="3.5" class="v"/><text x="33" y="159" class="la">a₃</text>
+  <circle cx="45" cy="215" r="6.5" class="rc"/><circle cx="45" cy="215" r="3.5" class="v"/><text x="33" y="219" class="la">a₄</text>
+</g>
+
+<!-- Augmentation: after -->
+<g transform="translate(330,12)">
+  <line x1="45" y1="28" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="155" class="e-bg"/>
+  <line x1="45" y1="155" x2="215" y2="155" class="e-mf"/>
+  <line x1="45" y1="90" x2="215" y2="95" class="e-mf"/>
+  <line x1="45" y1="28" x2="215" y2="215" class="e-m"/>
+  <line x1="45" y1="215" x2="215" y2="155" class="e-m"/>
+  <line x1="45" y1="155" x2="215" y2="95" class="e-m"/>
+  <line x1="45" y1="90" x2="215" y2="38" class="e-m"/>
+  <circle cx="215" cy="38" r="3.5" class="v"/><circle cx="215" cy="95" r="3.5" class="v"/><circle cx="215" cy="155" r="3.5" class="v"/><circle cx="215" cy="215" r="3.5" class="v"/>
+  <text x="226" y="42" class="lb">b₁</text><text x="226" y="99" class="lb">b₂</text><text x="226" y="159" class="lb">b₃</text><text x="226" y="219" class="lb">b₄</text>
+  <circle cx="45" cy="28" r="6.5" class="rc"/><circle cx="45" cy="28" r="3.5" class="v"/><text x="33" y="32" class="la">a₁</text>
+  <circle cx="45" cy="90" r="6.5" class="rc"/><circle cx="45" cy="90" r="3.5" class="v"/><text x="33" y="94" class="la">a₂</text>
+  <circle cx="45" cy="155" r="6.5" class="rc"/><circle cx="45" cy="155" r="3.5" class="v"/><text x="33" y="159" class="la">a₃</text>
+  <circle cx="45" cy="215" r="6.5" class="rc"/><circle cx="45" cy="215" r="3.5" class="v"/><text x="33" y="219" class="la">a₄</text>
+</g>
+
+<!-- Switching: before -->
+<g transform="translate(15,318)">
+  <line x1="45" y1="90" x2="215" y2="38" class="e-bg"/>
+  <line x1="45" y1="215" x2="215" y2="38" class="e-bg"/>
+  <line x1="45" y1="215" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="38" class="e-m"/>
+  <line x1="45" y1="90" x2="215" y2="95" class="e-m"/>
+  <line x1="45" y1="215" x2="215" y2="215" class="e-m"/>
+  <line x1="45" y1="150" x2="215" y2="38" class="e-s"/>
+  <line x1="45" y1="150" x2="215" y2="95" class="e-s"/>
+  <line x1="45" y1="28" x2="215" y2="95" class="e-s"/>
+  <path d="M 25 21 Q 20 21,20 26 L 20 84 Q 20 90,16 90 Q 20 90,20 96 L 20 144 Q 20 149,25 149" class="br"/>
+  <text x="9" y="88" class="bl">S</text>
+  <circle cx="215" cy="38" r="3.5" class="v"/><circle cx="215" cy="95" r="3.5" class="v"/><circle cx="215" cy="215" r="3.5" class="v"/>
+  <text x="226" y="42" class="lb">b₁</text><text x="226" y="99" class="lb">b₂</text><text x="226" y="219" class="lb">b₃</text>
+  <circle cx="45" cy="28" r="6.5" class="rs"/><circle cx="45" cy="28" r="3.5" class="v"/><text x="33" y="32" class="la">a₁</text>
+  <circle cx="45" cy="90" r="6.5" class="rs"/><circle cx="45" cy="90" r="3.5" class="v"/><text x="33" y="94" class="la">a₂</text>
+  <circle cx="45" cy="150" r="6.5" class="rs"/><circle cx="45" cy="150" r="3.5" class="v"/><text x="33" y="154" class="la">a₄</text>
+  <circle cx="45" cy="215" r="6.5" class="rc"/><circle cx="45" cy="215" r="3.5" class="v"/><text x="33" y="219" class="la">a₃</text>
+</g>
+
+<!-- Switching: after -->
+<g transform="translate(330,318)">
+  <line x1="45" y1="150" x2="215" y2="38" class="e-bg"/>
+  <line x1="45" y1="150" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="90" x2="215" y2="38" class="e-bg"/>
+  <line x1="45" y1="215" x2="215" y2="38" class="e-bg"/>
+  <line x1="45" y1="215" x2="215" y2="95" class="e-bg"/>
+  <line x1="45" y1="28" x2="215" y2="38" class="e-m"/>
+  <line x1="45" y1="90" x2="215" y2="95" class="e-m"/>
+  <line x1="45" y1="215" x2="215" y2="215" class="e-m"/>
+  <circle cx="215" cy="38" r="6.5" class="rc"/><circle cx="215" cy="38" r="3.5" class="v"/><text x="226" y="42" class="lb">b₁</text>
+  <circle cx="215" cy="95" r="6.5" class="rc"/><circle cx="215" cy="95" r="3.5" class="v"/><text x="226" y="99" class="lb">b₂</text>
+  <circle cx="215" cy="215" r="3.5" class="v"/><text x="226" y="219" class="lb">b₃</text>
+  <circle cx="45" cy="28" r="3.5" class="v"/><text x="33" y="32" class="la">a₁</text>
+  <circle cx="45" cy="90" r="3.5" class="v"/><text x="33" y="94" class="la">a₂</text>
+  <circle cx="45" cy="150" r="3.5" class="v"/><text x="33" y="154" class="la">a₄</text>
+  <circle cx="45" cy="215" r="6.5" class="rc"/><circle cx="45" cy="215" r="3.5" class="v"/><text x="33" y="219" class="la">a₃</text>
+</g>
+</svg>
+</div>
+
+<div class="problem"><span class="num">5.</span> Покажите, что обе операции дают согласованную пару. Как меняется дефект?</div>
+
+<details><summary>Решение (операция 1)</summary><div class="content">
+M<sub>P</sub> — паросочетание, |M<sub>P</sub>| = |M| + 1 (на P на одно M̄-ребро больше). Новые M<sub>P</sub>-рёбра (M̄-рёбра P) имеют один конец в C, другой вне C (чередование вершин). C не изменилось. Дефект: f − 1.
+</div></details>
+
+<details><summary>Решение (операция 2)</summary><div class="content">
+В каждом M-ребре с концом s ∈ S представитель сменился на M-партнёра; свободные вершины S удалены. |C<sub>S</sub>| = |C| − k, где k — число свободных вершин в S. Покрытие: ребро sv, s ∈ S, v ∉ C. Если sv ∈ M: v = M-партнёр s, v ∈ C<sub>S</sub>. Если sv ∈ M̄: по условию ∃w ∈ S с vw ∈ M, v ∈ C<sub>S</sub>. Рёбер внутри S нет (S независимо). Дефект: f − k.
+</div></details>
+
+<div class="problem"><span class="num">6.</span> а) Докажите, что для согласованной пары с f > 0 применима одна из операций, уменьшающая дефект.</p>
+
+<details><summary>Указание</summary><div class="content">
+Рассмотрите множество вершин, достижимых из свободной вершины по чередующимся путям.
+</div></details>
+
+<p>б) <strong>Лемма Берже.</strong> Паросочетание максимально тогда и только тогда, когда к нему не применима операция 1.</p>
+</div>
+
+<details><summary>Решение (а)</summary><div class="content">
+<p>Пусть v₀ ∈ C — свободная. Рассмотрим Z — множество вершин, достижимых из v₀ по путям с чередованием рёбер (M̄, M, …) и вершин (C, V\C, …). Положим S = Z ∩ C.</p>
+<p>S независимо (Z ∩ C лежит в одной доле по двудольности и чередованию). Условие операции 2: M̄-ребро sv, s ∈ S, v ∉ C ⟹ v ∈ Z. Если v покрыта M-ребром vw ⟹ w ∈ Z ∩ C = S. Условие выполнено.</p>
+<p>Если v свободна ⟹ путь из v₀ в v — допустимый для операции 1.</p>
+<p>Итого: нет свободных в Z \ C → операция 2 (k ≥ 1); есть → операция 1.</p>
+</div></details>
+
+<details><summary>Решение (б)</summary><div class="content">
+<p>⟹: если допустимый путь P существует, M △ E(P) — паросочетание размера |M| + 1.</p>
+<p>⟸: допустимых путей нет. Берём согласованную пару (M, C). Если f > 0, по (а) применима одна из операций. Операция 1 невозможна. Значит применима операция 2, уменьшающая дефект. Повторяем, пока f = 0. Тогда |M| = |C| ≥ τ ≥ ν ≥ |M|, M максимально.</p>
+</div></details>
+
+<div class="problem" id="konig"><span class="num">7.</span> <strong>Теорема Кёнига.</strong> Докажите, что в двудольном графе выполняется ν(G) = τ(G).</div>
+
+<details><summary>Решение</summary><div class="content">
+ν ≤ τ очевидно. Согласованные пары существуют (M = ∅, C = A). Среди всех согласованных пар выберем пару с наименьшим дефектом. Если f > 0, по задаче 6а дефект можно уменьшить — противоречие. Значит f = 0, и τ ≤ |C| = |M| ≤ ν.
+</div></details>
+
+<div class="problem" id="hall"><span class="num">8.</span> Для S ⊆ A обозначим N(S) — множество вершин B, смежных хотя бы с одной вершиной из S.
+<br>а) Докажите, что τ(G) = |A| − max<sub>S⊆A</sub>(|S| − |N(S)|).
+<br>б) Докажите, что если |N(S)| ≥ |S| для всякого S ⊆ A, то существует паросочетание, покрывающее A.
+<br>в) <strong>Лемма Холла.</strong> Если условие Холла выполняется, то существует паросочетание, покрывающее A.</div>
+
+<details><summary>Решение (а)</summary><div class="content">
+Покрытие C оптимально при C = (A \ S) ∪ N(S). Минимальное: τ = min<sub>S⊆A</sub>(|A \ S| + |N(S)|) = |A| − max<sub>S⊆A</sub>(|S| − |N(S)|).
+</div></details>
+
+<details><summary>Решение (б)</summary><div class="content">
+Если |N(S)| ≥ |S| для всех S ⊆ A, то max(|S| − |N(S)|) = 0, τ = |A|. По Кёнигу ν = τ = |A|.
+</div></details>
+
+<details><summary>Решение (в)</summary><div class="content">
+Условие Холла: |N(S)| ≥ |S| для всякого S ⊆ A (задача 1б). Частный случай (б).
+</div></details>
+
+<hr class="sep">
+
+<div class="problem"><span class="num">9.</span> Клетки доски n × n покрашены в чёрный и белый, причём в каждой строке и каждом столбце закрашено r клеток. Докажите, что на закрашенные клетки можно поставить n ладей, чтобы они не били друг друга.</div>
+
+<details><summary>Решение</summary><div class="content">
+Двудольный граф: A = строки, B = столбцы, ребро (i, j) ⟺ клетка (i, j) закрашена. Каждая вершина имеет степень r. Для S ⊆ A из S выходит r|S| рёбер, каждая вершина B принимает ≤ r, значит |N(S)| ≥ |S|. По лемме Холла существует паросочетание, покрывающее A.
+</div></details>
+
+<div class="problem"><span class="num">10<span style="color:var(--accent)">*</span>.</span> Рассмотрим множество X из n элементов.
+<br>а) Докажите, что все подмножества X можно разбить на C(n, ⌊n/2⌋) последовательностей, в которых каждое следующее подмножество содержит предыдущее.
+<br>б) Какое наибольшее число подмножеств X можно выбрать, чтобы ни одно из них не содержалось в другом?
+<br>в) Функция f из подмножеств X в {0, 1} монотонна, если из Y ⊆ Z следует f(Y) ≤ f(Z). Докажите, что
+<span class="centered">2 + 2<sup>m</sup> &lt; число монотонных функций &lt; 2 + n<sup>m</sup>, где m = C(n, ⌊n/2⌋).</span></p>
+</div>
+
+<details><summary>Решение (а)</summary><div class="content">
+Разобьём подмножества на слои Lᵢ = {подмножества размера i}. Для i &lt; n/2 строим паросочетание Lᵢ → Lᵢ₊₁: каждая вершина Lᵢ имеет n − i соседей в Lᵢ₊₁, каждая вершина Lᵢ₊₁ имеет i + 1 сосед в Lᵢ. Условие Холла: k вершин из Lᵢ инцидентны k(n − i) рёбрам; если соседей менее k, то рёбер ≤ (k − 1)(i + 1) &lt; k(n − i). Аналогично для i ≥ n/2. Склеивая, получаем C(n, ⌊n/2⌋) цепей.
+</div></details>
+
+<details><summary>Решение (б)</summary><div class="content">
+Антицепь пересекает каждую цепь не более чем в одном элементе: |антицепь| ≤ m. Подмножества размера ⌊n/2⌋ дают антицепь размера m.
+</div></details>
+
+<details><summary>Решение (в)</summary><div class="content">
+<em>Нижняя оценка:</em> положим f = 0 на слоях ниже среднего, f = 1 выше, на среднем — произвольно: 2<sup>m</sup> нeконстантных функций + 2 константы. <em>Верхняя оценка:</em> неконстантная f на цепи из ≤ n + 1 вершин определяется моментом переключения с 0 на 1: не более n вариантов на цепь. Итого не более n<sup>m</sup> + 2.
+</div></details>
+
+<div class="problem"><span class="num">11.</span> <strong>Перманент</strong> квадратной матрицы A = (a<sub>ij</sub>) размера n × n — это число per A = ∑<sub>σ∈S<sub>n</sub></sub> a<sub>1σ₁</sub> · a<sub>2σ₂</sub> · … · a<sub>nσₙ</sub>. Докажите, что перманент неотрицательной матрицы равен нулю тогда и только тогда, когда найдутся k строк и n − k + 1 столбцов, на пересечении которых все элементы нулевые.</div>
+
+<details><summary>Решение</summary><div class="content">
+Заменим ненулевые элементы на 1. per A = 0 ⟺ ν &lt; n ⟺ (Кёниг) τ &lt; n ⟺ ∃ покрытие C, |C| &lt; n. Положим S = A \ C (k непокрытых строк), T = B \ C (непокрытые столбцы). |T| = n − |C ∩ B| ≥ n − |C| + |C ∩ A| = n − |C| + (n − k) ≥ n − k + 1. Рёбра между S и T отсутствуют (ни один конец не покрыт) = на пересечении k строк и ≥ n − k + 1 столбцов все нули.
+</div></details>
+
+</body>
+</html>
